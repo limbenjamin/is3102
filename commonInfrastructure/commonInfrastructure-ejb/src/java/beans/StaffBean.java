@@ -15,7 +15,7 @@ import javax.persistence.*;
 
 /**
  *
- * @author Benjamin and team
+ * @author Benjamin and the IS3102 team
  */
 @Stateful
 public class StaffBean {
