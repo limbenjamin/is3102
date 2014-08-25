@@ -8,11 +8,11 @@
             <web-module-libraries/>
             <web-module-additional-libraries>
                 <library>
-                    <file>${reference.commonInfrastructure-war.dist-ear}</file>
+                    <file>${reference.commonInfrastructure-ejb.dist-ear}</file>
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.commonInfrastructure-ejb.dist-ear}</file>
+                    <file>${reference.commonInfrastructure-war.dist-ear}</file>
                     <path-in-war>/</path-in-war>
                 </library>
             </web-module-additional-libraries>

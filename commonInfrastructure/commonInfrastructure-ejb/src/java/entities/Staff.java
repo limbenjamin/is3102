@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,10 +30,12 @@ public class Staff implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique=true)
     private String Username;
     private String Password;
     private String Salt;
     private String Name;
+    @Column(unique=true)
     private String EmailAddress;
     private String ForgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)

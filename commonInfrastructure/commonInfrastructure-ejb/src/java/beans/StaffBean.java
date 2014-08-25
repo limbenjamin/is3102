@@ -6,10 +6,12 @@
 
 package beans;
 
-import entities.Staff;
-import javax.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import entities.*;
+import java.security.Principal;
+import java.util.Date;
+import javax.annotation.*;
+import javax.ejb.*;
+import javax.persistence.*;
 
 /**
  *
@@ -21,16 +23,41 @@ public class StaffBean {
     @PersistenceContext
     EntityManager em;
     
+    @Resource SessionContext ctx;
     private Staff staff;
+    private Log log;
     
     public StaffBean(){
         
     }
-
-    public void createStaff(){
-        staff = new Staff();
-        staff.setUsername("test");
-        staff.setPassword("test");
-        em.persist(staff);
+    
+    public boolean authenticate(String username, String password){
+        Query query = em.createQuery("FROM Staff s where s.Username=:username");
+        query.setParameter("username", username);
+        try{
+            staff = (Staff) query.getSingleResult();
+        }catch(NoResultException | NonUniqueResultException nre){ 
+            return false;
+        }
+        String correctpassword = staff.getPassword();
+        if (!correctpassword.equals(password)){
+            log("Staff",staff.getId(),"Access","Invalid Login Attempt",null);
+            return false;
+        }else{
+            log("Staff",staff.getId(),"Access","Logged in",staff.getId());
+            staff.setLastLogon(new Date());
+            return true;
+        }
+    }
+    
+    public void log(String EntityName,Long EntityId, String UserAction, String ChangeMessage, Long StaffId){
+        log = new Log();
+        log.setEntityName(EntityName);
+        log.setEntityId(EntityId);
+        log.setUserAction(UserAction);
+        log.setTimestamp(new Date());
+        log.setChangeMessage(ChangeMessage);
+        log.setStaff(em.find(Staff.class, StaffId));
+        em.persist(log);
     }
 }
