@@ -28,7 +28,7 @@ public class StaffBean {
     private Log log;
     
     public StaffBean(){
-        
+        Clashes here!!
     }
     
     public boolean authenticate(String username, String password){
