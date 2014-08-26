@@ -4,38 +4,27 @@
  * and open the template in the editor.
  */
 
-package OVERLAPS;
+package entities;
 
-import CountryHQEntity.Country_Office;
-import CountryHQEntity.Transaction;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author Benjamin
  */
-@Entity(name = "Store")
-public class Store implements Serializable {
+@Entity
+public class Preference implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @OneToMany
-    private List<Transaction> Trans;
-    
-    @ManyToOne
-    private Country_Office country_office;
-    
-    
-    
+    @OneToOne(mappedBy="Preference")
+    private Staff Staff;
 
     public Long getId() {
         return id;
@@ -43,6 +32,14 @@ public class Store implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Staff getStaff() {
+        return Staff;
+    }
+
+    public void setStaff(Staff Staff) {
+        this.Staff = Staff;
     }
 
     @Override
@@ -55,10 +52,10 @@ public class Store implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Store)) {
+        if (!(object instanceof Preference)) {
             return false;
         }
-        Store other = (Store) object;
+        Preference other = (Preference) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -67,7 +64,7 @@ public class Store implements Serializable {
 
     @Override
     public String toString() {
-        return "OVERLAPS.Store[ id=" + id + " ]";
+        return "entities.Preference[ id=" + id + " ]";
     }
     
 }

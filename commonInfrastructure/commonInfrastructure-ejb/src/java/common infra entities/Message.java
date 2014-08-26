@@ -4,24 +4,33 @@
  * and open the template in the editor.
  */
 
-package OVERLAPS;
+package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  *
- * @author James
+ * @author Benjamin
  */
 @Entity
-public class ManufacturingFacility implements Serializable {
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String Content;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date Timestamp;
+    private Boolean IsRead;
+    @ManyToOne
+    private Thread Thread;
 
     public Long getId() {
         return id;
@@ -30,6 +39,40 @@ public class ManufacturingFacility implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getContent() {
+        return Content;
+    }
+
+    public void setContent(String Content) {
+        this.Content = Content;
+    }
+
+    public Date getTimestamp() {
+        return Timestamp;
+    }
+
+    public void setTimestamp(Date Timestamp) {
+        this.Timestamp = Timestamp;
+    }
+
+    public Boolean isIsRead() {
+        return IsRead;
+    }
+
+    public void setIsRead(Boolean IsRead) {
+        this.IsRead = IsRead;
+    }
+
+    public Thread getThread() {
+        return Thread;
+    }
+
+    public void setThread(Thread Thread) {
+        this.Thread = Thread;
+    }
+
+    
 
     @Override
     public int hashCode() {
@@ -41,10 +84,10 @@ public class ManufacturingFacility implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ManufacturingFacility)) {
+        if (!(object instanceof Message)) {
             return false;
         }
-        ManufacturingFacility other = (ManufacturingFacility) object;
+        Message other = (Message) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -53,7 +96,7 @@ public class ManufacturingFacility implements Serializable {
 
     @Override
     public String toString() {
-        return "OVERLAPS.ManufacturingFacility[ id=" + id + " ]";
+        return "entities.Message[ id=" + id + " ]";
     }
     
 }

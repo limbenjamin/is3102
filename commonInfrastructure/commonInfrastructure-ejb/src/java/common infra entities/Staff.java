@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -39,18 +40,20 @@ public class Staff implements Serializable {
     private String EmailAddress;
     private String ForgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date lastLogon;
+    private Date LastLogon;
     @OneToMany(mappedBy="Staff")
     private List<Todo> TodoList;
     @OneToMany(mappedBy="Recipient")
-    private List<Message> Inbox;
+    private List<Thread> Inbox;
     @OneToMany(mappedBy="Sender")
-    private List<Message> Outbox;
+    private List<Thread> Outbox;
     @ManyToOne
     private Store Store;
     @ManyToMany(mappedBy="Staffs")
     private List<Role> Roles;
-
+    @OneToOne
+    private Preference Preference;
+    
     public Long getId() {
         return id;
     }
@@ -108,11 +111,11 @@ public class Staff implements Serializable {
     }
 
     public Date getLastLogon() {
-        return lastLogon;
+        return LastLogon;
     }
 
-    public void setLastLogon(Date lastLogon) {
-        this.lastLogon = lastLogon;
+    public void setLastLogon(Date LastLogon) {
+        this.LastLogon = LastLogon;
     }
 
     public List<Todo> getTodoList() {
@@ -123,19 +126,19 @@ public class Staff implements Serializable {
         this.TodoList = TodoList;
     }
 
-    public List<Message> getInbox() {
+    public List<Thread> getInbox() {
         return Inbox;
     }
 
-    public void setInbox(List<Message> Inbox) {
+    public void setInbox(List<Thread> Inbox) {
         this.Inbox = Inbox;
     }
 
-    public List<Message> getOutbox() {
+    public List<Thread> getOutbox() {
         return Outbox;
     }
 
-    public void setOutbox(List<Message> Outbox) {
+    public void setOutbox(List<Thread> Outbox) {
         this.Outbox = Outbox;
     }
 
@@ -153,6 +156,14 @@ public class Staff implements Serializable {
 
     public void setRoles(List<Role> Roles) {
         this.Roles = Roles;
+    }
+
+    public Preference getPreference() {
+        return Preference;
+    }
+
+    public void setPreference(Preference Preference) {
+        this.Preference = Preference;
     }
     
     
