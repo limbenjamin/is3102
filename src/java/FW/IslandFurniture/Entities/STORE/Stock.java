@@ -6,6 +6,7 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
+import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -25,10 +26,12 @@ public abstract class Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    
     @OneToMany(mappedBy = "stock")
     private List<StockUnit> stockUnit;
 
+    @OneToMany(mappedBy="stock")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReq;
+    
     public Long getId() {
         return id;
     }

@@ -7,6 +7,7 @@
 package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,16 +26,15 @@ public class Message implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Content;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date Timestamp;
-    private Boolean IsRead;
+    private String content;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Time msgTime;
+    private Boolean isRead;
     @ManyToOne
-    private Thread Thread;
+    private Thread thread;
     
     @ManyToOne
     private Staff staff;
-    
 
     public Long getId() {
         return id;
@@ -45,39 +45,45 @@ public class Message implements Serializable {
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
-    public void setContent(String Content) {
-        this.Content = Content;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Date getTimestamp() {
-        return Timestamp;
+    public Time getMsgTime() {
+        return msgTime;
     }
 
-    public void setTimestamp(Date Timestamp) {
-        this.Timestamp = Timestamp;
+    public void setMsgTime(Time msgTime) {
+        this.msgTime = msgTime;
     }
 
     public Boolean isIsRead() {
-        return IsRead;
+        return isRead;
     }
 
-    public void setIsRead(Boolean IsRead) {
-        this.IsRead = IsRead;
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 
     public Thread getThread() {
-        return Thread;
+        return thread;
     }
 
-    public void setThread(Thread Thread) {
-        this.Thread = Thread;
+    public void setThread(Thread thread) {
+        this.thread = thread;
     }
 
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
     
-
     @Override
     public int hashCode() {
         int hash = 0;

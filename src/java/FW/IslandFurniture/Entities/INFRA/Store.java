@@ -7,6 +7,8 @@
 package FW.IslandFurniture.Entities.INFRA;
 
 
+import FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocument;
+import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
 import FW.IslandFurniture.Entities.STORE.Plant;
 import java.io.Serializable;
 import java.util.List;
@@ -33,6 +35,10 @@ public class Store extends Plant implements Serializable {
     private List<Staff> employees;
     @ManyToOne
     private Country country;
+    @OneToMany(mappedBy="store")
+    private List<GoodsIssuedDocument> goodsIssuedDocument;
+    @OneToMany(mappedBy="store")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
 
     public String getCode() {
         return code;
@@ -64,6 +70,22 @@ public class Store extends Plant implements Serializable {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public List<GoodsIssuedDocument> getGoodsIssuedDocument() {
+        return goodsIssuedDocument;
+    }
+
+    public void setGoodsIssuedDocument(List<GoodsIssuedDocument> goodsIssuedDocument) {
+        this.goodsIssuedDocument = goodsIssuedDocument;
+    }
+
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
 
     @Override

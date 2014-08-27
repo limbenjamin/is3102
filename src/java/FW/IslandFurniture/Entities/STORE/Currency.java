@@ -28,7 +28,7 @@ public class Currency implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private double ExchngRate=1;
+    private double exchangeRate=1;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date effectiveDate;
     
@@ -85,15 +85,15 @@ public class Currency implements Serializable {
     /**
      * @return the ExchngRate
      */
-    public double getExchngRate() {
-        return ExchngRate;
+    public double getExchangeRate() {
+        return exchangeRate;
     }
 
     /**
-     * @param ExchngRate the ExchngRate to set
+     * @param exchangeRate the ExchngRate to set
      */
-    public void setExchngRate(double ExchngRate) {
-        this.ExchngRate = ExchngRate;
+    public void setExchangeRate(double exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 
     public Date getEffectiveDate() {

@@ -6,6 +6,7 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
+import FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -25,13 +27,16 @@ public class Supplier implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToMany
     private List<Ingredient> ingredients;
-    
-    
-    @OneToMany(mappedBy = "supplier")
+    @ManyToOne
     private List<PurchaseOrder> purchaseOrders;
+    @ManyToOne
+    private Currency currency;
+    @OneToMany(mappedBy = "supplier")
+    private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
+    @ManyToMany(mappedBy="suppliers")
+    private List<ProcuredStock> procuredStocks;
 
     public Long getId() {
         return id;

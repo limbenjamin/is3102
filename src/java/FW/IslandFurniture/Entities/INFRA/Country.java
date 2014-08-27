@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -28,17 +27,14 @@ public class Country implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Code;
-    private String Name;
+    private String code;
+    private String name;
     
-    @OneToMany(mappedBy="Country")
+    @OneToMany(mappedBy="country")
     private List<Plant> plant;
     
     @ManyToMany
     private List<Currency> currency;
-    
-
-    
 
     public Long getId() {
         return id;
@@ -49,21 +45,36 @@ public class Country implements Serializable {
     }
 
     public String getCode() {
-        return Code;
+        return code;
     }
 
-    public void setCode(String Code) {
-        this.Code = Code;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public List<Plant> getPlant() {
+        return plant;
+    }
+
+    public void setPlant(List<Plant> plant) {
+        this.plant = plant;
+    }
+
+    public List<Currency> getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(List<Currency> currency) {
+        this.currency = currency;
+    }
 
     @Override
     public int hashCode() {

@@ -23,12 +23,12 @@ public class Todo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Description;
-    private Boolean Status;
+    private String description;
+    private Boolean status;
     @ManyToOne
     private Staff Staff;
 
-    public Long getId() {
+  public Long getId() {
         return id;
     }
 
@@ -37,19 +37,19 @@ public class Todo implements Serializable {
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
-    public void setDescription(String Description) {
-        this.Description = Description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean isStatus() {
-        return Status;
+        return status;
     }
 
-    public void setStatus(Boolean Status) {
-        this.Status = Status;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Staff getStaff() {

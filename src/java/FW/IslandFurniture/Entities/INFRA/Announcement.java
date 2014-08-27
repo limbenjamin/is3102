@@ -24,12 +24,12 @@ public class Announcement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Title;
-    private String Content;
+    private String title;
+    private String content;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date ActiveDate;
+    private Date activeDate;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date ExpireDate;
+    private Date expireDate;
 
     public Long getId() {
         return id;
@@ -40,38 +40,36 @@ public class Announcement implements Serializable {
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
-    public void setTitle(String Title) {
-        this.Title = Title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
-    public void setContent(String Content) {
-        this.Content = Content;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getActiveDate() {
-        return ActiveDate;
+        return activeDate;
     }
 
-    public void setActiveDate(Date ActiveDate) {
-        this.ActiveDate = ActiveDate;
+    public void setActiveDate(Date activeDate) {
+        this.activeDate = activeDate;
     }
 
     public Date getExpireDate() {
-        return ExpireDate;
+        return expireDate;
     }
 
-    public void setExpireDate(Date ExpireDate) {
-        this.ExpireDate = ExpireDate;
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
     }
-
-    
 
     @Override
     public int hashCode() {

@@ -7,6 +7,7 @@
 package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +26,14 @@ public class Log implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String EntityName;
-    private long EntityId;
-    private String UserAction;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date Timestamp;
-    private String ChangeMessage;
+    private String entityName;
+    private long entityId;
+    private String userAction;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Time logTime;
+    private String changeMessage;
     @ManyToOne
-    private Staff Staff;
+    private Staff staff;
 
     public Long getId() {
         return id;
@@ -43,52 +44,54 @@ public class Log implements Serializable {
     }
 
     public String getEntityName() {
-        return EntityName;
+        return entityName;
     }
 
-    public void setEntityName(String EntityName) {
-        this.EntityName = EntityName;
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
     public long getEntityId() {
-        return EntityId;
+        return entityId;
     }
 
-    public void setEntityId(long EntityId) {
-        this.EntityId = EntityId;
+    public void setEntityId(long entityId) {
+        this.entityId = entityId;
     }
 
     public String getUserAction() {
-        return UserAction;
+        return userAction;
     }
 
-    public void setUserAction(String UserAction) {
-        this.UserAction = UserAction;
+    public void setUserAction(String userAction) {
+        this.userAction = userAction;
     }
 
-    public Date getTimestamp() {
-        return Timestamp;
+    public Time getLogTime() {
+        return logTime;
     }
 
-    public void setTimestamp(Date Timestamp) {
-        this.Timestamp = Timestamp;
+    public void setLogTime(Time logTime) {
+        this.logTime = logTime;
     }
 
     public String getChangeMessage() {
-        return ChangeMessage;
+        return changeMessage;
     }
 
-    public void setChangeMessage(String ChangeMessage) {
-        this.ChangeMessage = ChangeMessage;
+    public void setChangeMessage(String changeMessage) {
+        this.changeMessage = changeMessage;
     }
 
     public Staff getStaff() {
-        return Staff;
+        return staff;
     }
 
-    public void setStaff(Staff Staff) {
-        this.Staff = Staff;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
+
+    
 
     @Override
     public int hashCode() {

@@ -22,8 +22,7 @@ public class Member implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    private String Tier;
+    private String tier;
 
     public Long getId() {
         return id;
@@ -31,6 +30,14 @@ public class Member implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTier() {
+        return tier;
+    }
+
+    public void setTier(String tier) {
+        this.tier = tier;
     }
 
     @Override

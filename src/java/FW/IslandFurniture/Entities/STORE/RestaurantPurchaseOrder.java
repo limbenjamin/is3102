@@ -6,29 +6,40 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
+import FW.IslandFurniture.Entities.INFRA.Store;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author James
  */
 @Entity
-public abstract class ProcuredStocka extends Stock implements Serializable {
+public class RestaurantPurchaseOrder implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @OneToMany
+    private List<RestaurantPurchaseOrderDetail> purchaseOrderDetails;
+    
+    @ManyToOne
+    private Supplier supplier;
+    
+    @ManyToOne
+    private Store store;
 
-    @Override
     public Long getId() {
         return id;
     }
 
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -43,10 +54,10 @@ public abstract class ProcuredStocka extends Stock implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProcuredStocka)) {
+        if (!(object instanceof RestaurantPurchaseOrder)) {
             return false;
         }
-        ProcuredStocka other = (ProcuredStocka) object;
+        RestaurantPurchaseOrder other = (RestaurantPurchaseOrder) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -55,7 +66,7 @@ public abstract class ProcuredStocka extends Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Procuredstock[ id=" + id + " ]";
+        return "FW.IslandFurniture.Entities.STORE.PurchaseOrder[ id=" + id + " ]";
     }
     
 }

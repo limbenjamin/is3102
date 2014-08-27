@@ -24,11 +24,11 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Name;
+    private String name;
     @ManyToMany
-    private List<Staff> Staffs;
-    @ManyToMany(mappedBy="Roles")
-    private List<Privilege> Privileges;
+    private List<Staff> staffs;
+    @ManyToMany(mappedBy="roles")
+    private List<Privilege> privileges;
 
     public Long getId() {
         return id;
@@ -39,31 +39,30 @@ public class Role implements Serializable {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Staff> getStaffs() {
-        return Staffs;
+        return staffs;
     }
 
-    public void setStaffs(List<Staff> Staffs) {
-        this.Staffs = Staffs;
+    public void setStaffs(List<Staff> staffs) {
+        this.staffs = staffs;
     }
 
     public List<Privilege> getPrivileges() {
-        return Privileges;
+        return privileges;
     }
 
-    public void setPrivileges(List<Privilege> Privileges) {
-        this.Privileges = Privileges;
+    public void setPrivileges(List<Privilege> privileges) {
+        this.privileges = privileges;
     }
-    
-    
 
+    
     @Override
     public int hashCode() {
         int hash = 0;

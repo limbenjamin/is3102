@@ -26,12 +26,12 @@ public class Thread implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    private Staff Sender;
+    private Staff sender;
     @ManyToOne
-    private Staff Recipient;
-    @OneToMany(mappedBy="Thread")
-    private List<Message> Messages;
-    
+    private Staff recipient;
+    @OneToMany(mappedBy="thread")
+    private List<Message> messages;
+
     public Long getId() {
         return id;
     }
@@ -41,29 +41,29 @@ public class Thread implements Serializable {
     }
 
     public Staff getSender() {
-        return Sender;
+        return sender;
     }
 
-    public void setSender(Staff Sender) {
-        this.Sender = Sender;
+    public void setSender(Staff sender) {
+        this.sender = sender;
     }
 
     public Staff getRecipient() {
-        return Recipient;
+        return recipient;
     }
 
-    public void setRecipient(Staff Recipient) {
-        this.Recipient = Recipient;
+    public void setRecipient(Staff recipient) {
+        this.recipient = recipient;
     }
 
     public List<Message> getMessages() {
-        return Messages;
+        return messages;
     }
 
-    public void setMessages(List<Message> Messages) {
-        this.Messages = Messages;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

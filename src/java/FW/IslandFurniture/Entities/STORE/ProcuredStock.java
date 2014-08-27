@@ -7,10 +7,12 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -22,6 +24,8 @@ public abstract class ProcuredStock extends Stock implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @ManyToMany
+    private List<Supplier> suppliers;
 
     @Override
     public Long getId() {

@@ -24,9 +24,9 @@ public class Privilege implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Name;
+    private String name;
     @ManyToMany
-    private List<Role> Roles;
+    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -37,22 +37,20 @@ public class Privilege implements Serializable {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Role> getRoles() {
-        return Roles;
+        return roles;
     }
 
-    public void setRoles(List<Role> Roles) {
-        this.Roles = Roles;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
-    
-    
 
     @Override
     public boolean equals(Object object) {

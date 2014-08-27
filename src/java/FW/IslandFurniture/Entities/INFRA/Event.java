@@ -7,6 +7,7 @@
 package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,10 +25,10 @@ public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Name;
-    private String Description;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date Date;
+    private String name;
+    private String description;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Time eventTime;
 
     public Long getId() {
         return id;
@@ -38,30 +39,28 @@ public class Event implements Serializable {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
-    public void setDescription(String Description) {
-        this.Description = Description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getDate() {
-        return Date;
+    public Time getEventTime() {
+        return eventTime;
     }
 
-    public void setDate(Date Date) {
-        this.Date = Date;
+    public void setEventTime(Time eventTime) {
+        this.eventTime = eventTime;
     }
-
-   
 
     @Override
     public int hashCode() {
