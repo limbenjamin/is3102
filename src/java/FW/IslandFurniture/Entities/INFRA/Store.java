@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.INFRA;
 
-import static FW.IslandFurniture.Entities.INFRA.Country_.plant;
+
 import FW.IslandFurniture.Entities.STORE.Plant;
 import java.io.Serializable;
 import java.util.List;
