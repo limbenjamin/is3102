@@ -27,7 +27,7 @@ public class Dish implements Serializable {
     private Long id;
     
     @ManyToMany(mappedBy = "dishes")
-    private List<MenuItem> menuitem;
+    private List<MenuItem> menuItem;
     
     @OneToMany
     private List<Ingredient> ingredients;

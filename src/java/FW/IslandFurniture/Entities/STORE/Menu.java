@@ -26,8 +26,7 @@ public class Menu implements Serializable {
     private Long id;
     
     @ManyToOne
-    private MenuItem menuitem;
-    
+    private MenuItem menuItem;
 
     public Long getId() {
         return id;

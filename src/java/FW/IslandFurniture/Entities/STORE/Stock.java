@@ -27,7 +27,7 @@ public abstract class Stock implements Serializable {
     
     
     @OneToMany(mappedBy = "stock")
-    private List<StockUnit> stockunit;
+    private List<StockUnit> stockUnit;
 
     public Long getId() {
         return id;

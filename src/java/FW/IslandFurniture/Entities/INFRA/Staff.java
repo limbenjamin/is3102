@@ -32,27 +32,27 @@ public class Staff implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique=true)
-    private String Username;
-    private String Password;
-    private String Salt;
-    private String Name;
+    private String username;
+    private String password;
+    private String salt;
+    private String name;
     @Column(unique=true)
-    private String EmailAddress;
-    private String ForgottenPasswordCode;
+    private String emailAddress;
+    private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date LastLogon;
-    @OneToMany(mappedBy="Staff")
-    private List<Todo> TodoList;
-    @OneToMany(mappedBy="Recipient")
-    private List<Thread> Inbox;
-    @OneToMany(mappedBy="Sender")
-    private List<Thread> Outbox;
+    private Date lastLogon;
+    @OneToMany(mappedBy="staff")
+    private List<Todo> todoList;
+    @OneToMany(mappedBy="recipient")
+    private List<Thread> inbox;
+    @OneToMany(mappedBy="sender")
+    private List<Thread> outbox;
     @ManyToOne
-    private Store Store;
-    @ManyToMany(mappedBy="Staffs")
-    private List<Role> Roles;
+    private Store store;
+    @ManyToMany(mappedBy="staffs")
+    private List<Role> roles;
     @OneToOne
-    private Preference Preference;
+    private Preference preference;
     
     @OneToMany
     private List<Notification> notifications;
@@ -67,111 +67,117 @@ public class Staff implements Serializable {
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
-    public void setUsername(String Username) {
-        this.Username = Username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSalt() {
-        return Salt;
+        return salt;
     }
 
-    public void setSalt(String Salt) {
-        this.Salt = Salt;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmailAddress() {
-        return EmailAddress;
+        return emailAddress;
     }
 
-    public void setEmailAddress(String EmailAddress) {
-        this.EmailAddress = EmailAddress;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public String getForgottenPasswordCode() {
-        return ForgottenPasswordCode;
+        return forgottenPasswordCode;
     }
 
-    public void setForgottenPasswordCode(String ForgottenPasswordCode) {
-        this.ForgottenPasswordCode = ForgottenPasswordCode;
+    public void setForgottenPasswordCode(String forgottenPasswordCode) {
+        this.forgottenPasswordCode = forgottenPasswordCode;
     }
 
     public Date getLastLogon() {
-        return LastLogon;
+        return lastLogon;
     }
 
-    public void setLastLogon(Date LastLogon) {
-        this.LastLogon = LastLogon;
+    public void setLastLogon(Date lastLogon) {
+        this.lastLogon = lastLogon;
     }
 
     public List<Todo> getTodoList() {
-        return TodoList;
+        return todoList;
     }
 
-    public void setTodoList(List<Todo> TodoList) {
-        this.TodoList = TodoList;
+    public void setTodoList(List<Todo> todoList) {
+        this.todoList = todoList;
     }
 
     public List<Thread> getInbox() {
-        return Inbox;
+        return inbox;
     }
 
-    public void setInbox(List<Thread> Inbox) {
-        this.Inbox = Inbox;
+    public void setInbox(List<Thread> inbox) {
+        this.inbox = inbox;
     }
 
     public List<Thread> getOutbox() {
-        return Outbox;
+        return outbox;
     }
 
-    public void setOutbox(List<Thread> Outbox) {
-        this.Outbox = Outbox;
+    public void setOutbox(List<Thread> outbox) {
+        this.outbox = outbox;
     }
 
     public Store getStore() {
-        return Store;
+        return store;
     }
 
-    public void setStore(Store Store) {
-        this.Store = Store;
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public List<Role> getRoles() {
-        return Roles;
+        return roles;
     }
 
-    public void setRoles(List<Role> Roles) {
-        this.Roles = Roles;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public Preference getPreference() {
-        return Preference;
+        return preference;
     }
 
-    public void setPreference(Preference Preference) {
-        this.Preference = Preference;
+    public void setPreference(Preference preference) {
+        this.preference = preference;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
     }
     
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -196,5 +202,5 @@ public class Staff implements Serializable {
     public String toString() {
         return "commonInfrastructure.entities.Staff[ id=" + id + " ]";
     }
-    
+
 }

@@ -22,12 +22,10 @@ public class DailyIngredientSupplyReq implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-   
-    @ManyToOne
-    private WeeklyIngredientSupplyReq weeklyingredientsupplyreq;
-    
-    
     private Long id;
+    
+    @ManyToOne
+    private WeeklyIngredientSupplyReq weeklyIngredientSupplyReq;
 
     public Long getId() {
         return id;

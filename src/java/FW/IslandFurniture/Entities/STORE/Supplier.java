@@ -31,7 +31,7 @@ public class Supplier implements Serializable {
     
     
     @OneToMany(mappedBy = "supplier")
-    private List<PurchaseOrder> purchaseorder;
+    private List<PurchaseOrder> purchaseOrders;
 
     public Long getId() {
         return id;

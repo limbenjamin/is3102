@@ -26,7 +26,7 @@ public class StorageLocation implements Serializable {
     private Long id;
     
     @OneToMany(mappedBy = "location")
-    private List<StockUnit> stockunits;
+    private List<StockUnit> stockUnits;
     
 
     public Long getId() {

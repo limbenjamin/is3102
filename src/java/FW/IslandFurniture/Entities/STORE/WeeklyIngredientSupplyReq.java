@@ -33,8 +33,8 @@ public class WeeklyIngredientSupplyReq implements Serializable {
     
     
 
-    @OneToMany(mappedBy = "weeklyingredientsupplyreq")
-    private List<DailyIngredientSupplyReq> daily_req;
+    @OneToMany(mappedBy = "weeklyIngredientSupplyReq")
+    private List<DailyIngredientSupplyReq> dailyReq;
     
     
 

@@ -27,18 +27,12 @@ public abstract class Plant implements Serializable  {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    
     @ManyToOne
     private Country country;
     
     @OneToMany(mappedBy = "plant")
     private Transaction transaction;
     
-
-    
-
-    
-
     public Long getId() {
         return id;
     }

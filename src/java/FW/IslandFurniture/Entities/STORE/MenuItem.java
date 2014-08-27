@@ -26,18 +26,18 @@ public class MenuItem extends Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany(mappedBy = "menuitem")
+    @OneToMany(mappedBy = "menuItem")
     private List<Menu> menus;
     
     @ManyToMany
     private List<Dish> dishes;
-    
-    
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

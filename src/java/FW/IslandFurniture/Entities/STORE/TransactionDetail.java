@@ -28,7 +28,7 @@ public abstract class TransactionDetail implements Serializable {
     Transaction transaction;
     
     @ManyToOne
-    Stock saleable_item;
+    Stock saleableItem;
     
     
 

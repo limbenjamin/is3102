@@ -15,7 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -29,13 +29,11 @@ public class Currency implements Serializable {
     private Long id;
     private String name;
     private double ExchngRate=1;
-    private Date effective_date;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date effectiveDate;
     
     @ManyToMany
     private List<Country> countries;
-    
-    
-    
 
     public Long getId() {
         return id;
@@ -98,18 +96,20 @@ public class Currency implements Serializable {
         this.ExchngRate = ExchngRate;
     }
 
-    /**
-     * @return the effective_date
-     */
-    public Date getEffective_date() {
-        return effective_date;
+    public Date getEffectiveDate() {
+        return effectiveDate;
     }
 
-    /**
-     * @param effective_date the effective_date to set
-     */
-    public void setEffective_date(Date effective_date) {
-        this.effective_date = effective_date;
+    public void setEffectiveDate(Date effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
-    
+
+    public List<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
+    }
+
 }

@@ -26,7 +26,7 @@ public class PurchaseOrderDetail implements Serializable {
     private Long id;
     
     @ManyToOne
-    private PurchaseOrder purchaseorder;
+    private PurchaseOrder purchaseOrder;
     
     @ManyToOne
     private Ingredient ingredient;

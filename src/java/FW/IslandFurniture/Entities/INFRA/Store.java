@@ -27,56 +27,44 @@ public class Store extends Plant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String Code;
-    private String Name;
-    @OneToMany(mappedBy="Store")
-    private List<Staff> Employees;
+    private String code;
+    private String name;
+    @OneToMany(mappedBy="store")
+    private List<Staff> employees;
     @ManyToOne
-    private Country Country;
-    
-    
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Country country;
 
     public String getCode() {
-        return Code;
+        return code;
     }
 
-    public void setCode(String Code) {
-        this.Code = Code;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
-    public void setName(String Name) {
-        this.Name = Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Staff> getEmployees() {
-        return Employees;
+        return employees;
     }
 
-    public void setEmployees(List<Staff> Employees) {
-        this.Employees = Employees;
+    public void setEmployees(List<Staff> employees) {
+        this.employees = employees;
     }
 
     public Country getCountry() {
-        return Country;
+        return country;
     }
 
-    public void setCountry(Country Country) {
-        this.Country = Country;
+    public void setCountry(Country country) {
+        this.country = country;
     }
-
-    
 
     @Override
     public int hashCode() {

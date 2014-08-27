@@ -26,9 +26,7 @@ public class Ingredient implements Serializable {
     private Long id;
     
     @ManyToMany(mappedBy = "ingredients")
-    private List<Supplier> suppliers;
-
-    
+    private List<Supplier> suppliers;    
     
     public Long getId() {
         return id;

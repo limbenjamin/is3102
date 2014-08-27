@@ -23,7 +23,7 @@ public class StockUnit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private long qty=0l;
+    private long qty = 0l;
     
     @ManyToOne
     private Stock stock;
