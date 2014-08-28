@@ -37,6 +37,22 @@ public class WeeklyProductionPlan implements Serializable {
         this.id = id;
     }
 
+    public MonthlyProductionPlan getMonthlyProductionPlan() {
+        return monthlyProductionPlan;
+    }
+
+    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
+        this.monthlyProductionPlan = monthlyProductionPlan;
+    }
+
+    public ProductionOrder getProductionOrder() {
+        return productionOrder;
+    }
+
+    public void setProductionOrder(ProductionOrder productionOrder) {
+        this.productionOrder = productionOrder;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

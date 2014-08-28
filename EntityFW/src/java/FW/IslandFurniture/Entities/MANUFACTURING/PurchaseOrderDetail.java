@@ -37,6 +37,22 @@ public class PurchaseOrderDetail implements Serializable {
         this.id = id;
     }
 
+    public PurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
+    }
+
+    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
+
+    public ProcuredStock getProcuredStock() {
+        return procuredStock;
+    }
+
+    public void setProcuredStock(ProcuredStock procuredStock) {
+        this.procuredStock = procuredStock;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -25,16 +25,26 @@ public class RetailItemTransaction extends Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany(mappedBy = "RetailItemTransaction")
+    @OneToMany(mappedBy = "retailItemTransaction")
     private List<RetailItemTransactionDetail> retailItemTransactionDetails;
     
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<RetailItemTransactionDetail> getRetailItemTransactionDetails() {
+        return retailItemTransactionDetails;
+    }
+
+    public void setRetailItemTransactionDetails(List<RetailItemTransactionDetail> retailItemTransactionDetails) {
+        this.retailItemTransactionDetails = retailItemTransactionDetails;
     }
 
     @Override

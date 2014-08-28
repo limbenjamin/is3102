@@ -25,10 +25,8 @@ public class GoodsReceiptDocument implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @OneToOne(mappedBy="goodsReceiptDocument")
     private PurchaseOrder receiveFrom;
-    
     @OneToMany(mappedBy="goodsReceiptDocument")
     private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;
 
@@ -46,6 +44,14 @@ public class GoodsReceiptDocument implements Serializable {
 
     public void setReceiveFrom(PurchaseOrder receiveFrom) {
         this.receiveFrom = receiveFrom;
+    }
+
+    public List<GoodsReceiptDocumentDetail> getGoodsReceiptDocumentDetails() {
+        return goodsReceiptDocumentDetails;
+    }
+
+    public void setGoodsReceiptDocumentDetails(List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails) {
+        this.goodsReceiptDocumentDetails = goodsReceiptDocumentDetails;
     }
 
     @Override

@@ -16,7 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -33,14 +32,10 @@ public class Store extends Plant implements Serializable {
     private String name;
     @OneToMany(mappedBy="store")
     private List<Staff> employees;
-    @ManyToOne
-    private Country country;
     @OneToMany(mappedBy="store")
     private List<GoodsIssuedDocument> goodsIssuedDocument;
     @OneToMany(mappedBy="store")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
-    
-
 
     public String getCode() {
         return code;
@@ -64,14 +59,6 @@ public class Store extends Plant implements Serializable {
 
     public void setEmployees(List<Staff> employees) {
         this.employees = employees;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public void setCountry(Country country) {
-        this.country = country;
     }
 
     public List<GoodsIssuedDocument> getGoodsIssuedDocument() {

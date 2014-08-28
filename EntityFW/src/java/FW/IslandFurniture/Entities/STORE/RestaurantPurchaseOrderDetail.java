@@ -38,6 +38,22 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
         this.id = id;
     }
 
+    public RestaurantPurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
+    }
+
+    public void setPurchaseOrder(RestaurantPurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -39,6 +39,22 @@ public class GoodsIssuedDocument implements Serializable {
         this.id = id;
     }
 
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {
+        return goodsIssuedDocumentDetails;
+    }
+
+    public void setGoodsIssuedDocumentDetails(List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails) {
+        this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

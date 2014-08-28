@@ -40,6 +40,22 @@ public class ProductionOrder implements Serializable {
         this.batchNo = batchNo;
     }
 
+    public FurnitureModel getFurnitureModel() {
+        return furnitureModel;
+    }
+
+    public void setFurnitureModel(FurnitureModel furnitureModel) {
+        this.furnitureModel = furnitureModel;
+    }
+
+    public List<StockUnit> getStockUnits() {
+        return stockUnits;
+    }
+
+    public void setStockUnits(List<StockUnit> stockUnits) {
+        this.stockUnits = stockUnits;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -21,14 +21,14 @@ import javax.persistence.ManyToMany;
  * @author James
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class ProcuredStock extends Stock implements Serializable {
-    private static final long serialVersionUID = 1L;
+    protected static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
     @ManyToMany
-    private List<Supplier> suppliers;
+    protected List<Supplier> suppliers;
 
     @Override
     public Long getId() {
@@ -38,6 +38,14 @@ public abstract class ProcuredStock extends Stock implements Serializable {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     @Override

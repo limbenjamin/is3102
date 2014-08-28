@@ -27,7 +27,7 @@ public class RestaurantPurchaseOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany
+    @OneToMany(mappedBy="purchaseOrder")
     private List<RestaurantPurchaseOrderDetail> purchaseOrderDetails;
     
     @ManyToOne
@@ -42,6 +42,30 @@ public class RestaurantPurchaseOrder implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<RestaurantPurchaseOrderDetail> getPurchaseOrderDetails() {
+        return purchaseOrderDetails;
+    }
+
+    public void setPurchaseOrderDetails(List<RestaurantPurchaseOrderDetail> purchaseOrderDetails) {
+        this.purchaseOrderDetails = purchaseOrderDetails;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     @Override

@@ -7,7 +7,6 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +25,7 @@ public class RestaurantGoodsReceiptDocumentDetail implements Serializable {
     private Long id;
     
     @ManyToOne
-    private RestaurantGoodReceiptDocument restaurantgoodreceiptdocuments;
+    private RestaurantGoodReceiptDocument restaurantGoodReceiptDocument;
 
     public Long getId() {
         return id;
@@ -34,6 +33,14 @@ public class RestaurantGoodsReceiptDocumentDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public RestaurantGoodReceiptDocument getRestaurantGoodReceiptDocument() {
+        return restaurantGoodReceiptDocument;
+    }
+
+    public void setRestaurantGoodReceiptDocument(RestaurantGoodReceiptDocument restaurantGoodReceiptDocument) {
+        this.restaurantGoodReceiptDocument = restaurantGoodReceiptDocument;
     }
 
     @Override

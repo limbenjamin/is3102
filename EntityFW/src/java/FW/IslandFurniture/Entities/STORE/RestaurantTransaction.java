@@ -26,7 +26,7 @@ public class RestaurantTransaction extends Transaction implements Serializable {
     private Long id;
     
     @OneToMany(mappedBy = "restaurantTransaction")
-    private List<TransactionDetail> restaurantTransactionDetails;
+    private List<RestaurantTransactionDetail> restaurantTransactionDetails;
 
     @Override
     public Long getId() {
@@ -36,6 +36,14 @@ public class RestaurantTransaction extends Transaction implements Serializable {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<RestaurantTransactionDetail> getRestaurantTransactionDetails() {
+        return restaurantTransactionDetails;
+    }
+
+    public void setRestaurantTransactionDetails(List<RestaurantTransactionDetail> restaurantTransactionDetails) {
+        this.restaurantTransactionDetails = restaurantTransactionDetails;
     }
 
     @Override

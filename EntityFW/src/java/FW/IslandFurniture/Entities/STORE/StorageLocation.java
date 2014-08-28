@@ -25,16 +25,23 @@ public class StorageLocation implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy="location")
     private List<StockUnit> stockUnits;
     
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<StockUnit> getStockUnits() {
+        return stockUnits;
+    }
+
+    public void setStockUnits(List<StockUnit> stockUnits) {
+        this.stockUnits = stockUnits;
     }
 
     @Override

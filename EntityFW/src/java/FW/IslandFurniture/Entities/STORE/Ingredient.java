@@ -24,8 +24,7 @@ public class Ingredient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @ManyToMany(mappedBy = "ingredients")
+    @ManyToMany(mappedBy="ingredients")
     private List<Supplier> suppliers;    
     
     public Long getId() {
@@ -34,6 +33,14 @@ public class Ingredient implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     @Override

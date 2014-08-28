@@ -35,6 +35,14 @@ public class DailyIngredientSupplyReq implements Serializable {
         this.id = id;
     }
 
+    public WeeklyIngredientSupplyReq getWeeklyIngredientSupplyReq() {
+        return weeklyIngredientSupplyReq;
+    }
+
+    public void setWeeklyIngredientSupplyReq(WeeklyIngredientSupplyReq weeklyIngredientSupplyReq) {
+        this.weeklyIngredientSupplyReq = weeklyIngredientSupplyReq;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

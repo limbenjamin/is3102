@@ -9,7 +9,6 @@ package FW.IslandFurniture.Entities.STORE;
 import FW.IslandFurniture.Entities.INFRA.Member;
 import FW.IslandFurniture.Entities.INFRA.Store;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -31,17 +29,11 @@ public abstract class Transaction implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    
     @ManyToOne
     private Member member;
     
     @ManyToOne
     private Store store;
-    
-    @OneToMany(mappedBy = "transaction")
-    private List<TransactionDetail> details; 
-    
-
 
     public Long getId() {
         return id;
@@ -49,6 +41,22 @@ public abstract class Transaction implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     @Override

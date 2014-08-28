@@ -30,20 +30,48 @@ public class WeeklyIngredientSupplyReq implements Serializable {
 
     @ManyToOne
     private Ingredient ingredient;
-    
-    
 
     @OneToMany(mappedBy = "weeklyIngredientSupplyReq")
     private List<DailyIngredientSupplyReq> dailyReq;
     
-    
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(Long period) {
+        this.period = period;
+    }
+
+    public Long getQty() {
+        return qty;
+    }
+
+    public void setQty(Long qty) {
+        this.qty = qty;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public List<DailyIngredientSupplyReq> getDailyReq() {
+        return dailyReq;
+    }
+
+    public void setDailyReq(List<DailyIngredientSupplyReq> dailyReq) {
+        this.dailyReq = dailyReq;
     }
 
     @Override

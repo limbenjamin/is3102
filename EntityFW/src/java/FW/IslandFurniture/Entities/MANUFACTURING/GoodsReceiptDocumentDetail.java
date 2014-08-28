@@ -24,10 +24,8 @@ public class GoodsReceiptDocumentDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
     private GoodsReceiptDocument goodsReceiptDocument;
-    
     @ManyToOne
     private Stock receivedStock;
 

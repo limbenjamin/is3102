@@ -25,22 +25,18 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Plant implements Serializable  {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
+    protected Long id;
     @ManyToOne
-    private Country country;
-    
-    @OneToMany(mappedBy = "plant")
-    private List<Transaction> transactions;
-
+    protected Country country;
+    @OneToMany(mappedBy="plant")
+    protected List<Transaction> transactions;
     @ManyToMany
-    private List<PlantStockInventory> plantStockInventories;
-    
+    protected List<PlantStockInventory> plantStockInventories;
     
     public Long getId() {
         return id;
@@ -48,6 +44,30 @@ public abstract class Plant implements Serializable  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public List<PlantStockInventory> getPlantStockInventories() {
+        return plantStockInventories;
+    }
+
+    public void setPlantStockInventories(List<PlantStockInventory> plantStockInventories) {
+        this.plantStockInventories = plantStockInventories;
     }
 
     @Override

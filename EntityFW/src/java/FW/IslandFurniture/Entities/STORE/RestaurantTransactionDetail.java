@@ -18,15 +18,14 @@ import javax.persistence.ManyToOne;
  * @author James
  */
 @Entity
-public class RestaurantTransactionDetail extends TransactionDetail implements Serializable {
+public class RestaurantTransactionDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @ManyToOne
-    private RestaurantTransaction restaurantTransaction;
-    
+    private RestaurantTransaction restaurantTransaction; 
 
     public Long getId() {
         return id;
@@ -34,6 +33,14 @@ public class RestaurantTransactionDetail extends TransactionDetail implements Se
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public RestaurantTransaction getRestaurantTransaction() {
+        return restaurantTransaction;
+    }
+
+    public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
+        this.restaurantTransaction = restaurantTransaction;
     }
 
     @Override

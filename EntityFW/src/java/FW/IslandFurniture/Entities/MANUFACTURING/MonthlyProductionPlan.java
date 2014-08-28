@@ -37,6 +37,37 @@ public class MonthlyProductionPlan implements Serializable {
     @OneToMany(mappedBy="monthlyProductionPlan")
     private List<WeeklyProductionPlan> weeklyProductionPlans;
 
+    public FurnitureModel getFurnitureModel() {
+        return furnitureModel;
+    }
+
+    public void setFurnitureModel(FurnitureModel furnitureModel) {
+        this.furnitureModel = furnitureModel;
+    }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public void setMonth(Month month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public List<WeeklyProductionPlan> getWeeklyProductionPlans() {
+        return weeklyProductionPlans;
+    }
+
+    public void setWeeklyProductionPlans(List<WeeklyProductionPlan> weeklyProductionPlans) {
+        this.weeklyProductionPlans = weeklyProductionPlans;
+    }
 
     @Override
     public int hashCode() {

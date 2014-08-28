@@ -30,7 +30,6 @@ public class StockUnit implements Serializable {
     
     @ManyToOne
     private StorageLocation location;
-    
 
     public Long getId() {
         return id;
@@ -38,6 +37,30 @@ public class StockUnit implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public long getQty() {
+        return qty;
+    }
+
+    public void setQty(long qty) {
+        this.qty = qty;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public StorageLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(StorageLocation location) {
+        this.location = location;
     }
 
     @Override

@@ -28,14 +28,13 @@ public class PurchaseOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
     private Plant shipsTo;
     
     @OneToMany(mappedBy="purchaseOrder")
     private List<PurchaseOrderDetail> purchaseOrderDetails;
     
-    @OneToMany(mappedBy="purchaseOrders",targetEntity =Supplier.class)
+    @OneToMany(mappedBy="purchaseOrders")
     private Supplier supplier;
     
     @OneToOne

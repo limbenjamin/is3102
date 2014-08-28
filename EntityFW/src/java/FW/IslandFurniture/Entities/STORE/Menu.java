@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 
 /**
@@ -26,7 +25,6 @@ public class Menu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToMany
     private List<MenuItem> menuItem;
 
@@ -36,6 +34,14 @@ public class Menu implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<MenuItem> getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(List<MenuItem> menuItem) {
+        this.menuItem = menuItem;
     }
 
     @Override

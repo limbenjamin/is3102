@@ -38,6 +38,14 @@ public class Material extends ProcuredStock implements Serializable {
         this.id = id;
     }
 
+    public List<WeeklyMRPRecord> getWeeklyMRPRecords() {
+        return weeklyMRPRecords;
+    }
+
+    public void setWeeklyMRPRecords(List<WeeklyMRPRecord> weeklyMRPRecords) {
+        this.weeklyMRPRecords = weeklyMRPRecords;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

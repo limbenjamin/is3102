@@ -18,15 +18,13 @@ import javax.persistence.ManyToOne;
  * @author James
  */
 @Entity
-public class FurnitureTransactionDetail extends TransactionDetail implements Serializable {
+public class FurnitureTransactionDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
     private FurnitureTransaction furnitureTransaction;
-    
 
     public Long getId() {
         return id;
@@ -34,6 +32,14 @@ public class FurnitureTransactionDetail extends TransactionDetail implements Ser
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public FurnitureTransaction getFurnitureTransaction() {
+        return furnitureTransaction;
+    }
+
+    public void setFurnitureTransaction(FurnitureTransaction furnitureTransaction) {
+        this.furnitureTransaction = furnitureTransaction;
     }
 
     @Override

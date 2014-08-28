@@ -33,7 +33,7 @@ public class Country implements Serializable {
     @OneToMany(mappedBy="country")
     private List<Plant> plant;
     
-    @ManyToMany
+    @ManyToMany(mappedBy="countries")
     private List<Currency> currency;
 
     public Long getId() {

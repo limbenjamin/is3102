@@ -35,6 +35,14 @@ public class BOM implements Serializable {
         this.id = id;
     }
 
+    public List<BOMDetail> getBOMDetails() {
+        return BOMDetails;
+    }
+
+    public void setBOMDetails(List<BOMDetail> BOMDetails) {
+        this.BOMDetails = BOMDetails;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -23,26 +23,21 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Stock implements Serializable {
-    private static final long serialVersionUID = 1L;
+    protected static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
-    @OneToMany(mappedBy = "stock")
-    private List<StockUnit> stockUnit;
-
-    @OneToMany(mappedBy="stock")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReq;
-    
-    @OneToMany(mappedBy = "stock")
-    private List<PlantStockInventory> planStockInventories;
+    protected Long id;
     
     @OneToMany(mappedBy="stock")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    protected List<StockUnit> stockUnit;
     
- 
+    @OneToMany(mappedBy="stock")
+    protected List<PlantStockInventory> planStockInventories;
+    
+    @OneToMany(mappedBy="stock")
+    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
     
     public Long getId() {
         return id;
@@ -50,6 +45,30 @@ public abstract class Stock implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<StockUnit> getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(List<StockUnit> stockUnit) {
+        this.stockUnit = stockUnit;
+    }
+
+    public List<PlantStockInventory> getPlanStockInventories() {
+        return planStockInventories;
+    }
+
+    public void setPlanStockInventories(List<PlantStockInventory> planStockInventories) {
+        this.planStockInventories = planStockInventories;
+    }
+
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
 
     @Override

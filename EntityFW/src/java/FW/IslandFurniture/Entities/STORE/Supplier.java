@@ -33,7 +33,7 @@ public class Supplier implements Serializable {
     private List<PurchaseOrder> purchaseOrders;
     @ManyToOne
     private Currency currency;
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(mappedBy="supplier")
     private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
     @ManyToMany(mappedBy="suppliers")
     private List<ProcuredStock> procuredStocks;
@@ -44,6 +44,46 @@ public class Supplier implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<PurchaseOrder> getPurchaseOrders() {
+        return purchaseOrders;
+    }
+
+    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+        this.purchaseOrders = purchaseOrders;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public List<RestaurantPurchaseOrder> getRestaurantPurchaseOrders() {
+        return restaurantPurchaseOrders;
+    }
+
+    public void setRestaurantPurchaseOrders(List<RestaurantPurchaseOrder> restaurantPurchaseOrders) {
+        this.restaurantPurchaseOrders = restaurantPurchaseOrders;
+    }
+
+    public List<ProcuredStock> getProcuredStocks() {
+        return procuredStocks;
+    }
+
+    public void setProcuredStocks(List<ProcuredStock> procuredStocks) {
+        this.procuredStocks = procuredStocks;
     }
 
     @Override

@@ -38,6 +38,54 @@ public class WeeklyMRPRecord implements Serializable {
     @OneToOne
     private PurchaseOrderDetail purchaseOrderDetail;
 
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Integer getWeek() {
+        return week;
+    }
+
+    public void setWeek(Integer week) {
+        this.week = week;
+    }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public void setMonth(Month month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public WeeklyProductionPlan getWeeklyProductionPlan() {
+        return weeklyProductionPlan;
+    }
+
+    public void setWeeklyProductionPlan(WeeklyProductionPlan weeklyProductionPlan) {
+        this.weeklyProductionPlan = weeklyProductionPlan;
+    }
+
+    public PurchaseOrderDetail getPurchaseOrderDetail() {
+        return purchaseOrderDetail;
+    }
+
+    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        this.purchaseOrderDetail = purchaseOrderDetail;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;

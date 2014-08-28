@@ -36,6 +36,22 @@ public class BOMDetail implements Serializable {
         this.id = id;
     }
 
+    public BOM getBOM() {
+        return BOM;
+    }
+
+    public void setBOM(BOM BOM) {
+        this.BOM = BOM;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -39,6 +39,30 @@ public class GoodsIssuedDocumentDetail implements Serializable {
         this.id = id;
     }
 
+    public GoodsIssuedDocument getGoodsIssuedDocument() {
+        return goodsIssuedDocument;
+    }
+
+    public void setGoodsIssuedDocument(GoodsIssuedDocument goodsIssuedDocument) {
+        this.goodsIssuedDocument = goodsIssuedDocument;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public MonthlyStockSupplyReq getMonthlyStockSupplyReq() {
+        return monthlyStockSupplyReq;
+    }
+
+    public void setMonthlyStockSupplyReq(MonthlyStockSupplyReq monthlyStockSupplyReq) {
+        this.monthlyStockSupplyReq = monthlyStockSupplyReq;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

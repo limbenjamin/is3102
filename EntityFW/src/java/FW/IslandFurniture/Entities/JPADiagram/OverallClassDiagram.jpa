@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jpa:entity-mappings status="GENERATED" id="_14092392782931" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_2_1.xsd" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:jpa="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <jpa:entity class="MembershipTier" compositePrimaryKeyType="NONE" minimized="false" id="_14092392783624">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_14092392783675">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="MonthlyMenuItemSalesForecast" compositePrimaryKeyType="NONE" minimized="false" id="_14092392783946">
+        <jpa:attributes>
+            <jpa:basic name="id" attribute-type="java.lang.Long" id="_14092392783957"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="PlantStockInventory" compositePrimaryKeyType="NONE" minimized="false" id="_14092392784208">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_14092392784209">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="PromotionCampaign" compositePrimaryKeyType="NONE" minimized="false" id="_140923927844210">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927844211">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="PromotionDetail" compositePrimaryKeyType="NONE" minimized="false" id="_140923927845912">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927845913">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Announcement" compositePrimaryKeyType="NONE" minimized="false" id="_140923927847814">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927847815">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="title" attribute-type="java.lang.String" id="_140923927847816"/>
+            <jpa:basic name="content" attribute-type="java.lang.String" id="_140923927847817"/>
+            <jpa:basic name="activeDate" attribute-type="java.util.Date" id="_140923927847818">
+                <jpa:temporal>DATE</jpa:temporal>
+            </jpa:basic>
+            <jpa:basic name="expireDate" attribute-type="java.util.Date" id="_140923927847819">
+                <jpa:temporal>DATE</jpa:temporal>
+            </jpa:basic>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Country" compositePrimaryKeyType="NONE" minimized="false" id="_140923927850020">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927850021">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="code" attribute-type="java.lang.String" id="_140923927850022"/>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927850023"/>
+            <jpa:one-to-many name="plant" target-entity="Plant" mapped-by="country" collection-type="java.util.List" id="_140923927850024"/>
+            <jpa:many-to-many name="currency" target-entity="Currency" collection-type="java.util.List" connected-entity-id="_1409239279372136" id="_140923927850125"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Event" compositePrimaryKeyType="NONE" minimized="false" id="_140923927852126">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927852227">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927852228"/>
+            <jpa:basic name="description" attribute-type="java.lang.String" id="_140923927852229"/>
+            <jpa:basic name="eventTime" attribute-type="java.sql.Time" id="_140923927852230">
+                <jpa:temporal>TIMESTAMP</jpa:temporal>
+            </jpa:basic>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Log" compositePrimaryKeyType="NONE" minimized="false" id="_140923927854031">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927854032">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="entityName" attribute-type="java.lang.String" id="_140923927854033"/>
+            <jpa:basic name="entityId" attribute-type="long" id="_140923927854034"/>
+            <jpa:basic name="userAction" attribute-type="java.lang.String" id="_140923927854035"/>
+            <jpa:basic name="logTime" attribute-type="java.sql.Time" id="_140923927854036">
+                <jpa:temporal>TIMESTAMP</jpa:temporal>
+            </jpa:basic>
+            <jpa:basic name="changeMessage" attribute-type="java.lang.String" id="_140923927854037"/>
+            <jpa:many-to-one name="staff" target-entity="Staff" primaryKey="false" connected-entity-id="_140923927870965" id="_140923927854038"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Member" compositePrimaryKeyType="NONE" minimized="false" id="_140923927856339">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927856340">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="tier" attribute-type="java.lang.String" id="_140923927856341"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Message" compositePrimaryKeyType="NONE" minimized="false" id="_140923927858542">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927858543">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="content" attribute-type="java.lang.String" id="_140923927858544"/>
+            <jpa:basic name="msgTime" attribute-type="java.sql.Time" id="_140923927858545">
+                <jpa:temporal>TIMESTAMP</jpa:temporal>
+            </jpa:basic>
+            <jpa:many-to-one name="thread" target-entity="Thread" primaryKey="false" connected-entity-id="_140923927882790" connected-attribute-id="_140923927882794" id="_140923927858546"/>
+            <jpa:many-to-one name="staff" target-entity="Staff" primaryKey="false" connected-entity-id="_140923927870965" id="_140923927858547"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Notification" compositePrimaryKeyType="NONE" minimized="false" id="_140923927860648">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927860752">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="content" attribute-type="java.lang.String" id="_140923927860749"/>
+            <jpa:basic name="link" attribute-type="java.lang.String" id="_140923927860750"/>
+            <jpa:basic name="linkText" attribute-type="java.lang.String" id="_140923927860751"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Preference" compositePrimaryKeyType="NONE" minimized="false" id="_140923927863653">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927863654">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:one-to-one name="staff" target-entity="Staff" mapped-by="preference" connected-entity-id="_140923927870965" connected-attribute-id="_140923927870979" id="_140923927863655"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Privilege" compositePrimaryKeyType="NONE" minimized="false" id="_140923927866156">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927866157">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927866158"/>
+            <jpa:many-to-many name="roles" target-entity="Role" collection-type="java.util.List" connected-entity-id="_140923927868660" connected-attribute-id="_140923927868664" id="_140923927866159"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Role" compositePrimaryKeyType="NONE" minimized="false" id="_140923927868660">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927868661">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927868662"/>
+            <jpa:many-to-many name="staffs" target-entity="Staff" collection-type="java.util.List" connected-entity-id="_140923927870965" connected-attribute-id="_140923927870978" id="_140923927868663"/>
+            <jpa:many-to-many name="privileges" target-entity="Privilege" mapped-by="roles" collection-type="java.util.List" connected-entity-id="_140923927866156" connected-attribute-id="_140923927866159" id="_140923927868664"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Staff" compositePrimaryKeyType="NONE" minimized="false" id="_140923927870965">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927870966">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="username" attribute-type="java.lang.String" id="_140923927870967">
+                <jpa:column unique="true"/>
+            </jpa:basic>
+            <jpa:basic name="password" attribute-type="java.lang.String" id="_140923927870968"/>
+            <jpa:basic name="salt" attribute-type="java.lang.String" id="_140923927870969"/>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927870970"/>
+            <jpa:basic name="emailAddress" attribute-type="java.lang.String" id="_140923927870971">
+                <jpa:column unique="true"/>
+            </jpa:basic>
+            <jpa:basic name="forgottenPasswordCode" attribute-type="java.lang.String" id="_140923927870972"/>
+            <jpa:basic name="lastLogon" attribute-type="java.util.Date" id="_140923927870973">
+                <jpa:temporal>DATE</jpa:temporal>
+            </jpa:basic>
+            <jpa:many-to-one name="store" target-entity="Store" primaryKey="false" connected-entity-id="_140923927875483" connected-attribute-id="_140923927875486" id="_140923927870977"/>
+            <jpa:one-to-many name="todoList" target-entity="Todo" mapped-by="staff" collection-type="java.util.List" id="_140923927870974"/>
+            <jpa:one-to-many name="inbox" target-entity="Thread" mapped-by="recipient" collection-type="java.util.List" connected-entity-id="_140923927882790" connected-attribute-id="_140923927882793" id="_140923927870975"/>
+            <jpa:one-to-many name="outbox" target-entity="Thread" mapped-by="sender" collection-type="java.util.List" connected-entity-id="_140923927882790" connected-attribute-id="_140923927882792" id="_140923927870976"/>
+            <jpa:one-to-many name="notifications" target-entity="Notification" collection-type="java.util.List" connected-entity-id="_140923927860648" id="_140923927870980"/>
+            <jpa:one-to-one name="preference" target-entity="Preference" connected-entity-id="_140923927863653" connected-attribute-id="_140923927863655" id="_140923927870979"/>
+            <jpa:many-to-many name="roles" target-entity="Role" mapped-by="staffs" collection-type="java.util.List" connected-entity-id="_140923927868660" connected-attribute-id="_140923927868663" id="_140923927870978"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Plant" compositePrimaryKeyType="NONE" minimized="false" id="_140923927875381">
+        <jpa:inheritance strategy="SINGLE_TABLE"/>
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927875482">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Store" compositePrimaryKeyType="NONE" superclass="Plant" superclassId="_140923927875381" minimized="false" id="_140923927875483">
+        <jpa:attributes>
+            <jpa:basic name="code" attribute-type="java.lang.String" id="_140923927875484"/>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_140923927875485"/>
+            <jpa:many-to-one name="country" target-entity="Country" primaryKey="false" connected-entity-id="_140923927850020" id="_140923927875487"/>
+            <jpa:one-to-many name="employees" target-entity="Staff" mapped-by="store" collection-type="java.util.List" connected-entity-id="_140923927870965" connected-attribute-id="_140923927870977" id="_140923927875486"/>
+            <jpa:one-to-many name="goodsIssuedDocument" target-entity="GoodsIssuedDocument" mapped-by="store" collection-type="java.util.List" id="_140923927875488"/>
+            <jpa:one-to-many name="monthlyStockSupplyReqs" target-entity="MonthlyStockSupplyReq" mapped-by="store" collection-type="java.util.List" id="_140923927875489"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Thread" compositePrimaryKeyType="NONE" minimized="false" id="_140923927882790">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927882791">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:many-to-one name="sender" target-entity="Staff" primaryKey="false" connected-entity-id="_140923927870965" connected-attribute-id="_140923927870976" id="_140923927882792"/>
+            <jpa:many-to-one name="recipient" target-entity="Staff" primaryKey="false" connected-entity-id="_140923927870965" connected-attribute-id="_140923927870975" id="_140923927882793"/>
+            <jpa:one-to-many name="messages" target-entity="Message" mapped-by="thread" collection-type="java.util.List" connected-entity-id="_140923927858542" connected-attribute-id="_140923927858546" id="_140923927882794"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Todo" compositePrimaryKeyType="NONE" minimized="false" id="_140923927884895">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927884896">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="description" attribute-type="java.lang.String" id="_140923927884897"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="BOM" compositePrimaryKeyType="NONE" minimized="false" id="_140923927887898">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_140923927887899">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="BOMDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239278910100">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239278910101">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="GoodsIssuedDocument" compositePrimaryKeyType="NONE" minimized="false" id="_1409239278944102">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239278944103">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="GoodsIssuedDocumentDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239278978104">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239278978105">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="GoodsReceiptDocument" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279033106">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279033107">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:one-to-one name="receiveFrom" target-entity="PurchaseOrder" mapped-by="goodsReceiptDocument" connected-entity-id="_1409239279244125" connected-attribute-id="_1409239279244130" id="_1409239279033108"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="GoodsReceiptDocumentDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279066109">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279066110">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:many-to-one name="goodsReceiptDocument" target-entity="GoodsReceiptDocument" primaryKey="false" connected-entity-id="_1409239279033106" id="_1409239279066111"/>
+            <jpa:many-to-one name="receivedStock" target-entity="Stock" primaryKey="false" connected-entity-id="_1409239279160115" id="_1409239279066112"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="ManufacturingFacility" compositePrimaryKeyType="NONE" superclass="Plant" superclassId="_140923927875381" minimized="false" id="_1409239279110113">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279110114">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Stock" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279160115">
+        <jpa:inheritance strategy="SINGLE_TABLE"/>
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279160116">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="ProcuredStock" compositePrimaryKeyType="NONE" superclass="Stock" superclassId="_1409239279160115" minimized="false" id="_1409239279160117">
+        <jpa:inheritance strategy="SINGLE_TABLE"/>
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279160118">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Material" compositePrimaryKeyType="NONE" superclass="ProcuredStock" superclassId="_1409239279160117" minimized="false" id="_1409239279160119">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279160120">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="MonthlyProductionPlan" compositePrimaryKeyType="IDCLASS" compositePrimaryKeyClass="MonthlyProductionPlanPK" minimized="false" id="_1409239279185121">
+        <jpa:id-class class="MonthlyProductionPlanPK"/>
+        <jpa:attributes/>
+    </jpa:entity>
+    <jpa:entity class="MonthlyStockSupplyReq" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279204122">
+        <jpa:attributes/>
+    </jpa:entity>
+    <jpa:entity class="ProductionOrder" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279225123">
+        <jpa:attributes>
+            <jpa:id name="batchNo" attribute-type="java.lang.Long" id="_1409239279225124">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="PurchaseOrder" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279244125">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279244126">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:many-to-one name="shipsTo" target-entity="Plant" primaryKey="false" connected-entity-id="_140923927875381" id="_1409239279244127"/>
+            <jpa:one-to-many name="purchaseOrderDetails" target-entity="PurchaseOrderDetail" mapped-by="purchaseOrder" collection-type="java.util.List" id="_1409239279244128"/>
+            <jpa:one-to-many name="supplier" target-entity="Supplier" mapped-by="purchaseOrders" collection-type="FW.IslandFurniture.Entities.STORE.Supplier" id="_1409239279244129"/>
+            <jpa:one-to-one name="goodsReceiptDocument" target-entity="GoodsReceiptDocument" connected-entity-id="_1409239279033106" connected-attribute-id="_1409239279033108" id="_1409239279244130"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="PurchaseOrderDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279263131">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279263132">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="WeeklyMRPRecord" compositePrimaryKeyType="IDCLASS" compositePrimaryKeyClass="WeeklyMRPRecordPK" minimized="false" id="_1409239279283133">
+        <jpa:id-class class="WeeklyMRPRecordPK"/>
+        <jpa:attributes/>
+    </jpa:entity>
+    <jpa:entity class="WeeklyProductionPlan" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279304134">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279304135">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Currency" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279372136">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279372137">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+            <jpa:basic name="name" attribute-type="java.lang.String" id="_1409239279372138"/>
+            <jpa:basic name="exchangeRate" attribute-type="double" id="_1409239279372139"/>
+            <jpa:basic name="effectiveDate" attribute-type="java.util.Date" id="_1409239279372140">
+                <jpa:temporal>DATE</jpa:temporal>
+            </jpa:basic>
+            <jpa:many-to-many name="countries" target-entity="Country" collection-type="java.util.List" connected-entity-id="_140923927850020" id="_1409239279372141"/>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="DailyIngredientSupplyReq" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279393142">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279393143">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Dish" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279414144">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279414145">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="FurnitureModel" compositePrimaryKeyType="NONE" superclass="Stock" superclassId="_1409239279160115" minimized="false" id="_1409239279433146">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279433147">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Transaction" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279456148">
+        <jpa:inheritance strategy="TABLE_PER_CLASS"/>
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279456149">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="FurnitureTransaction" compositePrimaryKeyType="NONE" superclass="Transaction" superclassId="_1409239279456148" minimized="false" id="_1409239279457150">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279457151">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="TransactionDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279478152">
+        <jpa:inheritance strategy="SINGLE_TABLE"/>
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279478153">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="FurnitureTransactionDetail" compositePrimaryKeyType="NONE" superclass="TransactionDetail" superclassId="_1409239279478152" minimized="false" id="_1409239279478154">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279478155">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Ingredient" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279499156">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279499157">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Menu" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279527158">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279527159">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="MenuItem" compositePrimaryKeyType="NONE" superclass="Stock" superclassId="_1409239279160115" minimized="false" id="_1409239279546160">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279546161">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantGoodReceiptDocument" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279605162">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279605163">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantGoodsReceiptDocumentDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279632164">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279632165">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantPurchaseOrder" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279653166">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279653167">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantPurchaseOrderDetail" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279674168">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279674169">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantTransaction" compositePrimaryKeyType="NONE" superclass="Transaction" superclassId="_1409239279456148" minimized="false" id="_1409239279692170">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279692171">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RestaurantTransactionDetail" compositePrimaryKeyType="NONE" superclass="TransactionDetail" superclassId="_1409239279478152" minimized="false" id="_1409239279711172">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279711173">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RetailItem" compositePrimaryKeyType="NONE" superclass="ProcuredStock" superclassId="_1409239279160117" minimized="false" id="_1409239279734174">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279734175">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RetailItemTransaction" compositePrimaryKeyType="NONE" superclass="Transaction" superclassId="_1409239279456148" minimized="false" id="_1409239279761176">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279761177">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="RetailItemTransactionDetail" compositePrimaryKeyType="NONE" superclass="TransactionDetail" superclassId="_1409239279478152" minimized="false" id="_1409239279786178">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279786179">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="StockUnit" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279831180">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279831181">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="StorageLocation" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279852182">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279852183">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="Supplier" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279878184">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279878185">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:entity class="WeeklyIngredientSupplyReq" compositePrimaryKeyType="NONE" minimized="false" id="_1409239279960186">
+        <jpa:attributes>
+            <jpa:id name="id" attribute-type="java.lang.Long" id="_1409239279960187">
+                <jpa:generated-value strategy="AUTO"/>
+            </jpa:id>
+        </jpa:attributes>
+    </jpa:entity>
+    <jpa:diagram id="_14092392783062">
+        <plane elementRef="_14092392782931" id="_14092392783073_p"/>
+    </jpa:diagram>
+</jpa:entity-mappings>

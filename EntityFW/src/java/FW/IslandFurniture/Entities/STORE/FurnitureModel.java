@@ -37,6 +37,14 @@ public class FurnitureModel extends Stock implements Serializable {
         this.id = id;
     }
 
+    public BOM getBOM() {
+        return BOM;
+    }
+
+    public void setBOM(BOM BOM) {
+        this.BOM = BOM;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

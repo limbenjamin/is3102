@@ -29,8 +29,8 @@ public class RestaurantGoodReceiptDocument implements Serializable {
     @ManyToOne
     private List<Supplier> suppliers;
     
-    @OneToMany(mappedBy = "restaurantgoodreceiptdocuments")
-    private List<RestaurantGoodsReceiptDocumentDetail> restaurantgoodsreceiptdocumentdetails;
+    @OneToMany(mappedBy="restaurantGoodReceiptDocument")
+    private List<RestaurantGoodsReceiptDocumentDetail> restaurantGoodsReceiptDocumentDetails;
     
     @ManyToOne
     private Ingredient ingredient;
@@ -42,6 +42,30 @@ public class RestaurantGoodReceiptDocument implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
+    }
+
+    public List<RestaurantGoodsReceiptDocumentDetail> getRestaurantGoodsReceiptDocumentDetails() {
+        return restaurantGoodsReceiptDocumentDetails;
+    }
+
+    public void setRestaurantGoodsReceiptDocumentDetails(List<RestaurantGoodsReceiptDocumentDetail> restaurantGoodsReceiptDocumentDetails) {
+        this.restaurantGoodsReceiptDocumentDetails = restaurantGoodsReceiptDocumentDetails;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override

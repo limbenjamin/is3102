@@ -6,8 +6,8 @@
 
 package FW.IslandFurniture.Entities.INFRA;
 
+import FW.IslandFurniture.Entities.STORE.Plant;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -48,7 +48,7 @@ public class Staff implements Serializable {
     @OneToMany(mappedBy="sender")
     private List<Thread> outbox;
     @ManyToOne
-    private Store store;
+    private Plant plant;
     @ManyToMany(mappedBy="staffs")
     private List<Role> roles;
     @OneToOne
@@ -146,12 +146,12 @@ public class Staff implements Serializable {
         this.outbox = outbox;
     }
 
-    public Store getStore() {
-        return store;
+    public Plant getPlant() {
+        return plant;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
     public List<Role> getRoles() {

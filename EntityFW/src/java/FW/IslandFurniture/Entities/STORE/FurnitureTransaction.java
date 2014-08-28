@@ -24,8 +24,7 @@ public class FurnitureTransaction extends Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @OneToMany(mappedBy = "furnitureTransaction")
+    @OneToMany(mappedBy="furnitureTransaction")
     private List<FurnitureTransactionDetail> furnitureTransactionDetails;
 
     @Override
@@ -36,6 +35,14 @@ public class FurnitureTransaction extends Transaction implements Serializable {
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<FurnitureTransactionDetail> getFurnitureTransactionDetails() {
+        return furnitureTransactionDetails;
+    }
+
+    public void setFurnitureTransactionDetails(List<FurnitureTransactionDetail> furnitureTransactionDetails) {
+        this.furnitureTransactionDetails = furnitureTransactionDetails;
     }
 
     @Override

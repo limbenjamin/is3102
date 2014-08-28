@@ -40,6 +40,22 @@ public class Dish implements Serializable {
         this.id = id;
     }
 
+    public List<MenuItem> getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(List<MenuItem> menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
