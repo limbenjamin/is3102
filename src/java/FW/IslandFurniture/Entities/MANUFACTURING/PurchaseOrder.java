@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.MANUFACTURING;
 
-import FW.IslandFurniture.Entities.INFRA.Store;
+import FW.IslandFurniture.Entities.STORE.Plant;
 import FW.IslandFurniture.Entities.STORE.Supplier;
 import java.io.Serializable;
 import java.util.List;
@@ -30,18 +30,13 @@ public class PurchaseOrder implements Serializable {
     private Long id;
     
     @ManyToOne
-    private ManufacturingFacility manufacturingFacility;
-    
-    @ManyToOne
-    private Store shipsTo;
+    private Plant shipsTo;
     
     @OneToMany(mappedBy="purchaseOrder")
     private List<PurchaseOrderDetail> purchaseOrderDetails;
     
     @OneToMany(mappedBy="purchaseOrders",targetEntity =Supplier.class)
     private Supplier supplier;
-    
-
     
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
@@ -54,27 +49,11 @@ public class PurchaseOrder implements Serializable {
         this.id = id;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
-    public ManufacturingFacility getManufacturingFacility() {
-        return manufacturingFacility;
-    }
-
-    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
-        this.manufacturingFacility = manufacturingFacility;
-    }
-
-    public Store getShipsTo() {
+    public Plant getShipsTo() {
         return shipsTo;
     }
 
-    public void setShipsTo(Store shipsTo) {
+    public void setShipsTo(Plant shipsTo) {
         this.shipsTo = shipsTo;
     }
 
@@ -84,6 +63,14 @@ public class PurchaseOrder implements Serializable {
 
     public void setPurchaseOrderDetails(List<PurchaseOrderDetail> purchaseOrderDetails) {
         this.purchaseOrderDetails = purchaseOrderDetails;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {
