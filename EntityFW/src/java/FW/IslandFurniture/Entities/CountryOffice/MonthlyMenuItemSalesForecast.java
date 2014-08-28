@@ -6,12 +6,15 @@
 
 package FW.IslandFurniture.Entities.CountryOffice;
 
+import FW.IslandFurniture.Entities.Enums.Month;
+import FW.IslandFurniture.Entities.Keys.MonthlyMenuItemSalesForecastPK;
 import FW.IslandFurniture.Entities.STORE.MenuItem;
+import FW.IslandFurniture.Entities.STORE.Store;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
 /**
@@ -19,21 +22,42 @@ import javax.persistence.ManyToOne;
  * @author James
  */
 @Entity
+@IdClass(MonthlyMenuItemSalesForecastPK.class)
 public class MonthlyMenuItemSalesForecast implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
+    private Month month;
+    @Id
+    private Integer year;
+    @Id
+    @ManyToOne
+    private Store store;
+    @Id
     @ManyToOne
     private MenuItem menuItem;
 
-    public Long getId() {
-        return id;
+    public Month getMonth() {
+        return month;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMonth(Month month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public MenuItem getMenuItem() {
@@ -46,8 +70,11 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.month);
+        hash = 37 * hash + Objects.hashCode(this.year);
+        hash = 37 * hash + Objects.hashCode(this.store);
+        hash = 37 * hash + Objects.hashCode(this.menuItem);
         return hash;
     }
 
@@ -58,15 +85,12 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
             return false;
         }
         MonthlyMenuItemSalesForecast other = (MonthlyMenuItemSalesForecast) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.store.equals(other.store) && this.menuItem.equals(other.menuItem);
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.MonthlyMenuItemSalesForecast[ id=" + id + " ]";
+        return "FW.IslandFurniture.Entities.CountryOffice.MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.store.getId() + this.menuItem.getId() + " ]";
     }
     
 }

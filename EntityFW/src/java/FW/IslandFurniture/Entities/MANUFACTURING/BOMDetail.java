@@ -36,11 +36,11 @@ public class BOMDetail implements Serializable {
         this.id = id;
     }
 
-    public BOM getBOM() {
+    public BOM getBom() {
         return bom;
     }
 
-    public void setBOM(BOM bom) {
+    public void setBom(BOM bom) {
         this.bom = bom;
     }
 

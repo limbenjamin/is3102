@@ -6,12 +6,16 @@
 
 package FW.IslandFurniture.Entities.MANUFACTURING;
 
+import FW.IslandFurniture.Entities.GLOBALHQ.ProcurementContractDetail;
+import FW.IslandFurniture.Entities.GLOBALHQ.StockSupplied;
 import FW.IslandFurniture.Entities.STORE.Plant;
+import FW.IslandFurniture.Entities.STORE.Stock;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -20,6 +24,36 @@ import javax.persistence.Id;
 @Entity
 public class ManufacturingFacility extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
+    @OneToOne(mappedBy="supplierFor")
+    private ProcurementContractDetail suppliedBy;
+    @ManyToMany
+    private List<Stock> produces;
+    @OneToMany(mappedBy="manufacturingFacility")
+    private List<StockSupplied> supplyingWhatTo;
+
+    public ProcurementContractDetail getSuppliedBy() {
+        return suppliedBy;
+    }
+
+    public void setSuppliedBy(ProcurementContractDetail suppliedBy) {
+        this.suppliedBy = suppliedBy;
+    }
+
+    public List<Stock> getProduces() {
+        return produces;
+    }
+
+    public void setProduces(List<Stock> produces) {
+        this.produces = produces;
+    }
+
+    public List<StockSupplied> getSupplyingWhatTo() {
+        return supplyingWhatTo;
+    }
+
+    public void setSupplyingWhatTo(List<StockSupplied> supplyingWhatTo) {
+        this.supplyingWhatTo = supplyingWhatTo;
+    }
 
     @Override
     public int hashCode() {

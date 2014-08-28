@@ -4,29 +4,43 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.STORE;
+package FW.IslandFurniture.Entities.GLOBALHQ;
 
-import FW.IslandFurniture.Entities.MANUFACTURING.BOM;
+import FW.IslandFurniture.Entities.CountryOffice.Country;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author asus
  */
 @Entity
-public class FurnitureModel extends Stock implements Serializable {
+public class PriceInCountry implements Serializable {
     private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @OneToOne
-    private BOM bom;
+    private Country country;
 
-    public BOM getBom() {
-        return bom;
+    public Long getId() {
+        return id;
     }
 
-    public void setBom(BOM bom) {
-        this.bom = bom;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
@@ -39,10 +53,10 @@ public class FurnitureModel extends Stock implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FurnitureModel)) {
+        if (!(object instanceof PriceInCountry)) {
             return false;
         }
-        FurnitureModel other = (FurnitureModel) object;
+        PriceInCountry other = (PriceInCountry) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -51,7 +65,7 @@ public class FurnitureModel extends Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.FurnitureModel[ id=" + id + " ]";
+        return "FW.IslandFurniture.Entities.GLOBALHQ.PriceInCountry[ id=" + id + " ]";
     }
     
 }

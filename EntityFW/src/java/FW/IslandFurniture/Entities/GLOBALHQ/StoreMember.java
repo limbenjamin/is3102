@@ -4,15 +4,18 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.INFRA;
+package FW.IslandFurniture.Entities.GLOBALHQ;
 
+import FW.IslandFurniture.Entities.CountryOffice.Country;
 import FW.IslandFurniture.Entities.CountryOffice.MembershipTier;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -24,9 +27,14 @@ public class StoreMember implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
     private MembershipTier membershipTier;
+    @ManyToOne
+    private Country country;
+    @OneToMany
+    private List<Cart> carts;
+    @OneToMany(mappedBy="member")
+    private List<Feedback> feedbacks;
     
     public Long getId() {
         return id;
@@ -42,6 +50,30 @@ public class StoreMember implements Serializable {
 
     public void setMembershipTier(MembershipTier membershipTier) {
         this.membershipTier = membershipTier;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public List<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(List<Cart> carts) {
+        this.carts = carts;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     @Override

@@ -7,12 +7,15 @@
 package FW.IslandFurniture.Entities.STORE;
 
 
+import FW.IslandFurniture.Entities.CountryOffice.MonthlyMenuItemSalesForecast;
+import FW.IslandFurniture.Entities.GLOBALHQ.StockSupplied;
 import FW.IslandFurniture.Entities.INFRA.Staff;
 import FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocument;
 import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -30,6 +33,12 @@ public class Store extends Plant implements Serializable {
     private List<GoodsIssuedDocument> goodsIssuedDocument;
     @OneToMany(mappedBy="store")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    @OneToMany(mappedBy="store")
+    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts;
+    @ManyToMany
+    private List<Stock> sells;
+    @OneToMany(mappedBy="store")
+    private List<StockSupplied> suppliedWithFrom;
 
     public String getCode() {
         return code;
@@ -69,6 +78,30 @@ public class Store extends Plant implements Serializable {
 
     public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
         this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
+
+    public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
+        return monthlyMenuItemSalesForecasts;
+    }
+
+    public void setMonthlyMenuItemSalesForecasts(List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts) {
+        this.monthlyMenuItemSalesForecasts = monthlyMenuItemSalesForecasts;
+    }
+
+    public List<Stock> getSells() {
+        return sells;
+    }
+
+    public void setSells(List<Stock> sells) {
+        this.sells = sells;
+    }
+
+    public List<StockSupplied> getSuppliedWithFrom() {
+        return suppliedWithFrom;
+    }
+
+    public void setSuppliedWithFrom(List<StockSupplied> suppliedWithFrom) {
+        this.suppliedWithFrom = suppliedWithFrom;
     }
 
     @Override

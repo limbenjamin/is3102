@@ -7,6 +7,8 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import FW.IslandFurniture.Entities.CountryOffice.PlantStockInventory;
+import FW.IslandFurniture.Entities.GLOBALHQ.PriceInCountry;
+import FW.IslandFurniture.Entities.MANUFACTURING.ManufacturingFacility;
 import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -29,15 +32,18 @@ public abstract class Stock implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    
     @OneToMany(mappedBy="stock")
     protected List<StockUnit> stockUnit;
-    
     @OneToMany(mappedBy="stock")
     protected List<PlantStockInventory> planStockInventories;
-    
     @OneToMany(mappedBy="stock")
     protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    @OneToMany
+    protected List<PriceInCountry> priceInCountry;
+    @ManyToMany(mappedBy="stocks")
+    protected List<ManufacturingFacility> producedBy;
+    @ManyToMany(mappedBy="stocks")
+    protected List<Store> soldBy;
     
     public Long getId() {
         return id;
@@ -69,6 +75,30 @@ public abstract class Stock implements Serializable {
 
     public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
         this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
+
+    public List<PriceInCountry> getPriceInCountry() {
+        return priceInCountry;
+    }
+
+    public void setPriceInCountry(List<PriceInCountry> priceInCountry) {
+        this.priceInCountry = priceInCountry;
+    }
+
+    public List<ManufacturingFacility> getProducedBy() {
+        return producedBy;
+    }
+
+    public void setProducedBy(List<ManufacturingFacility> producedBy) {
+        this.producedBy = producedBy;
+    }
+
+    public List<Store> getSoldBy() {
+        return soldBy;
+    }
+
+    public void setSoldBy(List<Store> soldBy) {
+        this.soldBy = soldBy;
     }
 
     @Override

@@ -4,30 +4,19 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.STORE;
+package FW.IslandFurniture.Entities.GLOBALHQ;
 
-import FW.IslandFurniture.Entities.MANUFACTURING.BOM;
+import FW.IslandFurniture.Entities.STORE.Plant;
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author asus
  */
 @Entity
-public class FurnitureModel extends Stock implements Serializable {
+public class GlobalHQ extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
-    @OneToOne
-    private BOM bom;
-
-    public BOM getBom() {
-        return bom;
-    }
-
-    public void setBom(BOM bom) {
-        this.bom = bom;
-    }
 
     @Override
     public int hashCode() {
@@ -39,10 +28,10 @@ public class FurnitureModel extends Stock implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FurnitureModel)) {
+        if (!(object instanceof GlobalHQ)) {
             return false;
         }
-        FurnitureModel other = (FurnitureModel) object;
+        GlobalHQ other = (GlobalHQ) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -51,7 +40,7 @@ public class FurnitureModel extends Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.FurnitureModel[ id=" + id + " ]";
+        return "FW.IslandFurniture.Entities.GLOBALHQ.GlobalHQ[ id=" + id + " ]";
     }
     
 }

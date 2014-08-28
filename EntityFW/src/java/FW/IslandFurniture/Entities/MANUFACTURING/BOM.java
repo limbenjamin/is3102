@@ -25,7 +25,7 @@ public class BOM implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(mappedBy="bom")
-    private List<BOMDetail> BOMDetails;
+    private List<BOMDetail> bomDetails;
 
     public Long getId() {
         return id;
@@ -35,12 +35,12 @@ public class BOM implements Serializable {
         this.id = id;
     }
 
-    public List<BOMDetail> getBOMDetails() {
-        return BOMDetails;
+    public List<BOMDetail> getBomDetails() {
+        return bomDetails;
     }
 
-    public void setBOMDetails(List<BOMDetail> BOMDetails) {
-        this.BOMDetails = BOMDetails;
+    public void setBomDetails(List<BOMDetail> bomDetails) {
+        this.bomDetails = bomDetails;
     }
 
     @Override

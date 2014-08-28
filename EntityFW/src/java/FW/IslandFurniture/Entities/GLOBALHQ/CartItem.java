@@ -4,33 +4,32 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.INFRA;
+package FW.IslandFurniture.Entities.GLOBALHQ;
 
+import FW.IslandFurniture.Entities.STORE.FurnitureModel;
 import java.io.Serializable;
-import java.sql.Time;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
+import javax.persistence.OneToOne;
 
 /**
  *
- * @author Benjamin
+ * @author asus
  */
 @Entity
-public class Event implements Serializable {
+public class CartItem implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
-    private String description;
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Time eventTime;
+    private Integer qty;
     @ManyToOne
-    private Staff creator;
+    private Cart cart;
+    @OneToOne
+    private FurnitureModel furnitureModel;
 
     public Long getId() {
         return id;
@@ -40,37 +39,30 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getQty() {
+        return qty;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
-    public String getDescription() {
-        return description;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
-    public Time getEventTime() {
-        return eventTime;
+    public FurnitureModel getFurnitureModel() {
+        return furnitureModel;
     }
 
-    public void setEventTime(Time eventTime) {
-        this.eventTime = eventTime;
+    public void setFurnitureModel(FurnitureModel furnitureModel) {
+        this.furnitureModel = furnitureModel;
     }
 
-    public Staff getCreator() {
-        return creator;
-    }
-
-    public void setCreator(Staff creator) {
-        this.creator = creator;
-    }
 
     @Override
     public int hashCode() {
@@ -82,10 +74,10 @@ public class Event implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Event)) {
+        if (!(object instanceof CartItem)) {
             return false;
         }
-        Event other = (Event) object;
+        CartItem other = (CartItem) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -94,7 +86,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Event[ id=" + id + " ]";
+        return "FW.IslandFurniture.Entities.GLOBALHQ.CartItem[ id=" + id + " ]";
     }
     
 }

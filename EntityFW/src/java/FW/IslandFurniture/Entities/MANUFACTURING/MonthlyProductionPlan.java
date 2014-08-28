@@ -11,6 +11,7 @@ import FW.IslandFurniture.Entities.Keys.MonthlyProductionPlanPK;
 import FW.IslandFurniture.Entities.STORE.FurnitureModel;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -71,8 +72,10 @@ public class MonthlyProductionPlan implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += ((furnitureModel != null && month != null && year != null) ? (furnitureModel.hashCode() ^ month.hashCode() ^ year.hashCode()) : 0);
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.furnitureModel);
+        hash = 53 * hash + Objects.hashCode(this.month);
+        hash = 53 * hash + Objects.hashCode(this.year);
         return hash;
     }
 

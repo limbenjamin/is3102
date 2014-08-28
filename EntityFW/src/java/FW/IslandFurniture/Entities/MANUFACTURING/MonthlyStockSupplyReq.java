@@ -12,6 +12,7 @@ import FW.IslandFurniture.Entities.Keys.MonthlyStockSupplyReqPK;
 import FW.IslandFurniture.Entities.STORE.Stock;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -130,8 +131,11 @@ public class MonthlyStockSupplyReq implements Serializable {
     }
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += ((stock != null && store != null && month != null && year != null) ? (stock.hashCode() ^ store.hashCode() ^ month.hashCode() ^ year.hashCode()) : 0);
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.stock);
+        hash = 97 * hash + Objects.hashCode(this.store);
+        hash = 97 * hash + Objects.hashCode(this.month);
+        hash = 97 * hash + Objects.hashCode(this.year);
         return hash;
     }
 
@@ -142,10 +146,7 @@ public class MonthlyStockSupplyReq implements Serializable {
             return false;
         }
         MonthlyStockSupplyReq other = (MonthlyStockSupplyReq) object;
-        if (this.stock.equals(other.stock) && this.store.equals(other.store) && this.month == other.month && this.year == other.year) {
-            return false;
-        }
-        return true;
+        return this.stock.equals(other.stock) && this.store.equals(other.store) && this.month.equals(other.month) && this.year.equals(other.year);
     }
 
     @Override

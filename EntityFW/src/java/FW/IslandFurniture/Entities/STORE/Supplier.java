@@ -6,6 +6,8 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
+import FW.IslandFurniture.Entities.CountryOffice.Country;
+import FW.IslandFurniture.Entities.GLOBALHQ.ProcurementContractDetail;
 import FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder;
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -32,11 +35,13 @@ public class Supplier implements Serializable {
     @ManyToOne
     private List<PurchaseOrder> purchaseOrders;
     @ManyToOne
-    private Currency currency;
+    private Country country;
     @OneToMany(mappedBy="supplier")
     private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
     @ManyToMany(mappedBy="suppliers")
     private List<ProcuredStock> procuredStocks;
+    @OneToOne(mappedBy="supplier")
+    private ProcurementContractDetail procurementContractDetail;
 
     public Long getId() {
         return id;
@@ -62,12 +67,12 @@ public class Supplier implements Serializable {
         this.purchaseOrders = purchaseOrders;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     public List<RestaurantPurchaseOrder> getRestaurantPurchaseOrders() {
@@ -84,6 +89,14 @@ public class Supplier implements Serializable {
 
     public void setProcuredStocks(List<ProcuredStock> procuredStocks) {
         this.procuredStocks = procuredStocks;
+    }
+
+    public ProcurementContractDetail getProcurementContractDetail() {
+        return procurementContractDetail;
+    }
+
+    public void setProcurementContractDetail(ProcurementContractDetail procurementContractDetail) {
+        this.procurementContractDetail = procurementContractDetail;
     }
 
     @Override

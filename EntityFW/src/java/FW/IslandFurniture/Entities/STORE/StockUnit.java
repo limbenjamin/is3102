@@ -23,11 +23,10 @@ public class StockUnit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private long qty = 0l;
-    
+    private Long batchNo;
+    private Long qty = 0l;
     @ManyToOne
     private Stock stock;
-    
     @ManyToOne
     private StorageLocation location;
 
@@ -39,11 +38,19 @@ public class StockUnit implements Serializable {
         this.id = id;
     }
 
-    public long getQty() {
+    public Long getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(Long batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public Long getQty() {
         return qty;
     }
 
-    public void setQty(long qty) {
+    public void setQty(Long qty) {
         this.qty = qty;
     }
 

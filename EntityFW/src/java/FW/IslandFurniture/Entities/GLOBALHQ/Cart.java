@@ -4,39 +4,33 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.STORE;
+package FW.IslandFurniture.Entities.GLOBALHQ;
 
-import FW.IslandFurniture.Entities.GLOBALHQ.StoreMember;
-import FW.IslandFurniture.Entities.Keys.TransactionPK;
+import FW.IslandFurniture.Entities.STORE.Store;
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
- * @author James
+ * @author asus
  */
 @Entity
-@IdClass(TransactionPK.class)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Transaction implements Serializable {
+public class Cart implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
-    @Id
+    private Long id;
+    @OneToMany(mappedBy="cart")
+    private List<CartItem> cartItems;
     @ManyToOne
-    protected Store store;
-    @ManyToOne
-    protected StoreMember member;
-    
+    private Store store;
+
     public Long getId() {
         return id;
     }
@@ -45,12 +39,12 @@ public abstract class Transaction implements Serializable {
         this.id = id;
     }
 
-    public StoreMember getMember() {
-        return member;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
-    public void setMember(StoreMember member) {
-        this.member = member;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public Store getStore() {
@@ -63,25 +57,27 @@ public abstract class Transaction implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id);
-        hash = 71 * hash + Objects.hashCode(this.store);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Transaction)) {
+        if (!(object instanceof Cart)) {
             return false;
         }
-        Transaction other = (Transaction) object;
-        return this.id.equals(other.id) && this.store.equals(other.store);
+        Cart other = (Cart) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Transaction[ id=" + this.getStore().getId() + ", " + id + " ]";
+        return "FW.IslandFurniture.Entities.GLOBALHQ.Cart[ id=" + id + " ]";
     }
     
 }

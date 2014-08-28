@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.CountryOffice;
 
-import FW.IslandFurniture.Entities.INFRA.StoreMember;
+import FW.IslandFurniture.Entities.GLOBALHQ.StoreMember;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
