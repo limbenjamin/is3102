@@ -3,3 +3,11 @@
 /commonInfrastructure/commonInfrastructure-ejb/nbproject/private/
 /build/
 /dist/
+/nbproject/private/
+/entities-ejb/nbproject/private/
+/entity-ejb/nbproject/private/
+/SupplyChain-client/nbproject/private/
+/SupplyChainClient/nbproject/private/
+/SupplyChainInterface/nbproject/private/
+/SupplyChainLocalInterface/nbproject/private/
+/SupplyChainModule/nbproject/private/
