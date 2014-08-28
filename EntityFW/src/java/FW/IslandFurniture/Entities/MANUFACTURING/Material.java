@@ -10,9 +10,6 @@ import FW.IslandFurniture.Entities.STORE.ProcuredStock;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
@@ -22,21 +19,8 @@ import javax.persistence.OneToMany;
 @Entity
 public class Material extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @OneToMany(mappedBy="material")
     private List<WeeklyMRPRecord> weeklyMRPRecords;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public List<WeeklyMRPRecord> getWeeklyMRPRecords() {
         return weeklyMRPRecords;

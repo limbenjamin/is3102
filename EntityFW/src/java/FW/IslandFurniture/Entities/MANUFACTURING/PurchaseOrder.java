@@ -30,13 +30,10 @@ public class PurchaseOrder implements Serializable {
     private Long id;
     @ManyToOne
     private Plant shipsTo;
-    
     @OneToMany(mappedBy="purchaseOrder")
     private List<PurchaseOrderDetail> purchaseOrderDetails;
-    
     @OneToMany(mappedBy="purchaseOrders")
-    private Supplier supplier;
-    
+    private List<Supplier> suppliers;
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
 
@@ -64,12 +61,12 @@ public class PurchaseOrder implements Serializable {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public List<Supplier> getSuppliers() {
+        return suppliers;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setSuppliers(List<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {

@@ -7,7 +7,7 @@
 package FW.IslandFurniture.Entities.MANUFACTURING;
 
 import FW.IslandFurniture.Entities.Enums.Month;
-import FW.IslandFurniture.Entities.INFRA.Store;
+import FW.IslandFurniture.Entities.STORE.Store;
 import FW.IslandFurniture.Entities.Keys.MonthlyStockSupplyReqPK;
 import FW.IslandFurniture.Entities.STORE.Stock;
 import java.io.Serializable;

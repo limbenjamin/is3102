@@ -24,7 +24,7 @@ public class BOM implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany(mappedBy="BOM")
+    @OneToMany(mappedBy="bom")
     private List<BOMDetail> BOMDetails;
 
     public Long getId() {

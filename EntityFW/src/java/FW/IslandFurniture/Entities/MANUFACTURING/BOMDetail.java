@@ -24,7 +24,7 @@ public class BOMDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    private BOM BOM;
+    private BOM bom;
     @ManyToOne
     private Material material;
 
@@ -37,11 +37,11 @@ public class BOMDetail implements Serializable {
     }
 
     public BOM getBOM() {
-        return BOM;
+        return bom;
     }
 
-    public void setBOM(BOM BOM) {
-        this.BOM = BOM;
+    public void setBOM(BOM bom) {
+        this.bom = bom;
     }
 
     public Material getMaterial() {

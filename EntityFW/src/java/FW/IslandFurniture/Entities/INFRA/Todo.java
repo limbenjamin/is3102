@@ -26,7 +26,7 @@ public class Todo implements Serializable {
     private String description;
     private Boolean status;
     @ManyToOne
-    private Staff Staff;
+    private Staff staff;
 
   public Long getId() {
         return id;
@@ -53,11 +53,11 @@ public class Todo implements Serializable {
     }
 
     public Staff getStaff() {
-        return Staff;
+        return staff;
     }
 
-    public void setStaff(Staff Staff) {
-        this.Staff = Staff;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     @Override

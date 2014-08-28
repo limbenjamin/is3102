@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.MANUFACTURING;
 
-import FW.IslandFurniture.Entities.INFRA.Store;
+import FW.IslandFurniture.Entities.STORE.Store;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;

@@ -20,19 +20,6 @@ import javax.persistence.Id;
 @Entity
 public class ManufacturingFacility extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public int hashCode() {

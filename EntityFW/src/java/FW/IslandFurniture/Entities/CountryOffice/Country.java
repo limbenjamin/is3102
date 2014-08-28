@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.INFRA;
+package FW.IslandFurniture.Entities.CountryOffice;
 
 import FW.IslandFurniture.Entities.STORE.Currency;
 import FW.IslandFurniture.Entities.STORE.Plant; 

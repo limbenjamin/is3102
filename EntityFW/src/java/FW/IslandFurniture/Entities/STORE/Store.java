@@ -4,18 +4,15 @@
  * and open the template in the editor.
  */
 
-package FW.IslandFurniture.Entities.INFRA;
+package FW.IslandFurniture.Entities.STORE;
 
 
+import FW.IslandFurniture.Entities.INFRA.Staff;
 import FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocument;
 import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
-import FW.IslandFurniture.Entities.STORE.Plant;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
@@ -25,9 +22,6 @@ import javax.persistence.OneToMany;
 @Entity
 public class Store extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private String code;
     private String name;
     @OneToMany(mappedBy="store")

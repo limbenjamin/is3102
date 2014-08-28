@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
-import FW.IslandFurniture.Entities.INFRA.Country;
+import FW.IslandFurniture.Entities.CountryOffice.Country;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

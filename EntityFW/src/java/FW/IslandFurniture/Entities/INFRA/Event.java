@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -28,6 +29,8 @@ public class Event implements Serializable {
     private String description;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Time eventTime;
+    @ManyToOne
+    private Staff creator;
 
     public Long getId() {
         return id;

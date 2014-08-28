@@ -7,7 +7,6 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import FW.IslandFurniture.Entities.INFRA.StoreMember;
-import FW.IslandFurniture.Entities.INFRA.Store;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,13 +26,11 @@ public abstract class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
+    protected Long id;
     @ManyToOne
-    private StoreMember member;
-    
+    protected StoreMember member;
     @ManyToOne
-    private Store store;
+    protected Store store;
 
     public Long getId() {
         return id;

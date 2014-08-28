@@ -7,7 +7,7 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import FW.IslandFurniture.Entities.CountryOffice.PlantStockInventory;
-import FW.IslandFurniture.Entities.INFRA.Country;
+import FW.IslandFurniture.Entities.CountryOffice.Country;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;

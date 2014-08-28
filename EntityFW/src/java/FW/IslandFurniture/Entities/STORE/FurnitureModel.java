@@ -9,9 +9,6 @@ package FW.IslandFurniture.Entities.STORE;
 import FW.IslandFurniture.Entities.MANUFACTURING.BOM;
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 /**
@@ -21,28 +18,15 @@ import javax.persistence.OneToOne;
 @Entity
 public class FurnitureModel extends Stock implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @OneToOne
-    private BOM BOM;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private BOM bom;
 
     public BOM getBOM() {
-        return BOM;
+        return bom;
     }
 
-    public void setBOM(BOM BOM) {
-        this.BOM = BOM;
+    public void setBOM(BOM bom) {
+        this.bom = bom;
     }
 
     @Override
