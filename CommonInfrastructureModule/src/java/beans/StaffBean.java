@@ -6,8 +6,7 @@
 
 package beans;
 
-import entities.*;
-import java.security.Principal;
+import FW.IslandFurniture.Entities.INFRA.*;
 import java.util.Date;
 import javax.annotation.*;
 import javax.ejb.*;
@@ -32,7 +31,7 @@ public class StaffBean {
     }
     
     public boolean authenticate(String username, String password){
-        Query query = em.createQuery("FROM Staff s where s.Username=:username");
+        Query query = em.createQuery("FROM Staff s where s.username=:username");
         query.setParameter("username", username);
         try{
             staff = (Staff) query.getSingleResult();
@@ -55,7 +54,8 @@ public class StaffBean {
         log.setEntityName(EntityName);
         log.setEntityId(EntityId);
         log.setUserAction(UserAction);
-        log.setTimestamp(new Date());
+        java.util.Date today = new java.util.Date();
+        log.setLogTime(new java.sql.Time(today.getTime()));
         log.setChangeMessage(ChangeMessage);
         log.setStaff(em.find(Staff.class, StaffId));
         em.persist(log);

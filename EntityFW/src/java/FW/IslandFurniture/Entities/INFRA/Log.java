@@ -8,7 +8,6 @@ package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
 import java.sql.Time;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
