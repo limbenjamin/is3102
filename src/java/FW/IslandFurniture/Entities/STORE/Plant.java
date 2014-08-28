@@ -31,7 +31,7 @@ public abstract class Plant implements Serializable  {
     private Country country;
     
     @OneToMany(mappedBy = "plant")
-    private Transaction transaction;
+    private List<Transaction> transactions;
     
     public Long getId() {
         return id;

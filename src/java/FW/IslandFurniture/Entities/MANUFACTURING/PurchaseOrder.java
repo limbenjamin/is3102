@@ -38,8 +38,10 @@ public class PurchaseOrder implements Serializable {
     @OneToMany(mappedBy="purchaseOrder")
     private List<PurchaseOrderDetail> purchaseOrderDetails;
     
-    @OneToMany(mappedBy="purchaseOrders")
+    @OneToMany(mappedBy="purchaseOrders",targetEntity =Supplier.class)
     private Supplier supplier;
+    
+
     
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
