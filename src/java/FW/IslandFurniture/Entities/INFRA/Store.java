@@ -39,6 +39,8 @@ public class Store extends Plant implements Serializable {
     private List<GoodsIssuedDocument> goodsIssuedDocument;
     @OneToMany(mappedBy="store")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    
+
 
     public String getCode() {
         return code;

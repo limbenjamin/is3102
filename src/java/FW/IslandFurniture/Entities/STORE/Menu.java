@@ -7,10 +7,12 @@
 package FW.IslandFurniture.Entities.STORE;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 
@@ -25,8 +27,8 @@ public class Menu implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne
-    private MenuItem menuItem;
+    @ManyToMany
+    private List<MenuItem> menuItem;
 
     public Long getId() {
         return id;

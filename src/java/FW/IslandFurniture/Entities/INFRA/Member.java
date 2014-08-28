@@ -6,11 +6,14 @@
 
 package FW.IslandFurniture.Entities.INFRA;
 
+import FW.IslandFurniture.Entities.CountryOffice.MembershipTier;
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -23,6 +26,10 @@ public class Member implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String tier;
+    
+    @ManyToMany
+    private List<MembershipTier> membershipTiers;
+    
 
     public Long getId() {
         return id;

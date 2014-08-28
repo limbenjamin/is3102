@@ -26,7 +26,7 @@ public class MenuItem extends Stock implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToMany(mappedBy = "menuItem")
+    @ManyToMany(mappedBy = "menuItem")
     private List<Menu> menus;
     
     @ManyToMany

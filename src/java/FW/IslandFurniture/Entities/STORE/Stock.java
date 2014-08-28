@@ -6,6 +6,7 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
+import FW.IslandFurniture.Entities.CountryOffice.PlantStockInventory;
 import FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq;
 import java.io.Serializable;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
 /**
@@ -20,6 +23,7 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Stock implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,6 +35,14 @@ public abstract class Stock implements Serializable {
 
     @OneToMany(mappedBy="stock")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReq;
+    
+    @OneToMany(mappedBy = "stock")
+    private List<PlantStockInventory> planStockInventories;
+    
+    @OneToMany(mappedBy="stock")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    
+ 
     
     public Long getId() {
         return id;
