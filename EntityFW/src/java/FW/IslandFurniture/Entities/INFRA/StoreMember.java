@@ -8,29 +8,26 @@ package FW.IslandFurniture.Entities.INFRA;
 
 import FW.IslandFurniture.Entities.CountryOffice.MembershipTier;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 /**
  *
  * @author James
  */
 @Entity
-public class Member implements Serializable {
+public class StoreMember implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String tier;
     
-    @ManyToMany
-    private List<MembershipTier> membershipTiers;
+    @ManyToOne
+    private MembershipTier membershipTier;
     
-
     public Long getId() {
         return id;
     }
@@ -39,12 +36,12 @@ public class Member implements Serializable {
         this.id = id;
     }
 
-    public String getTier() {
-        return tier;
+    public MembershipTier getMembershipTier() {
+        return membershipTier;
     }
 
-    public void setTier(String tier) {
-        this.tier = tier;
+    public void setMembershipTier(MembershipTier membershipTier) {
+        this.membershipTier = membershipTier;
     }
 
     @Override
@@ -57,10 +54,10 @@ public class Member implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Member)) {
+        if (!(object instanceof StoreMember)) {
             return false;
         }
-        Member other = (Member) object;
+        StoreMember other = (StoreMember) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

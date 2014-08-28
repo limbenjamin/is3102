@@ -26,14 +26,11 @@ public class PromotionCampaign implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    
-    
     @ManyToMany(mappedBy = "promotionCampaigns")
     private List<MembershipTier> membershipTiers;
     
     @OneToMany(mappedBy = "promotionCampaign")
     private List<PromotionDetail> promotionDetails;
-    
 
     public Long getId() {
         return id;
@@ -41,6 +38,22 @@ public class PromotionCampaign implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<MembershipTier> getMembershipTiers() {
+        return membershipTiers;
+    }
+
+    public void setMembershipTiers(List<MembershipTier> membershipTiers) {
+        this.membershipTiers = membershipTiers;
+    }
+
+    public List<PromotionDetail> getPromotionDetails() {
+        return promotionDetails;
+    }
+
+    public void setPromotionDetails(List<PromotionDetail> promotionDetails) {
+        this.promotionDetails = promotionDetails;
     }
 
     @Override

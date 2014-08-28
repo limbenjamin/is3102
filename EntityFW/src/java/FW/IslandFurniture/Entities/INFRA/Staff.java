@@ -53,9 +53,10 @@ public class Staff implements Serializable {
     private List<Role> roles;
     @OneToOne
     private Preference preference;
-    
     @OneToMany
     private List<Notification> notifications;
+    @OneToMany(mappedBy="creator")
+    private List<Announcement> announcements;
     
     
     public Long getId() {

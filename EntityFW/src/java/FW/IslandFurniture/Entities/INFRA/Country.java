@@ -34,7 +34,7 @@ public class Country implements Serializable {
     private List<Plant> plant;
     
     @ManyToMany(mappedBy="countries")
-    private List<Currency> currency;
+    private List<Currency> currencies;
 
     public Long getId() {
         return id;
@@ -68,12 +68,12 @@ public class Country implements Serializable {
         this.plant = plant;
     }
 
-    public List<Currency> getCurrency() {
-        return currency;
+    public List<Currency> getCurrencies() {
+        return currencies;
     }
 
-    public void setCurrency(List<Currency> currency) {
-        this.currency = currency;
+    public void setCurrency(List<Currency> currencies) {
+        this.currencies = currencies;
     }
 
     @Override

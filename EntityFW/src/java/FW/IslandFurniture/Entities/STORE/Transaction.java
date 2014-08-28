@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.STORE;
 
-import FW.IslandFurniture.Entities.INFRA.Member;
+import FW.IslandFurniture.Entities.INFRA.StoreMember;
 import FW.IslandFurniture.Entities.INFRA.Store;
 import java.io.Serializable;
 import javax.persistence.Entity;
@@ -30,7 +30,7 @@ public abstract class Transaction implements Serializable {
     private Long id;
     
     @ManyToOne
-    private Member member;
+    private StoreMember member;
     
     @ManyToOne
     private Store store;
@@ -43,11 +43,11 @@ public abstract class Transaction implements Serializable {
         this.id = id;
     }
 
-    public Member getMember() {
+    public StoreMember getMember() {
         return member;
     }
 
-    public void setMember(Member member) {
+    public void setMember(StoreMember member) {
         this.member = member;
     }
 

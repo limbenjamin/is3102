@@ -9,12 +9,11 @@ package FW.IslandFurniture.Entities.CountryOffice;
 import FW.IslandFurniture.Entities.STORE.Plant;
 import FW.IslandFurniture.Entities.STORE.Stock;
 import java.io.Serializable;
-import java.util.List;
+import java.sql.Time;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
@@ -27,14 +26,11 @@ public class PlantStockInventory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @ManyToMany(mappedBy = "plantStockInventories")
-    private List<Plant> plants;
-    
+    private Time recordTime;
+    @ManyToOne
+    private Plant plant;
     @ManyToOne
     private Stock stock;
-    
-    
 
     public Long getId() {
         return id;
@@ -42,6 +38,30 @@ public class PlantStockInventory implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Time getRecordTime() {
+        return recordTime;
+    }
+
+    public void setRecordTime(Time recordTime) {
+        this.recordTime = recordTime;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     @Override

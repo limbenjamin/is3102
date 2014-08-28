@@ -8,7 +8,6 @@ package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
 import java.sql.Time;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +20,7 @@ import javax.persistence.Temporal;
  * @author Benjamin
  */
 @Entity
-public class Log implements Serializable {
+public class LogEntry implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -103,10 +102,10 @@ public class Log implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Log)) {
+        if (!(object instanceof LogEntry)) {
             return false;
         }
-        Log other = (Log) object;
+        LogEntry other = (LogEntry) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

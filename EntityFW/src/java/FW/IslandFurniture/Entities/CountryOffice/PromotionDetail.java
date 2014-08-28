@@ -24,14 +24,10 @@ public class PromotionDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
     private Stock stock;
-    
     @ManyToOne
     private PromotionCampaign promotionCampaign;
-    
-            
 
     public Long getId() {
         return id;
@@ -39,6 +35,22 @@ public class PromotionDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public PromotionCampaign getPromotionCampaign() {
+        return promotionCampaign;
+    }
+
+    public void setPromotionCampaign(PromotionCampaign promotionCampaign) {
+        this.promotionCampaign = promotionCampaign;
     }
 
     @Override

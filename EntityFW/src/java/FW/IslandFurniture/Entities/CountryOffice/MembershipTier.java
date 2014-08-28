@@ -6,7 +6,7 @@
 
 package FW.IslandFurniture.Entities.CountryOffice;
 
-import FW.IslandFurniture.Entities.INFRA.Member;
+import FW.IslandFurniture.Entities.INFRA.StoreMember;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -25,13 +25,10 @@ public class MembershipTier implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToMany
     private List<PromotionCampaign> promotionCampaigns;
-    
-    @ManyToMany(mappedBy = "membershipTiers")
-    private List<Member> members;
-    
+    @ManyToMany(mappedBy="membershipTiers")
+    private List<StoreMember> members;
 
     public Long getId() {
         return id;
@@ -39,6 +36,22 @@ public class MembershipTier implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<PromotionCampaign> getPromotionCampaigns() {
+        return promotionCampaigns;
+    }
+
+    public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
+        this.promotionCampaigns = promotionCampaigns;
+    }
+
+    public List<StoreMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<StoreMember> members) {
+        this.members = members;
     }
 
     @Override

@@ -23,11 +23,10 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     
     @ManyToOne
     private MenuItem menuItem;
-    
-    private Long id;
 
     public Long getId() {
         return id;
@@ -35,6 +34,14 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
     }
 
     @Override

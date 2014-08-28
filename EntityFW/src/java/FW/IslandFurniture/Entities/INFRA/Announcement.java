@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
 /**
@@ -30,6 +31,8 @@ public class Announcement implements Serializable {
     private Date activeDate;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date expireDate;
+    @ManyToOne
+    private Staff creator;
 
     public Long getId() {
         return id;
@@ -69,6 +72,14 @@ public class Announcement implements Serializable {
 
     public void setExpireDate(Date expireDate) {
         this.expireDate = expireDate;
+    }
+
+    public Staff getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Staff creator) {
+        this.creator = creator;
     }
 
     @Override
