@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package FW.IslandFurniture.Entities.INFRA;
 
 import java.io.Serializable;
@@ -21,6 +20,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Message implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +31,7 @@ public class Message implements Serializable {
     private Boolean isRead;
     @ManyToOne
     private Thread thread;
-    
+
     @ManyToOne
     private Staff staff;
 
@@ -82,7 +82,7 @@ public class Message implements Serializable {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -107,5 +107,5 @@ public class Message implements Serializable {
     public String toString() {
         return "entities.Message[ id=" + id + " ]";
     }
-    
+
 }
