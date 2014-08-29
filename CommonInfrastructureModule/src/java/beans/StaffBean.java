@@ -6,6 +6,7 @@
 
 package beans;
 
+import IslandFurniture.FW.Entities.Staff;
 import FW.IslandFurniture.Entities.INFRA.*;
 import java.util.Date;
 import javax.annotation.*;
