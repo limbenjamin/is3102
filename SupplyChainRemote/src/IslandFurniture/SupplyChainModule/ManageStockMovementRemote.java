@@ -4,15 +4,15 @@
  * and open the template in the editor.
  */
 
-package ejb;
+package IslandFurniture.SupplyChainModule;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author a0101774
  */
-@Local
-public interface SupplyChainBeanLocal {
+@Remote
+public interface ManageStockMovementRemote {
     
 }

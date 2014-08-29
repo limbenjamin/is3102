@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ejb;
+package IslandFurniture.SupplyChainModule;
 
 import javax.ejb.Stateful;
 
@@ -13,7 +13,7 @@ import javax.ejb.Stateful;
  * @author a0101774
  */
 @Stateful
-public class SupplyChainBean implements SupplyChainBeanRemote, SupplyChainBeanLocal {
+public class ManageStockIssue implements ManageStockIssueRemote, ManageStockIssueLocal {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

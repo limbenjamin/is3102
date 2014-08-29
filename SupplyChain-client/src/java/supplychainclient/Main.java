@@ -1,27 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package supplychainclient;
 
-import ejb.SupplyChainBeanRemote;
+import IslandFurniture.SupplyChainModule.ManageStockReceiptRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
-/**
- *
- * @author a0101774
- */
 public class Main {
     @EJB
-    private static SupplyChainBeanRemote supplyChainBean;
+    private static ManageStockReceiptRemote manageStockReceipt;
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
+        
+        System.out.println("Hello World!");
         System.out.println("Hello World!");
         Scanner sc = new Scanner(System.in);
         while(true) {
@@ -72,6 +62,6 @@ public class Main {
                 break;
                 
         }
-                
     }
+    
 }
