@@ -26,3 +26,14 @@
 /ManufacturingFacilitySystem/nbproject/private/
 /CountryOfficeSystem/nbproject/private/
 /GlobalHQSystem/nbproject/private/
+nbproject
+.nbproject
+.nbproject/*
+nbproject/*
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
