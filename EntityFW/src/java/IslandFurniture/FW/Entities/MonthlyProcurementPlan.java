@@ -6,8 +6,8 @@
 
 package IslandFurniture.FW.Entities;
 
+import IslandFurniture.FW.Entities.Keys.MonthlyProcurementPlanPK;
 import IslandFurniture.FW.Enums.Month;
-import IslandFurniture.FW.Entities.Keys.WeeklyMRPRecordPK;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -21,38 +21,21 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@IdClass(WeeklyMRPRecordPK.class)
-public class WeeklyMRPRecord implements Serializable {
+@IdClass(MonthlyProcurementPlanPK.class)
+public class MonthlyProcurementPlan implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @ManyToOne
-    private Material material;
-    @Id
-    private Integer week;
     @Id
     private Month month;
     @Id
     private Integer year;
-    @OneToOne
-    private WeeklyProductionPlan weeklyProductionPlan;
+    @Id
+    @ManyToOne
+    private RetailItem retailItem;
+    @Id
     @OneToOne
     private PurchaseOrderDetail purchaseOrderDetail;
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public Integer getWeek() {
-        return week;
-    }
-
-    public void setWeek(Integer week) {
-        this.week = week;
-    }
+    private Integer qty;
+    private Boolean locked;
 
     public Month getMonth() {
         return month;
@@ -70,12 +53,12 @@ public class WeeklyMRPRecord implements Serializable {
         this.year = year;
     }
 
-    public WeeklyProductionPlan getWeeklyProductionPlan() {
-        return weeklyProductionPlan;
+    public RetailItem getRetailItem() {
+        return retailItem;
     }
 
-    public void setWeeklyProductionPlan(WeeklyProductionPlan weeklyProductionPlan) {
-        this.weeklyProductionPlan = weeklyProductionPlan;
+    public void setRetailItem(RetailItem retailItem) {
+        this.retailItem = retailItem;
     }
 
     public PurchaseOrderDetail getPurchaseOrderDetail() {
@@ -86,29 +69,45 @@ public class WeeklyMRPRecord implements Serializable {
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public Boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.material);
-        hash = 97 * hash + Objects.hashCode(this.week);
-        hash = 97 * hash + Objects.hashCode(this.month);
-        hash = 97 * hash + Objects.hashCode(this.year);
+        hash = 53 * hash + Objects.hashCode(this.month);
+        hash = 53 * hash + Objects.hashCode(this.year);
+        hash = 53 * hash + Objects.hashCode(this.retailItem);
+        hash = 53 * hash + Objects.hashCode(this.purchaseOrderDetail);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof WeeklyMRPRecord)) {
+        if (!(object instanceof MonthlyProcurementPlan)) {
             return false;
         }
-        WeeklyMRPRecord other = (WeeklyMRPRecord) object;
-        return this.material.equals(other.material) && this.week.equals(other.week) && this.month.equals(other.month) && this.year.equals(other.year);
+        MonthlyProcurementPlan other = (MonthlyProcurementPlan) object;
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.retailItem.equals(other.retailItem) && this.purchaseOrderDetail.equals(other.purchaseOrderDetail);
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyMRPRecord[ id=" + this.material.getId() + "," + week + "," + month + "," + year + " ]";
+        return "IslandFurniture.FW.Entities.MonthlyProcurementPlan[ id=" + month + ", " + year + ", " + this.retailItem.getId() + ", " + this.purchaseOrderDetail.getId() + " ]";
     }
     
 }

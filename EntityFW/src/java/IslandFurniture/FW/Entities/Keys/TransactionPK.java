@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class TransactionPK implements Serializable {
     private Long id;

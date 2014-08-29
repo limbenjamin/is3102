@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 @IdClass(MonthlyStockSupplyReqPK.class)

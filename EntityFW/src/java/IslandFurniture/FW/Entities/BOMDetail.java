@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 public class BOMDetail implements Serializable {

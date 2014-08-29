@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 public class GoodsReceiptDocument implements Serializable {

@@ -8,7 +8,7 @@ package IslandFurniture.FW.Enums;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 public enum Month {
     JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC

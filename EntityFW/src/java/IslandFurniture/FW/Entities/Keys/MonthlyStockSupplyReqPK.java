@@ -14,7 +14,7 @@ import java.util.Objects;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class MonthlyStockSupplyReqPK implements Serializable {
     private Stock stock;

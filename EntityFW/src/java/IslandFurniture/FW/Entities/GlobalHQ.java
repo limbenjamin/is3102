@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 public class GlobalHQ extends Plant implements Serializable {

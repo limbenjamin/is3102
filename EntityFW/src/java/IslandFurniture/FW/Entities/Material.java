@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 public class Material extends ProcuredStock implements Serializable {

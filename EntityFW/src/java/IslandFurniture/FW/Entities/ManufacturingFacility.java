@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
 public class ManufacturingFacility extends Plant implements Serializable {
@@ -26,6 +26,8 @@ public class ManufacturingFacility extends Plant implements Serializable {
     private List<Stock> produces;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<StockSupplied> supplyingWhatTo;
+    @OneToMany(mappedBy="manufacturingFacility")
+    private List<ProductionCapacity> productionCapacities;
 
     public ProcurementContractDetail getSuppliedBy() {
         return suppliedBy;
@@ -49,6 +51,14 @@ public class ManufacturingFacility extends Plant implements Serializable {
 
     public void setSupplyingWhatTo(List<StockSupplied> supplyingWhatTo) {
         this.supplyingWhatTo = supplyingWhatTo;
+    }
+
+    public List<ProductionCapacity> getProductionCapacities() {
+        return productionCapacities;
+    }
+
+    public void setProductionCapacities(List<ProductionCapacity> productionCapacities) {
+        this.productionCapacities = productionCapacities;
     }
 
     @Override

@@ -6,32 +6,29 @@
 
 package IslandFurniture.FW.Entities;
 
-import IslandFurniture.FW.Entities.Keys.StockSuppliedPK;
+import IslandFurniture.FW.Entities.Keys.ProductionCapacityPK;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@IdClass(StockSuppliedPK.class)
-public class StockSupplied implements Serializable {
+@IdClass(ProductionCapacityPK.class)
+public class ProductionCapacity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @OneToOne
+    @ManyToOne
     private Stock stock;
     @Id
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
-    @Id
-    @ManyToOne
-    private Store store;
+    private Integer qty;
 
     public Stock getStock() {
         return stock;
@@ -49,36 +46,35 @@ public class StockSupplied implements Serializable {
         this.manufacturingFacility = manufacturingFacility;
     }
 
-    public Store getStore() {
-        return store;
+    public Integer getQty() {
+        return qty;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = 7;
         hash = 89 * hash + Objects.hashCode(this.stock);
         hash = 89 * hash + Objects.hashCode(this.manufacturingFacility);
-        hash = 89 * hash + Objects.hashCode(this.store);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StockSupplied)) {
+        if (!(object instanceof ProductionCapacity)) {
             return false;
         }
-        StockSupplied other = (StockSupplied) object;
-        return this.stock.equals(other.stock) && this.manufacturingFacility.equals(other.manufacturingFacility) && this.store.equals(other.store);
+        ProductionCapacity other = (ProductionCapacity) object;
+        return this.stock.equals(other.stock) && this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.StockSupplied[ id=" + this.stock.getId() + ", " + this.manufacturingFacility.getId() + ", " + this.store.getId() + " ]";
+        return "IslandFurniture.FW.Entities.ProductionCapacity[ id=" + this.stock.getId() + ", " + this.manufacturingFacility.getId() + " ]";
     }
     
 }

@@ -13,7 +13,7 @@ import java.util.Objects;
 
 /**
  *
- * @author asus
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class WeeklyMRPRecordPK implements Serializable {
     private Material material;
