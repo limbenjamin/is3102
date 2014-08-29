@@ -11,7 +11,9 @@ package managedbean;
  * @author Benjamin
  */
 
-import beans.StaffBean;
+
+
+import IslandFurniture.CommonInfrastructureModule.ManageAuthenticationBean;
 import java.io.Serializable;
 import java.util.Random;
 import javax.ejb.EJB;
@@ -28,7 +30,7 @@ public class StaffManagedBean implements Serializable {
     private String password = null;
     private String status = null;
     @EJB
-    private StaffBean StaffBean;
+    private ManageAuthenticationBean StaffBean;
     
     public StaffManagedBean() {
     }
