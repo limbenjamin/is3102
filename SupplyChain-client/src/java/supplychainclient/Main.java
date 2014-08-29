@@ -1,11 +1,20 @@
 
 package supplychainclient;
 
+import IslandFurniture.SupplyChainModule.ManageInventoryStatusRemote;
+import IslandFurniture.SupplyChainModule.ManageStockIssueRemote;
+import IslandFurniture.SupplyChainModule.ManageStockMovementRemote;
 import IslandFurniture.SupplyChainModule.ManageStockReceiptRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
 public class Main {
+    @EJB
+    private static ManageStockMovementRemote manageStockMovement;
+    @EJB
+    private static ManageStockIssueRemote manageStockIssue;
+    @EJB
+    private static ManageInventoryStatusRemote manageInventoryStatus;
     @EJB
     private static ManageStockReceiptRemote manageStockReceipt;
 
