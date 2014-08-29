@@ -6,7 +6,8 @@
 
 package IslandFurniture.CommonInfrastructureModule;
 
-import FW.IslandFurniture.Entities.INFRA.*;
+
+import IslandFurniture.FW.Entities.*;
 import java.util.Date;
 import javax.annotation.*;
 import javax.ejb.*;
@@ -59,5 +60,9 @@ public class ManageAuthenticationBean {
         logEntry.setChangeMessage(ChangeMessage);
         logEntry.setStaff(em.find(Staff.class, StaffId));
         em.persist(logEntry);
+    }
+    
+    public boolean resetPassword(String username){
+        return true;
     }
 }
