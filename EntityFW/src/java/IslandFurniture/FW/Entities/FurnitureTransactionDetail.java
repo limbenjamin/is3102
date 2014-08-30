@@ -25,6 +25,8 @@ public class FurnitureTransactionDetail implements Serializable {
     private Long id;
     @ManyToOne
     private FurnitureTransaction furnitureTransaction;
+    @ManyToOne
+    private PromotionDetail promotionDetail;
 
     public Long getId() {
         return id;
@@ -40,6 +42,14 @@ public class FurnitureTransactionDetail implements Serializable {
 
     public void setFurnitureTransaction(FurnitureTransaction furnitureTransaction) {
         this.furnitureTransaction = furnitureTransaction;
+    }
+
+    public PromotionDetail getPromotionDetail() {
+        return promotionDetail;
+    }
+
+    public void setPromotionDetail(PromotionDetail promotionDetail) {
+        this.promotionDetail = promotionDetail;
     }
 
     @Override

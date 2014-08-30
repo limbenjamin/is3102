@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
@@ -19,13 +18,15 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 public class RestaurantTransactionDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
     @ManyToOne
-    private RestaurantTransaction restaurantTransaction; 
+    private RestaurantTransaction restaurantTransaction;
+    @ManyToOne
+    private PromotionDetail promotionDetail;
 
     public Long getId() {
         return id;
@@ -41,6 +42,14 @@ public class RestaurantTransactionDetail implements Serializable {
 
     public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
         this.restaurantTransaction = restaurantTransaction;
+    }
+
+    public PromotionDetail getPromotionDetail() {
+        return promotionDetail;
+    }
+
+    public void setPromotionDetail(PromotionDetail promotionDetail) {
+        this.promotionDetail = promotionDetail;
     }
 
     @Override
@@ -67,5 +76,5 @@ public class RestaurantTransactionDetail implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.RestaurantTransactionDetail[ id=" + id + " ]";
     }
-    
+
 }
