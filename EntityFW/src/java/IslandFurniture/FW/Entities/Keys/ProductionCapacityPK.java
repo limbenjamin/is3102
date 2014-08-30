@@ -6,8 +6,6 @@
 
 package IslandFurniture.FW.Entities.Keys;
 
-import IslandFurniture.FW.Entities.ManufacturingFacility;
-import IslandFurniture.FW.Entities.Stock;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,8 +14,8 @@ import java.util.Objects;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class ProductionCapacityPK implements Serializable {
-    private Stock stock;
-    private ManufacturingFacility manufacturingFacility;
+    private Long stock;
+    private Long manufacturingFacility;
     
     @Override
     public boolean equals(Object object) {
@@ -38,6 +36,6 @@ public class ProductionCapacityPK implements Serializable {
     
     @Override
     public String toString() {
-        return this.stock.getId() + ", " + this.manufacturingFacility.getId();
+        return stock + ", " + manufacturingFacility;
     }
 }

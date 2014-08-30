@@ -6,8 +6,6 @@
 
 package IslandFurniture.FW.Entities.Keys;
 
-import IslandFurniture.FW.Entities.ProcuredStock;
-import IslandFurniture.FW.Entities.Supplier;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,8 +14,8 @@ import java.util.Objects;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class LeadTimePK implements Serializable {
-    private ProcuredStock procuredStock;
-    private Supplier supplier;
+    private Long procuredStock;
+    private Long supplier;
     
     @Override
     public boolean equals(Object object) {
@@ -38,6 +36,6 @@ public class LeadTimePK implements Serializable {
     
     @Override
     public String toString() {
-        return this.procuredStock.getId() + ", " + this.supplier.getId();
+        return this.procuredStock + ", " + this.supplier;
     }
 }

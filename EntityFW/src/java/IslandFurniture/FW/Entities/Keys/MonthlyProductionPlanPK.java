@@ -7,7 +7,6 @@
 package IslandFurniture.FW.Entities.Keys;
 
 import IslandFurniture.FW.Enums.Month;
-import IslandFurniture.FW.Entities.FurnitureModel;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class MonthlyProductionPlanPK implements Serializable{
-    private FurnitureModel furnitureModel;
+    private Long furnitureModel;
     private Month month;
     private Integer year;
     
@@ -40,6 +39,6 @@ public class MonthlyProductionPlanPK implements Serializable{
     
     @Override
     public String toString() {
-        return this.furnitureModel.getId() + "," + month + "," + year;
+        return this.furnitureModel + "," + month + "," + year;
     }
 }

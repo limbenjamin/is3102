@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -26,7 +27,7 @@ public class MembershipTier implements Serializable {
     private Long id;
     @ManyToMany
     private List<PromotionCampaign> promotionCampaigns;
-    @ManyToMany(mappedBy="membershipTiers")
+    @OneToMany(mappedBy="membershipTier")
     private List<StoreMember> members;
 
     public Long getId() {

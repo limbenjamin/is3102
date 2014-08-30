@@ -6,7 +6,6 @@
 
 package IslandFurniture.FW.Entities.Keys;
 
-import IslandFurniture.FW.Entities.Store;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,7 +15,7 @@ import java.util.Objects;
  */
 public class TransactionPK implements Serializable {
     private Long id;
-    private Store store;
+    private Long store;
     
     @Override
     public boolean equals(Object object) {
@@ -37,6 +36,6 @@ public class TransactionPK implements Serializable {
     
     @Override
     public String toString() {
-        return this.id + "," + this.store.getId();
+        return id + "," + store;
     }
 }

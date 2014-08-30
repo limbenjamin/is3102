@@ -6,7 +6,7 @@
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +27,7 @@ public class Message implements Serializable {
     private Long id;
     private String content;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Time msgTime;
+    private Calendar msgTime;
     private Boolean isRead;
     @ManyToOne
     private Thread thread;
@@ -51,11 +51,11 @@ public class Message implements Serializable {
         this.content = content;
     }
 
-    public Time getMsgTime() {
+    public Calendar getMsgTime() {
         return msgTime;
     }
 
-    public void setMsgTime(Time msgTime) {
+    public void setMsgTime(Calendar msgTime) {
         this.msgTime = msgTime;
     }
 
