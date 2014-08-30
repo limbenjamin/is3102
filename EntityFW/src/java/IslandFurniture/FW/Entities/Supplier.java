@@ -29,7 +29,7 @@ public class Supplier implements Serializable {
     private Long id;
     @ManyToMany
     private List<Ingredient> ingredients;
-    @ManyToOne
+    @OneToMany(mappedBy="supplier")
     private List<PurchaseOrder> purchaseOrders;
     @ManyToOne
     private Country country;

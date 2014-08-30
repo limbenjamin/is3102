@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -24,18 +22,17 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Plant implements Serializable  {
+public abstract class Plant implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     @ManyToOne
     protected Country country;
-    @OneToMany(mappedBy="plant")
-    protected List<Transaction> transactions;
     @ManyToMany
     protected List<PlantStockInventory> plantStockInventories;
-    
+
     public Long getId() {
         return id;
     }
@@ -50,14 +47,6 @@ public abstract class Plant implements Serializable  {
 
     public void setCountry(Country country) {
         this.country = country;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
     public List<PlantStockInventory> getPlantStockInventories() {
@@ -92,5 +81,5 @@ public abstract class Plant implements Serializable  {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Plant[ id=" + id + " ]";
     }
-    
+
 }

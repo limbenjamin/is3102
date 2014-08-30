@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
@@ -16,22 +15,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-/**
- *
- * @author Chen Tong <chentong@nus.edu.sg>
- */
 @Entity
 public class PurchaseOrder implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
     private Plant shipsTo;
-    @OneToMany(mappedBy="purchaseOrder")
+    @OneToMany(mappedBy = "purchaseOrder")
     private List<PurchaseOrderDetail> purchaseOrderDetails;
-    @OneToMany(mappedBy="purchaseOrders")
-    private List<Supplier> suppliers;
+    @ManyToOne
+    private Supplier supplier;
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
 
@@ -59,12 +55,12 @@ public class PurchaseOrder implements Serializable {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
 
-    public List<Supplier> getSuppliers() {
-        return suppliers;
+    public Supplier getSupplier() {
+        return supplier;
     }
 
-    public void setSuppliers(List<Supplier> suppliers) {
-        this.suppliers = suppliers;
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {
@@ -99,5 +95,5 @@ public class PurchaseOrder implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder[ id=" + id + " ]";
     }
-    
+
 }

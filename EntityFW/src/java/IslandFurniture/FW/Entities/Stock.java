@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
@@ -24,25 +23,26 @@ import javax.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Stock implements Serializable {
+
     protected static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    @OneToMany(mappedBy="stock")
+    @OneToMany(mappedBy = "stock")
     protected List<StockUnit> stockUnit;
-    @OneToMany(mappedBy="stock")
+    @OneToMany(mappedBy = "stock")
     protected List<PlantStockInventory> planStockInventories;
-    @OneToMany(mappedBy="stock")
+    @OneToMany(mappedBy = "stock")
     protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
     @OneToMany
     protected List<PriceInCountry> priceInCountry;
-    @ManyToMany(mappedBy="stocks")
+    @ManyToMany(mappedBy = "produces")
     protected List<ManufacturingFacility> producedBy;
-    @ManyToMany(mappedBy="stocks")
+    @ManyToMany(mappedBy = "sells")
     protected List<Store> soldBy;
-    @OneToMany(mappedBy="stock")
-    protected ProductionCapacity productionCapacity;
-    
+    @OneToMany(mappedBy = "stock")
+    protected List<ProductionCapacity> productionCapacity;
+
     public Long getId() {
         return id;
     }
@@ -99,11 +99,11 @@ public abstract class Stock implements Serializable {
         this.soldBy = soldBy;
     }
 
-    public ProductionCapacity getProductionCapacity() {
+    public List<ProductionCapacity> getProductionCapacity() {
         return productionCapacity;
     }
 
-    public void setProductionCapacity(ProductionCapacity productionCapacity) {
+    public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
         this.productionCapacity = productionCapacity;
     }
 
@@ -131,5 +131,5 @@ public abstract class Stock implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Stock[ id=" + id + " ]";
     }
-    
+
 }
