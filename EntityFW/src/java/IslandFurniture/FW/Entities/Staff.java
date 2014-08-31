@@ -9,6 +9,7 @@ package IslandFurniture.FW.Entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,27 +39,32 @@ public class Staff implements Serializable {
     private String name;
     @Column(unique=true)
     private String emailAddress;
+    @JoinColumn(nullable = true)
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
+    @JoinColumn(nullable = true)
     private Date lastLogon;
     @OneToMany(mappedBy="staff")
     private List<Todo> todoList;
     @OneToMany(mappedBy="recipient")
+    @JoinColumn(nullable = true) //TODO : remove later once Thread settled
     private List<Thread> inbox;
     @OneToMany(mappedBy="sender")
+    @JoinColumn(nullable = true) //TODO : remove later once Thread settled
     private List<Thread> outbox;
     @ManyToOne
-    @JoinColumn(nullable = true) //TODO : remove later
+    @JoinColumn(nullable = true) //TODO : remove later once Plant settled
     private Plant plant;
     @ManyToMany(mappedBy="staffs")
+    @JoinColumn(nullable = true) //TODO : remove later when role created
     private List<Role> roles;
-    @OneToOne
+    @OneToOne(cascade={CascadeType.ALL})
     private Preference preference;
-    @OneToMany
+    @OneToMany(cascade={CascadeType.ALL})
     private List<Notification> notifications;
-    @OneToMany(mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
     private List<Announcement> announcements;
-    @OneToMany(mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
     private List<Event> events;
     
     

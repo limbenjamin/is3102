@@ -16,7 +16,6 @@ import javax.persistence.PersistenceContext;
  * @author Benjamin
  */
 @Stateless
-@LocalBean
 public class EntityManagerBean {
 
     @PersistenceContext

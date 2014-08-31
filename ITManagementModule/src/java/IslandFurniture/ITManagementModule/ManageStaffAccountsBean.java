@@ -92,7 +92,6 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
         staff.setTodoList(todolist);
         staff.setAnnouncements(announcements);
         staff.setEvents(events);
-
         em.persist(staff);
         em.flush();
     }
