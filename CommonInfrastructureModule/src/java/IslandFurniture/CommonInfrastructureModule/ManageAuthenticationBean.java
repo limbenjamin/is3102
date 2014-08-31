@@ -55,8 +55,8 @@ public class ManageAuthenticationBean {
         logEntry.setEntityName(EntityName);
         logEntry.setEntityId(EntityId);
         logEntry.setUserAction(UserAction);
-        java.util.Date today = new java.util.Date();
-        logEntry.setLogTime(new java.sql.Time(today.getTime()));
+//        java.util.Date today = new java.util.Date();
+        logEntry.setLogTime(java.util.Calendar.getInstance());
         logEntry.setChangeMessage(ChangeMessage);
         logEntry.setStaff(em.find(Staff.class, StaffId));
         em.persist(logEntry);

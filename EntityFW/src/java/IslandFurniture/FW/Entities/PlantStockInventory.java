@@ -7,12 +7,14 @@
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -24,7 +26,8 @@ public class PlantStockInventory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Time recordTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar recordTime;
     @ManyToOne
     private Plant plant;
     @ManyToOne
@@ -38,11 +41,11 @@ public class PlantStockInventory implements Serializable {
         this.id = id;
     }
 
-    public Time getRecordTime() {
+    public Calendar getRecordTime() {
         return recordTime;
     }
 
-    public void setRecordTime(Time recordTime) {
+    public void setRecordTime(Calendar recordTime) {
         this.recordTime = recordTime;
     }
 

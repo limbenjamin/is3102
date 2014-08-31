@@ -7,7 +7,7 @@
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,7 +29,7 @@ public class LogEntry implements Serializable {
     private long entityId;
     private String userAction;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Time logTime;
+    private Calendar logTime;
     private String changeMessage;
     @ManyToOne
     private Staff staff;
@@ -66,11 +66,11 @@ public class LogEntry implements Serializable {
         this.userAction = userAction;
     }
 
-    public Time getLogTime() {
+    public Calendar getLogTime() {
         return logTime;
     }
 
-    public void setLogTime(Time logTime) {
+    public void setLogTime(Calendar logTime) {
         this.logTime = logTime;
     }
 

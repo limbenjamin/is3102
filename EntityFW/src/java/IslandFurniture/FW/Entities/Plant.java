@@ -15,6 +15,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -30,6 +31,8 @@ public abstract class Plant implements Serializable {
     protected Long id;
     @ManyToOne
     protected Country country;
+    @OneToMany(mappedBy = "plant")
+    private List<Staff> employees;
     @ManyToMany
     protected List<PlantStockInventory> plantStockInventories;
 
@@ -47,6 +50,14 @@ public abstract class Plant implements Serializable {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public List<Staff> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Staff> employees) {
+        this.employees = employees;
     }
 
     public List<PlantStockInventory> getPlantStockInventories() {

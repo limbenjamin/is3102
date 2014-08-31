@@ -7,8 +7,6 @@
 package IslandFurniture.FW.Entities.Keys;
 
 import IslandFurniture.FW.Enums.Month;
-import IslandFurniture.FW.Entities.MenuItem;
-import IslandFurniture.FW.Entities.Store;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,8 +17,8 @@ import java.util.Objects;
 public class MonthlyMenuItemSalesForecastPK implements Serializable {
     private Month month;
     private Integer year;
-    private Store store;
-    private MenuItem menuItem;
+    private Long store;
+    private Long menuItem;
     
     @Override
     public boolean equals(Object object) {
@@ -43,6 +41,6 @@ public class MonthlyMenuItemSalesForecastPK implements Serializable {
     
     @Override
     public String toString() {
-        return this.month + "," + this.year + "," + this.store.getId() + "," + this.menuItem.getId();
+        return this.month + "," + this.year + "," + this.store + "," + this.menuItem;
     }
 }

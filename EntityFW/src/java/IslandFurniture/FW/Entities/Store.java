@@ -23,8 +23,6 @@ public class Store extends Plant implements Serializable {
     private String code;
     private String name;
     @OneToMany(mappedBy="store")
-    private List<Staff> employees;
-    @OneToMany(mappedBy="store")
     private List<GoodsIssuedDocument> goodsIssuedDocument;
     @OneToMany(mappedBy="store")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
@@ -49,14 +47,6 @@ public class Store extends Plant implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Staff> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Staff> employees) {
-        this.employees = employees;
     }
 
     public List<GoodsIssuedDocument> getGoodsIssuedDocument() {

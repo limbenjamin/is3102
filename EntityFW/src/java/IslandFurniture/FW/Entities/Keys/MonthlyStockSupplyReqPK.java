@@ -7,8 +7,6 @@
 package IslandFurniture.FW.Entities.Keys;
 
 import IslandFurniture.FW.Enums.Month;
-import IslandFurniture.FW.Entities.Store;
-import IslandFurniture.FW.Entities.Stock;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -17,8 +15,8 @@ import java.util.Objects;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class MonthlyStockSupplyReqPK implements Serializable {
-    private Stock stock;
-    private Store store;
+    private Long stock;
+    private Long store;
     private Month month;
     private Integer year;
     
@@ -43,6 +41,6 @@ public class MonthlyStockSupplyReqPK implements Serializable {
     
     @Override
     public String toString() {
-        return this.stock.getId() + "," + store.getId() + "," + month + "," + year;
+        return stock + "," + store + "," + month + "," + year;
     }
 }
