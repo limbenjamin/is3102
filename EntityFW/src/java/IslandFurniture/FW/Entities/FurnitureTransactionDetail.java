@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
@@ -11,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -19,12 +20,19 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 public class FurnitureTransactionDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID", insertable = false, updatable = false)
+    })
     private FurnitureTransaction furnitureTransaction;
+    @ManyToOne
+    private FurnitureModel furnitureModel;
     @ManyToOne
     private PromotionDetail promotionDetail;
 
@@ -42,6 +50,14 @@ public class FurnitureTransactionDetail implements Serializable {
 
     public void setFurnitureTransaction(FurnitureTransaction furnitureTransaction) {
         this.furnitureTransaction = furnitureTransaction;
+    }
+
+    public FurnitureModel getFurnitureModel() {
+        return furnitureModel;
+    }
+
+    public void setFurnitureModel(FurnitureModel furnitureModel) {
+        this.furnitureModel = furnitureModel;
     }
 
     public PromotionDetail getPromotionDetail() {
@@ -76,5 +92,5 @@ public class FurnitureTransactionDetail implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.FurnitureTransactionDetail[ id=" + id + " ]";
     }
-    
+
 }

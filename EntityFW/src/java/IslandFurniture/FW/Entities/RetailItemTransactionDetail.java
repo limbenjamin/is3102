@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -24,7 +26,13 @@ public class RetailItemTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name="TRANSACTION_ID", referencedColumnName="ID", insertable=false, updatable=false),
+        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID", insertable=false, updatable=false)
+    })
     private RetailItemTransaction retailItemTransaction;
+    @ManyToOne
+    private RetailItem retailItem;
     @ManyToOne
     private PromotionDetail promotionDetail;
 
@@ -42,6 +50,14 @@ public class RetailItemTransactionDetail implements Serializable {
 
     public void setRetailItemTransaction(RetailItemTransaction retailItemTransaction) {
         this.retailItemTransaction = retailItemTransaction;
+    }
+
+    public RetailItem getRetailItem() {
+        return retailItem;
+    }
+
+    public void setRetailItem(RetailItem retailItem) {
+        this.retailItem = retailItem;
     }
 
     public PromotionDetail getPromotionDetail() {
