@@ -9,6 +9,8 @@ package IslandFurniture.ITManagementModule;
 import IslandFurniture.FW.Entities.*;
 import java.security.Key;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -16,7 +18,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import sun.misc.BASE64Encoder;
@@ -25,9 +27,8 @@ import sun.misc.BASE64Encoder;
  *
  * @author Benjamin
  */
-@Stateless
-@LocalBean
-public class ManageStaffAccountsBean {
+@Stateful
+public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
     
     @PersistenceContext
     EntityManager em;
@@ -35,12 +36,18 @@ public class ManageStaffAccountsBean {
     @Resource SessionContext ctx;
     private Staff staff;
     private LogEntry logEntry;
+    private List<Notification> notifications;
+    private List<Todo> todolist;
+    private List<IslandFurniture.FW.Entities.Thread> thread;
+    private Preference preference;
+    private List<Announcement> announcements;
+    private List<Event> events;
     
     static String IV = "AAAAAAAAAAAAAAAA";
     static String encryptionKey = "0123456789abcdef";
 
-    
-    public boolean createStaffAccount(String username, String password, String name, String emailAddress) {
+    @Override
+    public void createStaffAccount(String username, String password, String name, String emailAddress) {
         staff = new Staff();
         staff.setUsername(username);
         //generate salt
@@ -75,8 +82,19 @@ public class ManageStaffAccountsBean {
         } catch (Exception ex) {
             Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return true;
+        preference = new Preference();
+        notifications = new ArrayList<Notification>();
+        todolist = new ArrayList<Todo>();
+        announcements = new ArrayList<Announcement>();
+        events = new ArrayList<Event>();
+        staff.setPreference(preference);
+        staff.setNotifications(notifications);
+        staff.setTodoList(todolist);
+        staff.setAnnouncements(announcements);
+        staff.setEvents(events);
+
+        em.persist(staff);
+        em.flush();
     }
 
 }
