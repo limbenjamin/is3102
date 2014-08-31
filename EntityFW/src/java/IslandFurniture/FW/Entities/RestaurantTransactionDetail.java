@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -24,7 +26,13 @@ public class RestaurantTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID", insertable = false, updatable = false),
+        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID", insertable = false, updatable = false)
+    })
     private RestaurantTransaction restaurantTransaction;
+    @ManyToOne
+    private MenuItem menuItem;
     @ManyToOne
     private PromotionDetail promotionDetail;
 
@@ -42,6 +50,14 @@ public class RestaurantTransactionDetail implements Serializable {
 
     public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
         this.restaurantTransaction = restaurantTransaction;
+    }
+
+    public MenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
     }
 
     public PromotionDetail getPromotionDetail() {

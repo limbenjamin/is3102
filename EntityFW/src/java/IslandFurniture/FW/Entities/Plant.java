@@ -22,7 +22,7 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;

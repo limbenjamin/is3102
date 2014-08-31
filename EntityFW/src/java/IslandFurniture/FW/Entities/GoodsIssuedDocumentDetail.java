@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -28,6 +30,12 @@ public class GoodsIssuedDocumentDetail implements Serializable {
     @ManyToOne
     private Stock stock;
     @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name="STOCK_ID", referencedColumnName="STOCK_ID", insertable=false, updatable=false),
+        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID"),
+        @JoinColumn(name="MONTH", referencedColumnName="MONTH"),
+        @JoinColumn(name="YEAR", referencedColumnName="YEAR")
+            })
     private MonthlyStockSupplyReq monthlyStockSupplyReq;
 
     public Long getId() {
