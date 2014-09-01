@@ -11,6 +11,7 @@ import java.security.Key;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import sun.misc.BASE64Encoder;
 
 /**
@@ -38,50 +40,27 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
     private LogEntry logEntry;
     private List<Notification> notifications;
     private List<Todo> todolist;
-    private List<IslandFurniture.FW.Entities.Thread> thread;
+    private List<IslandFurniture.FW.Entities.MessageThread> thread;
     private Preference preference;
     private List<Announcement> announcements;
     private List<Event> events;
     
-    static String IV = "AAAAAAAAAAAAAAAA";
-    static String encryptionKey = "0123456789abcdef";
+
 
     @Override
-    public void createStaffAccount(String username, String password, String name, String emailAddress) {
+    public void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo) {
         staff = new Staff();
         staff.setUsername(username);
+        staff.setNotes("");
+        staff.setInvalidPasswordCount(0);
+        staff.setActive(Boolean.TRUE);
         //generate salt
         String salt = Long.toHexString(Double.doubleToLongBits(Math.random()));
         staff.setSalt(salt);
-        String fullPassword = salt + "" + password;
-        try {
-            //use SHA256 hashing for passwords
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(fullPassword.getBytes());
-            byte byteArray[] = messageDigest.digest();
-            //convert to hex to store in db
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < byteArray.length; i++) {
-             stringBuilder.append(Integer.toString((byteArray[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            staff.setPassword(stringBuilder.toString());
-        } catch (Exception ex) {
-            Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //Encrypt all personal data with AES to comply with PDPA
-        try {
-            Key key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] encName = cipher.doFinal(name.getBytes());
-            String encryptedName = new BASE64Encoder().encode(encName);
-            staff.setName(name);
-            byte[] encEmailAddress = cipher.doFinal(name.getBytes());
-            String encryptedEmailAddress = new BASE64Encoder().encode(encEmailAddress);
-            staff.setEmailAddress(emailAddress);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        staff.setPassword(password);
+        staff.setName(name);
+        staff.setEmailAddress(emailAddress);
+        staff.setPhoneNo(phoneNo);
         preference = new Preference();
         notifications = new ArrayList<Notification>();
         todolist = new ArrayList<Todo>();
@@ -94,6 +73,22 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
         staff.setEvents(events);
         em.persist(staff);
         em.flush();
+    }
+    
+    public List<Vector> displayAllStaffAccounts(){
+        Query query = em.createQuery("SELECT s FROM Staff S");
+        List<Vector> staffList = new ArrayList();
+        for (Object o: query.getResultList()) {
+            Staff s = (Staff)o;
+            Vector vector = new Vector();
+            vector.add(s.getId());
+            vector.add(s.getName());
+            vector.add(s.getEmailAddress());
+            vector.add(s.getPhoneNo());
+            vector.add(s.getPassword());
+            staffList.add(vector);
+        }
+        return staffList;
     }
 
 }

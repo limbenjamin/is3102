@@ -3,37 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.FW.Entities;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author Benjamin
  */
 @Entity
-public class Message implements Serializable {
-
+public class MessageThread implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String content;
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Calendar msgTime;
-    private Boolean isRead;
     @ManyToOne
-    private MessageThread thread;
-
+    private Staff sender;
     @ManyToOne
-    private Staff staff;
+    private Staff recipient;
+    @OneToMany(mappedBy="thread")
+    private List<Message> messages;
 
     public Long getId() {
         return id;
@@ -43,46 +40,30 @@ public class Message implements Serializable {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public Staff getSender() {
+        return sender;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSender(Staff sender) {
+        this.sender = sender;
     }
 
-    public Calendar getMsgTime() {
-        return msgTime;
+    public Staff getRecipient() {
+        return recipient;
     }
 
-    public void setMsgTime(Calendar msgTime) {
-        this.msgTime = msgTime;
+    public void setRecipient(Staff recipient) {
+        this.recipient = recipient;
     }
 
-    public Boolean isIsRead() {
-        return isRead;
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    public void setIsRead(Boolean isRead) {
-        this.isRead = isRead;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
-
-    public MessageThread getThread() {
-        return thread;
-    }
-
-    public void setThread(MessageThread thread) {
-        this.thread = thread;
-    }
-
-    public Staff getStaff() {
-        return staff;
-    }
-
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -93,10 +74,10 @@ public class Message implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Message)) {
+        if (!(object instanceof MessageThread)) {
             return false;
         }
-        Message other = (Message) object;
+        MessageThread other = (MessageThread) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -105,7 +86,7 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Message[ id=" + id + " ]";
+        return "entities.Thread[ id=" + id + " ]";
     }
-
+    
 }

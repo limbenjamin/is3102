@@ -6,6 +6,8 @@
 
 package IslandFurniture.ITManagementModule;
 
+import java.util.List;
+import java.util.Vector;
 import javax.ejb.Remote;
 
 /**
@@ -15,6 +17,6 @@ import javax.ejb.Remote;
 @Remote
 public interface ManageStaffAccountRemote {
 
-    void createStaffAccount(String username, String password, String name, String emailAddress);
-    
+    void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo);
+    List<Vector> displayAllStaffAccounts();
 }

@@ -27,6 +27,7 @@ public class Announcement implements Serializable {
     private Long id;
     private String title;
     private String content;
+    private String department;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date activeDate;
     @Temporal(javax.persistence.TemporalType.DATE)

@@ -27,6 +27,7 @@ public class Country implements Serializable {
     private Long id;
     private String code;
     private String name;
+    private String phoneCode;
     
     @OneToMany(mappedBy="country")
     private List<Plant> plant;

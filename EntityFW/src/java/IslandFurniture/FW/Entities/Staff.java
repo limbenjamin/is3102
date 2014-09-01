@@ -6,9 +6,25 @@
 
 package IslandFurniture.FW.Entities;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +37,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -37,26 +55,25 @@ public class Staff implements Serializable {
     private String password;
     private String salt;
     private String name;
+    private String notes;
+    //phone no. has to be string because it is encrypted 
+    private String phoneNo;
+    private Boolean active;
+    private Integer invalidPasswordCount;
     @Column(unique=true)
     private String emailAddress;
-    @JoinColumn(nullable = true)
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
-    @JoinColumn(nullable = true)
     private Date lastLogon;
     @OneToMany(mappedBy="staff")
     private List<Todo> todoList;
     @OneToMany(mappedBy="recipient")
-    @JoinColumn(nullable = true) //TODO : remove later once Thread settled
-    private List<Thread> inbox;
+    private List<MessageThread> inbox;
     @OneToMany(mappedBy="sender")
-    @JoinColumn(nullable = true) //TODO : remove later once Thread settled
-    private List<Thread> outbox;
+    private List<MessageThread> outbox;
     @ManyToOne
-    @JoinColumn(nullable = true) //TODO : remove later once Plant settled
     private Plant plant;
     @ManyToMany(mappedBy="staffs")
-    @JoinColumn(nullable = true) //TODO : remove later when role created
     private List<Role> roles;
     @OneToOne(cascade={CascadeType.ALL})
     private Preference preference;
@@ -89,7 +106,21 @@ public class Staff implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        String fullPassword = salt + "" + password;
+        try {
+            //use SHA256 hashing for passwords
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(fullPassword.getBytes());
+            byte byteArray[] = messageDigest.digest();
+            //convert to hex to store in db
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < byteArray.length; i++) {
+             stringBuilder.append(Integer.toString((byteArray[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            this.password = stringBuilder.toString();
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String getSalt() {
@@ -101,19 +132,23 @@ public class Staff implements Serializable {
     }
 
     public String getName() {
-        return name;
+        String decName = AESDecrypt(name);
+        return decName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        String encName = AESEncrypt(name);
+        this.name = encName;
     }
 
     public String getEmailAddress() {
-        return emailAddress;
+        String decEmailAddress = AESDecrypt(emailAddress);
+        return decEmailAddress;
     }
 
     public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+        String encEmailAddress = AESEncrypt(emailAddress);
+        this.emailAddress = encEmailAddress;
     }
 
     public String getForgottenPasswordCode() {
@@ -140,19 +175,19 @@ public class Staff implements Serializable {
         this.todoList = todoList;
     }
 
-    public List<Thread> getInbox() {
+    public List<MessageThread> getInbox() {
         return inbox;
     }
 
-    public void setInbox(List<Thread> inbox) {
+    public void setInbox(List<MessageThread> inbox) {
         this.inbox = inbox;
     }
 
-    public List<Thread> getOutbox() {
+    public List<MessageThread> getOutbox() {
         return outbox;
     }
 
-    public void setOutbox(List<Thread> outbox) {
+    public void setOutbox(List<MessageThread> outbox) {
         this.outbox = outbox;
     }
 
@@ -203,6 +238,41 @@ public class Staff implements Serializable {
     public void setEvents(List<Event> events) {
         this.events = events;
     }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getPhoneNo() {
+        String decPhoneNo = AESDecrypt(phoneNo);
+        return decPhoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        String encPhoneNo = AESEncrypt(phoneNo);
+        this.phoneNo = encPhoneNo;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Integer getInvalidPasswordCount() {
+        return invalidPasswordCount;
+    }
+
+    public void setInvalidPasswordCount(Integer invalidPasswordCount) {
+        this.invalidPasswordCount = invalidPasswordCount;
+    }
+    
     
     @Override
     public int hashCode() {
@@ -228,5 +298,38 @@ public class Staff implements Serializable {
     public String toString() {
         return "commonInfrastructure.entities.Staff[ id=" + id + " ]";
     }
-
+    
+    static byte[] iv = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5 };
+    static IvParameterSpec ivspec = new IvParameterSpec(iv);
+    static String encryptionKey = "0123456789abcdef"; //TODO : move the keys into store entity
+    
+    // Used to encrypt name, email, phone no. to comply with PDPA's "reasonable security arrangements"
+    private String AESEncrypt(String plaintext){
+        String ciphertext = "";
+        try {
+            Key key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivspec);
+            byte[] plainTextByte = cipher.doFinal(plaintext.getBytes());
+            ciphertext = new BASE64Encoder().encode(plainTextByte);
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ciphertext;
+    }
+    
+    public static String AESDecrypt(String ciphertext){
+        String plaintext = "";
+        try{
+            Key key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
+            cipher.init(Cipher.DECRYPT_MODE, key, ivspec);
+            byte[] cipherTextByte = new BASE64Decoder().decodeBuffer(ciphertext);
+            byte[] plainTextByte = cipher.doFinal(cipherTextByte);
+            plaintext = new String(plainTextByte);
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchProviderException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException | IOException | InvalidAlgorithmParameterException ex) {
+            Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return plaintext;
+    }
 }

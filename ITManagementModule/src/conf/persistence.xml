@@ -68,15 +68,15 @@
     <class>IslandFurniture.FW.Entities.Store</class>
     <class>IslandFurniture.FW.Entities.StoreMember</class>
     <class>IslandFurniture.FW.Entities.Supplier</class>
-    <class>IslandFurniture.FW.Entities.Thread</class>
     <class>IslandFurniture.FW.Entities.Todo</class>
     <class>IslandFurniture.FW.Entities.Transaction</class>
     <class>IslandFurniture.FW.Entities.WeeklyIngredientSupplyReq</class>
     <class>IslandFurniture.FW.Entities.WeeklyMRPRecord</class>
     <class>IslandFurniture.FW.Entities.WeeklyProductionPlan</class>
+    <class>IslandFurniture.FW.Entities.MessageThread</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
 </persistence>
