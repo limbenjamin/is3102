@@ -7,6 +7,9 @@
 package benclient;
 
 import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 import javax.ejb.EJB;
 
 /**
@@ -22,7 +25,15 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       msar.createStaffAccount("username", "pass", "name", "email@email.com");
+        msar.createStaffAccount("username4", "pass", "name", "email4@email.com", "91234567");
+        for (Object obj : msar.displayAllStaffAccounts()) {
+            Vector vector = (Vector) obj;
+            System.out.println(vector.get(0));
+            System.out.println(vector.get(1));
+            System.out.println(vector.get(2));
+            System.out.println(vector.get(3));
+            System.out.println(vector.get(4));
+        }
     }
     
 }

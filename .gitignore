@@ -14,3 +14,12 @@
 **/*.war
 **/*.ear
 
+/IslandFurniture/IslandFurniture-erp-war/nbproject/private/
+/IslandFurniture/IslandFurniture-ejb/nbproject/private/
+/IslandFurniture/IslandFurniture-eservices-war/nbproject/private/
+/IslandFurniture/IslandFurniture-ejb/build/
+/IslandFurniture/IslandFurniture-ejb/dist/
+/IslandFurniture/IslandFurniture-erp-war/build/
+/IslandFurniture/IslandFurniture-eservices-war/build/
+/IslandFurniture/IslandFurniture-erp-war/dist/
+/IslandFurniture/IslandFurniture-eservices-war/dist/
