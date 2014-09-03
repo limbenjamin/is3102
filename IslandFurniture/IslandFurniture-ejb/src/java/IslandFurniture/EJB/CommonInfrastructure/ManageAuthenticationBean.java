@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.*;
+import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
 import java.util.Date;
 import javax.annotation.*;
 import javax.ejb.*;
@@ -35,15 +36,14 @@ public class ManageAuthenticationBean {
         query.setParameter("username", username);
         try{
             staff = (Staff) query.getSingleResult();
-        }catch(NoResultException | NonUniqueResultException nre){ 
+        }catch(NoResultException | NonUniqueResultException nre){
             return false;
         }
-        String correctpassword = staff.getPassword();
-        if (!correctpassword.equals(password)){
-            log("Staff",staff.getId(),"Access","Invalid Login Attempt",null);
+        String correctPassword = staff.getPassword();
+        String hashedPassword = SHA1Hash(staff.getSalt() + password);
+        if (!correctPassword.equals(hashedPassword)){
             return false;
         }else{
-            log("Staff",staff.getId(),"Access","Logged in",staff.getId());
             staff.setLastLogon(new Date());
             return true;
         }

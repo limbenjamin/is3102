@@ -25,7 +25,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        msar.createStaffAccount("username4", "pass", "name", "email4@email.com", "91234567");
+        msar.createStaffAccount("username", "pass", "name", "email@email.com", "91234567");
+        msar.createStaffAccount("username2", "pass", "name", "email2@email.com", "91234568");
+        msar.createStaffAccount("username3", "pass", "name", "email3@email.com", "91234569");
+        msar.createStaffAccount("username4", "pass", "name", "email4@email.com", "91234560");
         for (Object obj : msar.displayAllStaffAccounts()) {
             Vector vector = (Vector) obj;
             System.out.println(vector.get(0));

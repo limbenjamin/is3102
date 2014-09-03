@@ -106,20 +106,8 @@ public class Staff implements Serializable {
 
     public void setPassword(String password) {
         String fullPassword = salt + "" + password;
-        try {
-            //use SHA256 hashing for passwords
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(fullPassword.getBytes());
-            byte byteArray[] = messageDigest.digest();
-            //convert to hex to store in db
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < byteArray.length; i++) {
-             stringBuilder.append(Integer.toString((byteArray[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            this.password = stringBuilder.toString();
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String hashedPassword = SHA1Hash(fullPassword);
+        this.password = hashedPassword;
     }
 
     public String getSalt() {
@@ -330,5 +318,22 @@ public class Staff implements Serializable {
             Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
         }
         return plaintext;
+    }
+    
+    public static String SHA1Hash(String fullPassword){
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            //use SHA256 hashing for passwords
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(fullPassword.getBytes());
+            byte byteArray[] = messageDigest.digest();
+            //convert to hex to store in db
+            for (int i = 0; i < byteArray.length; i++) {
+             stringBuilder.append(Integer.toString((byteArray[i] & 0xff) + 0x100, 16).substring(1));
+            }
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Staff.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stringBuilder.toString();
     }
 }
