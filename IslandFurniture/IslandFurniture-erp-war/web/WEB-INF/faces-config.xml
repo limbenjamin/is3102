@@ -4,10 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
     <navigation-rule>
-        <from-view-id>/login.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>dash</from-outcome>
             <to-view-id>/dash.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>modifyparticulars</from-outcome>
+            <to-view-id>/modifyparticulars.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

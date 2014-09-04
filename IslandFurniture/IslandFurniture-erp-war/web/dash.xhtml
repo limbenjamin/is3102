@@ -7,8 +7,16 @@
     </h:head>
     <h:body>
         <h:form>       
-            <p>Welcome, #{staffManagedBean.uname}</p>
-        <h:commandButton action="#{staffManagedBean.logout}" value="Logout"></h:commandButton>
-    </h:form>
+            <p>Welcome, #{staffManagedBean.name}</p>
+            <p>Logged in on #{staffManagedBean.lastLogon}</p>
+            <h:commandButton action="#{staffManagedBean.logout}" value="Logout"></h:commandButton>
+        </h:form>
+        <p>Notes: #{staffManagedBean.notes}</p>
+        <h:form id="notesForm">       
+            <p>Modify Notes</p>
+            <h:inputText id="notes"></h:inputText>
+            <h:commandButton action="#{staffManagedBean.modifyNotes}" value="Modify notes"></h:commandButton>
+        </h:form>
+        <h:link value="Modify personal particulars" outcome="modifyparticulars"/>
     </h:body>
 </html>
