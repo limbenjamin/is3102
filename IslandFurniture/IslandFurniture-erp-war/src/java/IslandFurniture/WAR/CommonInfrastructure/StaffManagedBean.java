@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package managedbean;
+package IslandFurniture.WAR.CommonInfrastructure;
 
 /**
  *
