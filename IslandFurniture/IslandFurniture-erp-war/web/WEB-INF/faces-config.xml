@@ -12,5 +12,9 @@
             <from-outcome>modifyparticulars</from-outcome>
             <to-view-id>/common/modifyparticulars.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>messaging</from-outcome>
+            <to-view-id>/common/messaging.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

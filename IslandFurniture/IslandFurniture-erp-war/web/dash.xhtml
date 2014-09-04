@@ -1,47 +1,359 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
     <h:head>
-        <title>Facelet Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <title>Island Furniture - Web Application Admin Dashboard</title>
+        <!-- core styles -->
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.css"></link>
+        <!-- template styles -->
+        <link rel="stylesheet" href="assets/css/palette.css"></link>
+        <link rel="stylesheet" href="assets/css/navigation.css"></link>
+        <link rel="stylesheet" href="assets/css/dashboard.css"></link> 
+        <link rel="stylesheet" href="assets/plugins/calendar/bootstrap_calendar.css"></link>
     </h:head>
     <h:body>
-        <h:form>       
-            <p>Welcome, #{staffManagedBean.name}</p>
-            <p>Logged in on #{staffManagedBean.lastLogon}</p>
-            <h:commandButton action="#{staffManagedBean.logout}" value="Logout"></h:commandButton>
-        </h:form>
-        <p>Notes: #{staffManagedBean.notes}</p>
-        <h:form id="notesForm">       
-            <p>Modify Notes</p>
-            <h:inputText id="notes"></h:inputText>
-            <h:commandButton action="#{staffManagedBean.modifyNotes}" value="Modify notes"></h:commandButton>
-        </h:form>
-        <h:link value="Modify personal particulars" outcome="modifyparticulars"/>
-        <p>Todo List:</p>
-        <ui:repeat value="#{staffManagedBean.todoList}" var="todo">
-            Description: #{todo.description}  Status: #{todo.isStatus()}<br />
-        </ui:repeat>
-        <h:form id="todoForm">       
-            <p>Add Todo</p>
-            <h:inputText id="description"></h:inputText>
-            <h:commandButton action="#{staffManagedBean.addTodo}" value="Add Todo"></h:commandButton>
-        </h:form>
-        <p>Thread List:</p>
-        <ui:repeat value="#{staffManagedBean.inbox}" var="messageThread">
-            ID: #{messageThread.id}     Title: #{messageThread.title}     
-            <ui:repeat value="#{messageThread.recipient}" var="recipient">
-                Recipients: #{recipient.username}
-            </ui:repeat>    
-            <br />
-        </ui:repeat>
-        <h:form id="threadForm">       
-            <p>Add Thread</p>
-            <h:inputText id="title"></h:inputText>
-            <h:inputText id="recipients"></h:inputText>
-            <h:commandButton action="#{staffManagedBean.addThread}" value="Add Thread"></h:commandButton>
-        </h:form>
         
+    <div class="app">
+        <!-- top header -->
+        <header class="header header-fixed navbar">
+
+            <div class="brand">
+                <!-- toggle offscreen menu -->
+                <a href="javascript:;" class="fa fa-bars off-left visible-xs" data-toggle="offscreen" data-move="ltr"></a>
+                <!-- /toggle offscreen menu -->
+
+                <!-- logo -->
+                <a href="dash.xhtml" class="navbar-brand">
+                    <img src="assets/img/logo.png" alt=""></img>
+                    <span class="heading-font">
+                        Island Furniture
+                    </span>
+                </a>
+                <!-- /logo -->
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="hidden-xs">
+                    <!-- toggle small menu -->
+                    <a href="#" class="toggle-sidebar">
+                        <i class="fa fa-bars"></i>
+                    </a>
+                    <!-- /toggle small menu -->
+                </li>
+                <li class="dashboard-name">
+                    <h4>Common Workspace</h4>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="notifications dropdown">
+                    <a href="#" data-toggle="dropdown">
+                        <i class="fa fa-bell"></i>
+                        <div class="badge badge-top">
+                            <span>3</span>
+                        </div>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="panel panel-default no-m">
+                            <div class="panel-heading small"><b>Notifications</b>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a href="#">
+                                        <div class="m-body">
+                                            <small><h6>Inventory Management System:</h6></small>
+                                            <span>Order #12093 was delivered to the warehouse</span><br></br>
+                                            <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 8:32 AM</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="#">
+                                        <div class="m-body">
+                                            <small><h6>Lee Chen Tong:</h6></small>
+                                            <span>Reminder to refill the sauce bottles</span><br></br>
+                                            <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 4:32 PM</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="panel-footer">
+                                <a href="#">See all notifications <i class="fa fa-arrow-circle-o-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown">
+                        <i class="fa fa-cogs"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <h:link value="View Employee Record" outcome="modifyparticulars"/>
+                        </li>
+                        <li>
+                            <a href="#">Reset Password</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">Notification Settings</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="off-right">
+                    <h:form>
+                    <h:commandLink action="#{staffManagedBean.logout}" >
+                        <span>Logout</span>
+                    </h:commandLink>
+                    </h:form>
+                </li>
+            </ul>
+        </header>
+        <!-- /top header -->
+
+        <section class="layout">
+            <!-- sidebar menu -->
+            <aside class="sidebar offscreen-left">
+                <!-- main navigation -->
+                <nav class="main-navigation" data-height="auto" data-size="6px" data-distance="0" data-rail-visible="true" data-wheel-step="10">
+
+                    <ul class="nav user-info">
+                        <li>
+                            <a href="index.html">
+                                <img src="assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                <span class="user-info">
+                                    #{staffManagedBean.name}<br></br>
+                                    Marketing Executive<br></br>
+                                    Singapore Office
+                                </span>
+                            </a>
+                        </li>
+                    </ul> 
+
+                    <p class="nav-title">MENU</p>
+                    <ul class="nav sidenav">
+
+                        <li class="active">
+                            <a href="index.html">
+                                <i class="fa fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <span>CRM Analytics<i class="fa fa-caret-down pull-right"></i></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="buttons.html">
+                                        <span>Customer Membership Analytics</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="general.html">
+                                        <span>Customer Purchase Patterns Analytics</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="typography.html">
+                                        <span>Promotion Analytics</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-edit"></i><span>CRM Operations</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-star"></i>
+                                <span>Sales &amp; Marketing<i class="fa fa-caret-down pull-right"></i></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="#">
+                                        <span>Past Sales Performance</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Sales Forecast</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-clock-o"></i><span>Transaction History</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-desktop"></i><span>Staff Activity Log</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-pencil"></i><span>Your Tasks</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-calendar"></i><span>Calendar of Events</span>
+                            </a>
+                        </li>   
+                        <li>
+                            <a href="./common/messaging.xhtml">
+                                <i class="fa fa-envelope"></i><span>Messages</span>
+                            </a>
+                        </li>                                                                      
+                    </ul>
+                </nav>
+            </aside>
+            <!-- /sidebar menu -->
+
+            <!-- main content starts here -->
+            <section class="main-content">
+
+                <!-- content wrapper -->
+                <div class="content-wrap">
+
+                    <!-- inner content wrapper -->
+                    <div class="wrapper">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
+                        <h4>Quick Links</h4>
+                        <hr></hr>
+                        <!-- Quick Links -->
+                        <div class="col-md-4"><a href="acrm.html">
+                            <div class="quick-link">
+                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
+                                <h5>CRM Analytics</h5>
+                            </div></a>
+                        </div>       
+                        <div class="col-md-4"><a href="acrm.html">
+                            <div class="quick-link">
+                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
+                                <h5>Sales Forecast</h5>
+                            </div></a>
+                        </div>    
+                        <div class="col-md-4"><a href="./common/messaging.xhtml">
+                            <div class="quick-link">
+                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
+                                <h5>Messages</h5>
+                            </div></a>
+                        </div> 
+                        <div class="col-md-4"><a href="acrm.html">
+                            <div class="quick-link">
+                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
+                                <h5>CRM Operations</h5>
+                            </div></a>
+                        </div>    
+                        <div class="col-md-4"><a href="acrm.html">
+                            <div class="quick-link">
+                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
+                                <h5>Transaction History</h5>
+                            </div></a>
+                        </div>
+
+                        <div class="col-md-12">
+                            <hr></hr>
+                        </div>
+                        <div class="col-md-12">                      
+                          <section class="panel">
+                            <div class="panel-heading announcement-widget">
+                              <span class="badge pull-right">4</span>
+                              <a href="#" class="no-decor">Announcements</a>
+                            </div>
+                            <div class="list-group">                          
+                              <a href="#" class="list-group-item">
+                                  <h5>Order #1512 has arrived at the warehouse</h5>
+                                  <small>August 12 2014 14:15</small>
+                              </a>
+                              <a href="#" class="list-group-item">
+                                  <h5>Compulsory Fire Drill</h5>
+                                  <small>August 10 2014 17:32</small>
+                              </a>
+                              <a href="#" class="list-group-item">
+                                  <h5>Order #1312 has arrived been shipped</h5>
+                                  <small>August 08 2014 09:18</small>
+                              </a>
+                              <a href="#" class="list-group-item">
+                                  <h5>Payment from Seng Media has been processed</h5>
+                                  <small>August 07 2014 12:46</small>
+                              </a>
+                            </div>
+                            <div class="panel-footer">
+                                <a href="#" class="no-decor">
+                                    View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
+                                </a>
+                            </div>
+                          </section>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4"> 
+                    <h4>Quick Calendar</h4>
+                    <hr></hr> 
+                      <section class="panel">
+                        <div id="calendar"></div>
+                        <div class="list-group">
+                          <a href="#" class="list-group-item">
+                            <span class="badge">10:30</span> 
+                            <strong>4 Aug</strong>: Marketing Meeting
+                          </a>
+                          <a href="#" class="list-group-item"> 
+                            <span class="badge">15:30</span> 
+                            <strong>7 Aug</strong>: Marketing Plans for September Due
+                          </a>
+                          <a href="#" class="list-group-item">
+                            <span class="badge">10:30</span> 
+                            <strong>17 Aug</strong>: Milestone Release
+                          </a>
+                          <a href="#" class="list-group-item"> 
+                            <span class="badge">10:30</span> 
+                            <strong>19 Aug</strong>: Corporate Outreach
+                          </a>                          
+                        </div>                        
+                      </section>                                        
+                    </div>
+                </div>
+
+                    </div>
+                    <!-- /inner content wrapper -->
+
+                </div>
+                <!-- /content wrapper -->
+                <a class="exit-offscreen"></a>
+            </section>
+            <!-- /main content -->
+        </section>
+        </div>
+        
+        <!-- core scripts -->
+        <script src="assets/plugins/jquery-1.11.0.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/plugins/jquery.slimscroll.min.js"></script>
+        <script src="assets/plugins/calendar/bootstrap_calendar.js"></script>
+        <script src="assets/plugins/calendar/demo.js"></script>
+        <!-- template scripts -->
+        <script src="assets/js/offscreen.js"></script>
+        <script src="assets/js/navigation.js"></script>
     </h:body>
 </html>
+

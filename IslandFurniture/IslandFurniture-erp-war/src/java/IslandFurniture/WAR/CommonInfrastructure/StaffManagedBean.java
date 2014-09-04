@@ -124,7 +124,7 @@ public class StaffManagedBean implements Serializable {
       recipients += ","+username;
       messageBean.createNewThread(title, recipients);
       dash();
-      return "dash";
+      return "messaging";
     }
 
     public String getUsername() {
@@ -269,6 +269,14 @@ public class StaffManagedBean implements Serializable {
 
     public void setMessageBean(ManageMessagesBean messageBean) {
         this.messageBean = messageBean;
+    }
+
+    public String getRecipients() {
+        return recipients;
+    }
+
+    public void setRecipients(String recipients) {
+        this.recipients = recipients;
     }
 
     
