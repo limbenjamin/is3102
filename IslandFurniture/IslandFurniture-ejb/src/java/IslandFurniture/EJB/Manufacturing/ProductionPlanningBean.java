@@ -3,13 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
+import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
-import javax.ejb.Stateless;
+import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
+import IslandFurniture.StaticClasses.Helper.Helper;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -20,19 +29,70 @@ import javax.persistence.PersistenceContext;
 @Stateless
 @LocalBean
 public class ProductionPlanningBean {
+
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+//Create MonthlyProductionPlan
+    public MonthlyProductionPlan CreateProductionPlan(int month, long Year, FurnitureModel furnitureModel) {
+        MonthlyProductionPlan mpp = null;
+        try {
+            Month E_month = Helper.TranslateMonth(month);
+            mpp = new MonthlyProductionPlan();
+            mpp.setMonth(E_month);
+            mpp.setYear((int) Year);
+            mpp.setFurnitureModel(furnitureModel);
+            mpp.setWeeklyProductionPlans(new ArrayList<WeeklyProductionPlan>());
+            em.persist(mpp);
+        } catch (Exception ex) {
+        }
 
-    public MonthlyProductionPlan CreateProductionPlan(long Month, long Year,FurnitureModel furnitureModel) {
-        return null;
+        return mpp;
+
     }
+
+    //Add a weeklyProduction Plan
+    public WeeklyProductionPlan AddWeeklyPlan(MonthlyProductionPlan mpp) {
+
+        WeeklyProductionPlan wpp = null;
+        try {
+
+            wpp = new WeeklyProductionPlan();
+            wpp.setMonthlyProductionPlan(mpp);
+            wpp.setWeekNo(mpp.getWeeklyProductionPlans().size() + 1);
+
+            em.persist(wpp);
+        } catch (Exception ex) {
+        }
+
+        return wpp;
+
+    }
+
+    
+    //This process plans MPP and split it evenly across weeks
+    public void planMPP(MonthlyProductionPlan mpp) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(mpp.getYear(), mpp.getMonth().value, 1);
+        int maxWeeknumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int rperweek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeeknumber));
+
+        for (int i = 1; i <= maxWeeknumber; i++) {
+
+            WeeklyProductionPlan wp = AddWeeklyPlan(mpp);
+            if (i == maxWeeknumber) {
+                wp.setQTY(mpp.getQTY() - rperweek * (maxWeeknumber - 1));
+            } else {
+                wp.setQTY(rperweek);
+            }
+
+        }
+
+    }
+
 }
