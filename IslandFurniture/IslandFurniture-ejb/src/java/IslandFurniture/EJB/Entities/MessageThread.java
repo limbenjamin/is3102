@@ -8,11 +8,12 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -25,10 +26,9 @@ public class MessageThread implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    private Staff sender;
-    @ManyToOne
-    private Staff recipient;
+    private String title;
+    @ManyToMany(cascade={CascadeType.ALL},mappedBy="inbox")
+    private List<Staff> recipients;
     @OneToMany(mappedBy="thread")
     private List<Message> messages;
 
@@ -40,20 +40,20 @@ public class MessageThread implements Serializable {
         this.id = id;
     }
 
-    public Staff getSender() {
-        return sender;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSender(Staff sender) {
-        this.sender = sender;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Staff getRecipient() {
-        return recipient;
+    public List<Staff> getRecipient() {
+        return recipients;
     }
 
-    public void setRecipient(Staff recipient) {
-        this.recipient = recipient;
+    public void setRecipient(List<Staff> recipients) {
+        this.recipients = recipients;
     }
 
     public List<Message> getMessages() {

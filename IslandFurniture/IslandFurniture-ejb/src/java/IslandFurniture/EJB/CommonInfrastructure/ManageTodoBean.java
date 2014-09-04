@@ -6,17 +6,54 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
+
+import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.Todo;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Benjamin
  */
-@Stateless
-@LocalBean
+@Stateful
 public class ManageTodoBean {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext
+    EntityManager em;
+    
+    @Resource SessionContext ctx;
+    private Staff staff;
+    private Todo todo;
+    private List<Todo> todoList;
+    
+    @EJB
+    private ManageUserAccountInformationBean staffbean;
+    
+    public ManageTodoBean(){
+        
+    }
+    
+    public void addTodoItem(String username, String description){
+        staff = staffbean.getStaff(username);
+        todo = new Todo();
+        todo.setStaff(staff);
+        todo.setDescription(description);
+        todo.setStatus(Boolean.FALSE);
+        todoList = staff.getTodoList();
+        todoList.add(todo);
+        em.merge(staff);
+        em.flush();
+    }
+    
+    public List<Todo> getTodoList(String username){
+        staff = staffbean.getStaff(username);
+        return staff.getTodoList();
+    }
+    
 }

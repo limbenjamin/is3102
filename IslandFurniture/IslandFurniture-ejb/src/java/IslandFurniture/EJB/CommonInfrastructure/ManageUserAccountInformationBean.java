@@ -41,18 +41,14 @@ public class ManageUserAccountInformationBean {
     }
     
     public void modifyNote(String username, String notes){
-        Query query = em.createQuery("FROM Staff s where s.username=:username");
-        query.setParameter("username", username);
-        staff = (Staff) query.getSingleResult();
+        staff = getStaff(username);
         staff.setNotes(notes);
         em.merge(staff);
         em.flush();
     }
     
     public void modifyPersonalParticulars(String username, String phoneNo, String emailAddress){
-        Query query = em.createQuery("FROM Staff s where s.username=:username");
-        query.setParameter("username", username);
-        staff = (Staff) query.getSingleResult();
+        staff = getStaff(username);
         staff.setPhoneNo(phoneNo);
         staff.setEmailAddress(emailAddress);
         em.merge(staff);

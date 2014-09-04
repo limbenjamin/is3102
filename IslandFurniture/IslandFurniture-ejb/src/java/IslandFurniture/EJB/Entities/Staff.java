@@ -64,12 +64,10 @@ public class Staff implements Serializable {
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
-    @OneToMany(mappedBy="staff")
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="staff")
     private List<Todo> todoList;
-    @OneToMany(mappedBy="recipient")
+    @ManyToMany(cascade={CascadeType.ALL})
     private List<MessageThread> inbox;
-    @OneToMany(mappedBy="sender")
-    private List<MessageThread> outbox;
     @ManyToOne
     private Plant plant;
     @ManyToMany(mappedBy="staffs")
@@ -168,14 +166,6 @@ public class Staff implements Serializable {
 
     public void setInbox(List<MessageThread> inbox) {
         this.inbox = inbox;
-    }
-
-    public List<MessageThread> getOutbox() {
-        return outbox;
-    }
-
-    public void setOutbox(List<MessageThread> outbox) {
-        this.outbox = outbox;
     }
 
     public Plant getPlant() {

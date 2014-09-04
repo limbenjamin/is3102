@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Facelet Title</title>
     </h:head>
@@ -18,5 +19,29 @@
             <h:commandButton action="#{staffManagedBean.modifyNotes}" value="Modify notes"></h:commandButton>
         </h:form>
         <h:link value="Modify personal particulars" outcome="modifyparticulars"/>
+        <p>Todo List:</p>
+        <ui:repeat value="#{staffManagedBean.todoList}" var="todo">
+            Description: #{todo.description}  Status: #{todo.isStatus()}<br />
+        </ui:repeat>
+        <h:form id="todoForm">       
+            <p>Add Todo</p>
+            <h:inputText id="description"></h:inputText>
+            <h:commandButton action="#{staffManagedBean.addTodo}" value="Add Todo"></h:commandButton>
+        </h:form>
+        <p>Thread List:</p>
+        <ui:repeat value="#{staffManagedBean.inbox}" var="messageThread">
+            ID: #{messageThread.id}     Title: #{messageThread.title}     
+            <ui:repeat value="#{messageThread.recipient}" var="recipient">
+                Recipients: #{recipient.username}
+            </ui:repeat>    
+            <br />
+        </ui:repeat>
+        <h:form id="threadForm">       
+            <p>Add Thread</p>
+            <h:inputText id="title"></h:inputText>
+            <h:inputText id="recipients"></h:inputText>
+            <h:commandButton action="#{staffManagedBean.addThread}" value="Add Thread"></h:commandButton>
+        </h:form>
+        
     </h:body>
 </html>

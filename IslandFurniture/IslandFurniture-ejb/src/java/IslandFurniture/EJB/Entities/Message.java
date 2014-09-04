@@ -28,7 +28,6 @@ public class Message implements Serializable {
     private String content;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar msgTime;
-    private Boolean isRead;
     @ManyToOne
     private MessageThread thread;
 
@@ -57,14 +56,6 @@ public class Message implements Serializable {
 
     public void setMsgTime(Calendar msgTime) {
         this.msgTime = msgTime;
-    }
-
-    public Boolean isIsRead() {
-        return isRead;
-    }
-
-    public void setIsRead(Boolean isRead) {
-        this.isRead = isRead;
     }
 
     public MessageThread getThread() {
