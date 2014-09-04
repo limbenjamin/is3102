@@ -56,7 +56,7 @@ public class ProductionPlanningBean {
     }
 
     //Add a weeklyProduction Plan
-    public WeeklyProductionPlan AddWeeklyPlan(MonthlyProductionPlan mpp, FurnitureModel furnitureModel) {
+    public WeeklyProductionPlan AddWeeklyPlan(MonthlyProductionPlan mpp) {
 
         WeeklyProductionPlan wpp = null;
         try {
@@ -73,10 +73,26 @@ public class ProductionPlanningBean {
 
     }
 
+    
+    //This process plans MPP and split it evenly across weeks
     public void planMPP(MonthlyProductionPlan mpp) {
         Calendar cal = Calendar.getInstance();
-        cal.set(mpp.getYear(), mpp.getMonth().value,1);
+        cal.set(mpp.getYear(), mpp.getMonth().value, 1);
         int maxWeeknumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int rperweek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeeknumber));
+
+        for (int i = 1; i <= maxWeeknumber; i++) {
+
+            WeeklyProductionPlan wp = AddWeeklyPlan(mpp);
+            if (i == maxWeeknumber) {
+                wp.setQTY(mpp.getQTY() - rperweek * (maxWeeknumber - 1));
+            } else {
+                wp.setQTY(rperweek);
+            }
+
+        }
+
     }
 
 }

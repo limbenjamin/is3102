@@ -30,6 +30,15 @@ public class WeeklyProductionPlan implements Serializable {
     private ProductionOrder productionOrder;
     
     private int WeekNo;
+    private int QTY;
+
+    public int getQTY() {
+        return QTY;
+    }
+
+    public void setQTY(int QTY) {
+        this.QTY = QTY;
+    }
     
 
     public Long getId() {

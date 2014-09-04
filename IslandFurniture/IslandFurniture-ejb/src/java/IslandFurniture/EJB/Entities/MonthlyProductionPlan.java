@@ -34,6 +34,8 @@ public class MonthlyProductionPlan implements Serializable {
     private Integer year;
     @OneToMany(mappedBy="monthlyProductionPlan")
     private List<WeeklyProductionPlan> weeklyProductionPlans;
+    
+    private Integer QTY;
 
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
@@ -89,6 +91,14 @@ public class MonthlyProductionPlan implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.MonthlyProductionPlan[ id=" + this.furnitureModel.getId() + ", " + this.month + ", " + this.year + " ]";
+    }
+
+    public Integer getQTY() {
+        return QTY;
+    }
+
+    public void setQTY(Integer QTY) {
+        this.QTY = QTY;
     }
     
 }
