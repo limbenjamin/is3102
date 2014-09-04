@@ -28,14 +28,15 @@ public class WeeklyProductionPlan implements Serializable {
     private MonthlyProductionPlan monthlyProductionPlan;
     @OneToOne
     private ProductionOrder productionOrder;
+    
+    private int WeekNo;
+    
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 
     public MonthlyProductionPlan getMonthlyProductionPlan() {
         return monthlyProductionPlan;
@@ -76,6 +77,14 @@ public class WeeklyProductionPlan implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyProductionPlan[ id=" + id + " ]";
+    }
+
+    public int getWeekNo() {
+        return WeekNo;
+    }
+
+    public void setWeekNo(int WeekNo) {
+        this.WeekNo = WeekNo;
     }
     
 }
