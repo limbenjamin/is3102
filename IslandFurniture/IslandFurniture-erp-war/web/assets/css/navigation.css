@@ -377,7 +377,7 @@ ol.list-style-none,ul.list-style-none{
 			.right-menu .brand{
 				float:right;
 				margin-left:0;
-				margin-right:-15px}
+				margin-right:-15px;
 			}
 			.right-menu.small-menu .brand{
 				float:right
@@ -385,7 +385,7 @@ ol.list-style-none,ul.list-style-none{
 			.right-menu.small-menu .main-navigation>ul>li .sub-menu{
 				border-left:1px solid #e3e6f3!important;
 				border-right:0!important;
-			}
+                        }
 		}
 
 		@media screen and (min-width:768px){
