@@ -5,6 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>IslandFurniture-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
+            <explicit-platform explicit-source-supported="true"/>
             <included-library dirs="200">reference.SupplyChainRemote.jar</included-library>
             <included-library dirs="200">reference.StaffBeanRemote.jar</included-library>
             <included-library dirs="200">reference.ITManagementRemote.jar</included-library>

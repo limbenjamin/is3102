@@ -8,19 +8,29 @@ package IslandFurniture.EJB.Manufacturing;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
+import IslandFurnitures.EJB.Exceptions.ProductionPlanExceedsException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.apache.jasper.tagplugins.jstl.ForEach;
 
 /**
  *
@@ -28,6 +38,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 @LocalBean
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ProductionPlanningBean {
 
     @PersistenceContext(unitName = "IslandFurniture")
@@ -37,15 +48,35 @@ public class ProductionPlanningBean {
         em.persist(object);
     }
 
+    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException {
+
+        //Start from last date to earlist date
+        Comparator<MonthlyStockSupplyReq> byMY = (e1, e2) -> Integer.compare((int) (e1.getYear() & e1.getMonth().value), (int) (e2.getYear() & e2.getMonth().value));
+        Stream<MonthlyStockSupplyReq> sorted_MSSRL = MSSRL.stream().sorted(byMY);
+
+        for (Object o : sorted_MSSRL.toArray()) {
+            MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
+            CreateProductionPlanFromForecast(mssr);
+        }
+
+    }
+
+    public MonthlyProductionPlan CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws ProductionPlanExceedsException {
+
+        MonthlyProductionPlan MPP = CreateProductionPlan(MSSR.getMonth().value, MSSR.getYear(), MSSR.getStock());
+        planMPP(MPP);
+        return (MPP);
+    }
+
 //Create MonthlyProductionPlan
-    public MonthlyProductionPlan CreateProductionPlan(int month, long Year, FurnitureModel furnitureModel) {
+    public MonthlyProductionPlan CreateProductionPlan(int month, long Year, Stock furnitureModel) {
         MonthlyProductionPlan mpp = null;
         try {
             Month E_month = Helper.TranslateMonth(month);
             mpp = new MonthlyProductionPlan();
             mpp.setMonth(E_month);
             mpp.setYear((int) Year);
-            mpp.setFurnitureModel(furnitureModel);
+            mpp.setFurnitureModel((FurnitureModel) furnitureModel);
             mpp.setWeeklyProductionPlans(new ArrayList<WeeklyProductionPlan>());
             em.persist(mpp);
         } catch (Exception ex) {
@@ -73,9 +104,8 @@ public class ProductionPlanningBean {
 
     }
 
-    
     //This process plans MPP and split it evenly across weeks
-    public void planMPP(MonthlyProductionPlan mpp) {
+    public void planMPP(MonthlyProductionPlan mpp) throws ProductionPlanExceedsException {
         Calendar cal = Calendar.getInstance();
         cal.set(mpp.getYear(), mpp.getMonth().value, 1);
         int maxWeeknumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
@@ -95,4 +125,7 @@ public class ProductionPlanningBean {
 
     }
 
+    public void ExecuteMPP(MonthlyProductionPlan mpp) {
+
+    }
 }
