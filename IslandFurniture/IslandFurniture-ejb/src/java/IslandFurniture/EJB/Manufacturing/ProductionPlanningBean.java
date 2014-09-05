@@ -30,6 +30,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import org.apache.jasper.tagplugins.jstl.ForEach;
 
 /**
@@ -63,14 +64,19 @@ public class ProductionPlanningBean {
 
     public MonthlyProductionPlan CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws ProductionPlanExceedsException {
 
-        MonthlyProductionPlan MPP = CreateProductionPlan(MSSR.getMonth().value, MSSR.getYear(), MSSR.getStock());
+        MonthlyProductionPlan MPP = CreateModifyProductionPlan(MSSR.getMonth().value, MSSR.getYear(), MSSR.getStock());
         planMPP(MPP);
         return (MPP);
     }
 
 //Create MonthlyProductionPlan
-    public MonthlyProductionPlan CreateProductionPlan(int month, long Year, Stock furnitureModel) {
+    public MonthlyProductionPlan CreateModifyProductionPlan(int month, long Year, Stock furnitureModel) {
         MonthlyProductionPlan mpp = null;
+        
+        Query q = em.createQuery("select mpp  from MonthlyProductionPlan mpp where mpp.locked=false and mpp.year=0 and mpp.month=");
+        
+        if (q.getResultList().size()==0){
+        
         try {
             Month E_month = Helper.TranslateMonth(month);
             mpp = new MonthlyProductionPlan();
@@ -80,6 +86,9 @@ public class ProductionPlanningBean {
             mpp.setWeeklyProductionPlans(new ArrayList<WeeklyProductionPlan>());
             em.persist(mpp);
         } catch (Exception ex) {
+        }
+        }else{
+        
         }
 
         return mpp;

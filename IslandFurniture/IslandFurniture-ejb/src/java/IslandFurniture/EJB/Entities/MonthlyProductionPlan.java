@@ -36,6 +36,10 @@ public class MonthlyProductionPlan implements Serializable {
     private List<WeeklyProductionPlan> weeklyProductionPlans;
     
     private Integer QTY;
+    
+    private boolean locked=false;
+    
+    
 
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
@@ -99,6 +103,14 @@ public class MonthlyProductionPlan implements Serializable {
 
     public void setQTY(Integer QTY) {
         this.QTY = QTY;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
     
 }
