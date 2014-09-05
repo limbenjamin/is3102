@@ -30,6 +30,7 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class StaffManagedBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;
+    private String absolutepath = "http://localhost:8080/IslandFurniture-erp-war/";
     private Staff staff;
     private String username = null;
     private String password = null;
@@ -277,6 +278,14 @@ public class StaffManagedBean implements Serializable {
 
     public void setRecipients(String recipients) {
         this.recipients = recipients;
+    }
+
+    public String getAbsolutepath() {
+        return absolutepath;
+    }
+
+    public void setAbsolutepath(String absolutepath) {
+        this.absolutepath = absolutepath;
     }
 
     
