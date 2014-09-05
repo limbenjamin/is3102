@@ -9,6 +9,7 @@ package IslandFurniture.EJB.Entities;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -32,14 +34,33 @@ public class MonthlyProductionPlan implements Serializable {
     private Month month;
     @Id
     private Integer year;
+    
     @OneToMany(mappedBy="monthlyProductionPlan")
-    private List<WeeklyProductionPlan> weeklyProductionPlans;
+    private List<WeeklyProductionPlan> weeklyProductionPlans=new ArrayList<WeeklyProductionPlan>();
     
     private Integer QTY;
     
     private boolean locked=false;
     
+    @OneToMany(mappedBy = "monthlyProductionPlan")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs=new ArrayList<MonthlyStockSupplyReq>();
     
+    @OneToOne
+    private ProductionCapacity productionCapacity=null;
+    
+
+    
+    public long get_total_demand()
+    {
+        long total=0;
+        
+        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs)
+        {
+            total+=mssr.getQtyRequested();
+        }
+        
+        return(total);
+    }
 
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
@@ -111,6 +132,22 @@ public class MonthlyProductionPlan implements Serializable {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
+
+    public ProductionCapacity getPc() {
+        return productionCapacity;
+    }
+
+    public void setPc(ProductionCapacity pc) {
+        this.productionCapacity = pc;
     }
     
 }

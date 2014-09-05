@@ -42,6 +42,12 @@ public class MonthlyStockSupplyReq implements Serializable {
     private boolean commited;
     @OneToMany(mappedBy="monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
+    
+    @ManyToOne
+    private MonthlyProductionPlan monthlyProductionPlan;
+    
+    
+    
 
     public Stock getStock() {
         return stock;
@@ -150,6 +156,14 @@ public class MonthlyStockSupplyReq implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
+    }
+
+    public MonthlyProductionPlan getMonthlyProductionPlan() {
+        return monthlyProductionPlan;
+    }
+
+    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
+        this.monthlyProductionPlan = monthlyProductionPlan;
     }
     
 }

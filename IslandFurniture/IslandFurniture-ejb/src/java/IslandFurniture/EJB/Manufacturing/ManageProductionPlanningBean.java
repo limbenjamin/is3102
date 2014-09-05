@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
@@ -45,27 +46,27 @@ import org.apache.jasper.tagplugins.jstl.ForEach;
 @Stateful
 @LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ProductionPlanningBean {
+public class ManageProductionPlanningBean {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    private ManufacturingFacility MF=null;
+    private ManufacturingFacility MF = null;
 
     private void persist(Object object) {
         em.persist(object);
     }
 
     //Public method. Country must set first.
-    public void setCN(Country cn)
-    {
-       MF=(ManufacturingFacility)em.createQuery("select mf from ManufacturingFacility mf where mf.country.id="+cn.getId()).getResultList().get(1);
-       
+    public void setCN(Country cn) {
+        MF = (ManufacturingFacility) em.createQuery("select mf from ManufacturingFacility mf where mf.country.id=" + cn.getId()).getResultList().get(1);
+
     }
-    
-    
-    //Public method 
-    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN {
-           if (MF==null) throw new ProductionPlanNoCN();
+
+    //Public method , pass a list of forecast to see if it is feasible.
+    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN, Exception {
+        if (MF == null) {
+            throw new ProductionPlanNoCN();
+        }
         //Start from last date to earlist date
         Comparator<MonthlyStockSupplyReq> byMY = (e1, e2) -> Integer.compare((int) (e1.getYear() & e1.getMonth().value), (int) (e2.getYear() & e2.getMonth().value));
         Stream<MonthlyStockSupplyReq> sorted_MSSRL = MSSRL.stream().sorted(byMY);
@@ -77,50 +78,57 @@ public class ProductionPlanningBean {
 
     }
 
-    private MonthlyProductionPlan CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws ProductionPlanExceedsException {
-        
-        
+    private void CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws ProductionPlanExceedsException, Exception {
 
-        MonthlyProductionPlan MPP = CreateOverwriteProductionPlan(MSSR.getMonth().value, MSSR.getYear(), MSSR.getStock());
-        planMPP(MPP);
-        return (MPP);
-    }
+        int month = MSSR.getMonth().value;
+        int Year = MSSR.getYear();
+        FurnitureModel furnitureModel = (FurnitureModel) MSSR.getStock();
 
-//Create MonthlyProductionPlan
-    private MonthlyProductionPlan CreateOverwriteProductionPlan(int month, long Year, Stock furnitureModel) {
         MonthlyProductionPlan mpp = null;
-        
-        Query q = em.createQuery("select mpp  from MonthlyProductionPlan mpp where mpp.locked=false and mpp.year="+ Year + " and mpp.month.value=" + month);
-        ManufacturingCapacity capacity=(ManufacturingCapacity)em.createQuery("select cpp from ManufacturingCapacity cpp where cpp.stock.id="+furnitureModel.getId()+" and cpp.manufacturingFacility.id="+MF.getId());
-        //Lets create mpp for other months from current month to that month if they dont exist
-        
-        if (q.getResultList().size()==0){
-        
-        try {
-            Month E_month = Helper.TranslateMonth(month);
-            mpp = new MonthlyProductionPlan();
-            mpp.setMonth(E_month);
-            mpp.setYear((int) Year);
-            mpp.setFurnitureModel((FurnitureModel) furnitureModel);
-            mpp.setWeeklyProductionPlans(new ArrayList<WeeklyProductionPlan>());
-            em.persist(mpp);
-        } catch (Exception ex) {
-        }
-        }else{
-            mpp = (MonthlyProductionPlan)q.getResultList().get(0);
-            
+
+        int c_year = Calendar.getInstance().get(Calendar.YEAR);
+        int c_month = Calendar.getInstance().get(Calendar.MONTH);
+        long month_gap = (Year - c_year) * 12 + (month - c_month);
+        //Loop to ensure get all MPP before are created up to the month
+        for (int i = 1; i <= month_gap; i++) {
+            int i_month = ((c_month + i - 1) % 12) + 1;
+            int i_year = Math.floorDiv((c_month + i - 1), 12) + c_year;
+
+            Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + i_year + " and mpp.month.value=" + i_month);
+            if (q.getResultList().size() == 0) {
+                Month E_month = Helper.TranslateMonth(i_month);
+                mpp = new MonthlyProductionPlan();
+                mpp.setMonth(E_month);
+                mpp.setYear((int) i_year);
+                mpp.setFurnitureModel((FurnitureModel) furnitureModel);;
+                mpp.setQTY(0); //Brand New
+                em.persist(mpp);
+            } else {
+                mpp = (MonthlyProductionPlan) q.getResultList().get(0);
+            }
+            if (mpp.getPc() == null) {
+                Query v = em.createQuery("select c from ProductionCapacity c where c.manufacturingFacility.id=" + MF.getId() + " and c.stock.id=" + furnitureModel.getId());
+                if (v.getResultList().size() > 0) {
+                    mpp.setPc((ProductionCapacity) v.getResultList().get(0));
+                    em.persist(mpp);
+                }
+            }
+            //Tag monthlyProductionPlan to MonthlyStockSupply
+            if (!mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
+                mpp.getMonthlyStockSupplyReqs().add(MSSR);
+                em.persist(mpp);
+            }
+
         }
 
-        return mpp;
+    } //End of iteration.
+
+     //ProductionBalancing - To Be done
+    private void balanceProduction() {
+        return;
 
     }
 
-    //ProductionBalancing
-    private void balanceProduction(){
-        
-    }
-    
-    
     //Add a weeklyProduction Plan
     private WeeklyProductionPlan AddWeeklyPlan(MonthlyProductionPlan mpp) {
 
@@ -159,6 +167,5 @@ public class ProductionPlanningBean {
         }
 
     }
-
 
 }
