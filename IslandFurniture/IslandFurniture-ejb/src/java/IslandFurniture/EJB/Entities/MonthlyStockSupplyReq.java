@@ -14,6 +14,8 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -43,7 +45,12 @@ public class MonthlyStockSupplyReq implements Serializable {
     @OneToMany(mappedBy="monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
     
-    @ManyToOne
+        @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name="FURNITUREMODEL_ID", referencedColumnName="FURNITUREMODEL_ID", insertable=false, updatable=false),
+        @JoinColumn(name="MONTH", referencedColumnName="MONTH", insertable=false, updatable=false),
+        @JoinColumn(name="YEAR", referencedColumnName="YEAR", insertable=false, updatable=false)
+    })
     private MonthlyProductionPlan monthlyProductionPlan;
     
     
@@ -158,12 +165,12 @@ public class MonthlyStockSupplyReq implements Serializable {
         return "FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
     }
 
-    public MonthlyProductionPlan getMonthlyProductionPlan() {
-        return monthlyProductionPlan;
-    }
-
-    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
-        this.monthlyProductionPlan = monthlyProductionPlan;
-    }
+//    public MonthlyProductionPlan getMonthlyProductionPlan() {
+//        return monthlyProductionPlan;
+//    }
+//
+//    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
+//        this.monthlyProductionPlan = monthlyProductionPlan;
+//    }
     
 }

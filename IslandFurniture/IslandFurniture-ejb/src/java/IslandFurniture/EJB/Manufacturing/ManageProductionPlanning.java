@@ -123,10 +123,10 @@ public class ManageProductionPlanning {
                 }
             }            
             //Tag monthlyProductionPlan to MonthlyStockSupply
-            if (!mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
-                mpp.getMonthlyStockSupplyReqs().add(MSSR);
-                em.persist(mpp);
-            }
+//            if (!mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
+//                mpp.getMonthlyStockSupplyReqs().add(MSSR);
+//                em.persist(mpp);
+//            }
             
             prev_mpp=mpp;
 

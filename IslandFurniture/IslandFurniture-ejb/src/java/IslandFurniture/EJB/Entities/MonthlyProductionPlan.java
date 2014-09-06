@@ -15,6 +15,7 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -56,17 +57,17 @@ public class MonthlyProductionPlan implements Serializable {
 //    private MonthlyProductionPlan prevMonthlyProcurementPlan;
 
     
-    public long get_total_demand()
-    {
-        long total=0;
-        
-        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs)
-        {
-            total+=mssr.getQtyRequested();
-        }
-        
-        return(total);
-    }
+//    public long get_total_demand()
+//    {
+//        long total=0;
+//        
+//        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs)
+//        {
+//            total+=mssr.getQtyRequested();
+//        }
+//        
+//        return(total);
+//    }
 
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
@@ -140,13 +141,13 @@ public class MonthlyProductionPlan implements Serializable {
         this.locked = locked;
     }
 
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-        return monthlyStockSupplyReqs;
-    }
-
-    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
-    }
+//    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+//        return monthlyStockSupplyReqs;
+//    }
+//
+//    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+//        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+//    }
 
     public ProductionCapacity getPc() {
         return productionCapacity;
