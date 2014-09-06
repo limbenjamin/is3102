@@ -22,6 +22,25 @@
     padding: 10px;
 }
 
+/************************* special forms ***********************************/
+
+.transparent-form {
+    background-color: transparent;
+    border: transparent;
+}
+
+.inner-addon { 
+    position: relative; 
+}
+
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+.right-addon .glyphicon { right: 20px;}
+
 /************************* dashboard login page ***********************************/
 
 .login-container {

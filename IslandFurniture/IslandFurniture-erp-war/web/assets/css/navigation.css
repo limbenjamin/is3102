@@ -127,7 +127,7 @@ ol.list-style-none,ul.list-style-none{
 	}
 	.header .brand .navbar-brand img{max-height:25px;margin-right:5px;margin-top:-5px}
 	.header .navbar-nav{margin:0}
-	.header .navbar-nav>li>a{padding-top:15px;padding-bottom:15px;max-height:50px}
+	.header .navbar-nav>li>a, .header .navbar-nav>li>form>a{padding-top:15px;padding-bottom:15px;max-height:50px}
 	.header .navbar-nav>li>a:focus{background-color:transparent}
 	.header .header-avatar{width:32px;margin-top:-6px}
 	.header>.nav>li>a>.badge{position:absolute;top:8px;right:2px;width:16px;height:16px;font-size:11px;line-height:1.5;text-align:center;padding:0}
