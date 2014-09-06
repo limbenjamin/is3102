@@ -46,7 +46,7 @@ import org.apache.jasper.tagplugins.jstl.ForEach;
 @Stateful
 @LocalBean
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ManageProductionPlanningBean {
+public class ManageProductionPlanning {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -90,11 +90,16 @@ public class ManageProductionPlanningBean {
         int c_month = Calendar.getInstance().get(Calendar.MONTH);
         long month_gap = (Year - c_year) * 12 + (month - c_month);
         //Loop to ensure get all MPP before are created up to the month
-        for (int i = 1; i <= month_gap; i++) {
+        
+        MonthlyProductionPlan prev_mpp=null;
+        for (int i = 0; i <= month_gap; i++) {
             int i_month = ((c_month + i - 1) % 12) + 1;
             int i_year = Math.floorDiv((c_month + i - 1), 12) + c_year;
 
             Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + i_year + " and mpp.month.value=" + i_month);
+            
+            
+            
             if (q.getResultList().size() == 0) {
                 Month E_month = Helper.TranslateMonth(i_month);
                 mpp = new MonthlyProductionPlan();
@@ -102,7 +107,11 @@ public class ManageProductionPlanningBean {
                 mpp.setYear((int) i_year);
                 mpp.setFurnitureModel((FurnitureModel) furnitureModel);;
                 mpp.setQTY(0); //Brand New
-                em.persist(mpp);
+                if(prev_mpp != null){
+                    mpp.setPrevMonthlyProcurementPlan(prev_mpp);
+                    prev_mpp.setNextMonthlyProcurementPlan(mpp);
+                }
+                    em.persist(mpp);
             } else {
                 mpp = (MonthlyProductionPlan) q.getResultList().get(0);
             }
@@ -112,12 +121,14 @@ public class ManageProductionPlanningBean {
                     mpp.setPc((ProductionCapacity) v.getResultList().get(0));
                     em.persist(mpp);
                 }
-            }
+            }            
             //Tag monthlyProductionPlan to MonthlyStockSupply
             if (!mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
                 mpp.getMonthlyStockSupplyReqs().add(MSSR);
                 em.persist(mpp);
             }
+            
+            prev_mpp=mpp;
 
         }
 

@@ -48,6 +48,12 @@ public class MonthlyProductionPlan implements Serializable {
     @OneToOne
     private ProductionCapacity productionCapacity=null;
     
+    @OneToOne //Kind of like the linked list approach
+    private MonthlyProductionPlan nextMonthlyProcurementPlan;
+    
+    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
+    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
+    private MonthlyProductionPlan prevMonthlyProcurementPlan;
 
     
     public long get_total_demand()
@@ -149,5 +155,30 @@ public class MonthlyProductionPlan implements Serializable {
     public void setPc(ProductionCapacity pc) {
         this.productionCapacity = pc;
     }
-    
+
+    public ProductionCapacity getProductionCapacity() {
+        return productionCapacity;
+    }
+
+    public void setProductionCapacity(ProductionCapacity productionCapacity) {
+        this.productionCapacity = productionCapacity;
+    }
+
+    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
+        return nextMonthlyProcurementPlan;
+    }
+
+    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
+        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
+    }
+
+    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
+        return prevMonthlyProcurementPlan;
+    }
+
+    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
+        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
+    }
+
+
 }

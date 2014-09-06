@@ -42,6 +42,9 @@ public abstract class Stock implements Serializable {
     protected List<Store> soldBy;
     @OneToMany(mappedBy = "stock")
     protected List<ProductionCapacity> productionCapacity;
+    
+    private String name;
+    
 
     public Long getId() {
         return id;
@@ -130,6 +133,14 @@ public abstract class Stock implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Stock[ id=" + id + " ]";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
