@@ -33,6 +33,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class BroadcastManagedBean implements Serializable {
     
+    private Long id = null;
     private String username = null;
     private String title = null;
     private String content = null;
@@ -41,10 +42,11 @@ public class BroadcastManagedBean implements Serializable {
     private String activeDateString = null;
     private String expireDateString = null;
     private List<Announcement> announcementList = null;
-    private String name;
-    private String description;
+    private String name = null;
+    private String description = null;
     private Calendar eventTime;
-    private String eventTimeString;
+    private String eventTimeString = null;
+    private String idString = null;
     private List<Event> eventList = null;
     
     @EJB
@@ -73,6 +75,28 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
+    public String editAnnouncement() throws ParseException {
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      idString = request.getParameter("editAnnouncementForm:id");
+      id = Long.valueOf(idString);
+      title = request.getParameter("editAnnouncementForm:title");
+      content = request.getParameter("editAnnouncementForm:content");
+      activeDateString = request.getParameter("editAnnouncementForm:activeDateString");
+      expireDateString = request.getParameter("editAnnouncementForm:expireDateString");
+      activeDate = new SimpleDateFormat("dd-MM-yy").parse(activeDateString);
+      expireDate = new SimpleDateFormat("dd-MM-yy").parse(expireDateString);
+      announcementBean.editAnnouncement(id, title, content, activeDate, expireDate);
+      announcementList = announcementBean.getMyAnnouncements(username);
+      return "broadcast";
+    }
+    
+    public String deleteAnnouncement(){
+      id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+      announcementBean.deleteAnnouncement(id);
+      announcementList = announcementBean.getMyAnnouncements(username);
+      return "broadcast";
+    }
+    
     public String addEvent() throws ParseException{
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       name = request.getParameter("eventForm:name");
@@ -84,6 +108,31 @@ public class BroadcastManagedBean implements Serializable {
       cal.setTime(date);
       eventTime = cal;
       eventBean.addEvent(name, description, eventTime, username);
+      eventList = eventBean.getMyEvents(username);
+      return "broadcast";
+    }
+    
+    public String editEvent() throws ParseException{
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      idString = request.getParameter("editAnnouncementForm:id");
+      id = Long.valueOf(idString);
+      name = request.getParameter("editEventForm:name");
+      description = request.getParameter("editEventForm:description");
+      eventTimeString = request.getParameter("editEventForm:eventTimeString");
+      DateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm");
+      Date date = (Date)formatter.parse(eventTimeString); 
+      Calendar cal=Calendar.getInstance();
+      cal.setTime(date);
+      eventTime = cal;
+      eventBean.editEvent(name, description, eventTime, id);
+      eventList = eventBean.getMyEvents(username);
+      return "broadcast";
+    }
+    
+    public String deleteEvent(){
+      id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+      eventBean.deleteEvent(id);
+      eventList = eventBean.getMyEvents(username);
       return "broadcast";
     }
 
@@ -190,5 +239,39 @@ public class BroadcastManagedBean implements Serializable {
     public void setEventList(List<Event> eventList) {
         this.eventList = eventList;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEventTimeString() {
+        return eventTimeString;
+    }
+
+    public void setEventTimeString(String eventTimeString) {
+        this.eventTimeString = eventTimeString;
+    }
+
+    public String getIdString() {
+        return idString;
+    }
+
+    public void setIdString(String idString) {
+        this.idString = idString;
+    }
+
+    public ManageEventsBean getEventBean() {
+        return eventBean;
+    }
+
+    public void setEventBean(ManageEventsBean eventBean) {
+        this.eventBean = eventBean;
+    }
+    
+    
     
 }
