@@ -108,8 +108,8 @@ public class ManageProductionPlanning {
                 mpp.setFurnitureModel((FurnitureModel) furnitureModel);;
                 mpp.setQTY(0); //Brand New
                 if(prev_mpp != null){
-                    mpp.setPrevMonthlyProcurementPlan(prev_mpp);
-                    prev_mpp.setNextMonthlyProcurementPlan(mpp);
+//                    mpp.setPrevMonthlyProcurementPlan(prev_mpp);
+//                    prev_mpp.setNextMonthlyProcurementPlan(mpp);
                 }
                     em.persist(mpp);
             } else {

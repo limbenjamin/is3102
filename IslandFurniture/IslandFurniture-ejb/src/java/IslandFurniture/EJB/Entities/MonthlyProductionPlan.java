@@ -43,17 +43,17 @@ public class MonthlyProductionPlan implements Serializable {
     private boolean locked=false;
     
     @OneToMany(mappedBy = "monthlyProductionPlan")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs=new ArrayList<MonthlyStockSupplyReq>();
+    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs=new ArrayList<MonthlyStockSupplyReq>();
     
     @OneToOne
     private ProductionCapacity productionCapacity=null;
-    
-    @OneToOne //Kind of like the linked list approach
-    private MonthlyProductionPlan nextMonthlyProcurementPlan;
-    
-    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
-    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
-    private MonthlyProductionPlan prevMonthlyProcurementPlan;
+//    
+//    @OneToOne //Kind of like the linked list approach
+//    private MonthlyProductionPlan nextMonthlyProcurementPlan;
+//    
+//    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
+//    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
+//    private MonthlyProductionPlan prevMonthlyProcurementPlan;
 
     
     public long get_total_demand()
@@ -163,22 +163,22 @@ public class MonthlyProductionPlan implements Serializable {
     public void setProductionCapacity(ProductionCapacity productionCapacity) {
         this.productionCapacity = productionCapacity;
     }
-
-    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
-        return nextMonthlyProcurementPlan;
-    }
-
-    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
-        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
-    }
-
-    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
-        return prevMonthlyProcurementPlan;
-    }
-
-    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
-        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
-    }
+//
+//    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
+//        return nextMonthlyProcurementPlan;
+//    }
+//
+//    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
+//        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
+//    }
+//
+//    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
+//        return prevMonthlyProcurementPlan;
+//    }
+//
+//    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
+//        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
+//    }
 
 
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Country;
@@ -12,42 +11,37 @@ import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  *
- * @author James
- * Will be deleted
+ * @author James Will be deleted
  */
 public class JamesConsoleTest {
+
     @EJB
-        private static ManageProductionPlanning manager;
-    @PersistenceContext(unitName = "IslandFurniture")
-    private static EntityManager em;
-        
-    public static void main(String[] args){
-        create_test_data();
+    ManageProductionPlanning manager;
+
+    @EJB
+    JamesTestDataBean jt;
+
+    public static void main(String[] args) {
+        JamesConsoleTest test = new JamesConsoleTest();
+        test.createdata();
     }
     
-    public static void create_test_data()
+    public void createdata()
     {
-      
-        Country cn = new Country();
-        cn.setName("SINGAPORE");
-        ManufacturingFacility mf=new ManufacturingFacility();
-        mf.setCountry(cn);
-        FurnitureModel fm=new FurnitureModel();
-        fm.setName("FURNITURE");
-        ProductionCapacity pc = new ProductionCapacity();
-        pc.setStock(fm);
-        pc.setQty(100);
-        em.persist(cn);
-        em.persist(pc);
-        em.persist(fm);
-        em.persist(mf);
-        
+        jt.createtestdata();
     }
+
+
 }
