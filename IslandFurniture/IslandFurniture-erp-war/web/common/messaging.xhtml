@@ -18,7 +18,7 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Thread List</a>
                             </div>
-                            <ui:repeat value="#{staffManagedBean.inbox}" var="messageThread">
+                            <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">
                                 ID: #{messageThread.id}     Title: #{messageThread.title}  Recipients:   
                                 <ui:repeat value="#{messageThread.recipient}" var="recipient">
                                      #{recipient.username}
@@ -29,7 +29,7 @@
                                 <p>Add Thread</p>
                                 <h:inputText id="title"></h:inputText>
                                 <h:inputText id="recipients"></h:inputText>
-                                <h:commandButton action="#{staffManagedBean.addThread}" value="Add Thread"></h:commandButton>
+                                <h:commandButton action="#{messagingManagedBean.addThread}" value="Add Thread"></h:commandButton>
                             </h:form>
                           </section>
                         </div>

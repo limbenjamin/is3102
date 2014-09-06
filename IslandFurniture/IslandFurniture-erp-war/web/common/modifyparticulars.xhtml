@@ -14,10 +14,10 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Modify Personal Particulars</a>
                             </div>
-                            <h:form>       
-                            <h:inputText id="phoneNo" value="#{staffManagedBean.phoneNo}" ></h:inputText>
-                            <h:inputText id="emailAddress" value="#{staffManagedBean.emailAddress}" ></h:inputText>
-                            <h:commandButton action="#{staffManagedBean.modifyPersonalParticulars}" value="Modify Personal Particulars"></h:commandButton>
+                            <h:form id="particularsForm">       
+                            <h:inputText id="phoneNo" value="#{personalParticularsManagedBean.phoneNo}" ></h:inputText>
+                            <h:inputText id="emailAddress" value="#{personalParticularsManagedBean.emailAddress}" ></h:inputText>
+                            <h:commandButton action="#{personalParticularsManagedBean.modifyPersonalParticulars}" value="Modify Personal Particulars"></h:commandButton>
                             </h:form>
                           </section>
                         </div>

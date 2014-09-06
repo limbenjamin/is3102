@@ -53,24 +53,13 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Announcements</a>
                             </div>
-                            <div class="list-group">                          
-                              <a href="#" class="list-group-item">
-                                  <h5>Order #1512 has arrived at the warehouse</h5>
-                                  <small>August 12 2014 14:15</small>
-                              </a>
-                              <a href="#" class="list-group-item">
-                                  <h5>Compulsory Fire Drill</h5>
-                                  <small>August 10 2014 17:32</small>
-                              </a>
-                              <a href="#" class="list-group-item">
-                                  <h5>Order #1312 has arrived been shipped</h5>
-                                  <small>August 08 2014 09:18</small>
-                              </a>
-                              <a href="#" class="list-group-item">
-                                  <h5>Payment from Seng Media has been processed</h5>
-                                  <small>August 07 2014 12:46</small>
-                              </a>
-                            </div>
+                            <ui:repeat value="#{staffManagedBean.announcementList}" var="announcement">
+                                <a class="list-group-item">
+                                    <h4><u>#{announcement.title}</u></h4>
+                                    <h5>#{announcement.content}</h5>
+                                    <small>#{announcement.activeDate}</small>
+                                </a>
+                            </ui:repeat>    
                             <div class="panel-footer">
                                 <a href="#" class="no-decor">
                                     View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
@@ -86,22 +75,12 @@
                       <section class="panel">
                         <div id="calendar"></div>
                         <div class="list-group">
-                          <a href="#" class="list-group-item">
-                            <span class="badge">10:30</span> 
-                            <strong>4 Aug</strong>: Marketing Meeting
-                          </a>
-                          <a href="#" class="list-group-item"> 
-                            <span class="badge">15:30</span> 
-                            <strong>7 Aug</strong>: Marketing Plans for September Due
-                          </a>
-                          <a href="#" class="list-group-item">
-                            <span class="badge">10:30</span> 
-                            <strong>17 Aug</strong>: Milestone Release
-                          </a>
-                          <a href="#" class="list-group-item"> 
-                            <span class="badge">10:30</span> 
-                            <strong>19 Aug</strong>: Corporate Outreach
-                          </a>                          
+                            <ui:repeat value="#{staffManagedBean.eventList}" var="event">
+                                <a class="list-group-item">
+                                    <span class="badge">#{event.eventTime.time.hours}:#{event.eventTime.time.minutes}</span> 
+                                    <strong>#{event.eventTime.time.date}-#{event.eventTime.time.month}</strong>: #{event.description}
+                                </a>
+                            </ui:repeat>                                                      
                         </div>                        
                       </section>                                        
                     </div>

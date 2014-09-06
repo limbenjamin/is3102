@@ -20,16 +20,11 @@ public class Util {
  
       public static HttpSession getSession() {
         return (HttpSession)
-          FacesContext.
-          getCurrentInstance().
-          getExternalContext().
-          getSession(false);
+          FacesContext.getCurrentInstance().getExternalContext().getSession(false);
       }
        
       public static HttpServletRequest getRequest() {
-       return (HttpServletRequest) FacesContext.
-          getCurrentInstance().
-          getExternalContext().getRequest();
+       return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
       }
  
       public static String getUserName()

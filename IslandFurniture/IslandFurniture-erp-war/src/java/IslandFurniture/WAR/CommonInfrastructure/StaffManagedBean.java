@@ -36,15 +36,12 @@ public class StaffManagedBean implements Serializable {
     private String password = null;
     private String name = null;
     private String notes = null;
-    private String phoneNo = null;
-    private String emailAddress = null;
     private String description = null;
     private Date lastLogon = null;
     private List<Todo> todoList;
-    private List<MessageThread> inbox;
-    private Message message;
-    private String title = null;
-    private String recipients = null;
+    private List<Event> eventList;
+
+    private List<Announcement> announcementList = null;
     
     @EJB
     private ManageAuthenticationBean authBean;
@@ -53,7 +50,9 @@ public class StaffManagedBean implements Serializable {
     @EJB
     private ManageTodoBean todoBean;
     @EJB
-    private ManageMessagesBean messageBean;
+    private ManageAnnouncementsBean announcementBean; 
+    @EJB
+    private ManageEventsBean eventBean;  
     
     public StaffManagedBean() {
     }
@@ -91,10 +90,9 @@ public class StaffManagedBean implements Serializable {
         this.notes = staff.getNotes();
         this.name = staff.getName();
         this.lastLogon = staff.getLastLogon();
-        this.phoneNo = staff.getPhoneNo();
-        this.emailAddress = staff.getEmailAddress();
         this.todoList = staff.getTodoList();
-        this.inbox = staff.getInbox();
+        this.announcementList = announcementBean.getActiveAnnouncements();
+        this.eventList = eventBean.getEvents();
     }
     
     public String modifyNotes() {
@@ -105,11 +103,6 @@ public class StaffManagedBean implements Serializable {
       return "dash";
     }
     
-    public String modifyPersonalParticulars() {
-      staffBean.modifyPersonalParticulars(username, phoneNo, emailAddress);
-      return "modifyparticulars";
-    }
-    
     public String addTodo() {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       description = request.getParameter("todoForm:description");
@@ -118,16 +111,6 @@ public class StaffManagedBean implements Serializable {
       return "dash";
     }
     
-    public String addThread() {
-      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      title = request.getParameter("threadForm:title");
-      recipients = request.getParameter("threadForm:recipients");
-      recipients += ","+username;
-      messageBean.createNewThread(title, recipients);
-      dash();
-      return "messaging";
-    }
-
     public String getUsername() {
         return username;
     }
@@ -184,22 +167,6 @@ public class StaffManagedBean implements Serializable {
         this.name = name;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
     public Date getLastLogon() {
         return lastLogon;
     }
@@ -232,60 +199,48 @@ public class StaffManagedBean implements Serializable {
         this.todoBean = todoBean;
     }
 
-    public List<MessageThread> getInbox() {
-        return inbox;
-    }
-
-    public void setInbox(List<MessageThread> inbox) {
-        this.inbox = inbox;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getRecipient() {
-        return recipients;
-    }
-
-    public void setRecipient(String recipient) {
-        this.recipients = recipient;
-    }
-
-    public ManageMessagesBean getMessageBean() {
-        return messageBean;
-    }
-
-    public void setMessageBean(ManageMessagesBean messageBean) {
-        this.messageBean = messageBean;
-    }
-
-    public String getRecipients() {
-        return recipients;
-    }
-
-    public void setRecipients(String recipients) {
-        this.recipients = recipients;
-    }
-
     public String getAbsolutepath() {
         return absolutepath;
     }
 
     public void setAbsolutepath(String absolutepath) {
         this.absolutepath = absolutepath;
+    }
+
+    public ManageAnnouncementsBean getAnnouncementBean() {
+        return announcementBean;
+    }
+
+    public void setAnnouncementBean(ManageAnnouncementsBean announcementBean) {
+        this.announcementBean = announcementBean;
+    }
+
+    public List<Announcement> getAnnouncementList() {
+        return announcementList;
+    }
+
+    public void setAnnouncementList(List<Announcement> announcementList) {
+        this.announcementList = announcementList;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+
+    public ManageEventsBean getEventBean() {
+        return eventBean;
+    }
+
+    public void setEventBean(ManageEventsBean eventBean) {
+        this.eventBean = eventBean;
     }
 
     

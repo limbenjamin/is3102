@@ -8,10 +8,12 @@ package IslandFurniture.EJB.Entities;;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -26,12 +28,13 @@ public class Announcement implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
+    @Lob
     private String content;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date activeDate;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date expireDate;
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.ALL})
     private Staff creator;
 
     public Long getId() {
