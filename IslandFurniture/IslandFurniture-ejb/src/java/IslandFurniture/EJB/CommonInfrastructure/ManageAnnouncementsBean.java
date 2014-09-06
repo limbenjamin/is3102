@@ -54,6 +54,26 @@ public class ManageAnnouncementsBean {
         em.flush();
     }
     
+    public void editAnnouncement(Long id, String title, String content, Date activeDate, Date expireDate){
+        announcement = em.find(Announcement.class, id);
+        announcement.setTitle(title);
+        announcement.setContent(content);
+        announcement.setActiveDate(activeDate);
+        announcement.setExpireDate(expireDate);
+        announcement.setCreator(staff);
+        em.merge(announcement);
+        em.flush();
+    }
+    
+    public void deleteAnnouncement(Long id){
+        announcement = em.find(Announcement.class, id);
+        announcementList = announcement.getCreator().getAnnouncements();
+        announcementList.remove(announcement);
+        em.merge(announcement.getCreator());
+        em.remove(announcement);
+        em.flush();
+    }
+    
     public List<Announcement> getActiveAnnouncements(){
         Date today = new Date(); 
         Query query = em.createQuery("SELECT a " + "FROM Announcement a " + "WHERE :today BETWEEN a.activeDate AND a.expireDate")

@@ -54,6 +54,27 @@ public class ManageEventsBean {
      
     }
     
+    public void editEvent(String name, String description, Calendar eventTime, Long id){
+        event = em.find(Event.class, id);
+        event.setName(name);
+        event.setDescription(description);
+        event.setEventTime(eventTime);
+        event.setCreator(creator);
+        em.merge(event);
+        em.flush();
+     
+    }
+    
+    public void deleteEvent(Long id){
+        event = em.find(Event.class, id);
+        eventList = event.getCreator().getEvents();
+        eventList.remove(event);
+        em.merge(event.getCreator());
+        em.remove(event);
+        em.flush();
+     
+    }
+    
     public List<Event> getEvents(){
         Query query = em.createQuery("SELECT e " + "FROM Event e ");
         return query.getResultList();

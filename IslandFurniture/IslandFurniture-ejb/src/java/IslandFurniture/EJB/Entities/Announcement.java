@@ -34,7 +34,7 @@ public class Announcement implements Serializable {
     private Date activeDate;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date expireDate;
-    @ManyToOne(cascade={CascadeType.ALL})
+    @ManyToOne
     private Staff creator;
 
     public Long getId() {
