@@ -6,8 +6,11 @@
 
 package IslandFurniture.WAR.CommonInfrastructure;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBean;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
 import IslandFurniture.EJB.Entities.Staff;
+import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
+import IslandFurniture.WAR.CommonInfrastructure.Exceptions.*;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -28,9 +31,16 @@ public class PersonalParticularsManagedBean implements Serializable {
     private String phoneNo = null;
     private String emailAddress = null;
     private Staff staff;
+    private String hashedPassword = null;
+    private String oldPassword = null;
+    private String newPassword = null;
+    private String confirmNewPassword = null;
+    private String hashedOldPassword = null;
     
     @EJB
     private ManageUserAccountInformationBean staffBean;
+    @EJB
+    private ManageAuthenticationBean authBean;
     
     @PostConstruct
     public void init(){
@@ -49,6 +59,26 @@ public class PersonalParticularsManagedBean implements Serializable {
       emailAddress = request.getParameter("particularsForm:emailAddress");
       staffBean.modifyPersonalParticulars(username, phoneNo, emailAddress);
       return "modifyparticulars";
+    }
+    
+    public String changePassword() throws NewPasswordsNotTheSameException, WrongPasswordException {
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      oldPassword = request.getParameter("passwordForm:oldPassword");
+      newPassword = request.getParameter("passwordForm:newPassword");
+      confirmNewPassword = request.getParameter("passwordForm:confirmNewPassword");
+      if (!newPassword.equals(confirmNewPassword)){
+        throw new NewPasswordsNotTheSameException();
+      }
+      HttpSession session = Util.getSession();
+      username = (String) session.getAttribute("username");
+      staff = staffBean.getStaff(username);
+      hashedPassword = staff.getPassword();
+      hashedOldPassword = SHA1Hash(staff.getSalt()+ oldPassword);
+      if (!hashedOldPassword.equals(hashedPassword)){
+          throw new WrongPasswordException();
+      }
+      authBean.changePassword(username, newPassword);
+      return "changepassword";
     }
 
     public String getUsername() {
@@ -89,6 +119,46 @@ public class PersonalParticularsManagedBean implements Serializable {
 
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getConfirmNewPassword() {
+        return confirmNewPassword;
+    }
+
+    public void setConfirmNewPassword(String confirmNewPassword) {
+        this.confirmNewPassword = confirmNewPassword;
+    }
+
+    public String getHashedOldPassword() {
+        return hashedOldPassword;
+    }
+
+    public void setHashedOldPassword(String hashedOldPassword) {
+        this.hashedOldPassword = hashedOldPassword;
     }
     
     

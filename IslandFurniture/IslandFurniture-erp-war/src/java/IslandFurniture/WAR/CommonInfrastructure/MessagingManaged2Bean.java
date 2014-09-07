@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
  */
 @Named
 @ViewScoped
-public class MessagingManagedBean implements Serializable {
+public class MessagingManaged2Bean implements Serializable {
 
     private Long id = null;
     private String username = null;
@@ -36,6 +36,9 @@ public class MessagingManagedBean implements Serializable {
     private String title = null;
     private String recipients = null;
     private Staff staff;
+    private MessageThread messageThread;
+    private List<Message> messageList;
+    private String content;
     
     @EJB
     private ManageMessagesBean messageBean;
@@ -46,16 +49,34 @@ public class MessagingManagedBean implements Serializable {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        this.inbox = messageBean.displayAllThreads(username);
+        try{
+            id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+            session.setAttribute("threadid", id);
+        }catch (Exception e){
+            
+        }
+        if (!session.getAttribute("threadid").equals(null)){
+            id = (Long) session.getAttribute("threadid");
+            messageThread = messageBean.getMessageThread(id);
+            messageList = messageThread.getMessages();
+        }
     }
     
-    public String addThread() {
+    public String displayMessages() {
+      HttpSession session = Util.getSession();
+      id = (Long) session.getAttribute("threadid");
+      messageThread = messageBean.getMessageThread(id);
+      messageList = messageThread.getMessages();
+      return "messaging2";
+    }
+    
+    public String addMessage() {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      title = request.getParameter("threadForm:title");
-      recipients = request.getParameter("threadForm:recipients");
-      recipients += ","+username;
-      messageBean.createNewThread(title, recipients);
-      return "messaging";
+      HttpSession session = Util.getSession();
+      id = (Long) session.getAttribute("threadid");
+      content = request.getParameter("AddMessageForm:content");
+      messageBean.sendMessage(username, id, content);
+      return "messaging2";
     }
 
     public String getUsername() {
@@ -129,6 +150,31 @@ public class MessagingManagedBean implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public MessageThread getMessageThread() {
+        return messageThread;
+    }
+
+    public void setMessageThread(MessageThread messageThread) {
+        this.messageThread = messageThread;
+    }
+
+    public List<Message> getMessageList() {
+        return messageList;
+    }
+
+    public void setMessageList(List<Message> messageList) {
+        this.messageList = messageList;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
     
     
 }

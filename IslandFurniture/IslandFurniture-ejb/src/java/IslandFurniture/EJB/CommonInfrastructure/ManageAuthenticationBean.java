@@ -27,6 +27,9 @@ public class ManageAuthenticationBean {
     private Staff staff;
     private LogEntry logEntry;
     
+    @EJB
+    private ManageUserAccountInformationBean staffbean;
+    
     public ManageAuthenticationBean(){
         
     }
@@ -59,9 +62,13 @@ public class ManageAuthenticationBean {
         logEntry.setChangeMessage(ChangeMessage);
         logEntry.setStaff(em.find(Staff.class, StaffId));
         em.persist(logEntry);
+        em.flush();
     }
     
-    public boolean resetPassword(String username){
-        return true;
+    public void changePassword(String username, String newPassword){
+        staff = staffbean.getStaff(username);
+        staff.setPassword(newPassword);
+        em.merge(staff);
+        em.flush();
     }
 }

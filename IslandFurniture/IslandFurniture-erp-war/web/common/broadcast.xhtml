@@ -35,15 +35,17 @@
                             </div>
                             <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
                                 <a class="list-group-item">
+                                    <h:form>
+                                        <span class="pull-right">
+                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteAnnouncement}">
+                                                <f:param name="id" value="#{announcement.id}" />
+                                            </h:commandButton>
+                                        </span>
+                                    </h:form>
                                     <h4><u>#{announcement.title}</u></h4>
                                     <h5>#{announcement.content}</h5>
                                     <small>#{announcement.activeDate}</small>
                                 </a>
-                                <h:form>
-                                <h:commandButton value="Delete" action="#{broadcastManagedBean.deleteAnnouncement}">
-                                    <f:param name="id" value="#{announcement.id}" />
-                                </h:commandButton>
-                                </h:form>
                             </ui:repeat>
                           </section>
                           <section class="panel">
@@ -66,15 +68,17 @@
                             </div>
                             <ui:repeat value="#{broadcastManagedBean.eventList}" var="event">
                                 <a class="list-group-item">
+                                    <h:form>
+                                        <span class="pull-right">
+                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteEvent}">
+                                                <f:param name="id" value="#{event.id}" />
+                                            </h:commandButton>
+                                        </span>
+                                    </h:form>
                                     <h4><u>#{event.name}</u></h4>
                                     <h5>#{event.description}</h5>
                                     <small>#{event.eventTime.time}</small>
                                 </a>
-                                <h:form>
-                                <h:commandButton value="Delete" action="#{broadcastManagedBean.deleteEvent}">
-                                    <f:param name="id" value="#{event.id}" />
-                                </h:commandButton>
-                                </h:form>
                             </ui:repeat>
                           </section>  
                          

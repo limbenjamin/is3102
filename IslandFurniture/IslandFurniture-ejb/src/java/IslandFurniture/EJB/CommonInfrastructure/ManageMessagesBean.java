@@ -96,6 +96,13 @@ public class ManageMessagesBean {
         message.setContent(content);
         message.setMsgTime(Calendar.getInstance());
         em.persist(message);
+        listStaff = messageThread.getRecipient();
+        Iterator<Staff> iterator = listStaff.iterator();
+        while (iterator.hasNext()) {
+		staff = iterator.next();
+                staff.getInbox().get(staff.getInbox().indexOf(messageThread)).getMessages().add(message);
+                em.merge(staff);
+	}
         em.flush();
     }
 }

@@ -8,20 +8,30 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-8">
+                        <div class="col-md-12">
+                            <hr></hr>
+                        </div>
                         <div class="col-md-12">                      
                           <section class="panel">
                             <div class="panel-heading announcement-widget">
                               <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Modify Personal Particulars</a>
+                              <a href="#" class="no-decor">Thread List</a>
                             </div>
-                            <h:form id="particularsForm">       
-                            <h:inputText id="phoneNo" value="#{personalParticularsManagedBean.phoneNo}" ></h:inputText>
-                            <h:inputText id="emailAddress" value="#{personalParticularsManagedBean.emailAddress}" ></h:inputText>
-                            <h:commandButton action="#{personalParticularsManagedBean.modifyPersonalParticulars}" value="Modify Personal Particulars"></h:commandButton>
+                              <ui:repeat value="#{messagingManaged2Bean.messageList}" var="message">
+                                  Content: #{message.content}     Sender: #{message.staff.name}  Time: #{message.msgTime.time};
+                                <br />
+                            </ui:repeat>
+                            <h:form id="AddMessageForm">       
+                                <p>Compose Message</p>
+                                <h:inputText id="content"></h:inputText>
+                                <h:commandButton action="#{messagingManaged2Bean.addMessage}" value="Send"></h:commandButton>
                             </h:form>
                           </section>
                         </div>
                     </div>
+
+                </div>
                 </ui:define>
         </ui:composition>
     </h:body>

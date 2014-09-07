@@ -2,7 +2,8 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -18,13 +19,19 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Thread List</a>
                             </div>
-                            <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">
-                                ID: #{messageThread.id}     Title: #{messageThread.title}  Recipients:   
-                                <ui:repeat value="#{messageThread.recipient}" var="recipient">
-                                     #{recipient.username}
-                                </ui:repeat>    
-                                <br />
+                            <h:form id="messageForm">
+                            <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">                                
+                                    <h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
+                                                    <f:param name="id" value="#{messageThread.id}" />
+                                    </h:commandLink>                               
+                                <span class="pull-right"> Recipients:
+                                    <ui:repeat value="#{messageThread.recipient}" var="recipient">
+                                         #{recipient.username}
+                                    </ui:repeat>
+                                </span> 
+                            <br />
                             </ui:repeat>
+                            </h:form>                                  
                             <h:form id="threadForm">       
                                 <p>Add Thread</p>
                                 <h:inputText id="title"></h:inputText>
