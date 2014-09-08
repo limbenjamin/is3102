@@ -38,42 +38,7 @@ a:visited,a:active,a:focus,a:hover{
 	line-height:inherit;
 }
 
-hr{
-	display:block;
-	margin:1em 0;
-	padding:0;height:1px;
-	border:0;
-	border-top:1px solid #e3e6f3;
-}
 
-img{
-	max-width:100%;
-	height:auto
-}
-
-.img-rounded{
-	border-radius:2px;
-}
-
-.img-circle{
-	border-radius:50%;
-}
-
-.avatar{
-	position:relative;
-	display:inline-block;
-	width:100%
-}
-
-.user-avatar {
-	width: 40px;
-	margin: 5px 5px 0 0;
-}
-
-.dashboard-name {
-	margin: 5px;
-	color: #777;
-}
 
 [contenteditable],[contenteditable]:hover,[contenteditable]:active{
 	outline:0;
@@ -127,11 +92,16 @@ ol.list-style-none,ul.list-style-none{
 	}
 	.header .brand .navbar-brand img{max-height:25px;margin-right:5px;margin-top:-5px}
 	.header .navbar-nav{margin:0}
-	.header .navbar-nav>li>a, .header .navbar-nav>li>form>a{padding-top:15px;padding-bottom:15px;max-height:50px}
+	.header .navbar-nav>li>a{padding-top:15px;padding-bottom:15px;max-height:50px}
 	.header .navbar-nav>li>a:focus{background-color:transparent}
 	.header .header-avatar{width:32px;margin-top:-6px}
 	.header>.nav>li>a>.badge{position:absolute;top:8px;right:2px;width:16px;height:16px;font-size:11px;line-height:1.5;text-align:center;padding:0}
 	.header .navbar-right>li:hover {background-color: #ecf0f1;}
+        
+        /* fix logout button on the right side of navbar */
+        .off-right form {
+            margin: 15px;
+        }
 
 	.header .notifications{position:relative}
 	.header .notifications .panel{border:0}

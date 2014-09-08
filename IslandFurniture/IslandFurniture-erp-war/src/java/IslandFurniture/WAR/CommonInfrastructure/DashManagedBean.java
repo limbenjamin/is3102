@@ -17,9 +17,9 @@ import IslandFurniture.EJB.Entities.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +27,9 @@ import javax.servlet.http.HttpSession;
 
 
 @Named
-@SessionScoped
-public class StaffManagedBean implements Serializable {
+@ViewScoped
+public class DashManagedBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;
-    private String absolutepath = "http://localhost:8080/IslandFurniture-erp-war/";
     private Staff staff;
     private String username = null;
     private String password = null;
@@ -54,38 +53,10 @@ public class StaffManagedBean implements Serializable {
     @EJB
     private ManageEventsBean eventBean;  
     
-    public StaffManagedBean() {
-    }
-    
-    public String login() {
-        boolean result = authBean.authenticate(username, password);
-        if (result) {
-            HttpSession session = Util.getSession();
-            session.setAttribute("username", username);
-            dash();
-            return "dash";
-        } else {
- 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "Invalid Login!",
-                    "Please Try Again!"));
- 
-            // invalidate session, and redirect to other pages
- 
-            //message = "Invalid Login. Please Try Again!";
-            return "login";
-        }
-    }
-    
-    public String logout() {
-      HttpSession session = Util.getSession();
-      session.invalidate();
-      return "login";
-    }
-    
-    public void dash() {
+    @PostConstruct
+    public void init(){
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
         this.staff = staffBean.getStaff(username);
         this.notes = staff.getNotes();
         this.name = staff.getName();
@@ -95,11 +66,16 @@ public class StaffManagedBean implements Serializable {
         this.eventList = eventBean.getEvents();
     }
     
+    public String logout() {
+      HttpSession session = Util.getSession();
+      session.invalidate();
+      return "login";
+    }
+    
     public String modifyNotes() {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       notes = request.getParameter("notesForm:notes");
       staffBean.modifyNote(username, notes);
-      dash();
       return "dash";
     }
     
@@ -107,7 +83,6 @@ public class StaffManagedBean implements Serializable {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       description = request.getParameter("todoForm:description");
       todoBean.addTodoItem(username, description);
-      dash();
       return "dash";
     }
     
@@ -199,14 +174,6 @@ public class StaffManagedBean implements Serializable {
         this.todoBean = todoBean;
     }
 
-    public String getAbsolutepath() {
-        return absolutepath;
-    }
-
-    public void setAbsolutepath(String absolutepath) {
-        this.absolutepath = absolutepath;
-    }
-
     public ManageAnnouncementsBean getAnnouncementBean() {
         return announcementBean;
     }
@@ -242,7 +209,6 @@ public class StaffManagedBean implements Serializable {
     public void setEventBean(ManageEventsBean eventBean) {
         this.eventBean = eventBean;
     }
-
     
 
 }

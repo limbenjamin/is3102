@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Entities.Month;
@@ -16,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,6 +27,7 @@ import javax.persistence.OneToOne;
 @Entity
 @IdClass(MonthlyProductionPlanPK.class)
 public class MonthlyProductionPlan implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @ManyToOne
@@ -35,39 +36,42 @@ public class MonthlyProductionPlan implements Serializable {
     private Month month;
     @Id
     private Integer year;
-    
-    @OneToMany(mappedBy="monthlyProductionPlan")
-    private List<WeeklyProductionPlan> weeklyProductionPlans=new ArrayList<WeeklyProductionPlan>();
-    
-    private Integer QTY;
-    
-    private boolean locked=false;
-    
-    @OneToMany(mappedBy = "monthlyProductionPlan")
-    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs=new ArrayList<MonthlyStockSupplyReq>();
-    
-    @OneToOne
-    private ProductionCapacity productionCapacity=null;
-//    
-//    @OneToOne //Kind of like the linked list approach
-//    private MonthlyProductionPlan nextMonthlyProcurementPlan;
-//    
-//    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
-//    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
-//    private MonthlyProductionPlan prevMonthlyProcurementPlan;
 
-    
-//    public long get_total_demand()
-//    {
-//        long total=0;
-//        
-//        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs)
-//        {
-//            total+=mssr.getQtyRequested();
-//        }
-//        
-//        return(total);
-//    }
+    @OneToMany(mappedBy = "monthlyProductionPlan")
+    private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
+
+    private Integer QTY;
+
+    private boolean locked = false;
+
+    @OneToMany(mappedBy = "monthlyProductionPlan")
+    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList<MonthlyStockSupplyReq>();
+
+    @OneToOne
+    private ProductionCapacity productionCapacity = null;
+
+    @OneToOne //Kind of like the linked list approach
+    @JoinColumns({
+        @JoinColumn(name = "FURNITUREMODEL_ID", referencedColumnName = "FURNITUREMODEL_ID", insertable = false, updatable = false),
+        @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
+        @JoinColumn(name = "YEAR", referencedColumnName = "YEAR", insertable = false, updatable = false)
+    })
+    private MonthlyProductionPlan nextMonthlyProcurementPlan;
+
+    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
+
+    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
+    private MonthlyProductionPlan prevMonthlyProcurementPlan;
+
+    public long get_total_demand() {
+        long total = 0;
+
+        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs) {
+            total += mssr.getQtyRequested();
+        }
+
+        return (total);
+    }
 
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
@@ -148,7 +152,6 @@ public class MonthlyProductionPlan implements Serializable {
 //    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
 //        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
 //    }
-
     public ProductionCapacity getPc() {
         return productionCapacity;
     }
@@ -180,6 +183,5 @@ public class MonthlyProductionPlan implements Serializable {
 //    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
 //        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
 //    }
-
 
 }

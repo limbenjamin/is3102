@@ -53,7 +53,7 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Announcements</a>
                             </div>
-                            <ui:repeat value="#{staffManagedBean.announcementList}" var="announcement">
+                            <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
                                 <a class="list-group-item">
                                     <h4><u>#{announcement.title}</u></h4>
                                     <h5>#{announcement.content}</h5>
@@ -75,7 +75,7 @@
                       <section class="panel">
                         <div id="calendar"></div>
                         <div class="list-group">
-                            <ui:repeat value="#{staffManagedBean.eventList}" var="event">
+                            <ui:repeat value="#{dashManagedBean.eventList}" var="event">
                                 <a class="list-group-item">
                                     <span class="badge">#{event.eventTime.time.hours}:#{event.eventTime.time.minutes}</span> 
                                     <strong>#{event.eventTime.time.date}-#{event.eventTime.time.month}</strong>: #{event.description}

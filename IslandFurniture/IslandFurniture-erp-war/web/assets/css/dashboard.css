@@ -22,7 +22,46 @@
     padding: 10px;
 }
 
-/************************* special forms ***********************************/
+hr{
+    display:block;
+    margin:1em 0;
+    padding:0;height:1px;
+    border:0;
+    border-top:1px solid #e3e6f3;
+}
+
+/******************************* avatar images *************************************/
+
+img{
+    max-width:100%;
+    height:auto
+}
+
+.img-rounded{
+    border-radius:2px;
+}
+
+.img-circle{
+    border-radius:50%;
+}
+
+.avatar{
+    position:relative;
+    display:inline-block;
+    width:100%
+}
+
+.user-avatar {
+    width: 40px;
+    margin: 5px 5px 0 0;
+}
+
+.user-avatar-sm {
+    width: 30px;
+    margin-right: 10px;
+}
+
+/******************************* special forms *************************************/
 
 .transparent-form {
     background-color: transparent;
@@ -85,7 +124,33 @@ a .quick-link h5{
     font-size: 0.8em;
 }
 
-/************************* dashboard announcement widget ***********************************/
+/************************ dashboard panel common look and feel ****************************/
+
+.dashboard-name {
+    margin: 5px;
+    color: #777;
+}
+
+.dashboard-title-panel {
+    color: #fff;
+    background-color: #2c3e50;
+    height: 42px;
+}
+
+.dashboard-title-panel .pull-right {
+    border-left: 1px solid #bdc3c7;
+    margin: -10px 0;    
+    height: 42px;
+}
+
+.btn-panel-right, .btn-panel-right:hover {
+    color: #fff;
+    background-color: transparent;
+    padding: 10px 0px 10px 10px;
+    border-radius: 0px;
+}
+
+/******************************* dashboard announcements ***********************************/
 
 .announcement-widget {
     background-color: #2c3e50;
@@ -93,6 +158,18 @@ a .quick-link h5{
 
 .announcement-widget a{
     color: #fff;
+}
+
+/******************************* dashboard messages & contacts **********************************/
+
+.dashboard-title-panel {
+    color: #fff;
+    background-color: #2c3e50;
+}
+
+.contact-list {
+    max-height: 350px;
+    overflow-y: scroll;
 }
 
 /************************* dashboard receipt and transaction ***********************************/

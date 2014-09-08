@@ -41,15 +41,15 @@
                     <h:form id="loginForm" class="form-horizontal" pt:role="form">                   
                           <div class="form-group">
                             <div class="col-sm-12">
-                                <h:inputText id="username" value="#{staffManagedBean.username}" class="form-control" pt:placeholder="User ID" required="true"></h:inputText>
+                                <h:inputText id="username" value="#{loginManagedBean.username}" class="form-control" pt:placeholder="User ID" required="true"></h:inputText>
                             </div>
                           </div>
                           <div class="form-group">
                             <div class="col-sm-12">
-                                <h:inputSecret id="password" value="#{staffManagedBean.password}" class="form-control" pt:placeholder="Password" required="true"></h:inputSecret>
+                                <h:inputSecret id="password" value="#{loginManagedBean.password}" class="form-control" pt:placeholder="Password" required="true"></h:inputSecret>
                             </div>
                           </div>
-                            <h:commandButton action="#{staffManagedBean.login}" class="btn btn-lg btn-success btn-block" value="Login"></h:commandButton>                            
+                            <h:commandButton action="#{loginManagedBean.login}" class="btn btn-lg btn-success btn-block" value="Login"></h:commandButton>                            
                     </h:form>
                 </div>
               </div>

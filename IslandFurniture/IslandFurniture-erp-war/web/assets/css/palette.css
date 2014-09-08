@@ -58,7 +58,7 @@ body .login {
 
 @media screen and (min-width:768px) {
 	.header .nav>li>a:hover,.header .nav>li>a:focus,.header .nav .open>a,.header .nav .open>a:hover,.header .nav .open>a:focus {
-		background-color:#1377c9;
+		background-color:#ecf0f1;
 	}
 
 	.small-menu .main-navigation>ul>li.open {

@@ -9,13 +9,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Web Application Admin Dashboard</title>
         <!-- core styles -->
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/bootstrap/css/bootstrap.min.css"></link>
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/font-awesome/css/font-awesome.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/bootstrap/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/font-awesome/css/font-awesome.css"></link>
         <!-- template styles -->
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/css/palette.css"></link>
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/css/navigation.css"></link>
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/css/dashboard.css"></link> 
-        <link rel="stylesheet" href="#{staffManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/navigation.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/dashboard.css"></link> 
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
     </h:head>
     <h:body>
         
@@ -29,8 +29,8 @@
                 <!-- /toggle offscreen menu -->
 
                 <!-- logo -->
-                <a href="#{staffManagedBean.absolutepath}dash.xhtml" class="navbar-brand">
-                    <img src="#{staffManagedBean.absolutepath}/assets/img/logo.png" alt=""></img>
+                <a href="#{loginManagedBean.absolutepath}dash.xhtml" class="navbar-brand">
+                    <img src="#{loginManagedBean.absolutepath}/assets/img/logo.png" alt=""></img>
                     <span class="heading-font">
                         Island Furniture
                     </span>
@@ -113,7 +113,7 @@
 
                 <li class="off-right">
                     <h:form>
-                    <h:commandLink action="#{staffManagedBean.logout}" >
+                    <h:commandLink action="#{dashManagedBean.logout}" >
                         <span>Logout</span>
                     </h:commandLink>
                     </h:form>
@@ -131,9 +131,9 @@
                     <ul class="nav user-info">
                         <li>
                             <a href="index.html">
-                                <img src="#{staffManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                <img src="#{loginManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
                                 <span class="user-info">
-                                    #{staffManagedBean.name}<br></br>
+                                    #{dashManagedBean.name}<br></br>
                                     Marketing Executive<br></br>
                                     Singapore Office
                                 </span>
@@ -145,7 +145,7 @@
                     <ul class="nav sidenav">
 
                         <li class="active">
-                            <a href="#{staffManagedBean.absolutepath}dash.xhtml">
+                            <a href="#{loginManagedBean.absolutepath}dash.xhtml">
                                 <i class="fa fa-home"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -217,12 +217,12 @@
                             </a>
                         </li>   
                         <li>
-                            <a href="#{staffManagedBean.absolutepath}common/messaging.xhtml">
+                            <a href="#{loginManagedBean.absolutepath}common/messaging.xhtml">
                                 <i class="fa fa-envelope"></i><span>Messages</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#{staffManagedBean.absolutepath}common/broadcast.xhtml">
+                            <a href="#{loginManagedBean.absolutepath}common/broadcast.xhtml">
                                 <i class="fa fa-bullhorn"></i><span>Broadcasts</span>
                             </a>
                         </li>
@@ -254,14 +254,14 @@
         </div>
         
         <!-- core scripts -->
-        <script src="#{staffManagedBean.absolutepath}/assets/plugins/jquery-1.11.0.js"></script>
-        <script src="#{staffManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="#{staffManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
-        <script src="#{staffManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
-        <script src="#{staffManagedBean.absolutepath}/assets/plugins/calendar/demo.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.0.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/demo.js"></script>
         <!-- template scripts -->
-        <script src="#{staffManagedBean.absolutepath}/assets/js/offscreen.js"></script>
-        <script src="#{staffManagedBean.absolutepath}/assets/js/navigation.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/js/offscreen.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/js/navigation.js"></script>
     </h:body>
 </html>
 
