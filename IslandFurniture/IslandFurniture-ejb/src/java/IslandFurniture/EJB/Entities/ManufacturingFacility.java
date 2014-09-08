@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -86,4 +87,9 @@ public class ManufacturingFacility extends Plant implements Serializable {
         return "FW.IslandFurniture.Entities.MANUFACTURING.ManufacturingFacility[ id=" + id + " ]";
     }
     
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

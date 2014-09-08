@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -15,6 +15,7 @@ import javax.persistence.Entity;
  */
 @Entity
 public class CountryOffice extends Plant implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -41,5 +42,10 @@ public class CountryOffice extends Plant implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.CountryOffice.CountryOffice[ id=" + id + " ]";
     }
-    
+
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }
