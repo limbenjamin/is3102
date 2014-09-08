@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,6 +30,8 @@ public abstract class Plant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
+    @Column(unique = true)
+    protected String name;
     @ManyToOne
     protected Country country;
     @OneToMany(mappedBy = "plant")
@@ -42,6 +45,14 @@ public abstract class Plant implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Country getCountry() {

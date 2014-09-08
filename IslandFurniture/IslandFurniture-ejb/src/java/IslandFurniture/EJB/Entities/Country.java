@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
@@ -14,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Country implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,11 +29,11 @@ public class Country implements Serializable {
     private String code;
     private String name;
     private String phoneCode;
-    
-    @OneToMany(mappedBy="country")
+
+    @OneToMany(mappedBy = "country")
     private List<Plant> plant;
-    
-    @ManyToMany(mappedBy="countries")
+
+    @ManyToMany(mappedBy = "countries")
     private List<Currency> currencies;
 
     public Long getId() {
@@ -75,6 +76,14 @@ public class Country implements Serializable {
         this.currencies = currencies;
     }
 
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -99,5 +108,11 @@ public class Country implements Serializable {
     public String toString() {
         return "entities.Country[ id=" + id + " ]";
     }
-    
+
+    // Entity Callbacks
+
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

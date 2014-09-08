@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
-
 
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -19,35 +18,18 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class Store extends Plant implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    private String code;
-    private String name;
-    @OneToMany(mappedBy="store")
+    @OneToMany(mappedBy = "store")
     private List<GoodsIssuedDocument> goodsIssuedDocument;
-    @OneToMany(mappedBy="store")
+    @OneToMany(mappedBy = "store")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
-    @OneToMany(mappedBy="store")
+    @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts;
     @ManyToMany
     private List<Stock> sells;
-    @OneToMany(mappedBy="store")
+    @OneToMany(mappedBy = "store")
     private List<StockSupplied> suppliedWithFrom;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<GoodsIssuedDocument> getGoodsIssuedDocument() {
         return goodsIssuedDocument;
@@ -113,5 +95,10 @@ public class Store extends Plant implements Serializable {
     public String toString() {
         return "entities.Store[ id=" + id + " ]";
     }
-    
+
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }
