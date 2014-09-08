@@ -26,7 +26,10 @@ import javax.persistence.PostPersist;
 @NamedQueries({
     @NamedQuery(
         name="findCountryByName",
-        query="SELECT a FROM Country a WHERE a.name = :name")
+        query="SELECT a FROM Country a WHERE a.name = :name"),
+    @NamedQuery(
+        name="getAllCountry",
+        query="SELECT a FROM Country a")
 })
 public class Country implements Serializable {
 
@@ -38,6 +41,7 @@ public class Country implements Serializable {
     @Column(unique = true)
     private String name;
     private String phoneCode;
+    private String timeZoneID;
 
     @OneToMany(mappedBy = "country")
     private List<Plant> plant;
@@ -91,6 +95,14 @@ public class Country implements Serializable {
 
     public void setPhoneCode(String phoneCode) {
         this.phoneCode = phoneCode;
+    }
+
+    public String getTimeZoneID() {
+        return timeZoneID;
+    }
+
+    public void setTimeZoneID(String timeZoneID) {
+        this.timeZoneID = timeZoneID;
     }
 
     @Override

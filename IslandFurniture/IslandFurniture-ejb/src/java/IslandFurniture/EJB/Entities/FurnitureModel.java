@@ -20,7 +20,10 @@ import javax.persistence.PostPersist;
 @NamedQueries({
     @NamedQuery(
             name = "findFurnitureByName",
-            query = "SELECT a FROM FurnitureModel a WHERE a.name = :name")
+            query = "SELECT a FROM FurnitureModel a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllFurnitureModels",
+            query = "SELECT a FROM FurnitureModel a")
 })
 public class FurnitureModel extends Stock implements Serializable {
 
@@ -62,7 +65,6 @@ public class FurnitureModel extends Stock implements Serializable {
     }
 
     // Entity Callbacks
-    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);

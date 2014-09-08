@@ -15,7 +15,10 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.RemoteInterfaces.LoadOrgEntitiesBeanRemote;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -85,12 +88,13 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         }
     }
 
-    private Country addCountry(String countryName) {
+    private Country addCountry(String countryName, String timeZoneID) {
         Country country = this.findCountryByName(countryName);
 
         if (country == null) {
             country = new Country();
             country.setName(countryName);
+            country.setTimeZoneID(timeZoneID);
             em.persist(country);
 
             return country;
@@ -118,18 +122,19 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         }
     }
 
-    private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails) {
+    private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails, Calendar transTime) {
         FurnitureTransaction fTrans = new FurnitureTransaction();
         fTrans.setStore(store);
+        fTrans.setTransTime(transTime);
         for (FurnitureTransactionDetail eachDetail : fTransDetails) {
             eachDetail.setFurnitureTransaction(fTrans);
         }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
-        
+
         em.persist(fTrans);
 
         System.out.println(fTransDetails.get(0).getFurnitureTransaction());
-        
+
         return fTrans;
     }
 
@@ -192,52 +197,52 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
 
         try {
             // Add Countries and Plants
-            country = this.addCountry("Singapore");
+            country = this.addCountry("Singapore", "Asia/Singapore");
             if (country != null) {
                 this.addCountryOffice("Singapore", country);
                 this.addStore("Alexandra", country);
                 this.addStore("Tampines", country);
             }
 
-            country = this.addCountry("Malaysia");
+            country = this.addCountry("Malaysia", "Asia/Kuala_Lumpur");
             if (country != null) {
                 this.addCountryOffice("Malaysia", country);
                 this.addStore("Johor Bahru - Kulai", country);
             }
 
-            country = this.addCountry("China");
+            country = this.addCountry("China", "Asia/Shanghai");
             if (country != null) {
                 this.addCountryOffice("China", country);
                 this.addStore("Yunnan - Yuanjiang", country);
                 this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country);
             }
 
-            country = this.addCountry("Indonesia");
+            country = this.addCountry("Indonesia", "Asia/Jakarta");
             if (country != null) {
                 this.addCountryOffice("Indonesia", country);
                 this.addManufacturingFacility("Surabaya", country);
                 this.addManufacturingFacility("Sukabumi", country);
             }
 
-            country = this.addCountry("Cambodia");
+            country = this.addCountry("Cambodia", "Asia/Phnom_Penh");
             if (country != null) {
                 this.addCountryOffice("Cambodia", country);
                 this.addManufacturingFacility("Krong Chbar Mon", country);
             }
 
-            country = this.addCountry("Thailand");
+            country = this.addCountry("Thailand", "Asia/Bangkok");
             if (country != null) {
                 this.addCountryOffice("Thailand", country);
                 this.addStore("Bangkok - Ma Boon Krong", country);
             }
 
-            country = this.addCountry("Vietnam");
+            country = this.addCountry("Vietnam", "Asia/Ho_Chi_Minh");
             if (country != null) {
                 this.addCountryOffice("Vietnam", country);
                 this.addManufacturingFacility("Chiang Mai", country);
             }
 
-            country = this.addCountry("Laos");
+            country = this.addCountry("Laos", "Asia/Vientiane");
             if (country != null) {
                 this.addCountryOffice("Laos", country);
                 this.addStore("Vientiane", country);
@@ -250,13 +255,30 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             this.addFurnitureModel("Study Table - Dinosaur Edition");
             this.addFurnitureModel("Bedside Lamp H31");
             this.addFurnitureModel("Bathroom Rug E64");
+            this.addFurnitureModel("Kitchen Stool");
 
             // Add Transactions for stores
-            store = (Store) this.findPlantByName(this.findCountryByName("Singapore"), "Alexandra");
+            Calendar cal;
+            Random rand = new Random();
+            List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
+            List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
 
-            fTransDetails.add(this.addFurnitureTransactionDetail(this.findFurnitureByName("Swivel Chair"), 2));
-            fTransDetails.add(this.addFurnitureTransactionDetail(this.findFurnitureByName("Round Table"), 4));
-            fTrans = this.addFurnitureTransaction(store, fTransDetails);
+            for (int i = 0; i < 800; i++) {
+                for (Store eachStore : stores) {
+                    fTransDetails.clear();
+                    for (FurnitureModel fm : furnitureModels) {
+                        if (rand.nextBoolean()) {
+                            fTransDetails.add(this.addFurnitureTransactionDetail(fm, rand.nextInt(50) + 1));
+                        }
+                    }
+
+                    if (!fTransDetails.isEmpty()) {
+                        cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+                        cal.set(rand.nextInt(28) + 1, rand.nextInt(12) + 1, rand.nextInt(2) + 2013, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        fTrans = this.addFurnitureTransaction(eachStore, fTransDetails, cal);
+                    }
+                }
+            }
 
             return true;
         } catch (Exception ex) {

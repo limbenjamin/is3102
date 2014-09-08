@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Entities.TransactionPK;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +17,8 @@ import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -26,6 +28,7 @@ import javax.persistence.ManyToOne;
 @IdClass(TransactionPK.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Transaction implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,15 +36,26 @@ public abstract class Transaction implements Serializable {
     @Id
     @ManyToOne
     protected Store store;
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Calendar transTime;
+
     @ManyToOne
     protected StoreMember member;
-    
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public StoreMember getMember() {
@@ -52,13 +66,15 @@ public abstract class Transaction implements Serializable {
         this.member = member;
     }
 
-    public Store getStore() {
-        return store;
+    public Calendar getTransTime() {
+        return transTime;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setTransTime(Calendar transTime) {
+        this.transTime = transTime;
     }
+
+
 
     @Override
     public int hashCode() {
@@ -82,5 +98,5 @@ public abstract class Transaction implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Transaction[ id=" + this.getStore().getId() + ", " + id + " ]";
     }
-    
+
 }
