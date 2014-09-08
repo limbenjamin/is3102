@@ -13,7 +13,7 @@ import javax.ejb.Stateless;
  * @author KamilulAshraf
  */
 @Stateless
-public class ManageStockIssue implements ManageStockIssueRemote {
+public class ManageStockIssue {
 
     
     
