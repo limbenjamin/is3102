@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -17,8 +18,9 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class FurnitureTransaction extends Transaction implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy="furnitureTransaction")
+    @OneToMany(mappedBy = "furnitureTransaction", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<FurnitureTransactionDetail> furnitureTransactionDetails;
 
     public List<FurnitureTransactionDetail> getFurnitureTransactionDetails() {
@@ -51,7 +53,13 @@ public class FurnitureTransaction extends Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.RetailItemTransaction[ id=" + id + " ]";
+        return "FurnitureTransaction[ id=" + this.id + ", " + this.store + " ]";
     }
+
+    // Entity Callbacks
     
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

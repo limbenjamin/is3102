@@ -121,18 +121,22 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails) {
         FurnitureTransaction fTrans = new FurnitureTransaction();
         fTrans.setStore(store);
+        for (FurnitureTransactionDetail eachDetail : fTransDetails) {
+            eachDetail.setFurnitureTransaction(fTrans);
+        }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
+        
         em.persist(fTrans);
 
+        System.out.println(fTransDetails.get(0).getFurnitureTransaction());
+        
         return fTrans;
     }
 
-    private FurnitureTransactionDetail addFurnitureTransactionDetail(FurnitureTransaction fTrans, FurnitureModel furniture, int qty) {
+    private FurnitureTransactionDetail addFurnitureTransactionDetail(FurnitureModel furniture, int qty) {
         FurnitureTransactionDetail fTransDetail = new FurnitureTransactionDetail();
-        fTransDetail.setFurnitureTransaction(fTrans);
         fTransDetail.setFurnitureModel(furniture);
         fTransDetail.setQty(qty);
-        em.persist(fTransDetail);
 
         return fTransDetail;
     }
@@ -207,26 +211,26 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
                 this.addStore("Yunnan - Yuanjiang", country);
                 this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country);
             }
-            
+
             country = this.addCountry("Indonesia");
             if (country != null) {
                 this.addCountryOffice("Indonesia", country);
                 this.addManufacturingFacility("Surabaya", country);
                 this.addManufacturingFacility("Sukabumi", country);
             }
-            
+
             country = this.addCountry("Cambodia");
             if (country != null) {
                 this.addCountryOffice("Cambodia", country);
                 this.addManufacturingFacility("Krong Chbar Mon", country);
             }
-            
+
             country = this.addCountry("Thailand");
             if (country != null) {
                 this.addCountryOffice("Thailand", country);
                 this.addStore("Bangkok - Ma Boon Krong", country);
             }
-            
+
             country = this.addCountry("Vietnam");
             if (country != null) {
                 this.addCountryOffice("Vietnam", country);
@@ -246,10 +250,13 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             this.addFurnitureModel("Study Table - Dinosaur Edition");
             this.addFurnitureModel("Bedside Lamp H31");
             this.addFurnitureModel("Bathroom Rug E64");
-//
-//            // Add Transactions for stores
-//            store = (Store) this.findPlantByName(this.findCountryByName("Singapore"), "Alexandra");
-//            this.addFurnitureTransaction(store, fTransDetails);
+
+            // Add Transactions for stores
+            store = (Store) this.findPlantByName(this.findCountryByName("Singapore"), "Alexandra");
+
+            fTransDetails.add(this.addFurnitureTransactionDetail(this.findFurnitureByName("Swivel Chair"), 2));
+            fTransDetails.add(this.addFurnitureTransactionDetail(this.findFurnitureByName("Round Table"), 4));
+            fTrans = this.addFurnitureTransaction(store, fTransDetails);
 
             return true;
         } catch (Exception ex) {
