@@ -6,16 +6,20 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
-import IslandFurniture.SupplyChainModule.ManageStockIssueRemote;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 
 /**
  *
- * @author a0101774
+ * @author KamilulAshraf
  */
-@Stateful
-public class ManageStockIssue implements ManageStockIssueRemote, ManageStockIssueLocal {
+@Stateless
+public class ManageStockIssue implements ManageStockIssueRemote {
 
+    
+    
+    
+    
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }
