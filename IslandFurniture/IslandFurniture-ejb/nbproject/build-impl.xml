@@ -819,33 +819,37 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
     <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
-        <copyfiles files="${reference.SupplyChainRemote.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${reference.StaffBeanRemote.jar}" todir="${build.classes.dir}"/>
-        <copyfiles files="${reference.ITManagementRemote.jar}" todir="${build.classes.dir}"/>
         <copyfiles files="${file.reference.commons-codec-1.9.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${libs.javaee-api-7.0.classpath}" todir="${build.classes.dir}"/>
         <copyfiles files="${reference.IslandFurnitureRemote.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${reference.ITManagementRemote.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${reference.StaffBeanRemote.jar}" todir="${build.classes.dir}"/>
+        <copyfiles files="${reference.SupplyChainRemote.jar}" todir="${build.classes.dir}"/>
     </target>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
-        <basename file="${reference.SupplyChainRemote.jar}" property="manifest.reference.SupplyChainRemote.jar"/>
-        <basename file="${reference.StaffBeanRemote.jar}" property="manifest.reference.StaffBeanRemote.jar"/>
-        <basename file="${reference.ITManagementRemote.jar}" property="manifest.reference.ITManagementRemote.jar"/>
         <basename file="${file.reference.commons-codec-1.9.jar}" property="manifest.file.reference.commons-codec-1.9.jar"/>
+        <basename file="${libs.javaee-api-7.0.classpath}" property="manifest.libs.javaee-api-7.0.classpath"/>
         <basename file="${reference.IslandFurnitureRemote.jar}" property="manifest.reference.IslandFurnitureRemote.jar"/>
+        <basename file="${reference.ITManagementRemote.jar}" property="manifest.reference.ITManagementRemote.jar"/>
+        <basename file="${reference.StaffBeanRemote.jar}" property="manifest.reference.StaffBeanRemote.jar"/>
+        <basename file="${reference.SupplyChainRemote.jar}" property="manifest.reference.SupplyChainRemote.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.reference.SupplyChainRemote.jar}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.reference.StaffBeanRemote.jar}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.reference.ITManagementRemote.jar}"/>
-            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.commons-codec-1.9.jar}"/>
-            <attribute name="jar-5-Extension-Name" value="${manifest.reference.IslandFurnitureRemote.jar}"/>
+            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.commons-codec-1.9.jar}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.libs.javaee-api-7.0.classpath}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.reference.IslandFurnitureRemote.jar}"/>
+            <attribute name="jar-4-Extension-Name" value="${manifest.reference.ITManagementRemote.jar}"/>
+            <attribute name="jar-5-Extension-Name" value="${manifest.reference.StaffBeanRemote.jar}"/>
+            <attribute name="jar-6-Extension-Name" value="${manifest.reference.SupplyChainRemote.jar}"/>
         </manifest>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
-        <copyfiles files="${reference.SupplyChainRemote.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.StaffBeanRemote.jar}" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.ITManagementRemote.jar}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${file.reference.commons-codec-1.9.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${libs.javaee-api-7.0.classpath}" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.IslandFurnitureRemote.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.ITManagementRemote.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.StaffBeanRemote.jar}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.SupplyChainRemote.jar}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target name="-copy-meta-inf">
