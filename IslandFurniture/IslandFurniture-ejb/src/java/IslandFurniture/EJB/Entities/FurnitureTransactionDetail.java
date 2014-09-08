@@ -25,6 +25,8 @@ public class FurnitureTransactionDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer qty;
+    
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID", insertable = false, updatable = false),
@@ -42,6 +44,14 @@ public class FurnitureTransactionDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
     public FurnitureTransaction getFurnitureTransaction() {

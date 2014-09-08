@@ -3,19 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
 
 /**
  *
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findFurnitureByName",
+            query = "SELECT a FROM FurnitureModel a WHERE a.name = :name")
+})
 public class FurnitureModel extends Stock implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @OneToOne
     private BOM bom;
@@ -52,5 +60,12 @@ public class FurnitureModel extends Stock implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.FurnitureModel[ id=" + id + " ]";
     }
+
+    // Entity Callbacks
     
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
+
 }
