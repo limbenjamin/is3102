@@ -8,41 +8,116 @@
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="col-md-12">
-                            <hr></hr>
-                        </div>
-                        <div class="col-md-12">                      
-                          <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Thread List</a>
-                            </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Messages</h4>
+                                <hr></hr>       
+                            </div>                        
+                            <div class="col-md-9 col-sm-8">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    <span class="pull-right">
+                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newThread">
+                                            <span class="fa fa-plus"></span> New
+                                        </a>
+                                    </span>
+                                    Thread List
+                                </div>
                             <h:form id="messageForm">
-                            <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">                                
-                                    <h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
+                            <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">
+                                <div class="list-group-item">
+                                    <h5><strong><h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
                                                     <f:param name="id" value="#{messageThread.id}" />
-                                    </h:commandLink>                               
-                                <span class="pull-right"> Recipients:
+                                            </h:commandLink></strong></h5>                               
+                                    Recipients:
                                     <ui:repeat value="#{messageThread.recipient}" var="recipient">
                                          #{recipient.username}
-                                    </ui:repeat>
-                                </span> 
-                            <br />
+                                    </ui:repeat> 
+                                </div>
                             </ui:repeat>
-                            </h:form>                                  
-                            <h:form id="threadForm">       
-                                <p>Add Thread</p>
-                                <h:inputText id="title"></h:inputText>
-                                <h:inputText id="recipients"></h:inputText>
-                                <h:commandButton action="#{messagingManagedBean.addThread}" value="Add Thread"></h:commandButton>
                             </h:form>
-                          </section>
-                        </div>
-                    </div>
+                              </section>
+                            </div>
 
-                </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="newThread" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Create A New Thread</h4>
+                                  </div>
+                                  <h:form id="threadForm" class="form-horizontal">
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Thread Title: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-bookmark"></i>
+                                              <h:inputText id="title" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">User Contact: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-user"></i>
+                                              <h:inputText id="recipients" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{messagingManagedBean.addThread}" class="btn btn-success" value="Add Thread"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+                            <div class="col-md-3 col-sm-4">                      
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                  All Contacts
+                                </div>
+                                <div class="list-group contact-list">                          
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Benjamin Lim</h6>
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Kamilul Ashraf</h6>  
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Lee Chen Tong</h6>  
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Yap Zi Xuan</h6>
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>James Song Jianyong</h6>  
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Darius Foo</h6>  
+                                  </a>
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Christopher Lee</h6>
+                                  </a>     
+                                  <a href="#" class="list-group-item">
+                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                      <h6>Joe Chee</h6>
+                                  </a>                                                                
+                                </div>
+                              </section>
+                            </div>                            
+                        </div>                
                 </ui:define>
         </ui:composition>
     </h:body>
