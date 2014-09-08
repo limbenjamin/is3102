@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="col-md-12">
+                            <hr></hr>
+                        </div>
+                        <div class="col-md-12">                      
+                          <section class="panel">
+                            <div class="panel-heading announcement-widget">
+                              <span class="badge pull-right">4</span>
+                              <a href="#" class="no-decor">Announcements</a>
+                            </div>
+                            <h:form id="announcementForm">       
+                                <p>Add Announcement</p>
+                                Title <h:inputText id="title"></h:inputText><br />
+                                Content <h:inputTextarea id="content"></h:inputTextarea><br />
+                                Active Date (dd-mm-yy) <h:inputText id="activeDateString"></h:inputText><br />
+                                Expire Date (dd-mm-yy) <h:inputText id="expireDateString"></h:inputText><br />
+                                <h:commandButton action="#{broadcastManagedBean.addAnnouncement}" value="Add Announcement"></h:commandButton>
+                            </h:form>
+                          </section>
+                            <section class="panel">
+                            <div class="panel-heading announcement-widget">
+                              <span class="badge pull-right">4</span>
+                              <a href="#" class="no-decor">My announcements</a>
+                            </div>
+                            <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
+                                <a class="list-group-item">
+                                    <h:form>
+                                        <span class="pull-right">
+                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteAnnouncement}">
+                                                <f:param name="id" value="#{announcement.id}" />
+                                            </h:commandButton>
+                                        </span>
+                                    </h:form>
+                                    <h4><u>#{announcement.title}</u></h4>
+                                    <h5>#{announcement.content}</h5>
+                                    <small>#{announcement.activeDate}</small>
+                                </a>
+                            </ui:repeat>
+                          </section>
+                          <section class="panel">
+                            <div class="panel-heading announcement-widget">
+                              <span class="badge pull-right">4</span>
+                              <a href="#" class="no-decor">Events</a>
+                            </div>
+                            <h:form id="eventForm">       
+                                <p>Add Event</p>
+                                Name <h:inputText id="name"></h:inputText><br />
+                                Description <h:inputTextarea id="description"></h:inputTextarea><br />
+                                Event Time (dd-mm-yy HH:MM) <h:inputText id="eventTimeString"></h:inputText><br />
+                                <h:commandButton action="#{broadcastManagedBean.addEvent}" value="Add Event"></h:commandButton>
+                            </h:form>
+                          </section>
+                            <section class="panel">
+                            <div class="panel-heading announcement-widget">
+                              <span class="badge pull-right">4</span>
+                              <a href="#" class="no-decor">My Events</a>
+                            </div>
+                            <ui:repeat value="#{broadcastManagedBean.eventList}" var="event">
+                                <a class="list-group-item">
+                                    <h:form>
+                                        <span class="pull-right">
+                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteEvent}">
+                                                <f:param name="id" value="#{event.id}" />
+                                            </h:commandButton>
+                                        </span>
+                                    </h:form>
+                                    <h4><u>#{event.name}</u></h4>
+                                    <h5>#{event.description}</h5>
+                                    <small>#{event.eventTime.time}</small>
+                                </a>
+                            </ui:repeat>
+                          </section>  
+                         
+                        </div>
+                    </div>
+
+                </div>
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+
+

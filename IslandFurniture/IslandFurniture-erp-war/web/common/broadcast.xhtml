@@ -8,84 +8,156 @@
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="col-md-12">
-                            <hr></hr>
-                        </div>
-                        <div class="col-md-12">                      
-                          <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Announcements</a>
-                            </div>
-                            <h:form id="announcementForm">       
-                                <p>Add Announcement</p>
-                                Title <h:inputText id="title"></h:inputText><br />
-                                Content <h:inputTextarea id="content"></h:inputTextarea><br />
-                                Active Date (dd-mm-yy) <h:inputText id="activeDateString"></h:inputText><br />
-                                Expire Date (dd-mm-yy) <h:inputText id="expireDateString"></h:inputText><br />
-                                <h:commandButton action="#{broadcastManagedBean.addAnnouncement}" value="Add Announcement"></h:commandButton>
-                            </h:form>
-                          </section>
-                            <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">My announcements</a>
-                            </div>
-                            <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
-                                <a class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Announcements &amp; Events</h4>
+                                <hr></hr>       
+                            </div>                        
+                            <div class="col-md-6">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    <span class="pull-right">
+                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newAnnouncement">
+                                            <span class="fa fa-plus"></span> New
+                                        </a>
+                                    </span>
+                                    My Announcements
+                                </div>
+                                <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
+                                <div class="list-group">                          
+                                  <a href="#" class="list-group-item">                                      
+                                      <h5><strong>#{announcement.title}</strong></h5>
                                     <h:form>
                                         <span class="pull-right">
                                             <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteAnnouncement}">
                                                 <f:param name="id" value="#{announcement.id}" />
                                             </h:commandButton>
                                         </span>
-                                    </h:form>
-                                    <h4><u>#{announcement.title}</u></h4>
-                                    <h5>#{announcement.content}</h5>
-                                    <small>#{announcement.activeDate}</small>
-                                </a>
-                            </ui:repeat>
-                          </section>
-                          <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Events</a>
+                                    </h:form>                                      
+                                      <p><span class="fa fa-clock-o"></span> #{announcement.activeDate}</p>
+                                      <p>#{announcement.content}</p>
+                                  </a>                                  
+                                </div>
+                                </ui:repeat>
+                              </section>
                             </div>
-                            <h:form id="eventForm">       
-                                <p>Add Event</p>
-                                Name <h:inputText id="name"></h:inputText><br />
-                                Description <h:inputTextarea id="description"></h:inputTextarea><br />
-                                Event Time (dd-mm-yy HH:MM) <h:inputText id="eventTimeString"></h:inputText><br />
-                                <h:commandButton action="#{broadcastManagedBean.addEvent}" value="Add Event"></h:commandButton>
-                            </h:form>
-                          </section>
-                            <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">My Events</a>
+
+
+                            <!-- Announcement Modal -->
+                            <div class="modal fade" id="newAnnouncement" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Announcement</h4>
+                                  </div>
+                                  <h:form id="announcementForm" class="form-horizontal">
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Title: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="title" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Content: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputTextarea id="content" class="form-control"></h:inputTextarea>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                              <label class="col-sm-3 control-label">Active Date: <br></br>(dd-mm-yy)</label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="activeDateString" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>          
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Expiry Date: <br></br>(dd-mm-yy)</label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="expireDateString" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>                                                                           
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{broadcastManagedBean.addAnnouncement}" value="Add Announcement" class="btn btn-success"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
                             </div>
-                            <ui:repeat value="#{broadcastManagedBean.eventList}" var="event">
-                                <a class="list-group-item">
+
+
+
+                            <div class="col-md-6">                      
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    <span class="pull-right">
+                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newEvent">
+                                            <span class="fa fa-plus"></span> New
+                                        </a>
+                                    </span>
+                                    Events
+                                </div>
+                                <ui:repeat value="#{broadcastManagedBean.eventList}" var="event">
+                                <div class="list-group">                          
+                                  <a href="#" class="list-group-item">
+                                      <h5><strong>#{event.name}</strong></h5>
                                     <h:form>
                                         <span class="pull-right">
                                             <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteEvent}">
                                                 <f:param name="id" value="#{event.id}" />
                                             </h:commandButton>
                                         </span>
-                                    </h:form>
-                                    <h4><u>#{event.name}</u></h4>
-                                    <h5>#{event.description}</h5>
-                                    <small>#{event.eventTime.time}</small>
-                                </a>
-                            </ui:repeat>
-                          </section>  
-                         
-                        </div>
-                    </div>
+                                    </h:form>                                      
+                                      <p><span class="fa fa-clock-o"></span> #{event.eventTime.time}</p>
+                                      <p>#{event.description}</p>
+                                  </a>
+                                </div>
+                                </ui:repeat>
+                              </section>
+                            </div>  
 
-                </div>
+                            <!-- Event Modal -->
+                            <div class="modal fade" id="newEvent" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Event</h4>
+                                  </div>
+                                  <h:form id="eventForm" class="form-horizontal"> 
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Event Name: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="name" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Description: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputTextarea id="description" class="form-control"></h:inputTextarea>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Event Time: <br></br>(dd-mm-yy HH:MM)</label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="eventTimeString" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>                                          
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{broadcastManagedBean.addEvent}" value="Add Event" class="btn btn-success"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
+                            </div>
+
+
+                        </div>
                 </ui:define>
         </ui:composition>
     </h:body>
