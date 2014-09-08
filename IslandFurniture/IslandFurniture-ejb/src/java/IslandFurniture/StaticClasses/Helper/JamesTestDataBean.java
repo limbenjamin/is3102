@@ -10,8 +10,8 @@ import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.TEST.JamesTestDataBeanRemote;
 import javax.ejb.Stateless;
-import javax.ejb.LocalBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -20,15 +20,16 @@ import javax.persistence.PersistenceContext;
  * @author James
  */
 @Stateless
-@LocalBean
-public class JamesTestDataBean {
+public class JamesTestDataBean implements JamesTestDataBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
+    @Override
     public void persist(Object object) {
         em.persist(object);
     }
     
+    @Override
     public void createtestdata(){
                 Country cn = new Country();
         cn.setName("SINGAPORE");
