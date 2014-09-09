@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.time.*;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -21,14 +23,25 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class GoodsIssuedDocument implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
     private Store store;
-    @OneToMany(mappedBy="goodsIssuedDocument")
+    @OneToMany(mappedBy = "goodsIssuedDocument")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    Date documentDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    Date postingDate;
+
+    public void create(Date documentDate, Date postingDate, Store store) {
+        this.setDocumentDate(documentDate);
+        this.setPostingDate(postingDate);
+        this.setStore(store);
+    }
 
     public Long getId() {
         return id;
@@ -54,6 +67,24 @@ public class GoodsIssuedDocument implements Serializable {
         this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
+    public Date getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(Date documentDate) {
+        this.documentDate = documentDate;
+    }
+
+    public Date getPostingDate() {
+        return postingDate;
+    }
+
+    public void setPostingDate(Date postingDate) {
+        this.postingDate = postingDate;
+    }
+
+
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -78,5 +109,5 @@ public class GoodsIssuedDocument implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocument[ id=" + id + " ]";
     }
-    
+
 }
