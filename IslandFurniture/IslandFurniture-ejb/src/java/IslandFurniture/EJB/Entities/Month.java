@@ -5,13 +5,15 @@
  */
 package IslandFurniture.EJB.Entities;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  * I have added a helper function to translate enum to month. See
  * Helper.TranslateMonth
  */
-public enum Month {
+public enum Month implements Serializable {
 
     JAN(1), FEB(2), MAR(3), APR(4), MAY(5), JUN(6), JUL(7), AUG(8), SEP(9), OCT(10), NOV(11), DEC(12);
 

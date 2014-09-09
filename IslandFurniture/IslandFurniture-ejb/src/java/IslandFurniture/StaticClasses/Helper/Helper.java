@@ -37,7 +37,7 @@ switch(month)
     case 9:
         return Month.SEP;
     case 10:
-        return Month.AUG;
+        return Month.OCT;
     case 11:
         return Month.NOV;
     case 12:

@@ -4,16 +4,12 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.TEST;
-
-import javax.ejb.Remote;
+package IslandFurnitures.EJB.Exceptions;
 
 /**
  *
  * @author James
  */
-@Remote
-public interface JamesTestDataBeanRemote {
-    public void createtestdata();
-    public void persist(Object object);
+public class ProductionPlanNoCN extends Exception {
+    
 }
