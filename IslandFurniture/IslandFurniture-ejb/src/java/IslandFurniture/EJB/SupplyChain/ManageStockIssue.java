@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author KamilulAshraf
+ * @author KamilulAshraf (Add something)
  */
 @Stateless
 public class ManageStockIssue {
