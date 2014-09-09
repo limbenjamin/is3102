@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -17,6 +19,14 @@ import javax.persistence.PostPersist;
  * @author Benjamin
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name="findStoreByName",
+        query="SELECT a FROM Store a WHERE a.country = :country AND a.name = :name"),
+    @NamedQuery(
+        name="getAllStores",
+        query="SELECT a FROM Store a")
+})
 public class Store extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;

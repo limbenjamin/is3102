@@ -3,29 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.StaticClasses.Helper;
+package islandfurnituretestclient;
 
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
+import IslandFurniture.TEST.JamesTestDataBeanRemote;
 import javax.ejb.EJB;
 
 /**
- *
+ * 
  * @author James Will be deleted
  */
-public class JamesConsoleTest {
+public class Main {
+
 
     @EJB
-    ManageProductionPlanning manager;
-
-    @EJB
-    JamesTestDataBean jt;
+    private static JamesTestDataBeanRemote jt;
 
     public static void main(String[] args) {
-        JamesConsoleTest test = new JamesConsoleTest();
-        test.createdata();
+        Main jx = new Main();
+        jx.add_data();
     }
     
-    public void createdata()
+    public void add_data()
     {
         jt.createtestdata();
     }

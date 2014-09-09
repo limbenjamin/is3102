@@ -57,7 +57,6 @@ public class DashManagedBean implements Serializable {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        System.err.println( " herher " + username);
         this.staff = staffBean.getStaff(username);
         this.notes = staff.getNotes();
         this.name = staff.getName();

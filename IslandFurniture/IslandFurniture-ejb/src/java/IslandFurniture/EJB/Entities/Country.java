@@ -7,11 +7,14 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -20,6 +23,14 @@ import javax.persistence.PostPersist;
  * @author Benjamin
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name="findCountryByName",
+        query="SELECT a FROM Country a WHERE a.name = :name"),
+    @NamedQuery(
+        name="getAllCountry",
+        query="SELECT a FROM Country a")
+})
 public class Country implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,8 +38,10 @@ public class Country implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String code;
+    @Column(unique = true)
     private String name;
     private String phoneCode;
+    private String timeZoneID;
 
     @OneToMany(mappedBy = "country")
     private List<Plant> plant;
@@ -84,6 +97,14 @@ public class Country implements Serializable {
         this.phoneCode = phoneCode;
     }
 
+    public String getTimeZoneID() {
+        return timeZoneID;
+    }
+
+    public void setTimeZoneID(String timeZoneID) {
+        this.timeZoneID = timeZoneID;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -110,7 +131,6 @@ public class Country implements Serializable {
     }
 
     // Entity Callbacks
-
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);
