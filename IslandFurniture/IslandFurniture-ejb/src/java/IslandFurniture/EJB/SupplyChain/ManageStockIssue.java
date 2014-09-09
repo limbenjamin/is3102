@@ -19,7 +19,7 @@ import javax.persistence.PersistenceContext;
  * @author KamilulAshraf
  */
 @Stateless
-public class ManageStockIssue implements ManageStockIssueRemote {
+public class ManageStockIssue {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;

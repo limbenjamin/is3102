@@ -15,9 +15,9 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Benjamin
  */
-@Named
+@ManagedBean
 @ViewScoped
 public class MessagingManaged2Bean implements Serializable {
 
@@ -39,6 +39,7 @@ public class MessagingManaged2Bean implements Serializable {
     private MessageThread messageThread;
     private List<Message> messageList;
     private String content;
+    private Integer messageListSize;
     
     @EJB
     private ManageMessagesBean messageBean;
@@ -59,6 +60,7 @@ public class MessagingManaged2Bean implements Serializable {
             id = (Long) session.getAttribute("threadid");
             messageThread = messageBean.getMessageThread(id);
             messageList = messageThread.getMessages();
+            messageListSize = messageList.size();
         }
     }
     
@@ -78,6 +80,18 @@ public class MessagingManaged2Bean implements Serializable {
       messageBean.sendMessage(username, id, content);
       return "messaging2";
     }
+ 
+    public void pullMessage() {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("threadid");
+        messageThread = messageBean.getMessageThread(id);
+        messageList = messageThread.getMessages();     
+        if (messageList.size() != messageListSize){
+            message = messageList.get(messageList.size()-1);
+            System.out.println(message.getContent());
+            this.setMessage(message);
+        }
+    }
 
     public String getUsername() {
         return username;
@@ -96,6 +110,7 @@ public class MessagingManaged2Bean implements Serializable {
     }
 
     public Message getMessage() {
+        System.err.print("getting " +message);
         return message;
     }
 
@@ -173,6 +188,14 @@ public class MessagingManaged2Bean implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getMessageListSize() {
+        return messageListSize;
+    }
+
+    public void setMessageListSize(Integer messageListSize) {
+        this.messageListSize = messageListSize;
     }
     
     

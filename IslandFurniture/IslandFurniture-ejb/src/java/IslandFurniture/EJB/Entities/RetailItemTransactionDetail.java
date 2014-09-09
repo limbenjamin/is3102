@@ -27,8 +27,8 @@ public class RetailItemTransactionDetail implements Serializable {
     private Long id;
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name="TRANSACTION_ID", referencedColumnName="ID", insertable=false, updatable=false),
-        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID", insertable=false, updatable=false)
+        @JoinColumn(name="TRANSACTION_ID", referencedColumnName="ID"),
+        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID")
     })
     private RetailItemTransaction retailItemTransaction;
     @ManyToOne

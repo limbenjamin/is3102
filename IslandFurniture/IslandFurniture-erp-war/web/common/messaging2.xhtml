@@ -2,7 +2,8 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -18,10 +19,17 @@
                               <span class="badge pull-right">4</span>
                               <a href="#" class="no-decor">Thread List</a>
                             </div>
-                              <ui:repeat value="#{messagingManaged2Bean.messageList}" var="message">
-                                  Content: #{message.content}     Sender: #{message.staff.name}  Time: #{message.msgTime.time};
-                                <br />
-                            </ui:repeat>
+                            
+                                <ui:repeat value="#{messagingManaged2Bean.messageList}" var="message">
+                                      Content: #{message.content}     Sender: #{message.staff.name}  Time: #{message.msgTime.time};
+                                    <br />
+                                </ui:repeat>
+                            <h:form id="newMessage">
+                                Content: <h:outputText value="#{messagingManaged2Bean.message.content}" />     
+                                Sender: <h:outputText value="#{messagingManaged2Bean.message.staff.name}" />  
+                                Time: <h:outputText value="#{messagingManaged2Bean.message.msgTime.time}" />
+                                <p:poll interval="3" listener="#{messagingManaged2Bean.pullMessage}" update="newMessage" />
+                            </h:form>
                             <h:form id="AddMessageForm">       
                                 <p>Compose Message</p>
                                 <h:inputText id="content"></h:inputText>

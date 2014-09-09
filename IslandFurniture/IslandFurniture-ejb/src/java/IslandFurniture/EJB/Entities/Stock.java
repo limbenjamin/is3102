@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +29,9 @@ public abstract class Stock implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
+    @Column(unique = true)
+    protected String name;
+
     @OneToMany(mappedBy = "stock")
     protected List<StockUnit> stockUnit;
     @OneToMany(mappedBy = "stock")
@@ -42,9 +46,6 @@ public abstract class Stock implements Serializable {
     protected List<Store> soldBy;
     @OneToMany(mappedBy = "stock")
     protected List<ProductionCapacity> productionCapacity;
-    
-    private String name;
-    
 
     public Long getId() {
         return id;
@@ -52,6 +53,14 @@ public abstract class Stock implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<StockUnit> getStockUnit() {
@@ -133,14 +142,6 @@ public abstract class Stock implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Stock[ id=" + id + " ]";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 }

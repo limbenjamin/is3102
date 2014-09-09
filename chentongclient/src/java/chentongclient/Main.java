@@ -9,7 +9,9 @@ import IslandFurniture.EJB.RemoteInterfaces.LoadOrgEntitiesBeanRemote;
 import javax.ejb.EJB;
 
 /**
- * Data Loading client for sales forecasting
+ * IMPORTANT!
+ * Data Loading client for sales forecasting. around 16k lines of Transaction
+ * Detail data loaded each run. Please do not run too many times.
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
