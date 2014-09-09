@@ -110,7 +110,6 @@ public class MessagingManaged2Bean implements Serializable {
     }
 
     public Message getMessage() {
-        System.err.print("getting " +message);
         return message;
     }
 

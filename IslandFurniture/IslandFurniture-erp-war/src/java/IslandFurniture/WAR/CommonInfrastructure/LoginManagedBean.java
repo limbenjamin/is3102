@@ -18,12 +18,12 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 
-@Named
+@ManagedBean
 @SessionScoped
 public class LoginManagedBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;

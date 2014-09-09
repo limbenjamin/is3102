@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -66,15 +67,15 @@
                                             </div>
                                           </div>
                                           <div class="form-group">
-                                              <label class="col-sm-3 control-label">Active Date: <br></br>(dd-mm-yy)</label>
+                                              <label class="col-sm-3 control-label">Active Date: </label>
                                             <div class="col-sm-9">
-                                              <h:inputText id="activeDateString" class="form-control"></h:inputText>
+                                              <h:inputText id="activeDateString" p:type="date" class="form-control"></h:inputText>
                                             </div>
                                           </div>          
                                           <div class="form-group">
-                                            <label class="col-sm-3 control-label">Expiry Date: <br></br>(dd-mm-yy)</label>
+                                            <label class="col-sm-3 control-label">Expiry Date: </label>
                                             <div class="col-sm-9">
-                                              <h:inputText id="expireDateString" class="form-control"></h:inputText>
+                                              <h:inputText id="expireDateString" p:type="date" class="form-control"></h:inputText>
                                             </div>
                                           </div>                                                                           
                                       </div>
@@ -141,9 +142,9 @@
                                             </div>
                                           </div>
                                           <div class="form-group">
-                                            <label class="col-sm-3 control-label">Event Time: <br></br>(dd-mm-yy HH:MM)</label>
+                                            <label class="col-sm-3 control-label">Event Time: </label>
                                             <div class="col-sm-9">
-                                              <h:inputText id="eventTimeString" class="form-control"></h:inputText>
+                                              <h:inputText id="eventTimeString" p:type="datetime-local" class="form-control"></h:inputText>
                                             </div>
                                           </div>                                          
                                       </div>

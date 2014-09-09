@@ -15,18 +15,23 @@ package IslandFurniture.WAR.CommonInfrastructure;
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
-@Named
+@ManagedBean
 @ViewScoped
 public class DashManagedBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;
@@ -39,6 +44,10 @@ public class DashManagedBean implements Serializable {
     private Date lastLogon = null;
     private List<Todo> todoList;
     private List<Event> eventList;
+    private Event event;
+    private LocalDateTime localDateTime;
+    private Instant instant;
+    private List<LocalDateTime> localDateTimeList;
 
     private List<Announcement> announcementList = null;
     
@@ -64,6 +73,14 @@ public class DashManagedBean implements Serializable {
         this.todoList = staff.getTodoList();
         this.announcementList = announcementBean.getActiveAnnouncements();
         this.eventList = eventBean.getEvents();
+        Iterator<Event> iterator = eventList.iterator();
+        localDateTimeList = new ArrayList();
+        while (iterator.hasNext()) {
+            event = iterator.next();
+            instant = event.getEventTime().toInstant();
+            localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            localDateTimeList.add(localDateTime);
+	}
     }
     
     public String logout() {
@@ -209,6 +226,39 @@ public class DashManagedBean implements Serializable {
     public void setEventBean(ManageEventsBean eventBean) {
         this.eventBean = eventBean;
     }
-    
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public Instant getInstant() {
+        return instant;
+    }
+
+    public void setInstant(Instant instant) {
+        this.instant = instant;
+    }
+
+    public List<LocalDateTime> getLocalDateTimeList() {
+        return localDateTimeList;
+    }
+
+    public void setLocalDateTimeList(List<LocalDateTime> localDateTimeList) {
+        this.localDateTimeList = localDateTimeList;
+    }
+    
+    
+    
 }

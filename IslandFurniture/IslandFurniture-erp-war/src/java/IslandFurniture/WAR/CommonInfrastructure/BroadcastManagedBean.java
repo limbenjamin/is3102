@@ -19,9 +19,9 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Benjamin
  */
-@Named
+@ManagedBean
 @ViewScoped
 public class BroadcastManagedBean implements Serializable {
     
@@ -68,8 +68,8 @@ public class BroadcastManagedBean implements Serializable {
       content = request.getParameter("announcementForm:content");
       activeDateString = request.getParameter("announcementForm:activeDateString");
       expireDateString = request.getParameter("announcementForm:expireDateString");
-      activeDate = new SimpleDateFormat("dd-MM-yy").parse(activeDateString);
-      expireDate = new SimpleDateFormat("dd-MM-yy").parse(expireDateString);
+      activeDate = new SimpleDateFormat("yyyy-MM-dd").parse(activeDateString);
+      expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expireDateString);
       announcementBean.addAnnouncement(username, title, content, activeDate, expireDate);
       announcementList = announcementBean.getMyAnnouncements(username);
       return "broadcast";
@@ -83,8 +83,8 @@ public class BroadcastManagedBean implements Serializable {
       content = request.getParameter("editAnnouncementForm:content");
       activeDateString = request.getParameter("editAnnouncementForm:activeDateString");
       expireDateString = request.getParameter("editAnnouncementForm:expireDateString");
-      activeDate = new SimpleDateFormat("dd-MM-yy").parse(activeDateString);
-      expireDate = new SimpleDateFormat("dd-MM-yy").parse(expireDateString);
+      activeDate = new SimpleDateFormat("yyyy-MM-dd").parse(activeDateString);
+      expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expireDateString);
       announcementBean.editAnnouncement(id, title, content, activeDate, expireDate);
       announcementList = announcementBean.getMyAnnouncements(username);
       return "broadcast";
@@ -102,7 +102,7 @@ public class BroadcastManagedBean implements Serializable {
       name = request.getParameter("eventForm:name");
       description = request.getParameter("eventForm:description");
       eventTimeString = request.getParameter("eventForm:eventTimeString");
-      DateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm");
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
       Date date = (Date)formatter.parse(eventTimeString); 
       Calendar cal=Calendar.getInstance();
       cal.setTime(date);
@@ -119,7 +119,7 @@ public class BroadcastManagedBean implements Serializable {
       name = request.getParameter("editEventForm:name");
       description = request.getParameter("editEventForm:description");
       eventTimeString = request.getParameter("editEventForm:eventTimeString");
-      DateFormat formatter = new SimpleDateFormat("dd-MM-yy HH:mm");
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
       Date date = (Date)formatter.parse(eventTimeString); 
       Calendar cal=Calendar.getInstance();
       cal.setTime(date);
