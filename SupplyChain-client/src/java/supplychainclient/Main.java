@@ -1,34 +1,23 @@
 
 package supplychainclient;
 
-import IslandFurniture.SupplyChainModule.ManageInventoryStatusRemote;
-import IslandFurniture.SupplyChainModule.ManageStockIssueRemote;
-import IslandFurniture.SupplyChainModule.ManageStockMovementRemote;
-import IslandFurniture.SupplyChainModule.ManageStockReceiptRemote;
+
 import java.util.Scanner;
 import javax.ejb.EJB;
+import IslandFurniture.EJB.SupplyChain.ManageStockRemote;
 
 public class Main {
     @EJB
-    private static ManageStockMovementRemote manageStockMovement;
-    @EJB
-    private static ManageStockIssueRemote manageStockIssue;
-    @EJB
-    private static ManageInventoryStatusRemote manageInventoryStatus;
-    @EJB
-    private static ManageStockReceiptRemote manageStockReceipt;
+    private static ManageStockRemote manageStock;
 
     public static void main(String[] args) {
         
         System.out.println("Hello World!");
-        System.out.println("Hello World!");
         Scanner sc = new Scanner(System.in);
         while(true) {
-            System.out.println("Select and Enter:\n 1) Display inbound shipment schedule for selected time period\n 2) Create Goods Receipt documents\n 3) Display a list of Goods Receipt documents\n 4) View contents of single Goods Receipt document\n 5) View StorageLocation contents, giving a breakdown by StockUnits");
-            System.out.println(" 6) Assign quantity of stocks from a single StockUnit to multiple StorageLocations\n 7) Display list of StockUnits and their location of selected Stock\n 8) Create Goods Issued document\n 9) Update details of unconfirmed Goods Issued doc\n10) View selected Goods Issued document");
-            System.out.println("11) Display a list of Goods Issued document\n12) Confirm Goods Issued document and update inventories\n13) Display inventory report\n14) Display total inventory count of selected Stock\n15) Update Global HQ about current plant's stock inventory for all stocks supplied by the plant\n16) Update quantity for a list of StockUnit\n\n0) Exit");
+            System.out.println("Select and Enter:\n 1) Add Material");
             System.out.print("\nOption: ");
-            String input = sc.next();
+            String input = sc.nextLine();
             System.out.println("You chose :" + input);
             if(input.equals("0"))
                 break;
@@ -36,8 +25,13 @@ public class Main {
         }
     }
     public static void assignMethod(String input) {
-        switch(Integer.parseInt(input)){
+  //      manageStock = new ManageStock();
+        switch(Integer.parseInt(input)) {
             case 1: 
+                if(manageStock == null) 
+                    System.out.println("null");
+                else 
+                    manageStock.addMaterial("screw");
                 break;
             case 2: ;
                 break;

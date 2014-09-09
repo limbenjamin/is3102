@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.SupplyChainModule.ManageStockIssueRemote;
 import javax.ejb.Stateless;
 
 /**
