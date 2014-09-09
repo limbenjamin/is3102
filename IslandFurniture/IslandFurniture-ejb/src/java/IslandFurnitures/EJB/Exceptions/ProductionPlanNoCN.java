@@ -6,10 +6,12 @@
 
 package IslandFurnitures.EJB.Exceptions;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James
  */
-public class ProductionPlanNoCN extends Exception {
+public class ProductionPlanNoCN extends Exception implements Serializable {
     
 }
