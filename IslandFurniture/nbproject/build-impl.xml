@@ -201,10 +201,6 @@ exists or setup the property manually. For example like this:
                 <isset property="build.deploy.on.save"/>
             </not>
         </condition>
-        <ant antfile="${project.IslandFurniture-Entities}/build.xml" inheritall="false" target="dist-ear">
-            <property location="${build.dir}" name="dist.ear.dir"/>
-            <property name="deploy.on.save" value="${build.deploy.on.save}"/>
-        </ant>
         <ant antfile="${project.IslandFurniture-ejb}/build.xml" inheritall="false" target="dist-ear">
             <property location="${build.dir}" name="dist.ear.dir"/>
             <property name="deploy.on.save" value="${build.deploy.on.save}"/>
@@ -232,7 +228,6 @@ exists or setup the property manually. For example like this:
         <copyfiles files="${reference.IslandFurniture-erp-war.dist-ear}" todir="${build.dir}//"/>
         <copyfiles files="${reference.IslandFurniture-ejb.dist-ear}" todir="${build.dir}//"/>
         <copyfiles files="${reference.IslandFurniture-eservices-war.dist-ear}" todir="${build.dir}//"/>
-        <copyfiles files="${reference.IslandFurniture-Entities.dist-ear}" todir="${build.dir}//"/>
     </target>
     <target name="post-compile">
         <!-- Empty placeholder for easier customization. -->
@@ -309,7 +304,6 @@ exists or setup the property manually. For example like this:
     </target>
     <target name="-run-deploy-am" unless="no.deps">
         <!-- Task to deploy to the Access Manager runtime. -->
-        <ant antfile="${project.IslandFurniture-Entities}/build.xml" inheritall="false" target="-run-deploy-am"/>
         <ant antfile="${project.IslandFurniture-ejb}/build.xml" inheritall="false" target="-run-deploy-am"/>
         <ant antfile="${project.IslandFurniture-erp-war}/build.xml" inheritall="false" target="-run-deploy-am"/>
         <ant antfile="${project.IslandFurniture-eservices-war}/build.xml" inheritall="false" target="-run-deploy-am"/>
@@ -637,10 +631,6 @@ exists or setup the property manually. For example like this:
                 <isset property="build.deploy.on.save"/>
             </not>
         </condition>
-        <ant antfile="${project.IslandFurniture-Entities}/build.xml" inheritall="false" target="clean-ear">
-            <property location="${build.dir}" name="dist.ear.dir"/>
-            <property name="deploy.on.save" value="${build.deploy.on.save}"/>
-        </ant>
         <ant antfile="${project.IslandFurniture-ejb}/build.xml" inheritall="false" target="clean-ear">
             <property location="${build.dir}" name="dist.ear.dir"/>
             <property name="deploy.on.save" value="${build.deploy.on.save}"/>
