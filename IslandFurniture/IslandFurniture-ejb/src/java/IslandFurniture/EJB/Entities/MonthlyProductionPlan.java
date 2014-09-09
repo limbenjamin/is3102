@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -30,27 +31,27 @@ public class MonthlyProductionPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private FurnitureModel furnitureModel;
     @Id
     private Month month;
     @Id
     private Integer year;
 
-    @OneToMany(mappedBy = "monthlyProductionPlan")
+    @OneToMany(mappedBy = "monthlyProductionPlan",cascade = {CascadeType.ALL})
     private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
 
     private Integer QTY;
 
     private boolean locked = false;
 
-    @OneToMany(mappedBy = "monthlyProductionPlan")
+    @OneToMany(mappedBy = "monthlyProductionPlan",cascade = {CascadeType.ALL})
     protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList<MonthlyStockSupplyReq>();
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private ProductionCapacity productionCapacity = null;
 
-    @OneToOne //Kind of like the linked list approach
+    @OneToOne(cascade = {CascadeType.ALL}) //Kind of like the linked list approach
     @JoinColumns({
         @JoinColumn(name = "FURNITUREMODEL_ID", referencedColumnName = "FURNITUREMODEL_ID", insertable = false, updatable = false),
         @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
@@ -58,7 +59,7 @@ public class MonthlyProductionPlan implements Serializable {
     })
     private MonthlyProductionPlan nextMonthlyProcurementPlan;
 
-    @OneToOne(mappedBy = "nextMonthlyProcurementPlan") //Kind of like the linked list approach it works ok . special case of JPA 
+    @OneToOne(mappedBy = "nextMonthlyProcurementPlan",cascade = {CascadeType.ALL}) //Kind of like the linked list approach it works ok . special case of JPA 
 
     //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
     private MonthlyProductionPlan prevMonthlyProcurementPlan;
@@ -145,13 +146,13 @@ public class MonthlyProductionPlan implements Serializable {
         this.locked = locked;
     }
 
-//    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-//        return monthlyStockSupplyReqs;
-//    }
-//
-//    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-//        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
-//    }
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
     public ProductionCapacity getPc() {
         return productionCapacity;
     }
@@ -167,21 +168,21 @@ public class MonthlyProductionPlan implements Serializable {
     public void setProductionCapacity(ProductionCapacity productionCapacity) {
         this.productionCapacity = productionCapacity;
     }
-//
-//    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
-//        return nextMonthlyProcurementPlan;
-//    }
-//
-//    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
-//        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
-//    }
-//
-//    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
-//        return prevMonthlyProcurementPlan;
-//    }
-//
-//    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
-//        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
-//    }
+
+    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
+        return nextMonthlyProcurementPlan;
+    }
+
+    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
+        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
+    }
+
+    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
+        return prevMonthlyProcurementPlan;
+    }
+
+    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
+        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
+    }
 
 }
