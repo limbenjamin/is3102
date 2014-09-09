@@ -3,13 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package islandfurnituretestclient;
+package JamesTestClient;
 
-import IslandFurniture.TEST.JamesTestDataBeanRemote;
+import IslandFurniture.StaticClasses.Helper.JamesTestDataBeanRemote;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
- * 
+ *
  * @author James Will be deleted
  */
 public class Main {
