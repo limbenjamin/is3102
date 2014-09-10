@@ -66,7 +66,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
         staff.setAnnouncements(announcements);
         staff.setEvents(events);
         em.persist(staff);
-        em.flush();
+        //em.flush();
     }
     
     public List<Vector> displayAllStaffAccounts(){
