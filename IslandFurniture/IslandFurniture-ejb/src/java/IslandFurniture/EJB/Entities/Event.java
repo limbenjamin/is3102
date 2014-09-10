@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -72,6 +73,7 @@ public class Event implements Serializable {
     public void setCreator(Staff creator) {
         this.creator = creator;
     }
+    
 
     @Override
     public int hashCode() {

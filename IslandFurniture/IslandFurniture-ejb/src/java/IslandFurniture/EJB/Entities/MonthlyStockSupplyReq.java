@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
-import IslandFurniture.EJB.Entities.Month;
-import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -26,6 +24,7 @@ import javax.persistence.OneToMany;
 @Entity
 @IdClass(MonthlyStockSupplyReqPK.class)
 public class MonthlyStockSupplyReq implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @ManyToOne
@@ -42,19 +41,16 @@ public class MonthlyStockSupplyReq implements Serializable {
     private int qtyForecasted;
     private int qtyRequested;
     private boolean commited;
-    @OneToMany(mappedBy="monthlyStockSupplyReq")
+    @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
-    
-        @ManyToOne
+
+    @ManyToOne
     @JoinColumns({
-        @JoinColumn(name="FURNITUREMODEL_ID", referencedColumnName="FURNITUREMODEL_ID", insertable=false, updatable=false),
-        @JoinColumn(name="MONTH", referencedColumnName="MONTH", insertable=false, updatable=false),
-        @JoinColumn(name="YEAR", referencedColumnName="YEAR", insertable=false, updatable=false)
+        @JoinColumn(name = "STOCK_ID", referencedColumnName = "FURNITUREMODEL_ID", insertable = false, updatable = false),
+        @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
+        @JoinColumn(name = "YEAR", referencedColumnName = "YEAR", insertable = false, updatable = false)
     })
     private MonthlyProductionPlan monthlyProductionPlan;
-    
-    
-    
 
     public Stock getStock() {
         return stock;
@@ -136,10 +132,20 @@ public class MonthlyStockSupplyReq implements Serializable {
         this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
-    public void calcQtyRequested(){
-        if(!this.commited)
-            this.qtyRequested = this.qtyForecasted - this.qtySold;
+    public MonthlyProductionPlan getMonthlyProductionPlan() {
+        return monthlyProductionPlan;
     }
+
+    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
+        this.monthlyProductionPlan = monthlyProductionPlan;
+    }
+
+    public void calcQtyRequested() {
+        if (!this.commited) {
+            this.qtyRequested = this.qtyForecasted - this.qtySold;
+        }
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -162,15 +168,13 @@ public class MonthlyStockSupplyReq implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
+        return "MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
     }
 
-//    public MonthlyProductionPlan getMonthlyProductionPlan() {
-//        return monthlyProductionPlan;
-//    }
-//
-//    public void setMonthlyProductionPlan(MonthlyProductionPlan monthlyProductionPlan) {
-//        this.monthlyProductionPlan = monthlyProductionPlan;
-//    }
+    // Entity Callbacks
     
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

@@ -14,9 +14,9 @@ import IslandFurniture.WAR.CommonInfrastructure.Exceptions.*;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Benjamin
  */
-@Named
+@ManagedBean
 @ViewScoped
 public class PersonalParticularsManagedBean implements Serializable {
     private String username = null;
