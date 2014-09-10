@@ -27,6 +27,8 @@ public class StorageLocation implements Serializable {
     
     @OneToMany(mappedBy="location")
     private List<StockUnit> stockUnits;
+    private String rackNumber;
+    
     
     public Long getId() {
         return id;
@@ -43,6 +45,16 @@ public class StorageLocation implements Serializable {
     public void setStockUnits(List<StockUnit> stockUnits) {
         this.stockUnits = stockUnits;
     }
+
+    public String getRackNumber() {
+        return rackNumber;
+    }
+
+    public void setRackNumber(String rackNumber) {
+        this.rackNumber = rackNumber;
+    }
+
+
 
     @Override
     public int hashCode() {

@@ -8,17 +8,10 @@ package IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
-import IslandFurniture.EJB.Entities.FurnitureTransaction;
-import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.RemoteInterfaces.LoadOrgEntitiesBeanRemote;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
-import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -122,30 +115,6 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         }
     }
 
-    private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails, Calendar transTime) {
-        FurnitureTransaction fTrans = new FurnitureTransaction();
-        fTrans.setStore(store);
-        fTrans.setTransTime(transTime);
-        for (FurnitureTransactionDetail eachDetail : fTransDetails) {
-            eachDetail.setFurnitureTransaction(fTrans);
-        }
-        fTrans.setFurnitureTransactionDetails(fTransDetails);
-
-        em.persist(fTrans);
-
-        System.out.println(fTransDetails.get(0).getFurnitureTransaction());
-
-        return fTrans;
-    }
-
-    private FurnitureTransactionDetail addFurnitureTransactionDetail(FurnitureModel furniture, int qty) {
-        FurnitureTransactionDetail fTransDetail = new FurnitureTransactionDetail();
-        fTransDetail.setFurnitureModel(furniture);
-        fTransDetail.setQty(qty);
-
-        return fTransDetail;
-    }
-
     private Plant findPlantByName(Country country, String plantName) {
         Query q = em.createNamedQuery("findPlantByName");
         q.setParameter("country", country);
@@ -192,8 +161,6 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
 
         Country country;
         Store store;
-        FurnitureTransaction fTrans;
-        List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
 
         try {
             // Add Countries and Plants
@@ -257,32 +224,10 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             this.addFurnitureModel("Bathroom Rug E64");
             this.addFurnitureModel("Kitchen Stool");
 
-            // Add Transactions for stores
-            Calendar cal;
-            Random rand = new Random();
-            List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
-            List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
-
-            for (int i = 0; i < 800; i++) {
-                for (Store eachStore : stores) {
-                    fTransDetails.clear();
-                    for (FurnitureModel fm : furnitureModels) {
-                        if (rand.nextBoolean()) {
-                            fTransDetails.add(this.addFurnitureTransactionDetail(fm, rand.nextInt(50) + 1));
-                        }
-                    }
-
-                    if (!fTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
-                        cal.set(rand.nextInt(28) + 1, rand.nextInt(12) + 1, rand.nextInt(2) + 2013, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        fTrans = this.addFurnitureTransaction(eachStore, fTransDetails, cal);
-                    }
-                }
-            }
-
             return true;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
+            
             return false;
         }
     }

@@ -13,6 +13,8 @@ import javax.ejb.Local;
  * @author a0101774
  */
 @Local
-public interface ManageStockLocal {
+public interface StockManagerLocal {
+
+    public boolean addMaterial();
     
 }

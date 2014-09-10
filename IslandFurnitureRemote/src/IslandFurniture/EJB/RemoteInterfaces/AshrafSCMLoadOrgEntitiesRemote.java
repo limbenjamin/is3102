@@ -4,14 +4,18 @@
  * and open the template in the editor.
  */
 
-package IslandFurnitures.EJB.Exceptions;
+package IslandFurniture.EJB.RemoteInterfaces;
 
-import java.io.Serializable;
+import javax.ejb.Remote;
 
 /**
  *
- * @author James
+ * @author KamilulAshraf
  */
-public class ProductionPlanExceedsException extends Exception implements Serializable {
+
+@Remote
+public interface AshrafSCMLoadOrgEntitiesRemote {
+    
+    boolean loadSampleData();
     
 }

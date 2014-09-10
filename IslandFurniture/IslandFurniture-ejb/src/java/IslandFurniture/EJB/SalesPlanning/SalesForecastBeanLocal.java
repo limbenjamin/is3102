@@ -6,6 +6,10 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.Store;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -14,5 +18,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface SalesForecastBeanLocal {
+
+    public List<MonthlyStockSupplyReq> generateSalesFigures(Store store, Month startMonth, int startYear, Month endMonth, int endYear);
     
 }

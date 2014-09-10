@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package IslandFurniture.SupplyChainModule;
+package IslandFurniture.EJB.RemoteInterfaces;
 
 import javax.ejb.Remote;
 
 /**
  *
- * @author a0101774
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Remote
-public interface ManageStockIssueRemote {
-    
+public interface LoadTransactionBeanRemote {
+
+    public boolean loadSampleData();
 }

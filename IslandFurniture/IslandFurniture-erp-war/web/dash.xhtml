@@ -2,7 +2,8 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     
     <h:body>
         <ui:composition template="./template.xhtml">
@@ -75,12 +76,12 @@
                       <section class="panel">
                         <div id="calendar"></div>
                         <div class="list-group">
-                            <ui:repeat value="#{dashManagedBean.eventList}" var="event">
+                            <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
                                 <a class="list-group-item">
-                                    <span class="badge">#{event.eventTime.time.hours}:#{event.eventTime.time.minutes}</span> 
-                                    <strong>#{event.eventTime.time.date}-#{event.eventTime.time.month}</strong>: #{event.description}
+                                    <span class="badge">#{dashManagedBean.localDateTimeList.get(i).toLocalTime()}</span> 
+                                    <strong>#{dashManagedBean.localDateTimeList.get(i).toLocalDate()}</strong>: #{dashManagedBean.eventList.get(i).name}
                                 </a>
-                            </ui:repeat>                                                      
+                            </c:forEach>
                         </div>                        
                       </section>                                        
                     </div>

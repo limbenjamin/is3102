@@ -21,11 +21,29 @@ public class Material extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     private Long id;
-    private String name;
+    private String materialName;
+    private Double  materialWeight;
+
+    public Double getMaterialWeight() {
+        return materialWeight;
+    }
+
+    public void setMaterialWeight(Double materialWeight) {
+        this.materialWeight = materialWeight;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
     @OneToMany(mappedBy="material")
     private List<WeeklyMRPRecord> weeklyMRPRecords;
     
     public Material() {
+        System.out.println("Material: create");
     }
     public Material(String name) {
         this.name = name;
@@ -36,13 +54,6 @@ public class Material extends ProcuredStock implements Serializable {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-    
-    public String getName() {
-        return this.name;
-    }
-    public void setName(String name) {
-        this.name = name;
     }
     
     public List<WeeklyMRPRecord> getWeeklyMRPRecords() {
