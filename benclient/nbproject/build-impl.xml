@@ -770,10 +770,10 @@ exists or setup the property manually. For example like this:
         </fail>
     </target>
     <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps">
-        <ant antfile="${project.ITManagementRemote}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.IslandFurnitureRemote}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps">
-        <ant antfile="${project.ITManagementRemote}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.IslandFurnitureRemote}/build.xml" inheritall="false" target="jar"/>
     </target>
     <target depends="init, -check-main-class, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
     <target depends="init,deps-jar" name="-pre-pre-compile">
@@ -784,19 +784,19 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
-        <basename file="${reference.ITManagementRemote.jar}" property="manifest.reference.ITManagementRemote.jar"/>
+        <basename file="${reference.IslandFurnitureRemote.jar}" property="manifest.reference.IslandFurnitureRemote.jar"/>
         <basename file="${libs.javaee-api-7.0.classpath}" property="manifest.libs.javaee-api-7.0.classpath"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
             <attribute name="Extension-List" value="jar-1 jar-2 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.reference.ITManagementRemote.jar}"/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.reference.IslandFurnitureRemote.jar}"/>
             <attribute name="jar-2-Extension-Name" value="${manifest.libs.javaee-api-7.0.classpath}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${reference.ITManagementRemote.jar}" manifestproperty="manifest.reference.ITManagementRemote.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.IslandFurnitureRemote.jar}" manifestproperty="manifest.reference.IslandFurnitureRemote.jar" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${libs.javaee-api-7.0.classpath}" manifestproperty="manifest.libs.javaee-api-7.0.classpath" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.reference.ITManagementRemote.jar} lib/${manifest.reference.ITManagementRemote.jar} ${manifest.libs.javaee-api-7.0.classpath} lib/${manifest.libs.javaee-api-7.0.classpath} "/>
+            <attribute name="Class-Path" value="${manifest.reference.IslandFurnitureRemote.jar} lib/${manifest.reference.IslandFurnitureRemote.jar} ${manifest.libs.javaee-api-7.0.classpath} lib/${manifest.libs.javaee-api-7.0.classpath} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">
@@ -1300,7 +1300,7 @@ exists or setup the property manually. For example like this:
                 ===============
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
-        <ant antfile="${project.ITManagementRemote}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.IslandFurnitureRemote}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
