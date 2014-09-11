@@ -51,17 +51,29 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
     {
 //        EntityTransaction trx = em.getTransaction();
 //        trx.begin();
+        em.createQuery("DELETE FROM Store").executeUpdate();
         em.createQuery("DELETE FROM Country").executeUpdate();
         em.createQuery("DELETE FROM ManufacturingFacility").executeUpdate();
         em.createQuery("DELETE FROM ManufacturingCapacity").executeUpdate();
         em.createQuery("DELETE FROM MonthlyStockSupplyReq").executeUpdate();        
         em.createQuery("DELETE FROM FurnitureModel").executeUpdate();
-        em.createQuery("DELETE FROM Store").executeUpdate();
+
         em.createQuery("DELETE FROM MonthlyProductionPlan").executeUpdate();
-        
+        em.createQuery("DELETE FROM ProductionCapacity").executeUpdate();
         em.flush();
 
 
+    }
+    
+    @Override
+    public void planall()
+    {
+        try {
+            mpp.setCN("SINGAPORE");
+            mpp.CreateProductionPlanFromForecast();
+        } catch (Exception ex) {
+            Logger.getLogger(JamesTestDataBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -79,6 +91,9 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         try {
             cn = new Country();
             cn.setName("SINGAPORE");
+            cn.setPhoneCode("65");
+            cn.setCode("SG");
+            cn.setTimeZoneID("GMT 8");
            
             persist(cn);
         } catch (Exception err) {

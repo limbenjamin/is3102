@@ -77,6 +77,16 @@ public class ManageProductionPlanning {
 
     }
 
+    //Public method. Plan all requirements
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void CreateProductionPlanFromForecast() throws Exception {
+        Query q = em.createQuery("select mmsr from MonthlyStockSupplyReq mmsr");
+
+        List<MonthlyStockSupplyReq> MSSRL = q.getResultList();
+
+        CreateProductionPlanFromForecast(MSSRL);
+    }
+
     // Public method , pass a list of forecast to see if it is feasible.
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN, Exception {
@@ -88,7 +98,7 @@ public class ManageProductionPlanning {
                 = new Comparator<MonthlyStockSupplyReq>() {
                     @Override
                     public int compare(MonthlyStockSupplyReq e1, MonthlyStockSupplyReq e2) {
-                        return (Integer.compare((int) (e2.getYear() & e2.getMonth().value),(int) (e1.getYear() & e1.getMonth().value)));
+                        return (Integer.compare((int) (e2.getYear() & e2.getMonth().value), (int) (e1.getYear() & e1.getMonth().value)));
                     }
                 };
 
@@ -144,14 +154,19 @@ public class ManageProductionPlanning {
                 mpp.setYear((int) i_year);
                 mpp.setFurnitureModel((FurnitureModel) furnitureModel);;
                 mpp.setQTY(0); //Brand New
-                if (i==0) mpp.setLocked(true); //prevent planning for this month
-                if (prev_mpp != null) {
-                    mpp.setPrevMonthlyProcurementPlan(prev_mpp);
-                    prev_mpp.setNextMonthlyProcurementPlan(mpp);
+                if (i == 0) {
+                    mpp.setLocked(true); //prevent planning for this month
                 }
+
             } else {
                 mpp = (MonthlyProductionPlan) q.getResultList().get(0);
             }
+
+            if (prev_mpp != null && !prev_mpp.equals(mpp)) {
+                mpp.setPrevMonthlyProcurementPlan(prev_mpp);
+                prev_mpp.setNextMonthlyProcurementPlan(mpp);
+            }
+
             if (mpp.getPc() == null) {
                 Query v = em.createQuery("select c from ProductionCapacity c where c.manufacturingFacility.id=" + MF.getId() + " and c.stock.id=" + furnitureModel.getId());
                 if (v.getResultList().size() > 0) {
@@ -160,7 +175,7 @@ public class ManageProductionPlanning {
                 }
             }
             //Tag monthlyProductionPlan to MonthlyStockSupply
-            if (i==month_gap && !mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
+            if (i == month_gap && !mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
                 mpp.getMonthlyStockSupplyReqs().add(MSSR);
             }
 
@@ -176,7 +191,7 @@ public class ManageProductionPlanning {
     } //End of iteration.
 
     //ProductionBalancing - To Be done
-   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void balanceProductionTill(int year, int m) throws Exception {
 
         Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + year + " and mpp.month=:i_m");
@@ -195,7 +210,7 @@ public class ManageProductionPlanning {
             int fufill = Math.min(requirement + deficit, max_capacity);
             plantillmonthcursor.setQTY(fufill);
             deficit += requirement - fufill;
-            
+
             System.out.println("ManageProductionPlanning: Planned capacity for Year:" + plantillmonthcursor.getYear() + " month:" + plantillmonthcursor.getMonth().value + " PRODUCE=" + fufill);
 
             plantillmonthcursor = plantillmonthcursor.getPrevMonthlyProcurementPlan();
