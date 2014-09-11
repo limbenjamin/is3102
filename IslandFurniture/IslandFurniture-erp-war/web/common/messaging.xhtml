@@ -23,19 +23,26 @@
                                     </span>
                                     Thread List
                                 </div>
-                            <h:form id="messageForm">
+                            
                             <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">
                                 <div class="list-group-item">
+                                    <h:form id="unsubForm">
+                                    <h:commandLink class="pull-right" value="Unsubscribe" action="#{messagingManagedBean.unsubThread}">
+                                         <f:param name="id" value="#{messageThread.id}" />
+                                    </h:commandLink>
+                                    </h:form>
+                                    <h:form id="messageForm">
                                     <h5><strong><h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
                                                     <f:param name="id" value="#{messageThread.id}" />
-                                            </h:commandLink></strong></h5>                               
+                                            </h:commandLink></strong></h5>
+                                    </h:form>
                                     Recipients:
                                     <ui:repeat value="#{messageThread.recipient}" var="recipient">
                                          #{recipient.username}
                                     </ui:repeat> 
                                 </div>
                             </ui:repeat>
-                            </h:form>
+                            
                               </section>
                             </div>
 

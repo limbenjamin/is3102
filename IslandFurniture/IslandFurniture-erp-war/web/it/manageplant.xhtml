@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Plants</h4>
+                                <hr></hr>       
+                            </div>                        
+                            <div class="col-md-9 col-sm-8">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    <span class="pull-right">
+                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newThread">
+                                            <span class="fa fa-plus"></span> New
+                                        </a>
+                                    </span>
+                                    Plant List
+                                </div>
+                                Store
+                                <ui:repeat value="#{organizationalHierarchyManagedBean.storeList}" var="store">
+                                    <div class="list-group">                          
+                                      <a href="#" class="list-group-item">                                      
+                                          <h5><strong>#{store.name}</strong></h5>
+                                        <h:form>
+                                            <span class="pull-right">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                    <f:param name="id" value="#{store.id}" />
+                                                    <f:param name="plantType" value="Store" />
+                                                </h:commandButton>
+                                            </span>
+                                        </h:form>                                      
+                                          <p>#{store.country.name}</p>
+                                      </a>                                  
+                                    </div>
+                                </ui:repeat>
+                                Manufacturing Facility
+                                <ui:repeat value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
+                                    <div class="list-group">                          
+                                      <a href="#" class="list-group-item">                                      
+                                          <h5><strong>#{mf.name}</strong></h5>
+                                        <h:form>
+                                            <span class="pull-right">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                    <f:param name="id" value="#{mf.id}" />
+                                                    <f:param name="plantType" value="Manufacturing Facility" />
+                                                </h:commandButton>
+                                            </span>
+                                        </h:form>                                      
+                                          <p>#{mf.country.name}</p>
+                                      </a>                                  
+                                    </div>
+                                </ui:repeat>
+                                Country Office
+                                <ui:repeat value="#{organizationalHierarchyManagedBean.coList}" var="co">
+                                    <div class="list-group">                          
+                                      <a href="#" class="list-group-item">                                      
+                                          <h5><strong>#{co.name}</strong></h5>
+                                        <h:form>
+                                            <span class="pull-right">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                    <f:param name="id" value="#{co.id}" />
+                                                    <f:param name="plantType" value="Country Office" />
+                                                </h:commandButton>
+                                            </span>
+                                        </h:form>                                      
+                                          <p>#{co.country.name}</p>
+                                      </a>                                  
+                                    </div>
+                                </ui:repeat>
+                              </section>
+                            </div>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="newThread" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Create A New Plant</h4>
+                                  </div>
+                                  <h:form id="plantForm" class="form-horizontal">
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Plant Name: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-bookmark"></i>
+                                              <h:inputText id="plantName" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Country: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-user"></i>
+                                                <h:selectOneMenu id="country">
+                                                    <c:forEach var="i" begin="0" end="#{organizationalHierarchyManagedBean.countryList.size()-1}">
+                                                        <f:selectItem itemLabel="#{organizationalHierarchyManagedBean.countryList.get(i).name}" itemValue="#{organizationalHierarchyManagedBean.countryList.get(i).name}" />
+                                                    </c:forEach>
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Plant Type: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-user"></i>
+                                                <h:selectOneMenu id="plantType">
+                                                    <f:selectItem itemLabel="Store" itemValue="Store" />
+                                                    <f:selectItem itemLabel="Manufacturing Facility" itemValue="Manufacturing Facility" />
+                                                    <f:selectItem itemLabel="Country Office" itemValue="Country Office" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{organizationalHierarchyManagedBean.addPlant}" class="btn btn-success" value="Add Plant"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
+                            </div>
+                                                  
+                        </div>                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+

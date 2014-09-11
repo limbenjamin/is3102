@@ -77,6 +77,8 @@ public class ManageMessagesBean {
         listStaff = messageThread.getRecipient();
         listStaff.remove(staff);
         em.persist(messageThread);
+        staff.getInbox().remove(messageThread);
+        em.persist(staff);
         em.flush();
     }
     

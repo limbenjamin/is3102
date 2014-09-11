@@ -5,9 +5,10 @@
  */
 package IslandFurniture.EJB.SupplyChain;
 
-
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.EJB.RemoteInterfaces.ManageStockIssueRemote;
+import java.time.*;
 import java.util.Date;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

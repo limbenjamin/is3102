@@ -33,6 +33,10 @@
             <to-view-id>/login.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>manageplant</from-outcome>
+            <to-view-id>/it/manageplant.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>material</from-outcome>
             <to-view-id>/knowledge/material.xhtml</to-view-id>
         </navigation-case>

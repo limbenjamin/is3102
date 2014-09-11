@@ -57,6 +57,12 @@ public class MessagingManagedBean implements Serializable {
       messageBean.createNewThread(title, recipients);
       return "messaging";
     }
+    
+    public String unsubThread() {
+      id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+      messageBean.unsubscribeFromThread(username, id);
+      return "messaging";
+    }
 
     public String getUsername() {
         return username;
