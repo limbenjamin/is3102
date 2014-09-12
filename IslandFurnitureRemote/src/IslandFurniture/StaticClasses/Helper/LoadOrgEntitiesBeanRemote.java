@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.EJB.RemoteInterfaces;
+package IslandFurniture.StaticClasses.Helper;
 
 import javax.ejb.Remote;
 

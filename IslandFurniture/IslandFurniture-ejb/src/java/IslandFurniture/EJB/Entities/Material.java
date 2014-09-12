@@ -86,7 +86,7 @@ public class Material extends ProcuredStock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.Material[ id=" + id + " ]";
+        return "Material[ id=" + id + " ]";
     }
     
 }

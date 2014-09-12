@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.EJB.RemoteInterfaces;
+
+package IslandFurniture.StaticClasses.Helper;
 
 import javax.ejb.Remote;
 
@@ -12,7 +13,8 @@ import javax.ejb.Remote;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Remote
-public interface LoadTransactionBeanRemote {
+public interface LoadSalesForecastBeanRemote {
 
-    public boolean loadSampleData();
+    boolean loadSampleData();
+    
 }

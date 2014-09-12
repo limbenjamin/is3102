@@ -5,8 +5,9 @@
  */
 package chentongclient;
 
-import IslandFurniture.EJB.RemoteInterfaces.LoadOrgEntitiesBeanRemote;
-import IslandFurniture.EJB.RemoteInterfaces.LoadTransactionBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
@@ -18,6 +19,8 @@ import javax.ejb.EJB;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+    @EJB
+    private static LoadSalesForecastBeanRemote loadSalesForecastBean;
 
     @EJB
     private static LoadTransactionBeanRemote loadTransactionBean;
@@ -50,6 +53,17 @@ public class Main {
                 System.out.println("Failed to load Transaction data. Check for existing data and/or recreate islandFurniture database");
             }
         }
+        
+        // Load Sales Forecasts from given set of Transactions
+        System.out.print("Generate sales forecasts? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadSalesForecastBean.loadSampleData()) {
+                System.out.println("Sales Forecast data generated successfully from transactions!");
+            } else {
+                System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
+            }
+        }
+        
     }
 
 }

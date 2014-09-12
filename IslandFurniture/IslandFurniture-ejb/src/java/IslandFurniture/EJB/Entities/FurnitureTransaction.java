@@ -21,9 +21,9 @@ import javax.persistence.PostPersist;
 @Entity
 @NamedQueries({
     @NamedQuery(
-            // Fetches all transactions from specified store fallign between startDate and endDate
-            name = "getStoreTransactions",
-            query = "SELECT a FROM FurnitureTransaction a WHERE a.transTime >= :startDate AND a.transTime < :endDate AND a.store = :store")
+            // Fetches all Furniture Transactions from specified store falling between startDate and endDate
+            name = "getStoreFurnitureTransactions",
+            query = "SELECT a FROM FurnitureTransaction a WHERE a.transTime >= :startDate AND a.transTime <= :endDate AND a.store = :store")
 })
 public class FurnitureTransaction extends Transaction implements Serializable {
 

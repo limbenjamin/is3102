@@ -9,7 +9,6 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.Store;
-import IslandFurniture.EJB.RemoteInterfaces.LoadTransactionBeanRemote;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -80,7 +79,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
                     if (!fTransDetails.isEmpty()) {
                         cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
-                        cal.set(rand.nextInt(28) + 1, rand.nextInt(12) + 1, rand.nextInt(2) + 2013, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12) + 1, rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
                         fTrans = this.addFurnitureTransaction(eachStore, fTransDetails, cal);
                     }
                 }

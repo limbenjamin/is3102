@@ -9,16 +9,12 @@ import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Store;
-import IslandFurniture.EJB.RemoteInterfaces.LoadOrgEntitiesBeanRemote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  *
@@ -31,7 +27,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     private EntityManager em;
 
     private Store addStore(String storeName, Country country) {
-        Store store = (Store) this.findPlantByName(country, storeName);
+        Store store = (Store) QueryMethods.findPlantByName(em, country, storeName);
 
         if (store == null) {
             store = new Store();
@@ -48,7 +44,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     }
 
     private ManufacturingFacility addManufacturingFacility(String mfName, Country country) {
-        ManufacturingFacility mf = (ManufacturingFacility) this.findPlantByName(country, mfName);
+        ManufacturingFacility mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, country, mfName);
 
         if (mf == null) {
             mf = new ManufacturingFacility();
@@ -65,7 +61,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     }
 
     private CountryOffice addCountryOffice(String coName, Country country) {
-        CountryOffice co = (CountryOffice) this.findPlantByName(country, coName);
+        CountryOffice co = (CountryOffice) QueryMethods.findPlantByName(em, country, coName);
 
         if (co == null) {
             co = new CountryOffice();
@@ -82,7 +78,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     }
 
     private Country addCountry(String countryName, String timeZoneID) {
-        Country country = this.findCountryByName(countryName);
+        Country country = QueryMethods.findCountryByName(em, countryName);
 
         if (country == null) {
             country = new Country();
@@ -100,7 +96,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     }
 
     private FurnitureModel addFurnitureModel(String name) {
-        FurnitureModel furniture = (FurnitureModel) this.findFurnitureByName(name);
+        FurnitureModel furniture = (FurnitureModel) QueryMethods.findFurnitureByName(em, name);
 
         if (furniture == null) {
             furniture = new FurnitureModel();
@@ -111,40 +107,6 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         } else {
             System.out.println("Furniture Model \"" + name + "\" already exists");
 
-            return null;
-        }
-    }
-
-    private Plant findPlantByName(Country country, String plantName) {
-        Query q = em.createNamedQuery("findPlantByName");
-        q.setParameter("country", country);
-        q.setParameter("name", plantName);
-
-        try {
-            return (Plant) q.getSingleResult();
-        } catch (NoResultException nrex) {
-            return null;
-        }
-    }
-
-    private Country findCountryByName(String countryName) {
-        Query q = em.createNamedQuery("findCountryByName");
-        q.setParameter("name", countryName);
-
-        try {
-            return (Country) q.getSingleResult();
-        } catch (NoResultException nrex) {
-            return null;
-        }
-    }
-
-    private FurnitureModel findFurnitureByName(String furnitureName) {
-        Query q = em.createNamedQuery("findFurnitureByName");
-        q.setParameter("name", furnitureName);
-
-        try {
-            return (FurnitureModel) q.getSingleResult();
-        } catch (NoResultException nrex) {
             return null;
         }
     }

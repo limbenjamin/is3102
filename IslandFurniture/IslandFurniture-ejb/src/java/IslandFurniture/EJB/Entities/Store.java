@@ -107,6 +107,7 @@ public class Store extends Plant implements Serializable {
     }
 
     // Entity Callbacks
+    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);

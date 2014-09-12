@@ -40,7 +40,7 @@ public class CountryOffice extends Plant implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.CountryOffice[ id=" + id + " ]";
+        return "CountryOffice[ id=" + id + " ]";
     }
 
     // Entity Callbacks
