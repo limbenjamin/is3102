@@ -9,6 +9,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -31,6 +32,9 @@ public class MonthlyProductionPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @ManyToOne
+    private ManufacturingFacility manufacturingFacility;
+    @Id
     @ManyToOne(cascade = {CascadeType.ALL})
     private FurnitureModel furnitureModel;
     @Id
@@ -38,40 +42,41 @@ public class MonthlyProductionPlan implements Serializable {
     @Id
     private Integer year;
 
-    @OneToMany(mappedBy = "monthlyProductionPlan",cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
     private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
 
     private Integer QTY;
 
-    private boolean locked = false;
+    private Boolean locked = false;
 
-    @OneToMany(mappedBy = "monthlyProductionPlan",cascade = {CascadeType.ALL})
-    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList<MonthlyStockSupplyReq>();
-
-    @OneToOne(cascade = {CascadeType.ALL})
-    private ProductionCapacity productionCapacity = null;
-
-    @OneToOne(cascade = {CascadeType.ALL}) //Kind of like the linked list approach
+    @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
     @JoinColumns({
-        @JoinColumn(name = "FURNITUREMODEL_ID", referencedColumnName = "FURNITUREMODEL_ID", insertable = false, updatable = false),
+        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID"),
+        @JoinColumn(name = "FURNITUREMODEL_ID", referencedColumnName = "STOCK_ID", insertable = false, updatable = false),
         @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
         @JoinColumn(name = "YEAR", referencedColumnName = "YEAR", insertable = false, updatable = false)
     })
-    private MonthlyProductionPlan nextMonthlyProcurementPlan;
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList<MonthlyStockSupplyReq>();
 
-    @OneToOne(mappedBy = "nextMonthlyProcurementPlan",cascade = {CascadeType.ALL}) //Kind of like the linked list approach it works ok . special case of JPA 
+    @OneToOne(cascade = {CascadeType.ALL}) //Kind of like the linked list approach
+    @JoinColumns({
+        @JoinColumn(name = "NEXT_MANUFACTURINGFACILITY_ID", referencedColumnName = "MANUFACTURINGFACILITY_ID"),
+        @JoinColumn(name = "NEXT_FURNITUREMODEL_ID", referencedColumnName = "FURNITUREMODEL_ID"),
+        @JoinColumn(name = "NEXT_MONTH", referencedColumnName = "MONTH"),
+        @JoinColumn(name = "NEXT_YEAR", referencedColumnName = "YEAR")
+    })
+    private MonthlyProductionPlan nextMonthlyProductionPlan;
 
+    @OneToOne(mappedBy = "nextMonthlyProductionPlan", cascade = {CascadeType.ALL}) //Kind of like the linked list approach it works ok . special case of JPA 
     //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
-    private MonthlyProductionPlan prevMonthlyProcurementPlan;
+    private MonthlyProductionPlan prevMonthlyProductionPlan;
 
-    public long get_total_demand() {
-        long total = 0;
+    public ManufacturingFacility getManufacturingFacility() {
+        return manufacturingFacility;
+    }
 
-        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs) {
-            total += mssr.getQtyRequested();
-        }
-
-        return (total);
+    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
+        this.manufacturingFacility = manufacturingFacility;
     }
 
     public FurnitureModel getFurnitureModel() {
@@ -106,30 +111,6 @@ public class MonthlyProductionPlan implements Serializable {
         this.weeklyProductionPlans = weeklyProductionPlans;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.furnitureModel);
-        hash = 53 * hash + Objects.hashCode(this.month);
-        hash = 53 * hash + Objects.hashCode(this.year);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MonthlyProductionPlan)) {
-            return false;
-        }
-        MonthlyProductionPlan other = (MonthlyProductionPlan) object;
-        return this.furnitureModel.equals(other.furnitureModel) && this.month.equals(other.month) && this.year.equals(other.year);
-    }
-
-    @Override
-    public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.MonthlyProductionPlan[ id=" + this.furnitureModel.getId() + ", " + this.month + ", " + this.year + " ]";
-    }
-
     public Integer getQTY() {
         return QTY;
     }
@@ -138,11 +119,11 @@ public class MonthlyProductionPlan implements Serializable {
         this.QTY = QTY;
     }
 
-    public boolean isLocked() {
+    public Boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(boolean locked) {
+    public void setLocked(Boolean locked) {
         this.locked = locked;
     }
 
@@ -153,36 +134,63 @@ public class MonthlyProductionPlan implements Serializable {
     public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
         this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
-    public ProductionCapacity getPc() {
-        return productionCapacity;
+
+    public MonthlyProductionPlan getNextMonthlyProductionPlan() {
+        return nextMonthlyProductionPlan;
     }
 
-    public void setPc(ProductionCapacity pc) {
-        this.productionCapacity = pc;
+    public void setNextMonthlyProductionPlan(MonthlyProductionPlan nextMonthlyProductionPlan) {
+        this.nextMonthlyProductionPlan = nextMonthlyProductionPlan;
     }
 
-    public ProductionCapacity getProductionCapacity() {
-        return productionCapacity;
+    public MonthlyProductionPlan getPrevMonthlyProductionPlan() {
+        return prevMonthlyProductionPlan;
     }
 
-    public void setProductionCapacity(ProductionCapacity productionCapacity) {
-        this.productionCapacity = productionCapacity;
+    public void setPrevMonthlyProductionPlan(MonthlyProductionPlan prevMonthlyProductionPlan) {
+        this.prevMonthlyProductionPlan = prevMonthlyProductionPlan;
     }
 
-    public MonthlyProductionPlan getNextMonthlyProcurementPlan() {
-        return nextMonthlyProcurementPlan;
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.manufacturingFacility);
+        hash = 29 * hash + Objects.hashCode(this.furnitureModel);
+        hash = 29 * hash + Objects.hashCode(this.month);
+        hash = 29 * hash + Objects.hashCode(this.year);
+        return hash;
     }
 
-    public void setNextMonthlyProcurementPlan(MonthlyProductionPlan nextMonthlyProcurementPlan) {
-        this.nextMonthlyProcurementPlan = nextMonthlyProcurementPlan;
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof MonthlyProductionPlan)) {
+            return false;
+        }
+        MonthlyProductionPlan other = (MonthlyProductionPlan) object;
+        return this.manufacturingFacility.equals(other.manufacturingFacility) && this.furnitureModel.equals(other.furnitureModel) && this.month.equals(other.month) && this.year.equals(other.year);
     }
 
-    public MonthlyProductionPlan getPrevMonthlyProcurementPlan() {
-        return prevMonthlyProcurementPlan;
+    @Override
+    public String toString() {
+        return "MonthlyProductionPlan[ id=" + this.manufacturingFacility.getId() + ", " + this.furnitureModel.getId() + ", " + this.month + ", " + this.year + " ]";
     }
 
-    public void setPrevMonthlyProcurementPlan(MonthlyProductionPlan prevMonthlyProcurementPlan) {
-        this.prevMonthlyProcurementPlan = prevMonthlyProcurementPlan;
+    // Extra Methods
+    public long getTotalDemand() {
+        long total = 0;
+
+        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs) {
+            total += mssr.getQtyRequested();
+        }
+
+        return (total);
     }
 
+    public int getNumWorkDays() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(this.year, this.month.value, 1);
+
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
 }

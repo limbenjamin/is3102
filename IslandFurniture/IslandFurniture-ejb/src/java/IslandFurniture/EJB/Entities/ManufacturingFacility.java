@@ -87,6 +87,17 @@ public class ManufacturingFacility extends Plant implements Serializable {
         return "FW.IslandFurniture.Entities.MANUFACTURING.ManufacturingFacility[ id=" + id + " ]";
     }
     
+    // Extra Methods
+    public ProductionCapacity findProductionCapacity(FurnitureModel furnitureModel){
+        for(ProductionCapacity eachProdCap: this.productionCapacities){
+            if(eachProdCap.getFurnitureModel().equals(furnitureModel)){
+                return eachProdCap;
+            }
+        }
+        
+        return null;
+    }
+    
     // Entity Callbacks
     @PostPersist
     public void postPersist() {

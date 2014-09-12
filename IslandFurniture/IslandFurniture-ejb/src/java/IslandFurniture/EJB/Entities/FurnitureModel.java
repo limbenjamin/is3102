@@ -6,9 +6,11 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
 
@@ -30,6 +32,8 @@ public class FurnitureModel extends Stock implements Serializable {
     private static final long serialVersionUID = 1L;
     @OneToOne
     private BOM bom;
+    @OneToMany(mappedBy = "furnitureModel")
+    protected List<ProductionCapacity> productionCapacity;
 
     public BOM getBom() {
         return bom;
@@ -37,6 +41,14 @@ public class FurnitureModel extends Stock implements Serializable {
 
     public void setBom(BOM bom) {
         this.bom = bom;
+    }
+
+    public List<ProductionCapacity> getProductionCapacity() {
+        return productionCapacity;
+    }
+
+    public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
+        this.productionCapacity = productionCapacity;
     }
 
     @Override
@@ -61,7 +73,7 @@ public class FurnitureModel extends Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.FurnitureModel[ id=" + id + " ]";
+        return "FurnitureModel[ id=" + id + " ]";
     }
 
     // Entity Callbacks

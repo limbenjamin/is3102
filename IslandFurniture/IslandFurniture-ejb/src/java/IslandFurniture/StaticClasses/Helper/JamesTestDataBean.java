@@ -20,10 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -35,11 +32,9 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    
+
     @EJB
     private ManageProductionPlanning mpp;
-
-
 
     @Override
     public void persist(Object object) {
@@ -47,27 +42,24 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
     }
 
     @Override
-    public void deletedata()
-    {
+    public void deletedata() {
 //        EntityTransaction trx = em.getTransaction();
 //        trx.begin();
         em.createQuery("DELETE FROM Store").executeUpdate();
         em.createQuery("DELETE FROM Country").executeUpdate();
         em.createQuery("DELETE FROM ManufacturingFacility").executeUpdate();
         em.createQuery("DELETE FROM ManufacturingCapacity").executeUpdate();
-        em.createQuery("DELETE FROM MonthlyStockSupplyReq").executeUpdate();        
+        em.createQuery("DELETE FROM MonthlyStockSupplyReq").executeUpdate();
         em.createQuery("DELETE FROM FurnitureModel").executeUpdate();
 
         em.createQuery("DELETE FROM MonthlyProductionPlan").executeUpdate();
         em.createQuery("DELETE FROM ProductionCapacity").executeUpdate();
         em.flush();
 
-
     }
-    
+
     @Override
-    public void planall()
-    {
+    public void planall() {
         try {
             mpp.setCN("SINGAPORE");
             mpp.CreateProductionPlanFromForecast();
@@ -75,7 +67,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             Logger.getLogger(JamesTestDataBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void createtestdata() {
         Country cn = null;
@@ -85,16 +77,14 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         Store store = null;
         MonthlyStockSupplyReq MSSR = null;
         MonthlyStockSupplyReq MSSR2 = null;
-        
 
-        
         try {
             cn = new Country();
             cn.setName("SINGAPORE");
             cn.setPhoneCode("65");
             cn.setCode("SG");
             cn.setTimeZoneID("GMT 8");
-           
+
             persist(cn);
         } catch (Exception err) {
         }
@@ -113,7 +103,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         }
         try {
             pc = new ProductionCapacity();
-            pc.setStock(fm);
+            pc.setFurnitureModel(fm);
             pc.setQty(100);
             pc.setManufacturingFacility(mf);
             persist(pc);
@@ -136,8 +126,8 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             MSSR.setYear(2014);
             MSSR.setStore(store);
             persist(MSSR);
-            
-            MSSR2=new MonthlyStockSupplyReq();
+
+            MSSR2 = new MonthlyStockSupplyReq();
             MSSR2.setQtyRequested(199);
             MSSR2.setStock(fm);
             MSSR2.setMonth(Month.NOV);
@@ -150,11 +140,11 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         List<MonthlyStockSupplyReq> mssrs = new ArrayList<MonthlyStockSupplyReq>();
 
         mssrs.add(MSSR);
-        mssrs.add(MSSR2);        
+        mssrs.add(MSSR2);
         em.flush();
-        
+
         mpp.setCN(cn.getName());
-        
+
         try {
             mpp.CreateProductionPlanFromForecast(mssrs);
         } catch (ProductionPlanNoCN ex) {
@@ -163,13 +153,8 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             Logger.getLogger(JamesTestDataBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
-          
-
         System.out.println("SUCCESS");
 
-
     }
-
 
 }

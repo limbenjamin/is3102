@@ -46,6 +46,7 @@ public class MonthlyStockSupplyReq implements Serializable {
 
     @ManyToOne
     @JoinColumns({
+        @JoinColumn(name = "MANUFACTURINGFACILITY_ID", referencedColumnName = "MANUFACTURINGFACILITY_ID"),
         @JoinColumn(name = "STOCK_ID", referencedColumnName = "FURNITUREMODEL_ID", insertable = false, updatable = false),
         @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
         @JoinColumn(name = "YEAR", referencedColumnName = "YEAR", insertable = false, updatable = false)

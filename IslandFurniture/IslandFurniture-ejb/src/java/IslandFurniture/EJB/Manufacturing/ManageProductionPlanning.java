@@ -7,38 +7,25 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
-import IslandFurniture.EJB.Entities.ManufacturingCapacity;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.EJB.Entities.ProductionCapacity;
-import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
-import javax.ejb.ApplicationException;
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import org.apache.jasper.tagplugins.jstl.ForEach;
 
 /**
  *
@@ -102,24 +89,24 @@ public class ManageProductionPlanning {
                     }
                 };
 
-        Stream<MonthlyStockSupplyReq> sorted_MSSRL = MSSRL.stream().sorted(byMY);
+        Stream<MonthlyStockSupplyReq> sortedMSSRL = MSSRL.stream().sorted(byMY);
 
         boolean firstrow = true;
-        int latest_month = 0;
-        int latest_year = 0;
-        for (Object o : sorted_MSSRL.toArray()) {
+        int latestMonth = 0;
+        int latestYear = 0;
+        for (Object o : sortedMSSRL.toArray()) {
 
             MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
             if (firstrow) {
                 firstrow = false;
-                latest_month = mssr.getMonth().value;
-                latest_year = mssr.getYear();
+                latestMonth = mssr.getMonth().value;
+                latestYear = mssr.getYear();
 
             }
             CreateProductionPlanFromForecast(mssr);
         }
-        if (latest_year > 0) {
-            balanceProductionTill(latest_year, latest_month);
+        if (latestYear > 0) {
+            balanceProductionTill(latestYear, latestMonth);
         }
     }
 
@@ -134,13 +121,13 @@ public class ManageProductionPlanning {
 
         int c_year = Calendar.getInstance().get(Calendar.YEAR);
         int c_month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        long month_gap = (Year - c_year) * 12 + (month - c_month);
+        long monthGap = (Year - c_year) * 12 + (month - c_month);
 
-        long month_gap_semiannual = Math.max(month_gap, 5);
+        long monthGap_semiannual = Math.max(monthGap, 5);
         //Loop to ensure get all MPP before are created up to the month
 
-        MonthlyProductionPlan prev_mpp = null;
-        for (int i = 0; i <= month_gap_semiannual; i++) {
+        MonthlyProductionPlan prevMpp = null;
+        for (int i = 0; i <= monthGap_semiannual; i++) {
             int i_month = ((c_month + i - 1) % 12) + 1;
             int i_year = Math.floorDiv((c_month + i - 1), 12) + c_year;
 
@@ -148,9 +135,9 @@ public class ManageProductionPlanning {
             q.setParameter("i_m", Helper.TranslateMonth(i_month));
 
             if (q.getResultList().size() == 0) {
-                Month E_month = Helper.TranslateMonth(i_month);
+                Month eMonth = Helper.TranslateMonth(i_month);
                 mpp = new MonthlyProductionPlan();
-                mpp.setMonth(E_month);
+                mpp.setMonth(eMonth);
                 mpp.setYear((int) i_year);
                 mpp.setFurnitureModel((FurnitureModel) furnitureModel);;
                 mpp.setQTY(0); //Brand New
@@ -162,24 +149,17 @@ public class ManageProductionPlanning {
                 mpp = (MonthlyProductionPlan) q.getResultList().get(0);
             }
 
-            if (prev_mpp != null && !prev_mpp.equals(mpp)) {
-                mpp.setPrevMonthlyProcurementPlan(prev_mpp);
-                prev_mpp.setNextMonthlyProcurementPlan(mpp);
+            if (prevMpp != null && !prevMpp.equals(mpp)) {
+                mpp.setPrevMonthlyProductionPlan(prevMpp);
+                prevMpp.setNextMonthlyProductionPlan(mpp);
             }
 
-            if (mpp.getPc() == null) {
-                Query v = em.createQuery("select c from ProductionCapacity c where c.manufacturingFacility.id=" + MF.getId() + " and c.stock.id=" + furnitureModel.getId());
-                if (v.getResultList().size() > 0) {
-                    mpp.setPc((ProductionCapacity) v.getResultList().get(0));
-
-                }
-            }
             //Tag monthlyProductionPlan to MonthlyStockSupply
-            if (i == month_gap && !mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
+            if (i == monthGap && !mpp.getMonthlyStockSupplyReqs().contains(MSSR)) {
                 mpp.getMonthlyStockSupplyReqs().add(MSSR);
             }
 
-            prev_mpp = mpp;
+            prevMpp = mpp;
 
             em.persist(mpp);
             em.flush();
@@ -196,24 +176,24 @@ public class ManageProductionPlanning {
 
         Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + year + " and mpp.month=:i_m");
         q.setParameter("i_m", Helper.TranslateMonth(m));
-        MonthlyProductionPlan plantillmonthcursor = (MonthlyProductionPlan) q.getResultList().get(0);
+        MonthlyProductionPlan planTillMonthCursor = (MonthlyProductionPlan) q.getResultList().get(0);
 
         int deficit = 0;
-        String endmonth = plantillmonthcursor.getMonth().toString();
-        while (plantillmonthcursor.getPrevMonthlyProcurementPlan() != null) {
+        String endmonth = planTillMonthCursor.getMonth().toString();
+        while (planTillMonthCursor.getPrevMonthlyProductionPlan() != null) {
 
-            if (plantillmonthcursor.isLocked()) {
+            if (planTillMonthCursor.isLocked()) {
                 break;
             }
-            int max_capacity = ((ProductionCapacity) plantillmonthcursor.getProductionCapacity()).getQty();
-            int requirement = (int) (plantillmonthcursor.get_total_demand());
-            int fufill = Math.min(requirement + deficit, max_capacity);
-            plantillmonthcursor.setQTY(fufill);
+            int maxCapacity = planTillMonthCursor.getManufacturingFacility().findProductionCapacity(planTillMonthCursor.getFurnitureModel()).getQty() * planTillMonthCursor.getNumWorkDays();
+            int requirement = (int) (planTillMonthCursor.getTotalDemand());
+            int fufill = Math.min(requirement + deficit, maxCapacity);
+            planTillMonthCursor.setQTY(fufill);
             deficit += requirement - fufill;
 
-            System.out.println("ManageProductionPlanning: Planned capacity for Year:" + plantillmonthcursor.getYear() + " month:" + plantillmonthcursor.getMonth().value + " PRODUCE=" + fufill);
+            System.out.println("ManageProductionPlanning: Planned capacity for Year:" + planTillMonthCursor.getYear() + " month:" + planTillMonthCursor.getMonth().value + " PRODUCE=" + fufill);
 
-            plantillmonthcursor = plantillmonthcursor.getPrevMonthlyProcurementPlan();
+            planTillMonthCursor = planTillMonthCursor.getPrevMonthlyProductionPlan();
         }
 
         if (deficit > 0) {
@@ -223,7 +203,7 @@ public class ManageProductionPlanning {
     }
 
     //Add a weeklyProduction Plan
-    private WeeklyProductionPlan AddWeeklyPlan(MonthlyProductionPlan mpp) {
+    private WeeklyProductionPlan addWeeklyPlan(MonthlyProductionPlan mpp) {
 
         WeeklyProductionPlan wpp = null;
         try {
@@ -244,17 +224,17 @@ public class ManageProductionPlanning {
     private void planMPP(MonthlyProductionPlan mpp) throws ProductionPlanExceedsException {
         Calendar cal = Calendar.getInstance();
         cal.set(mpp.getYear(), mpp.getMonth().value, 1);
-        int maxWeeknumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
+        int maxWeekNumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
         int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int rperweek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeeknumber));
+        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeekNumber));
 
-        for (int i = 1; i <= maxWeeknumber; i++) {
+        for (int i = 1; i <= maxWeekNumber; i++) {
 
-            WeeklyProductionPlan wp = AddWeeklyPlan(mpp);
-            if (i == maxWeeknumber) {
-                wp.setQTY(mpp.getQTY() - rperweek * (maxWeeknumber - 1));
+            WeeklyProductionPlan wp = addWeeklyPlan(mpp);
+            if (i == maxWeekNumber) {
+                wp.setQTY(mpp.getQTY() - rPerWeek * (maxWeekNumber - 1));
             } else {
-                wp.setQTY(rperweek);
+                wp.setQTY(rPerWeek);
             }
 
         }

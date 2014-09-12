@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Entities.ProductionCapacityPK;
@@ -21,21 +20,22 @@ import javax.persistence.ManyToOne;
 @Entity
 @IdClass(ProductionCapacityPK.class)
 public class ProductionCapacity implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @ManyToOne
-    private Stock stock;
+    private FurnitureModel furnitureModel;
     @Id
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
     private Integer qty;
 
-    public Stock getStock() {
-        return stock;
+    public FurnitureModel getFurnitureModel() {
+        return furnitureModel;
     }
 
-    public void setStock(Stock stock) {
-        this.stock = stock;
+    public void setFurnitureModel(FurnitureModel furnitureModel) {
+        this.furnitureModel = furnitureModel;
     }
 
     public ManufacturingFacility getManufacturingFacility() {
@@ -57,8 +57,8 @@ public class ProductionCapacity implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.stock);
-        hash = 89 * hash + Objects.hashCode(this.manufacturingFacility);
+        hash = 59 * hash + Objects.hashCode(this.furnitureModel);
+        hash = 59 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
 
@@ -69,12 +69,12 @@ public class ProductionCapacity implements Serializable {
             return false;
         }
         ProductionCapacity other = (ProductionCapacity) object;
-        return this.stock.equals(other.stock) && this.manufacturingFacility.equals(other.manufacturingFacility);
+        return this.furnitureModel.equals(other.furnitureModel) && this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override
     public String toString() {
-        return "IslandFurniture.FW.Entities.ProductionCapacity[ id=" + this.stock.getId() + ", " + this.manufacturingFacility.getId() + " ]";
+        return "ProductionCapacity[ id=" + this.furnitureModel.getId() + ", " + this.manufacturingFacility.getId() + " ]";
     }
-    
+
 }

@@ -44,8 +44,6 @@ public abstract class Stock implements Serializable {
     protected List<ManufacturingFacility> producedBy;
     @ManyToMany(mappedBy = "sells")
     protected List<Store> soldBy;
-    @OneToMany(mappedBy = "stock")
-    protected List<ProductionCapacity> productionCapacity;
 
     public Long getId() {
         return id;
@@ -109,14 +107,6 @@ public abstract class Stock implements Serializable {
 
     public void setSoldBy(List<Store> soldBy) {
         this.soldBy = soldBy;
-    }
-
-    public List<ProductionCapacity> getProductionCapacity() {
-        return productionCapacity;
-    }
-
-    public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
-        this.productionCapacity = productionCapacity;
     }
 
     @Override
