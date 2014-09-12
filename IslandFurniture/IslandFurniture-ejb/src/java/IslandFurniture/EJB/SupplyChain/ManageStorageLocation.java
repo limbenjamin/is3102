@@ -6,17 +6,19 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
-import javax.ejb.Stateful;
 import IslandFurniture.EJB.Entities.StorageLocation;
+import java.util.List;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
  * @author KamilulAshraf
  */
 @Stateful
-public class ManageStorageLocation implements ManageStorageLocationRemote {
+public class ManageStorageLocation implements ManageStorageLocationLocal  {
 
     @PersistenceContext
     EntityManager em;
@@ -25,6 +27,9 @@ public class ManageStorageLocation implements ManageStorageLocationRemote {
     
     
     //public void createStorageLocation (String rackNumber, Integer storageLevel, Double volume) {
+   
+
+ 
     @Override
     public void createStorageLocation (String rackNumber) {
         storageLocation = new StorageLocation();
@@ -38,6 +43,15 @@ public class ManageStorageLocation implements ManageStorageLocationRemote {
                 */
         em.persist(storageLocation);
     }
+    
+   
+    @Override
+    public List<StorageLocation> viewStorageLocation() {
+        Query q = em.createQuery("SELECT s " + "FROM StorageLocation s");
+        return q.getResultList();
+        
+    }
+    
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
