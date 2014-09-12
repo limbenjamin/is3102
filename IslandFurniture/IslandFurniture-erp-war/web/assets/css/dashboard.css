@@ -4,6 +4,16 @@
     border-radius: 100px;
 }
 
+.btn-edit:hover {
+    color: #fff;
+    background-color:#5cb85c;
+}
+
+.btn-delete:hover {
+    color: #fff;
+    background-color:#d9534f;
+}
+
 .centered-title {
     display: block;
     float: none;
