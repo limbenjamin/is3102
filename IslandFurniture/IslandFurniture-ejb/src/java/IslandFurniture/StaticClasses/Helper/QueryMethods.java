@@ -7,6 +7,8 @@ package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
+import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -52,4 +54,7 @@ public class QueryMethods {
         }
     }
 
+    public static MonthlyStockSupplyReq findMssrByMonth(EntityManager em, Month month, int year){
+        return null;
+    }
 }

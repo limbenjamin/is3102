@@ -79,7 +79,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
                     if (!fTransDetails.isEmpty()) {
                         cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
-                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12) + 1, rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        
+                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        
                         fTrans = this.addFurnitureTransaction(eachStore, fTransDetails, cal);
                     }
                 }

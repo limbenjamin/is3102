@@ -40,7 +40,7 @@ public class MonthlyStockSupplyReq implements Serializable {
     private int qtySold;
     private int qtyForecasted;
     private int qtyRequested;
-    private boolean commited;
+    private boolean committed;
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
 
@@ -117,12 +117,12 @@ public class MonthlyStockSupplyReq implements Serializable {
         this.qtyRequested = qtyRequested;
     }
 
-    public boolean isCommited() {
-        return commited;
+    public boolean isCommitted() {
+        return committed;
     }
 
-    public void setCommited(boolean commited) {
-        this.commited = commited;
+    public void setCommitted(boolean commited) {
+        this.committed = commited;
     }
 
     public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {
@@ -142,7 +142,7 @@ public class MonthlyStockSupplyReq implements Serializable {
     }
 
     public void calcQtyRequested() {
-        if (!this.commited) {
+        if (!this.committed) {
             this.qtyRequested = this.qtyForecasted - this.qtySold;
         }
     }

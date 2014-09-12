@@ -29,7 +29,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
     public boolean loadSampleData() {
         Store storeToForecast = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Alexandra");
         System.out.println(storeToForecast);
-        salesForecastBean.generateSalesFigures(storeToForecast, Month.JAN, 2014, Month.JAN, 2014);
+        salesForecastBean.generateSalesFigures(storeToForecast, Month.NOV, 2013, Month.JAN, 2014);
 
         return false;
     }
