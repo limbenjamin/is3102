@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurnitures.EJB.Exceptions;
+package IslandFurniture.EJB.Exceptions;
 
 import java.io.Serializable;
 

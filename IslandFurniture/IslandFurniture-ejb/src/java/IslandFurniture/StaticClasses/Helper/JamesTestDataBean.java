@@ -13,7 +13,7 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
-import IslandFurnitures.EJB.Exceptions.ProductionPlanNoCN;
+import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
