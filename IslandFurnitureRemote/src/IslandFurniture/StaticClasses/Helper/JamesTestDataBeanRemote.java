@@ -21,4 +21,5 @@ public interface JamesTestDataBeanRemote {
     public void persist(Object object);
 
     public void deletedata();
+    public void planall();
 }
