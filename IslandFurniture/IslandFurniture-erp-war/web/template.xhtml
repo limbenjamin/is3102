@@ -10,12 +10,14 @@
         <title>Island Furniture - Web Application Admin Dashboard</title>
         <!-- core styles -->
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/bootstrap/css/bootstrap.min.css"></link>
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/font-awesome/css/font-awesome.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/font-awesome/css/font-awesome.min.css"></link>
         <!-- template styles -->
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css"></link>
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css" id="skin"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/navigation.css"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/dashboard.css"></link> 
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
+    
+        <script src="#{loginManagedBean.absolutepath}assets/plugins/modernizr.js"></script>
     </h:head>
     <h:body>
         
@@ -31,7 +33,7 @@
                 <!-- logo -->
                 <a href="#{loginManagedBean.absolutepath}dash.xhtml" class="navbar-brand">
                     <img src="#{loginManagedBean.absolutepath}/assets/img/logo.png" alt=""></img>
-                    <span class="heading-font">
+                    <span>
                         Island Furniture
                     </span>
                 </a>
@@ -254,7 +256,7 @@
         </div>
         
         <!-- core scripts -->
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.0.js"></script>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>

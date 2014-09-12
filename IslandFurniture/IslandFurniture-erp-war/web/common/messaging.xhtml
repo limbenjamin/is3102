@@ -21,7 +21,7 @@
                                             <span class="fa fa-plus"></span> New
                                         </a>
                                     </span>
-                                    Thread List
+                                    Your Message Threads
                                 </div>
                             
                             <ui:repeat value="#{messagingManagedBean.inbox}" var="messageThread">
@@ -32,9 +32,13 @@
                                     </h:commandLink>
                                     </h:form>
                                     <h:form id="messageForm">
-                                    <h5><strong><h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
+                                    <h5>
+                                        <h4><strong>
+                                            <h:commandLink value="#{messageThread.title}" action="#{messagingManaged2Bean.displayMessages}">
                                                     <f:param name="id" value="#{messageThread.id}" />
-                                            </h:commandLink></strong></h5>
+                                            </h:commandLink>
+                                            </strong></h4>
+                                    </h5>
                                     </h:form>
                                     Recipients:
                                     <ui:repeat value="#{messageThread.recipient}" var="recipient">
