@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class LoginManagedBean implements Serializable {
     private static final long serialVersionUID = 5443351151396868724L;
-    private String absolutepath = "http://localhost:8080/IslandFurniture-erp-war/";
+    private String absolutepath = "/IslandFurniture-erp-war/";
     private Staff staff;
     private String username = null;
     private String password = null;

@@ -1,7 +1,17 @@
 /************************* some useful classes ***********************************/
 
-.btn {
+.btn-round {
     border-radius: 100px;
+}
+
+.btn-edit:hover {
+    color: #fff;
+    background-color:#5cb85c;
+}
+
+.btn-delete:hover {
+    color: #fff;
+    background-color:#d9534f;
 }
 
 .centered-title {
@@ -28,6 +38,10 @@ hr{
     padding:0;height:1px;
     border:0;
     border-top:1px solid #e3e6f3;
+}
+
+.badge {
+    background-color: #1aae88;
 }
 
 /******************************* avatar images *************************************/

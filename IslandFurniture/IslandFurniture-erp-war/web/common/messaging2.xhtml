@@ -15,26 +15,38 @@
                         </div>
                         <div class="col-md-12">                      
                           <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Thread List</a>
+                            <div class="panel-heading dashboard-title-panel">
+                                <p>#{messageThread.title}</p>
                             </div>
                             
                                 <ui:repeat value="#{messagingManaged2Bean.messageList}" var="message">
-                                      Content: #{message.content}     Sender: #{message.staff.name}  Time: #{message.msgTime.time};
-                                    <br />
+                                    <div class="list-group-item">
+                                    <h5><strong> #{message.staff.name}: </strong> #{message.content} </h5>  
+                                    <small>#{message.msgTime.time}</small>
+                                    </div>
                                 </ui:repeat>
-                            <h:form id="newMessage">
-                                Content: <h:outputText value="#{messagingManaged2Bean.message.content}" />     
-                                Sender: <h:outputText value="#{messagingManaged2Bean.message.staff.name}" />  
-                                Time: <h:outputText value="#{messagingManaged2Bean.message.msgTime.time}" />
-                                <p:poll interval="3" listener="#{messagingManaged2Bean.pullMessage}" update="newMessage" />
-                            </h:form>
-                            <h:form id="AddMessageForm">       
-                                <p>Compose Message</p>
-                                <h:inputText id="content"></h:inputText>
-                                <h:commandButton action="#{messagingManaged2Bean.addMessage}" value="Send"></h:commandButton>
-                            </h:form>
+                              <div class="panel-footer">
+                                <h:form id="newMessage"> 
+                                    <h5>
+                                        <strong><h:outputText value="#{messagingManaged2Bean.message.staff.name}" /></strong> 
+                                        <h:outputText value="#{messagingManaged2Bean.message.content}" />
+                                    </h5>     
+                                    <small><h:outputText value="#{messagingManaged2Bean.message.msgTime.time}" /></small>
+                                    <p:poll interval="3" listener="#{messagingManaged2Bean.pullMessage}" update="newMessage" />
+                                </h:form>
+                                 
+                                <h:form id="AddMessageForm" class="form-horizontal">
+                                    <div class="form-group">
+                                         <div class="col-sm-10">
+                                            <h:inputText id="content" class="form-control"></h:inputText>
+                                         </div>
+                                         <div class="col-sm-2">
+                                             <h:commandButton action="#{messagingManaged2Bean.addMessage}" value="Compose" class="btn btn-success"></h:commandButton>
+                                         </div>                                        
+                                    </div>
+                                </h:form>
+                                  
+                              </div>
                           </section>
                         </div>
                     </div>

@@ -26,18 +26,19 @@
                                 </div>
                                 <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
                                 <div class="list-group">                          
-                                  <a href="#" class="list-group-item">                                      
+                                  <div class="list-group-item">                                      
                                       <h5><strong>#{announcement.title}</strong></h5>
                                     <h:form>
-                                        <span class="pull-right">
-                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteAnnouncement}">
+                                        <div class="pull-right btn-group">
+                                          <button type="button" class="btn btn-default btn-edit">Edit</button>
+                                            <h:commandButton value="Delete" class="btn btn-default btn-delete" action="#{broadcastManagedBean.deleteAnnouncement}">
                                                 <f:param name="id" value="#{announcement.id}" />
                                             </h:commandButton>
-                                        </span>
+                                        </div>
                                     </h:form>                                      
                                       <p><span class="fa fa-clock-o"></span> #{announcement.activeDate}</p>
                                       <p>#{announcement.content}</p>
-                                  </a>                                  
+                                  </div>                                  
                                 </div>
                                 </ui:repeat>
                               </section>
@@ -80,8 +81,8 @@
                                           </div>                                                                           
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{broadcastManagedBean.addAnnouncement}" value="Add Announcement" class="btn btn-success"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{broadcastManagedBean.addAnnouncement}" value="Add Announcement" class="btn btn-success btn-round"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
@@ -149,8 +150,8 @@
                                           </div>                                          
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{broadcastManagedBean.addEvent}" value="Add Event" class="btn btn-success"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{broadcastManagedBean.addEvent}" value="Add Event" class="btn btn-success btn-round"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
