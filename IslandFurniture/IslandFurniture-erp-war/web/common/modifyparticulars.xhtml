@@ -12,23 +12,24 @@
                                 <h4>Modify Personal Particulars</h4>
                                 <hr></hr>
                                 <h:form id="particularsForm" class="form-horizontal">
-                                  <div class="form-group has-feedback">
-                                    <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
-                                    <label class="col-sm-2 control-label">Phone: </label>
-                                    <div class="col-sm-10">
-                                      <h:inputText id="phoneNo" value="#{personalParticularsManagedBean.phoneNo}" class="form-control transparent-form"></h:inputText>
-                                      <span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+                                  <div class="form-group">
+                                    <label class="col-sm-2 control-label">Mobile: </label>
+                                    <div class="col-sm-10 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText id="phoneNo" value="#{personalParticularsManagedBean.phoneNo}" 
+                                        class="form-control transparent-form"></h:inputText>
                                     </div>
                                   </div>
                                   <div class="form-group">
                                     <label class="col-sm-2 control-label">Address: </label>
                                     <div class="col-sm-10 inner-addon right-addon">
-                                      <i class="glyphicon glyphicon-pencil"></i>
-                                      <h:inputText id="emailAddress" value="#{personalParticularsManagedBean.emailAddress}" class="form-control transparent-form"></h:inputText>
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText id="emailAddress" value="#{personalParticularsManagedBean.emailAddress}" 
+                                         class="form-control transparent-form"></h:inputText>
                                     </div>
                                   </div>
                                   <span class="pull-right">
-                                    <h:commandButton action="#{personalParticularsManagedBean.modifyPersonalParticulars}" value="Update" class="btn btn-success btn-block"></h:commandButton>
+                                    <h:commandButton action="#{personalParticularsManagedBean.modifyPersonalParticulars}" value="Update" class="btn btn-round btn-success btn-block"></h:commandButton>
                                     </span>
                                 </h:form>                                
                             </div>
