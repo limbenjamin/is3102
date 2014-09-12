@@ -40,5 +40,9 @@
             <from-outcome>material</from-outcome>
             <to-view-id>/knowledge/material.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>storagelocation</from-outcome>
+            <to-view-id>/supplychain/storagelocation.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>
