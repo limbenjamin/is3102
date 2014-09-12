@@ -56,9 +56,10 @@
                             </div>
                             <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
                                 <a class="list-group-item">
-                                    <h4><u>#{announcement.title}</u></h4>
+                                    <h4><strong>#{announcement.title}</strong></h4>
                                     <h5>#{announcement.content}</h5>
-                                    <small>#{announcement.activeDate}</small>
+                                    <br></br>
+                                    <small>Announced on #{announcement.activeDate}</small>
                                 </a>
                             </ui:repeat>    
                             <div class="panel-footer">
