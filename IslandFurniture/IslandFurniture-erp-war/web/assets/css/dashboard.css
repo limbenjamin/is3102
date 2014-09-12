@@ -1,6 +1,6 @@
 /************************* some useful classes ***********************************/
 
-.btn {
+.btn-round {
     border-radius: 100px;
 }
 
@@ -28,6 +28,10 @@ hr{
     padding:0;height:1px;
     border:0;
     border-top:1px solid #e3e6f3;
+}
+
+.badge {
+    background-color: #1aae88;
 }
 
 /******************************* avatar images *************************************/
