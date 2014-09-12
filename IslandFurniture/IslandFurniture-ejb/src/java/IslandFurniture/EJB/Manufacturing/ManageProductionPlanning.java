@@ -132,10 +132,10 @@ public class ManageProductionPlanning {
             int i_year = Math.floorDiv((c_month + i - 1), 12) + c_year;
 
             Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + i_year + " and mpp.month=:i_m");
-            q.setParameter("i_m", Helper.TranslateMonth(i_month));
+            q.setParameter("i_m", Helper.translateMonth(i_month));
 
             if (q.getResultList().size() == 0) {
-                Month eMonth = Helper.TranslateMonth(i_month);
+                Month eMonth = Helper.translateMonth(i_month);
                 mpp = new MonthlyProductionPlan();
                 mpp.setMonth(eMonth);
                 mpp.setYear((int) i_year);
@@ -175,7 +175,7 @@ public class ManageProductionPlanning {
     private void balanceProductionTill(int year, int m) throws Exception {
 
         Query q = em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.year=" + year + " and mpp.month=:i_m");
-        q.setParameter("i_m", Helper.TranslateMonth(m));
+        q.setParameter("i_m", Helper.translateMonth(m));
         MonthlyProductionPlan planTillMonthCursor = (MonthlyProductionPlan) q.getResultList().get(0);
 
         int deficit = 0;
