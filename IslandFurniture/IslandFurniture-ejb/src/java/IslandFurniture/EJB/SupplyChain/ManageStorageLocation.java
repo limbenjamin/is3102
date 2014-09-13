@@ -13,10 +13,31 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-/**
+ /**
+ *      @author Kamilul Ashraf
  *
- * @author KamilulAshraf
+ *      List of Attributes for Storage Location
+ *
+ * 1.   Plant Number - Integer
+ *      Plant/Store Number (eg. 1, 2, 3)
+ * 
+ * 2.   Storage Area Number - Integer
+ *      Area Number (eg. 1, 2.. )
+ * 
+ * 3.   Storage Area Name - String
+ *      Area Name (eg. Staging Area, Receiving Area)
+ * 
+ * 4.   Storage ID - String
+ *      Storage ID (eg. A12, B55, C42.. )
+ * 
+ * 5.   Storage Type - String
+ *      Type of Storage (eg. Public or Private)
+ * 
+ * 6.   Storage Description - String
+ *      Description of Storage Space (eg. Usually store SKU 1234)
+ *	
  */
+
 @Stateful
 public class ManageStorageLocation implements ManageStorageLocationLocal  {
 
@@ -25,25 +46,18 @@ public class ManageStorageLocation implements ManageStorageLocationLocal  {
     
     private StorageLocation storageLocation;
     
-    
-    //public void createStorageLocation (String rackNumber, Integer storageLevel, Double volume) {
-   
-
- 
     @Override
-    public void createStorageLocation (String rackNumber) {
+    public void createStorageLocation (Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription) {
         storageLocation = new StorageLocation();
-        storageLocation.setRackNumber(rackNumber);
+        storageLocation.setPlantNumber(plantNumber);
+        storageLocation.setStorageAreaNumber(storageAreaNumber);
+        storageLocation.setStorageAreaName(storageAreaName);
+        storageLocation.setStorageID(storageID);
+        storageLocation.setStorageType(storageType);
+        storageLocation.setStorageDescription(storageDescription);
         storageLocation.setStockUnits(null);
-        /*
-        storageLocation.setStockUnits(null);
-        storageLocation.setRackNumber(rackNumber);
-        storageLocation.setStorageLevel(storageLevel);
-        storageLocation.setVolume(volume);
-                */
         em.persist(storageLocation);
     }
-    
    
     @Override
     public List<StorageLocation> viewStorageLocation() {

@@ -1,31 +1,69 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html">
-    
+
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
-                        <div class="row">
-                            <div class="col-md-6">
-                            
-                            <h:form id="storageForm" class="form-horizontal">
-                                <h:inputText id="rackNumber" value="#{storageLocationManagedBean.rackNumber}"></h:inputText>
-                                <h:commandButton action="#{storageLocationManagedBean.addStorageLocation}" value="Create Storage Location"></h:commandButton>
-                            </h:form> 
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <h:form id="storageForm" class="form-horizontal">
+
+                            <b> Create Storage Location</b><br></br> 
+                            Plant Number <h:inputText id="plantNumber" value="#{storageLocationManagedBean.plantNumber}"></h:inputText><br></br>
+                            Storage Area Number <h:inputText id="storageAreaNumber" value="#{storageLocationManagedBean.storageAreaNumber}"></h:inputText><br></br>
+                            Storage Area Name <h:inputText id="storageAreaName" value="#{storageLocationManagedBean.storageAreaName}"></h:inputText><br></br>
+                            Storage ID <h:inputText id="storageID" value="#{storageLocationManagedBean.storageID}"></h:inputText><br></br>
+                            Storage Type <h:inputText id="storageType" value="#{storageLocationManagedBean.storageType}"></h:inputText><br></br>
+                            Storage Description <h:inputText id="storageDescription" value="#{storageLocationManagedBean.storageDescription}"></h:inputText><br> </br>
+
+                            <h:commandButton action="#{storageLocationManagedBean.addStorageLocation}" value="Create Storage Location"></h:commandButton><br> </br>
+                        </h:form> 
+
+                        <b>View Storage Location</b><br> </br> 
+                        
+                            <table>
+                            <tr>
+                                <th class="tg-031e">ID</th>
+                                <th class="tg-031e">Plant Number</th>
+                                <th class="tg-031e">Storage Area Number</th>
+                                <th class="tg-031e">Storage Area Name</th>
+                                <th class="tg-031e">Storage ID</th>
+                                <th class="tg-031e">Storage Type</th>
+                                <th class="tg-031e">Storage Description</th>
+                            </tr>
+                            <ui:repeat value="#{storageLocationManagedBean.storageLocation}" var="StorageLocation">
+                            <tr>
+                                <td class="tg-031e"><p>#{StorageLocation.id}</p></td>
+                                <td class="tg-031e"><p>#{StorageLocation.plantNumber}</p> </td>
+                                <td class="tg-031e"><p>#{StorageLocation.storageAreaNumber}</p> </td>
+                                <td class="tg-031e"><p>#{StorageLocation.storageAreaName}</p></td>
+                                <td class="tg-031e"><p>#{StorageLocation.storageID}</p> </td>
+                                <td class="tg-031e"><p>#{StorageLocation.storageType}</p> </td>
+                                <td class="tg-031e"><p>#{StorageLocation.storageDescription}</p> </td>
+                            </tr>
+                                </ui:repeat>
+                        </table>     
                                 
-                                <ui:repeat value="#{storageLocationManagedBean.storageLocation}" var="StorageLocation">
-                                <div>                                                               
-                                    <p>#{StorageLocation.id}</p>      
-                                    <p>#{StorageLocation.rackNumber}</p> 
-                                </div>
-                            </ui:repeat>
+                                
+                                 
                                 
                                 
-                            </div>
-                        </div>
-                </ui:define>
+                                
+
+                           
+                        
+
+                        
+
+
+
+                    </div>
+                </div>
+            </ui:define>
         </ui:composition>
     </h:body>
 </html>

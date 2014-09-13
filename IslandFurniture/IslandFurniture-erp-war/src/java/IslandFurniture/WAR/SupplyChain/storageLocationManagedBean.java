@@ -28,7 +28,12 @@ public class storageLocationManagedBean {
      * Creates a new instance of storageLocationManagedBean
      */
    
-    private String rackNumber;
+    private Integer plantNumber;
+    private Integer storageAreaNumber;
+    private String storageAreaName;
+    private String storageID;
+    private String storageType;
+    private String storageDescription;
     private List<StorageLocation> storageLocation;
     
     @EJB
@@ -40,18 +45,65 @@ public class storageLocationManagedBean {
     }
     
     public String addStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        rackNumber = request.getParameter("storageForm:rackNumber");
-        mslr.createStorageLocation(rackNumber);
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();       
+        
+        plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
+        storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
+        storageAreaName = request.getParameter("storageForm:storageAreaName");
+        storageID = request.getParameter("storageForm:storageID");
+        storageType = request.getParameter("storageForm:storageType");
+        storageDescription = request.getParameter("storageForm:storageDescription");
+
+        mslr.createStorageLocation(plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
         return "storagelocation";
     }
 
-    public String getRackNumber() {
-        return rackNumber;
+    public Integer getPlantNumber() {
+        return plantNumber;
     }
 
-    public void setRackNumber(String rackNumber) {
-        this.rackNumber = rackNumber;
+    public void setPlantNumber(Integer plantNumber) {
+        this.plantNumber = plantNumber;
+    }
+
+    public Integer getStorageAreaNumber() {
+        return storageAreaNumber;
+    }
+
+    public void setStorageAreaNumber(Integer storageAreaNumber) {
+        this.storageAreaNumber = storageAreaNumber;
+    }
+
+    public String getStorageAreaName() {
+        return storageAreaName;
+    }
+
+    public void setStorageAreaName(String storageAreaName) {
+        this.storageAreaName = storageAreaName;
+    }
+
+    public String getStorageID() {
+        return storageID;
+    }
+
+    public void setStorageID(String storageID) {
+        this.storageID = storageID;
+    }
+
+    public String getStorageType() {
+        return storageType;
+    }
+
+    public void setStorageType(String storageType) {
+        this.storageType = storageType;
+    }
+
+    public String getStorageDescription() {
+        return storageDescription;
+    }
+
+    public void setStorageDescription(String storageDescription) {
+        this.storageDescription = storageDescription;
     }
 
     public ManageStorageLocationLocal getMslr() {
@@ -70,8 +122,4 @@ public class storageLocationManagedBean {
         this.storageLocation = storageLocation;
     }
 
-
-    
-    
-    
 }

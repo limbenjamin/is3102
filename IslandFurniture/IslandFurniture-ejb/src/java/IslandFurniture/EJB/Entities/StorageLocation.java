@@ -14,10 +14,31 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-/**
+ /**
+ *      @author Kamilul Ashraf
  *
- * @author James
+ *      List of Attributes for Storage Location
+ *
+ * 1.   Plant Number - Integer
+ *      Plant/Store Number (eg. 1, 2, 3)
+ * 
+ * 2.   Storage Area Number - Integer
+ *      Area Number (eg. 1, 2.. )
+ * 
+ * 3.   Storage Area Name - String
+ *      Area Name (eg. Staging Area, Receiving Area)
+ * 
+ * 4.   Storage ID - String
+ *      Storage ID (eg. A12, B55, C42.. )
+ * 
+ * 5.   Storage Type - String
+ *      Type of Storage (eg. Public or Private)
+ * 
+ * 6.   Storage Description - String
+ *      Description of Storage Space (eg. Usually store SKU 1234)
+ *	
  */
+
 @Entity
 public class StorageLocation implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -27,10 +48,15 @@ public class StorageLocation implements Serializable {
     
     @OneToMany(mappedBy="location")
     private List<StockUnit> stockUnits;
-    private String rackNumber;
     
+    private Integer plantNumber;
+    private Integer storageAreaNumber;
+    private String storageAreaName;
+    private String storageID;
+    private String storageType;
+    private String storageDescription;
     
-    public Long getId() {
+        public Long getId() {
         return id;
     }
 
@@ -46,13 +72,55 @@ public class StorageLocation implements Serializable {
         this.stockUnits = stockUnits;
     }
 
-    public String getRackNumber() {
-        return rackNumber;
+    public Integer getPlantNumber() {
+        return plantNumber;
     }
 
-    public void setRackNumber(String rackNumber) {
-        this.rackNumber = rackNumber;
+    public void setPlantNumber(Integer plantNumber) {
+        this.plantNumber = plantNumber;
     }
+
+    public Integer getStorageAreaNumber() {
+        return storageAreaNumber;
+    }
+
+    public void setStorageAreaNumber(Integer storageAreaNumber) {
+        this.storageAreaNumber = storageAreaNumber;
+    }
+
+    public String getStorageAreaName() {
+        return storageAreaName;
+    }
+
+    public void setStorageAreaName(String storageAreaName) {
+        this.storageAreaName = storageAreaName;
+    }
+
+    public String getStorageID() {
+        return storageID;
+    }
+
+    public void setStorageID(String storageID) {
+        this.storageID = storageID;
+    }
+
+    public String getStorageType() {
+        return storageType;
+    }
+
+    public void setStorageType(String storageType) {
+        this.storageType = storageType;
+    }
+
+    public String getStorageDescription() {
+        return storageDescription;
+    }
+
+    public void setStorageDescription(String storageDescription) {
+        this.storageDescription = storageDescription;
+    }
+
+
 
 
 
