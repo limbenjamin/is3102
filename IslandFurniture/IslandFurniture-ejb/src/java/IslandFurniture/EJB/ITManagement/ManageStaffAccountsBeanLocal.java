@@ -17,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageStaffAccountsBeanLocal {
 
-    void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo);
+    void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String country, String storeName);
 
     List<Vector> displayAllStaffAccounts();
     

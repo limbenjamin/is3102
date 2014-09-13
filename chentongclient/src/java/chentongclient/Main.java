@@ -8,6 +8,7 @@ package chentongclient;
 import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
@@ -27,6 +28,9 @@ public class Main {
 
     @EJB
     private static LoadOrgEntitiesBeanRemote loadOrgEntitiesBean;
+    
+    @EJB
+    private static LoadStaffDataBeanRemote loadStaffDataBean;
 
     /**
      * @param args the command line arguments
@@ -54,8 +58,19 @@ public class Main {
             }
         }
         
+        // Load Staff Data
+        System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
+        System.out.print("Load Staff Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadStaffDataBean.loadSampleData()) {
+                System.out.println("Staff data generated successfully from transactions!");
+            } else {
+                System.out.println("Failed to load staff data. Check for errors in server log.");
+            }
+        }
+        
         // Load Sales Forecasts from given set of Transactions
-        System.out.print("Generate sales forecasts? (y/n):");
+       System.out.print("Generate sales forecasts? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadSalesForecastBean.loadSampleData()) {
                 System.out.println("Sales Forecast data generated successfully from transactions!");
