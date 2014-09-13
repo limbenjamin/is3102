@@ -18,5 +18,9 @@ and open the template in the editor.
             <h:commandButton action="#{materialManagedBean.addMaterial()}"></h:commandButton>
             
         </h:form>
+        <ui:repeat value="#{materialManagedBean.displayMaterialList()}" var="material">
+            <h5>#{material.id}</h5>
+            <p>#{material.name}</p>
+        </ui:repeat>
     </h:body>
 </html>

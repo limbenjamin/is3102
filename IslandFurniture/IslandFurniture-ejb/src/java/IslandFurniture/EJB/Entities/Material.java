@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -17,6 +19,10 @@ import javax.persistence.OneToMany;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="Material.getMaterialList",
+            query="SELECT m FROM Material m")
+})
 public class Material extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
