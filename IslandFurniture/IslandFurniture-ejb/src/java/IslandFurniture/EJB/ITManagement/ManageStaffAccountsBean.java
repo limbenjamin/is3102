@@ -9,9 +9,14 @@ package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import IslandFurniture.EJB.Exceptions.InvalidCountryException;
+import IslandFurniture.EJB.Exceptions.InvalidPlantException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
@@ -38,11 +43,13 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     private Preference preference;
     private List<Announcement> announcements;
     private List<Event> events;
+    private Plant plant;
+    private Country country;
     
 
 
     @Override
-    public void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo) {
+    public void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
         staff = new Staff();
         staff.setUsername(username);
         staff.setNotes("");
@@ -65,6 +72,25 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setTodoList(todolist);
         staff.setAnnouncements(announcements);
         staff.setEvents(events);
+        country = (Country) QueryMethods.findCountryByName(em, countryName);
+        if (country == null) {
+            try {
+                throw new InvalidCountryException();
+            } catch (InvalidCountryException ex) {
+                Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            plant = (Plant) QueryMethods.findPlantByName(em, country, plantName);
+            if (plant == null) {
+                try {
+                    throw new InvalidPlantException();
+                } catch (InvalidPlantException ex) {
+                    Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                staff.setPlant(plant);
+            }
+        }
         em.persist(staff);
         //em.flush();
     }
