@@ -2,7 +2,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -23,42 +24,43 @@
                             <h:commandButton action="#{storageLocationManagedBean.addStorageLocation}" value="Create Storage Location"></h:commandButton><br> </br>
                         </h:form> 
 
-                        <b>View Storage Location</b><br> </br> 
+                        <b>View and Edit Storage Location</b><br> </br> 
                         
+                       
                             <table>
                             <tr>
-                                <th class="tg-031e">ID</th>
+                              
                                 <th class="tg-031e">Plant Number</th>
                                 <th class="tg-031e">Storage Area Number</th>
                                 <th class="tg-031e">Storage Area Name</th>
                                 <th class="tg-031e">Storage ID</th>
                                 <th class="tg-031e">Storage Type</th>
                                 <th class="tg-031e">Storage Description</th>
+                                <th class="tg-031e">Edit</th>
                             </tr>
-                            <ui:repeat value="#{storageLocationManagedBean.storageLocation}" var="StorageLocation">
+                            <ui:repeat value="#{storageLocationManagedBean.storageLocationList}" var="StorageLocation">
                             <tr>
-                                <td class="tg-031e"><p>#{StorageLocation.id}</p></td>
-                                <td class="tg-031e"><p>#{StorageLocation.plantNumber}</p> </td>
+                          <h:form id="modifyStorageForm" class="form-horizontal">
+                                <td class="tg-031e"><h:inputText id="plantNumber" value="#{storageLocationManagedBean.plantNumber}"></h:inputText> </td>
                                 <td class="tg-031e"><p>#{StorageLocation.storageAreaNumber}</p> </td>
                                 <td class="tg-031e"><p>#{StorageLocation.storageAreaName}</p></td>
                                 <td class="tg-031e"><p>#{StorageLocation.storageID}</p> </td>
                                 <td class="tg-031e"><p>#{StorageLocation.storageType}</p> </td>
                                 <td class="tg-031e"><p>#{StorageLocation.storageDescription}</p> </td>
+                                <td class="tg-031e"><p><h:commandButton action="#{storageLocationManagedBean.modifyStorageLocation}" value="Update" class="btn btn-round btn-success btn-block"> 
+                                            <f:param name="id" value="#{StorageLocation.id}" />
+                                                       <f:param name="storageAreaNumber" value="#{StorageLocation.storageAreaNumber}" />
+                                            <f:param name="storageAreaName" value="#{StorageLocation.storageAreaName}" />
+                                            <f:param name="storageID" value="#{StorageLocation.storageID}" />
+                                            <f:param name="storageType" value="#{StorageLocation.storageType}" />
+                                            <f:param name="storageDescription" value="#{StorageLocation.storageDescription}" />
+                                </h:commandButton></p>
+                                   
+                                </td>
+                                   </h:form>  
                             </tr>
                                 </ui:repeat>
                         </table>     
-                                
-                                
-                                 
-                                
-                                
-                                
-
-                           
-                        
-
-                        
-
 
 
                     </div>
