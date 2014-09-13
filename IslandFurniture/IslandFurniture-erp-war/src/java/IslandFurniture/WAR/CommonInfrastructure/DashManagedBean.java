@@ -52,15 +52,15 @@ public class DashManagedBean implements Serializable {
     private List<Announcement> announcementList = null;
     
     @EJB
-    private ManageAuthenticationBean authBean;
+    private ManageAuthenticationBeanLocal authBean;
     @EJB
     private ManageUserAccountInformationBean staffBean;
     @EJB
-    private ManageTodoBean todoBean;
+    private ManageTodoBeanLocal todoBean;
     @EJB
-    private ManageAnnouncementsBean announcementBean; 
+    private ManageAnnouncementsBeanLocal announcementBean; 
     @EJB
-    private ManageEventsBean eventBean;  
+    private ManageEventsBeanLocal eventBean;  
     
     @PostConstruct
     public void init(){
@@ -119,11 +119,11 @@ public class DashManagedBean implements Serializable {
         this.password = password;
     }
 
-    public ManageAuthenticationBean getAuthBean() {
+    public ManageAuthenticationBeanLocal getAuthBean() {
         return authBean;
     }
 
-    public void setAuthBean(ManageAuthenticationBean authBean) {
+    public void setAuthBean(ManageAuthenticationBeanLocal authBean) {
         this.authBean = authBean;
     }
 
@@ -183,19 +183,19 @@ public class DashManagedBean implements Serializable {
         this.todoList = todoList;
     }
 
-    public ManageTodoBean getTodoBean() {
+    public ManageTodoBeanLocal getTodoBean() {
         return todoBean;
     }
 
-    public void setTodoBean(ManageTodoBean todoBean) {
+    public void setTodoBean(ManageTodoBeanLocal todoBean) {
         this.todoBean = todoBean;
     }
 
-    public ManageAnnouncementsBean getAnnouncementBean() {
+    public ManageAnnouncementsBeanLocal getAnnouncementBean() {
         return announcementBean;
     }
 
-    public void setAnnouncementBean(ManageAnnouncementsBean announcementBean) {
+    public void setAnnouncementBean(ManageAnnouncementsBeanLocal announcementBean) {
         this.announcementBean = announcementBean;
     }
 
@@ -219,11 +219,11 @@ public class DashManagedBean implements Serializable {
         this.eventList = eventList;
     }
 
-    public ManageEventsBean getEventBean() {
+    public ManageEventsBeanLocal getEventBean() {
         return eventBean;
     }
 
-    public void setEventBean(ManageEventsBean eventBean) {
+    public void setEventBean(ManageEventsBeanLocal eventBean) {
         this.eventBean = eventBean;
     }
 

@@ -27,7 +27,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageMessagesBean {
+public class ManageMessagesBean implements ManageMessagesBeanLocal {
     
     @PersistenceContext
     EntityManager em;
@@ -41,10 +41,12 @@ public class ManageMessagesBean {
     @EJB
     private ManageUserAccountInformationBean staffbean;
 
+    @Override
     public void ManageMessagesBean(){
         
     }
     
+    @Override
     public void createNewThread(String title, String recipients){
         messageThread = new MessageThread();
         messageThread.setTitle(title);
@@ -66,11 +68,13 @@ public class ManageMessagesBean {
         em.flush();
     }
     
+    @Override
     public List<MessageThread> displayAllThreads(String username){
         staff = staffbean.getStaff(username);
         return staff.getInbox();
     }
     
+    @Override
     public void unsubscribeFromThread(String username, Long threadId){
         staff = staffbean.getStaff(username);
         messageThread = getMessageThread(threadId);
@@ -82,6 +86,7 @@ public class ManageMessagesBean {
         em.flush();
     }
     
+    @Override
     public MessageThread getMessageThread(Long id){
         Query query = em.createQuery("FROM MessageThread m where m.id=:id");
         query.setParameter("id", id);
@@ -89,6 +94,7 @@ public class ManageMessagesBean {
         return messageThread;
     }
     
+    @Override
     public void sendMessage(String username, Long threadId, String content){
         staff = staffbean.getStaff(username);
         messageThread = getMessageThread(threadId);

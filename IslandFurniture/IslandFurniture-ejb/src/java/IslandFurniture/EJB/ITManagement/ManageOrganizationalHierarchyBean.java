@@ -25,7 +25,7 @@ import javax.persistence.Query;
  */
 @Stateful
 @LocalBean
-public class ManageOrganizationalHierarchyBean {
+public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHierarchyBeanLocal {
 
     @PersistenceContext
     private EntityManager em;
@@ -36,6 +36,7 @@ public class ManageOrganizationalHierarchyBean {
     private Country country;
     
 
+    @Override
     public Store addStore(String storeName, Country country) {
         store = (Store) this.findPlantByName(country, storeName);
 
@@ -53,6 +54,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void editStore(Long storeId, String name, Country country) {
         store = (Store) em.find(Store.class, storeId);
 
@@ -66,6 +68,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void deleteStore(Long storeId) {
         store = (Store) em.find(Store.class, storeId);
         country = store.getCountry();
@@ -80,11 +83,13 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public List<Store> displayStore() {
         Query q = em.createQuery("SELECT s " + "FROM Store s");
         return q.getResultList();
     }
 
+    @Override
     public ManufacturingFacility addManufacturingFacility(String mfName, Country country) {
         mf = (ManufacturingFacility) this.findPlantByName(country, mfName);
 
@@ -102,6 +107,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void editManufacturingFacility(Long mfId, String name, Country country) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
 
@@ -115,6 +121,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void deleteManufacturingFacility(Long mfId) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
         country = mf.getCountry();
@@ -129,11 +136,13 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public List<ManufacturingFacility> displayManufacturingFacility() {
         Query q = em.createQuery("SELECT m " + "FROM ManufacturingFacility m");
         return q.getResultList();
     }
 
+    @Override
     public CountryOffice addCountryOffice(String coName, Country country) {
         co = (CountryOffice) this.findPlantByName(country, coName);
 
@@ -151,6 +160,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void editCountryOffice(Long coId, String name, Country country) {
         co = (CountryOffice) em.find(CountryOffice.class, coId);
 
@@ -164,6 +174,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public void deleteCountryOffice(Long coId) {
         co = (CountryOffice) em.find(CountryOffice.class, coId);
         country = co.getCountry();
@@ -178,11 +189,13 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public List<CountryOffice> displayCountryOffice() {
         Query q = em.createQuery("SELECT c " + "FROM CountryOffice c");
         return q.getResultList();
     }    
     
+    @Override
     public Plant findPlantByName(Country country, String plantName) {
         Query q = em.createNamedQuery("findPlantByName");
         q.setParameter("country", country);
@@ -195,6 +208,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
 
+    @Override
     public Country findCountryByName(String countryName) {
         Query q = em.createNamedQuery("findCountryByName");
         q.setParameter("name", countryName);
@@ -206,6 +220,7 @@ public class ManageOrganizationalHierarchyBean {
         }
     }
     
+    @Override
     public List<Country> getCountries(){
         Query q = em.createQuery("SELECT c " + "FROM Country c");
         return q.getResultList();

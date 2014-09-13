@@ -22,7 +22,7 @@ import javax.persistence.PersistenceContext;
  * @author Benjamin
  */
 @Stateful
-public class ManageTodoBean {
+public class ManageTodoBean implements ManageTodoBeanLocal {
 
     @PersistenceContext
     EntityManager em;
@@ -39,6 +39,7 @@ public class ManageTodoBean {
         
     }
     
+    @Override
     public void addTodoItem(String username, String description){
         staff = staffbean.getStaff(username);
         todo = new Todo();
@@ -51,6 +52,7 @@ public class ManageTodoBean {
         em.flush();
     }
     
+    @Override
     public List<Todo> getTodoList(String username){
         staff = staffbean.getStaff(username);
         return staff.getTodoList();

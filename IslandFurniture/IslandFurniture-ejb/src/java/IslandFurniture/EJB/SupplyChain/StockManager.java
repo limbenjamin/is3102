@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.Material;
+import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,10 +28,23 @@ public class StockManager implements StockManagerLocal {
             System.out.println("StockManager: 1");
             material = new Material();
             System.out.println("StockManager: 2");
+            em.persist(material);
+            System.out.println("StockManager: 3");
             return true;
         } catch(Exception ex) {
             ex.printStackTrace();
             return false;
+        }
+    }
+    public List displayMaterialList() {
+        Material material;
+        List materialList;
+        try {
+            materialList = em.createNamedQuery("Material.getMaterialList", Material.class).getResultList();
+            return materialList;
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }
