@@ -13,7 +13,7 @@ import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
-import IslandFurniture.EJB.Exceptions.InvalidCountryException;
+import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -76,7 +76,7 @@ public class ManageProductionPlanning {
 
     // Public method , pass a list of forecast to see if it is feasible.
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws InvalidCountryException, ProductionPlanNoCN, Exception {
+    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN, Exception {
         if (MF == null) {
             throw new ProductionPlanNoCN();
         }
@@ -111,7 +111,7 @@ public class ManageProductionPlanning {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private void CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws InvalidCountryException, Exception {
+    private void CreateProductionPlanFromForecast(MonthlyStockSupplyReq MSSR) throws ProductionPlanExceedsException, Exception {
 
         int month = MSSR.getMonth().value;
         int Year = MSSR.getYear();
@@ -221,7 +221,7 @@ public class ManageProductionPlanning {
     }
 
     //This process plans MPP and split it evenly across weeks
-    private void planMPP(MonthlyProductionPlan mpp) throws InvalidCountryException {
+    private void planMPP(MonthlyProductionPlan mpp) throws ProductionPlanExceedsException {
         Calendar cal = Calendar.getInstance();
         cal.set(mpp.getYear(), mpp.getMonth().value, 1);
         int maxWeekNumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
