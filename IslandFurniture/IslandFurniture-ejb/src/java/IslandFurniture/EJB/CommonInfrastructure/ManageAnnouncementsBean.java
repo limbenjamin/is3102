@@ -25,8 +25,7 @@ import javax.persistence.TemporalType;
  * @author Benjamin
  */
 @Stateful
-@LocalBean
-public class ManageAnnouncementsBean {
+public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
 
     @PersistenceContext
     EntityManager em;
@@ -39,6 +38,7 @@ public class ManageAnnouncementsBean {
     @EJB
     private ManageUserAccountInformationBean staffbean;
     
+    @Override
     public void addAnnouncement(String username, String title, String content, Date activeDate, Date expireDate){
         staff = staffbean.getStaff(username);
         announcement = new Announcement();
@@ -54,6 +54,7 @@ public class ManageAnnouncementsBean {
         em.flush();
     }
     
+    @Override
     public void editAnnouncement(Long id, String title, String content, Date activeDate, Date expireDate){
         announcement = em.find(Announcement.class, id);
         announcement.setTitle(title);
@@ -65,6 +66,7 @@ public class ManageAnnouncementsBean {
         em.flush();
     }
     
+    @Override
     public void deleteAnnouncement(Long id){
         announcement = em.find(Announcement.class, id);
         announcementList = announcement.getCreator().getAnnouncements();
@@ -74,6 +76,7 @@ public class ManageAnnouncementsBean {
         em.flush();
     }
     
+    @Override
     public List<Announcement> getActiveAnnouncements(){
         Date today = new Date(); 
         Query query = em.createQuery("SELECT a " + "FROM Announcement a " + "WHERE :today BETWEEN a.activeDate AND a.expireDate")
@@ -81,6 +84,7 @@ public class ManageAnnouncementsBean {
         return query.getResultList();
     }
     
+    @Override
     public List<Announcement> getMyAnnouncements(String username){
         staff = staffbean.getStaff(username);
         return staff.getAnnouncements();

@@ -18,7 +18,7 @@ import javax.persistence.*;
  * @author Benjamin and the IS3102 team
  */
 @Stateful
-public class ManageAuthenticationBean {
+public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
 
     @PersistenceContext
     EntityManager em;
@@ -34,6 +34,7 @@ public class ManageAuthenticationBean {
         
     }
     
+    @Override
     public boolean authenticate(String username, String password){
         Query query = em.createQuery("FROM Staff s where s.username=:username");
         query.setParameter("username", username);
@@ -52,6 +53,7 @@ public class ManageAuthenticationBean {
         }
     }
     
+    @Override
     public void log(String EntityName,Long EntityId, String UserAction, String ChangeMessage, Long StaffId){
         logEntry = new LogEntry();
         logEntry.setEntityName(EntityName);
@@ -65,6 +67,7 @@ public class ManageAuthenticationBean {
         em.flush();
     }
     
+    @Override
     public void changePassword(String username, String newPassword){
         staff = staffbean.getStaff(username);
         staff.setPassword(newPassword);

@@ -24,7 +24,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateless
-public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
+public class ManageStaffAccountsBean implements ManageStaffAccountRemote, ManageStaffAccountsBeanLocal{
     
     @PersistenceContext
     EntityManager em;
@@ -69,6 +69,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote{
         //em.flush();
     }
     
+    @Override
     public List<Vector> displayAllStaffAccounts(){
         Query query = em.createQuery("SELECT s FROM Staff S");
         List<Vector> staffList = new ArrayList();

@@ -33,10 +33,8 @@ public class LoginManagedBean implements Serializable {
     private String password = null;
     
     @EJB
-    private ManageAuthenticationBean authBean;  
+    private ManageAuthenticationBeanLocal authBean;  
     
-    public LoginManagedBean() {
-    }
     
     public String login() {
         boolean result = authBean.authenticate(username, password);
@@ -75,11 +73,11 @@ public class LoginManagedBean implements Serializable {
         this.password = password;
     }
 
-    public ManageAuthenticationBean getAuthBean() {
+    public ManageAuthenticationBeanLocal getAuthBean() {
         return authBean;
     }
 
-    public void setAuthBean(ManageAuthenticationBean authBean) {
+    public void setAuthBean(ManageAuthenticationBeanLocal authBean) {
         this.authBean = authBean;
     }
 

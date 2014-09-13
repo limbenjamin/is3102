@@ -21,7 +21,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageUserAccountInformationBean {
+public class ManageUserAccountInformationBean{
     
     @PersistenceContext
     EntityManager em;
@@ -46,7 +46,7 @@ public class ManageUserAccountInformationBean {
         em.merge(staff);
         em.flush();
     }
-    
+
     public void modifyPersonalParticulars(String username, String phoneNo, String emailAddress){
         staff = getStaff(username);
         staff.setPhoneNo(phoneNo);

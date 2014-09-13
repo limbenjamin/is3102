@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -25,8 +24,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-@LocalBean
-public class ManageEventsBean {
+public class ManageEventsBean implements ManageEventsBeanLocal {
 
     @PersistenceContext
     EntityManager em;
@@ -39,6 +37,7 @@ public class ManageEventsBean {
     @EJB
     private ManageUserAccountInformationBean staffbean;
     
+    @Override
     public void addEvent(String name, String description, Calendar eventTime, String username){
         creator = staffbean.getStaff(username);
         event = new Event();
@@ -54,6 +53,7 @@ public class ManageEventsBean {
      
     }
     
+    @Override
     public void editEvent(String name, String description, Calendar eventTime, Long id){
         event = em.find(Event.class, id);
         event.setName(name);
@@ -65,6 +65,7 @@ public class ManageEventsBean {
      
     }
     
+    @Override
     public void deleteEvent(Long id){
         event = em.find(Event.class, id);
         eventList = event.getCreator().getEvents();
@@ -75,11 +76,13 @@ public class ManageEventsBean {
      
     }
     
+    @Override
     public List<Event> getEvents(){
         Query query = em.createQuery("SELECT e " + "FROM Event e ");
         return query.getResultList();
     }
     
+    @Override
     public List<Event> getMyEvents(String username){
         creator = staffbean.getStaff(username);
         return creator.getEvents();

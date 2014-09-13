@@ -6,8 +6,8 @@
 
 package IslandFurniture.WAR.CommonInfrastructure;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageAnnouncementsBean;
-import IslandFurniture.EJB.CommonInfrastructure.ManageEventsBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageAnnouncementsBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageEventsBeanLocal;
 import IslandFurniture.EJB.Entities.Announcement;
 import IslandFurniture.EJB.Entities.Event;
 import java.io.Serializable;
@@ -50,9 +50,9 @@ public class BroadcastManagedBean implements Serializable {
     private List<Event> eventList = null;
     
     @EJB
-    private ManageAnnouncementsBean announcementBean;
+    private ManageAnnouncementsBeanLocal announcementBean;
     @EJB
-    private ManageEventsBean eventBean;
+    private ManageEventsBeanLocal eventBean;
     
     @PostConstruct
     public void init(){
@@ -200,11 +200,11 @@ public class BroadcastManagedBean implements Serializable {
         this.announcementList = announcementList;
     }
 
-    public ManageAnnouncementsBean getAnnouncementBean() {
+    public ManageAnnouncementsBeanLocal getAnnouncementBean() {
         return announcementBean;
     }
 
-    public void setAnnouncementBean(ManageAnnouncementsBean announcementBean) {
+    public void setAnnouncementBean(ManageAnnouncementsBeanLocal announcementBean) {
         this.announcementBean = announcementBean;
     }
 
@@ -264,11 +264,11 @@ public class BroadcastManagedBean implements Serializable {
         this.idString = idString;
     }
 
-    public ManageEventsBean getEventBean() {
+    public ManageEventsBeanLocal getEventBean() {
         return eventBean;
     }
 
-    public void setEventBean(ManageEventsBean eventBean) {
+    public void setEventBean(ManageEventsBeanLocal eventBean) {
         this.eventBean = eventBean;
     }
     
