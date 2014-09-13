@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,5 +17,7 @@ import javax.ejb.Local;
 public interface StockManagerLocal {
 
     public boolean addMaterial();
+
+    public List displayMaterialList();
     
 }
