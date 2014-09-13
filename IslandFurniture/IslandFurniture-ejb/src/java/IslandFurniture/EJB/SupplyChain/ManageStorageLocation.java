@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.StorageLocation;
@@ -13,41 +12,43 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
- /**
- *      @author Kamilul Ashraf
+/**
+ * @author Kamilul Ashraf
  *
- *      List of Attributes for Storage Location
+ * List of Attributes for Storage Location
  *
- * 1.   Plant Number - Integer
- *      Plant/Store Number (eg. 1, 2, 3)
- * 
- * 2.   Storage Area Number - Integer
- *      Area Number (eg. 1, 2.. )
- * 
- * 3.   Storage Area Name - String
- *      Area Name (eg. Staging Area, Receiving Area)
- * 
- * 4.   Storage ID - String
- *      Storage ID (eg. A12, B55, C42.. )
- * 
- * 5.   Storage Type - String
- *      Type of Storage (eg. Public or Private)
- * 
- * 6.   Storage Description - String
- *      Description of Storage Space (eg. Usually store SKU 1234)
- *	
+ * 1. Plant Number - Integer Plant/Store Number (eg. 1, 2, 3)
+ *
+ * 2. Storage Area Number - Integer Area Number (eg. 1, 2.. )
+ *
+ * 3. Storage Area Name - String Area Name (eg. Staging Area, Receiving Area)
+ *
+ * 4. Storage ID - String Storage ID (eg. A12, B55, C42.. )
+ *
+ * 5. Storage Type - String Type of Storage (eg. Public or Private)
+ *
+ * 6. Storage Description - String Description of Storage Space (eg. Usually
+ * store SKU 1234)
+ *
  */
-
 @Stateful
-public class ManageStorageLocation implements ManageStorageLocationLocal  {
+public class ManageStorageLocation implements ManageStorageLocationLocal {
 
     @PersistenceContext
     EntityManager em;
-    
+
     private StorageLocation storageLocation;
-    
+
     @Override
-    public void createStorageLocation (Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription) {
+    public StorageLocation getStorageLocation(Long id) {
+        Query query = em.createQuery("FROM StorageLocation s where s.id=:id");
+        query.setParameter("id", id);
+        storageLocation = (StorageLocation) query.getSingleResult();
+        return storageLocation;
+    }
+
+    @Override
+    public void createStorageLocation(Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription) {
         storageLocation = new StorageLocation();
         storageLocation.setPlantNumber(plantNumber);
         storageLocation.setStorageAreaNumber(storageAreaNumber);
@@ -58,15 +59,35 @@ public class ManageStorageLocation implements ManageStorageLocationLocal  {
         storageLocation.setStockUnits(null);
         em.persist(storageLocation);
     }
-   
+
+    @Override
+    public void editStorageLocation(Long id, Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription) {
+        storageLocation = getStorageLocation(id);
+        storageLocation.setPlantNumber(plantNumber);
+        storageLocation.setStorageAreaNumber(storageAreaNumber);
+        storageLocation.setStorageAreaName(storageAreaName);
+        storageLocation.setStorageID(storageID);
+        storageLocation.setStorageType(storageType);
+        storageLocation.setStorageDescription(storageDescription);
+        storageLocation.setStockUnits(null);
+        em.merge(storageLocation);
+        em.flush();
+    }
+
+    @Override
+    public void deleteStorageLocation(Long id) {
+        storageLocation = getStorageLocation(id);
+        em.remove(storageLocation);
+        em.flush();
+    }
+
     @Override
     public List<StorageLocation> viewStorageLocation() {
         Query q = em.createQuery("SELECT s " + "FROM StorageLocation s");
         return q.getResultList();
-        
+
     }
-    
-    
+
     // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+// "Insert Code > Add Business Method")
 }

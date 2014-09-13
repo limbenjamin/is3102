@@ -28,25 +28,25 @@ public class storageLocationManagedBean {
      * Creates a new instance of storageLocationManagedBean
      */
    
+    private Long id;
     private Integer plantNumber;
     private Integer storageAreaNumber;
     private String storageAreaName;
     private String storageID;
     private String storageType;
     private String storageDescription;
-    private List<StorageLocation> storageLocation;
+    private List<StorageLocation> storageLocationList;
     
     @EJB
     public ManageStorageLocationLocal mslr;
     
     @PostConstruct
     public void init(){
-       storageLocation = mslr.viewStorageLocation();
+       storageLocationList = mslr.viewStorageLocation();
     }
     
     public String addStorageLocation() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();       
-        
         plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
         storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
         storageAreaName = request.getParameter("storageForm:storageAreaName");
@@ -57,7 +57,36 @@ public class storageLocationManagedBean {
         mslr.createStorageLocation(plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
         return "storagelocation";
     }
+    
+        public String deleteStorageLocation() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();       
+        id = Long.parseLong(request.getParameter("deleteStorageForm:id"));
+        mslr.deleteStorageLocation(id);
+        return "storagelocation";
+    }
+        
+        public String editStorageLocation() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        id = Long.parseLong(request.getParameter("deleteStorageForm:id"));
+        plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
+        storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
+        storageAreaName = request.getParameter("storageForm:storageAreaName");
+        storageID = request.getParameter("storageForm:storageID");
+        storageType = request.getParameter("storageForm:storageType");
+        storageDescription = request.getParameter("storageForm:storageDescription");
 
+        mslr.editStorageLocation(id, plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
+        return "storagelocation";
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public Integer getPlantNumber() {
         return plantNumber;
     }
@@ -114,12 +143,13 @@ public class storageLocationManagedBean {
         this.mslr = mslr;
     }
 
-    public List<StorageLocation> getStorageLocation() {
-        return storageLocation;
+    public List<StorageLocation> getStorageLocationList() {
+        return storageLocationList;
     }
 
-    public void setStorageLocation(List<StorageLocation> storageLocation) {
-        this.storageLocation = storageLocation;
+    public void setStorageLocationList(List<StorageLocation> storageLocationList) {
+        this.storageLocationList = storageLocationList;
     }
 
+    
 }

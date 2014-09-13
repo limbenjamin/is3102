@@ -16,8 +16,12 @@ import java.util.List;
 public interface ManageStorageLocationLocal {
 
     void createStorageLocation (Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription);
-
+    void editStorageLocation (Long id, Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription);
+    void deleteStorageLocation(Long id);
+    
     List<StorageLocation> viewStorageLocation();
+    StorageLocation getStorageLocation(Long id);
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     
