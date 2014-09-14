@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.RetailItem;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -49,6 +50,17 @@ public class QueryMethods {
 
         try {
             return (FurnitureModel) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    public static RetailItem findRetailItemByName(EntityManager em, String retailItemName) {
+        Query q = em.createNamedQuery("findRetailItemByName");
+        q.setParameter("name", retailItemName);
+
+        try {
+            return (RetailItem) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }

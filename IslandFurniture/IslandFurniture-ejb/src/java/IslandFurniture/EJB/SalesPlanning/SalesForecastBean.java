@@ -8,6 +8,7 @@ package IslandFurniture.EJB.SalesPlanning;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,10 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         while (start.compareTo(end) <= 0) {
             // Grab list of furniture transactions in given store in a month
             List<FurnitureTransaction> listOfTrans = this.getStoreFurnitureTransactions(store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
+            
+            for(StockSupplied eachStockSupplied: store.getSuppliedWithFrom()){
+                
+            }
 
             // Display all transactions grabbed in the month
             DateFormat dateYearFormat = new SimpleDateFormat("MMM yyyy");

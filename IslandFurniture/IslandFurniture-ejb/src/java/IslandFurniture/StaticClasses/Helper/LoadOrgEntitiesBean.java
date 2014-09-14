@@ -7,7 +7,6 @@ package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Store;
 import javax.ejb.Stateless;
@@ -95,22 +94,6 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
 
     }
 
-    private FurnitureModel addFurnitureModel(String name) {
-        FurnitureModel furniture = (FurnitureModel) QueryMethods.findFurnitureByName(em, name);
-
-        if (furniture == null) {
-            furniture = new FurnitureModel();
-            furniture.setName(name);
-            em.persist(furniture);
-
-            return furniture;
-        } else {
-            System.out.println("Furniture Model \"" + name + "\" already exists");
-
-            return null;
-        }
-    }
-
     /**
      * Loads a sample data list of Country, Country Offices, Manufacturing
      * Facilities as well as Stores
@@ -121,16 +104,16 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     @TransactionAttribute(REQUIRED)
     public boolean loadSampleData() {
 
-        Country country;
-        Store store;
-
         try {
+            Country country;
+
             // Add Countries and Plants
             country = this.addCountry("Singapore", "Asia/Singapore");
             if (country != null) {
                 this.addCountryOffice("Singapore", country);
                 this.addStore("Alexandra", country);
                 this.addStore("Tampines", country);
+                this.addManufacturingFacility("Tuas", country);
             }
 
             country = this.addCountry("Malaysia", "Asia/Kuala_Lumpur");
@@ -177,19 +160,10 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
                 this.addStore("Vientiane", country);
             }
 
-            // Add some Furniture Models
-            this.addFurnitureModel("Swivel Chair");
-            this.addFurnitureModel("Round Table");
-            this.addFurnitureModel("Coffee Table");
-            this.addFurnitureModel("Study Table - Dinosaur Edition");
-            this.addFurnitureModel("Bedside Lamp H31");
-            this.addFurnitureModel("Bathroom Rug E64");
-            this.addFurnitureModel("Kitchen Stool");
-
             return true;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            
+
             return false;
         }
     }

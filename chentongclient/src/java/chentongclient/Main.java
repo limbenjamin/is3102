@@ -9,17 +9,21 @@ import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadStocksBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
 /**
- * IMPORTANT! Data Loading client for organisation data and transaction data. 
- * Around 16k lines of Transaction Detail data loaded when loading transaction 
+ * IMPORTANT! Data Loading client for organisation data and transaction data.
+ * Around 16k lines of Transaction Detail data loaded when loading transaction
  * data. Please do not run too many times.
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+
+    @EJB
+    private static LoadStocksBeanRemote loadStocksBean;
     @EJB
     private static LoadSalesForecastBeanRemote loadSalesForecastBean;
 
@@ -28,7 +32,7 @@ public class Main {
 
     @EJB
     private static LoadOrgEntitiesBeanRemote loadOrgEntitiesBean;
-    
+
     @EJB
     private static LoadStaffDataBeanRemote loadStaffDataBean;
 
@@ -38,13 +42,23 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Load Organisation Entities (Store, Manufacturing Facility, Country Office) & FurnitureModels
-        System.out.print("Load Organisation & Furniture Data? (y/n):");
+        // Load Organisation Entities (Store, Manufacturing Facility, Country Office)
+        System.out.print("Load Organisation Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadOrgEntitiesBean.loadSampleData()) {
-                System.out.println("Organisation Data & Furniture data loaded successfully!");
+                System.out.println("Organisation Data loaded successfully!");
             } else {
-                System.out.println("Failed to load Organisation and furniture data. Check for existing data and/or recreate islandFurniture database");
+                System.out.println("Failed to load Organisation data. Check for existing data and/or recreate islandFurniture database");
+            }
+        }
+
+        // Load Stock Entities (FurnitureModel, RetailItem, Materials) & StockSupplied relationships
+        System.out.print("Load Stock Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadStocksBean.loadSampleData()) {
+                System.out.println("Stock data loaded successfully!");
+            } else {
+                System.out.println("Failed to load Stock data. Check for existing data and/or recreate islandFurniture database");
             }
         }
 
@@ -57,7 +71,7 @@ public class Main {
                 System.out.println("Failed to load Transaction data. Check for existing data and/or recreate islandFurniture database");
             }
         }
-        
+
         // Load Staff Data
         System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
         System.out.print("Load Staff Data? (y/n):");
@@ -68,9 +82,9 @@ public class Main {
                 System.out.println("Failed to load staff data. Check for errors in server log.");
             }
         }
-        
+
         // Load Sales Forecasts from given set of Transactions
-       System.out.print("Generate sales forecasts? (y/n):");
+        System.out.print("Generate sales forecasts? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadSalesForecastBean.loadSampleData()) {
                 System.out.println("Sales Forecast data generated successfully from transactions!");
@@ -78,7 +92,7 @@ public class Main {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
             }
         }
-        
+
     }
 
 }

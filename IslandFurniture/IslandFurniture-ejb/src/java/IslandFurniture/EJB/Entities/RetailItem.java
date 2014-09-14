@@ -8,12 +8,22 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findRetailItemByName",
+            query = "SELECT a FROM RetailItem a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllRetailItemModels",
+            query = "SELECT a FROM RetailItem a")
+})
 public class RetailItem extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -39,7 +49,7 @@ public class RetailItem extends ProcuredStock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.RetailItem[ id=" + id + " ]";
+        return "RetailItem[ id=" + id + " ]";
     }
     
 }
