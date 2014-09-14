@@ -136,8 +136,8 @@
                                 <img src="#{loginManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
                                 <span class="user-info">
                                     #{dashManagedBean.name}<br></br>
-                                    Marketing Executive<br></br>
-                                    Singapore Office
+                                    #{dashManagedBean.plantName}<br></br>
+                                    #{dashManagedBean.countryName}
                                 </span>
                             </a>
                         </li>
@@ -214,8 +214,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-pencil"></i><span>Your Tasks</span>
+                            <a href="#{loginManagedBean.absolutepath}it/roleprivilege.xhtml">
+                                <i class="fa fa-pencil"></i><span>Manage Privileges</span>
                             </a>
                         </li>
                         <li>

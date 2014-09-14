@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Manage Roles and Privileges</h4>
+                                <hr></hr>       
+                            </div>                        
+                            <div class="col-md-5 col-sm-5">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    <span class="pull-right">
+                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newPrivilege">
+                                            <span class="fa fa-plus"></span> New
+                                        </a>
+                                    </span>
+                                    Privilege List for #{rolePrivilegeManaged2Bean.role.name}
+                                </div>
+                                  <ui:repeat value="#{rolePrivilegeManaged2Bean.privilegeList}" var="privilege">
+                                    <div class="list-group">                          
+                                      <a href="#" class="list-group-item">                                      
+                                          <h5><strong>#{privilege.name}</strong></h5>
+                                        <h:form>
+                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{rolePrivilegeManaged2Bean.removePrivilegeFromRole}">
+                                                    <f:param name="privilegeId" value="#{privilege.id}" />
+                                                </h:commandButton>
+                                        </h:form>
+                                      </a>                                  
+                                    </div>
+                                </ui:repeat>
+                              </section>
+                            </div>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="newPrivilege" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Privilege to Role</h4>
+                                  </div>
+                                  <h:form id="privilegeForm" class="form-horizontal">
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Privilege Name: </label>
+                                            <div class="col-sm-9 inner-addon right-addon">
+                                              <i class="glyphicon glyphicon-bookmark"></i>
+                                                <h:selectOneMenu id="privilegeName">
+                                                    <c:forEach var="i" begin="0" end="#{rolePrivilegeManaged2Bean.globalPrivilegeList.size()-1}">
+                                                        <f:selectItem itemLabel="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" itemValue="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" />
+                                                    </c:forEach>
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{rolePrivilegeManaged2Bean.addPrivilegeToRole}" class="btn btn-success" value="Add Privilege"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
+                            </div>
+                           
+                                                  
+                        </div>                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+
