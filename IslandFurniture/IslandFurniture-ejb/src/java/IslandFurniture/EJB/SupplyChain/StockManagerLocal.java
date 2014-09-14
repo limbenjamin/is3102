@@ -16,10 +16,10 @@ import javax.ejb.Local;
 @Local
 public interface StockManagerLocal {
 
-    public boolean addMaterial();
-
     public List displayMaterialList();
 
     public boolean updateMaterial(Long id, String name, Double weight);
+
+    public boolean addMaterial(String name, Double weight);
     
 }

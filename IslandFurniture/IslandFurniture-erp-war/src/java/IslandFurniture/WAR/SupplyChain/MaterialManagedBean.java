@@ -54,14 +54,19 @@ public class MaterialManagedBean implements Serializable {
     }
     
     public boolean addMaterial() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("MaterialManagedBean: 1");
-        stockManager.addMaterial();
+        String name = request.getParameter("addMaterialForm:name");
+        Double weight = Double.parseDouble(request.getParameter("addMaterialForm:weight"));
+        stockManager.addMaterial(name, weight);
         return true;
     }
     public boolean editMaterial() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Long id = Long.parseLong(request.getParameter("editMaterialForm:id"));
-        stockManager.updateMaterial(id, "here", null);
+        String name = request.getParameter("editMaterialForm:name");
+        Double weight = Double.parseDouble(request.getParameter("editMaterialForm:weight"));
+        stockManager.updateMaterial(id, name, weight);
         return true;
     }
     public List<Material> displayMaterialList() {

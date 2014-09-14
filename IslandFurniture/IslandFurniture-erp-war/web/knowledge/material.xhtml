@@ -13,9 +13,11 @@ and open the template in the editor.
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <h2>Add Material</h2>
-        <h:form>
+        <h:form id="addMaterialForm">
             <label>Name</label>
             <h:inputText id="name"></h:inputText>
+            <label>Weight</label>
+            <h:inputText id="weight"></h:inputText>
             <h:commandButton action="#{materialManagedBean.addMaterial()}"></h:commandButton>
             
         </h:form>

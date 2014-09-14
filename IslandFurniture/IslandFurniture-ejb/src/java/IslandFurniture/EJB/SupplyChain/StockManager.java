@@ -22,14 +22,14 @@ public class StockManager implements StockManagerLocal {
     @PersistenceContext
     EntityManager em;
     
-    public boolean addMaterial() {
+    public boolean addMaterial(String name, Double weight) {
         Material material;
         try{
             System.out.println("StockManager: 1");
             material = new Material();
-            System.out.println("StockManager: 2");
+            material.setMaterialName(name);
+            material.setMaterialWeight(weight);
             em.persist(material);
-            System.out.println("StockManager: 3");
             return true;
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -52,11 +52,11 @@ public class StockManager implements StockManagerLocal {
         try {
             material = em.find(Material.class, id);
             if(name != null) {
-                System.out.println("Changing name");
+                System.out.println("Changing name to " + name);
                 material.setMaterialName(name);
             }
             if(weight != null) {
-                System.out.println("Changing weight");
+                System.out.println("Changing weight to " + weight);
                 material.setMaterialWeight(weight);
             }
             return true;
