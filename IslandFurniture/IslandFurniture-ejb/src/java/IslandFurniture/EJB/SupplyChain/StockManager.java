@@ -47,4 +47,22 @@ public class StockManager implements StockManagerLocal {
             return null;
         }
     }
+    public boolean updateMaterial(Long id, String name, Double weight) {
+        Material material;
+        try {
+            material = em.find(Material.class, id);
+            if(name != null) {
+                System.out.println("Changing name");
+                material.setMaterialName(name);
+            }
+            if(weight != null) {
+                System.out.println("Changing weight");
+                material.setMaterialWeight(weight);
+            }
+            return true;
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
 }

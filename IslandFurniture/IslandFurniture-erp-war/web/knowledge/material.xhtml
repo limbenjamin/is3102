@@ -9,7 +9,8 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <h2>Add Material</h2>
         <h:form>
@@ -18,9 +19,41 @@ and open the template in the editor.
             <h:commandButton action="#{materialManagedBean.addMaterial()}"></h:commandButton>
             
         </h:form>
-        <ui:repeat value="#{materialManagedBean.displayMaterialList()}" var="material">
-            <h5>#{material.id}</h5>
-            <p>#{material.name}</p>
-        </ui:repeat>
+        <br></br><br></br>
+        <h2>Material List</h2>
+        <h:dataTable value="#{materialManagedBean.displayMaterialList()}" var="material">
+            <h:column>
+                <h:dataTable value="#{materialManagedBean.rowCounter()}" var="i">
+                    <h:column>
+                        <f:facet name="header">Sn</f:facet>
+                        <h:outputText value="#{(i+1)/3}"></h:outputText>
+                    </h:column>
+                </h:dataTable>
+            </h:column>
+            <h:column>
+                <f:facet name="header">ID</f:facet>
+                #{material.id}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                #{material.materialName}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Weight</f:facet>
+                #{material.materialWeight}
+            </h:column>
+        
+        </h:dataTable>
+        <br></br><br></br>
+        <h2>Edit Material</h2>
+        <h:form id="editMaterialForm">
+            <label>ID</label>
+            <h:inputText id="id"></h:inputText>
+            <label>Name</label>
+            <h:inputText id="name"></h:inputText>
+            <label>Weight</label>
+            <h:inputText id="weight"></h:inputText>
+            <h:commandButton action="#{materialManagedBean.editMaterial()}"></h:commandButton>
+        </h:form>
     </h:body>
 </html>

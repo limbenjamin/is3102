@@ -15,6 +15,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -25,6 +27,23 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class MaterialManagedBean implements Serializable {
     private List<Material> materialList = null;
+    private int rowCount = 1;
+
+    public List<Material> getMaterialList() {
+        return materialList;
+    }
+
+    public void setMaterialList(List<Material> materialList) {
+        this.materialList = materialList;
+    }
+
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public void setRowCount(int rowCount) {
+        this.rowCount = rowCount;
+    }
     @EJB
     private StockManagerLocal stockManager;
     
@@ -37,16 +56,21 @@ public class MaterialManagedBean implements Serializable {
     public boolean addMaterial() {
         System.out.println("MaterialManagedBean: 1");
         stockManager.addMaterial();
-        System.out.println("MaterialManagedBean: 2 ");
-        materialList = stockManager.displayMaterialList();
         return true;
     }
     public boolean editMaterial() {
-        
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Long id = Long.parseLong(request.getParameter("editMaterialForm:id"));
+        stockManager.updateMaterial(id, "here", null);
         return true;
     }
     public List<Material> displayMaterialList() {
         System.out.println("MaterialManagedBean.displayMaterialList(): 1");
+        materialList = stockManager.displayMaterialList();
         return materialList;
+    }
+    public int rowCounter() {
+        System.out.println(rowCount);
+        return rowCount++;
     }
 }
