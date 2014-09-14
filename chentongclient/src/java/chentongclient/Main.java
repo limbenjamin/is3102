@@ -62,7 +62,7 @@ public class Main {
             }
         }
 
-        // Load Transaction Data (Furniture Only for now)
+        // Load Transaction Data (Furniture & Retail Items only for now)
         System.out.print("Load Transaction Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadTransactionBean.loadSampleData()) {

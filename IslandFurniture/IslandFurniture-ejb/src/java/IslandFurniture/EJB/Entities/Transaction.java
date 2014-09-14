@@ -17,6 +17,8 @@ import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -27,6 +29,12 @@ import javax.persistence.TemporalType;
 @Entity
 @IdClass(TransactionPK.class)
 @Inheritance(strategy = InheritanceType.JOINED)
+@NamedQueries({
+    @NamedQuery(
+            // Fetches all Transactions from specified store falling between startDate and endDate
+            name = "getStoreTransactions",
+            query = "SELECT a FROM Transaction a WHERE a.transTime >= :startDate AND a.transTime <= :endDate AND a.store = :store")
+})
 public abstract class Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;

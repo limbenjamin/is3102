@@ -100,7 +100,7 @@ public class Store extends Plant implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Store[ id=" + id + " ]";
+        return "Store[ id=" + id + " ]";
     }
 
     // Entity Callbacks

@@ -5,11 +5,12 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
-import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.EJB.Entities.Transaction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,18 +32,23 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private List<FurnitureTransaction> getStoreFurnitureTransactions(Store store, Month month, int year) {
+    private List<Transaction> getStoreTransactions(Store store, Month month, int year) {
         Calendar start = Calendar.getInstance(TimeZone.getTimeZone(store.getCountry().getTimeZoneID()));
         Calendar end = Calendar.getInstance(TimeZone.getTimeZone(store.getCountry().getTimeZoneID()));
         start.set(year, month.value, 1);
         end.set(year, month.value, end.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-        Query q = em.createNamedQuery("getStoreFurnitureTransactions");
+        Query q = em.createNamedQuery("getStoreTransactions");
         q.setParameter("store", store);
         q.setParameter("startDate", start, TemporalType.DATE);
         q.setParameter("endDate", end, TemporalType.DATE);
 
-        return (List<FurnitureTransaction>) q.getResultList();
+        return (List<Transaction>) q.getResultList();
+    }
+    
+    private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, Store store, Month month, int year){
+        
+        return null;
     }
 
     @Override
@@ -54,19 +60,19 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         end.set(endYear, endMonth.value, 1);
 
         while (start.compareTo(end) <= 0) {
-            // Grab list of furniture transactions in given store in a month
-            List<FurnitureTransaction> listOfTrans = this.getStoreFurnitureTransactions(store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
-            
-            for(StockSupplied eachStockSupplied: store.getSuppliedWithFrom()){
-                
+            for (StockSupplied eachStockSupplied : store.getSuppliedWithFrom()) {
+
             }
+
+            // Grab list of furniture transactions in given store in a month
+            List<Transaction> listOfTrans = this.getStoreTransactions(store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
 
             // Display all transactions grabbed in the month
             DateFormat dateYearFormat = new SimpleDateFormat("MMM yyyy");
             System.out.println("--------");
             System.out.println(dateYearFormat.format(start.getTime()));
             System.out.println("--------");
-            for (FurnitureTransaction eachTrans : listOfTrans) {
+            for (Transaction eachTrans : listOfTrans) {
                 System.out.println("Transaction Id: " + eachTrans.getId());
                 System.out.println("Store: " + eachTrans.getStore().getName());
 

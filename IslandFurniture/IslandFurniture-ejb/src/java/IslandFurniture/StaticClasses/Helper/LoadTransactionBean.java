@@ -8,6 +8,9 @@ package IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
+import IslandFurniture.EJB.Entities.RetailItem;
+import IslandFurniture.EJB.Entities.RetailItemTransaction;
+import IslandFurniture.EJB.Entities.RetailItemTransactionDetail;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,8 +44,6 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
         em.persist(fTrans);
 
-        System.out.println(fTransDetails.get(0).getFurnitureTransaction());
-
         return fTrans;
     }
 
@@ -54,23 +55,49 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         return fTransDetail;
     }
 
+    private RetailItemTransaction addRetailItemTransaction(Store store, List<RetailItemTransactionDetail> riTransDetails, Calendar transTime) {
+        RetailItemTransaction riTrans = new RetailItemTransaction();
+        riTrans.setStore(store);
+        riTrans.setTransTime(transTime);
+        for (RetailItemTransactionDetail eachDetail : riTransDetails) {
+            eachDetail.setRetailItemTransaction(riTrans);
+        }
+        riTrans.setRetailItemTransactionDetails(riTransDetails);
+
+        em.persist(riTrans);
+
+        return riTrans;
+    }
+
+    private RetailItemTransactionDetail addRetailItemTransactionDetail(RetailItem retailItem, int qty) {
+        RetailItemTransactionDetail riTransDetail = new RetailItemTransactionDetail();
+        riTransDetail.setRetailItem(retailItem);
+        riTransDetail.setQty(qty);
+
+        return riTransDetail;
+    }
+
     @Override
     @TransactionAttribute(REQUIRED)
     public boolean loadSampleData() {
-
-        FurnitureTransaction fTrans;
-        List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
 
         try {
             // Add Transactions for stores
             Calendar cal;
             Random rand = new Random(1); // Seed to ensure always same sample transactions
+
+            List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
+            List<RetailItemTransactionDetail> riTransDetails = new ArrayList();
+
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
             List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
+            List<RetailItem> retailItems = (List<RetailItem>) em.createNamedQuery("getAllRetailItems").getResultList();
 
             for (int i = 0; i < 800; i++) {
                 for (Store eachStore : stores) {
+                    // Add Furniture Transaction
                     fTransDetails.clear();
+
                     for (FurnitureModel fm : furnitureModels) {
                         if (rand.nextBoolean()) {
                             fTransDetails.add(this.addFurnitureTransactionDetail(fm, rand.nextInt(50) + 1));
@@ -79,11 +106,29 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
                     if (!fTransDetails.isEmpty()) {
                         cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
-                        
+
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
                         cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        
-                        fTrans = this.addFurnitureTransaction(eachStore, fTransDetails, cal);
+
+                        this.addFurnitureTransaction(eachStore, fTransDetails, cal);
+                    }
+
+                    // Add Retail Item Transaction
+                    riTransDetails.clear();
+
+                    for (RetailItem ri : retailItems) {
+                        if (rand.nextBoolean()) {
+                            riTransDetails.add(this.addRetailItemTransactionDetail(ri, rand.nextInt(50) + 1));
+                        }
+                    }
+
+                    if (!riTransDetails.isEmpty()) {
+                        cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+
+                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+
+                        this.addRetailItemTransaction(eachStore, riTransDetails, cal);
                     }
                 }
             }
@@ -91,7 +136,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             return true;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            
+
             return false;
         }
 

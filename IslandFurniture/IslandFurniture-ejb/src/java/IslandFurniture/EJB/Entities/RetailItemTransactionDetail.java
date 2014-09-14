@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -25,10 +26,12 @@ public class RetailItemTransactionDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer qty;
+
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name="TRANSACTION_ID", referencedColumnName="ID"),
-        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID")
+        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
+        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
     })
     private RetailItemTransaction retailItemTransaction;
     @ManyToOne
@@ -42,6 +45,14 @@ public class RetailItemTransactionDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 
     public RetailItemTransaction getRetailItemTransaction() {
@@ -90,7 +101,12 @@ public class RetailItemTransactionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.RetailItemTransactionDetail[ id=" + id + " ]";
+        return "RetailItemTransactionDetail[ id=" + id + " ]";
     }
 
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

@@ -131,7 +131,7 @@ public abstract class Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Stock[ id=" + id + " ]";
+        return "Stock[ id=" + id + " ]";
     }
 
 }

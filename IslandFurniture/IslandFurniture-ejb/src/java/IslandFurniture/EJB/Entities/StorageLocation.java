@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
  /**
  *      @author Kamilul Ashraf
@@ -146,7 +147,13 @@ public class StorageLocation implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.StorageLocation[ id=" + id + " ]";
+        return "StorageLocation[ id=" + id + " ]";
     }
     
+    // Entity Callbacks
+
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

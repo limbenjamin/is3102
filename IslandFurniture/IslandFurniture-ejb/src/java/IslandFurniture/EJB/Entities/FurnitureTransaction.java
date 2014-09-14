@@ -28,7 +28,7 @@ import javax.persistence.PostPersist;
 public class FurnitureTransaction extends Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy = "furnitureTransaction", cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "furnitureTransaction", cascade={CascadeType.ALL})
     private List<FurnitureTransactionDetail> furnitureTransactionDetails;
 
     public List<FurnitureTransactionDetail> getFurnitureTransactionDetails() {

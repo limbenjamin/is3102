@@ -12,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
 
@@ -23,16 +21,6 @@ import javax.persistence.PostPersist;
  */
 @Entity
 @IdClass(StockSuppliedPK.class)
-@NamedQueries({
-    @NamedQuery(
-            // Grabs all the StockSupplied to Store
-            name = "getStockSuppliedToStore",
-            query = "SELECT a FROM StockSupplied a WHERE a.store = :store"),
-    @NamedQuery(
-            // Grabs all the StockSupplied by Manufacturing Facility
-            name = "getStockSuppliedByMF",
-            query = "SELECT a FROM StockSupplied a WHERE a.manufacturingFacility = :mf")
-})
 public class StockSupplied implements Serializable {
 
     private static final long serialVersionUID = 1L;
