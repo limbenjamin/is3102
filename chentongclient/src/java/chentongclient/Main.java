@@ -14,9 +14,9 @@ import java.util.Scanner;
 import javax.ejb.EJB;
 
 /**
- * IMPORTANT! Data Loading client for organisation data and transaction data.
- * Around 16k lines of Transaction Detail data loaded when loading transaction
- * data. Please do not run too many times.
+ * IMPORTANT! Data Loading client for all types of sample data. Some segments do
+ * not check for duplicates (e.g. transactions), hence please do not run too 
+ * many times (might overload your database)!
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
@@ -56,7 +56,7 @@ public class Main {
         System.out.print("Load Stock Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadStocksBean.loadSampleData()) {
-                System.out.println("Stock data loaded successfully!");
+                System.out.println("Stock data (Furniture Model, Retail Items, Materials, StockSupplied relationships) loaded successfully!");
             } else {
                 System.out.println("Failed to load Stock data. Check for existing data and/or recreate islandFurniture database");
             }
@@ -77,7 +77,7 @@ public class Main {
         System.out.print("Load Staff Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadStaffDataBean.loadSampleData()) {
-                System.out.println("Staff data generated successfully from transactions!");
+                System.out.println("Staff data loaded successfully!");
             } else {
                 System.out.println("Failed to load staff data. Check for errors in server log.");
             }

@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -21,10 +21,11 @@ import javax.persistence.NamedQuery;
             name = "findRetailItemByName",
             query = "SELECT a FROM RetailItem a WHERE a.name = :name"),
     @NamedQuery(
-            name = "getAllRetailItemModels",
+            name = "getAllRetailItems",
             query = "SELECT a FROM RetailItem a")
 })
 public class RetailItem extends ProcuredStock implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -51,5 +52,10 @@ public class RetailItem extends ProcuredStock implements Serializable {
     public String toString() {
         return "RetailItem[ id=" + id + " ]";
     }
-    
+
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

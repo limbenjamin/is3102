@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
@@ -19,6 +21,11 @@ import javax.persistence.PostPersist;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name="getAllMFs",
+        query="SELECT a FROM ManufacturingFacility a")
+})
 public class ManufacturingFacility extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
     @OneToOne(mappedBy="supplierFor")
@@ -84,7 +91,7 @@ public class ManufacturingFacility extends Plant implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.ManufacturingFacility[ id=" + id + " ]";
+        return "ManufacturingFacility[ id=" + id + " ]";
     }
     
     // Extra Methods

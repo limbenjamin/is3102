@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -20,15 +19,18 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="Material.getMaterialList",
-            query="SELECT m FROM Material m")
+    @NamedQuery(
+            name = "findMaterialByName",
+            query = "SELECT a FROM Material a WHERE a.name = :name"),
+    @NamedQuery(name = "Material.getMaterialList",
+            query = "SELECT m FROM Material m")
 })
 public class Material extends ProcuredStock implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Id
-    private Long id;
+
     private String materialName;
-    private Double  materialWeight;
+    private Double materialWeight;
 
     public Double getMaterialWeight() {
         return materialWeight;
@@ -45,23 +47,17 @@ public class Material extends ProcuredStock implements Serializable {
     public void setMaterialName(String materialName) {
         this.materialName = materialName;
     }
-    @OneToMany(mappedBy="material")
+    @OneToMany(mappedBy = "material")
     private List<WeeklyMRPRecord> weeklyMRPRecords;
-    
+
     public Material() {
         System.out.println("Material: create");
     }
+
     public Material(String name) {
         this.name = name;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
     public List<WeeklyMRPRecord> getWeeklyMRPRecords() {
         return weeklyMRPRecords;
     }
@@ -94,5 +90,11 @@ public class Material extends ProcuredStock implements Serializable {
     public String toString() {
         return "Material[ id=" + id + " ]";
     }
-    
+
+    // Entity Callbacks
+
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }

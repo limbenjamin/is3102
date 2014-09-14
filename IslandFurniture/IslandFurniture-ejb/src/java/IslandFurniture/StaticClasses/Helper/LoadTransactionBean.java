@@ -64,7 +64,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         try {
             // Add Transactions for stores
             Calendar cal;
-            Random rand = new Random();
+            Random rand = new Random(1); // Seed to ensure always same sample transactions
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
             List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
 

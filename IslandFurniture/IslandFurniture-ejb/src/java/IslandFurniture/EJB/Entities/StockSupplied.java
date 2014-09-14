@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Entities.StockSuppliedPK;
@@ -13,7 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -21,17 +23,27 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @IdClass(StockSuppliedPK.class)
+@NamedQueries({
+    @NamedQuery(
+            // Grabs all the StockSupplied to Store
+            name = "getStockSuppliedToStore",
+            query = "SELECT a FROM StockSupplied a WHERE a.store = :store"),
+    @NamedQuery(
+            // Grabs all the StockSupplied by Manufacturing Facility
+            name = "getStockSuppliedByMF",
+            query = "SELECT a FROM StockSupplied a WHERE a.manufacturingFacility = :mf")
+})
 public class StockSupplied implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @OneToOne
     private Stock stock;
     @Id
     @ManyToOne
-    private ManufacturingFacility manufacturingFacility;
-    @Id
-    @ManyToOne
     private Store store;
+    @ManyToOne
+    private ManufacturingFacility manufacturingFacility;
 
     public Stock getStock() {
         return stock;
@@ -39,14 +51,6 @@ public class StockSupplied implements Serializable {
 
     public void setStock(Stock stock) {
         this.stock = stock;
-    }
-
-    public ManufacturingFacility getManufacturingFacility() {
-        return manufacturingFacility;
-    }
-
-    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
-        this.manufacturingFacility = manufacturingFacility;
     }
 
     public Store getStore() {
@@ -57,12 +61,19 @@ public class StockSupplied implements Serializable {
         this.store = store;
     }
 
+    public ManufacturingFacility getManufacturingFacility() {
+        return manufacturingFacility;
+    }
+
+    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
+        this.manufacturingFacility = manufacturingFacility;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + Objects.hashCode(this.stock);
-        hash = 89 * hash + Objects.hashCode(this.manufacturingFacility);
-        hash = 89 * hash + Objects.hashCode(this.store);
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.stock);
+        hash = 41 * hash + Objects.hashCode(this.store);
         return hash;
     }
 
@@ -73,12 +84,17 @@ public class StockSupplied implements Serializable {
             return false;
         }
         StockSupplied other = (StockSupplied) object;
-        return this.stock.equals(other.stock) && this.manufacturingFacility.equals(other.manufacturingFacility) && this.store.equals(other.store);
+        return this.stock.equals(other.stock) && this.store.equals(other.store);
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.StockSupplied[ id=" + this.stock.getId() + ", " + this.manufacturingFacility.getId() + ", " + this.store.getId() + " ]";
+        return "StockSupplied[ id=" + this.stock + ", " + this.store + " ]";
     }
-    
+
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
+    }
 }
