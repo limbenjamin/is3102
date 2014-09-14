@@ -48,7 +48,8 @@ public class DashManagedBean implements Serializable {
     private LocalDateTime localDateTime;
     private Instant instant;
     private List<LocalDateTime> localDateTimeList;
-
+    private String plantName = null;
+    private String countryName = null;
     private List<Announcement> announcementList = null;
     
     @EJB
@@ -69,6 +70,8 @@ public class DashManagedBean implements Serializable {
         this.staff = staffBean.getStaff(username);
         this.notes = staff.getNotes();
         this.name = staff.getName();
+        this.plantName = staff.getPlant().getName();
+        this.countryName = staff.getPlant().getCountry().getName();
         this.lastLogon = staff.getLastLogon();
         this.todoList = staff.getTodoList();
         this.announcementList = announcementBean.getActiveAnnouncements();
@@ -257,6 +260,22 @@ public class DashManagedBean implements Serializable {
 
     public void setLocalDateTimeList(List<LocalDateTime> localDateTimeList) {
         this.localDateTimeList = localDateTimeList;
+    }
+
+    public String getPlantName() {
+        return plantName;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
     
     
