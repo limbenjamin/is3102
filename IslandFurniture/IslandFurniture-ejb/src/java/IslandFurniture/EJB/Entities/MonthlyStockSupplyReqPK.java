@@ -19,6 +19,13 @@ public class MonthlyStockSupplyReqPK implements Serializable {
     private Long store;
     private Month month;
     private Integer year;
+
+    public MonthlyStockSupplyReqPK(Long stock, Long store, Month month, Integer year) {
+        this.stock = stock;
+        this.store = store;
+        this.month = month;
+        this.year = year;
+    }
     
     @Override
     public boolean equals(Object object) {

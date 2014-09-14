@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.RetailItemTransaction;
 import IslandFurniture.EJB.Entities.RetailItemTransactionDetail;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,17 +91,20 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             List<RetailItemTransactionDetail> riTransDetails = new ArrayList();
 
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
-            List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
-            List<RetailItem> retailItems = (List<RetailItem>) em.createNamedQuery("getAllRetailItems").getResultList();
 
-            for (int i = 0; i < 800; i++) {
-                for (Store eachStore : stores) {
-                    // Add Furniture Transaction
+            for (Store eachStore : stores) {
+                for (int i = 0; i < 800; i++) {
+                    // Add Furniture Transaction & Retail Item Transaction
                     fTransDetails.clear();
+                    riTransDetails.clear();
 
-                    for (FurnitureModel fm : furnitureModels) {
+                    for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
-                            fTransDetails.add(this.addFurnitureTransactionDetail(fm, rand.nextInt(50) + 1));
+                            if (ss.getStock() instanceof FurnitureModel) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(50) + 1));
+                            } else if (ss.getStock() instanceof RetailItem) {
+                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(50) + 1));
+                            }
                         }
                     }
 
@@ -111,15 +115,6 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                         cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
 
                         this.addFurnitureTransaction(eachStore, fTransDetails, cal);
-                    }
-
-                    // Add Retail Item Transaction
-                    riTransDetails.clear();
-
-                    for (RetailItem ri : retailItems) {
-                        if (rand.nextBoolean()) {
-                            riTransDetails.add(this.addRetailItemTransactionDetail(ri, rand.nextInt(50) + 1));
-                        }
                     }
 
                     if (!riTransDetails.isEmpty()) {

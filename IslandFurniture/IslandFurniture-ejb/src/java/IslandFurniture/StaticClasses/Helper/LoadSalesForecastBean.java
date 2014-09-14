@@ -31,7 +31,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
         System.out.println(storeToForecast);
         salesForecastBean.generateSalesFigures(storeToForecast, Month.NOV, 2013, Month.JAN, 2014);
 
-        return false;
+        return false; // Stub - incomplete function
     }
 
 }

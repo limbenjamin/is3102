@@ -5,12 +5,15 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
+import IslandFurniture.EJB.Entities.RetailItemTransaction;
 import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Transaction;
+import IslandFurniture.EJB.Entities.TransactionPK;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,10 +48,23 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
         return (List<Transaction>) q.getResultList();
     }
-    
-    private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, Store store, Month month, int year){
+
+    private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, Store store, Month month, int year) {
+        MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(stock.getId(), store.getId(), month, year);
+
+        MonthlyStockSupplyReq mssr = em.find(MonthlyStockSupplyReq.class, mssrPK);
+
+        if (mssr == null) {
+            mssr = new MonthlyStockSupplyReq();
+            mssr.setStock(stock);
+            mssr.setStore(store);
+            mssr.setMonth(month);
+            mssr.setYear(year);
+
+            em.persist(mssr);
+        }
         
-        return null;
+        return mssr;
     }
 
     @Override
@@ -59,13 +75,45 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         Calendar end = Calendar.getInstance();
         end.set(endYear, endMonth.value, 1);
 
+        MonthlyStockSupplyReq mssr;
+        FurnitureTransaction fTrans;
+        RetailItemTransaction riTrans;
+        
+        Transaction a = em.find(Transaction.class, new TransactionPK(new Long(248), new Long(28)));
+        Calendar b = a.getTransTime();
+        b.setTimeZone(TimeZone.getTimeZone(a.getStore().getCountry().getTimeZoneID()));
+        
+        System.out.println(b.get(Calendar.HOUR_OF_DAY));
+
         while (start.compareTo(end) <= 0) {
-            for (StockSupplied eachStockSupplied : store.getSuppliedWithFrom()) {
-
-            }
-
-            // Grab list of furniture transactions in given store in a month
+//            for (StockSupplied eachStockSupplied : store.getSuppliedWithFrom()) {
+//                this.addMonthlyStockSupplyReq(eachStockSupplied.getStock(), store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
+//            }
+//
+            // Grab list of transactions in given store in a month
             List<Transaction> listOfTrans = this.getStoreTransactions(store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
+//
+//            // Loops through each transaction and increment qtySold in relevant MSSR
+//            for (Transaction eachTrans : listOfTrans) {
+//                if (eachTrans instanceof FurnitureTransaction) {
+//                    fTrans = (FurnitureTransaction) eachTrans;
+//
+//                    for (FurnitureTransactionDetail eachDetail : fTrans.getFurnitureTransactionDetails()) {
+//                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getFurnitureModel(), store, Month.getMonth(fTrans.getTransTime().get(Calendar.MONTH)), fTrans.getTransTime().get(Calendar.YEAR));
+//
+//                        mssr.setQtySold(mssr.getQtySold() + eachDetail.getQty());
+//                    }
+//
+//                } else if (eachTrans instanceof RetailItemTransaction) {
+//                    riTrans = (RetailItemTransaction) eachTrans;
+//
+//                    for (RetailItemTransactionDetail eachDetail : riTrans.getRetailItemTransactionDetails()) {
+//                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getRetailItem(), store, Month.getMonth(riTrans.getTransTime().get(Calendar.MONTH)), riTrans.getTransTime().get(Calendar.YEAR));
+//
+//                        mssr.setQtySold(mssr.getQtySold() + eachDetail.getQty());
+//                    }
+//                }
+//            }
 
             // Display all transactions grabbed in the month
             DateFormat dateYearFormat = new SimpleDateFormat("MMM yyyy");

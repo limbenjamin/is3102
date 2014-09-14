@@ -16,6 +16,11 @@ import java.util.Objects;
 public class TransactionPK implements Serializable {
     private Long id;
     private Long store;
+
+    public TransactionPK(Long id, Long store) {
+        this.id = id;
+        this.store = store;
+    }
     
     @Override
     public boolean equals(Object object) {
