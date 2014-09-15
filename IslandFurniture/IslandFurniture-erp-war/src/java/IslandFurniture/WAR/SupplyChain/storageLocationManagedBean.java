@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.Entities.StorageLocation;
@@ -27,7 +26,6 @@ public class storageLocationManagedBean {
     /**
      * Creates a new instance of storageLocationManagedBean
      */
-   
     private Long id;
     private Integer plantNumber;
     private Integer storageAreaNumber;
@@ -36,17 +34,17 @@ public class storageLocationManagedBean {
     private String storageType;
     private String storageDescription;
     private List<StorageLocation> storageLocationList;
-    
+
     @EJB
     public ManageStorageLocationLocal mslr;
-    
+
     @PostConstruct
-    public void init(){
-       storageLocationList = mslr.viewStorageLocation();
+    public void init() {
+        storageLocationList = mslr.viewStorageLocation();
     }
-    
+
     public String addStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();       
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
         storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
         storageAreaName = request.getParameter("storageForm:storageAreaName");
@@ -57,16 +55,15 @@ public class storageLocationManagedBean {
         mslr.createStorageLocation(plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
         return "storagelocation";
     }
-    
-        public String deleteStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();       
-        id = Long.parseLong(request.getParameter("deleteStorageForm:id"));
+
+    public String deleteStorageLocation() {
+        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mslr.deleteStorageLocation(id);
         return "storagelocation";
     }
-        
-        public String editStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    
+    public String editStorageLocation() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         id = Long.parseLong(request.getParameter("deleteStorageForm:id"));
         plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
         storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
@@ -86,7 +83,7 @@ public class storageLocationManagedBean {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Integer getPlantNumber() {
         return plantNumber;
     }
@@ -151,5 +148,4 @@ public class storageLocationManagedBean {
         this.storageLocationList = storageLocationList;
     }
 
-    
 }
