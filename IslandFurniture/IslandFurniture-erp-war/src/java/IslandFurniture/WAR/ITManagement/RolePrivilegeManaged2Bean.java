@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class RolePrivilegeManaged2Bean {
+public class RolePrivilegeManaged2Bean  implements Serializable  {
 
     
     private String username;
