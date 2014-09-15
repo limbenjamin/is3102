@@ -117,7 +117,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 
                 if (eachTrans instanceof FurnitureTransaction) {
                     fTrans = (FurnitureTransaction) eachTrans;
-                    System.out.println(fTrans.getFurnitureTransactionDetails().get(0));
+                    em.refresh(fTrans);
 
                     for (FurnitureTransactionDetail eachDetail : fTrans.getFurnitureTransactionDetails()) {
                         mssr = this.addMonthlyStockSupplyReq(eachDetail.getFurnitureModel(), store, Month.getMonth(fTrans.getTransTime().get(Calendar.MONTH)), fTrans.getTransTime().get(Calendar.YEAR));
@@ -130,6 +130,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
                 } else if (eachTrans instanceof RetailItemTransaction) {
                     riTrans = (RetailItemTransaction) eachTrans;
+                    em.refresh(riTrans);
 
                     for (RetailItemTransactionDetail eachDetail : riTrans.getRetailItemTransactionDetails()) {
                         mssr = this.addMonthlyStockSupplyReq(eachDetail.getRetailItem(), store, Month.getMonth(riTrans.getTransTime().get(Calendar.MONTH)), riTrans.getTransTime().get(Calendar.YEAR));
