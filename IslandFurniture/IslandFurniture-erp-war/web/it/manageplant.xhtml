@@ -10,21 +10,29 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newPlant">
+                                    <i class="fa fa-fw fa-plus"></i>New Plant
+                                </button>
                                 <h4>Plants</h4>
                                 <hr></hr>       
                             </div>                        
-                            <div class="col-md-9 col-sm-8">                                               
-                              <section class="panel">
+                            <div class="col-md-8">                                               
+                                <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                                  <li class="active"><a href="#stores" role="tab" data-toggle="tab">Stores</a></li>
+                                  <li><a href="#facilities" role="tab" data-toggle="tab">Manufacturing Facility</a></li>
+                                  <li><a href="#offices" role="tab" data-toggle="tab">Country Office</a></li>
+                                </ul>
+                                
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="stores">
+                                    
+                                <!-- Stores Tab -->
+                                <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
-                                    <span class="pull-right">
-                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newThread">
-                                            <span class="fa fa-plus"></span> New
-                                        </a>
-                                    </span>
-                                    Plant List
-                                </div>
-                                Store
+                                  This tab displays Island Furniture's stores worldwide
+                                </div>                                      
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.storeList}" var="store">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
@@ -41,7 +49,16 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                                Manufacturing Facility
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="facilities">
+                                    
+                                <!-- Manufacturing Facilities Tab -->
+                                <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                  This tab displays Island Furniture's manufacturing facilities worldwide
+                                </div>                                    
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
@@ -58,7 +75,16 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                                Country Office
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="offices">
+                                    
+                                <!-- Country Offices Tab -->
+                                <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                  This tab displays Island Furniture's country offices worldwide
+                                </div>                                    
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.coList}" var="co">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
@@ -75,12 +101,15 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                              </section>
-                            </div>
-
+                                </section>
+                                </div>
+                            </div>                                
+                                
+                                
+                            </div>                            
 
                             <!-- Modal -->
-                            <div class="modal fade" id="newThread" aria-hidden="true">
+                            <div class="modal fade" id="newPlant" aria-hidden="true">
                               <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">

@@ -195,6 +195,24 @@ input[type="checkbox"] {
     border:1px solid #777;
 }
 
+/******************************* dashboard tabs ***********************************/
+
+.dashboard-tabs {
+    border-bottom: transparent;
+}
+
+.dashboard-tabs>li>a {
+    background-color: #fff;
+    border: 1px solid #e3e6f3;
+    margin-right: 7px;
+}
+
+.dashboard-tabs>li.active>a, .dashboard-tabs>li.active>a:hover, .dashboard-tabs>li.active>a:focus{
+    color: #fff;
+    background-color: #2c3e50;
+    border-bottom: 1px solid #2c3e50;
+}
+
 /************************* dashboard receipt and transaction ***********************************/
 
 .tab-content .col-xs-12{
