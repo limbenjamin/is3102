@@ -27,9 +27,9 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
     @Override
     public boolean loadSampleData() {
-        Store storeToForecast = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Alexandra");
+        Store storeToForecast = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Canada"), "Toronto");
         System.out.println(storeToForecast);
-        salesForecastBean.generateSalesFigures(storeToForecast, Month.NOV, 2013, Month.JAN, 2014);
+        salesForecastBean.generateSalesFigures(storeToForecast, Month.DEC, 2013, Month.JAN, 2014);
 
         return false; // Stub - incomplete function
     }
