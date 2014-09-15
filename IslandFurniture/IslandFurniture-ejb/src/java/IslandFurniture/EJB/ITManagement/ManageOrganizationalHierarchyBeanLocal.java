@@ -51,4 +51,6 @@ public interface ManageOrganizationalHierarchyBeanLocal {
 
     List<Country> getCountries();
     
+    List<Plant> displayPlant();
+    
 }

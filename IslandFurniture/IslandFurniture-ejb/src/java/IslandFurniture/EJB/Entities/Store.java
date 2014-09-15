@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -28,15 +29,15 @@ public class Store extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "store")
-    private List<GoodsIssuedDocument> goodsIssuedDocument;
+    private List<GoodsIssuedDocument> goodsIssuedDocument = new ArrayList();
     @OneToMany(mappedBy = "store")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
     @OneToMany(mappedBy = "store")
-    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts;
+    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
     @ManyToMany
-    private List<Stock> sells;
+    private List<Stock> sells = new ArrayList();
     @OneToMany(mappedBy = "store")
-    private List<StockSupplied> suppliedWithFrom;
+    private List<StockSupplied> suppliedWithFrom = new ArrayList();
 
     public List<GoodsIssuedDocument> getGoodsIssuedDocument() {
         return goodsIssuedDocument;

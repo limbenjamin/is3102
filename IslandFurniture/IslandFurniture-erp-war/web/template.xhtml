@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css" id="skin"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/navigation.css"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/dashboard.css"></link> 
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
     
         <script src="#{loginManagedBean.absolutepath}assets/plugins/modernizr.js"></script>
     </h:head>
@@ -176,9 +175,27 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#{loginManagedBean.absolutepath}supplychain/storagelocation.xhtml">
-                                <i class="fa fa-star"></i><span>Manage Supply Chain</span>
+                            <a href="javascript:;">
+                                <i class="fa fa-star"></i>
+                                <span>Supply Chain<i class="fa fa-caret-down pull-right"></i></span>
                             </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="#{loginManagedBean.absolutepath}supplychain/storagelocation.xhtml">
+                                        <span>Manage Storage Locations</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#{loginManagedBean.absolutepath}supplychain/goodsissued.xhtml">
+                                        <span>Manage Goods Issued</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#{loginManagedBean.absolutepath}supplychain/goodsreceipt.xhtml">
+                                        <span>Manage Goods Receipt</span>
+                                    </a>
+                                </li>                                
+                            </ul>                            
                         </li>                        
                         <li>
                             <a href="javascript:;">
@@ -219,8 +236,8 @@
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-calendar"></i><span>Calendar of Events</span>
+                            <a href="#{loginManagedBean.absolutepath}it/managestaff.xhtml">
+                                <i class="fa fa-calendar"></i><span>Manage Staff</span>
                             </a>
                         </li>   
                         <li>
@@ -264,11 +281,13 @@
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/demo.js"></script>
         <!-- template scripts -->
         <script src="#{loginManagedBean.absolutepath}/assets/js/offscreen.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/js/navigation.js"></script>
+        <!-- for calendar, TODO: try to move to dash -->
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
+
     </h:body>
 </html>
 

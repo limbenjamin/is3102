@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,17 +34,17 @@ public abstract class Stock implements Serializable {
     protected String name;
 
     @OneToMany(mappedBy = "stock")
-    protected List<StockUnit> stockUnit;
+    protected List<StockUnit> stockUnit = new ArrayList();
     @OneToMany(mappedBy = "stock")
-    protected List<PlantStockInventory> planStockInventories;
+    protected List<PlantStockInventory> planStockInventories = new ArrayList();
     @OneToMany(mappedBy = "stock")
-    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs;
+    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
     @OneToMany
-    protected List<PriceInCountry> priceInCountry;
+    protected List<PriceInCountry> priceInCountry = new ArrayList();
     @ManyToMany(mappedBy = "produces")
-    protected List<ManufacturingFacility> producedBy;
+    protected List<ManufacturingFacility> producedBy = new ArrayList();
     @ManyToMany(mappedBy = "sells")
-    protected List<Store> soldBy;
+    protected List<Store> soldBy = new ArrayList();
 
     public Long getId() {
         return id;

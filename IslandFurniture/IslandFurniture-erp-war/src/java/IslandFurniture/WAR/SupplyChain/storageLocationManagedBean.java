@@ -7,12 +7,15 @@ package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.Entities.StorageLocation;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -21,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ManagedBean
 @ViewScoped
-public class storageLocationManagedBean {
+public class storageLocationManagedBean implements Serializable {
 
     /**
      * Creates a new instance of storageLocationManagedBean
@@ -34,6 +37,7 @@ public class storageLocationManagedBean {
     private String storageType;
     private String storageDescription;
     private List<StorageLocation> storageLocationList;
+    private StorageLocation storageLocation;
 
     @EJB
     public ManageStorageLocationLocal mslr;
@@ -41,6 +45,11 @@ public class storageLocationManagedBean {
     @PostConstruct
     public void init() {
         storageLocationList = mslr.viewStorageLocation();
+        System.out.println("Init");
+        
+        id = (Long)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("locationId");
+        
+        if(id != null) storageLocation = mslr.getStorageLocation(id);
     }
 
     public String addStorageLocation() {
@@ -51,7 +60,6 @@ public class storageLocationManagedBean {
         storageID = request.getParameter("storageForm:storageID");
         storageType = request.getParameter("storageForm:storageType");
         storageDescription = request.getParameter("storageForm:storageDescription");
-
         mslr.createStorageLocation(plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
         return "storagelocation";
     }
@@ -61,21 +69,39 @@ public class storageLocationManagedBean {
         mslr.deleteStorageLocation(id);
         return "storagelocation";
     }
-    
-    public String editStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        id = Long.parseLong(request.getParameter("deleteStorageForm:id"));
-        plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
-        storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
-        storageAreaName = request.getParameter("storageForm:storageAreaName");
-        storageID = request.getParameter("storageForm:storageID");
-        storageType = request.getParameter("storageForm:storageType");
-        storageDescription = request.getParameter("storageForm:storageDescription");
 
-        mslr.editStorageLocation(id, plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
-        return "storagelocation";
+    public void loadStorageLocation(ActionEvent event) {
+        System.out.println("This is the id: "+ id);
+        // id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+        //id = Long.parseLong(event.getComponent().getAttributes().get("id").toString());
+        id = (Long)event.getComponent().getAttributes().get("id");
+        System.out.println("the id is" + id);
+       storageLocation = mslr.getStorageLocation(id);
     }
-
+    
+    
+     public String editStorageLocation(ActionEvent event) throws IOException {
+     StorageLocation sl =  (StorageLocation)event.getComponent().getAttributes().get("slid");
+      
+     id = sl.getId();
+     plantNumber = sl.getPlantNumber();
+     storageAreaNumber = sl.getStorageAreaNumber();
+     storageAreaName = sl.getStorageAreaName();
+     storageID = sl.getStorageID();
+     storageType = sl.getStorageType();
+     storageDescription = sl.getStorageDescription();
+     
+     mslr.editStorageLocation(id, plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
+     FacesContext.getCurrentInstance().getExternalContext().redirect("storagelocation.xhtml");
+     return "storagelocation";
+     }
+     
+     public void storagelocationdetailActionListener(ActionEvent event) throws IOException
+     {
+         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("locationId", event.getComponent().getAttributes().get("locationId"));
+         FacesContext.getCurrentInstance().getExternalContext().redirect("storagelocationdetail.xhtml");
+     }
+     
     public Long getId() {
         return id;
     }
@@ -146,6 +172,14 @@ public class storageLocationManagedBean {
 
     public void setStorageLocationList(List<StorageLocation> storageLocationList) {
         this.storageLocationList = storageLocationList;
+    }
+
+    public StorageLocation getStorageLocation() {
+        return storageLocation;
+    }
+
+    public void setStorageLocation(StorageLocation storageLocation) {
+        this.storageLocation = storageLocation;
     }
 
 }

@@ -25,4 +25,5 @@ public interface ManageRolesBeanLocal {
     void addPrivilegeToRole(Long roleId, String privilegeName);
     void removePrivilegeFromRole(Long roleId, Long privilegeId);
     Role getRole(Long roleId);
+    Role getRoleFromName(String roleName);
 }

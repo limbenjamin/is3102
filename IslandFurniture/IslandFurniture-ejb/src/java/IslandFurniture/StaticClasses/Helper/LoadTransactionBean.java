@@ -97,7 +97,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     // Add Furniture Transaction & Retail Item Transaction
                     fTransDetails.clear();
                     riTransDetails.clear();
-
+                    
                     for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
                             if (ss.getStock() instanceof FurnitureModel) {
@@ -126,6 +126,8 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                         this.addRetailItemTransaction(eachStore, riTransDetails, cal);
                     }
                 }
+                
+                em.flush();
             }
 
             return true;

@@ -89,6 +89,11 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             stockSupplied.setStore(store);
             stockSupplied.setManufacturingFacility(mf);
             em.persist(stockSupplied);
+            store.getSuppliedWithFrom().add(stockSupplied);
+
+            if (mf != null) {
+                mf.getSupplyingWhatTo().add(stockSupplied);
+            }
 
             return stockSupplied;
         } else {
@@ -158,7 +163,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             this.addMaterial("Steel Knob 03", 65);
 
             // Add StockSupplied Relationship (Dependant on prior data loading
-            // of Organisation Entities
+            // of Organisation Entities)
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
             List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
             List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
@@ -178,6 +183,8 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                     }
                 }
             }
+
+            em.flush();
 
             return true;
         } catch (Exception ex) {

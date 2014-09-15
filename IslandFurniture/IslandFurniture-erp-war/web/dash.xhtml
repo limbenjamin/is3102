@@ -1,93 +1,162 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    
-    <h:body>
-        <ui:composition template="./template.xhtml">
-            <ui:define name="content">
-                <div class="row">
-                    <div class="col-md-9">
-                        <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
-                        <h4>Quick Links</h4>
-                        <hr></hr>
-                        <!-- Quick Links -->
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
-                                <h5>CRM Analytics</h5>
-                            </div></a>
-                        </div>       
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
-                                <h5>Sales Forecast</h5>
-                            </div></a>
-                        </div>    
-                        <div class="col-md-4"><a href="./common/messaging.xhtml">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
-                                <h5>Messages</h5>
-                            </div></a>
-                        </div> 
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
-                                <h5>CRM Operations</h5>
-                            </div></a>
-                        </div>    
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
-                                <h5>Transaction History</h5>
-                            </div></a>
-                        </div>
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:define name="content">
+        <h:outputScript target="body">
+            $(document).ready( function(){
+            var cTime = new Date(), month = cTime.getMonth()+1, year = cTime.getFullYear();
+              theMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              theDays = ["S", "M", "T", "W", "T", "F", "S"];
+              events = [
+                <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
+                    [
+                    "#{dashManagedBean.localDateTimeList.get(i).getDayOfMonth()}/"+month+"/"+year, 
+                        '#{dashManagedBean.eventList.get(i).name}', 
+                        '#', 
+                        '#177bbb', 
+                        'Time: #{dashManagedBean.localDateTimeList.get(i).toLocalTime()} <br /> Description: #{dashManagedBean.eventList.get(i).description}'
+                    ],
 
-                        <div class="col-md-12">
-                            <hr></hr>
-                        </div>
-                        <div class="col-md-12">                      
-                          <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Announcements</a>
-                            </div>
-                            <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
-                                <a class="list-group-item">
-                                    <h4><strong>#{announcement.title}</strong></h4>
-                                    <h5>#{announcement.content}</h5>
-                                    <br></br>
-                                    <small>Announced on #{announcement.activeDate}</small>
-                                </a>
-                            </ui:repeat>    
-                            <div class="panel-footer">
-                                <a href="#" class="no-decor">
-                                    View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
-                                </a>
-                            </div>
-                          </section>
-                        </div>
-                    </div>
+                </c:forEach>
 
-                    <div class="col-md-3"> 
-                    <h4>Quick Calendar</h4>
-                    <hr></hr> 
-                      <section class="panel">
-                        <div id="calendar"></div>
-                        <div class="list-group">
-                            <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
-                                <a class="list-group-item">
-                                    <span class="badge">#{dashManagedBean.localDateTimeList.get(i).toLocalTime()}</span> 
-                                    <strong>#{dashManagedBean.localDateTimeList.get(i).toLocalDate()}</strong>: #{dashManagedBean.eventList.get(i).name}
-                                </a>
-                            </c:forEach>
-                        </div>                        
-                      </section>                                        
-                    </div>
+              ];
+              $('#calendar').calendar({
+                  months: theMonths,
+                  days: theDays,
+                  events: events,
+                  popover_options:{
+                      placement: 'top',
+                      html: true
+                  }
+              });
+          });
+
+        </h:outputScript>
+        <div class="row">
+            <div class="col-md-9">
+                <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
+                <h4>Quick Links</h4>
+                <hr></hr>
+                <!-- Quick Links -->
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
+                        <h5>CRM Analytics</h5>
+                    </div></a>
+                </div>       
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
+                        <h5>Sales Forecast</h5>
+                    </div></a>
+                </div>    
+                <div class="col-md-4"><a href="./common/messaging.xhtml">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
+                        <h5>Messages</h5>
+                    </div></a>
+                </div> 
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
+                        <h5>CRM Operations</h5>
+                    </div></a>
+                </div>    
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
+                        <h5>Transaction History</h5>
+                    </div></a>
                 </div>
-                </ui:define>
-        </ui:composition>
-    </h:body>
-</html>
+
+                <div class="col-md-12">
+                    <hr></hr>
+                </div>
+                <div class="col-md-6">                      
+                  <section class="panel">
+                    <div class="panel-heading announcement-widget">
+                      <a href="#" class="no-decor">Announcements</a>
+                    </div>
+                    <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
+                        <a class="list-group-item">
+                            <h4><strong>#{announcement.title}</strong></h4>
+                            <h5>#{announcement.content}</h5>
+                            <br></br>
+                            <small>Announced on #{announcement.activeDate}</small>
+                        </a>
+                    </ui:repeat>    
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                  </section>
+                </div>
+                
+                <div class="col-md-6">                      
+                  <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      To-Do List
+                    </div>
+                    <a class="list-group-item">
+                        <h5>
+                            <label>Proof-read Q4 Sales Report</label>
+                            <input type="checkbox" class="checkbox pull-right"></input>
+                        </h5>
+                        <small>due on 16 Sep 2014, Tuesday</small>
+                    </a>
+                    <a class="list-group-item">
+                        <h5>
+                            <label>Proof-read Q4 Sales Report</label>
+                            <input type="checkbox" class="checkbox pull-right"></input>
+                        </h5>
+                        <small>due on 16 Sep 2014, Tuesday</small>
+                    </a>                              
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All To-Dos <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                  </section>
+                </div>                
+                
+            </div>
+
+            <div class="col-md-3"> 
+            <h4>Quick Calendar</h4>
+            <hr></hr> 
+              <section class="panel">
+                <div id="calendar"></div>
+                <div class="list-group">
+                    <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
+                        <a class="list-group-item">
+                            <span class="badge">#{dashManagedBean.localDateTimeList.get(i).toLocalTime()}</span> 
+                            <strong>#{dashManagedBean.localDateTimeList.get(i).toLocalDate()}</strong>: #{dashManagedBean.eventList.get(i).name}
+                        </a>
+                    </c:forEach>
+                </div>                        
+              </section> 
+            
+              <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      Notes
+                    </div>
+                    <a class="list-group-item">
+                        <h5><strong>Some Tips and Tricks</strong></h5>
+                        <p>TBHQ, a byproduct of the petroleum industry, is often listed as an “antioxidant,” 
+                           but it’s important to realize it is a synthetic chemical with antioxidant properties
+                           but not a natural antioxidant.</p>
+                    </a>   
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All Notes <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+              </section>            
+            
+            </div>
+        </div>
+        </ui:define>
+</ui:composition>
