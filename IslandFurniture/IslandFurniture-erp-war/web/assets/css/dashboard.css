@@ -216,3 +216,7 @@ a .quick-link h5{
     border-bottom-right-radius: 50px;
     font-size: 11px;   
 }
+
+.own-message{
+    text-align: right;
+}
