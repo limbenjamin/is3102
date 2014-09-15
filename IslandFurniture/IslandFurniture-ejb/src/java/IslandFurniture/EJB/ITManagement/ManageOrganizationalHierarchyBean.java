@@ -141,6 +141,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         Query q = em.createQuery("SELECT m " + "FROM ManufacturingFacility m");
         return q.getResultList();
     }
+    
+    @Override
+    public List<Plant> displayPlant() {
+        Query q = em.createQuery("SELECT p " + "FROM Plant p");
+        return q.getResultList();
+    }
 
     @Override
     public CountryOffice addCountryOffice(String coName, Country country) {

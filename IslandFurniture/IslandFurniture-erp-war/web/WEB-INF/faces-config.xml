@@ -1,8 +1,9 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<faces-config version="2.0"
-    xmlns="http://java.sun.com/xml/ns/javaee"
+<?xml version='1.0' encoding='UTF-8'?>  
+   <faces-config version="2.2"
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
     <navigation-rule>
         <navigation-case>
             <from-outcome>dash</from-outcome>
@@ -33,6 +34,14 @@
             <to-view-id>/login.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>managestaff2</from-outcome>
+            <to-view-id>/it/managestaff2.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>managestaff</from-outcome>
+            <to-view-id>/it/managestaff.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>roleprivilege2</from-outcome>
             <to-view-id>/it/roleprivilege2.xhtml</to-view-id>
         </navigation-case>
@@ -51,6 +60,10 @@
         <navigation-case>
             <from-outcome>storagelocation</from-outcome>
             <to-view-id>/supplychain/storagelocation.xhtml</to-view-id>
+        </navigation-case>
+                <navigation-case>
+            <from-outcome>storagelocationdetail</from-outcome>
+            <to-view-id>/supplychain/storagelocationdetail.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

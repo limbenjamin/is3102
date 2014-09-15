@@ -9,6 +9,7 @@ package IslandFurniture.EJB.ITManagement;
 import IslandFurniture.EJB.Entities.Privilege;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
@@ -33,6 +34,7 @@ public class ManageRolesBean implements ManageRolesBeanLocal {
     private Role role;
     private List<Role> roleList;
     private List<Privilege> privilegeList;
+    private List<Staff> staffList;
     
     @Override
     public void createRole(String name) {
@@ -44,6 +46,13 @@ public class ManageRolesBean implements ManageRolesBeanLocal {
     @Override
     public void removeRole(Long id){
         role = em.find(Role.class, id);
+        staffList = role.getStaffs();
+        Iterator<Staff> iterator = staffList.iterator();
+        while (iterator.hasNext()) {
+		staff = iterator.next();
+                staff.getRoles().remove(role);
+                em.merge(staff);
+	}
         em.remove(role);
         
     }
@@ -57,6 +66,13 @@ public class ManageRolesBean implements ManageRolesBeanLocal {
     @Override
     public Role getRole(Long roleId){
         role = em.find(Role.class, roleId);
+        return role;
+    }
+    
+    @Override
+    public Role getRoleFromName(String roleName){
+        Query query = em.createQuery("FROM Role r where r.name=:name");
+        query.setParameter("name", roleName);
         return role;
     }
     
