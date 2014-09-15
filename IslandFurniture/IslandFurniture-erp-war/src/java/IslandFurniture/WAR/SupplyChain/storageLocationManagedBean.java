@@ -7,12 +7,13 @@ package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.Entities.StorageLocation;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author KamilulAshraf
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class storageLocationManagedBean implements Serializable {
 
     /**
@@ -45,6 +46,10 @@ public class storageLocationManagedBean implements Serializable {
     public void init() {
         storageLocationList = mslr.viewStorageLocation();
         System.out.println("Init");
+        
+        id = (Long)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("locationId");
+        
+        if(id != null) storageLocation = mslr.getStorageLocation(id);
     }
 
     public String addStorageLocation() {
@@ -71,22 +76,40 @@ public class storageLocationManagedBean implements Serializable {
         //id = Long.parseLong(event.getComponent().getAttributes().get("id").toString());
         id = (Long)event.getComponent().getAttributes().get("id");
         System.out.println("the id is" + id);
-       //storageLocation = mslr.getStorageLocation(id);
+       storageLocation = mslr.getStorageLocation(id);
     }
     
     
-     public String editStorageLocation() {
-     id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-     HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-     plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
-     storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
-     storageAreaName = request.getParameter("storageForm:storageAreaName");
-     storageID = request.getParameter("storageForm:storageID");
-     storageType = request.getParameter("storageForm:storageType");
-     storageDescription = request.getParameter("storageForm:storageDescription");
+     public String editStorageLocation(ActionEvent event) {
+     StorageLocation sl =  (StorageLocation)event.getComponent().getAttributes().get("slid");
+      
+     if(sl != null)
+        System.err.println("storageLocationTemp: " + sl.getStorageAreaName());
+     
+     id = sl.getId();
+     plantNumber = sl.getPlantNumber();
+     storageAreaNumber = sl.getStorageAreaNumber();
+     storageAreaName = sl.getStorageAreaName();
+     storageID = sl.getStorageID();
+     storageType = sl.getStorageType();
+     storageDescription = sl.getStorageDescription();
+     
+//     HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//     plantNumber = Integer.parseInt(request.getParameter("modifyStorageForm:plantNumber"));
+//     storageAreaNumber = Integer.parseInt(request.getParameter("modifyStorageForm:storageAreaNumber"));
+//     storageAreaName = request.getParameter("modifyStorageForm:storageAreaName");
+//     storageID = request.getParameter("modifyStorageForm:storageID");
+//     storageType = request.getParameter("modifyStorageForm:storageType");
+//     storageDescription = request.getParameter("modifyStorageForm:storageDescription");
 
      mslr.editStorageLocation(id, plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
      return "storagelocation";
+     }
+     
+     public void storagelocationdetailActionListener(ActionEvent event) throws IOException
+     {
+         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("locationId", event.getComponent().getAttributes().get("locationId"));
+         FacesContext.getCurrentInstance().getExternalContext().redirect("storagelocationdetail.xhtml");
      }
      
     public Long getId() {
