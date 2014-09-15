@@ -6,8 +6,14 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,11 +33,47 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
     @Override
     public boolean loadSampleData() {
-        Store storeToForecast = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Canada"), "Toronto");
-        System.out.println(storeToForecast);
-        salesForecastBean.generateSalesFigures(storeToForecast, Month.DEC, 2013, Month.JAN, 2014);
+        try {
+            Calendar curr;
+            Random rand = new Random(1);
+            List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
-        return false; // Stub - incomplete function
+            for (Store eachStore : stores) {
+                curr = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+                curr.add(Calendar.MONTH, -1);
+                Month prevMth = Month.getMonth(curr.get(Calendar.MONTH));
+
+                System.out.println(eachStore);
+                salesForecastBean.generateSalesFigures(eachStore, Month.JAN, 2013, prevMth, curr.get(Calendar.YEAR));
+
+                for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
+                    List<MonthlyStockSupplyReq> listOfMssr = salesForecastBean.retrieveMssrForStoreStock(eachStore, ss.getStock(), Month.JAN, 2013, prevMth, curr.get(Calendar.YEAR));
+                    listOfMssr.sort(null);
+
+                    int prevExcessInv = 0;
+                    int prevIdealInv = 0;
+
+                    for (MonthlyStockSupplyReq eachMssr: listOfMssr) {
+                        eachMssr.setIdealInventory(100);
+                        eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(200) - 100);
+
+                        eachMssr.setBeginInventory(prevExcessInv + prevIdealInv);
+                        eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getIdealInventory() - eachMssr.getBeginInventory());
+                        
+                        prevExcessInv = eachMssr.getQtyForecasted() - eachMssr.getQtySold();
+                        prevIdealInv = eachMssr.getIdealInventory();
+
+                        System.out.println(eachMssr);
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+
+            return false; // Stub - incomplete function
+        }
     }
 
 }

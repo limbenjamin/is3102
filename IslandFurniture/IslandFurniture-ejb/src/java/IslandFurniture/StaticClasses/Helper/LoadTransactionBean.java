@@ -85,6 +85,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         try {
             // Add Transactions for stores
             Calendar cal;
+            TimeZone tz;
             Random rand = new Random(1); // Seed to ensure always same sample transactions
 
             List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
@@ -93,11 +94,13 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
             for (Store eachStore : stores) {
+                tz = TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID());
+
                 for (int i = 0; i < 800; i++) {
                     // Add Furniture Transaction & Retail Item Transaction
                     fTransDetails.clear();
                     riTransDetails.clear();
-                    
+
                     for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
                             if (ss.getStock() instanceof FurnitureModel) {
@@ -109,24 +112,28 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     }
 
                     if (!fTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+                        cal = Calendar.getInstance(tz);
 
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
-                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        do {
+                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        } while (cal.after(Calendar.getInstance(tz)));
 
                         this.addFurnitureTransaction(eachStore, fTransDetails, cal);
                     }
 
                     if (!riTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+                        cal = Calendar.getInstance(tz);
 
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
-                        cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        do {
+                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        } while (cal.after(Calendar.getInstance(tz)));
 
                         this.addRetailItemTransaction(eachStore, riTransDetails, cal);
                     }
                 }
-                
+
                 em.flush();
             }
 

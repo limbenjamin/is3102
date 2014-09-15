@@ -14,6 +14,8 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -23,7 +25,15 @@ import javax.persistence.PostPersist;
  */
 @Entity
 @IdClass(MonthlyStockSupplyReqPK.class)
-public class MonthlyStockSupplyReq implements Serializable {
+@NamedQueries({
+    @NamedQuery(
+            name = "getMssrByStoreStock",
+            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE "
+                    + "a.store = :store AND a.stock = :stock AND "
+                    + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
+                    + "a.year*12 + a.month <= :endYr*12 + :endMth")
+})
+public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,6 +50,7 @@ public class MonthlyStockSupplyReq implements Serializable {
     private int qtySold;
     private int qtyForecasted;
     private int qtyRequested;
+    private int idealInventory;
     private boolean committed;
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
@@ -125,6 +136,14 @@ public class MonthlyStockSupplyReq implements Serializable {
         this.committed = commited;
     }
 
+    public int getIdealInventory() {
+        return idealInventory;
+    }
+
+    public void setIdealInventory(int idealInventory) {
+        this.idealInventory = idealInventory;
+    }
+
     public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {
         return goodsIssuedDocumentDetails;
     }
@@ -168,14 +187,38 @@ public class MonthlyStockSupplyReq implements Serializable {
     }
 
     @Override
+    public int compareTo(MonthlyStockSupplyReq other) {
+        if (this.store.getId() > other.store.getId()) {
+            return 1;
+        }
+        if (this.store.getId() < other.store.getId()) {
+            return -1;
+        }
+        if (this.year * 12 + this.month.value > other.year * 12 + other.month.value) {
+            return 1;
+        }
+        if (this.year * 12 + this.month.value < other.year * 12 + other.month.value) {
+            return -1;
+        }
+        if (this.stock.getId() > other.stock.getId()) {
+            return 1;
+        }
+        if (this.stock.getId() < other.stock.getId()) {
+            return -1;
+        }
+        return 0;
+
+    }
+
+    @Override
     public String toString() {
         return "MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
     }
 
     // Entity Callbacks
-    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);
     }
+
 }

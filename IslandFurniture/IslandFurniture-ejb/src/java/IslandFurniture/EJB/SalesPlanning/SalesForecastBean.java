@@ -149,6 +149,16 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         return null;
     }
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @Override
+    public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear){
+        Query q = em.createNamedQuery("getMssrByStoreStock");
+        q.setParameter("store", store);
+        q.setParameter("stock", stock);
+        q.setParameter("startYr", startYear);
+        q.setParameter("startMth", startMonth);
+        q.setParameter("endYr", endYear);
+        q.setParameter("endMth", endMonth);
+        
+        return (List<MonthlyStockSupplyReq>) q.getResultList();
+    }
 }
