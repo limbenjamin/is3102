@@ -40,6 +40,11 @@ public class ManageUserAccountInformationBean{
         return staff;
     }
     
+    public Staff getStaffFromId(Long staffId){
+        staff = (Staff) em.find(Staff.class, staffId);
+        return staff;
+    }
+    
     public void modifyNote(String username, String notes){
         staff = getStaff(username);
         staff.setNotes(notes);

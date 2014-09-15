@@ -34,6 +34,14 @@
             <to-view-id>/login.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>managestaff2</from-outcome>
+            <to-view-id>/it/managestaff2.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>managestaff</from-outcome>
+            <to-view-id>/it/managestaff.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>roleprivilege2</from-outcome>
             <to-view-id>/it/roleprivilege2.xhtml</to-view-id>
         </navigation-case>

@@ -13,6 +13,7 @@ import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurniture.EJB.Exceptions.InvalidCountryException;
 import IslandFurniture.EJB.Exceptions.InvalidPlantException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -45,6 +46,8 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     private List<Event> events;
     private Plant plant;
     private Country country;
+    private MessageThread messageThread;
+    private Role role;
     
 
 
@@ -96,20 +99,47 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     }
     
     @Override
-    public List<Vector> displayAllStaffAccounts(){
+    public List<Staff> displayAllStaffAccounts(){
         Query query = em.createQuery("SELECT s FROM Staff S");
-        List<Vector> staffList = new ArrayList();
-        for (Object o: query.getResultList()) {
-            Staff s = (Staff)o;
-            Vector vector = new Vector();
-            vector.add(s.getId());
-            vector.add(s.getName());
-            vector.add(s.getEmailAddress());
-            vector.add(s.getPhoneNo());
-            vector.add(s.getPassword());
-            staffList.add(vector);
-        }
-        return staffList;
+        return query.getResultList();
+    }
+    
+    @Override
+    public void deleteStaffAccount(Long id){
+        staff = (Staff) em.find(Staff.class, id);
+        plant = (Plant) staff.getPlant();
+        plant.getEmployees().remove(staff);
+        em.merge(plant);
+        thread = staff.getInbox();
+        Iterator<MessageThread> iterator = thread.iterator();
+        while (iterator.hasNext()) {
+		messageThread = iterator.next();
+                messageThread.getRecipient().remove(staff);
+                em.merge(messageThread);
+	}
+        em.remove(staff);
+    }
+    
+    @Override
+    public void removeRoleFromStaff(Long staffId, Long roleId){
+        staff = (Staff) em.find(Staff.class, staffId);
+        role = (Role) em.find(Role.class, roleId);
+        staff.getRoles().remove(role);
+        role.getStaffs().remove(staff);
+        em.merge(role);
+        em.merge(staff);
+    }
+    
+    @Override
+    public void addRoleToStaff(Long staffId, String roleName){
+        staff = (Staff) em.find(Staff.class, staffId);
+        Query query = em.createQuery("FROM Role r WHERE r.name=:name");
+        query.setParameter("name", roleName);
+        role = (Role) query.getSingleResult();
+        staff.getRoles().add(role);
+        role.getStaffs().add(staff);
+        em.merge(role);
+        em.merge(staff);
     }
 
 }
