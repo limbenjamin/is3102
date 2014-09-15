@@ -41,9 +41,8 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
     @Override
     public StorageLocation getStorageLocation(Long id) {
-        Query query = em.createQuery("FROM StorageLocation s where s.id=:id");
-        query.setParameter("id", id);
-        storageLocation = (StorageLocation) query.getSingleResult();
+        storageLocation = (StorageLocation) em.find(StorageLocation.class, id);
+        System.out.println("this is the getStorageLocation id "+ id);
         return storageLocation;
     }
 
@@ -87,6 +86,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         return q.getResultList();
 
     }
+    
 
     // Add business logic below. (Right-click in editor and choose
 // "Insert Code > Add Business Method")
