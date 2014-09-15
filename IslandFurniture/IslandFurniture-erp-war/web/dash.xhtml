@@ -74,10 +74,9 @@
                 <div class="col-md-12">
                     <hr></hr>
                 </div>
-                <div class="col-md-12">                      
+                <div class="col-md-6">                      
                   <section class="panel">
                     <div class="panel-heading announcement-widget">
-                      <span class="badge pull-right">4</span>
                       <a href="#" class="no-decor">Announcements</a>
                     </div>
                     <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
@@ -95,6 +94,34 @@
                     </div>
                   </section>
                 </div>
+                
+                <div class="col-md-6">                      
+                  <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      To-Do List
+                    </div>
+                    <a class="list-group-item">
+                        <h5>
+                            <label>Proof-read Q4 Sales Report</label>
+                            <input type="checkbox" class="checkbox pull-right"></input>
+                        </h5>
+                        <small>due on 16 Sep 2014, Tuesday</small>
+                    </a>
+                    <a class="list-group-item">
+                        <h5>
+                            <label>Proof-read Q4 Sales Report</label>
+                            <input type="checkbox" class="checkbox pull-right"></input>
+                        </h5>
+                        <small>due on 16 Sep 2014, Tuesday</small>
+                    </a>                              
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All To-Dos <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                  </section>
+                </div>                
+                
             </div>
 
             <div class="col-md-3"> 
@@ -110,7 +137,25 @@
                         </a>
                     </c:forEach>
                 </div>                        
-              </section>                                        
+              </section> 
+            
+              <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      Notes
+                    </div>
+                    <a class="list-group-item">
+                        <h5><strong>Some Tips and Tricks</strong></h5>
+                        <p>TBHQ, a byproduct of the petroleum industry, is often listed as an “antioxidant,” 
+                           but it’s important to realize it is a synthetic chemical with antioxidant properties
+                           but not a natural antioxidant.</p>
+                    </a>   
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All Notes <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+              </section>            
+            
             </div>
         </div>
         </ui:define>
