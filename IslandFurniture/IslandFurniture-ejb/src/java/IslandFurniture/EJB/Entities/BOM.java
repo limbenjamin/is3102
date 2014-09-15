@@ -27,6 +27,9 @@ public class BOM implements Serializable {
     @OneToMany(mappedBy="bom")
     private List<BOMDetail> bomDetails;
 
+    public BOM() {
+        
+    }
     public Long getId() {
         return id;
     }

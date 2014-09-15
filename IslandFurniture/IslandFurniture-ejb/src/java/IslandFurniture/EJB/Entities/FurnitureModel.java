@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,9 +33,16 @@ public class FurnitureModel extends Stock implements Serializable {
     private static final long serialVersionUID = 1L;
     @OneToOne
     private BOM bom;
-    @OneToMany(mappedBy = "furnitureModel")
+    @OneToMany(mappedBy = "furnitureModel", cascade={CascadeType.PERSIST})
     protected List<ProductionCapacity> productionCapacity;
 
+    public FurnitureModel() {
+        this.bom = new BOM();
+    }
+    public FurnitureModel(String name) {
+        this.name = name;
+        this.bom = new BOM();
+    }
     public BOM getBom() {
         return bom;
     }
