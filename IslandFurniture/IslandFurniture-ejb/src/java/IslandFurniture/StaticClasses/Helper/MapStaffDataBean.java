@@ -24,7 +24,7 @@ import javax.persistence.PersistenceContext;
  * @author Benjamin
  */
 @Stateless
-public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
+public class MapStaffDataBean implements MapStaffDataBeanRemote {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -77,25 +77,17 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
         };
         
         String[] roles = new String [] {
-            "IT (Store)","Marketing (Store)","Production & Ops (Store)","Supply Chain (Store)","Management (Store)",
-            "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
-            "Shipping (Mfg)","Factory Floor (Mfg)","Management (Mfg)","SUPER USER",
+            "IT (Store)","Marketing (Store)","IT (Mfg)","SUPER USER","Supply Chain (Store)","Purchasing (Mfg)",
+            "Management (Store)","IT (Store)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
+            "Shipping (Mfg)","Marketing (Store)","Factory Floor (Mfg)","Management (Mfg)","Production & Ops (Store)",
             "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
-            "IT (HQ)","Marketing (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+            "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","IT (HQ)","Marketing (HQ)",
+            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };
-
-        for (int i=0; i<roles.length; i++){
-            try {
-                mrbl.createRole(roles[i]);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                return false;
-            }
-        }       
         
         for (int i=0; i<arr.length; i++){
             try {
-                msal.createStaffAccount(arr[i][0],arr[i][1],arr[i][2],arr[i][3],arr[i][4],arr[i][5],arr[i][6]);
+                msal.addRoleToStaffByUsername(arr[i][0], roles[i]);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 return false;

@@ -6,10 +6,13 @@
 
 package IslandFurniture.StaticClasses.Helper;
 
+import IslandFurniture.EJB.Entities.Country;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBean;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
 /**
@@ -23,10 +26,13 @@ import javax.ejb.Startup;
 @LocalBean
 public class InitialiseServerBean {
 
+    @EJB
+    ManageOrganizationalHierarchyBean mohb;
+    
+    Country country;
+    
     @PostConstruct
     public void initialiseServer(){
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        
-        System.out.println("TimeZone settings for server changed to: " + TimeZone.getDefault());
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));        
     }
 }

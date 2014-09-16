@@ -7,6 +7,7 @@ package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
+import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Store;
 import javax.ejb.Stateless;
@@ -25,6 +26,23 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
+    private GlobalHQ addGlobalHQ(String name, Country country) {
+        GlobalHQ globalhq = (GlobalHQ) QueryMethods.findPlantByName(em, country, name);
+
+        if (globalhq == null) {
+            globalhq = new GlobalHQ();
+            globalhq.setName(name);
+            globalhq.setCountry(country);
+            em.persist(globalhq);
+
+            return globalhq;
+        } else {
+            System.out.println("Global HQ already exists");
+
+            return null;
+        }
+    }
+    
     private Store addStore(String storeName, Country country) {
         Store store = (Store) QueryMethods.findPlantByName(em, country, storeName);
 
@@ -110,6 +128,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             // Add Countries and Plants
             country = this.addCountry("Singapore", "Asia/Singapore");
             if (country != null) {
+                this.addGlobalHQ("Global HQ", country);
                 this.addCountryOffice("Singapore", country);
                 this.addStore("Alexandra", country);
                 this.addStore("Tampines", country);

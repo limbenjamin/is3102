@@ -8,6 +8,7 @@ package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
+import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Store;
@@ -52,5 +53,9 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     List<Country> getCountries();
     
     List<Plant> displayPlant();
+    
+    GlobalHQ addGlobalHQ(String name, Country country);
+    
+    Country addCountry(String countryName, String timeZoneID);
     
 }

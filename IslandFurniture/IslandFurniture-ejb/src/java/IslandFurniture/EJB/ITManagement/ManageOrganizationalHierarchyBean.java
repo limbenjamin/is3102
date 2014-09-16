@@ -8,9 +8,11 @@ package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
+import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -30,12 +32,31 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     @PersistenceContext
     private EntityManager em;
     
+    private GlobalHQ globalhq;
     private Store store;
     private ManufacturingFacility mf;
     private CountryOffice co;
     private Country country;
     
 
+    @Override
+    public GlobalHQ addGlobalHQ(String name, Country country) {
+        globalhq = (GlobalHQ) this.findPlantByName(country, name);
+
+        if (globalhq == null) {
+            globalhq = new GlobalHQ();
+            globalhq.setName(name);
+            globalhq.setCountry(country);
+            em.persist(globalhq);
+
+            return globalhq;
+        } else {
+            System.out.println("Global HQ already exists");
+
+            return null;
+        }
+    }
+    
     @Override
     public Store addStore(String storeName, Country country) {
         store = (Store) this.findPlantByName(country, storeName);
@@ -230,5 +251,24 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     public List<Country> getCountries(){
         Query q = em.createQuery("SELECT c " + "FROM Country c");
         return q.getResultList();
+    }
+    
+    @Override
+    public Country addCountry(String countryName, String timeZoneID) {
+        Country country = QueryMethods.findCountryByName(em, countryName);
+
+        if (country == null) {
+            country = new Country();
+            country.setName(countryName);
+            country.setTimeZoneID(timeZoneID);
+            em.persist(country);
+
+            return country;
+        } else {
+            System.out.println("The country \"" + countryName + "\" already exists!");
+
+            return null;
+        }
+
     }
 }

@@ -95,7 +95,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
             }
         }
         em.persist(staff);
-        //em.flush();
+        em.flush();
     }
     
     @Override
@@ -134,6 +134,21 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     public void addRoleToStaff(Long staffId, String roleName){
         staff = (Staff) em.find(Staff.class, staffId);
         Query query = em.createQuery("FROM Role r WHERE r.name=:name");
+        query.setParameter("name", roleName);
+        role = (Role) query.getSingleResult();
+        staff.getRoles().add(role);
+        role.getStaffs().add(staff);
+        em.merge(role);
+        em.merge(staff);
+    }
+    
+    @Override
+    public void addRoleToStaffByUsername(String staffName, String roleName){
+        System.err.println("here "+staffName+roleName);
+        Query query = em.createQuery("FROM Staff s where s.username=:name");
+        query.setParameter("name", staffName);
+        staff = (Staff) query.getSingleResult();
+        query = em.createQuery("FROM Role r WHERE r.name=:name");
         query.setParameter("name", roleName);
         role = (Role) query.getSingleResult();
         staff.getRoles().add(role);
