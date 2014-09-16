@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class BOM implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany(mappedBy="bom")
+    @OneToMany(mappedBy="bom", cascade={CascadeType.PERSIST})
     private List<BOMDetail> bomDetails;
 
     public BOM() {
