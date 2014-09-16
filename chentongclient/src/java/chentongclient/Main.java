@@ -7,9 +7,10 @@ package chentongclient;
 
 import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStocksBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
+import IslandFurniture.StaticClasses.Helper.MapStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
@@ -35,6 +36,9 @@ public class Main {
 
     @EJB
     private static LoadStaffDataBeanRemote loadStaffDataBean;
+    
+    @EJB
+    private static MapStaffDataBeanRemote mapStaffDataBean;
 
     /**
      * @param args the command line arguments
@@ -74,12 +78,17 @@ public class Main {
 
         // Load Staff Data
         System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
-        System.out.print("Load Staff Data? (y/n):");
+        System.out.print("Load and map Staff and Roles Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadStaffDataBean.loadSampleData()) {
                 System.out.println("Staff data loaded successfully!");
             } else {
                 System.out.println("Failed to load staff data. Check for errors in server log.");
+            }
+            if (mapStaffDataBean.loadSampleData()) {
+                System.out.println("Staff data mapped successfully!");
+            } else {
+                System.out.println("Failed to map staff data. Check for errors in server log.");
             }
         }
 

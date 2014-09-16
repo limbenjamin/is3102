@@ -22,4 +22,5 @@ public interface ManageStaffAccountsBeanLocal {
     void deleteStaffAccount(Long id);
     void removeRoleFromStaff(Long staffId, Long roleId);
     void addRoleToStaff(Long staffId, String roleName);
+    void addRoleToStaffByUsername(String staffName, String roleName);
 }
