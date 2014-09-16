@@ -41,7 +41,6 @@ public class Material extends ProcuredStock implements Serializable {
         this.materialWeight = materialWeight;
     }
     public Material() {
-        System.out.println("Material: create");
     }
 
     public Material(String name) {

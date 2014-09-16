@@ -31,17 +31,15 @@ import javax.persistence.PostPersist;
 public class FurnitureModel extends Stock implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToOne
+    @OneToOne(cascade={CascadeType.PERSIST})
     private BOM bom;
     @OneToMany(mappedBy = "furnitureModel", cascade={CascadeType.PERSIST})
     protected List<ProductionCapacity> productionCapacity;
 
     public FurnitureModel() {
-        this.bom = new BOM();
     }
     public FurnitureModel(String name) {
         this.name = name;
-        this.bom = new BOM();
     }
     public BOM getBom() {
         return bom;
