@@ -19,10 +19,13 @@ import IslandFurniture.EJB.Entities.Transaction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -114,7 +117,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 DateFormat timeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
                 timeFormat.setTimeZone(TimeZone.getTimeZone(eachTrans.getStore().getCountry().getTimeZoneID()));
                 System.out.println("Transaction Date: " + timeFormat.format(eachTrans.getTransTime().getTime()) + ", " + eachTrans.getStore().getCountry().getTimeZoneID() + " time");
-                
+
                 if (eachTrans instanceof FurnitureTransaction) {
                     fTrans = (FurnitureTransaction) eachTrans;
                     em.refresh(fTrans);
@@ -150,7 +153,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear){
+    public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear) {
         Query q = em.createNamedQuery("getMssrByStoreStock");
         q.setParameter("store", store);
         q.setParameter("stock", stock);
@@ -158,7 +161,27 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         q.setParameter("startMth", startMonth);
         q.setParameter("endYr", endYear);
         q.setParameter("endMth", endMonth);
-        
+
         return (List<MonthlyStockSupplyReq>) q.getResultList();
     }
+
+    @Override
+    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForStore(long storeId) throws NoResultException {
+        Store store = em.find(Store.class, storeId);
+        
+        if (store == null) {
+            throw new NoResultException();
+        }
+
+        Map<Stock,List<MonthlyStockSupplyReq>> mssrMap = new HashMap();
+
+        for (StockSupplied ss : store.getSuppliedWithFrom()) {
+            List<MonthlyStockSupplyReq> stockMssr = this.retrieveMssrForStoreStock(store, ss.getStock(), Month.JAN, 0, Month.DEC, 9999);
+            stockMssr.sort(null);
+            mssrMap.put(stockMssr.get(0).getStock(), stockMssr);
+        }
+
+        return mssrMap;
+    }
+
 }

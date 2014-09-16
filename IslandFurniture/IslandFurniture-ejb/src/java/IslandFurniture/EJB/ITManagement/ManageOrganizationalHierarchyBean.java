@@ -75,7 +75,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         
         if (store != null) {
             em.remove(store);
-            country.getPlant().remove(store);
+            country.getPlants().remove(store);
             em.merge(country);
             em.flush();
         } else {
@@ -128,7 +128,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         
         if (mf != null) {
             em.remove(mf);
-            country.getPlant().remove(mf);
+            country.getPlants().remove(mf);
             em.merge(country);
             em.flush();
         } else {
@@ -187,7 +187,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         
         if (co != null) {
             em.remove(co);
-            country.getPlant().remove(co);
+            country.getPlants().remove(co);
             em.merge(country);
             em.flush();
         } else {

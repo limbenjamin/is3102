@@ -11,7 +11,9 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Local;
+import javax.persistence.NoResultException;
 
 /**
  *
@@ -23,5 +25,7 @@ public interface SalesForecastBeanLocal {
     public List<MonthlyStockSupplyReq> generateSalesFigures(Store store, Month startMonth, int startYear, Month endMonth, int endYear);
 
     public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
+
+    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForStore(long storeId) throws NoResultException;
     
 }

@@ -44,7 +44,7 @@ public class Country implements Serializable {
     private String timeZoneID;
 
     @OneToMany(mappedBy = "country")
-    private List<Plant> plant;
+    private List<Plant> plants;
 
     @ManyToMany(mappedBy = "countries")
     private List<Currency> currencies;
@@ -73,12 +73,12 @@ public class Country implements Serializable {
         this.name = name;
     }
 
-    public List<Plant> getPlant() {
-        return plant;
+    public List<Plant> getPlants() {
+        return plants;
     }
 
-    public void setPlant(List<Plant> plant) {
-        this.plant = plant;
+    public void setPlants(List<Plant> plants) {
+        this.plants = plants;
     }
 
     public List<Currency> getCurrencies() {
