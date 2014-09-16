@@ -108,16 +108,9 @@ public class ViewMssrManagedBean implements Serializable {
         this.mssrMap = mssrMap;
     }
 
-//    public void updateYearsOfMssr(AjaxBehaviorEvent event) {
-//        System.out.println(this.storeId);
-//        if (this.storeId != 0) {
-//            this.yearsOfMssr = salesForecastBean.getYearsOfMssr(this.storeId);
-//        }
-//    }
-
     public void updateMssr(AjaxBehaviorEvent event) {
         System.out.println(this.yearOfMssr + " | " + this.storeId);
-        
+
         if (this.yearOfMssr != 0 && this.storeId != 0) {
             this.mssrMap = salesForecastBean.retrieveMssrForStore(this.storeId, this.yearOfMssr);
         } else if (this.storeId != 0) {
@@ -125,8 +118,13 @@ public class ViewMssrManagedBean implements Serializable {
         }
     }
 
-    public void getMssr() {
+    public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
+        List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList = new ArrayList();
+        if (this.mssrMap != null) {
+            mssrList.addAll(this.mssrMap.entrySet());
+        }
 
+        return mssrList;
     }
 
 }

@@ -18,22 +18,13 @@
                                itemLabel="#{years}" itemValue="#{years}" />
                 <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />
             </h:selectOneMenu>
-
-            <p:dataTable id="mssrTable" value="#{viewMssrManagedBean.mssrMap.entrySet().toArray()}" var="mssrEntry">
-                <p:column>
-                    <f:facet name="header">
-                        <h:outputText value="Stock" />
-                    </f:facet>
-                    <h:outputText value="#{mssrEntry.key.name} (id:#{mssrEntry.key.id})" />
-                </p:column>
-                <p:column>
-                    <f:facet name="header">
-                        <h:outputText value="Store ID: #{viewMssrManagedBean.storeId}" />
-                    </f:facet>
+            <br /><br />
+            <p:accordionPanel id="mssrTable" value="#{viewMssrManagedBean.mssrList}" var="mssrEntry" multiple="true">
+                <p:tab title="#{mssrEntry.key.name} (id:#{mssrEntry.key.id})">
                     <table>
                         <thead>
                             <tr>
-                                <th>Sales Planning Parameters</th>
+                                <th>Month</th>
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <th>
                                         <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />
@@ -47,14 +38,6 @@
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.beginInventory}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Quantity Sold</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.qtySold}" />
                                     </td>
                                 </ui:repeat>
                             </tr>
@@ -75,18 +58,17 @@
                                 </ui:repeat>
                             </tr>
                             <tr>
-                                <th>Ideal Inventory</th>
+                                <th>Quantity Sold</th>
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <td>
-                                        <h:outputText value="#{stockMssr.idealInventory}" />
+                                        <h:outputText value="#{stockMssr.qtySold}" />
                                     </td>
                                 </ui:repeat>
                             </tr>
                         </tbody>
                     </table>
-                </p:column>
-
-            </p:dataTable>
+                </p:tab>
+            </p:accordionPanel>
         </h:form>
     </ui:define>
 </ui:composition>
