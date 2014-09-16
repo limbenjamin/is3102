@@ -85,6 +85,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         try {
             // Add Transactions for stores
             Calendar cal;
+            Calendar curr;
             TimeZone tz;
             Random rand = new Random(1); // Seed to ensure always same sample transactions
 
@@ -101,6 +102,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     fTransDetails.clear();
                     riTransDetails.clear();
 
+                    // Get current time in store's timezone
+                    curr = Calendar.getInstance();
+                    curr.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
+
                     for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
                             if (ss.getStock() instanceof FurnitureModel) {
@@ -112,23 +117,25 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     }
 
                     if (!fTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance(tz);
+                        cal = Calendar.getInstance();
 
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
                         do {
                             cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        } while (cal.after(Calendar.getInstance(tz)));
+                            cal.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
+                        } while (cal.after(curr));
 
                         this.addFurnitureTransaction(eachStore, fTransDetails, cal);
                     }
 
                     if (!riTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance(tz);
+                        cal = Calendar.getInstance();
 
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
                         do {
                             cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        } while (cal.after(Calendar.getInstance(tz)));
+                            cal.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
+                        } while (cal.after(curr));
 
                         this.addRetailItemTransaction(eachStore, riTransDetails, cal);
                     }

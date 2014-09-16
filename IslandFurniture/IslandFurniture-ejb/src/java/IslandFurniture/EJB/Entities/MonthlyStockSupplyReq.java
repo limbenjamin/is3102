@@ -31,7 +31,10 @@ import javax.persistence.PostPersist;
             query = "SELECT a FROM MonthlyStockSupplyReq a WHERE "
                     + "a.store = :store AND a.stock = :stock AND "
                     + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
-                    + "a.year*12 + a.month <= :endYr*12 + :endMth")
+                    + "a.year*12 + a.month <= :endYr*12 + :endMth"),
+    @NamedQuery(
+            name = "getMssrByStore",
+            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.store = :store")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 

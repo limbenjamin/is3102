@@ -20,30 +20,34 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
+import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
-@Named(value = "viewMssrManagedBean")
+@ManagedBean(name = "viewMssrManagedBean")
 @ViewScoped
-public class ViewMssrManagedBean implements Serializable{
+public class ViewMssrManagedBean implements Serializable {
 
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
-    
+
     @EJB
     private ManageUserAccountInformationBean staffBean;
 
     private long storeId;
+    private List<Store> storeListing = new ArrayList();
+
+    private int yearOfMssr;
+    private List<Integer> yearsOfMssr = new ArrayList();
 
     private Staff staff;
     private Country country;
-    private List<Store> storeListing = new ArrayList();
+
     private Map<Stock, List<MonthlyStockSupplyReq>> mssrMap;
 
     public ViewMssrManagedBean() {
@@ -53,9 +57,9 @@ public class ViewMssrManagedBean implements Serializable{
     public void init() {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
-        
+
         System.out.println(staff);
-        
+
         this.country = staff.getPlant().getCountry();
         for (Plant eachPlant : this.country.getPlants()) {
             if (eachPlant instanceof Store) {
@@ -70,6 +74,22 @@ public class ViewMssrManagedBean implements Serializable{
 
     public void setStoreId(long storeId) {
         this.storeId = storeId;
+    }
+
+    public int getYearOfMssr() {
+        return yearOfMssr;
+    }
+
+    public void setYearOfMssr(int yearOfMssr) {
+        this.yearOfMssr = yearOfMssr;
+    }
+
+    public List<Integer> getYearsOfMssr() {
+        return yearsOfMssr;
+    }
+
+    public void setYearsOfMssr(List<Integer> yearsOfMssr) {
+        this.yearsOfMssr = yearsOfMssr;
     }
 
     public List<Store> getStoreListing() {
@@ -88,8 +108,21 @@ public class ViewMssrManagedBean implements Serializable{
         this.mssrMap = mssrMap;
     }
 
+//    public void updateYearsOfMssr(AjaxBehaviorEvent event) {
+//        System.out.println(this.storeId);
+//        if (this.storeId != 0) {
+//            this.yearsOfMssr = salesForecastBean.getYearsOfMssr(this.storeId);
+//        }
+//    }
+
     public void updateMssr(AjaxBehaviorEvent event) {
-        this.mssrMap = salesForecastBean.retrieveMssrForStore(this.storeId);
+        System.out.println(this.yearOfMssr + " | " + this.storeId);
+        
+        if (this.yearOfMssr != 0 && this.storeId != 0) {
+            this.mssrMap = salesForecastBean.retrieveMssrForStore(this.storeId, this.yearOfMssr);
+        } else if (this.storeId != 0) {
+            this.yearsOfMssr = salesForecastBean.getYearsOfMssr(this.storeId);
+        }
     }
 
     public void getMssr() {
