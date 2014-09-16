@@ -56,8 +56,9 @@
                         </h:form> 
 
 
-                        <h4>View Storage Locations</h4><hr> </hr> 
-                        <table class="table table-hover">
+                                                <b>View and Edit Storage Location (II) </b><br> </br> 
+
+                        <table >
                             <tr>
                                 <th class="tg-031e">Plant Number</th>
                                 <th class="tg-031e">Storage Area Number</th>
@@ -68,29 +69,32 @@
                                 <th class="tg-031e">Edit</th>
                                 <th class="tg-031e">Delete</th>
                             </tr>
-                            <ui:repeat value="#{storageLocationManagedBean.storageLocationList}" var="StorageLocation">
-                                <tr>
-                                    <h:form id="modifyStorageForm" class="form-horizontal">
-                                        <td class="tg-031e"><p>#{StorageLocation.plantNumber}</p> </td>
-                                        <td class="tg-031e"><p>#{StorageLocation.storageAreaNumber}</p> </td>
-                                        <td class="tg-031e"><p>#{StorageLocation.storageAreaName}</p></td>
-                                        <td class="tg-031e"><p>#{StorageLocation.storageID}</p> </td>
-                                        <td class="tg-031e"><p>#{StorageLocation.storageType}</p> </td>
-                                        <td class="tg-031e"><p>#{StorageLocation.storageDescription}</p> </td>
-                                        <td class="tg-031e"><p>
-                                                <h:commandButton actionListener="#{storageLocationManagedBean.storagelocationdetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:attribute name="locationId" value="#{StorageLocation.id}" />
+
+                            <h:form id="modifyStorageForm" class="form-horizontal">
+
+                                <ui:repeat value="#{storageLocationManagedBean.storageLocationList}" var="StorageLocation">
+                                    <tr>
+
+                                        <td class="tg-031e"><p><h:inputText id="plantNumber" value="#{StorageLocation.plantNumber}"></h:inputText></p> </td>
+                                        <td class="tg-031e"><p><h:inputText id="storageAreaNumber" value="#{StorageLocation.storageAreaNumber}"></h:inputText></p> </td>
+                                        <td class="tg-031e"><p><h:inputText id="storageAreaName" value="#{StorageLocation.storageAreaName}"></h:inputText></p></td>
+                                        <td class="tg-031e"><p><h:inputText id="storageID" value="#{StorageLocation.storageID}"></h:inputText></p> </td>
+                                        <td class="tg-031e"><p><h:inputText id="storageType" value="#{StorageLocation.storageType}"></h:inputText></p> </td>
+                                        <td class="tg-031e"><p><h:inputText id="storageDescription" value="#{StorageLocation.storageDescription}"></h:inputText></p> </td>
+                                        <td class="tg-031e"><p><h:commandButton actionListener="#{storageLocationManagedBean.editStorageLocation}"  value="Update" class="btn btn-success btn-xs"> 
+                                                    <f:attribute name="slid" value="#{StorageLocation}" />
                                                 </h:commandButton></p>
                                         </td>
-                                    </h:form> 
-                                    <h:form id="deleteStorageForm" class="form-horizontal">
+
                                         <td class="tg-031e"><p><h:commandButton action="#{storageLocationManagedBean.deleteStorageLocation}" value="Delete" class="btn btn-danger btn-xs"> 
                                                     <f:param name="id" value="#{StorageLocation.id}" />
                                                 </h:commandButton></p></td>
-                                    </h:form> 
-                                </tr>
-                            </ui:repeat>
-                        </table>    
+
+                                    </tr>
+                                </ui:repeat>
+
+                            </h:form> 
+                        </table>
 
 
 

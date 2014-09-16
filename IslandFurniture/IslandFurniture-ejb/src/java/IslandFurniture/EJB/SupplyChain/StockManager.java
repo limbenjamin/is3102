@@ -122,6 +122,12 @@ public class StockManager implements StockManagerLocal {
             } else {
                 bom = furnitureModel.getBom();
             }
+            
+            BOMdetail = new BOMDetail();
+            BOMdetail.setMaterial(material);
+            BOMdetail.setBom(bom);
+            bom.getBomDetails().add(BOMdetail);
+            em.flush();
            
         } catch(NoResultException NRE) {
             System.err.println("Can't find name");

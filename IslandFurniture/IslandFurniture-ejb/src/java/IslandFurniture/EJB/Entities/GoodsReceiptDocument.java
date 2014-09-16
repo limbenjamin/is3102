@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -21,14 +23,19 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class GoodsReceiptDocument implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne(mappedBy="goodsReceiptDocument")
+    @OneToOne(mappedBy = "goodsReceiptDocument")
     private PurchaseOrder receiveFrom;
-    @OneToMany(mappedBy="goodsReceiptDocument")
+    @OneToMany(mappedBy = "goodsReceiptDocument")
     private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Calendar postingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Calendar documentDate;
 
     public Long getId() {
         return id;
@@ -52,6 +59,22 @@ public class GoodsReceiptDocument implements Serializable {
 
     public void setGoodsReceiptDocumentDetails(List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails) {
         this.goodsReceiptDocumentDetails = goodsReceiptDocumentDetails;
+    }
+
+    public Calendar getPostingDate() {
+        return postingDate;
+    }
+
+    public void setPostingDate(Calendar postingDate) {
+        this.postingDate = postingDate;
+    }
+
+    public Calendar getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(Calendar documentDate) {
+        this.documentDate = documentDate;
     }
 
     @Override
@@ -78,5 +101,5 @@ public class GoodsReceiptDocument implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.GoodsReceiptDocument[ id=" + id + " ]";
     }
-    
+
 }

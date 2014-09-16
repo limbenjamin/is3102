@@ -65,5 +65,20 @@
             <from-outcome>storagelocationdetail</from-outcome>
             <to-view-id>/supplychain/storagelocationdetail.xhtml</to-view-id>
         </navigation-case>
+        
+                        <navigation-case>
+            <from-outcome>goodsreceipt</from-outcome>
+            <to-view-id>/supplychain/goodsreceipt.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+                        <navigation-case>
+            <from-outcome>goodsissued</from-outcome>
+            <to-view-id>/supplychain/goodsissued.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        
+        
     </navigation-rule>
 </faces-config>
