@@ -4,7 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -29,26 +30,29 @@
                                 <div class="tab-pane active" id="stores">
                                     
                                 <!-- Stores Tab -->
-                                <section class="panel">
-                                <div class="panel-heading dashboard-title-panel">
-                                  This tab displays Island Furniture's stores worldwide
-                                </div>                                      
-                                <ui:repeat value="#{organizationalHierarchyManagedBean.storeList}" var="store">
-                                    <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{store.name}</strong></h5>
-                                        <h:form>
-                                            <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
-                                                    <f:param name="id" value="#{store.id}" />
-                                                    <f:param name="plantType" value="Store" />
+                                <section class="panel">                                     
+                
+                                    <p:dataTable value="#{organizationalHierarchyManagedBean.storeList}" var="store">
+
+                                        <p:column headerText="Branch" sortBy="#{store.name}">
+                                            <h:outputText value="#{store.name}" />
+                                        </p:column>
+
+                                        <p:column headerText="Country" sortBy="#{store.country.name}">
+                                            <h:outputText value="#{store.country.name}" />
+                                        </p:column>
+
+                                        <p:column>
+                                            <h:form>
+                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <f:param name="id" value="#{store.id}" />
+                                                <f:param name="plantType" value="Store" />
                                                 </h:commandButton>
-                                            </span>
-                                        </h:form>                                      
-                                          <p>#{store.country.name}</p>
-                                      </a>                                  
-                                    </div>
-                                </ui:repeat>
+                                            </h:form>
+                                        </p:column>                        
+
+                                    </p:dataTable>
+
                                 </section>
                                 </div>
                                 
@@ -56,25 +60,26 @@
                                     
                                 <!-- Manufacturing Facilities Tab -->
                                 <section class="panel">
-                                <div class="panel-heading dashboard-title-panel">
-                                  This tab displays Island Furniture's manufacturing facilities worldwide
-                                </div>                                    
-                                <ui:repeat value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
-                                    <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{mf.name}</strong></h5>
-                                        <h:form>
-                                            <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                    <p:dataTable value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
+
+                                        <p:column headerText="Branch" sortBy="#{mf.name}">
+                                            <h:outputText value="#{mf.name}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Country" sortBy="#{mf.country.name}">
+                                            <h:outputText value="#{mf.country.name}" />
+                                        </p:column>
+                                        
+                                        <p:column>
+                                            <h:form>
+                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
                                                     <f:param name="id" value="#{mf.id}" />
                                                     <f:param name="plantType" value="Manufacturing Facility" />
                                                 </h:commandButton>
-                                            </span>
-                                        </h:form>                                      
-                                          <p>#{mf.country.name}</p>
-                                      </a>                                  
-                                    </div>
-                                </ui:repeat>
+                                            </h:form>
+                                        </p:column>                        
+
+                                    </p:dataTable>
                                 </section>
                                 </div>
                                 
@@ -82,25 +87,26 @@
                                     
                                 <!-- Country Offices Tab -->
                                 <section class="panel">
-                                <div class="panel-heading dashboard-title-panel">
-                                  This tab displays Island Furniture's country offices worldwide
-                                </div>                                    
-                                <ui:repeat value="#{organizationalHierarchyManagedBean.coList}" var="co">
-                                    <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{co.name}</strong></h5>
-                                        <h:form>
-                                            <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                    <p:dataTable value="#{organizationalHierarchyManagedBean.coList}" var="co">
+
+                                        <p:column headerText="Branch" sortBy="#{co.name}">
+                                            <h:outputText value="#{co.name}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Country" sortBy="#{co.country.name}">
+                                            <h:outputText value="#{co.country.name}" />
+                                        </p:column>
+                                        
+                                        <p:column>
+                                            <h:form>
+                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
                                                     <f:param name="id" value="#{co.id}" />
                                                     <f:param name="plantType" value="Country Office" />
                                                 </h:commandButton>
-                                            </span>
-                                        </h:form>                                      
-                                          <p>#{co.country.name}</p>
-                                      </a>                                  
-                                    </div>
-                                </ui:repeat>
+                                            </h:form>
+                                        </p:column>                        
+
+                                    </p:dataTable>
                                 </section>
                                 </div>
                             </div>                                
