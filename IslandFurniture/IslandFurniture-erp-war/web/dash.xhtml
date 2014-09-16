@@ -2,7 +2,9 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:define name="content">
         <h:outputScript target="body">
             $(document).ready( function(){
@@ -100,23 +102,22 @@
                     <div class="panel-heading dashboard-title-panel">
                       To-Do List
                     </div>
-                    <a class="list-group-item">
-                        <h5>
-                            <label>Proof-read Q4 Sales Report</label>
-                            <input type="checkbox" class="checkbox pull-right"></input>
-                        </h5>
-                        <small>due on 16 Sep 2014, Tuesday</small>
-                    </a>
-                    <a class="list-group-item">
-                        <h5>
-                            <label>Proof-read Q4 Sales Report</label>
-                            <input type="checkbox" class="checkbox pull-right"></input>
-                        </h5>
-                        <small>due on 16 Sep 2014, Tuesday</small>
-                    </a>                              
+                      <c:forEach var="i" begin="0" end="#{dashManagedBean.todoList.size()-1}">
+                        <a class="list-group-item">
+                          <h5>
+                              <label>#{dashManagedBean.todoList.get(i).description}</label>
+                              <h:form>
+                                <h:commandButton value="Done" class="btn btn-default btn-success pull-right" action="#{dashManagedBean.deleteTodoItem}">
+                                      <f:param name="id" value="#{dashManagedBean.todoList.get(i).id}" />
+                                </h:commandButton>
+                              </h:form>
+                          </h5>
+                          <small>due on #{dashManagedBean.todoList.get(i).dueDate}</small>
+                        </a>
+                    </c:forEach>       
                     <div class="panel-footer">
-                        <a href="#" class="no-decor">
-                            View All To-Dos <i class="fa fa-arrow-circle-o-right"></i>
+                        <a href="#" class="no-decor" data-toggle="modal" data-target="#addTodo">
+                            Add To-Dos <i class="fa fa-arrow-circle-o-right"></i>
                         </a>
                     </div>
                   </section>
@@ -144,19 +145,79 @@
                       Notes
                     </div>
                     <a class="list-group-item">
-                        <h5><strong>Some Tips and Tricks</strong></h5>
-                        <p>TBHQ, a byproduct of the petroleum industry, is often listed as an “antioxidant,” 
-                           but it’s important to realize it is a synthetic chemical with antioxidant properties
-                           but not a natural antioxidant.</p>
+                        <h5><strong>Notes</strong></h5>
+                        <p>#{dashManagedBean.notes}</p>
                     </a>   
                     <div class="panel-footer">
-                        <a href="#" class="no-decor">
-                            View All Notes <i class="fa fa-arrow-circle-o-right"></i>
+                        <a href="#" class="no-decor" data-toggle="modal" data-target="#editNotes">
+                            Modify Notes <i class="fa fa-arrow-circle-o-right"></i>
                         </a>
                     </div>
               </section>            
             
             </div>
+           
+            <!-- Notes Modal -->
+            <div class="modal fade" id="editNotes" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Notes</h4>
+                  </div>
+                  <h:form id="notesForm" class="form-horizontal">
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Content: </label>
+                            <div class="col-sm-9">
+                              <h:inputTextarea id="notes" class="form-control" value="#{dashManagedBean.notes}"></h:inputTextarea>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                        <h:commandButton action="#{dashManagedBean.modifyNotes}" value="Edit Notes" class="btn btn-success btn-round"></h:commandButton>
+                      </div>
+                  </h:form>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Todo Modal -->
+            <div class="modal fade" id="addTodo" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Todo</h4>
+                  </div>
+                  <h:form id="todoForm" class="form-horizontal">
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Description: </label>
+                            <div class="col-sm-9">
+                              <h:inputTextarea id="description" class="form-control"></h:inputTextarea>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Due Date: </label>
+                            <div class="col-sm-9">
+                              <h:inputText id="dueDate" p:type="date" class="form-control"></h:inputText>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                        <h:commandButton action="#{dashManagedBean.addTodo}" value="Add Todo" class="btn btn-success btn-round"></h:commandButton>
+                      </div>
+                  </h:form>
+                </div>
+              </div>
+            </div>
+
         </div>
+        
         </ui:define>
 </ui:composition>

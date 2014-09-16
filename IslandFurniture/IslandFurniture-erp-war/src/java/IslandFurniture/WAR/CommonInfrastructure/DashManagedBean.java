@@ -15,6 +15,8 @@ package IslandFurniture.WAR.CommonInfrastructure;
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -51,6 +53,9 @@ public class DashManagedBean implements Serializable {
     private String plantName = null;
     private String countryName = null;
     private List<Announcement> announcementList = null;
+    private Date date;
+    private String dateString;
+    private Long id;
     
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -99,11 +104,20 @@ public class DashManagedBean implements Serializable {
       return "dash";
     }
     
-    public String addTodo() {
+    public String addTodo() throws ParseException {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       description = request.getParameter("todoForm:description");
-      todoBean.addTodoItem(username, description);
+      dateString = request.getParameter("todoForm:dueDate");
+      date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+      todoBean.addTodoItem(username, description, date);
       return "dash";
+    }
+    
+    public String deleteTodoItem(){
+        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+        todoBean.deleteTodoItem(id);
+        todoList = staff.getTodoList();
+        return "dash";
     }
     
     public String getUsername() {
@@ -276,6 +290,30 @@ public class DashManagedBean implements Serializable {
 
     public void setCountryName(String countryName) {
         this.countryName = countryName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
     

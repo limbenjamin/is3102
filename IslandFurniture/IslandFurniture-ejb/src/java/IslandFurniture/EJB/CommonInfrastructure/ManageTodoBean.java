@@ -9,6 +9,7 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Todo;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -40,12 +41,13 @@ public class ManageTodoBean implements ManageTodoBeanLocal {
     }
     
     @Override
-    public void addTodoItem(String username, String description){
+    public void addTodoItem(String username, String description, Date dueDate){
         staff = staffbean.getStaff(username);
         todo = new Todo();
         todo.setStaff(staff);
         todo.setDescription(description);
         todo.setStatus(Boolean.FALSE);
+        todo.setDueDate(dueDate);
         todoList = staff.getTodoList();
         todoList.add(todo);
         em.merge(staff);
@@ -58,4 +60,13 @@ public class ManageTodoBean implements ManageTodoBeanLocal {
         return staff.getTodoList();
     }
     
+    @Override
+    public void deleteTodoItem(Long id){
+        todo = em.find(Todo.class, id);
+        staff = todo.getStaff();
+        staff.getTodoList().remove(todo);
+        em.merge(staff);
+        em.remove(todo);
+    }
+  
 }
