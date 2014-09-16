@@ -104,7 +104,7 @@ public abstract class Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Transaction[ id=" + this.getStore().getId() + ", " + id + " ]";
+        return "Transaction[ id=" + this.getStore() + ", " + id + " ]";
     }
 
 }
