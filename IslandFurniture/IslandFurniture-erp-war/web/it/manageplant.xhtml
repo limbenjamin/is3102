@@ -10,28 +10,36 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newPlant">
+                                    <i class="fa fa-fw fa-plus"></i>New Plant
+                                </button>
                                 <h4>Plants</h4>
                                 <hr></hr>       
                             </div>                        
-                            <div class="col-md-9 col-sm-8">                                               
-                              <section class="panel">
+                            <div class="col-md-8">                                               
+                                <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                                  <li class="active"><a href="#stores" role="tab" data-toggle="tab">Stores</a></li>
+                                  <li><a href="#facilities" role="tab" data-toggle="tab">Manufacturing Facility</a></li>
+                                  <li><a href="#offices" role="tab" data-toggle="tab">Country Office</a></li>
+                                </ul>
+                                
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="stores">
+                                    
+                                <!-- Stores Tab -->
+                                <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
-                                    <span class="pull-right">
-                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newThread">
-                                            <span class="fa fa-plus"></span> New
-                                        </a>
-                                    </span>
-                                    Plant List
-                                </div>
-                                Store
+                                  This tab displays Island Furniture's stores worldwide
+                                </div>                                      
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.storeList}" var="store">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
                                           <h5><strong>#{store.name}</strong></h5>
                                         <h:form>
                                             <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
                                                     <f:param name="id" value="#{store.id}" />
                                                     <f:param name="plantType" value="Store" />
                                                 </h:commandButton>
@@ -41,14 +49,23 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                                Manufacturing Facility
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="facilities">
+                                    
+                                <!-- Manufacturing Facilities Tab -->
+                                <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                  This tab displays Island Furniture's manufacturing facilities worldwide
+                                </div>                                    
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
                                           <h5><strong>#{mf.name}</strong></h5>
                                         <h:form>
                                             <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
                                                     <f:param name="id" value="#{mf.id}" />
                                                     <f:param name="plantType" value="Manufacturing Facility" />
                                                 </h:commandButton>
@@ -58,14 +75,23 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                                Country Office
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="offices">
+                                    
+                                <!-- Country Offices Tab -->
+                                <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                  This tab displays Island Furniture's country offices worldwide
+                                </div>                                    
                                 <ui:repeat value="#{organizationalHierarchyManagedBean.coList}" var="co">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
                                           <h5><strong>#{co.name}</strong></h5>
                                         <h:form>
                                             <span class="pull-right">
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{organizationalHierarchyManagedBean.deletePlant}">
                                                     <f:param name="id" value="#{co.id}" />
                                                     <f:param name="plantType" value="Country Office" />
                                                 </h:commandButton>
@@ -75,12 +101,15 @@
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
-                              </section>
-                            </div>
-
+                                </section>
+                                </div>
+                            </div>                                
+                                
+                                
+                            </div>                            
 
                             <!-- Modal -->
-                            <div class="modal fade" id="newThread" aria-hidden="true">
+                            <div class="modal fade" id="newPlant" aria-hidden="true">
                               <div class="modal-dialog">
                                 <div class="modal-content">
                                   <div class="modal-header">
@@ -91,16 +120,14 @@
                                       <div class="modal-body">
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Plant Name: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-bookmark"></i>
+                                            <div class="col-sm-9">
                                               <h:inputText id="plantName" class="form-control"></h:inputText>
                                             </div>
                                           </div>
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Country: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-user"></i>
-                                                <h:selectOneMenu id="country">
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="country" class="form-control">
                                                     <c:forEach var="i" begin="0" end="#{organizationalHierarchyManagedBean.countryList.size()-1}">
                                                         <f:selectItem itemLabel="#{organizationalHierarchyManagedBean.countryList.get(i).name}" itemValue="#{organizationalHierarchyManagedBean.countryList.get(i).name}" />
                                                     </c:forEach>
@@ -109,9 +136,8 @@
                                           </div>
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Plant Type: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-user"></i>
-                                                <h:selectOneMenu id="plantType">
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="plantType" class="form-control">
                                                     <f:selectItem itemLabel="Store" itemValue="Store" />
                                                     <f:selectItem itemLabel="Manufacturing Facility" itemValue="Manufacturing Facility" />
                                                     <f:selectItem itemLabel="Country Office" itemValue="Country Office" />

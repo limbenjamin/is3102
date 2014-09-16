@@ -7,11 +7,13 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -27,6 +29,8 @@ public class Todo implements Serializable {
     private Boolean status;
     @ManyToOne
     private Staff staff;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date dueDate;
 
   public Long getId() {
         return id;
@@ -60,6 +64,16 @@ public class Todo implements Serializable {
         this.staff = staff;
     }
 
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

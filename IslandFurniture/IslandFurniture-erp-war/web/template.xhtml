@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css" id="skin"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/navigation.css"></link>
         <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/dashboard.css"></link> 
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
     
         <script src="#{loginManagedBean.absolutepath}assets/plugins/modernizr.js"></script>
     </h:head>
@@ -282,11 +281,13 @@
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/demo.js"></script>
         <!-- template scripts -->
         <script src="#{loginManagedBean.absolutepath}/assets/js/offscreen.js"></script>
         <script src="#{loginManagedBean.absolutepath}/assets/js/navigation.js"></script>
+        <!-- for calendar, TODO: try to move to dash -->
+        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
+        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
+
     </h:body>
 </html>
 

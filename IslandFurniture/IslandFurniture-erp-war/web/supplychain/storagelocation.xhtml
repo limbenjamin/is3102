@@ -1,62 +1,63 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
 
                         <h:form id="storageForm" class="form-horizontal">
 
-                            <h4> Create Storage Location</h4><hr></hr> 
-                            
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Plant Number: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="plantNumber" value="#{storageLocationManagedBean.plantNumber}" class="form-control"></h:inputText>
-                                    </div>
-                                 </div>                            
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Storage Area Number: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="storageAreaNumber" value="#{storageLocationManagedBean.storageAreaNumber}" class="form-control"></h:inputText>
-                                    </div>
-                                 </div>                             
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Storage Area Name: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="storageAreaName" value="#{storageLocationManagedBean.storageAreaName}" class="form-control"></h:inputText>
-                                    </div>
-                                 </div>   
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Storage ID: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="storageID" value="#{storageLocationManagedBean.storageID}" class="form-control"></h:inputText>
-                                    </div>
-                                 </div>                            
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Storage Type: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="storageType" value="#{storageLocationManagedBean.storageType}" class="form-control"></h:inputText>
-                                    </div>
-                                </div> 
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Storage Description: </label>
-                                    <div class="col-sm-8">
-                                        <h:inputText id="storageDescription" value="#{storageLocationManagedBean.storageDescription}" class="form-control"></h:inputText>
-                                    </div>
+                            <h4> Create Storage Locations</h4><hr></hr> 
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Plant Number: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="plantNumber" value="#{storageLocationManagedBean.plantNumber}" class="form-control"></h:inputText>
                                 </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Storage Area Number: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="storageAreaNumber" value="#{storageLocationManagedBean.storageAreaNumber}" class="form-control"></h:inputText>
+                                </div>
+                            </div>                             
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Storage Area Name: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="storageAreaName" value="#{storageLocationManagedBean.storageAreaName}" class="form-control"></h:inputText>
+                                </div>
+                            </div>   
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Storage ID: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="storageID" value="#{storageLocationManagedBean.storageID}" class="form-control"></h:inputText>
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Storage Type: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="storageType" value="#{storageLocationManagedBean.storageType}" class="form-control"></h:inputText>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Storage Description: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="storageDescription" value="#{storageLocationManagedBean.storageDescription}" class="form-control"></h:inputText>
+                                </div>
+                            </div>
 
                             <h:commandButton action="#{storageLocationManagedBean.addStorageLocation}" value="Create Storage Location" class="btn btn-default pull-right"></h:commandButton><br> </br>
                         </h:form> 
 
-                        <h4>View and Edit Storage Location </h4><hr> </hr> 
-                        <table>
+
+                        <h4>View Storage Locations</h4><hr> </hr> 
+                        <table class="table table-hover">
                             <tr>
                                 <th class="tg-031e">Plant Number</th>
                                 <th class="tg-031e">Storage Area Number</th>
@@ -77,8 +78,8 @@
                                         <td class="tg-031e"><p>#{StorageLocation.storageType}</p> </td>
                                         <td class="tg-031e"><p>#{StorageLocation.storageDescription}</p> </td>
                                         <td class="tg-031e"><p>
-                                                <h:commandButton action="storagelocationdetail"  value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:param name="id" value="#{StorageLocation.id}" />
+                                                <h:commandButton actionListener="#{storageLocationManagedBean.storagelocationdetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                    <f:attribute name="locationId" value="#{StorageLocation.id}" />
                                                 </h:commandButton></p>
                                         </td>
                                     </h:form> 
@@ -93,8 +94,6 @@
 
 
 
-
-                  
 
                     </div>
                 </div>

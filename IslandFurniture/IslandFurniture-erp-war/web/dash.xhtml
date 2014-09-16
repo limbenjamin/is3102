@@ -1,93 +1,223 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    
-    <h:body>
-        <ui:composition template="./template.xhtml">
-            <ui:define name="content">
-                <div class="row">
-                    <div class="col-md-9">
-                        <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
-                        <h4>Quick Links</h4>
-                        <hr></hr>
-                        <!-- Quick Links -->
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
-                                <h5>CRM Analytics</h5>
-                            </div></a>
-                        </div>       
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
-                                <h5>Sales Forecast</h5>
-                            </div></a>
-                        </div>    
-                        <div class="col-md-4"><a href="./common/messaging.xhtml">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
-                                <h5>Messages</h5>
-                            </div></a>
-                        </div> 
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
-                                <h5>CRM Operations</h5>
-                            </div></a>
-                        </div>    
-                        <div class="col-md-4"><a href="acrm.html">
-                            <div class="quick-link">
-                                <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
-                                <h5>Transaction History</h5>
-                            </div></a>
-                        </div>
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <h:outputScript target="body">
+            $(document).ready( function(){
+            var cTime = new Date(), month = cTime.getMonth()+1, year = cTime.getFullYear();
+              theMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              theDays = ["S", "M", "T", "W", "T", "F", "S"];
+              events = [
+                <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
+                    [
+                    "#{dashManagedBean.localDateTimeList.get(i).getDayOfMonth()}/"+month+"/"+year, 
+                        '#{dashManagedBean.eventList.get(i).name}', 
+                        '#', 
+                        '#177bbb', 
+                        'Time: #{dashManagedBean.localDateTimeList.get(i).toLocalTime()} <br /> Description: #{dashManagedBean.eventList.get(i).description}'
+                    ],
 
-                        <div class="col-md-12">
-                            <hr></hr>
-                        </div>
-                        <div class="col-md-12">                      
-                          <section class="panel">
-                            <div class="panel-heading announcement-widget">
-                              <span class="badge pull-right">4</span>
-                              <a href="#" class="no-decor">Announcements</a>
-                            </div>
-                            <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
-                                <a class="list-group-item">
-                                    <h4><strong>#{announcement.title}</strong></h4>
-                                    <h5>#{announcement.content}</h5>
-                                    <br></br>
-                                    <small>Announced on #{announcement.activeDate}</small>
-                                </a>
-                            </ui:repeat>    
-                            <div class="panel-footer">
-                                <a href="#" class="no-decor">
-                                    View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
-                                </a>
-                            </div>
-                          </section>
-                        </div>
-                    </div>
+                </c:forEach>
 
-                    <div class="col-md-3"> 
-                    <h4>Quick Calendar</h4>
-                    <hr></hr> 
-                      <section class="panel">
-                        <div id="calendar"></div>
-                        <div class="list-group">
-                            <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
-                                <a class="list-group-item">
-                                    <span class="badge">#{dashManagedBean.localDateTimeList.get(i).toLocalTime()}</span> 
-                                    <strong>#{dashManagedBean.localDateTimeList.get(i).toLocalDate()}</strong>: #{dashManagedBean.eventList.get(i).name}
-                                </a>
-                            </c:forEach>
-                        </div>                        
-                      </section>                                        
-                    </div>
+              ];
+              $('#calendar').calendar({
+                  months: theMonths,
+                  days: theDays,
+                  events: events,
+                  popover_options:{
+                      placement: 'top',
+                      html: true
+                  }
+              });
+          });
+
+        </h:outputScript>
+        <div class="row">
+            <div class="col-md-9">
+                <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
+                <h4>Quick Links</h4>
+                <hr></hr>
+                <!-- Quick Links -->
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
+                        <h5>CRM Analytics</h5>
+                    </div></a>
+                </div>       
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
+                        <h5>Sales Forecast</h5>
+                    </div></a>
+                </div>    
+                <div class="col-md-4"><a href="./common/messaging.xhtml">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
+                        <h5>Messages</h5>
+                    </div></a>
+                </div> 
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
+                        <h5>CRM Operations</h5>
+                    </div></a>
+                </div>    
+                <div class="col-md-4"><a href="acrm.html">
+                    <div class="quick-link">
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
+                        <h5>Transaction History</h5>
+                    </div></a>
                 </div>
-                </ui:define>
-        </ui:composition>
-    </h:body>
-</html>
+
+                <div class="col-md-12">
+                    <hr></hr>
+                </div>
+                <div class="col-md-6">                      
+                  <section class="panel">
+                    <div class="panel-heading announcement-widget">
+                      <a href="#" class="no-decor">Announcements</a>
+                    </div>
+                    <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
+                        <a class="list-group-item">
+                            <h4><strong>#{announcement.title}</strong></h4>
+                            <h5>#{announcement.content}</h5>
+                            <br></br>
+                            <small>Announced on #{announcement.activeDate}</small>
+                        </a>
+                    </ui:repeat>    
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor">
+                            View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                  </section>
+                </div>
+                
+                <div class="col-md-6">                      
+                  <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      To-Do List
+                    </div>
+                      <c:forEach var="i" begin="0" end="#{dashManagedBean.todoList.size()-1}">
+                        <a class="list-group-item">
+                          <h5>
+                              <label>#{dashManagedBean.todoList.get(i).description}</label>
+                              <h:form>
+                                <h:commandButton value="Done" class="btn btn-default btn-success pull-right" action="#{dashManagedBean.deleteTodoItem}">
+                                      <f:param name="id" value="#{dashManagedBean.todoList.get(i).id}" />
+                                </h:commandButton>
+                              </h:form>
+                          </h5>
+                          <small>due on #{dashManagedBean.todoList.get(i).dueDate}</small>
+                        </a>
+                    </c:forEach>       
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor" data-toggle="modal" data-target="#addTodo">
+                            Add To-Dos <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+                  </section>
+                </div>                
+                
+            </div>
+
+            <div class="col-md-3"> 
+            <h4>Quick Calendar</h4>
+            <hr></hr> 
+              <section class="panel">
+                <div id="calendar"></div>
+                <div class="list-group">
+                    <c:forEach var="i" begin="0" end="#{dashManagedBean.localDateTimeList.size()-1}">
+                        <a class="list-group-item">
+                            <span class="badge">#{dashManagedBean.localDateTimeList.get(i).toLocalTime()}</span> 
+                            <strong>#{dashManagedBean.localDateTimeList.get(i).toLocalDate()}</strong>: #{dashManagedBean.eventList.get(i).name}
+                        </a>
+                    </c:forEach>
+                </div>                        
+              </section> 
+            
+              <section class="panel">
+                    <div class="panel-heading dashboard-title-panel">
+                      Notes
+                    </div>
+                    <a class="list-group-item">
+                        <h5><strong>Notes</strong></h5>
+                        <p>#{dashManagedBean.notes}</p>
+                    </a>   
+                    <div class="panel-footer">
+                        <a href="#" class="no-decor" data-toggle="modal" data-target="#editNotes">
+                            Modify Notes <i class="fa fa-arrow-circle-o-right"></i>
+                        </a>
+                    </div>
+              </section>            
+            
+            </div>
+           
+            <!-- Notes Modal -->
+            <div class="modal fade" id="editNotes" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Notes</h4>
+                  </div>
+                  <h:form id="notesForm" class="form-horizontal">
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Content: </label>
+                            <div class="col-sm-9">
+                              <h:inputTextarea id="notes" class="form-control" value="#{dashManagedBean.notes}"></h:inputTextarea>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                        <h:commandButton action="#{dashManagedBean.modifyNotes}" value="Edit Notes" class="btn btn-success btn-round"></h:commandButton>
+                      </div>
+                  </h:form>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Todo Modal -->
+            <div class="modal fade" id="addTodo" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Todo</h4>
+                  </div>
+                  <h:form id="todoForm" class="form-horizontal">
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Description: </label>
+                            <div class="col-sm-9">
+                              <h:inputTextarea id="description" class="form-control"></h:inputTextarea>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-body">
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Due Date: </label>
+                            <div class="col-sm-9">
+                              <h:inputText id="dueDate" p:type="date" class="form-control"></h:inputText>
+                            </div>
+                          </div>                                                                       
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                        <h:commandButton action="#{dashManagedBean.addTodo}" value="Add Todo" class="btn btn-success btn-round"></h:commandButton>
+                      </div>
+                  </h:form>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        
+        </ui:define>
+</ui:composition>

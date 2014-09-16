@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -18,17 +19,27 @@
                             <div class="panel-heading dashboard-title-panel">
                                 <p>#{messageThread.title}</p>
                             </div>
-                            
-                                <ui:repeat value="#{messagingManaged2Bean.messageList}" var="message">
-                                    <div class="list-group-item">
-                                    <h5><strong> #{message.staff.name}: </strong> #{message.content} </h5>  
-                                    <small>#{message.msgTime.time}</small>
-                                    </div>
-                                </ui:repeat>
+                           
+                                <c:forEach items="${messagingManaged2Bean.messageList}" var="message">
+                                    <c:set var="uname" value="${message.staff.username}"/>
+                                    <c:if test="${uname == messagingManaged2Bean.username}">
+                                        <div class="list-group-item own-message">
+                                            <h5><strong> #{message.staff.name} : </strong> #{message.content} </h5>  
+                                            <small>#{message.msgTime.time}</small>
+                                        </div>
+                                    </c:if>
+                                    <c:if test="${uname != messagingManaged2Bean.username}">
+                                        <div class="list-group-item">
+                                            <h5><strong>  #{message.staff.name} : </strong> #{message.content} </h5>  
+                                            <small>#{message.msgTime.time}</small>
+                                        </div>
+                                    </c:if>
+
+                                </c:forEach>
                               <div class="panel-footer">
                                 <h:form id="newMessage"> 
                                     <h5>
-                                        <strong><h:outputText value="#{messagingManaged2Bean.message.staff.name}" /></strong> 
+                                        <strong><h:outputText value="#{messagingManaged2Bean.message.staff.name}" /></strong> : 
                                         <h:outputText value="#{messagingManaged2Bean.message.content}" />
                                     </h5>     
                                     <small><h:outputText value="#{messagingManaged2Bean.message.msgTime.time}" /></small>
@@ -41,7 +52,7 @@
                                             <h:inputText id="content" class="form-control"></h:inputText>
                                          </div>
                                          <div class="col-sm-2">
-                                             <h:commandButton action="#{messagingManaged2Bean.addMessage}" value="Compose" class="btn btn-success"></h:commandButton>
+                                             <h:commandButton action="#{messagingManaged2Bean.addMessage}" value="Send" class="btn btn-success"></h:commandButton>
                                          </div>                                        
                                     </div>
                                 </h:form>

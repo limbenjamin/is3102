@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Todo;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -17,8 +18,8 @@ import javax.ejb.Local;
 @Local
 public interface ManageTodoBeanLocal {
 
-    void addTodoItem(String username, String description);
-
+    void addTodoItem(String username, String description, Date date);
+    void deleteTodoItem(Long id);
     List<Todo> getTodoList(String username);
     
 }

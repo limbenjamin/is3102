@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.FurnitureModel;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -21,5 +22,13 @@ public interface StockManagerLocal {
     public boolean updateMaterial(Long id, String name, Double weight);
 
     public boolean addMaterial(String name, Double weight);
+
+    public boolean addFurnitureModel(String name);
+
+    public List<FurnitureModel> displayFurnitureList();
+
+    public void editFurnitureModel(String name);
+
+    public void addToBOM(Long materialID, Long furnitureID);
     
 }

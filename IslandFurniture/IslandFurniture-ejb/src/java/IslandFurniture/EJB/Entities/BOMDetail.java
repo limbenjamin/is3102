@@ -28,6 +28,9 @@ public class BOMDetail implements Serializable {
     @ManyToOne
     private Material material;
 
+    public BOMDetail() {
+        
+    }
     public Long getId() {
         return id;
     }
