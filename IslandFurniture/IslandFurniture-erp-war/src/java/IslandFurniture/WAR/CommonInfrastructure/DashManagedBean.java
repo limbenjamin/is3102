@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.CommonInfrastructure;
 
 /**
  *
  * @author Benjamin
  */
-
-
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,14 +26,15 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
 @ManagedBean
 @ViewScoped
 public class DashManagedBean implements Serializable {
+
     private static final long serialVersionUID = 5443351151396868724L;
     private Staff staff;
     private String username = null;
@@ -56,7 +55,7 @@ public class DashManagedBean implements Serializable {
     private Date date;
     private String dateString;
     private Long id;
-    
+
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     @EJB
@@ -64,12 +63,12 @@ public class DashManagedBean implements Serializable {
     @EJB
     private ManageTodoBeanLocal todoBean;
     @EJB
-    private ManageAnnouncementsBeanLocal announcementBean; 
+    private ManageAnnouncementsBeanLocal announcementBean;
     @EJB
-    private ManageEventsBeanLocal eventBean;  
-    
+    private ManageEventsBeanLocal eventBean;
+
     @PostConstruct
-    public void init(){
+    public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         this.staff = staffBean.getStaff(username);
@@ -88,38 +87,39 @@ public class DashManagedBean implements Serializable {
             instant = event.getEventTime().toInstant();
             localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
             localDateTimeList.add(localDateTime);
-	}
+        }
     }
-    
-    public String logout() {
-      HttpSession session = Util.getSession();
-      session.invalidate();
-      return "login";
+
+    public void logout() throws IOException {
+        HttpSession session = Util.getSession();
+        session.invalidate();
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(ec.getRequestContextPath());
     }
-    
+
     public String modifyNotes() {
-      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      notes = request.getParameter("notesForm:notes");
-      staffBean.modifyNote(username, notes);
-      return "dash";
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        notes = request.getParameter("notesForm:notes");
+        staffBean.modifyNote(username, notes);
+        return "dash";
     }
-    
+
     public String addTodo() throws ParseException {
-      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      description = request.getParameter("todoForm:description");
-      dateString = request.getParameter("todoForm:dueDate");
-      date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-      todoBean.addTodoItem(username, description, date);
-      return "dash";
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        description = request.getParameter("todoForm:description");
+        dateString = request.getParameter("todoForm:dueDate");
+        date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+        todoBean.addTodoItem(username, description, date);
+        return "dash";
     }
-    
-    public String deleteTodoItem(){
+
+    public String deleteTodoItem() {
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         todoBean.deleteTodoItem(id);
         todoList = staff.getTodoList();
         return "dash";
     }
-    
+
     public String getUsername() {
         return username;
     }
@@ -315,7 +315,5 @@ public class DashManagedBean implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
-    
+
 }

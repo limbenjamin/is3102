@@ -9,284 +9,282 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Web Application Admin Dashboard</title>
         <!-- core styles -->
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/bootstrap/css/bootstrap.min.css"></link>
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/font-awesome/css/font-awesome.min.css"></link>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/bootstrap/css/bootstrap.min.css"></link>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/font-awesome/css/font-awesome.min.css"></link>
         <!-- template styles -->
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/palette.css" id="skin"></link>
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/navigation.css"></link>
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/css/dashboard.css"></link> 
-    
-        <script src="#{loginManagedBean.absolutepath}assets/plugins/modernizr.js"></script>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/palette.css" id="skin"></link>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/navigation.css"></link>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/dashboard.css"></link> 
+
+        <script src="#{application.contextPath}/assets/plugins/modernizr.js"></script>
     </h:head>
     <h:body>
-        
-    <div class="app">
-        <!-- top header -->
-        <header class="header header-fixed navbar">
 
-            <div class="brand">
-                <!-- toggle offscreen menu -->
-                <a href="javascript:;" class="fa fa-bars off-left visible-xs" data-toggle="offscreen" data-move="ltr"></a>
-                <!-- /toggle offscreen menu -->
+        <div class="app">
+            <!-- top header -->
+            <header class="header header-fixed navbar">
 
-                <!-- logo -->
-                <a href="#{loginManagedBean.absolutepath}dash.xhtml" class="navbar-brand">
-                    <img src="#{loginManagedBean.absolutepath}/assets/img/logo.png" alt=""></img>
-                    <span>
-                        Island Furniture
-                    </span>
-                </a>
-                <!-- /logo -->
-            </div>
+                <div class="brand">
+                    <!-- toggle offscreen menu -->
+                    <a href="javascript:;" class="fa fa-bars off-left visible-xs" data-toggle="offscreen" data-move="ltr"></a>
+                    <!-- /toggle offscreen menu -->
 
-            <ul class="nav navbar-nav">
-                <li class="hidden-xs">
-                    <!-- toggle small menu -->
-                    <a href="#" class="toggle-sidebar">
-                        <i class="fa fa-bars"></i>
+                    <!-- logo -->
+                    <a href="#{application.contextPath}/dash.xhtml" class="navbar-brand">
+                        <img src="#{application.contextPath}/assets/img/logo.png" alt=""></img>
+                        <span>
+                            Island Furniture
+                        </span>
                     </a>
-                    <!-- /toggle small menu -->
-                </li>
-                <li class="dashboard-name">
-                    <h4>Common Workspace</h4>
-                </li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-
-                <li class="notifications dropdown">
-                    <a href="#" data-toggle="dropdown">
-                        <i class="fa fa-bell"></i>
-                        <div class="badge badge-top">
-                            <span>3</span>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu">
-                        <div class="panel panel-default no-m">
-                            <div class="panel-heading small"><b>Notifications</b>
-                            </div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <a href="#">
-                                        <div class="m-body">
-                                            <small><h6>Inventory Management System:</h6></small>
-                                            <span>Order #12093 was delivered to the warehouse</span><br></br>
-                                            <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 8:32 AM</span>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="#">
-                                        <div class="m-body">
-                                            <small><h6>Lee Chen Tong:</h6></small>
-                                            <span>Reminder to refill the sauce bottles</span><br></br>
-                                            <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 4:32 PM</span>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-
-                            <div class="panel-footer">
-                                <a href="#">See all notifications <i class="fa fa-arrow-circle-o-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-
-
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown">
-                        <i class="fa fa-cogs"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <h:link value="View Employee Record" outcome="modifyparticulars"/>
-                        </li>
-                        <li>
-                            <h:link value="Change Password" outcome="changepassword"/>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">Notification Settings</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="off-right">
-                    <h:form>
-                    <h:commandLink action="#{dashManagedBean.logout}" >
-                        <span>Logout</span>
-                    </h:commandLink>
-                    </h:form>
-                </li>
-            </ul>
-        </header>
-        <!-- /top header -->
-
-        <section class="layout">
-            <!-- sidebar menu -->
-            <aside class="sidebar offscreen-left">
-                <!-- main navigation -->
-                <nav class="main-navigation" data-height="auto" data-size="6px" data-distance="0" data-rail-visible="true" data-wheel-step="10">
-
-                    <ul class="nav user-info">
-                        <li>
-                            <a href="index.html">
-                                <img src="#{loginManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
-                                <span class="user-info">
-                                    #{dashManagedBean.name}<br></br>
-                                    #{dashManagedBean.plantName}<br></br>
-                                    #{dashManagedBean.countryName}
-                                </span>
-                            </a>
-                        </li>
-                    </ul> 
-
-                    <p class="nav-title">MENU</p>
-                    <ul class="nav sidenav">
-
-                        <li class="active">
-                            <a href="#{loginManagedBean.absolutepath}dash.xhtml">
-                                <i class="fa fa-home"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>CRM Analytics<i class="fa fa-caret-down pull-right"></i></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="buttons.html">
-                                        <span>Customer Membership Analytics</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="general.html">
-                                        <span>Customer Purchase Patterns Analytics</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="typography.html">
-                                        <span>Promotion Analytics</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-star"></i>
-                                <span>Supply Chain<i class="fa fa-caret-down pull-right"></i></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="#{loginManagedBean.absolutepath}supplychain/storagelocation.xhtml">
-                                        <span>Manage Storage Locations</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#{loginManagedBean.absolutepath}supplychain/goodsissued.xhtml">
-                                        <span>Manage Goods Issued</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#{loginManagedBean.absolutepath}supplychain/goodsreceipt.xhtml">
-                                        <span>Manage Goods Receipt</span>
-                                    </a>
-                                </li>                                
-                            </ul>                            
-                        </li>                        
-                        <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-edit"></i><span>CRM Operations</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-star"></i>
-                                <span>Sales &amp; Marketing<i class="fa fa-caret-down pull-right"></i></span>
-                            </a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="#">
-                                        <span>Past Sales Performance</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#{loginManagedBean.absolutepath}salesplanning/viewmssr.xhtml">
-                                        <span>Sales Forecast</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <i class="fa fa-clock-o"></i><span>Transaction History</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#{loginManagedBean.absolutepath}it/manageplant.xhtml">
-                                <i class="fa fa-desktop"></i><span>Manage Org. Hierarchy</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#{loginManagedBean.absolutepath}it/roleprivilege.xhtml">
-                                <i class="fa fa-pencil"></i><span>Manage Privileges</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#{loginManagedBean.absolutepath}it/managestaff.xhtml">
-                                <i class="fa fa-calendar"></i><span>Manage Staff</span>
-                            </a>
-                        </li>   
-                        <li>
-                            <a href="#{loginManagedBean.absolutepath}common/messaging.xhtml">
-                                <i class="fa fa-envelope"></i><span>Messages</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#{loginManagedBean.absolutepath}common/broadcast.xhtml">
-                                <i class="fa fa-bullhorn"></i><span>Broadcasts</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
-            <!-- /sidebar menu -->
-
-            <!-- main content starts here -->
-            <section class="main-content">
-
-                <!-- content wrapper -->
-                <div class="content-wrap">
-
-                    <!-- inner content wrapper -->
-                    <div class="wrapper">
-
-                        <ui:insert name="content" >Content</ui:insert>
-
-                    </div>
-                    <!-- /inner content wrapper -->
-
+                    <!-- /logo -->
                 </div>
-                <!-- /content wrapper -->
-                <a class="exit-offscreen"></a>
+
+                <ul class="nav navbar-nav">
+                    <li class="hidden-xs">
+                        <!-- toggle small menu -->
+                        <a href="#" class="toggle-sidebar">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <!-- /toggle small menu -->
+                    </li>
+                    <li class="dashboard-name">
+                        <h4>Common Workspace</h4>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="notifications dropdown">
+                        <a href="#" data-toggle="dropdown">
+                            <i class="fa fa-bell"></i>
+                            <div class="badge badge-top">
+                                <span>3</span>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="panel panel-default no-m">
+                                <div class="panel-heading small"><b>Notifications</b>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <a href="#">
+                                            <div class="m-body">
+                                                <small><h6>Inventory Management System:</h6></small>
+                                                <span>Order #12093 was delivered to the warehouse</span><br></br>
+                                                <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 8:32 AM</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="#">
+                                            <div class="m-body">
+                                                <small><h6>Lee Chen Tong:</h6></small>
+                                                <span>Reminder to refill the sauce bottles</span><br></br>
+                                                <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 4:32 PM</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <div class="panel-footer">
+                                    <a href="#">See all notifications <i class="fa fa-arrow-circle-o-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown">
+                            <i class="fa fa-cogs"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <h:link value="View Employee Record" outcome="modifyparticulars"/>
+                            </li>
+                            <li>
+                                <h:link value="Change Password" outcome="changepassword"/>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">Notification Settings</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="off-right">
+                        <h:form>
+                            <h:commandLink value="Logout" action="#{dashManagedBean.logout}" />
+                        </h:form>
+                    </li>
+                </ul>
+            </header>
+            <!-- /top header -->
+
+            <section class="layout">
+                <!-- sidebar menu -->
+                <aside class="sidebar offscreen-left">
+                    <!-- main navigation -->
+                    <nav class="main-navigation" data-height="auto" data-size="6px" data-distance="0" data-rail-visible="true" data-wheel-step="10">
+
+                        <ul class="nav user-info">
+                            <li>
+                                <a href="index.html">
+                                    <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                    <span class="user-info">
+                                        #{dashManagedBean.name}<br></br>
+                                        #{dashManagedBean.plantName}<br></br>
+                                        #{dashManagedBean.countryName}
+                                    </span>
+                                </a>
+                            </li>
+                        </ul> 
+
+                        <p class="nav-title">MENU</p>
+                        <ul class="nav sidenav">
+
+                            <li class="active">
+                                <a href="#{application.contextPath}/dash.xhtml">
+                                    <i class="fa fa-home"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <span>CRM Analytics<i class="fa fa-caret-down pull-right"></i></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="buttons.html">
+                                            <span>Customer Membership Analytics</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="general.html">
+                                            <span>Customer Purchase Patterns Analytics</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="typography.html">
+                                            <span>Promotion Analytics</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-star"></i>
+                                    <span>Supply Chain<i class="fa fa-caret-down pull-right"></i></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="#{application.contextPath}/supplychain/storagelocation.xhtml">
+                                            <span>Manage Storage Locations</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}/supplychain/goodsissued.xhtml">
+                                            <span>Manage Goods Issued</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}/supplychain/goodsreceipt.xhtml">
+                                            <span>Manage Goods Receipt</span>
+                                        </a>
+                                    </li>                                
+                                </ul>                            
+                            </li>                        
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-edit"></i><span>CRM Operations</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-star"></i>
+                                    <span>Sales &amp; Marketing<i class="fa fa-caret-down pull-right"></i></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="#">
+                                            <span>Past Sales Performance</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}/salesplanning/viewmssr.xhtml">
+                                            <span>Sales Forecast</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-clock-o"></i><span>Transaction History</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#{application.contextPath}/it/manageplant.xhtml">
+                                    <i class="fa fa-desktop"></i><span>Manage Org. Hierarchy</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#{application.contextPath}/it/roleprivilege.xhtml">
+                                    <i class="fa fa-pencil"></i><span>Manage Privileges</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#{application.contextPath}/it/managestaff.xhtml">
+                                    <i class="fa fa-calendar"></i><span>Manage Staff</span>
+                                </a>
+                            </li>   
+                            <li>
+                                <a href="#{application.contextPath}/common/messaging.xhtml">
+                                    <i class="fa fa-envelope"></i><span>Messages</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#{application.contextPath}/common/broadcast.xhtml">
+                                    <i class="fa fa-bullhorn"></i><span>Broadcasts</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+                <!-- /sidebar menu -->
+
+                <!-- main content starts here -->
+                <section class="main-content">
+
+                    <!-- content wrapper -->
+                    <div class="content-wrap">
+
+                        <!-- inner content wrapper -->
+                        <div class="wrapper">
+
+                            <ui:insert name="content" >Content</ui:insert>
+
+                        </div>
+                        <!-- /inner content wrapper -->
+
+                    </div>
+                    <!-- /content wrapper -->
+                    <a class="exit-offscreen"></a>
+                </section>
+                <!-- /main content -->
             </section>
-            <!-- /main content -->
-        </section>
         </div>
-        
+
         <!-- core scripts -->
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery-1.11.1.min.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/jquery.slimscroll.min.js"></script>
+        <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
+        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="#{application.contextPath}/assets/plugins/jquery.slimscroll.min.js"></script>
         <!-- template scripts -->
-        <script src="#{loginManagedBean.absolutepath}/assets/js/offscreen.js"></script>
-        <script src="#{loginManagedBean.absolutepath}/assets/js/navigation.js"></script>
+        <script src="#{application.contextPath}/assets/js/offscreen.js"></script>
+        <script src="#{application.contextPath}/assets/js/navigation.js"></script>
         <!-- for calendar, TODO: try to move to dash -->
-        <link rel="stylesheet" href="#{loginManagedBean.absolutepath}assets/plugins/calendar/bootstrap_calendar.css"></link>
-        <script src="#{loginManagedBean.absolutepath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/plugins/calendar/bootstrap_calendar.css"></link>
+        <script src="#{application.contextPath}/assets/plugins/calendar/bootstrap_calendar.js"></script>
 
     </h:body>
 </html>
