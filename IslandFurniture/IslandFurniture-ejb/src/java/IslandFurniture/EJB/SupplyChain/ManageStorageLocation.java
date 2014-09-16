@@ -5,7 +5,7 @@
  */
 package IslandFurniture.EJB.SupplyChain;
 
-import IslandFurniture.EJB.Entities.StorageLocation;
+import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -37,18 +37,18 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     @PersistenceContext
     EntityManager em;
 
-    private StorageLocation storageLocation;
+    private StorageBin storageLocation;
 
     @Override
-    public StorageLocation getStorageLocation(Long id) {
-        storageLocation = (StorageLocation) em.find(StorageLocation.class, id);
+    public StorageBin getStorageLocation(Long id) {
+        storageLocation = (StorageBin) em.find(StorageBin.class, id);
         System.out.println("this is the getStorageLocation id "+ id);
         return storageLocation;
     }
 
     @Override
     public void createStorageLocation(Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription) {
-        storageLocation = new StorageLocation();
+        storageLocation = new StorageBin();
         storageLocation.setPlantNumber(plantNumber);
         storageLocation.setStorageAreaNumber(storageAreaNumber);
         storageLocation.setStorageAreaName(storageAreaName);
@@ -81,7 +81,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     }
 
     @Override
-    public List<StorageLocation> viewStorageLocation() {
+    public List<StorageBin> viewStorageLocation() {
         Query q = em.createQuery("SELECT s " + "FROM StorageLocation s");
         return q.getResultList();
 

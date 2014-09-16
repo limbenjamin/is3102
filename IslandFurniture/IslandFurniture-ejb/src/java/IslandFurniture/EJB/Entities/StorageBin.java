@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -41,7 +42,7 @@ import javax.persistence.PostPersist;
  */
 
 @Entity
-public class StorageLocation implements Serializable {
+public class StorageBin implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,6 +50,9 @@ public class StorageLocation implements Serializable {
     
     @OneToMany(mappedBy="location")
     private List<StockUnit> stockUnits;
+    
+    @ManyToOne
+    private StorageArea storageArea;
     
     private Integer plantNumber;
     private Integer storageAreaNumber;
@@ -135,10 +139,10 @@ public class StorageLocation implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StorageLocation)) {
+        if (!(object instanceof StorageBin)) {
             return false;
         }
-        StorageLocation other = (StorageLocation) object;
+        StorageBin other = (StorageBin) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

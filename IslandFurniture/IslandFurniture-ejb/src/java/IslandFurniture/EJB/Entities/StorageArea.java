@@ -7,28 +7,28 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class StockUnit implements Serializable {
+public class StorageArea implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long batchNo;
-    private Long qty = 0l;
     @ManyToOne
-    private Stock stock;
-    @ManyToOne
-    private StorageBin location;
+    private Plant plant;
+    @OneToMany(mappedBy="storageArea")
+    private List<StorageBin> storageBins;
 
     public Long getId() {
         return id;
@@ -38,36 +38,20 @@ public class StockUnit implements Serializable {
         this.id = id;
     }
 
-    public Long getBatchNo() {
-        return batchNo;
+    public Plant getPlant() {
+        return plant;
     }
 
-    public void setBatchNo(Long batchNo) {
-        this.batchNo = batchNo;
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
-    public Long getQty() {
-        return qty;
+    public List<StorageBin> getStorageBins() {
+        return storageBins;
     }
 
-    public void setQty(Long qty) {
-        this.qty = qty;
-    }
-
-    public Stock getStock() {
-        return stock;
-    }
-
-    public void setStock(Stock stock) {
-        this.stock = stock;
-    }
-
-    public StorageBin getLocation() {
-        return location;
-    }
-
-    public void setLocation(StorageBin location) {
-        this.location = location;
+    public void setStorageBins(List<StorageBin> storageBins) {
+        this.storageBins = storageBins;
     }
 
     @Override
@@ -80,10 +64,10 @@ public class StockUnit implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StockUnit)) {
+        if (!(object instanceof StorageArea)) {
             return false;
         }
-        StockUnit other = (StockUnit) object;
+        StorageArea other = (StorageArea) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -92,7 +76,7 @@ public class StockUnit implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.StockUnit[ id=" + id + " ]";
+        return "IslandFurniture.EJB.Entities.StorageArea[ id=" + id + " ]";
     }
     
 }

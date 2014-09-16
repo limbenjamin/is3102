@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.Entities.StorageLocation;
+import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import java.io.IOException;
 import java.io.Serializable;
@@ -36,8 +36,8 @@ public class storageLocationManagedBean implements Serializable {
     private String storageID;
     private String storageType;
     private String storageDescription;
-    private List<StorageLocation> storageLocationList;
-    private StorageLocation storageLocation;
+    private List<StorageBin> storageLocationList;
+    private StorageBin storageLocation;
 
     @EJB
     public ManageStorageLocationLocal mslr;
@@ -81,7 +81,7 @@ public class storageLocationManagedBean implements Serializable {
     
     
      public String editStorageLocation(ActionEvent event) throws IOException {
-     StorageLocation sl =  (StorageLocation)event.getComponent().getAttributes().get("slid");
+     StorageBin sl =  (StorageBin)event.getComponent().getAttributes().get("slid");
       
      id = sl.getId();
      plantNumber = sl.getPlantNumber();
@@ -166,19 +166,19 @@ public class storageLocationManagedBean implements Serializable {
         this.mslr = mslr;
     }
 
-    public List<StorageLocation> getStorageLocationList() {
+    public List<StorageBin> getStorageLocationList() {
         return storageLocationList;
     }
 
-    public void setStorageLocationList(List<StorageLocation> storageLocationList) {
+    public void setStorageLocationList(List<StorageBin> storageLocationList) {
         this.storageLocationList = storageLocationList;
     }
 
-    public StorageLocation getStorageLocation() {
+    public StorageBin getStorageLocation() {
         return storageLocation;
     }
 
-    public void setStorageLocation(StorageLocation storageLocation) {
+    public void setStorageLocation(StorageBin storageLocation) {
         this.storageLocation = storageLocation;
     }
 

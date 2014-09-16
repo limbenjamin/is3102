@@ -48,6 +48,8 @@ public abstract class Plant implements Serializable {
     private List<Staff> employees;
     @ManyToMany
     protected List<PlantStockInventory> plantStockInventories;
+    @OneToMany(mappedBy = "plant")
+    protected List<StorageArea> storageAreas;
 
     public Long getId() {
         return id;
@@ -87,6 +89,14 @@ public abstract class Plant implements Serializable {
 
     public void setPlantStockInventories(List<PlantStockInventory> plantStockInventories) {
         this.plantStockInventories = plantStockInventories;
+    }
+
+    public List<StorageArea> getStorageAreas() {
+        return storageAreas;
+    }
+
+    public void setStorageAreas(List<StorageArea> storageAreas) {
+        this.storageAreas = storageAreas;
     }
 
     @Override
