@@ -6,7 +6,9 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
 /**
@@ -17,6 +19,27 @@ import javax.persistence.PostPersist;
 public class CountryOffice extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @OneToMany(mappedBy = "countryOffice")
+    private List<Store> stores;
+
+    @OneToMany(mappedBy = "countryOffice")
+    private List<ManufacturingFacility> mFacs;
+
+    public List<Store> getStores() {
+        return stores;
+    }
+
+    public void setStores(List<Store> stores) {
+        this.stores = stores;
+    }
+
+    public List<ManufacturingFacility> getmFacs() {
+        return mFacs;
+    }
+
+    public void setmFacs(List<ManufacturingFacility> mFacs) {
+        this.mFacs = mFacs;
+    }
 
     @Override
     public int hashCode() {

@@ -41,8 +41,6 @@ public abstract class Stock implements Serializable {
     protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
     @OneToMany
     protected List<PriceInCountry> priceInCountry = new ArrayList();
-    @ManyToMany(mappedBy = "produces")
-    protected List<ManufacturingFacility> producedBy = new ArrayList();
     @ManyToMany(mappedBy = "sells")
     protected List<Store> soldBy = new ArrayList();
 
@@ -92,14 +90,6 @@ public abstract class Stock implements Serializable {
 
     public void setPriceInCountry(List<PriceInCountry> priceInCountry) {
         this.priceInCountry = priceInCountry;
-    }
-
-    public List<ManufacturingFacility> getProducedBy() {
-        return producedBy;
-    }
-
-    public void setProducedBy(List<ManufacturingFacility> producedBy) {
-        this.producedBy = producedBy;
     }
 
     public List<Store> getSoldBy() {
