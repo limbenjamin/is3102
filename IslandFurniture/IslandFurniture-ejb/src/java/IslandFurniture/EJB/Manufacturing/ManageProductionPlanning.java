@@ -12,10 +12,12 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -36,14 +38,16 @@ import javax.persistence.Query;
 
 /**
  *
- * @author James
-* This powerful Bean does production planning on a specific manufacturing facility
-*/
-
+ * @author James This powerful Bean does production planning on a specific
+ * manufacturing facility
+ */
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ManageProductionPlanning implements ManageProductionPlanningRemote {
 
+    private static final int FORWARDLOCK=1; //This determine how many months in advance production planning is locked
+    
+    
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
     private ManufacturingFacility MF = null;
@@ -100,7 +104,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     }
 
     @Override
-    //Plan Production Planning 6 months in advance
+    //Plan Production Planning 6 months in advance that are relevant to MF
     public void CreateProductionPlanFromForecast() throws Exception {
         try {
             int m = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, true);
@@ -112,17 +116,39 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         }
     }
 
+    private List<MonthlyStockSupplyReq> GetRelevantMSSR(int m, int year) {
+        Query l = em.createNamedQuery("StockSupplied.FindByMf");
+        l.setParameter("mf", this.MF);
+        ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
+
+        for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByStoreStock");
+            q.setParameter("y", year);
+            try {
+                q.setParameter("m", Helper.translateMonth(m).value);
+            } catch (Exception ex) {
+            }
+            q.setParameter("store", ss.getStore());
+            q.setParameter("stock", ss.getStock());
+
+            try {
+                RelevantMSSR.addAll(q.getResultList());
+            } catch (Exception err) {
+            }
+
+        }
+
+        return RelevantMSSR;
+    }
+
     //Public method. Plan all requirements
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @Override
     public void CreateProductionPlanFromForecast(int m, int year) throws Exception {
-        Query q = em.createNamedQuery("MonthlyStockSupplyReq.finduntiltime");
-        q.setParameter("y", year);
-        q.setParameter("m", Helper.translateMonth(m).value);
+
+        CreateProductionPlanFromForecast(GetRelevantMSSR(m, year));
         System.out.println("CreateProductionPlanFromForecast(): Planning Production until Year:" + year + " and Month: " + Helper.translateMonth(m).toString());
 
-        List<MonthlyStockSupplyReq> MSSRL = q.getResultList();
-        CreateProductionPlanFromForecast(MSSRL);
     }
 
     // Public method , pass a list of forecast to see if it is feasible.
@@ -193,12 +219,12 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
                 mpp.setQTY(0); //Brand New
                 System.err.println("CreateProductionPlanFromForecast(): Created production planning for " + mpp.getFurnitureModel().getName() + " period: " + i_year + "/" + Helper.translateMonth(i_month).toString());
 
-                if (i == 0) {
-                    mpp.setLocked(true); //prevent planning for this month
-                }
-
             } else {
                 mpp = (MonthlyProductionPlan) q.getResultList().get(0);
+            }
+
+            if (i <= FORWARDLOCK) {
+                mpp.setLocked(true); //prevent planning for this month
             }
 
             prevMpp = mpp;
@@ -288,7 +314,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
                 throw new RuntimeException("balanceProductionTill()Unknown Error: Unable to fufill requirements! Deficit by " + deficit + " For month till " + endmonth);
             }
         }
-        
+
         System.out.println("balanceProductionTill(): Successful Production Planning !");
 
     }

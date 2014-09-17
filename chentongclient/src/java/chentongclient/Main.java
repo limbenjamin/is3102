@@ -48,6 +48,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        loadJamesTestData.loadProductionCapacityData();
+                if (1==1) return;
         Scanner sc = new Scanner(System.in);
 
         // Load Organisation Entities (Store, Manufacturing Facility, Country Office)
@@ -106,15 +108,15 @@ public class Main {
             }
         }
 
-        // Load Monthly Stock Supply Req
+        // Load Production Capacity Data
         //Added by James
         //shift down later
-        System.out.print("Generate Monthly Stock Supply Req? (y/n):");
+        System.out.print("Load Production Capacity Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
-            if (loadJamesTestData.loadMSSRS()) {
-                System.out.println("MSSR Success !");
+            if (loadJamesTestData.loadProductionCapacityData()) {
+                System.out.println("Production Capacity Data Emulated");
             } else {
-                System.out.println("Failed to generate MSSR data. Check for errors in server log.");
+                System.out.println("Failed to emulate Production Capacity Data");
             }
         }
 

@@ -6,11 +6,15 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import java.util.List;
+import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
@@ -20,6 +24,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -31,8 +36,6 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-
-
     @EJB
     private ManageProductionPlanningRemote mpp;
 
@@ -42,58 +45,33 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
-    public Boolean loadMSSRS() {
-            try{
-        FurnitureModel fm = Helper.getFirstObjectFromQuery("SELECT FM from FurnitureModel FM where FM.name='Round Table'",em);
-        FurnitureModel fm2 = Helper.getFirstObjectFromQuery("SELECT FM from FurnitureModel FM where FM.name='Swivel Chair'",em);
-        Store store = Helper.getFirstObjectFromQuery("SELECT s from Store s where s.name='Alexandra'",em);
+    public Boolean loadProductionCapacityData() {
+        try{
+        Query q = em.createQuery("select MF from ManufacturingFacility MF");
+        for (ManufacturingFacility MF : (List<ManufacturingFacility>) q.getResultList()) {
+            Query L = em.createQuery("SELECT SS from StockSupplied SS where SS.manufacturingFacility=:mf");
+            L.setParameter("mf", MF);
 
-        //Add Daily Production Capacity
-        try {
+            for (StockSupplied SS : (List<StockSupplied>) L.getResultList()) {
+                
+                if (!(SS.getStock() instanceof FurnitureModel)) continue;
 
-            mpp.createOrUpdateCapacity("Round Table", "Tuas", 4);
-            mpp.createOrUpdateCapacity("Swivel Chair", "Tuas", 7);
-        } catch (Exception ex) {
+                Query M = em.createQuery("SELECT MAX(MSSR.qtyRequested) from MonthlyStockSupplyReq MSSR where MSSR.stock=:stk and MSSR.store=:store");
+                M.setParameter("store", SS.getStore());
+                M.setParameter("stk", SS.getStock());
+                int max = (int) M.getSingleResult();
+                Random r=new Random();
+                int Capacity=(int)max*(10+r.nextInt(5));
+                mpp.createOrUpdateCapacity(SS.getStock().getName(), MF.getName(),Capacity);
+                System.out.println("loadProductionCapacityData(): MF="+MF.getName()+" PRODUCT="+SS.getStock().getName()+" MaxCapacity="+Capacity);
+
+            }
+
+          
         }
-
-        try {
-            MonthlyStockSupplyReq MSSR = new MonthlyStockSupplyReq();
-            MSSR.setQtyRequested(101);
-            MSSR.setStock(fm);
-            MSSR.setMonth(Month.DEC);
-            MSSR.setYear(2014);
-            MSSR.setStore(store);
-            persist(MSSR);
-        } catch (Exception err) {
-  
-        }
-
-        try {
-            MonthlyStockSupplyReq MSSR2 = new MonthlyStockSupplyReq();
-            MSSR2.setQtyRequested(199);
-            MSSR2.setStock(fm);
-            MSSR2.setMonth(Month.NOV);
-            MSSR2.setYear(2014);
-            MSSR2.setStore(store);
-            persist(MSSR2);
-        } catch (Exception err) {
-
-        }
-
-        try {
-            MonthlyStockSupplyReq MSSR3 = new MonthlyStockSupplyReq();
-            MSSR3.setQtyRequested(101);
-            MSSR3.setStock(fm2);
-            MSSR3.setMonth(Month.DEC);
-            MSSR3.setYear(2014);
-            MSSR3.setStore(store);
-            persist(MSSR3);
-        } catch (Exception err) {
-        }
-
-        return (true);
-            }catch(Exception ex){
-            return (false);}
+        return true;
+        }catch(Exception ex){return false;}
     }
-
+    
+    
 }

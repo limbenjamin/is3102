@@ -36,7 +36,8 @@ import javax.persistence.Query;
     @NamedQuery(name = "MonthlyProductionPlan.FindAllInPeriod", query = "select MPP from MonthlyProductionPlan MPP where MPP.month=:m and MPP.year=:y"),
     @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and MPP.month=:m and MPP.year=:y"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false"),
-    @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false order by MPP.furnitureModel.name")
+    @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false order by MPP.furnitureModel.name"),
+    @NamedQuery(name="MonthlyProductionPlan.FindAllOfMF",query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
 })
 public class MonthlyProductionPlan implements Serializable {
 

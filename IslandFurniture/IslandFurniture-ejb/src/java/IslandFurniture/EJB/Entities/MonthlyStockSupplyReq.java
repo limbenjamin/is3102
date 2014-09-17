@@ -40,8 +40,8 @@ import javax.persistence.Query;
                     + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
                     + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
-            name = "getMssrByStore",
-            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.store = :store")
+            name = "MonthlyStockSupplyReq.FindByStoreStock",
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.store = :store and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.committed=TRUE")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
