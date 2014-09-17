@@ -60,7 +60,6 @@ public class storageLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-
         storageBinList = mslr.viewStorageBin();
         storageAreaList = mslr.viewStorageArea();
         System.out.println("Init");
