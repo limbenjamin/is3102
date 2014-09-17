@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <f:metadata>
-        <f:viewParam name="id" value="#{goodsReceiptManagedBean.goodsReceiptDocumentId}"/>
+        <f:viewParam name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}"/>
     </f:metadata>
 
     <h:body>
@@ -25,7 +25,7 @@
                                 <th>Delete</th>
                             </tr>
                             <h:form id="viewGRD" class="form-horizontal">
-                                <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocument}" var="GRD">
+                                <ui:repeat value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument}" var="GRD">
                                     <tr>
                                         <td>#{GRD.id}</td>
                                         <td>#{GRD.postingDate}</td>

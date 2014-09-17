@@ -5,8 +5,7 @@
  */
 package JamesTestClient;
 
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
-import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
+import IslandFurniture.StaticClasses.Helper.JamesTestDataBeanRemote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -25,25 +24,17 @@ public class Main {
 
 
     @EJB
-    private static ManageProductionPlanningRemote MPP;
-    
-   @EJB
-    private static LoadJamesTestDataRemote loadJamesTestData;
+    private static JamesTestDataBeanRemote jt;
 
     public static void main(String[] args) {
-        
-        //loadJamesTestData.loadMSSRS();
-        
-    MPP.setCN("SINGAPORE");
-        try {
-            MPP.CreateProductionPlanFromForecast();
-            System.out.println("SUCCESS !");
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-   
+        Main jx = new Main();
+        jx.add_data();
     }
     
+    public void add_data()
+    {
+        jt.createtestdata();
+    }
 
 
 }

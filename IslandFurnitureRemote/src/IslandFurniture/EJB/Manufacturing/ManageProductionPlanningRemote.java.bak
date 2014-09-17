@@ -3,8 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-package IslandFurniture.StaticClasses.Helper;
+package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurnitures.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurnitures.EJB.Exceptions.ProductionPlanNoCN;
@@ -16,10 +15,10 @@ import javax.ejb.Remote;
  * @author James
  */
 @Remote
-public interface JamesTestDataBeanRemote {
-    public void createtestdata();
-    public void persist(Object object);
+public interface ManageProductionPlanningRemote {
 
-    public void deletedata();
-    public void planall();
+    public void setCN(String cn_name);
+
+//    public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN, Exception;
+
 }

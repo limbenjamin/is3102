@@ -55,10 +55,20 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
+
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        if (goodsReceiptDocumentId != null) {
+            goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
+        }
+        System.out.println("HERE IT GOES! this is the docomentid" + goodsReceiptDocumentId);
+        System.out.println("Init");
+    }
+
+    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         System.out.println("this is the docomentid" + goodsReceiptDocumentId);
-        if(goodsReceiptDocumentId != null) goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
-        System.out.println("Init");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
     public Long getPlantId() {
@@ -148,7 +158,5 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
-
-    
 
 }
