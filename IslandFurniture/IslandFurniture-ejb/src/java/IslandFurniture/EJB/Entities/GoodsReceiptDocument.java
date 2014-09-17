@@ -36,6 +36,7 @@ public class GoodsReceiptDocument implements Serializable {
     protected Calendar postingDate;
     @Temporal(TemporalType.TIMESTAMP)
     protected Calendar documentDate;
+    private String deliveryNote;
 
     public Long getId() {
         return id;
@@ -75,6 +76,14 @@ public class GoodsReceiptDocument implements Serializable {
 
     public void setDocumentDate(Calendar documentDate) {
         this.documentDate = documentDate;
+    }
+
+    public String getDeliveryNote() {
+        return deliveryNote;
+    }
+
+    public void setDeliveryNote(String deliveryNote) {
+        this.deliveryNote = deliveryNote;
     }
 
     @Override

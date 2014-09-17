@@ -7,6 +7,8 @@
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,11 +18,11 @@ import java.util.List;
  */
 public interface ManageGoodsReceiptLocal {
 
-    void createGoodsReceiptDocument(Calendar postingDate, Calendar documentDate);
+    void createGoodsReceiptDocument(Plant plant, Calendar postingDate);
 
-    void deleteGoodsReceiptDocument(Long id);
+    void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId);
 
-    void editGoodsReceiptDocument(Long id, Calendar postingDate, Calendar documentDate);
+    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar postingDate, Calendar documentDate, PurchaseOrder po, String deliveryNote);
 
     GoodsReceiptDocument getGoodsReceiptDocument(Long id);
 

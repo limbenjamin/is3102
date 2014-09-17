@@ -1,4 +1,3 @@
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,8 +5,14 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
+import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -19,6 +24,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -28,68 +34,139 @@ import javax.servlet.http.HttpServletRequest;
 @ViewScoped
 public class GoodsReceiptManagedBean implements Serializable {
 
-    private Long id;
+    private Long plantId;
+    private Long goodsReceiptDocumentId;
+
+    private String username;
+
     private Calendar postingDate;
     private Calendar documentDate;
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
+
     private GoodsReceiptDocument goodsReceiptDocument;
+    private Staff staff;
+    private Plant plant;
 
     @EJB
     public ManageGoodsReceiptLocal mgrl;
+    @EJB
+    private ManageUserAccountInformationBean staffBean;
 
     @PostConstruct
     public void init() {
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+        staff = staffBean.getStaff(username);
+        plant = staff.getPlant();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
         System.out.println("Init");
-        id = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("locationId");
-        if (id != null) {
-            goodsReceiptDocument = mgrl.getGoodsReceiptDocument(id);
-        }
     }
 
     public String addGoodsReceiptDocument() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//        postingDate = 
-//        documentDate = 
-
-//        plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
-//        storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
-//        storageAreaName = request.getParameter("storageForm:storageAreaName");
-//        storageID = request.getParameter("storageForm:storageID");
-//        storageType = request.getParameter("storageForm:storageType");
-//        storageDescription = request.getParameter("storageForm:storageDescription");
-//        mgrl.createGoodsReceiptDocument(postingDate, documentDate);
-        return "goodsreceipt";
+//        ** NEED TO ASK CT **        
+//        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        postingDate = request.getParameter("createGRD:postingDate");
+        postingDate = null;
+        mgrl.createGoodsReceiptDocument(plant, postingDate);
+        return "goodsreceiptdocument";
     }
 
     public String deleteGoodsReceiptDocument() {
-        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        mgrl.deleteGoodsReceiptDocument(id);
+        System.out.println("It went here!");
+        goodsReceiptDocumentId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("grdId"));
+        System.out.println("It went here too!");
+        mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
         return "goodsreceipt";
     }
 
-    public void loadStorageLocation(ActionEvent event) {
-        id = (Long) event.getComponent().getAttributes().get("id");
-        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(id);
+    public Long getPlantId() {
+        return plantId;
     }
 
-    public String editStorageLocation(ActionEvent event) throws IOException {
-        GoodsReceiptDocument gr = (GoodsReceiptDocument) event.getComponent().getAttributes().get("slid");
-
-        id = gr.getId();
-        postingDate = gr.getPostingDate();
-        documentDate = gr.getDocumentDate();
-
-        mgrl.editGoodsReceiptDocument(id, postingDate, documentDate);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceipt.xhtml");
-        return "storagelocation";
+    public void setPlantId(Long plantId) {
+        this.plantId = plantId;
     }
 
-    public void storagelocationdetailActionListener(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("locationId", event.getComponent().getAttributes().get("locationId"));
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
+    public Long getGoodsReceiptDocumentId() {
+        return goodsReceiptDocumentId;
+    }
+
+    public void setGoodsReceiptDocumentId(Long goodsReceiptDocumentId) {
+        this.goodsReceiptDocumentId = goodsReceiptDocumentId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Calendar getPostingDate() {
+        return postingDate;
+    }
+
+    public void setPostingDate(Calendar postingDate) {
+        this.postingDate = postingDate;
+    }
+
+    public Calendar getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(Calendar documentDate) {
+        this.documentDate = documentDate;
+    }
+
+    public List<GoodsReceiptDocument> getGoodsReceiptDocumentList() {
+        return goodsReceiptDocumentList;
+    }
+
+    public void setGoodsReceiptDocumentList(List<GoodsReceiptDocument> goodsReceiptDocumentList) {
+        this.goodsReceiptDocumentList = goodsReceiptDocumentList;
+    }
+
+    public GoodsReceiptDocument getGoodsReceiptDocument() {
+        return goodsReceiptDocument;
+    }
+
+    public void setGoodsReceiptDocument(GoodsReceiptDocument goodsReceiptDocument) {
+        this.goodsReceiptDocument = goodsReceiptDocument;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
+    public ManageGoodsReceiptLocal getMgrl() {
+        return mgrl;
+    }
+
+    public void setMgrl(ManageGoodsReceiptLocal mgrl) {
+        this.mgrl = mgrl;
+    }
+
+    public ManageUserAccountInformationBean getStaffBean() {
+        return staffBean;
+    }
+
+    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+        this.staffBean = staffBean;
     }
     
+    
 }
-

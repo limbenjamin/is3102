@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>  
 <faces-config version="2.2"
-                 xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     
     <navigation-rule>
         <navigation-case>
@@ -65,20 +65,17 @@
             <from-outcome>storagelocationdetail</from-outcome>
             <to-view-id>/supplychain/storagelocationdetail.xhtml</to-view-id>
         </navigation-case>
-        
         <navigation-case>
             <from-outcome>goodsreceipt</from-outcome>
             <to-view-id>/supplychain/goodsreceipt.xhtml</to-view-id>
-        </navigation-case>
-        
-        
+        </navigation-case>    
         <navigation-case>
-            <from-outcome>goodsissued</from-outcome>
-            <to-view-id>/supplychain/goodsissued.xhtml</to-view-id>
+            <from-outcome>goodsreceiptdocument</from-outcome>
+            <to-view-id>/supplychain/goodsreceiptdocument.xhtml</to-view-id>
         </navigation-case>
-        
-        
-        
-        
+        <navigation-case>
+            <from-outcome>goodsissueddocument</from-outcome>
+            <to-view-id>/supplychain/goodsissueddocument.xhtml</to-view-id>
+        </navigation-case>   
     </navigation-rule>
 </faces-config>
