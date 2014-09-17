@@ -20,7 +20,7 @@ public interface ManageProductionPlanningRemote {
 
     void CreateProductionPlanFromForecast() throws Exception;
 
-    void setCN(String cn_name);
+    void setMF(String MF_NAME) throws Exception;
     
     void createOrUpdateCapacity(String fmName,String mancFacNamem, int daily_max_capacity);
 

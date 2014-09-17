@@ -7,14 +7,14 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import java.util.HashMap;
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author James
  */
-@Local
-public interface DemandPlanningViewLocal {
+@Remote
+public interface MaterialResourcePlanningView {
 
     
         public HashMap<String, String>
