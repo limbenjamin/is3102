@@ -32,6 +32,15 @@ public class Material extends ProcuredStock implements Serializable {
     private Double materialWeight;
     @OneToMany(mappedBy = "material")
     private List<WeeklyMRPRecord> weeklyMRPRecords;
+    private boolean hidden;
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
     
     public Double getMaterialWeight() {
         return materialWeight;
@@ -41,9 +50,11 @@ public class Material extends ProcuredStock implements Serializable {
         this.materialWeight = materialWeight;
     }
     public Material() {
+        setHidden(false);
     }
 
     public Material(String name) {
+        setHidden(false);
         this.name = name;
     }
 

@@ -85,5 +85,12 @@ and open the template in the editor.
             <h:inputText id="weight"></h:inputText>
             <h:commandButton action="#{materialManagedBean.editMaterial()}"></h:commandButton>
         </h:form>
+        <br></br><br></br>
+        <h2>Delete Material</h2>
+        <h:form id="deleteMaterialForm">
+            <label>Name</label>
+            <h:inputText id="name"></h:inputText>
+            <h:commandButton action="#{materialManagedBean.deleteMaterial()}"></h:commandButton>
+        </h:form>
     </h:body>
 </html>
