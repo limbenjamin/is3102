@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 
     <f:metadata>
         <f:viewParam name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}"/>
@@ -19,18 +20,29 @@
                             <tr>
                                 <th>Goods Receipt ID</th>
                                 <th>Posting Date</th>
-                                <th>Document Date</th>
+                                <th>Receipt Date</th>
                                 <th>Purchase Order Number</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                                <th>Save</th>
+
                             </tr>
                             <h:form id="viewGRD" class="form-horizontal">
                                 <ui:repeat value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument}" var="GRD">
                                     <tr>
                                         <td>#{GRD.id}</td>
-                                        <td>#{GRD.postingDate}</td>
-                                        <td>#{GRD.documentDate}</td>
-                                        <td>#{GRD.receiveFrom.id}</td>
+                                        <td> <h:outputText value="#{GRD.postingDate.time}" >
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                </h:outputText></td>
+                                        <td><h:inputText id="eventTimeString" p:type="date" class="form-control"></h:inputText></td>
+                                        <td></td>
+                                        <td>
+                                            <h:commandButton actionListener="#{goodsReceiptManagedBean.editGoodsReceiptDocument}"  value="Update" class="btn btn-success btn-xs"> 
+                                                    <f:attribute name="grd" value="#{StorageArea}" />
+                                                </h:commandButton>
+                                            
+                                            
+                                            
+                                            
+                                        </td>
                                     </tr>
                                 </ui:repeat>
                             </h:form> 

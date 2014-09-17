@@ -22,7 +22,7 @@ public interface ManageGoodsReceiptLocal {
 
     void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId);
 
-    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar postingDate, Calendar documentDate, PurchaseOrder po, String deliveryNote);
+    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar documentDate, PurchaseOrder po, String deliveryNote);
 
     GoodsReceiptDocument getGoodsReceiptDocument(Long id);
 

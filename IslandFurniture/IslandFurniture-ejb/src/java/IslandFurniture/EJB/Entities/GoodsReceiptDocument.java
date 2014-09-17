@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -28,15 +29,19 @@ public class GoodsReceiptDocument implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar postingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar receiptDate;
+    private String deliveryNote;
+    
+    @ManyToOne
+    private Plant plant;
     @OneToOne(mappedBy = "goodsReceiptDocument")
     private PurchaseOrder receiveFrom;
     @OneToMany(mappedBy = "goodsReceiptDocument")
-    private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;
-    @Temporal(TemporalType.TIMESTAMP)
-    protected Calendar postingDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    protected Calendar documentDate;
-    private String deliveryNote;
+    private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;        
 
     public Long getId() {
         return id;
@@ -44,6 +49,38 @@ public class GoodsReceiptDocument implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Calendar getPostingDate() {
+        return postingDate;
+    }
+
+    public void setPostingDate(Calendar postingDate) {
+        this.postingDate = postingDate;
+    }
+
+    public Calendar getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Calendar receiptDate) {
+        this.receiptDate = receiptDate;
+    }
+
+    public String getDeliveryNote() {
+        return deliveryNote;
+    }
+
+    public void setDeliveryNote(String deliveryNote) {
+        this.deliveryNote = deliveryNote;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
     public PurchaseOrder getReceiveFrom() {
@@ -61,31 +98,7 @@ public class GoodsReceiptDocument implements Serializable {
     public void setGoodsReceiptDocumentDetails(List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails) {
         this.goodsReceiptDocumentDetails = goodsReceiptDocumentDetails;
     }
-
-    public Calendar getPostingDate() {
-        return postingDate;
-    }
-
-    public void setPostingDate(Calendar postingDate) {
-        this.postingDate = postingDate;
-    }
-
-    public Calendar getDocumentDate() {
-        return documentDate;
-    }
-
-    public void setDocumentDate(Calendar documentDate) {
-        this.documentDate = documentDate;
-    }
-
-    public String getDeliveryNote() {
-        return deliveryNote;
-    }
-
-    public void setDeliveryNote(String deliveryNote) {
-        this.deliveryNote = deliveryNote;
-    }
-
+            
     @Override
     public int hashCode() {
         int hash = 0;
