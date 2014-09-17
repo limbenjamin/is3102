@@ -10,6 +10,8 @@ import IslandFurniture.EJB.Entities.BOM;
 import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findMaterialByName;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -54,12 +56,8 @@ public class StockManager implements StockManagerLocal {
     public boolean updateMaterial(Long id, String name, Double weight) {
         Material material;
         try {
-            material = em.find(Material.class, id);
-            System.out.println(name);
-            if(name != null) {
-                System.out.println("Changing name to " + name);
-                material.setName(name);
-            }
+            material = findMaterialByName(em, name);
+            System.out.println(material.getName());
             if(weight != null) {
                 System.out.println("Changing weight to " + weight);
                 material.setMaterialWeight(weight);

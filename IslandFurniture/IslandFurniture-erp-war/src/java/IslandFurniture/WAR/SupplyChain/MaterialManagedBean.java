@@ -28,6 +28,15 @@ import javax.servlet.http.HttpSession;
 public class MaterialManagedBean implements Serializable {
     private List<Material> materialList = null;
     private int rowCount = 1;
+    private List<Material> filteredList = null;
+
+    public List<Material> getFilteredList() {
+        return filteredList;
+    }
+
+    public void setFilteredList(List<Material> filteredList) {
+        this.filteredList = filteredList;
+    }
 
     public List<Material> getMaterialList() {
         return materialList;
