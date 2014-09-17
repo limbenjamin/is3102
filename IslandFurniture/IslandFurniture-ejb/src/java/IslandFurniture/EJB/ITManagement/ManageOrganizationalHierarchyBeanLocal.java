@@ -24,9 +24,9 @@ public interface ManageOrganizationalHierarchyBeanLocal {
 
     CountryOffice addCountryOffice(String coName, Country country, String tz);
 
-    ManufacturingFacility addManufacturingFacility(String mfName, Country country, String tz);
+    ManufacturingFacility addManufacturingFacility(String mfName, String tz, CountryOffice co);
 
-    Store addStore(String storeName, Country country, String tz);
+    Store addStore(String storeName, String tz, CountryOffice co);
 
     void deleteCountryOffice(Long coId);
 
@@ -42,9 +42,9 @@ public interface ManageOrganizationalHierarchyBeanLocal {
 
     void editCountryOffice(Long coId, String name, Country country, String tz);
 
-    void editManufacturingFacility(Long mfId, String name, Country country, String tz);
+    void editManufacturingFacility(Long mfId, String name, String tz, CountryOffice co);
 
-    void editStore(Long storeId, String name, Country country, String tz);
+    void editStore(Long storeId, String name, String tz, CountryOffice co);
 
     Country findCountryByName(String countryName);
 
@@ -56,6 +56,10 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     
     GlobalHQ addGlobalHQ(String name, Country country, String tz);
     
-    Country addCountry(String countryName, String timeZoneID);
+    Country addCountry(String countryName);
+    
+    List<CountryOffice> getCountryOffices();
+    
+    CountryOffice findCountryOfficeByName(String countryOfficeName);
     
 }

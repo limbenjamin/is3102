@@ -36,10 +36,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     private List<ManufacturingFacility> mfList;
     private List<CountryOffice> coList;
     private String plantName; 
-    private String countryString;
-    private Country country;
+    private String countryOfficeString;
+    private CountryOffice countryOffice;
     private String plantType;
+    private List<CountryOffice> countryOfficeList;
     private List<Country> countryList;
+    private Country country;
+    private String countryString;
     
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohBean;
@@ -57,22 +60,30 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public String addPlant(){
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         plantName = request.getParameter("plantForm:plantName");
-        countryString = request.getParameter("plantForm:country");
-        country = mohBean.findCountryByName(countryString);
+        countryOfficeString = request.getParameter("plantForm:countryOffice");
+        countryOffice = mohBean.findCountryOfficeByName(countryOfficeString);
         plantType = request.getParameter("plantForm:plantType");
         switch (plantType) {
             case "Store":
-                mohBean.addStore(plantName, country, "Asia/Singapore");
+                mohBean.addStore(plantName, "Asia/Singapore", countryOffice);
                 break;
             case "Manufacturing Facility":
-                mohBean.addManufacturingFacility(plantName, country, "Asia/Singapore");
-                break;
-            case "Country Office":
-                mohBean.addCountryOffice(plantName, country, "Asia/Singapore");
+                mohBean.addManufacturingFacility(plantName, "Asia/Singapore", countryOffice);
                 break;
             default:
                 break;
         }
+        
+        return "manageplant";
+    }
+    
+        public String addCountryOffice(){
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        plantName = request.getParameter("coForm:plantName");
+        countryString = request.getParameter("coForm:country");
+        country = mohBean.findCountryByName(countryString);
+        plantType = request.getParameter("plantForm:plantType");
+        mohBean.addCountryOffice(plantName, country, "Asia/Singapore");
         
         return "manageplant";
     }
@@ -161,12 +172,36 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         this.plantName = plantName;
     }
 
-    public String getCountryString() {
-        return countryString;
+    public String getCountryOfficeString() {
+        return countryOfficeString;
     }
 
-    public void setCountryString(String countryString) {
-        this.countryString = countryString;
+    public void setCountryOfficeString(String countryOfficeString) {
+        this.countryOfficeString = countryOfficeString;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
+
+    public List<CountryOffice> getCountryOfficeList() {
+        return countryOfficeList;
+    }
+
+    public void setCountryOfficeList(List<CountryOffice> countryOfficeList) {
+        this.countryOfficeList = countryOfficeList;
+    }
+
+    public List<Country> getCountryList() {
+        return countryList;
+    }
+
+    public void setCountryList(List<Country> countryList) {
+        this.countryList = countryList;
     }
 
     public Country getCountry() {
@@ -177,12 +212,12 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         this.country = country;
     }
 
-    public List<Country> getCountryList() {
-        return countryList;
+    public String getCountryString() {
+        return countryString;
     }
 
-    public void setCountryList(List<Country> countryList) {
-        this.countryList = countryList;
+    public void setCountryString(String countryString) {
+        this.countryString = countryString;
     }
     
     
