@@ -58,13 +58,14 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public Store addStore(String storeName, Country country, String tz) {
+    public Store addStore(String storeName, String tz, CountryOffice co) {
         store = (Store) this.findPlantByName(country, storeName);
 
         if (store == null) {
             store = new Store();
             store.setName(storeName);
-            store.setCountry(country);
+            store.setCountry(co.getCountry());
+            store.setCountryOffice(co);
             em.persist(store);
 
             return store;
@@ -76,12 +77,13 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public void editStore(Long storeId, String name, Country country, String tz) {
+    public void editStore(Long storeId, String name, String tz, CountryOffice co) {
         store = (Store) em.find(Store.class, storeId);
 
         if (store != null) {
             store.setName(name);
-            store.setCountry(country);
+            store.setCountry(co.getCountry());
+            store.setCountryOffice(co);
             em.persist(store);
             em.flush();
         } else {
@@ -106,18 +108,19 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     
     @Override
     public List<Store> displayStore() {
-        Query q = em.createQuery("SELECT s " + "FROM Store s");
+        Query q = em.createNamedQuery("getAllStores");
         return q.getResultList();
     }
 
     @Override
-    public ManufacturingFacility addManufacturingFacility(String mfName, Country country, String tz) {
+    public ManufacturingFacility addManufacturingFacility(String mfName, String tz, CountryOffice co) {
         mf = (ManufacturingFacility) this.findPlantByName(country, mfName);
 
         if (mf == null) {
             mf = new ManufacturingFacility();
             mf.setName(mfName);
-            mf.setCountry(country);
+            mf.setCountry(co.getCountry());
+            mf.setCountryOffice(co);
             em.persist(mf);
 
             return mf;
@@ -129,12 +132,13 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public void editManufacturingFacility(Long mfId, String name, Country country, String tz) {
+    public void editManufacturingFacility(Long mfId, String name, String tz, CountryOffice co) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
 
         if (mf != null) {
             mf.setName(name);
-            mf.setCountry(country);
+            mf.setCountry(co.getCountry());
+            mf.setCountryOffice(co);
             em.persist(mf);
             em.flush();
         } else {
@@ -159,7 +163,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     
     @Override
     public List<ManufacturingFacility> displayManufacturingFacility() {
-        Query q = em.createQuery("SELECT m " + "FROM ManufacturingFacility m");
+        Query q = em.createNamedQuery("getAllMFs");
         return q.getResultList();
     }
     
@@ -249,12 +253,30 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     
     @Override
     public List<Country> getCountries(){
-        Query q = em.createQuery("SELECT c " + "FROM Country c");
+        Query q = em.createNamedQuery("getAllCountry");
         return q.getResultList();
     }
     
     @Override
-    public Country addCountry(String countryName, String timeZoneID) {
+    public List<CountryOffice> getCountryOffices(){
+        Query q = em.createNamedQuery("getAllCountryOffice");
+        return q.getResultList();
+    }
+    
+    @Override
+    public CountryOffice findCountryOfficeByName(String countryOfficeName) {
+        Query q = em.createNamedQuery("findCountryOfficeByName");
+        q.setParameter("name", countryOfficeName);
+
+        try {
+            return (CountryOffice) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    @Override
+    public Country addCountry(String countryName) {
         Country country = QueryMethods.findCountryByName(em, countryName);
 
         if (country == null) {
@@ -270,4 +292,5 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         }
 
     }
+    
 }

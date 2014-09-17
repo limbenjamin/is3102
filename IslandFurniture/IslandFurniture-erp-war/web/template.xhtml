@@ -4,7 +4,9 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Web Application Admin Dashboard</title>
@@ -66,29 +68,30 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
+                                        <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
+                                        <li class="list-group-item">
+                                            <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}">
+                                                <div class="m-body">
+                                                    <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
+                                                    <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        </c:forEach>
+                                    <h:form id="newNotification"> 
                                     <li class="list-group-item">
-                                        <a href="#">
+                                        <a href="#{application.contextPath}#{loginManagedBean.notification.link}">
                                             <div class="m-body">
-                                                <small><h6>Inventory Management System:</h6></small>
-                                                <span>Order #12093 was delivered to the warehouse</span><br></br>
-                                                <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 8:32 AM</span>
+                                                <small><h6>#{loginManagedBean.notification.title}:</h6></small>
+                                                <span>#{loginManagedBean.notification.content}</span><br></br>
+                                                <span class="small"><i class="fa fa-clock-o"></i> </span>
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="list-group-item">
-                                        <a href="#">
-                                            <div class="m-body">
-                                                <small><h6>Lee Chen Tong:</h6></small>
-                                                <span>Reminder to refill the sauce bottles</span><br></br>
-                                                <span class="small"><i class="fa fa-clock-o"></i> August 16 2014, 4:32 PM</span>
-                                            </div>
-                                        </a>
-                                    </li>
+                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                    </h:form>
                                 </ul>
-
-                                <div class="panel-footer">
-                                    <a href="#">See all notifications <i class="fa fa-arrow-circle-o-right"></i></a>
-                                </div>
                             </div>
                         </div>
                     </li>

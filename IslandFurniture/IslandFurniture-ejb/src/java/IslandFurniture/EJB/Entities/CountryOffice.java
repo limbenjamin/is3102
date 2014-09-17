@@ -8,6 +8,8 @@ package IslandFurniture.EJB.Entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -16,6 +18,14 @@ import javax.persistence.PostPersist;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name = "findCountryOfficeByName",
+        query = "SELECT a FROM CountryOffice a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllCountryOffice",
+            query = "SELECT a FROM CountryOffice a")
+})
 public class CountryOffice extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;

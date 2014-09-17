@@ -7,10 +7,12 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -23,9 +25,12 @@ public class Notification implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    private String title;
     private String content;
     private String link;
     private String linkText;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Calendar time;
 
     public String getContent() {
         return content;
@@ -59,6 +64,24 @@ public class Notification implements Serializable {
         this.id = id;
     }
 
+    public Calendar getTime() {
+        return time;
+    }
+
+    public void setTime(Calendar time) {
+        this.time = time;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

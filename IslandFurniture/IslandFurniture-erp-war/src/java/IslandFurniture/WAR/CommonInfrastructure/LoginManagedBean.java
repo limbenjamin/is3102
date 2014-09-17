@@ -12,8 +12,9 @@ package IslandFurniture.WAR.CommonInfrastructure;
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
 import java.io.Serializable;
+import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -28,16 +29,23 @@ public class LoginManagedBean implements Serializable {
     private Staff staff;
     private String username = null;
     private String password = null;
+    private List<Notification> notificationList;
+    private Notification notification;
+    private Integer notificationListSize;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
+    @EJB
+    private ManageUserAccountInformationBean muaib;
 
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
-
+            staff = muaib.getStaff(username);
+            notificationList = staff.getNotifications();
+            notificationListSize = notificationList.size();
             return "dash";
         } else {
 
@@ -50,6 +58,14 @@ public class LoginManagedBean implements Serializable {
             // invalidate session, and redirect to other pages
             //message = "Invalid Login. Please Try Again!";
             return "login";
+        }
+    }
+    
+    public void pullNotification() {
+        notificationList = staff.getNotifications();
+        if (notificationList.size() != notificationListSize){
+            notification = notificationList.get(notificationList.size()-1);
+            this.setNotification(notification);
         }
     }
 
@@ -97,4 +113,38 @@ public class LoginManagedBean implements Serializable {
         this.absolutepath = absolutepath;
     }
 
+    public List<Notification> getNotificationList() {
+        return notificationList;
+    }
+
+    public void setNotificationList(List<Notification> notificationList) {
+        this.notificationList = notificationList;
+    }
+
+    public ManageUserAccountInformationBean getMuaib() {
+        return muaib;
+    }
+
+    public void setMuaib(ManageUserAccountInformationBean muaib) {
+        this.muaib = muaib;
+    }
+
+    public Notification getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
+    public Integer getNotificationListSize() {
+        return notificationListSize;
+    }
+
+    public void setNotificationListSize(Integer notificationListSize) {
+        this.notificationListSize = notificationListSize;
+    }
+
+    
+    
 }
