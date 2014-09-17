@@ -244,11 +244,9 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     public double getReqCapacity(int year, int m) throws Exception {
         //Calculate Required Capacity First
         double reqCapacity = 0;
-        Query q2 = em.createNamedQuery("MonthlyStockSupplyReq.finduntiltime");
-        q2.setParameter("y", year);
-        q2.setParameter("m", m);
-
-        for (Object o : q2.getResultList()) {
+        
+        
+        for (Object o : GetRelevantMSSR(m, year)) {
             MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
             double maxCapacity = MF.findProductionCapacity((FurnitureModel) mssr.getStock()).getCapacity(mssr.getMonth(), mssr.getYear());
             reqCapacity += mssr.getQtyRequested() / maxCapacity;
@@ -262,7 +260,6 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         balanceProductionTill(latest.getYear(), latest.getMonth().value);
     }
 
-    //ProductionBalancing - To Be done
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void balanceProductionTill(int year, int m) throws Exception {
 
