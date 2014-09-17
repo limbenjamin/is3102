@@ -111,7 +111,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     }
 
     private List<MonthlyStockSupplyReq> GetRelevantMSSR(int m, int year) {
-        
+
         System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year);
         Query l = em.createNamedQuery("StockSupplied.FindByMf");
         l.setParameter("mf", this.MF);
@@ -122,8 +122,11 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             q.setParameter("y", year);
             try {
                 q.setParameter("m", Helper.translateMonth(m).value);
+
             } catch (Exception ex) {
             }
+            q.setParameter("nm", Helper.getCurrentMonth().value + FORWARDLOCK + 1); //2 months in advance
+            q.setParameter("ny", Helper.getCurrentYear());
             q.setParameter("store", ss.getStore());
             q.setParameter("stock", ss.getStock());
 

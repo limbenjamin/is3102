@@ -41,7 +41,7 @@ import javax.persistence.Query;
                     + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
             name = "MonthlyStockSupplyReq.FindByStoreStock",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.store = :store and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.committed=TRUE")
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.store = :store and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.committed=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
