@@ -129,14 +129,14 @@
 
                         <ul class="nav user-info">
                             <li>
-                                <a href="index.html">
-                                    <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                <h:link outcome="modifyparticulars">
+                                    <img src="#{loginManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
                                     <span class="user-info">
                                         #{dashManagedBean.name}<br></br>
                                         #{dashManagedBean.plantName}<br></br>
                                         #{dashManagedBean.countryName}
                                     </span>
-                                </a>
+                                </h:link>
                             </li>
                         </ul> 
 
@@ -203,17 +203,12 @@
                             <li>
                                 <a href="javascript:;">
                                     <i class="fa fa-star"></i>
-                                    <span>Sales &amp; Marketing<i class="fa fa-caret-down pull-right"></i></span>
+                                    <span>Sales Planning<i class="fa fa-caret-down pull-right"></i></span>
                                 </a>
                                 <ul class="sub-menu">
                                     <li>
-                                        <a href="#">
-                                            <span>Past Sales Performance</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}/salesplanning/viewmssr.xhtml">
-                                            <span>Sales Forecast</span>
+                                        <a href="#{loginManagedBean.absolutepath}salesplanning/viewmssr.xhtml">
+                                            <span>View Monthly Stock Supply Requirements</span>
                                         </a>
                                     </li>
                                 </ul>
