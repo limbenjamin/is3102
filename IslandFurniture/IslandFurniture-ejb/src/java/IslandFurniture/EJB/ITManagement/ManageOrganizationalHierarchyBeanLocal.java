@@ -22,11 +22,11 @@ import javax.ejb.Local;
 @Local
 public interface ManageOrganizationalHierarchyBeanLocal {
 
-    CountryOffice addCountryOffice(String coName, Country country);
+    CountryOffice addCountryOffice(String coName, Country country, String tz);
 
-    ManufacturingFacility addManufacturingFacility(String mfName, Country country);
+    ManufacturingFacility addManufacturingFacility(String mfName, Country country, String tz);
 
-    Store addStore(String storeName, Country country);
+    Store addStore(String storeName, Country country, String tz);
 
     void deleteCountryOffice(Long coId);
 
@@ -40,11 +40,11 @@ public interface ManageOrganizationalHierarchyBeanLocal {
 
     List<Store> displayStore();
 
-    void editCountryOffice(Long coId, String name, Country country);
+    void editCountryOffice(Long coId, String name, Country country, String tz);
 
-    void editManufacturingFacility(Long mfId, String name, Country country);
+    void editManufacturingFacility(Long mfId, String name, Country country, String tz);
 
-    void editStore(Long storeId, String name, Country country);
+    void editStore(Long storeId, String name, Country country, String tz);
 
     Country findCountryByName(String countryName);
 
@@ -54,7 +54,7 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     
     List<Plant> displayPlant();
     
-    GlobalHQ addGlobalHQ(String name, Country country);
+    GlobalHQ addGlobalHQ(String name, Country country, String tz);
     
     Country addCountry(String countryName, String timeZoneID);
     

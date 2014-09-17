@@ -40,7 +40,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     
 
     @Override
-    public GlobalHQ addGlobalHQ(String name, Country country) {
+    public GlobalHQ addGlobalHQ(String name, Country country, String tz) {
         globalhq = (GlobalHQ) this.findPlantByName(country, name);
 
         if (globalhq == null) {
@@ -58,7 +58,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public Store addStore(String storeName, Country country) {
+    public Store addStore(String storeName, Country country, String tz) {
         store = (Store) this.findPlantByName(country, storeName);
 
         if (store == null) {
@@ -76,7 +76,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public void editStore(Long storeId, String name, Country country) {
+    public void editStore(Long storeId, String name, Country country, String tz) {
         store = (Store) em.find(Store.class, storeId);
 
         if (store != null) {
@@ -111,7 +111,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
 
     @Override
-    public ManufacturingFacility addManufacturingFacility(String mfName, Country country) {
+    public ManufacturingFacility addManufacturingFacility(String mfName, Country country, String tz) {
         mf = (ManufacturingFacility) this.findPlantByName(country, mfName);
 
         if (mf == null) {
@@ -129,7 +129,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public void editManufacturingFacility(Long mfId, String name, Country country) {
+    public void editManufacturingFacility(Long mfId, String name, Country country, String tz) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
 
         if (mf != null) {
@@ -170,7 +170,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
 
     @Override
-    public CountryOffice addCountryOffice(String coName, Country country) {
+    public CountryOffice addCountryOffice(String coName, Country country, String tz) {
         co = (CountryOffice) this.findPlantByName(country, coName);
 
         if (co == null) {
@@ -188,7 +188,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }
     
     @Override
-    public void editCountryOffice(Long coId, String name, Country country) {
+    public void editCountryOffice(Long coId, String name, Country country, String tz) {
         co = (CountryOffice) em.find(CountryOffice.class, coId);
 
         if (co != null) {
@@ -260,7 +260,6 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         if (country == null) {
             country = new Country();
             country.setName(countryName);
-            country.setTimeZoneID(timeZoneID);
             em.persist(country);
 
             return country;
