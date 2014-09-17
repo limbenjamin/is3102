@@ -83,7 +83,6 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             cn.setName("SINGAPORE");
             cn.setPhoneCode("65");
             cn.setCode("SG");
-            cn.setTimeZoneID("GMT 8");
 
             persist(cn);
         } catch (Exception err) {
@@ -92,6 +91,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         try {
             mf = new ManufacturingFacility();
             mf.setCountry(cn);
+            mf.setTimeZoneID("GMT 8");
             persist(mf);
         } catch (Exception err) {
         }
@@ -114,6 +114,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             store = new Store();
             store.setCountry(cn);
             store.setName("Sembawang");
+            store.setTimeZoneID("GMT 8");
             persist(store);
         } catch (Exception err) {
         }

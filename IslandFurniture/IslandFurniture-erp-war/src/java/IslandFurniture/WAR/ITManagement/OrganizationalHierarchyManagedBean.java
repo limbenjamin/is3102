@@ -62,13 +62,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         plantType = request.getParameter("plantForm:plantType");
         switch (plantType) {
             case "Store":
-                mohBean.addStore(plantName, country);
+                mohBean.addStore(plantName, country, "Asia/Singapore");
                 break;
             case "Manufacturing Facility":
-                mohBean.addManufacturingFacility(plantName, country);
+                mohBean.addManufacturingFacility(plantName, country, "Asia/Singapore");
                 break;
             case "Country Office":
-                mohBean.addCountryOffice(plantName, country);
+                mohBean.addCountryOffice(plantName, country, "Asia/Singapore");
                 break;
             default:
                 break;

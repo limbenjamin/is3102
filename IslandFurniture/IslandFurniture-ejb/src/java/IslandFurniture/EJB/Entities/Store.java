@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -22,12 +23,14 @@ import javax.persistence.PostPersist;
 @Entity
 @NamedQueries({
     @NamedQuery(
-        name="getAllStores",
-        query="SELECT a FROM Store a")
+            name = "getAllStores",
+            query = "SELECT a FROM Store a")
 })
 public class Store extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @ManyToOne
+    private CountryOffice countryOffice;
     @OneToMany(mappedBy = "store")
     private List<GoodsIssuedDocument> goodsIssuedDocument = new ArrayList();
     @OneToMany(mappedBy = "store")
@@ -38,6 +41,14 @@ public class Store extends Plant implements Serializable {
     private List<Stock> sells = new ArrayList();
     @OneToMany(mappedBy = "store")
     private List<StockSupplied> suppliedWithFrom = new ArrayList();
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
 
     public List<GoodsIssuedDocument> getGoodsIssuedDocument() {
         return goodsIssuedDocument;
@@ -105,7 +116,6 @@ public class Store extends Plant implements Serializable {
     }
 
     // Entity Callbacks
-    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);
