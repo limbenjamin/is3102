@@ -15,6 +15,6 @@ import javax.ejb.Remote;
 @Remote
 public interface LoadJamesTestDataRemote {
 
-    Boolean loadMSSRS();
+    Boolean loadProductionCapacityData();
     
 }
