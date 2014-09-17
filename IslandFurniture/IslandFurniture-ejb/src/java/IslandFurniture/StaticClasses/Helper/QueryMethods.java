@@ -15,13 +15,14 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.EJB.Entities.Supplier;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 /**
- * This java class contains static methods to implement all the various named 
+ * This java class contains static methods to implement all the various named
  * queries that are reusable
  *
  * @author Chen Tong <chentong@nus.edu.sg>
@@ -82,6 +83,13 @@ public class QueryMethods {
         } catch (NoResultException nrex) {
             return null;
         }
+    }
+
+    public static List<Supplier> findSupplierByName(EntityManager em, String supplierName) {
+        Query q = em.createNamedQuery("findSupplierByName");
+        q.setParameter("name", supplierName);
+
+        return (List<Supplier>) q.getResultList();
     }
 
     public static List<StockSupplied> getStockSuppliedToStore(EntityManager em, Store store) {

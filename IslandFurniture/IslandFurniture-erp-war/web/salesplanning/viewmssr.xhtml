@@ -28,14 +28,6 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th>Begin Inventory</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.beginInventory}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
                                 <th>Quantity Forecasted</th>
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <td>
@@ -44,10 +36,10 @@
                                 </ui:repeat>
                             </tr>
                             <tr>
-                                <th>Quantity Requested</th>
+                                <th>Planned Inventory</th>
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <td>
-                                        <h:outputText value="#{stockMssr.qtyRequested}" />
+                                        <h:outputText value="#{stockMssr.plannedInventory}" />
                                     </td>
                                 </ui:repeat>
                             </tr>
@@ -56,6 +48,30 @@
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.qtySold}" />
+                                    </td>
+                                </ui:repeat>
+                            </tr>
+                            <tr>
+                                <th>Actual Inventory</th>
+                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                    <td>
+                                        <h:outputText value="#{stockMssr.actualInventory}" />
+                                    </td>
+                                </ui:repeat>
+                            </tr>
+                            <tr>
+                                <th>Variance Offset</th>
+                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                    <td>
+                                        <h:outputText value="#{stockMssr.varianceOffset}" />
+                                    </td>
+                                </ui:repeat>
+                            </tr>
+                            <tr>
+                                <th>Quantity Requested</th>
+                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                    <td>
+                                        <h:outputText value="#{stockMssr.qtyRequested}" />
                                     </td>
                                 </ui:repeat>
                             </tr>

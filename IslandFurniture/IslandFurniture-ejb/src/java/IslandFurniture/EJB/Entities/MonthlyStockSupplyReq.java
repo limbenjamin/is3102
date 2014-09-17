@@ -26,9 +26,8 @@ import javax.persistence.Query;
 @Entity
 @IdClass(MonthlyStockSupplyReqPK.class)
 @NamedQueries({
-
-    @NamedQuery(name = "MonthlyStockSupplyReq.find",query = "select MSSR from MonthlyStockSupplyReq MSSR where MSSR.year=:y and MSSR.stock=:fm and MSSR.month=:m")
-   ,@NamedQuery(name="MonthlyStockSupplyReq.finduntiltime",query="select MSSR from MonthlyStockSupplyReq MSSR where MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1)"),
+    @NamedQuery(name = "MonthlyStockSupplyReq.find", query = "select MSSR from MonthlyStockSupplyReq MSSR where MSSR.year=:y and MSSR.stock=:fm and MSSR.month=:m"),
+    @NamedQuery(name = "MonthlyStockSupplyReq.finduntiltime", query = "select MSSR from MonthlyStockSupplyReq MSSR where MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1)"),
     @NamedQuery(
             name = "getMssrByCoStock",
             query = "SELECT a FROM MonthlyStockSupplyReq a WHERE "
@@ -36,8 +35,11 @@ import javax.persistence.Query;
             + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
             + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
+            name = "getMssrByCO",
+            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.countryOffice=:countryOffice"),
+    @NamedQuery(
             name = "MonthlyStockSupplyReq.FindByCoStock",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.committed=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.approved=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
@@ -52,7 +54,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private Month month;
     @Id
     private Integer year;
-    
+
     private int qtyForecasted;
     private int plannedInventory;
     private int qtySold;
@@ -60,11 +62,9 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private int varianceOffset;
     private int qtyRequested;
     private boolean approved;
-    
+
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
-
-
 
     public Stock getStock() {
         return stock;
@@ -163,20 +163,17 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     }
 
     public MonthlyProductionPlan getMonthlyProductionPlan(EntityManager em) throws Exception {
-        try{
-        Query q=em.createNamedQuery("MonthlyProductionPlan.Find");
-        q.setParameter("m", this.month);
-        q.setParameter("y", this.year);
-        q.setParameter("fm", this.stock);
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", this.month);
+            q.setParameter("y", this.year);
+            q.setParameter("fm", this.stock);
 
-        return (MonthlyProductionPlan)q.getResultList().get(0);
-        }catch(Exception ex){
-        throw  new RuntimeException("This MSSR does not have a MPP yet");
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+            throw new RuntimeException("This MSSR does not have a MPP yet");
         }
     }
-
-
-   
 
     @Override
     public int hashCode() {

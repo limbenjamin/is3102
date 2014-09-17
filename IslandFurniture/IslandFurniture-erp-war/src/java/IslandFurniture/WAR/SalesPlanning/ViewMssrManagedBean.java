@@ -62,7 +62,8 @@ public class ViewMssrManagedBean implements Serializable {
         if (plant instanceof CountryOffice) {
             this.co = (CountryOffice) plant;
             this.yearsOfMssr = salesForecastBean.getYearsOfMssr(co);
-            this.yearOfMssr = this.yearsOfMssr.get(yearsOfMssr.get(yearsOfMssr.size()));
+            this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size()-1);
+            this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
         } else {
             try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -103,6 +104,8 @@ public class ViewMssrManagedBean implements Serializable {
 
     public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
         List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList = new ArrayList();
+        this.init();
+        
         if (this.mssrMap != null) {
             mssrList.addAll(this.mssrMap.entrySet());
         }

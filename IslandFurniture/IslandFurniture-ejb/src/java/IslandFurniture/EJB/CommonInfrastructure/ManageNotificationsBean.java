@@ -11,10 +11,8 @@ import IslandFurniture.EJB.Entities.Staff;
 import java.util.Calendar;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 

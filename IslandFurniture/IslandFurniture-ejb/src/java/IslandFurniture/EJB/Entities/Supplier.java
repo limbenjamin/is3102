@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -22,11 +24,17 @@ import javax.persistence.OneToOne;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findSupplierByName",
+            query = "SELECT a FROM Supplier a WHERE a.name = :name")
+})
 public class Supplier implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
     @ManyToMany
     private List<Ingredient> ingredients;
     @OneToMany(mappedBy="supplier")
@@ -46,6 +54,14 @@ public class Supplier implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Ingredient> getIngredients() {
