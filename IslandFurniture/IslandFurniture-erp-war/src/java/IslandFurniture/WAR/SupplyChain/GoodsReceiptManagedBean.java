@@ -75,11 +75,6 @@ public class GoodsReceiptManagedBean implements Serializable {
         return "goodsreceipt";
     }
 
-    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
-    }
-
     public Long getPlantId() {
         return plantId;
     }
