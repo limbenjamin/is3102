@@ -59,9 +59,7 @@
                                     <label class="col-sm-4 control-label">Storage Area Name: </label>
                                     <div class="col-sm-8">
                                         <h:selectOneMenu id="storageAreaId" class="form-control">
-                                            <c:forEach var="i" begin="0" end="#{storageLocationManagedBean.storageAreaList.size()-1}">
-                                                <f:selectItem itemLabel="#{storageLocationManagedBean.storageAreaList.get(i).name}" itemValue="#{storageLocationManagedBean.storageAreaList.get(i).id}" />
-                                            </c:forEach>
+                                            <f:selectItems value="#{storageLocationManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
                                         </h:selectOneMenu>
                                     </div>
                                 </div>
@@ -91,9 +89,7 @@
                                     <ui:repeat value="#{storageLocationManagedBean.storageBinList}" var="StorageBin">
                                         <tr>
                                             <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{StorageBin.storageArea.id}">
-                                                    <c:forEach var="i" begin="0" end="#{storageLocationManagedBean.storageAreaList.size()-1}">
-                                                        <f:selectItem itemLabel="#{storageLocationManagedBean.storageAreaList.get(i).name}" itemValue="#{storageLocationManagedBean.storageAreaList.get(i).id}" />
-                                                    </c:forEach>
+                                                    <f:selectItems value="#{storageLocationManagedBean.storageAreaList}" var="sArea" itemLabel="#{sArea.name}" itemValue="#{sArea.id}" />
                                                 </h:selectOneMenu></td>
                                             <td><h:inputText id="storageBinName" value="#{StorageBin.name}" class="form-control"></h:inputText></td>
                                             <td><h:commandButton actionListener="#{storageLocationManagedBean.editStorageBin}"  value="Update" class="btn btn-success btn-xs"> 

@@ -29,14 +29,14 @@ public interface ManageStorageLocationLocal {
 
     void editStorageArea(Long storageAreaId, String name);
 
-    void editStorageBin(Long storageBinId, String name);
+    void editStorageBin(Long storageAreaId, Long storageBinId, String name);
 
     StorageArea getStorageArea(Long storageAreaId);
 
     StorageBin getStorageBin(Long storageBinId);
 
-    List<StorageArea> viewStorageArea();
+    List<StorageArea> viewStorageArea(Plant plant);
 
-    List<StorageBin> viewStorageBin();
+    List<StorageBin> viewStorageBin(Plant plant);
     
 }

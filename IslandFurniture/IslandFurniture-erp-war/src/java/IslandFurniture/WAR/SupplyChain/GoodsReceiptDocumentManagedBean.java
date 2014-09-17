@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class GoodsReceiptManagedBean implements Serializable {
+public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     private Long plantId;
     private Long goodsReceiptDocumentId;
@@ -55,29 +55,10 @@ public class GoodsReceiptManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
-        plant = staff.getPlant();
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        System.out.println("this is the docomentid" + goodsReceiptDocumentId);
+        if(goodsReceiptDocumentId != null) goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         System.out.println("Init");
-    }
-
-    public String addGoodsReceiptDocument() {
-//        ** NEED TO ASK CT **        
-//        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//        postingDate = request.getParameter("createGRD:postingDate");
-        postingDate = null;
-        mgrl.createGoodsReceiptDocument(plant, postingDate);
-        return "goodsreceiptdocument";
-    }
-
-    public String deleteGoodsReceiptDocument() {
-        goodsReceiptDocumentId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("grdId"));
-        mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
-        return "goodsreceipt";
-    }
-
-    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
     public Long getPlantId() {
@@ -167,5 +148,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
+
+    
 
 }

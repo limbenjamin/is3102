@@ -59,8 +59,8 @@ public class storageLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = mslr.viewStorageBin();
-        storageAreaList = mslr.viewStorageArea();
+        storageBinList = mslr.viewStorageBin(plant);
+        storageAreaList = mslr.viewStorageArea(plant);
         System.out.println("Init");
     }
 
@@ -102,9 +102,7 @@ public class storageLocationManagedBean implements Serializable {
 
     public String editStorageBin(ActionEvent event) throws IOException {
         StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
-//        storageBinId = sb.getId();
-//        storageBinName = sb.getName();
-        mslr.editStorageBin(sb.getId(), sb.getName());
+        mslr.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
         return "storagelocation";
     }
 
