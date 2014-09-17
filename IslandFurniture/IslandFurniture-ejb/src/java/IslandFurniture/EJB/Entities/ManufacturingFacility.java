@@ -26,7 +26,7 @@ import javax.persistence.Query;
 @NamedQueries({
     @NamedQuery(
         name="getAllMFs",
-        query="SELECT a FROM ManufacturingFacility a ORDER BY a.country.name")
+        query="SELECT a FROM ManufacturingFacility a ORDER BY a.country.name, a.name ASC")
 })
 public class ManufacturingFacility extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;

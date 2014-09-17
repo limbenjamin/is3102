@@ -22,7 +22,7 @@ import javax.persistence.Query;
  * @author James
  */
 @Stateless
-public class MaterialResourcePlanning implements DemandPlanningViewLocal {
+public class MaterialResourcePlanning implements MaterialResourcePlanningView {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;

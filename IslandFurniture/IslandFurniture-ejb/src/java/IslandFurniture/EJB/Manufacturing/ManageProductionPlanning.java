@@ -45,9 +45,8 @@ import javax.persistence.Query;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ManageProductionPlanning implements ManageProductionPlanningRemote {
 
-    private static final int FORWARDLOCK=1; //This determine how many months in advance production planning is locked
-    
-    
+    private static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
+
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
     private ManufacturingFacility MF = null;
@@ -57,17 +56,17 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     }
 
     @Override
-    public void setCN(String cn_name) {
-        Country cn = null;
+    public void setMF(String MF_NAME) throws Exception {
+        ManufacturingFacility mf = null;
         try {
-            cn = (Country) em.createQuery("select cn from Country cn where cn.name='" + cn_name + "'").getResultList().get(0);
-            setCN(cn);
+            mf = (ManufacturingFacility) em.createQuery("select MF from ManufacturingFacility MF where MF.name='" + MF_NAME + "'").getResultList().get(0);
+            this.MF = mf;
         } catch (Exception ex) {
-            try {
-                throw new Exception("No such Country");
-            } catch (Exception ex1) {
-            }
+            throw new Exception("ManageProductionPlanning(): No such manufacturing facility = " + MF_NAME);
+
         }
+
+        System.out.println("ManageProductionPlanning(): Plant set to " + MF_NAME);
 
     }
 
@@ -98,11 +97,6 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
 
     }
 
-    public void setCN(Country cn) {
-        MF = (ManufacturingFacility) em.createQuery("select mf from ManufacturingFacility mf where mf.country.id=" + cn.getId()).getResultList().get(0);
-
-    }
-
     @Override
     //Plan Production Planning 6 months in advance that are relevant to MF
     public void CreateProductionPlanFromForecast() throws Exception {
@@ -117,6 +111,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     }
 
     private List<MonthlyStockSupplyReq> GetRelevantMSSR(int m, int year) {
+        
+        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year);
         Query l = em.createNamedQuery("StockSupplied.FindByMf");
         l.setParameter("mf", this.MF);
         ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
@@ -259,7 +255,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     }
 
     private void balanceProductionTill() throws Exception {
-        MonthlyProductionPlan latest = (MonthlyProductionPlan) em.createQuery("select mpp from MonthlyProductionPlan mpp order by mpp.year*12 + mpp.month DESC").getResultList().get(0);
+        MonthlyProductionPlan latest = (MonthlyProductionPlan) em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.manufacturingFacility.name='" + MF.getName() + "' order by mpp.year*12 + mpp.month DESC").getResultList().get(0);
         balanceProductionTill(latest.getYear(), latest.getMonth().value);
     }
 

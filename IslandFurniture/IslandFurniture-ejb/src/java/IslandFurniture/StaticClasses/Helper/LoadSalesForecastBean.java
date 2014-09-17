@@ -62,6 +62,8 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         
                         prevExcessInv = eachMssr.getQtyForecasted() - eachMssr.getQtySold();
                         prevIdealInv = eachMssr.getIdealInventory();
+                        
+                        eachMssr.setCommitted(true); //Added by james so that i can test my production planning. can fake some random approval :) ?
 
                         System.out.println(eachMssr);
                     }
