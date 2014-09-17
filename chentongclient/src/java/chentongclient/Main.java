@@ -5,6 +5,7 @@
  */
 package chentongclient;
 
+import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
 import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
@@ -39,6 +40,9 @@ public class Main {
     
     @EJB
     private static MapStaffDataBeanRemote mapStaffDataBean;
+
+    @EJB
+    private static LoadJamesTestDataRemote loadJamesTestData;
 
     /**
      * @param args the command line arguments
@@ -99,6 +103,18 @@ public class Main {
                 System.out.println("Sales Forecast data generated successfully from transactions!");
             } else {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
+            }
+        }
+
+        // Load Production Capacity Data
+        //Added by James
+        //shift down later
+        System.out.print("Load Production Capacity Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadJamesTestData.loadProductionCapacityData()) {
+                System.out.println("Production Capacity Data Emulated");
+            } else {
+                System.out.println("Failed to emulate Production Capacity Data");
             }
         }
 

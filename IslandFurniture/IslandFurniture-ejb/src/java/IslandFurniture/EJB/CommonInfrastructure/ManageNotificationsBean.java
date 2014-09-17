@@ -6,17 +6,47 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import javax.ejb.Stateless;
+import IslandFurniture.EJB.Entities.Notification;
+import IslandFurniture.EJB.Entities.Staff;
+import java.util.Calendar;
+import java.util.List;
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateful;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Benjamin
  */
-@Stateless
-@LocalBean
-public class ManageNotificationsBean {
+@Stateful
+public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext
+    EntityManager em;
+    
+    @Resource SessionContext ctx;
+    private Staff staff;
+    private Notification notification;
+    private List<Notification> notificationList;
+    
+    @Override
+    public void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff){
+        notification = new Notification();
+        notification.setTitle(title);
+        notification.setContent(content);
+        notification.setLink(link);
+        notification.setLinkText(linkText);
+        notification.setTime(Calendar.getInstance());
+        staff.getNotifications().add(notification);
+        em.merge(staff);
+    }
+    
+    @Override
+    public List<Notification> displayNotificationForStaff(Staff staff){
+        return staff.getNotifications();
+    }
 }

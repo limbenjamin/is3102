@@ -9,13 +9,12 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -23,7 +22,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -40,7 +38,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     private String username;
 
     private Calendar postingDate;
-    private Calendar documentDate;
+    private Calendar receiptDate;
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
 
@@ -64,20 +62,27 @@ public class GoodsReceiptManagedBean implements Serializable {
     }
 
     public String addGoodsReceiptDocument() {
-//        ** NEED TO ASK CT **        
-//        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//        postingDate = request.getParameter("createGRD:postingDate");
-        postingDate = null;
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        postingDate = cal;
         mgrl.createGoodsReceiptDocument(plant, postingDate);
-        return "goodsreceiptdocument";
+        
+        
+        return "goodsreceipt";
     }
 
-    public String deleteGoodsReceiptDocument() {
-        System.out.println("It went here!");
-        goodsReceiptDocumentId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("grdId"));
-        System.out.println("It went here too!");
-        mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
-        return "goodsreceipt";
+    public String editGoodsReceiptDocument(ActionEvent event) throws IOException {
+        GoodsReceiptDocument gr = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
+
+        Calendar cal = gr.getReceiptDate();
+        Date date = new Date();
+        cal.setTime(date);
+        receiptDate = cal;
+
+        // The purchase order is currently null
+        mgrl.editGoodsReceiptDocument(gr.getId(), receiptDate, null, gr.getDeliveryNote());
+        return "goodsreceiptdocument";
     }
 
     public Long getPlantId() {
@@ -113,11 +118,11 @@ public class GoodsReceiptManagedBean implements Serializable {
     }
 
     public Calendar getDocumentDate() {
-        return documentDate;
+        return receiptDate;
     }
 
     public void setDocumentDate(Calendar documentDate) {
-        this.documentDate = documentDate;
+        this.receiptDate = documentDate;
     }
 
     public List<GoodsReceiptDocument> getGoodsReceiptDocumentList() {
@@ -167,6 +172,5 @@ public class GoodsReceiptManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
-    
-    
+
 }

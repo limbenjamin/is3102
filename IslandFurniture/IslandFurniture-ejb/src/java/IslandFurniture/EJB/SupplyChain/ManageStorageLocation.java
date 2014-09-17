@@ -67,22 +67,25 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     }
 
     @Override
-    public void editStorageBin(Long storageBinId, String name) {
+    public void editStorageBin(Long storageAreaId, Long storageBinId, String name) {
+        storageArea = getStorageArea(storageAreaId);
+        System.out.println("this is the storage area" + storageArea);
         storageBin = getStorageBin(storageBinId);
+        storageBin.setStorageArea(storageArea);
         storageBin.setName(name);
         em.merge(storageBin);
         em.flush();
     }
 
     @Override
-    public List<StorageArea> viewStorageArea() {
-        Query q = em.createQuery("SELECT s " + "FROM StorageArea s");
+    public List<StorageArea> viewStorageArea(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
         return q.getResultList();
     }
 
     @Override
-    public List<StorageBin> viewStorageBin() {
-        Query q = em.createQuery("SELECT s " + "FROM StorageBin s");
+    public List<StorageBin> viewStorageBin(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
         return q.getResultList();
     }
 
@@ -99,5 +102,5 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.remove(storageBin);
         em.flush();
     }
-
+    
 }

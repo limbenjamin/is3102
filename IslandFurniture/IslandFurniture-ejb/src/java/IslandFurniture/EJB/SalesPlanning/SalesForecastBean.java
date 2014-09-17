@@ -41,8 +41,8 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     private EntityManager em;
 
     private List<Transaction> getStoreTransactions(Store store, Month month, int year) {
-        Calendar start = Calendar.getInstance(TimeZone.getTimeZone(store.getCountry().getTimeZoneID()));
-        Calendar end = Calendar.getInstance(TimeZone.getTimeZone(store.getCountry().getTimeZoneID()));
+        Calendar start = Calendar.getInstance(TimeZone.getTimeZone(store.getTimeZoneID()));
+        Calendar end = Calendar.getInstance(TimeZone.getTimeZone(store.getTimeZoneID()));
 
         start.set(year, month.value, 1, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
@@ -93,7 +93,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         FurnitureTransaction fTrans;
         RetailItemTransaction riTrans;
         Calendar cal;
-        TimeZone tz = TimeZone.getTimeZone(store.getCountry().getTimeZoneID());
+        TimeZone tz = TimeZone.getTimeZone(store.getTimeZoneID());
 
         while (start.compareTo(end) <= 0) {
             for (StockSupplied eachStockSupplied : store.getSuppliedWithFrom()) {
@@ -117,8 +117,8 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 System.out.println("Transaction Id: " + eachTrans.getId());
                 System.out.println("Store: " + eachTrans.getStore().getName());
                 DateFormat timeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
-                timeFormat.setTimeZone(TimeZone.getTimeZone(eachTrans.getStore().getCountry().getTimeZoneID()));
-                System.out.println("Transaction Date: " + timeFormat.format(eachTrans.getTransTime().getTime()) + ", " + eachTrans.getStore().getCountry().getTimeZoneID() + " time");
+                timeFormat.setTimeZone(TimeZone.getTimeZone(eachTrans.getStore().getTimeZoneID()));
+                System.out.println("Transaction Date: " + timeFormat.format(eachTrans.getTransTime().getTime()) + ", " + eachTrans.getStore().getTimeZoneID() + " time");
 
                 // Convert Calendar raw values to store's offset value
                 cal = eachTrans.getTransTime();

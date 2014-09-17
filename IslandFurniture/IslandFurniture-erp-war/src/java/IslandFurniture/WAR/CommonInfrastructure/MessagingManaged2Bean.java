@@ -7,11 +7,13 @@
 package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
 import IslandFurniture.EJB.Entities.Message;
 import IslandFurniture.EJB.Entities.MessageThread;
 import IslandFurniture.EJB.Entities.Staff;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,11 +42,14 @@ public class MessagingManaged2Bean implements Serializable {
     private List<Message> messageList;
     private String content;
     private Integer messageListSize;
+    private List<Staff> staffList;
     
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
     private ManageUserAccountInformationBean staffBean;
+    @EJB 
+    private ManageNotificationsBeanLocal notificationBean;  
     
     @PostConstruct
     public void init(){
@@ -76,8 +81,17 @@ public class MessagingManaged2Bean implements Serializable {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       HttpSession session = Util.getSession();
       id = (Long) session.getAttribute("threadid");
+      messageThread = messageBean.getMessageThread(id);
       content = request.getParameter("AddMessageForm:content");
       messageBean.sendMessage(username, id, content);
+      staffList = messageThread.getRecipient();
+      //dont want to receive your own notification
+      staffList.remove(staffBean.getStaff(username));
+      Iterator<Staff> iterator = staffList.iterator();
+        while (iterator.hasNext()) {
+                staff = (Staff) iterator.next();
+		notificationBean.createNewNotificationForStaff("Messaging System", "New message received in "+messageThread.getTitle(), "/common/messaging.xhtml", "Read", staff);
+	}
       return "messaging2";
     }
  

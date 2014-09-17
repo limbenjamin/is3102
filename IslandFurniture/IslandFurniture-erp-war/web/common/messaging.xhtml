@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -93,38 +94,15 @@
                                   All Contacts
                                 </div>
                                 <div class="list-group contact-list">                          
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Benjamin Lim</h6>
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Kamilul Ashraf</h6>  
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Lee Chen Tong</h6>  
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Yap Zi Xuan</h6>
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>James Song Jianyong</h6>  
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Darius Foo</h6>  
-                                  </a>
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Christopher Lee</h6>
-                                  </a>     
-                                  <a href="#" class="list-group-item">
-                                      <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
-                                      <h6>Joe Chee</h6>
-                                  </a>                                                                
+                                    <ui:repeat value="#{staffManagedBean.staffList}" var="staff">
+                                      <a href="#" class="list-group-item">
+                                          <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
+                                          <span class="user-info">
+                                              <h6>#{staff.name}</h6>
+                                              <p>#{staff.plant.name}, #{staff.plant.country.name}</p>
+                                          </span>
+                                      </a>
+                                    </ui:repeat>                                                               
                                 </div>
                               </section>
                             </div>                            

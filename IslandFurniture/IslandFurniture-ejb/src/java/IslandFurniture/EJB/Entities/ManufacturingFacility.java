@@ -9,12 +9,14 @@ package IslandFurniture.EJB.Entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.EntityManager;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
+import javax.persistence.Query;
 
 /**
  *
@@ -24,18 +26,27 @@ import javax.persistence.PostPersist;
 @NamedQueries({
     @NamedQuery(
         name="getAllMFs",
-        query="SELECT a FROM ManufacturingFacility a")
+        query="SELECT a FROM ManufacturingFacility a ORDER BY a.country.name")
 })
 public class ManufacturingFacility extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
+    
+    @ManyToOne
+    private CountryOffice countryOffice;
     @OneToOne(mappedBy="supplierFor")
     private ProcurementContractDetail suppliedBy;
-    @ManyToMany
-    private List<Stock> produces;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<StockSupplied> supplyingWhatTo;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<ProductionCapacity> productionCapacities;
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
 
     public ProcurementContractDetail getSuppliedBy() {
         return suppliedBy;
@@ -43,14 +54,6 @@ public class ManufacturingFacility extends Plant implements Serializable {
 
     public void setSuppliedBy(ProcurementContractDetail suppliedBy) {
         this.suppliedBy = suppliedBy;
-    }
-
-    public List<Stock> getProduces() {
-        return produces;
-    }
-
-    public void setProduces(List<Stock> produces) {
-        this.produces = produces;
     }
 
     public List<StockSupplied> getSupplyingWhatTo() {
@@ -104,6 +107,24 @@ public class ManufacturingFacility extends Plant implements Serializable {
         
         return null;
     }
+    
+        public double getCurrentFreeCapacity(EntityManager em,Month m,int year)
+    {
+        
+        Query q=em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
+        q.setParameter("m",m);
+        q.setParameter("y",year);
+        double cCap=0;
+    for(Object o : q.getResultList())
+    {
+        MonthlyProductionPlan mpp=(MonthlyProductionPlan) o;
+        cCap+=mpp.getQTY()/(0.0+this.findProductionCapacity(mpp.getFurnitureModel()).getCapacity(m, year));
+    }
+    
+    return 1-cCap;
+    
+    }
+    
     
     // Entity Callbacks
     @PostPersist

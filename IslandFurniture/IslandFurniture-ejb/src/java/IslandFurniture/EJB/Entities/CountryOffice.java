@@ -6,7 +6,11 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
 /**
@@ -14,9 +18,38 @@ import javax.persistence.PostPersist;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name = "findCountryOfficeByName",
+        query = "SELECT a FROM CountryOffice a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllCountryOffice",
+            query = "SELECT a FROM CountryOffice a")
+})
 public class CountryOffice extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @OneToMany(mappedBy = "countryOffice")
+    private List<Store> stores;
+
+    @OneToMany(mappedBy = "countryOffice")
+    private List<ManufacturingFacility> mFacs;
+
+    public List<Store> getStores() {
+        return stores;
+    }
+
+    public void setStores(List<Store> stores) {
+        this.stores = stores;
+    }
+
+    public List<ManufacturingFacility> getmFacs() {
+        return mFacs;
+    }
+
+    public void setmFacs(List<ManufacturingFacility> mFacs) {
+        this.mFacs = mFacs;
+    }
 
     @Override
     public int hashCode() {
