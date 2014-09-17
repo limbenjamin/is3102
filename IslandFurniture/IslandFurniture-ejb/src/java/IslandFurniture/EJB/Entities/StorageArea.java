@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -29,7 +31,8 @@ public class StorageArea implements Serializable {
     private Plant plant;
     @OneToMany(mappedBy="storageArea")
     private List<StorageBin> storageBins;
-
+    private String name;
+    
     public Long getId() {
         return id;
     }
@@ -54,6 +57,14 @@ public class StorageArea implements Serializable {
         this.storageBins = storageBins;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -76,7 +87,7 @@ public class StorageArea implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.EJB.Entities.StorageArea[ id=" + id + " ]";
+        return "StorageArea[ id=" + id + " ]";
     }
     
 }

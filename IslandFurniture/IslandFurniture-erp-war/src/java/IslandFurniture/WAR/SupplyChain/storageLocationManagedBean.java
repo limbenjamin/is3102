@@ -5,8 +5,13 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
+import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +22,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import static jdk.nashorn.internal.runtime.Debug.id;
 
 /**
  *
@@ -26,104 +33,105 @@ import javax.servlet.http.HttpServletRequest;
 @ViewScoped
 public class storageLocationManagedBean implements Serializable {
 
-    /**
-     * Creates a new instance of storageLocationManagedBean
-     */
-    private Long id;
-    private Integer plantNumber;
-    private Integer storageAreaNumber;
+    private Long plantId;
+    private Long storageAreaId;
+    private Long storageBinId;
+
     private String storageAreaName;
-    private String storageID;
-    private String storageType;
-    private String storageDescription;
-    private List<StorageBin> storageLocationList;
-    private StorageBin storageLocation;
+    private String storageBinName;
+    private String username;
+
+    private List<StorageBin> storageBinList;
+    private List<StorageArea> storageAreaList;
+
+    private StorageArea storageArea;
+    private StorageBin storageBin;
+    private Staff staff;
+    private Plant plant;
 
     @EJB
     public ManageStorageLocationLocal mslr;
+    @EJB
+    private ManageUserAccountInformationBean staffBean;
 
     @PostConstruct
     public void init() {
-        storageLocationList = mslr.viewStorageLocation();
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+        staff = staffBean.getStaff(username);
+        plant = staff.getPlant();
+
+        storageBinList = mslr.viewStorageBin();
+        storageAreaList = mslr.viewStorageArea();
         System.out.println("Init");
-        
-        id = (Long)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("locationId");
-        
-        if(id != null) storageLocation = mslr.getStorageLocation(id);
     }
 
-    public String addStorageLocation() {
+    public String addStorageArea() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        plantNumber = Integer.parseInt(request.getParameter("storageForm:plantNumber"));
-        storageAreaNumber = Integer.parseInt(request.getParameter("storageForm:storageAreaNumber"));
-        storageAreaName = request.getParameter("storageForm:storageAreaName");
-        storageID = request.getParameter("storageForm:storageID");
-        storageType = request.getParameter("storageForm:storageType");
-        storageDescription = request.getParameter("storageForm:storageDescription");
-        mslr.createStorageLocation(plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
+        storageAreaName = request.getParameter("createStorageArea:storageAreaName");
+        mslr.createStorageArea(plant, storageAreaName);
         return "storagelocation";
     }
 
-    public String deleteStorageLocation() {
-        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        mslr.deleteStorageLocation(id);
+    public String addStorageBin() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        storageAreaId = Long.parseLong(request.getParameter("createStorageBin:storageAreaId"));
+        storageArea = mslr.getStorageArea(storageAreaId);
+        storageBinName = request.getParameter("createStorageBin:storageBinName");
+        mslr.createStorageBin(storageArea, storageBinName);
         return "storagelocation";
     }
 
-    public void loadStorageLocation(ActionEvent event) {
-        System.out.println("This is the id: "+ id);
-        // id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        //id = Long.parseLong(event.getComponent().getAttributes().get("id").toString());
-        id = (Long)event.getComponent().getAttributes().get("id");
-        System.out.println("the id is" + id);
-       storageLocation = mslr.getStorageLocation(id);
-    }
-    
-    
-     public String editStorageLocation(ActionEvent event) throws IOException {
-     StorageBin sl =  (StorageBin)event.getComponent().getAttributes().get("slid");
-      
-     id = sl.getId();
-     plantNumber = sl.getPlantNumber();
-     storageAreaNumber = sl.getStorageAreaNumber();
-     storageAreaName = sl.getStorageAreaName();
-     storageID = sl.getStorageID();
-     storageType = sl.getStorageType();
-     storageDescription = sl.getStorageDescription();
-     
-     mslr.editStorageLocation(id, plantNumber, storageAreaNumber, storageAreaName, storageID, storageType, storageDescription);
-     FacesContext.getCurrentInstance().getExternalContext().redirect("storagelocation.xhtml");
-     return "storagelocation";
-     }
-     
-     public void storagelocationdetailActionListener(ActionEvent event) throws IOException
-     {
-         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("locationId", event.getComponent().getAttributes().get("locationId"));
-         FacesContext.getCurrentInstance().getExternalContext().redirect("storagelocationdetail.xhtml");
-     }
-     
-    public Long getId() {
-        return id;
+    public String deleteStorageArea() {
+        storageAreaId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageAreaId"));
+        mslr.deleteStorageArea(storageAreaId);
+        return "storagelocation";
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String deleteStorageBin() {
+        storageBinId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageBinId"));
+        mslr.deleteStorageBin(storageBinId);
+        return "storagelocation";
     }
 
-    public Integer getPlantNumber() {
-        return plantNumber;
+    public String editStorageArea(ActionEvent event) throws IOException {
+        StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
+        storageAreaId = sa.getId();
+        storageAreaName = sa.getName();
+        mslr.editStorageArea(storageAreaId, storageAreaName);
+        return "storagelocation";
     }
 
-    public void setPlantNumber(Integer plantNumber) {
-        this.plantNumber = plantNumber;
+    public String editStorageBin(ActionEvent event) throws IOException {
+        StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
+        storageBinId = sb.getId();
+        storageBinName = sb.getName();
+        mslr.editStorageBin(storageBinId, storageBinName);
+        return "storagelocation";
     }
 
-    public Integer getStorageAreaNumber() {
-        return storageAreaNumber;
+    public Long getPlantId() {
+        return plantId;
     }
 
-    public void setStorageAreaNumber(Integer storageAreaNumber) {
-        this.storageAreaNumber = storageAreaNumber;
+    public void setPlantId(Long plantId) {
+        this.plantId = plantId;
+    }
+
+    public Long getStorageAreaId() {
+        return storageAreaId;
+    }
+
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
+    }
+
+    public Long getStorageBinId() {
+        return storageBinId;
+    }
+
+    public void setStorageBinId(Long storageBinId) {
+        this.storageBinId = storageBinId;
     }
 
     public String getStorageAreaName() {
@@ -134,28 +142,68 @@ public class storageLocationManagedBean implements Serializable {
         this.storageAreaName = storageAreaName;
     }
 
-    public String getStorageID() {
-        return storageID;
+    public String getStorageBinName() {
+        return storageBinName;
     }
 
-    public void setStorageID(String storageID) {
-        this.storageID = storageID;
+    public void setStorageBinName(String storageBinName) {
+        this.storageBinName = storageBinName;
     }
 
-    public String getStorageType() {
-        return storageType;
+    public String getUsername() {
+        return username;
     }
 
-    public void setStorageType(String storageType) {
-        this.storageType = storageType;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getStorageDescription() {
-        return storageDescription;
+    public List<StorageBin> getStorageBinList() {
+        return storageBinList;
     }
 
-    public void setStorageDescription(String storageDescription) {
-        this.storageDescription = storageDescription;
+    public void setStorageBinList(List<StorageBin> storageBinList) {
+        this.storageBinList = storageBinList;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
+    }
+
+    public StorageArea getStorageArea() {
+        return storageArea;
+    }
+
+    public void setStorageArea(StorageArea storageArea) {
+        this.storageArea = storageArea;
+    }
+
+    public StorageBin getStorageBin() {
+        return storageBin;
+    }
+
+    public void setStorageBin(StorageBin storageBin) {
+        this.storageBin = storageBin;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
     public ManageStorageLocationLocal getMslr() {
@@ -166,20 +214,12 @@ public class storageLocationManagedBean implements Serializable {
         this.mslr = mslr;
     }
 
-    public List<StorageBin> getStorageLocationList() {
-        return storageLocationList;
+    public ManageUserAccountInformationBean getStaffBean() {
+        return staffBean;
     }
 
-    public void setStorageLocationList(List<StorageBin> storageLocationList) {
-        this.storageLocationList = storageLocationList;
-    }
-
-    public StorageBin getStorageLocation() {
-        return storageLocation;
-    }
-
-    public void setStorageLocation(StorageBin storageLocation) {
-        this.storageLocation = storageLocation;
+    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+        this.staffBean = staffBean;
     }
 
 }

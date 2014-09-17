@@ -6,6 +6,8 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.List;
 
@@ -15,14 +17,24 @@ import java.util.List;
  */
 public interface ManageStorageLocationLocal {
 
-    void createStorageLocation (Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription);
-    void editStorageLocation (Long id, Integer plantNumber, Integer storageAreaNumber, String storageAreaName, String storageID, String storageType, String storageDescription);
-    void deleteStorageLocation(Long id);
-    
-    List<StorageBin> viewStorageLocation();
-    StorageBin getStorageLocation(Long id);
-    
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    void createStorageArea(Plant plant, String name);
+
+    void createStorageBin(StorageArea storageArea, String name);
+
+    void deleteStorageArea(Long storageAreaId);
+
+    void deleteStorageBin(Long storageBinId);
+
+    void editStorageArea(Long storageAreaId, String name);
+
+    void editStorageBin(Long storageBinId, String name);
+
+    StorageArea getStorageArea(Long storageAreaId);
+
+    StorageBin getStorageBin(Long storageBinId);
+
+    List<StorageArea> viewStorageArea();
+
+    List<StorageBin> viewStorageBin();
     
 }
