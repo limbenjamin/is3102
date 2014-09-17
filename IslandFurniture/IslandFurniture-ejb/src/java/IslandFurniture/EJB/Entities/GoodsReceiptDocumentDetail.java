@@ -27,6 +27,7 @@ public class GoodsReceiptDocumentDetail implements Serializable {
     private GoodsReceiptDocument goodsReceiptDocument;
     @ManyToOne
     private Stock receivedStock;
+    private Boolean status;
 
     public Long getId() {
         return id;
@@ -50,6 +51,14 @@ public class GoodsReceiptDocumentDetail implements Serializable {
 
     public void setReceivedStock(Stock receivedStock) {
         this.receivedStock = receivedStock;
+    }
+
+    public Boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     @Override

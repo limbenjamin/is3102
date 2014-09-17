@@ -1,7 +1,8 @@
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -14,56 +15,51 @@ import javax.persistence.Query;
  * @author KamilulAshraf
  */
 @Stateful
-public class ManageGoodsReceipt implements ManageGoodsReceiptLocal  {
+public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @PersistenceContext
     EntityManager em;
 
     private GoodsReceiptDocument goodsReceiptDocument;
 
-  
     @Override
     public GoodsReceiptDocument getGoodsReceiptDocument(Long id) {
         goodsReceiptDocument = (GoodsReceiptDocument) em.find(GoodsReceiptDocument.class, id);
-        System.out.println("this is the goodsReceiptDocument id "+ id);
         return goodsReceiptDocument;
     }
-    
-    
+
     @Override
-        public void createGoodsReceiptDocument(Calendar postingDate, Calendar documentDate) {
+    public void createGoodsReceiptDocument(Plant plant, Calendar postingDate) {  
         goodsReceiptDocument = new GoodsReceiptDocument();
+//        goodsReceiptDocument.setPlant(plant);
         goodsReceiptDocument.setPostingDate(postingDate);
-        goodsReceiptDocument.setDocumentDate(documentDate);
+        goodsReceiptDocument.setDocumentDate(null);
         goodsReceiptDocument.setReceiveFrom(null);
-        goodsReceiptDocument.setGoodsReceiptDocumentDetails(null);
+        goodsReceiptDocument.setDeliveryNote(null);
         em.persist(goodsReceiptDocument);
     }
-    
-    
+
     @Override
-    public void editGoodsReceiptDocument(Long id, Calendar postingDate, Calendar documentDate) {
-        goodsReceiptDocument = getGoodsReceiptDocument(id);
+    public void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar postingDate, Calendar documentDate, PurchaseOrder po, String deliveryNote) {
+        goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocument.setPostingDate(postingDate);
         goodsReceiptDocument.setDocumentDate(documentDate);
-        goodsReceiptDocument.setReceiveFrom(null);
-        goodsReceiptDocument.setGoodsReceiptDocumentDetails(null);
+        goodsReceiptDocument.setReceiveFrom(po);
+        goodsReceiptDocument.setDeliveryNote(deliveryNote);
         em.merge(goodsReceiptDocument);
         em.flush();
     }
 
-   
-    @Override
-    public void deleteGoodsReceiptDocument(Long id) {
-        goodsReceiptDocument = getGoodsReceiptDocument(id);
-        em.remove(goodsReceiptDocument);
-        em.flush();
-    }
-
-   
     @Override
     public List<GoodsReceiptDocument> viewGoodsReceiptDocument() {
         Query q = em.createQuery("SELECT s " + "FROM GoodsReceiptDocument s");
         return q.getResultList();
+    }
+
+    @Override
+    public void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId) {
+        goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
+        em.remove(goodsReceiptDocument);
+        em.flush();
     }
 }
