@@ -85,7 +85,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
                         MSSR.setStock(SS.getStock());
                         MSSR.setStore(SS.getStore());
                         MSSR.setQtyRequested(r.nextInt(max)+max/4); //Max of 1.25
-                        
+                        MSSR.setCommitted(true);
                         try{
                         em.persist(MSSR);
                         
