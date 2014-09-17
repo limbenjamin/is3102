@@ -48,8 +48,6 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        loadJamesTestData.loadProductionCapacityData();
-                if (1==1) return;
         Scanner sc = new Scanner(System.in);
 
         // Load Organisation Entities (Store, Manufacturing Facility, Country Office)
