@@ -193,7 +193,6 @@ public class MonthlyProductionPlan implements Serializable {
     }
 
     public int getNumWorkDays() {
-
         return Helper.getNumWorkDays(this.month, this.year);
     }
 }

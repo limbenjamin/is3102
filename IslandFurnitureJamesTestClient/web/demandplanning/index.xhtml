@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Island Furniture | Demand Planning</title>
+    </h:head>
+    <h:body>            <h:form>
+
+            <div style="border:1px solid black; width:800px">
+
+                Select Manufacturing Facility:
+                <Br/>
+                <h:selectOneMenu value="#{DemandPlanning.MF}" id="select_mf">
+                    <f:selectItem itemValue="#{null}" itemLabel="--Select Manufacturing Facility --" />
+                    <f:selectItems value="#{DemandPlanning.MF_LIST}"/>
+                    <f:ajax execute="select_mf" render="mf_status"></f:ajax>
+                    <f:ajax execute="select_mf" render="ps"></f:ajax>
+                    <br/>
+
+                </h:selectOneMenu>
+
+
+            </div>
+            <br/>
+            <div style="border:1px solid black; width:800px">
+                 <h:outputText id="mf_status" value="Current Manufacturing Facility:#{DemandPlanning.MF}"></h:outputText>
+                 <h:outputText escape="false" id="ps" value="#{DemandPlanning.psHTML}">
+                 
+                 </h:outputText>
+            </div>
+
+
+        </h:form></h:body>
+</html>
+

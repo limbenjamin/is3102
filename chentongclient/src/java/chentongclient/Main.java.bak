@@ -5,7 +5,6 @@
  */
 package chentongclient;
 
-import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
 import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
@@ -103,8 +102,7 @@ public class Main {
                 System.out.println("Sales Forecast data generated successfully from transactions!");
             } else {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
-            }
-        }
+         
 
         // Load Monthly Stock Supply Req
         //Added by James
