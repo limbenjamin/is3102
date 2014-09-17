@@ -95,7 +95,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
             for (Store eachStore : stores) {
-                tz = TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID());
+                tz = TimeZone.getTimeZone(eachStore.getTimeZoneID());
 
                 for (int i = 0; i < 800; i++) {
                     // Add Furniture Transaction & Retail Item Transaction

@@ -28,12 +28,12 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"COUNTRY_ID", "NAME"})
+    @UniqueConstraint(columnNames = {"COUNTRY_ID", "NAME"})
 })
 @NamedQueries({
     @NamedQuery(
-        name="findPlantByName",
-        query="SELECT a FROM Plant a WHERE a.country = :country AND a.name = :name")
+            name = "findPlantByName",
+            query = "SELECT a FROM Plant a WHERE a.country = :country AND a.name = :name")
 })
 public abstract class Plant implements Serializable {
 
@@ -42,10 +42,12 @@ public abstract class Plant implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     protected String name;
+    protected String timeZoneID;
+
     @ManyToOne
     protected Country country;
     @OneToMany(mappedBy = "plant")
-    private List<Staff> employees;
+    protected List<Staff> employees;
     @ManyToMany
     protected List<PlantStockInventory> plantStockInventories;
     @OneToMany(mappedBy = "plant")
@@ -65,6 +67,14 @@ public abstract class Plant implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTimeZoneID() {
+        return timeZoneID;
+    }
+
+    public void setTimeZoneID(String timeZoneID) {
+        this.timeZoneID = timeZoneID;
     }
 
     public Country getCountry() {

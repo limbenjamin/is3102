@@ -39,7 +39,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
             for (Store eachStore : stores) {
-                curr = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getCountry().getTimeZoneID()));
+                curr = Calendar.getInstance(TimeZone.getTimeZone(eachStore.getTimeZoneID()));
                 curr.add(Calendar.MONTH, -1);
                 Month prevMth = Month.getMonth(curr.get(Calendar.MONTH));
 
