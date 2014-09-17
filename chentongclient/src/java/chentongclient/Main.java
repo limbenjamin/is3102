@@ -17,7 +17,7 @@ import javax.ejb.EJB;
 
 /**
  * IMPORTANT! Data Loading client for all types of sample data. Some segments do
- * not check for duplicates (e.g. transactions), hence please do not run too 
+ * not check for duplicates (e.g. transactions), hence please do not run too
  * many times (might overload your database)!
  *
  * @author Chen Tong <chentong@nus.edu.sg>
@@ -37,7 +37,7 @@ public class Main {
 
     @EJB
     private static LoadStaffDataBeanRemote loadStaffDataBean;
-    
+
     @EJB
     private static MapStaffDataBeanRemote mapStaffDataBean;
 
