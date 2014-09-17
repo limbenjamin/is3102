@@ -94,17 +94,17 @@ public class storageLocationManagedBean implements Serializable {
 
     public String editStorageArea(ActionEvent event) throws IOException {
         StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
-        storageAreaId = sa.getId();
-        storageAreaName = sa.getName();
-        mslr.editStorageArea(storageAreaId, storageAreaName);
+//        storageAreaId = sa.getId();
+//        storageAreaName = sa.getName();
+        mslr.editStorageArea(sa.getId(), sa.getName());
         return "storagelocation";
     }
 
     public String editStorageBin(ActionEvent event) throws IOException {
         StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
-        storageBinId = sb.getId();
-        storageBinName = sb.getName();
-        mslr.editStorageBin(storageBinId, storageBinName);
+//        storageBinId = sb.getId();
+//        storageBinName = sb.getName();
+        mslr.editStorageBin(sb.getId(), sb.getName());
         return "storagelocation";
     }
 
