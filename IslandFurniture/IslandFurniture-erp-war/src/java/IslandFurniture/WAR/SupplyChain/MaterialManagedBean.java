@@ -28,6 +28,15 @@ import javax.servlet.http.HttpSession;
 public class MaterialManagedBean implements Serializable {
     private List<Material> materialList = null;
     private int rowCount = 1;
+    private List<Material> filteredList = null;
+
+    public List<Material> getFilteredList() {
+        return filteredList;
+    }
+
+    public void setFilteredList(List<Material> filteredList) {
+        this.filteredList = filteredList;
+    }
 
     public List<Material> getMaterialList() {
         return materialList;
@@ -53,13 +62,13 @@ public class MaterialManagedBean implements Serializable {
         materialList = stockManager.displayMaterialList();
     }
     
-    public boolean addMaterial() {
+    public String addMaterial() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("MaterialManagedBean: 1");
         String name = request.getParameter("addMaterialForm:name");
         Double weight = Double.parseDouble(request.getParameter("addMaterialForm:weight"));
         stockManager.addMaterial(name, weight);
-        return true;
+        return "material";
     }
     public boolean editMaterial() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -86,6 +95,12 @@ public class MaterialManagedBean implements Serializable {
         System.out.println("MaterialManagedBean.displayMaterialList(): 1");
         materialList = stockManager.displayMaterialList();
         return materialList;
+    }
+    public String deleteMaterial() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String materialName = request.getParameter("deleteMaterialForm:name");
+        stockManager.deleteMaterial(materialName);
+        return "material";
     }
     public int rowCounter() {
         System.out.println(rowCount);

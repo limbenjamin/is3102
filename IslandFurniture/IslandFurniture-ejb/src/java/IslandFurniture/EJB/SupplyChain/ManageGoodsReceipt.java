@@ -27,23 +27,21 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         goodsReceiptDocument = (GoodsReceiptDocument) em.find(GoodsReceiptDocument.class, id);
         return goodsReceiptDocument;
     }
+    
+    
 
     @Override
-    public void createGoodsReceiptDocument(Plant plant, Calendar postingDate) {  
+    public void createGoodsReceiptDocument(Plant plant, Calendar postingDate) {
         goodsReceiptDocument = new GoodsReceiptDocument();
-//        goodsReceiptDocument.setPlant(plant);
+        goodsReceiptDocument.setPlant(plant);
         goodsReceiptDocument.setPostingDate(postingDate);
-        goodsReceiptDocument.setDocumentDate(null);
-        goodsReceiptDocument.setReceiveFrom(null);
-        goodsReceiptDocument.setDeliveryNote(null);
         em.persist(goodsReceiptDocument);
     }
 
     @Override
-    public void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar postingDate, Calendar documentDate, PurchaseOrder po, String deliveryNote) {
+    public void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, PurchaseOrder po, String deliveryNote) {
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
-        goodsReceiptDocument.setPostingDate(postingDate);
-        goodsReceiptDocument.setDocumentDate(documentDate);
+        goodsReceiptDocument.setReceiptDate(receiptDate);
         goodsReceiptDocument.setReceiveFrom(po);
         goodsReceiptDocument.setDeliveryNote(deliveryNote);
         em.merge(goodsReceiptDocument);

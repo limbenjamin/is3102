@@ -9,7 +9,7 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <h2>Add Furniture Design</h2>
@@ -19,34 +19,85 @@ and open the template in the editor.
             <h:commandButton action="#{furnitureManagedBean.addFurnitureModel()}" value="Send"></h:commandButton>
         </h:form>
         <br></br><br></br>
-        <h2>Furniture List</h2>
-        <h:dataTable value="#{furnitureManagedBean.displayFurnitureList()}" var="furniture">
-            <h:column>
-                <f:facet name="header">ID</f:facet>
-                #{furniture.id}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Name</f:facet>
-                #{furniture.name}
-            </h:column>
-        </h:dataTable>
+        <h2>Display Furniture List</h2>
+        <h:form>
+            <p:dataTable var="furniture" value="#{furnitureManagedBean.displayFurnitureList()}" widgetVar="materialTable"
+                         emptyMessage="No records found with given criteria" filteredValue="#{furnitureManagedBean.filteredList}">
+
+                <p:column filterBy="#{furniture.id}" headerText="Id" filterMatchMode="contains">
+                    <h:outputText value="#{furniture.id}" />
+                </p:column>
+
+                <p:column filterBy="#{furniture.name}" headerText="Name" filterMatchMode="contains">
+                    <h:outputText value="#{furniture.name}" />
+                </p:column>
+
+                <p:column filterBy="#{furniture.price}" headerText="Price" filterMatchMode="contains">
+                    <h:outputText value="$#{furniture.price}" />
+                </p:column>
+
+                <p:column filterBy="#{furniture.colour}" headerText="Colours Available" filterMatchMode="contains">
+                    <ui:repeat value="#{furniture.colour}" var="colours">
+                        <h:outputText value="##{colours} "></h:outputText>
+                    </ui:repeat>
+                    
+                    <!-- <h:outputText value="#{furniture.colour}"/> -->
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+        
         <br></br><br></br>
+        <br></br><br></br>
+        
         <h2>Edit Furniture</h2>
         <h:form id="editFurnitureForm">
             <label>ID</label>
             <h:inputText id="id"></h:inputText>
             <label>Name</label>
             <h:inputText id="name"></h:inputText>
+            <label>Price</label>
+            <h:inputText id="price"></h:inputText>
             <h:commandButton action="#{furnitureManagedBean.editFurnitureModel()}" value="Send"></h:commandButton>
+        </h:form>
+        <br></br><br></br>
+        <h2>Add Colour Option</h2>
+        <h:form id="addColourForm">
+            <label>Furniture Name</label>
+            <h:inputText id="name"></h:inputText>
+            <label>New Colour</label>
+            <h:inputText id="colour"></h:inputText>
+            <h:commandButton action="#{furnitureManagedBean.addFurnitureColour()}" value="Add"></h:commandButton>
         </h:form>
         <br></br><br></br>
         <h2>Add material to BOM</h2>
         <h:form id="addBOMForm">
-            <label>Furniture ID</label>
-            <h:inputText id="furnitureID"></h:inputText>
-            <label>Material ID</label>
-            <h:inputText id="materialID"></h:inputText>
+            <label>Furniture Name</label>
+            <h:inputText id="furnitureName"></h:inputText>
+            <label>Material Name</label>
+            <h:inputText id="materialName"></h:inputText>
             <h:commandButton action="#{furnitureManagedBean.addToBOM()}"></h:commandButton>
+        </h:form>
+        <br></br><br></br>
+        <h2>Display BOM</h2>
+        <h:form id="displayBOMForm">
+            <label>Name of Furniture</label>
+            <h:inputText id="name"></h:inputText>
+            <h:commandButton action="#{furnitureManagedBean.displayBOM()}"></h:commandButton>
+        </h:form>
+        <h:form>
+            <p:dataTable var="material" value="#{furnitureManagedBean.displayBOMList()}" widgetVar="materialTable"
+                         emptyMessage="No records found with given criteria">
+
+                <p:column filterBy="#{material.id}" headerText="Id" filterMatchMode="contains">
+                    <h:outputText value="#{material.id}" />
+                </p:column>
+
+                <p:column filterBy="#{material.name}" headerText="Name" filterMatchMode="contains">
+                    <h:outputText value="#{material.name}" />
+                </p:column>
+
+            </p:dataTable>
         </h:form>
     </h:body>
 </html>

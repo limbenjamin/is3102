@@ -69,6 +69,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     @Override
     public void editStorageBin(Long storageAreaId, Long storageBinId, String name) {
         storageArea = getStorageArea(storageAreaId);
+        System.out.println("this is the storage area" + storageArea);
         storageBin = getStorageBin(storageBinId);
         storageBin.setStorageArea(storageArea);
         storageBin.setName(name);

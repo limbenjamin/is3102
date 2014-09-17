@@ -7,10 +7,12 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
+import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -29,7 +31,19 @@ public class FurnitureManagedBean implements Serializable {
     private StockManagerLocal stockManager;
     private FurnitureModel furniture = null;
     private List<FurnitureModel> furnitureList = null;
+    private List<FurnitureModel> filteredList = null;
+    private List<Material> BOMList = null;
+
+    public List<Material> getBOMList() {        return BOMList;    }
+    public void setBOMList(List<Material> BOMList) {        this.BOMList = BOMList;    }
+    public FurnitureModel getFurniture() {        return furniture;    }
+    public void setFurniture(FurnitureModel furniture) {        this.furniture = furniture;    }
+    public List<FurnitureModel> getFurnitureList() {        return furnitureList;    }
+    public void setFurnitureList(List<FurnitureModel> furnitureList) {        this.furnitureList = furnitureList;    }
+    public List<FurnitureModel> getFilteredList() {        return filteredList;    }
+    public void setFilteredList(List<FurnitureModel> filteredList) {        this.filteredList = filteredList;    }
     
+    @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
         furnitureList = stockManager.displayFurnitureList();
@@ -49,23 +63,53 @@ public class FurnitureManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("FurnitureManagedBean.editFurnitureModel()");
         String name = request.getParameter("editFurnitureForm:name");
-        stockManager.editFurnitureModel(name);
+        String price = request.getParameter("editFurnitureForm:price");
+        stockManager.editFurnitureModel(name, price);
         displayFurnitureList();
     }
-    public void addToBOM() {
+    public String addFurnitureColour() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        System.out.println("FurnitureManagedBean.addFurnitureColour()");
+        String name = request.getParameter("addColourForm:name");
+        String colour = request.getParameter("addColourForm:colour");
+        stockManager.addFurnitureColour(name, colour);
+        return "furniture";
+    }
+    public String addToBOM() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("FurnitureManagedBean:addToBOM()");
-        Long materialID = null;
-        Long furnitureID = null;
         try {
-            String fID = request.getParameter("addBOMForm:furnitureID");
-            furnitureID = Long.parseLong(fID);
-            
-            String mID = request.getParameter("addBOMForm:materialID");
-            materialID  = Long.parseLong(mID);
-            stockManager.addToBOM(materialID, furnitureID);
+            String furnitureName = request.getParameter("addBOMForm:furnitureName");
+            String materialName= request.getParameter("addBOMForm:materialName");
+            stockManager.addToBOM(materialName, furnitureName);
+            return "furniture";
         } catch(Exception ex) {
             System.err.println("Something went wrong");
+            return "furniture";
         }
+    }
+    public void displayBOM() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        System.out.println("FurnitureManagedBean:displayBOM()");
+        String furnitureName = null;
+        try {
+            furnitureName = request.getParameter("displayBOMForm:name");
+            BOMList = stockManager.displayBOM(furnitureName);
+            System.out.println(BOMList.size());
+  //          return "furniture";
+        } catch(Exception ex) {
+            System.err.println("Something went wrong");
+  //          return "furniture";
+        }
+    }
+    public List<Material> displayBOMList() {
+        System.out.println("FurnitureManagedBean:displayBOMList()");
+        if(BOMList != null) {
+            for(int i=0; i<BOMList.size(); i++) {
+                System.out.println(BOMList.get(i).getName());
+            }
+        } else
+            System.out.println("BOMList is null");
+        return BOMList;
     }
 }

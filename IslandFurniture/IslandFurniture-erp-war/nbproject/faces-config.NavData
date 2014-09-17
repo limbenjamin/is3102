@@ -3,8 +3,8 @@
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
         <Node id="supplychain/goodsreceiptdocument.xhtml" x="400" y="600" zoom="true"/>
-        <Node id="it/managestaff2.xhtml" x="900" y="300" zoom="true"/>
         <Node id="salesplanning/viewmssr.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="it/managestaff2.xhtml" x="900" y="300" zoom="true"/>
         <Node id="welcomePrimefaces.xhtml" x="650" y="450" zoom="true"/>
         <Node id="common/broadcast.xhtml" x="1150" y="300" zoom="true"/>
         <Node id="supplychain/goodsissueddocument.xhtml" x="650" y="600" zoom="true"/>
@@ -21,9 +21,9 @@
         <Node id="supplychain/storagelocationdetail.xhtml" x="400" y="300" zoom="true"/>
         <Node id="common/messaging.xhtml" x="150" y="300" zoom="true"/>
         <Node id="template.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="knowledge/furniture.xhtml" x="650" y="300" zoom="true"/>
         <Node id="it/manageplant.xhtml" x="150" y="750" zoom="true"/>
         <Node id="common/modifyparticulars.xhtml" x="150" y="150" zoom="true"/>
-        <Node id="knowledge/furniture.xhtml" x="650" y="300" zoom="true"/>
         <Node id="dash.xhtml" x="1150" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>

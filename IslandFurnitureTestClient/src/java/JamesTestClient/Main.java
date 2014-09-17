@@ -5,16 +5,11 @@
  */
 package JamesTestClient;
 
-import IslandFurniture.StaticClasses.Helper.JamesTestDataBeanRemote;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 /**
  *
@@ -24,17 +19,25 @@ public class Main {
 
 
     @EJB
-    private static JamesTestDataBeanRemote jt;
+    private static ManageProductionPlanningRemote MPP;
+    
+   @EJB
+    private static LoadJamesTestDataRemote loadJamesTestData;
 
     public static void main(String[] args) {
-        Main jx = new Main();
-        jx.add_data();
+        
+        //loadJamesTestData.loadMSSRS();
+        
+    //MPP.setMF("SINGAPORE");
+        try {
+            MPP.CreateProductionPlanFromForecast();
+            System.out.println("SUCCESS !");
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   
     }
     
-    public void add_data()
-    {
-        jt.createtestdata();
-    }
 
 
 }

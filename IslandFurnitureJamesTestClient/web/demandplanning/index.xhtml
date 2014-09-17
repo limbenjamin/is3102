@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Island Furniture | Demand Planning</title>
+    </h:head>
+    <h:body>            <h:form id="page">
+
+            <div style="border:1px solid black; width:800px;padding-bottom: 10px">
+
+                <h3>Select Manufacturing Facility:</h3>
+                <h:selectOneMenu value="#{DemandPlanning.MF}" id="select_mf">
+                    <f:selectItem itemValue="#{null}" itemLabel="--Select Manufacturing Facility --" />
+                    <f:selectItems value="#{DemandPlanning.MF_LIST}"/>
+                    <f:ajax execute="select_mf" render="mf_status" listener="#{DemandPlanning.mfListerner()}"></f:ajax>
+
+
+                </h:selectOneMenu>
+
+
+            </div>
+            <br/>
+            <div style="border:1px solid black; width:800px;padding-bottom: 10px">
+                <h3>
+                 <h:outputText id="mf_status" value="Current Selected Manufacturing Facility:#{DemandPlanning.MF}"></h:outputText>
+                </h3>
+                 <p:dataTable></p:dataTable>
+                 
+            </div>
+            <br/>
+            <div style="border:1px solid black; width:800px;padding-bottom: 10px">
+                                <h3>Options</h3>
+            <h:commandButton id="plan_mpp" value="Automatic Production Scheduling" type="button">
+
+                
+                
+                <f:ajax execute="plan_mpp" listener="#{DemandPlanning.automaticPlanning}" render="page"></f:ajax>
+            </h:commandButton>
+            </div>
+
+        </h:form></h:body>
+</html>
+

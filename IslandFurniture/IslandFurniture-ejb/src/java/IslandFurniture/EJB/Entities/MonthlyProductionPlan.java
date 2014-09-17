@@ -5,8 +5,7 @@
  */
 package IslandFurniture.EJB.Entities;
 
-import IslandFurniture.EJB.Entities.Month;
-import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
+import IslandFurniture.StaticClasses.Helper.Helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,13 +13,18 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,6 +32,13 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @IdClass(MonthlyProductionPlanPK.class)
+@NamedQueries({
+    @NamedQuery(name = "MonthlyProductionPlan.FindAllInPeriod", query = "select MPP from MonthlyProductionPlan MPP where MPP.month=:m and MPP.year=:y"),
+    @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and MPP.month=:m and MPP.year=:y"),
+    @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false"),
+    @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false order by MPP.furnitureModel.name"),
+    @NamedQuery(name="MonthlyProductionPlan.FindAllOfMF",query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
+})
 public class MonthlyProductionPlan implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,28 +59,6 @@ public class MonthlyProductionPlan implements Serializable {
     private Integer QTY;
 
     private Boolean locked = false;
-
-    @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
-    @JoinColumns({
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID"),
-        @JoinColumn(name = "FURNITUREMODEL_ID", referencedColumnName = "STOCK_ID", insertable = false, updatable = false),
-        @JoinColumn(name = "MONTH", referencedColumnName = "MONTH", insertable = false, updatable = false),
-        @JoinColumn(name = "YEAR", referencedColumnName = "YEAR", insertable = false, updatable = false)
-    })
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList<MonthlyStockSupplyReq>();
-
-    @OneToOne(cascade = {CascadeType.ALL}) //Kind of like the linked list approach
-    @JoinColumns({
-        @JoinColumn(name = "NEXT_MANUFACTURINGFACILITY_ID", referencedColumnName = "MANUFACTURINGFACILITY_ID"),
-        @JoinColumn(name = "NEXT_FURNITUREMODEL_ID", referencedColumnName = "FURNITUREMODEL_ID"),
-        @JoinColumn(name = "NEXT_MONTH", referencedColumnName = "MONTH"),
-        @JoinColumn(name = "NEXT_YEAR", referencedColumnName = "YEAR")
-    })
-    private MonthlyProductionPlan nextMonthlyProductionPlan;
-
-    @OneToOne(mappedBy = "nextMonthlyProductionPlan", cascade = {CascadeType.ALL}) //Kind of like the linked list approach it works ok . special case of JPA 
-    //http://stackoverflow.com/questions/3393515/jpa-how-to-have-one-to-many-relation-of-the-same-entity-type
-    private MonthlyProductionPlan prevMonthlyProductionPlan;
 
     public ManufacturingFacility getManufacturingFacility() {
         return manufacturingFacility;
@@ -127,28 +116,45 @@ public class MonthlyProductionPlan implements Serializable {
         this.locked = locked;
     }
 
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-        return monthlyStockSupplyReqs;
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs(EntityManager em) {
+        try {
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.find");
+            q.setParameter("m", this.getMonth());
+            q.setParameter("fm", this.getFurnitureModel());
+            q.setParameter("y", this.getYear());
+
+            return (List<MonthlyStockSupplyReq>) q.getResultList();
+        } catch (Exception er) {
+            return null;
+        }
     }
 
-    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    public MonthlyProductionPlan getNextMonthlyProductionPlan(EntityManager em) {
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(this.month, this.year, 1, true)));
+            q.setParameter("y", Helper.addMonth(this.month, this.year, -1, false));
+            q.setParameter("fm", this.furnitureModel);
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+            return(null);
+        }
+
     }
 
-    public MonthlyProductionPlan getNextMonthlyProductionPlan() {
-        return nextMonthlyProductionPlan;
-    }
+    public MonthlyProductionPlan getPrevMonthlyProductionPlan(EntityManager em) {
 
-    public void setNextMonthlyProductionPlan(MonthlyProductionPlan nextMonthlyProductionPlan) {
-        this.nextMonthlyProductionPlan = nextMonthlyProductionPlan;
-    }
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(this.month, this.year, -1, true)));
+            q.setParameter("y", Helper.addMonth(this.month, this.year, -1, false));
+            q.setParameter("fm", this.furnitureModel);
 
-    public MonthlyProductionPlan getPrevMonthlyProductionPlan() {
-        return prevMonthlyProductionPlan;
-    }
-
-    public void setPrevMonthlyProductionPlan(MonthlyProductionPlan prevMonthlyProductionPlan) {
-        this.prevMonthlyProductionPlan = prevMonthlyProductionPlan;
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+            
+            return(null);
+        }
     }
 
     @Override
@@ -177,10 +183,10 @@ public class MonthlyProductionPlan implements Serializable {
     }
 
     // Extra Methods
-    public long getTotalDemand() {
+    public long getTotalDemand(EntityManager em) {
         long total = 0;
 
-        for (MonthlyStockSupplyReq mssr : monthlyStockSupplyReqs) {
+        for (MonthlyStockSupplyReq mssr : this.getMonthlyStockSupplyReqs(em)) {
             total += mssr.getQtyRequested();
         }
 
@@ -188,9 +194,7 @@ public class MonthlyProductionPlan implements Serializable {
     }
 
     public int getNumWorkDays() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(this.year, this.month.value, 1);
 
-        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return Helper.getNumWorkDays(this.month, this.year);
     }
 }

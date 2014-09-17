@@ -11,7 +11,9 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean
 import IslandFurniture.EJB.Entities.Message;
 import IslandFurniture.EJB.Entities.MessageThread;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -36,11 +38,14 @@ public class MessagingManagedBean implements Serializable {
     private String title = null;
     private String recipients = null;
     private Staff staff;
+    private List<Staff> listStaff;
     
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
     private ManageUserAccountInformationBean staffBean;
+    @EJB
+    private ManageStaffAccountsBeanLocal msaBean;
     
     @PostConstruct
     public void init(){
@@ -134,6 +139,22 @@ public class MessagingManagedBean implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<Staff> getListStaff() {
+        return listStaff;
+    }
+
+    public void setListStaff(List<Staff> listStaff) {
+        this.listStaff = listStaff;
+    }
+
+    public ManageStaffAccountsBeanLocal getMsaBean() {
+        return msaBean;
+    }
+
+    public void setMsaBean(ManageStaffAccountsBeanLocal msaBean) {
+        this.msaBean = msaBean;
     }
     
     

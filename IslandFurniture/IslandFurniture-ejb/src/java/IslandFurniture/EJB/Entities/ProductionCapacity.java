@@ -6,12 +6,15 @@
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Entities.ProductionCapacityPK;
+import IslandFurniture.StaticClasses.Helper.Helper;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
@@ -19,6 +22,9 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @IdClass(ProductionCapacityPK.class)
+@NamedQueries({
+    @NamedQuery(name = "ProductionCapacity.findPC", query = "SELECT PC from ProductionCapacity PC where PC.manufacturingFacility=:MFNAME and PC.furnitureModel=:FMNAME")
+})
 public class ProductionCapacity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,6 +66,10 @@ public class ProductionCapacity implements Serializable {
         hash = 59 * hash + Objects.hashCode(this.furnitureModel);
         hash = 59 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
+    }
+
+    public int getCapacity(Month mn, int Year) {
+        return (Helper.getNumWorkDays(mn, Year) * this.qty);
     }
 
     @Override

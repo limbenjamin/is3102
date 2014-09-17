@@ -21,6 +21,9 @@ import javax.persistence.PostPersist;
 @Entity
 @NamedQueries({
     @NamedQuery(
+        name = "findCountryOfficeByName",
+        query = "SELECT a FROM CountryOffice a WHERE a.name = :name"),
+    @NamedQuery(
             name = "getAllCountryOffices",
             query = "SELECT a FROM CountryOffice a")
 })

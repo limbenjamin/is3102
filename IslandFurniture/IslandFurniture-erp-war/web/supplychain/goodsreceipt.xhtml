@@ -30,21 +30,21 @@
                                     <th>Document Date</th>
                                     <th>Purchase Order Number</th>
                                     <th>Edit</th>
-                                    <th>Delete</th>
+
                                 </tr>
                                 <h:form id="viewGRD" class="form-horizontal">
                                     <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentList}" var="GRD">
                                         <tr>
                                             <td>#{GRD.id}</td>
-                                            <td>#{GRD.postingDate}</td>
-                                            <td>#{GRD.documentDate}</td>
-                                            <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                </h:commandButton>
+                                            <td>
+                                                <h:outputText value="#{GRD.postingDate.time}" >
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                </h:outputText>
                                             </td>
-                                            <td><h:commandButton action="#{goodsReceiptManagedBean.deleteGoodsReceiptDocument()}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                    <f:param name="grdId" value="#{GRD.id}" />
+                                            <td>#{GRD.receiptDate}</td>
+                                            <td>#{GRD.receiveFrom.id}</td>
+                                            <td> <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>
                                         </tr>
