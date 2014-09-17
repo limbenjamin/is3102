@@ -23,7 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import static jdk.nashorn.internal.runtime.Debug.id;
 
 /**
  *

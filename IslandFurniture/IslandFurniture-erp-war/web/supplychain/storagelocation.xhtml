@@ -90,9 +90,9 @@
                                 <h:form id="editStorageBin" class="form-horizontal">
                                     <ui:repeat value="#{storageLocationManagedBean.storageBinList}" var="StorageBin">
                                         <tr>
-                                            <td><h:selectOneMenu id="storageAreaId" class="form-control">
+                                            <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{StorageBin.storageArea.id}">
                                                     <c:forEach var="i" begin="0" end="#{storageLocationManagedBean.storageAreaList.size()-1}">
-                                                        <f:selectItem itemLabel="#{StorageBin.storageArea.name}" itemValue="#{StorageBin.storageArea.id}" />
+                                                        <f:selectItem itemLabel="#{storageLocationManagedBean.storageAreaList.get(i).name}" itemValue="#{storageLocationManagedBean.storageAreaList.get(i).id}" />
                                                     </c:forEach>
                                                 </h:selectOneMenu></td>
                                             <td><h:inputText id="storageBinName" value="#{StorageBin.name}" class="form-control"></h:inputText></td>
