@@ -29,7 +29,7 @@ public class StockSupplied implements Serializable {
     private Stock stock;
     @Id
     @ManyToOne
-    private Store store;
+    private CountryOffice countryOffice;
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
 
@@ -41,12 +41,12 @@ public class StockSupplied implements Serializable {
         this.stock = stock;
     }
 
-    public Store getStore() {
-        return store;
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public ManufacturingFacility getManufacturingFacility() {
@@ -61,7 +61,7 @@ public class StockSupplied implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 41 * hash + Objects.hashCode(this.stock);
-        hash = 41 * hash + Objects.hashCode(this.store);
+        hash = 41 * hash + Objects.hashCode(this.countryOffice);
         return hash;
     }
 
@@ -72,12 +72,12 @@ public class StockSupplied implements Serializable {
             return false;
         }
         StockSupplied other = (StockSupplied) object;
-        return this.stock.equals(other.stock) && this.store.equals(other.store);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice);
     }
 
     @Override
     public String toString() {
-        return "StockSupplied[ id=" + this.stock + ", " + this.store + " ]";
+        return "StockSupplied[ id=" + this.stock + ", " + this.countryOffice + " ]";
     }
 
     // Entity Callbacks

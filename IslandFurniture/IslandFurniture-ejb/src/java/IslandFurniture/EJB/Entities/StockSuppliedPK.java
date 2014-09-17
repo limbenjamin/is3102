@@ -15,14 +15,14 @@ import java.util.Objects;
 public class StockSuppliedPK implements Serializable {
 
     private Long stock;
-    private Long store;
+    private Long countryOffice;
 
     public StockSuppliedPK() {
     }
 
-    public StockSuppliedPK(Long stock, Long store) {
+    public StockSuppliedPK(Long stock, Long countryOffice) {
         this.stock = stock;
-        this.store = store;
+        this.countryOffice = countryOffice;
     }
 
     public Long getStock() {
@@ -34,11 +34,11 @@ public class StockSuppliedPK implements Serializable {
     }
 
     public Long getStore() {
-        return store;
+        return countryOffice;
     }
 
-    public void setStore(Long store) {
-        this.store = store;
+    public void setStore(Long countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     @Override
@@ -47,19 +47,19 @@ public class StockSuppliedPK implements Serializable {
             return false;
         }
         StockSuppliedPK other = (StockSuppliedPK) object;
-        return this.stock.equals(other.stock) && this.store.equals(other.store);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice);
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 41 * hash + Objects.hashCode(this.stock);
-        hash = 41 * hash + Objects.hashCode(this.store);
+        hash = 41 * hash + Objects.hashCode(this.countryOffice);
         return hash;
     }
 
     @Override
     public String toString() {
-        return stock + ", " + store;
+        return stock + ", " + countryOffice;
     }
 }

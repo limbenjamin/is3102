@@ -11,7 +11,7 @@ import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.RetailItemTransaction;
 import IslandFurniture.EJB.Entities.RetailItemTransactionDetail;
-import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -106,12 +106,12 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     curr = Calendar.getInstance();
                     curr.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
 
-                    for (StockSupplied ss : eachStore.getSuppliedWithFrom()) {
+                    for (Stock stock : eachStore.getSells()) {
                         if (rand.nextBoolean()) {
-                            if (ss.getStock() instanceof FurnitureModel) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(50) + 1));
-                            } else if (ss.getStock() instanceof RetailItem) {
-                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(50) + 1));
+                            if (stock instanceof FurnitureModel) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, rand.nextInt(50) + 1));
+                            } else if (stock instanceof RetailItem) {
+                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
                             }
                         }
                     }

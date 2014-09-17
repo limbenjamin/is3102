@@ -32,7 +32,7 @@ public class GoodsIssuedDocumentDetail implements Serializable {
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name="STOCK_ID", referencedColumnName="STOCK_ID", insertable=false, updatable=false),
-        @JoinColumn(name="STORE_ID", referencedColumnName="STORE_ID"),
+        @JoinColumn(name="COUNTRYOFFICE_ID", referencedColumnName="COUNTRYOFFICE_ID"),
         @JoinColumn(name="MONTH", referencedColumnName="MONTH"),
         @JoinColumn(name="YEAR", referencedColumnName="YEAR")
             })

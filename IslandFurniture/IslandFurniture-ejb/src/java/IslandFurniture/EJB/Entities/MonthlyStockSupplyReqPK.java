@@ -16,13 +16,13 @@ import java.util.Objects;
  */
 public class MonthlyStockSupplyReqPK implements Serializable {
     private Long stock;
-    private Long store;
+    private Long countryOffice;
     private Month month;
     private Integer year;
 
-    public MonthlyStockSupplyReqPK(Long stock, Long store, Month month, Integer year) {
+    public MonthlyStockSupplyReqPK(Long stock, Long countryOffice, Month month, Integer year) {
         this.stock = stock;
-        this.store = store;
+        this.countryOffice = countryOffice;
         this.month = month;
         this.year = year;
     }
@@ -33,14 +33,14 @@ public class MonthlyStockSupplyReqPK implements Serializable {
             return false;
         }
         MonthlyStockSupplyReqPK other = (MonthlyStockSupplyReqPK) object;
-        return this.stock.equals(other.stock) && this.store.equals(other.store) && this.month.equals(other.month) && this.year.equals(other.year);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice) && this.month.equals(other.month) && this.year.equals(other.year);
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.stock);
-        hash = 97 * hash + Objects.hashCode(this.store);
+        hash = 97 * hash + Objects.hashCode(this.countryOffice);
         hash = 97 * hash + Objects.hashCode(this.month);
         hash = 97 * hash + Objects.hashCode(this.year);
         return hash;
@@ -48,6 +48,6 @@ public class MonthlyStockSupplyReqPK implements Serializable {
     
     @Override
     public String toString() {
-        return stock + "," + store + "," + month + "," + year;
+        return stock + "," + countryOffice + "," + month + "," + year;
     }
 }

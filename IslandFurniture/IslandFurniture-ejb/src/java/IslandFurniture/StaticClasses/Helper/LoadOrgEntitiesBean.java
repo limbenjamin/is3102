@@ -54,6 +54,8 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             store.setTimeZoneID(timeZoneID);
             store.setCountryOffice(co);
             em.persist(store);
+            
+            co.getStores().add(store);
 
             return store;
         } else {
@@ -73,6 +75,8 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             mf.setTimeZoneID(timeZoneID);
             mf.setCountryOffice(co);
             em.persist(mf);
+            
+            co.getManufacturingFacilities().add(mf);
 
             return mf;
         } else {

@@ -6,8 +6,11 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
@@ -16,14 +19,33 @@ import javax.persistence.PostPersist;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getAllCountryOffices",
+            query = "SELECT a FROM CountryOffice a")
+})
 public class CountryOffice extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "countryOffice")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
+
+    @OneToMany(mappedBy = "countryOffice")
     private List<Store> stores;
 
     @OneToMany(mappedBy = "countryOffice")
-    private List<ManufacturingFacility> mFacs;
+    private List<ManufacturingFacility> manufacturingFacilities;
+
+    @OneToMany(mappedBy = "countryOffice")
+    private List<StockSupplied> suppliedWithFrom = new ArrayList();
+
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
 
     public List<Store> getStores() {
         return stores;
@@ -33,12 +55,20 @@ public class CountryOffice extends Plant implements Serializable {
         this.stores = stores;
     }
 
-    public List<ManufacturingFacility> getmFacs() {
-        return mFacs;
+    public List<ManufacturingFacility> getManufacturingFacilities() {
+        return manufacturingFacilities;
     }
 
-    public void setmFacs(List<ManufacturingFacility> mFacs) {
-        this.mFacs = mFacs;
+    public void setManufacturingFacilities(List<ManufacturingFacility> manufacturingFacilities) {
+        this.manufacturingFacilities = manufacturingFacilities;
+    }
+
+    public List<StockSupplied> getSuppliedWithFrom() {
+        return suppliedWithFrom;
+    }
+
+    public void setSuppliedWithFrom(List<StockSupplied> suppliedWithFrom) {
+        this.suppliedWithFrom = suppliedWithFrom;
     }
 
     @Override

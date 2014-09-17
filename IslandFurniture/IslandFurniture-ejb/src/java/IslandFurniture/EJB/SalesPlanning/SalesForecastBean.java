@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.Month;
@@ -39,18 +40,22 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
+    private TimeZone TimeZone;
 
     private List<Transaction> getStoreTransactions(Store store, Month month, int year) {
-        Calendar start = Calendar.getInstance(TimeZone.getTimeZone(store.getTimeZoneID()));
-        Calendar end = Calendar.getInstance(TimeZone.getTimeZone(store.getTimeZoneID()));
+        TimeZone tz = TimeZone.getTimeZone(store.getTimeZoneID());
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
 
         start.set(year, month.value, 1, 0, 0, 0);
         start.set(Calendar.MILLISECOND, 0);
+        start.add(Calendar.MILLISECOND, tz.getRawOffset()*-1);
 
         end.set(year, month.value, 1, 0, 0, 0);
         end.add(Calendar.MONTH, 1);
         end.set(Calendar.MILLISECOND, 0);
         end.add(Calendar.MILLISECOND, -1);
+        end.add(Calendar.MILLISECOND, tz.getRawOffset()*-1);
 
         Query q = em.createNamedQuery("getStoreTransactions");
         q.setParameter("store", store);
@@ -60,21 +65,21 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         return (List<Transaction>) q.getResultList();
     }
 
-    private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, Store store, Month month, int year) {
-        MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(stock.getId(), store.getId(), month, year);
+    private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, CountryOffice co, Month month, int year) {
+        MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(stock.getId(), co.getId(), month, year);
 
         MonthlyStockSupplyReq mssr = em.find(MonthlyStockSupplyReq.class, mssrPK);
 
         if (mssr == null) {
             mssr = new MonthlyStockSupplyReq();
             mssr.setStock(stock);
-            mssr.setStore(store);
+            mssr.setCountryOffice(co);
             mssr.setMonth(month);
             mssr.setYear(year);
 
             em.persist(mssr);
 
-            store.getMonthlyStockSupplyReqs().add(mssr);
+            co.getMonthlyStockSupplyReqs().add(mssr);
             stock.getMonthlyStockSupplyReqs().add(mssr);
         }
 
@@ -82,7 +87,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> generateSalesFigures(Store store, Month startMonth, int startYear, Month endMonth, int endYear) {
+    public List<MonthlyStockSupplyReq> generateSalesFigures(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear) {
         Calendar start = Calendar.getInstance();
         start.set(startYear, startMonth.value, 1);
 
@@ -93,18 +98,21 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         FurnitureTransaction fTrans;
         RetailItemTransaction riTrans;
         Calendar cal;
-        TimeZone tz = TimeZone.getTimeZone(store.getTimeZoneID());
+        TimeZone tz = TimeZone.getTimeZone(co.getTimeZoneID());
 
         while (start.compareTo(end) <= 0) {
-            for (StockSupplied eachStockSupplied : store.getSuppliedWithFrom()) {
-                mssr = this.addMonthlyStockSupplyReq(eachStockSupplied.getStock(), store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
+            for (StockSupplied eachStockSupplied : co.getSuppliedWithFrom()) {
+                mssr = this.addMonthlyStockSupplyReq(eachStockSupplied.getStock(), co, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
 
                 // Reset all qtySold to prevent duplicate counting
                 mssr.setQtySold(0);
             }
 
             // Grab list of transactions in given store in a month
-            List<Transaction> listOfTrans = this.getStoreTransactions(store, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
+            List<Transaction> listOfTrans = new ArrayList();
+            for (Store eachStore : co.getStores()) {
+                listOfTrans.addAll(this.getStoreTransactions(eachStore, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR)));
+            }
 
             // Display all transactions grabbed in the month
             DateFormat dateYearFormat = new SimpleDateFormat("MMM yyyy");
@@ -120,7 +128,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 timeFormat.setTimeZone(TimeZone.getTimeZone(eachTrans.getStore().getTimeZoneID()));
                 System.out.println("Transaction Date: " + timeFormat.format(eachTrans.getTransTime().getTime()) + ", " + eachTrans.getStore().getTimeZoneID() + " time");
 
-                // Convert Calendar raw values to store's offset value
+                // Convert Calendar raw values to country office's offset value
                 cal = eachTrans.getTransTime();
                 cal.add(Calendar.MILLISECOND, tz.getRawOffset());
 
@@ -130,7 +138,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
                     for (FurnitureTransactionDetail eachDetail : fTrans.getFurnitureTransactionDetails()) {
 
-                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getFurnitureModel(), store, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
+                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getFurnitureModel(), co, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
 
                         System.out.println(eachDetail.getFurnitureModel() + "|" + eachDetail.getQty());
 
@@ -143,7 +151,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                     em.refresh(riTrans);
 
                     for (RetailItemTransactionDetail eachDetail : riTrans.getRetailItemTransactionDetails()) {
-                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getRetailItem(), store, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
+                        mssr = this.addMonthlyStockSupplyReq(eachDetail.getRetailItem(), co, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
 
                         System.out.println(eachDetail.getRetailItem() + "|" + eachDetail.getQty());
 
@@ -160,9 +168,9 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear) {
-        Query q = em.createNamedQuery("getMssrByStoreStock");
-        q.setParameter("store", store);
+    public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear) {
+        Query q = em.createNamedQuery("getMssrByCoStock");
+        q.setParameter("countryOffice", co);
         q.setParameter("stock", stock);
         q.setParameter("startYr", startYear);
         q.setParameter("startMth", startMonth);
@@ -173,13 +181,11 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForStore(long storeId, int year) {
-        Store store = em.find(Store.class, storeId);
-
+    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, int year) {
         Map<Stock, List<MonthlyStockSupplyReq>> mssrMap = new HashMap();
 
-        for (StockSupplied ss : store.getSuppliedWithFrom()) {
-            List<MonthlyStockSupplyReq> stockMssr = this.retrieveMssrForStoreStock(store, ss.getStock(), Month.JAN, year, Month.DEC, year);
+        for (StockSupplied ss : co.getSuppliedWithFrom()) {
+            List<MonthlyStockSupplyReq> stockMssr = this.retrieveMssrForCoStock(co, ss.getStock(), Month.JAN, year, Month.DEC, year);
             stockMssr.sort(null);
             mssrMap.put(stockMssr.get(0).getStock(), stockMssr);
         }
@@ -188,10 +194,9 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<Integer> getYearsOfMssr(long storeId) {
-        Store store = em.find(Store.class, storeId);
-        Query q = em.createNamedQuery("getMssrByStore");
-        q.setParameter("store", store);
+    public List<Integer> getYearsOfMssr(CountryOffice co) {
+        Query q = em.createNamedQuery("getMssrByCO");
+        q.setParameter("countryOffice", co);
 
         List<Integer> yearsOfMssr = new ArrayList();
         for (MonthlyStockSupplyReq mssr : (List<MonthlyStockSupplyReq>) q.getResultList()) {
@@ -199,6 +204,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 yearsOfMssr.add(mssr.getYear());
             }
         }
+        yearsOfMssr.sort(null);
 
         return yearsOfMssr;
     }

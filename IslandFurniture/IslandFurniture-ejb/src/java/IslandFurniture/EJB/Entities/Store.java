@@ -31,16 +31,15 @@ public class Store extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
     @ManyToOne
     private CountryOffice countryOffice;
+    
     @OneToMany(mappedBy = "store")
     private List<GoodsIssuedDocument> goodsIssuedDocument = new ArrayList();
-    @OneToMany(mappedBy = "store")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
+    
     @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
+    
     @ManyToMany
     private List<Stock> sells = new ArrayList();
-    @OneToMany(mappedBy = "store")
-    private List<StockSupplied> suppliedWithFrom = new ArrayList();
 
     public CountryOffice getCountryOffice() {
         return countryOffice;
@@ -58,14 +57,6 @@ public class Store extends Plant implements Serializable {
         this.goodsIssuedDocument = goodsIssuedDocument;
     }
 
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-        return monthlyStockSupplyReqs;
-    }
-
-    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
-    }
-
     public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
         return monthlyMenuItemSalesForecasts;
     }
@@ -80,14 +71,6 @@ public class Store extends Plant implements Serializable {
 
     public void setSells(List<Stock> sells) {
         this.sells = sells;
-    }
-
-    public List<StockSupplied> getSuppliedWithFrom() {
-        return suppliedWithFrom;
-    }
-
-    public void setSuppliedWithFrom(List<StockSupplied> suppliedWithFrom) {
-        this.suppliedWithFrom = suppliedWithFrom;
     }
 
     @Override

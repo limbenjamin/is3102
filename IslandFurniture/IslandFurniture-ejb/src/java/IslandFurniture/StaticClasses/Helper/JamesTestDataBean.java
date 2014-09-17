@@ -6,6 +6,7 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.Country;
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Month;
@@ -75,6 +76,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
         FurnitureModel fm = null;
         ProductionCapacity pc = null;
         Store store = null;
+        CountryOffice co = null;
         MonthlyStockSupplyReq MSSR = null;
         MonthlyStockSupplyReq MSSR2 = null;
 
@@ -85,6 +87,14 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             cn.setCode("SG");
 
             persist(cn);
+        } catch (Exception err) {
+        }
+        
+        try {
+            co = new CountryOffice();
+            co.setName("SINGAPORE");
+
+            persist(co);
         } catch (Exception err) {
         }
 
@@ -125,7 +135,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             MSSR.setStock(fm);
             MSSR.setMonth(Month.DEC);
             MSSR.setYear(2014);
-            MSSR.setStore(store);
+            MSSR.setCountryOffice(co);
             persist(MSSR);
 
             MSSR2 = new MonthlyStockSupplyReq();
@@ -133,7 +143,7 @@ public class JamesTestDataBean implements JamesTestDataBeanRemote {
             MSSR2.setStock(fm);
             MSSR2.setMonth(Month.NOV);
             MSSR2.setYear(2014);
-            MSSR2.setStore(store);
+            MSSR2.setCountryOffice(co);
             persist(MSSR2);
         } catch (Exception err) {
         }

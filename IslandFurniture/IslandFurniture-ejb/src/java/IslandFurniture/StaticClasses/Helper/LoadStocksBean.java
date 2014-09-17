@@ -5,6 +5,7 @@
  */
 package IslandFurniture.StaticClasses.Helper;
 
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Material;
@@ -13,6 +14,7 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.StockSuppliedPK;
 import IslandFurniture.EJB.Entities.Store;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.ejb.Stateless;
@@ -78,18 +80,18 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         }
     }
 
-    private StockSupplied addStockSupplied(Stock stock, Store store, ManufacturingFacility mf) {
-        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), store.getId());
+    private StockSupplied addStockSupplied(Stock stock, CountryOffice co, ManufacturingFacility mf) {
+        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId());
 
         StockSupplied stockSupplied = em.find(StockSupplied.class, stockSuppliedPK);
 
         if (stockSupplied == null) {
             stockSupplied = new StockSupplied();
             stockSupplied.setStock(stock);
-            stockSupplied.setStore(store);
+            stockSupplied.setCountryOffice(co);
             stockSupplied.setManufacturingFacility(mf);
             em.persist(stockSupplied);
-            store.getSuppliedWithFrom().add(stockSupplied);
+            co.getSuppliedWithFrom().add(stockSupplied);
 
             if (mf != null) {
                 mf.getSupplyingWhatTo().add(stockSupplied);
@@ -162,25 +164,38 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             this.addMaterial("Steel Knob 02", 52);
             this.addMaterial("Steel Knob 03", 65);
 
-            // Add StockSupplied Relationship (Dependant on prior data loading
-            // of Organisation Entities)
+            // Add List of stuff each store will sell
+            Random rand = new Random(1);
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
-            List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
             List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
             List<RetailItem> retailItems = (List<RetailItem>) em.createNamedQuery("getAllRetailItems").getResultList();
-            Random rand = new Random(1);
 
             for (Store eachStore : stores) {
                 for (FurnitureModel eachFm : furnitureModels) {
                     if (rand.nextBoolean()) {
-                        this.addStockSupplied(eachFm, eachStore, mfs.get(rand.nextInt(mfs.size())));
+                        eachStore.getSells().add(eachFm);
                     }
-
                 }
                 for (RetailItem eachRi : retailItems) {
                     if (rand.nextBoolean()) {
-                        this.addStockSupplied(eachRi, eachStore, mfs.get(rand.nextInt(mfs.size())));
+                        eachStore.getSells().add(eachRi);
                     }
+                }
+
+            }
+
+            // Add StockSupplied Relationship (Dependant on prior data loading
+            // of Organisation Entities)
+            List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
+            List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
+
+            for (CountryOffice eachCo : countryOffices) {
+                List<Stock> stocksSold = new ArrayList();
+                for(Store eachStore: eachCo.getStores()){
+                    stocksSold.addAll(eachStore.getSells());
+                }
+                for(Stock eachStock: stocksSold){
+                    this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())));
                 }
             }
 

@@ -27,14 +27,14 @@ import javax.persistence.PostPersist;
 @IdClass(MonthlyStockSupplyReqPK.class)
 @NamedQueries({
     @NamedQuery(
-            name = "getMssrByStoreStock",
+            name = "getMssrByCoStock",
             query = "SELECT a FROM MonthlyStockSupplyReq a WHERE "
-                    + "a.store = :store AND a.stock = :stock AND "
-                    + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
-                    + "a.year*12 + a.month <= :endYr*12 + :endMth"),
+            + "a.countryOffice = :countryOffice AND a.stock = :stock AND "
+            + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
+            + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
-            name = "getMssrByStore",
-            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.store = :store")
+            name = "getMssrByCO",
+            query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.countryOffice = :countryOffice")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
@@ -44,17 +44,20 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private Stock stock;
     @Id
     @ManyToOne
-    private Store store;
+    private CountryOffice countryOffice;
     @Id
     private Month month;
     @Id
     private Integer year;
-    private int beginInventory;
-    private int qtySold;
+    
     private int qtyForecasted;
+    private int plannedInventory;
+    private int qtySold;
+    private int actualInventory;
+    private int varianceOffset;
     private int qtyRequested;
-    private int idealInventory;
-    private boolean committed;
+    private boolean approved;
+    
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
 
@@ -75,12 +78,12 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.stock = stock;
     }
 
-    public Store getStore() {
-        return store;
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public Month getMonth() {
@@ -99,12 +102,20 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.year = year;
     }
 
-    public int getBeginInventory() {
-        return beginInventory;
+    public int getQtyForecasted() {
+        return qtyForecasted;
     }
 
-    public void setBeginInventory(int beginInventory) {
-        this.beginInventory = beginInventory;
+    public void setQtyForecasted(int qtyForecasted) {
+        this.qtyForecasted = qtyForecasted;
+    }
+
+    public int getPlannedInventory() {
+        return plannedInventory;
+    }
+
+    public void setPlannedInventory(int plannedInventory) {
+        this.plannedInventory = plannedInventory;
     }
 
     public int getQtySold() {
@@ -115,12 +126,20 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.qtySold = qtySold;
     }
 
-    public int getQtyForecasted() {
-        return qtyForecasted;
+    public int getActualInventory() {
+        return actualInventory;
     }
 
-    public void setQtyForecasted(int qtyForecasted) {
-        this.qtyForecasted = qtyForecasted;
+    public void setActualInventory(int actualInventory) {
+        this.actualInventory = actualInventory;
+    }
+
+    public int getVarianceOffset() {
+        return varianceOffset;
+    }
+
+    public void setVarianceOffset(int varianceOffset) {
+        this.varianceOffset = varianceOffset;
     }
 
     public int getQtyRequested() {
@@ -131,20 +150,12 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.qtyRequested = qtyRequested;
     }
 
-    public boolean isCommitted() {
-        return committed;
+    public boolean isApproved() {
+        return approved;
     }
 
-    public void setCommitted(boolean commited) {
-        this.committed = commited;
-    }
-
-    public int getIdealInventory() {
-        return idealInventory;
-    }
-
-    public void setIdealInventory(int idealInventory) {
-        this.idealInventory = idealInventory;
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
     public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {
@@ -163,17 +174,13 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.monthlyProductionPlan = monthlyProductionPlan;
     }
 
-    public void calcQtyRequested() {
-        if (!this.committed) {
-            this.qtyRequested = this.qtyForecasted - this.qtySold;
-        }
-    }
+   
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.stock);
-        hash = 97 * hash + Objects.hashCode(this.store);
+        hash = 97 * hash + Objects.hashCode(this.countryOffice);
         hash = 97 * hash + Objects.hashCode(this.month);
         hash = 97 * hash + Objects.hashCode(this.year);
         return hash;
@@ -186,15 +193,15 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
             return false;
         }
         MonthlyStockSupplyReq other = (MonthlyStockSupplyReq) object;
-        return this.stock.equals(other.stock) && this.store.equals(other.store) && this.month.equals(other.month) && this.year.equals(other.year);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice) && this.month.equals(other.month) && this.year.equals(other.year);
     }
 
     @Override
     public int compareTo(MonthlyStockSupplyReq other) {
-        if (this.store.getId() > other.store.getId()) {
+        if (this.countryOffice.getId() > other.countryOffice.getId()) {
             return 1;
         }
-        if (this.store.getId() < other.store.getId()) {
+        if (this.countryOffice.getId() < other.countryOffice.getId()) {
             return -1;
         }
         if (this.year * 12 + this.month.value > other.year * 12 + other.month.value) {
@@ -215,7 +222,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     @Override
     public String toString() {
-        return "MonthlyStockSupplyReq[ id=" + stock.getId() + ", " + store.getId() + ", " + month + ", " + year + " ]";
+        return "MonthlyStockSupplyReq[ id=" + stock + ", " + countryOffice + ", " + month + ", " + year + " ]";
     }
 
     // Entity Callbacks

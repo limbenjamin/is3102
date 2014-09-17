@@ -6,14 +6,14 @@
 package IslandFurniture.WAR.SalesPlanning;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
-import IslandFurniture.EJB.Entities.Country;
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +21,10 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -39,14 +41,11 @@ public class ViewMssrManagedBean implements Serializable {
     @EJB
     private ManageUserAccountInformationBean staffBean;
 
-    private long storeId;
-    private List<Store> storeListing = new ArrayList();
-
     private int yearOfMssr;
     private List<Integer> yearsOfMssr = new ArrayList();
 
     private Staff staff;
-    private Country country;
+    private CountryOffice co;
 
     private Map<Stock, List<MonthlyStockSupplyReq>> mssrMap;
 
@@ -58,22 +57,20 @@ public class ViewMssrManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
 
-        System.out.println(staff);
+        Plant plant = staff.getPlant();
 
-        this.country = staff.getPlant().getCountry();
-        for (Plant eachPlant : this.country.getPlants()) {
-            if (eachPlant instanceof Store) {
-                storeListing.add((Store) eachPlant);
+        if (plant instanceof CountryOffice) {
+            this.co = (CountryOffice) plant;
+            this.yearsOfMssr = salesForecastBean.getYearsOfMssr(co);
+            this.yearOfMssr = this.yearsOfMssr.get(yearsOfMssr.get(yearsOfMssr.size()));
+        } else {
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect(ec.getRequestContextPath());
+            } catch (IOException ex) {
+
             }
         }
-    }
-
-    public long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(long storeId) {
-        this.storeId = storeId;
     }
 
     public int getYearOfMssr() {
@@ -92,14 +89,6 @@ public class ViewMssrManagedBean implements Serializable {
         this.yearsOfMssr = yearsOfMssr;
     }
 
-    public List<Store> getStoreListing() {
-        return storeListing;
-    }
-
-    public void setStoreListing(List<Store> storeListing) {
-        this.storeListing = storeListing;
-    }
-
     public Map<Stock, List<MonthlyStockSupplyReq>> getMssrMap() {
         return mssrMap;
     }
@@ -109,13 +98,7 @@ public class ViewMssrManagedBean implements Serializable {
     }
 
     public void updateMssr(AjaxBehaviorEvent event) {
-        System.out.println(this.yearOfMssr + " | " + this.storeId);
-
-        if (this.yearOfMssr != 0 && this.storeId != 0) {
-            this.mssrMap = salesForecastBean.retrieveMssrForStore(this.storeId, this.yearOfMssr);
-        } else if (this.storeId != 0) {
-            this.yearsOfMssr = salesForecastBean.getYearsOfMssr(this.storeId);
-        }
+        this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
     }
 
     public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {

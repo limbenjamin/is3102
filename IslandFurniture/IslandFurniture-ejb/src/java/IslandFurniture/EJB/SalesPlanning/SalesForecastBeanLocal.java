@@ -6,10 +6,10 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.Store;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Local;
@@ -21,12 +21,12 @@ import javax.ejb.Local;
 @Local
 public interface SalesForecastBeanLocal {
 
-    public List<MonthlyStockSupplyReq> generateSalesFigures(Store store, Month startMonth, int startYear, Month endMonth, int endYear);
+    public List<MonthlyStockSupplyReq> generateSalesFigures(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
 
-    public List<MonthlyStockSupplyReq> retrieveMssrForStoreStock(Store store, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
+    public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
 
-    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForStore(long storeId, int year);
+    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, int year);
 
-    public List<Integer> getYearsOfMssr(long storeId);
+    public List<Integer> getYearsOfMssr(CountryOffice co);
     
 }

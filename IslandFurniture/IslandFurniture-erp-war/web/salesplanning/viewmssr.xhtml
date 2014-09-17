@@ -6,14 +6,8 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:form>
-            <h:selectOneMenu value="#{viewMssrManagedBean.storeId}" >
-                <f:selectItem itemLabel="Select a Store" itemValue="0" />
-                <f:selectItems value="#{viewMssrManagedBean.storeListing}" var="stores" 
-                               itemLabel="#{stores.country.name}: #{stores.name}" itemValue="#{stores.id}" />
-                <f:ajax render="yearsOfMssr mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />
-            </h:selectOneMenu>
+            <h:outputText value="Select a year: " />
             <h:selectOneMenu value="#{viewMssrManagedBean.yearOfMssr}" id="yearsOfMssr">
-                <f:selectItem itemLabel="Select a Year" itemValue="0" />
                 <f:selectItems value="#{viewMssrManagedBean.yearsOfMssr}" var="years" 
                                itemLabel="#{years}" itemValue="#{years}" />
                 <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />

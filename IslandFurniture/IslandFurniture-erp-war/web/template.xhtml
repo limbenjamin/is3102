@@ -130,7 +130,7 @@
                         <ul class="nav user-info">
                             <li>
                                 <h:link outcome="modifyparticulars">
-                                    <img src="#{loginManagedBean.absolutepath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                    <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
                                     <span class="user-info">
                                         #{dashManagedBean.name}<br></br>
                                         #{dashManagedBean.plantName}<br></br>
@@ -207,7 +207,7 @@
                                 </a>
                                 <ul class="sub-menu">
                                     <li>
-                                        <a href="#{application.contextPath}salesplanning/viewmssr.xhtml">
+                                        <a href="#{application.contextPath}/salesplanning/viewmssr.xhtml">
                                             <span>View Monthly Stock Supply Requirements</span>
                                         </a>
                                     </li>
