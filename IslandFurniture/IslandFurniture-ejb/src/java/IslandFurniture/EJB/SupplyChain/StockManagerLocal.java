@@ -27,8 +27,14 @@ public interface StockManagerLocal {
 
     public List<FurnitureModel> displayFurnitureList();
 
-    public void editFurnitureModel(String name);
+    public void editFurnitureModel(String name, String price);
 
-    public void addToBOM(Long materialID, Long furnitureID);
+    public void addToBOM(String materialName, String furnitureName);
+
+    public void addFurnitureColour(String furnitureName, String colour);
+
+    public List displayBOM(String furnitureName);
+
+    public void deleteMaterial(String materialName);
     
 }

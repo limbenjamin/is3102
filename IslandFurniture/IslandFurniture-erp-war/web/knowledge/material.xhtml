@@ -9,8 +9,13 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <!-- @Zee
+         Ideally I was hoping this page to just display the material list with 
+         dynamic searching (not done). Then the add material can be a modal box.
+         Edit material will be done in a modal box after the user clicks on the row
+    -->
     <h:body>
         <h2>Add Material</h2>
         <h:form id="addMaterialForm">
@@ -19,9 +24,31 @@ and open the template in the editor.
             <label>Weight</label>
             <h:inputText id="weight"></h:inputText>
             <h:commandButton action="#{materialManagedBean.addMaterial()}"></h:commandButton>
-            
-        </h:form>
+        </h:form>    
         <br></br><br></br>
+        <!-- Form here -->
+        <h2>Display Material List</h2>
+        <h:form>
+            <p:dataTable var="material" value="#{materialManagedBean.displayMaterialList()}" widgetVar="materialTable"
+                         emptyMessage="No records found with given criteria" filteredValue="#{materialManagedBean.filteredList}">
+
+                <p:column filterBy="#{material.id}" headerText="Id" filterMatchMode="contains">
+                    <h:outputText value="#{material.id}" />
+                </p:column>
+
+                <p:column filterBy="#{material.name}" headerText="Name" filterMatchMode="contains">
+                    <h:outputText value="#{material.name}" />
+                </p:column>
+
+                <p:column filterBy="#{material.materialWeight}" headerText="Weight" filterMatchMode="contains">
+                    <h:outputText value="#{material.materialWeight}" />
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+        <!-- Form ends -->
+        <br></br><br></br>
+        <!--
         <h2>Material List</h2>
         <h:dataTable value="#{materialManagedBean.displayMaterialList()}" var="material">
             <h:column>
@@ -47,6 +74,7 @@ and open the template in the editor.
         
         </h:dataTable>
         <br></br><br></br>
+        -->
         <h2>Edit Material</h2>
         <h:form id="editMaterialForm">
             <label>ID</label>
@@ -56,6 +84,13 @@ and open the template in the editor.
             <label>Weight</label>
             <h:inputText id="weight"></h:inputText>
             <h:commandButton action="#{materialManagedBean.editMaterial()}"></h:commandButton>
+        </h:form>
+        <br></br><br></br>
+        <h2>Delete Material</h2>
+        <h:form id="deleteMaterialForm">
+            <label>Name</label>
+            <h:inputText id="name"></h:inputText>
+            <h:commandButton action="#{materialManagedBean.deleteMaterial()}"></h:commandButton>
         </h:form>
     </h:body>
 </html>
