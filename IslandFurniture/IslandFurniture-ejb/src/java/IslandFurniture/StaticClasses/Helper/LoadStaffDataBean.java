@@ -79,7 +79,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
         String[] roles = new String [] {
             "IT (Store)","Marketing (Store)","Production & Ops (Store)","Supply Chain (Store)","Management (Store)",
             "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
-            "Shipping (Mfg)","Factory Floor (Mfg)","Management (Mfg)","SUPER USER",
+            "Shipping (Mfg)","Factory Floor (Mfg)","Management (Mfg)","General Staff",
             "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
             "IT (HQ)","Marketing (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };

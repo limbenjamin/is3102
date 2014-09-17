@@ -77,17 +77,35 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         };
         
         String[] roles = new String [] {
-            "IT (Store)","Marketing (Store)","IT (Mfg)","SUPER USER","Supply Chain (Store)","Purchasing (Mfg)",
+            "IT (Store)","Marketing (Store)","IT (Mfg)","General Staff","Supply Chain (Store)","Purchasing (Mfg)",
             "Management (Store)","IT (Store)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
             "Shipping (Mfg)","Marketing (Store)","Factory Floor (Mfg)","Management (Mfg)","Production & Ops (Store)",
             "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
-            "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","IT (HQ)","Marketing (HQ)",
+            "General Staff","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","IT (HQ)","Marketing (HQ)",
             "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };
         
         for (int i=0; i<arr.length; i++){
             try {
                 msal.addRoleToStaffByUsername(arr[i][0], roles[i]);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return false;
+            }
+        }
+        
+        //add all roles to rose (SUPER USER) except for general staff which has been added above.;
+        String[] allRoles = new String [] {
+            "IT (Store)","Marketing (Store)","Production & Ops (Store)","Supply Chain (Store)","Management (Store)",
+            "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
+            "Shipping (Mfg)","Factory Floor (Mfg)","Management (Mfg)",
+            "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
+            "IT (HQ)","Marketing (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+                                    };
+        
+        for (int i=0; i<allRoles.length; i++){
+            try {
+                msal.addRoleToStaffByUsername("rose", allRoles[i]);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 return false;

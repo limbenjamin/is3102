@@ -10,11 +10,13 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStorageLocationLocal {
 
     void createStorageArea(Plant plant, String name);
