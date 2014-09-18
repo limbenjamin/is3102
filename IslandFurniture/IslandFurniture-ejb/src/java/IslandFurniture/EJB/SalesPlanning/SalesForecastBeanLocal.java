@@ -21,6 +21,8 @@ import javax.ejb.Local;
 @Local
 public interface SalesForecastBeanLocal {
 
+    public void saveMonthlyStockSupplyReq(List<MonthlyStockSupplyReq> mssrList);
+    
     public List<MonthlyStockSupplyReq> generateSalesFigures(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
 
     public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);

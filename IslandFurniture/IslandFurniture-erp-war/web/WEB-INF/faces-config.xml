@@ -19,6 +19,12 @@
         <navigation-case>
             <from-outcome>messaging2</from-outcome>
             <to-view-id>/common/messaging2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                <name>id</name>  
+                <value>#{messagingManaged2Bean.id}</value>  
+                </view-param>  
+            </redirect> 
         </navigation-case>
         <navigation-case>
             <from-outcome>broadcast</from-outcome>
@@ -76,9 +82,8 @@
             <from-outcome>goodsissueddocument</from-outcome>
             <to-view-id>/supplychain/goodsissueddocument.xhtml</to-view-id>
         </navigation-case>
-          <navigation-case>
-            <from-outcome>stockunit</from-outcome>
-            <to-view-id>/supplychain/stockunit.xhtml</to-view-id>
-        </navigation-case>     
+        <from-outcome>inventorytransfer</from-outcome>
+            <to-view-id>/supplychain/inventorytransfer.xhtml</to-view-id>
+        </navigation-case>    
     </navigation-rule>
 </faces-config>
