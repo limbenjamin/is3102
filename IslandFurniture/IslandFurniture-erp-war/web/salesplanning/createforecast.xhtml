@@ -17,8 +17,10 @@
                 <f:selectItem itemLabel="Select Month" noSelectionOption="true" />
                 <f:selectItems value="#{createForecastManagedBean.endMonths}" var="month" 
                                itemLabel="#{month.key}" itemValue="#{month.value}" />
-                <f:ajax render="mssrTable" listener="#{createForecastManagedBean.updateMssr}" />
             </h:selectOneMenu>
+            <h:commandButton value="Create Forecast">
+                <f:ajax execute="@form" render="mssrTable" listener="#{createForecastManagedBean.updateMssr}"
+            </h:commandButton>
             <br /><br />
             <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrList}" var="mssrEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
                 <p:tab title="#{mssrEntry.key.name} (id:#{mssrEntry.key.id})">
@@ -26,6 +28,11 @@
                         <thead>
                             <tr>
                                 <th>Month</th>
+                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                    <th>
+                                        <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />
+                                    </th>
+                                </ui:repeat>
                                 <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
                                     <th>
                                         <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />

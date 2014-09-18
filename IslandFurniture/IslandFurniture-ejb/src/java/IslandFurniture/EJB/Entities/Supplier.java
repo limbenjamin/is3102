@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
@@ -30,6 +29,7 @@ import javax.persistence.OneToOne;
             query = "SELECT a FROM Supplier a WHERE a.name = :name")
 })
 public class Supplier implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,16 +37,16 @@ public class Supplier implements Serializable {
     private String name;
     @ManyToMany
     private List<Ingredient> ingredients;
-    @OneToMany(mappedBy="supplier")
+    @OneToMany(mappedBy = "supplier")
     private List<PurchaseOrder> purchaseOrders;
     @ManyToOne
     private Country country;
-    @OneToMany(mappedBy="supplier")
+    @OneToMany(mappedBy = "supplier")
     private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
-    @ManyToMany(mappedBy="suppliers")
+    @ManyToMany(mappedBy = "suppliers")
     private List<ProcuredStock> procuredStocks;
-    @OneToOne(mappedBy="supplier")
-    private ProcurementContractDetail procurementContractDetail;
+    @OneToOne(mappedBy = "supplier")
+    private ProcurementContract procurementContract;
 
     public Long getId() {
         return id;
@@ -104,12 +104,12 @@ public class Supplier implements Serializable {
         this.procuredStocks = procuredStocks;
     }
 
-    public ProcurementContractDetail getProcurementContractDetail() {
-        return procurementContractDetail;
+    public ProcurementContract getProcurementContract() {
+        return procurementContract;
     }
 
-    public void setProcurementContractDetail(ProcurementContractDetail procurementContractDetail) {
-        this.procurementContractDetail = procurementContractDetail;
+    public void setProcurementContract(ProcurementContract procurementContract) {
+        this.procurementContract = procurementContract;
     }
 
     @Override
@@ -136,5 +136,5 @@ public class Supplier implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.STORE.Supplier[ id=" + id + " ]";
     }
-    
+
 }
