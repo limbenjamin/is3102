@@ -57,6 +57,8 @@ public class CreateForecastManagedBean {
 
     private Map<Stock, List<MonthlyStockSupplyReq>> mssrMap;
     private List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList;
+    
+    
 
     @PostConstruct
     public void init() {
@@ -74,7 +76,7 @@ public class CreateForecastManagedBean {
 
             // Populate years
             endYears = new ArrayList();
-            for (int i = cal.get(Calendar.YEAR); i < cal.get(Calendar.YEAR) + 10; i++) {
+            for (int i = cal.get(Calendar.YEAR); i <= cal.get(Calendar.YEAR) + 1; i++) {
                 endYears.add(i);
             }
             
@@ -93,15 +95,16 @@ public class CreateForecastManagedBean {
     public void updateMonths(AjaxBehaviorEvent event) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 2);
+        
+        endMonth = -1;
 
         endMonths = new ArrayList();
-        int i = 0;
 
-        if (endYear == cal.get(Calendar.YEAR)) {
-            i = cal.get(Calendar.MONTH);
+        if (endYear != cal.get(Calendar.YEAR)) {
+            cal.set(2000, 0, 1);
         }
 
-        for (; i < 12; i++) {
+        for (int i = cal.get(Calendar.MONTH); i < 12; i++) {
             Map.Entry<String, Integer> item = new AbstractMap.SimpleEntry(cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ENGLISH), i);
             endMonths.add(item);
 
@@ -126,6 +129,10 @@ public class CreateForecastManagedBean {
 
         if (this.mssrMap != null) {
             this.mssrList.addAll(this.mssrMap.entrySet());
+        }
+        
+        for(int i=1;i<this.mssrList.size();i++){
+            this.panelActive += "," + i;
         }
     }
 
