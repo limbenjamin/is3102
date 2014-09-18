@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class PurchaseOrderManaged2Bean {
+public class PurchaseOrderManaged2Bean implements Serializable{
 
     private String username;
     
