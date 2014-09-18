@@ -26,13 +26,15 @@
                                 </div>
                                   <ui:repeat value="#{rolePrivilegeManagedBean.privilegeList}" var="privilege">
                                     <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{privilege.name}</strong></h5>
+                                      <a href="#" class="list-group-item">    
                                         <h:form>
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{rolePrivilegeManagedBean.deletePrivilege}">
+                                            <div class="pull-right btn-group">
+                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{rolePrivilegeManagedBean.deletePrivilege}">
                                                     <f:param name="id" value="#{privilege.id}" />
                                                 </h:commandButton>
-                                        </h:form>
+                                            </div>
+                                        </h:form>                                          
+                                        <h5><strong>#{privilege.name}</strong></h5>
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
@@ -51,15 +53,17 @@
                                   <ui:repeat value="#{rolePrivilegeManagedBean.roleList}" var="role">
                                     <div class="list-group">                          
                                       <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{role.name}</strong></h5>
                                         <h:form>
-                                            <h:commandButton value="Update Privilege" class="btn btn-block" action="#{rolePrivilegeManaged2Bean.displayPrivileges}">
+                                            <div class="pull-right btn-group">
+                                                <h:commandButton value="Update Privilege" class="btn" action="#{rolePrivilegeManaged2Bean.displayPrivileges}">
                                                     <f:param name="id" value="#{role.id}" />
                                                 </h:commandButton>
-                                                <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{rolePrivilegeManagedBean.deleteRole}">
+                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{rolePrivilegeManagedBean.deleteRole}">
                                                     <f:param name="id" value="#{role.id}" />
                                                 </h:commandButton>
+                                            </div>
                                         </h:form>
+                                        <h5><strong>#{role.name}</strong></h5>                                          
                                       </a>                                  
                                     </div>
                                 </ui:repeat>
