@@ -19,23 +19,24 @@
                                itemLabel="#{month.key}" itemValue="#{month.value}" />
             </h:selectOneMenu>
             <h:commandButton value="Create Forecast">
-                <f:ajax execute="@form" render="mssrTable" listener="#{createForecastManagedBean.updateMssr}"
+                <f:ajax execute="@form" render="mssrTable" listener="#{createForecastManagedBean.updateMssr}" />
             </h:commandButton>
             <br /><br />
-            <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrList}" var="mssrEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
-                <p:tab title="#{mssrEntry.key.name} (id:#{mssrEntry.key.id})">
+            <h:outputText id="statusMessage" value="#{createForecastManagedBean.statusMessage}"/>
+            <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
+                <p:tab title="#{mssrPairedEntry.key.name} (id:#{mssrPairedEntry.key.id})">
                     <table>
                         <thead>
                             <tr>
                                 <th>Month</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <th>
                                         <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />
                                     </th>
                                 </ui:repeat>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
                                     <th>
-                                        <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />
+                                        <h:outputText value="#{stockMssrInput.month} #{stockMssrInput.year}" />
                                     </th>
                                 </ui:repeat>
                             </tr>
@@ -43,56 +44,89 @@
                         <tbody>
                             <tr>
                                 <th>Quantity Forecasted</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.qtyForecasted}" />
                                     </td>
                                 </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <p:inputText value="#{stockMssrInput.qtyForecasted}" />
+                                    </th>
+                                </ui:repeat>
                             </tr>
                             <tr>
                                 <th>Planned Inventory</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.plannedInventory}" />
                                     </td>
                                 </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <p:inputText value="#{stockMssrInput.plannedInventory}" />
+                                    </th>
+                                </ui:repeat>
                             </tr>
                             <tr>
                                 <th>Quantity Sold</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.qtySold}" />
                                     </td>
                                 </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <h:outputText value="#{stockMssrInput.qtySold}" />
+                                    </th>
+                                </ui:repeat>
                             </tr>
                             <tr>
                                 <th>Actual Inventory</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.actualInventory}" />
                                     </td>
                                 </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <h:outputText value="#{stockMssrInput.actualInventory}" />
+                                    </th>
+                                </ui:repeat>
                             </tr>
                             <tr>
                                 <th>Variance Offset</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.varianceOffset}" />
                                     </td>
                                 </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <h:outputText value="#{stockMssrInput.varianceOffset}" />
+                                    </th>
+                                </ui:repeat>
                             </tr>
                             <tr>
                                 <th>Quantity Requested</th>
-                                <ui:repeat value="#{mssrEntry.value}" var="stockMssr">
+                                <ui:repeat value="#{mssrPairedEntry.value.key}" var="stockMssr">
                                     <td>
                                         <h:outputText value="#{stockMssr.qtyRequested}" />
                                     </td>
+                                </ui:repeat>
+                                <ui:repeat value="#{mssrPairedEntry.value.value}" var="stockMssrInput">
+                                    <th>
+                                        <p:inputText value="#{stockMssrInput.qtyRequested}" />
+                                    </th>
                                 </ui:repeat>
                             </tr>
                         </tbody>
                     </table>
                 </p:tab>
             </p:accordionPanel>
+            <h:commandButton value="Save forecast">
+                <f:ajax execute="@form" render="statusMessage" listener="#{createForecastManagedBean.saveForecast}" />
+            </h:commandButton>
         </h:form>
     </ui:define>
 </ui:composition>

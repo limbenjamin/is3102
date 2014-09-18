@@ -27,6 +27,7 @@ public class PurchaseOrderDetail implements Serializable {
     private PurchaseOrder purchaseOrder;
     @ManyToOne
     private ProcuredStock procuredStock;
+    private Integer quantity;
 
     public Long getId() {
         return id;
@@ -52,6 +53,13 @@ public class PurchaseOrderDetail implements Serializable {
         this.procuredStock = procuredStock;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
     @Override
     public int hashCode() {
         int hash = 0;

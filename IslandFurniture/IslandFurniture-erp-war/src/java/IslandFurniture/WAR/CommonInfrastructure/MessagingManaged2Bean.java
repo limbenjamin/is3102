@@ -90,7 +90,7 @@ public class MessagingManaged2Bean implements Serializable {
       Iterator<Staff> iterator = staffList.iterator();
         while (iterator.hasNext()) {
                 staff = (Staff) iterator.next();
-		notificationBean.createNewNotificationForStaff("Messaging System", "New message received in "+messageThread.getTitle(), "/common/messaging.xhtml", "Read", staff);
+		notificationBean.createNewNotificationForStaff("New Message", username + " : " + content, "/common/messaging2.xhtml?id="+id, "Read", staff);
 	}
       return "messaging2";
     }

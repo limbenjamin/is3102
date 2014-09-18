@@ -27,7 +27,6 @@ import javax.servlet.http.HttpSession;
 public class LoginManagedBean implements Serializable {
 
     private static final long serialVersionUID = 5443351151396868724L;
-    private String absolutepath = "/IslandFurniture-erp-war/";
     private Staff staff;
     private String username = null;
     private String password = null;
@@ -37,6 +36,7 @@ public class LoginManagedBean implements Serializable {
     private Integer notificationListSize;
     private String menu;
     private Privilege privilege;
+    private Integer count;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -55,6 +55,7 @@ public class LoginManagedBean implements Serializable {
             staff = muaib.getStaff(username);
             notificationList = staff.getNotifications();
             notificationListSize = notificationList.size();
+            count = 0;
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             menu = new String();
@@ -104,11 +105,24 @@ public class LoginManagedBean implements Serializable {
     }
     
     public void pullNotification() {
+        staff = muaib.getStaff(username);
         notificationList = staff.getNotifications();
+        System.err.print("here pulling " + notificationList.size() +" "+ notificationListSize );
         if (notificationList.size() != notificationListSize){
+            System.err.print("here new message");
+            count++;
+            notificationListSize = notificationList.size();
             notification = notificationList.get(notificationList.size()-1);
             this.setNotification(notification);
         }
+    }
+    
+    public void pullCount() {
+        
+    }
+    
+    public void resetCount() {
+        count = 0;
     }
 
     public String getUsername() {
@@ -145,14 +159,6 @@ public class LoginManagedBean implements Serializable {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public String getAbsolutepath() {
-        return absolutepath;
-    }
-
-    public void setAbsolutepath(String absolutepath) {
-        this.absolutepath = absolutepath;
     }
 
     public List<Notification> getNotificationList() {
@@ -209,6 +215,30 @@ public class LoginManagedBean implements Serializable {
 
     public void setMenu(String menu) {
         this.menu = menu;
+    }
+
+    public Privilege getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(Privilege privilege) {
+        this.privilege = privilege;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public ManagePrivilegesBeanLocal getMpb() {
+        return mpb;
+    }
+
+    public void setMpb(ManagePrivilegesBeanLocal mpb) {
+        this.mpb = mpb;
     }
 
     

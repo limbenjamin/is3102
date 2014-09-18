@@ -65,6 +65,13 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         return (List<Transaction>) q.getResultList();
     }
 
+    @Override
+    public void saveMonthlyStockSupplyReq(List<MonthlyStockSupplyReq> mssrList) {
+        for (MonthlyStockSupplyReq mssr : mssrList) {
+            em.merge(mssr);
+        }
+    }
+
     private MonthlyStockSupplyReq addMonthlyStockSupplyReq(Stock stock, CountryOffice co, Month month, int year) {
         MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(stock.getId(), co.getId(), month, year);
 
@@ -192,29 +199,31 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         for (StockSupplied ss : co.getSuppliedWithFrom()) {
             List<MonthlyStockSupplyReq> stockMssrList = this.retrieveMssrForCoStock(co, ss.getStock(), startMonth, startYear, endMonth, endYear);
 
-            if (stockMssrList != null) {
-                Calendar start = Calendar.getInstance();
-                start.set(startYear, startMonth.value, 1);
+            if (stockMssrList == null) {
+                stockMssrList = new ArrayList();
+            }
+            
+            Calendar start = Calendar.getInstance();
+            start.set(startYear, startMonth.value, 1);
 
-                Calendar end = Calendar.getInstance();
-                end.set(endYear, endMonth.value, 1);
+            Calendar end = Calendar.getInstance();
+            end.set(endYear, endMonth.value, 1);
 
-                while (start.compareTo(end) <= 0) {
-                    MonthlyStockSupplyReq mssr = new MonthlyStockSupplyReq();
-                    mssr.setYear(start.get(Calendar.YEAR));
-                    mssr.setMonth(Month.getMonth(start.get(Calendar.MONTH)));
-                    mssr.setCountryOffice(co);
-                    mssr.setStock(ss.getStock());
+            while (start.compareTo(end) <= 0) {
+                MonthlyStockSupplyReq mssr = new MonthlyStockSupplyReq();
+                mssr.setYear(start.get(Calendar.YEAR));
+                mssr.setMonth(Month.getMonth(start.get(Calendar.MONTH)));
+                mssr.setCountryOffice(co);
+                mssr.setStock(ss.getStock());
 
-                    if (!stockMssrList.contains(mssr)) {
-                        stockMssrList.add(mssr);
-                    }
-
-                    start.add(Calendar.MONTH, 1);
+                if (!stockMssrList.contains(mssr)) {
+                    stockMssrList.add(mssr);
                 }
 
-                stockMssrList.sort(null);
+                start.add(Calendar.MONTH, 1);
             }
+
+            stockMssrList.sort(null);
 
             mssrMap.put(ss.getStock(), stockMssrList);
         }
