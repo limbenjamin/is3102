@@ -7,6 +7,8 @@
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.List;
@@ -15,27 +17,22 @@ import java.util.List;
  *
  * @author KamilulAshraf
  */
-public interface ManageStorageLocationLocal {
+public interface ManageInventoryMovementLocal {
 
-    void createStorageArea(Plant plant, String name);
+    void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin);
 
-    void createStorageBin(StorageArea storageArea, String name);
+    void editStockUnitLocationDefault(Long stockUnitId, Long storageBinId);
 
-    void deleteStorageArea(Long storageAreaId);
+    Stock getStock(Long stockId);
 
-    void deleteStorageBin(Long storageBinId);
-
-    void editStorageArea(Long storageAreaId, String name);
-
-    void editStorageBin(Long storageAreaId, Long storageBinId, String name);
+    StockUnit getStockUnit(Long stockUnitId);
 
     StorageArea getStorageArea(Long storageAreaId);
 
     StorageBin getStorageBin(Long storageBinId);
 
-    List<StorageArea> viewStorageArea(Plant plant);
+    List<StockUnit> viewStockUnit(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-    
     
 }

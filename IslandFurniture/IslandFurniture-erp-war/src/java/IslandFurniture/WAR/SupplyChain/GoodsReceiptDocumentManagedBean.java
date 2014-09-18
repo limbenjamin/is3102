@@ -11,7 +11,10 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
+import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,7 +42,10 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private Long goodsReceiptDocumentDetailId;
     private Long stockId;
 
+    private Long storageBinId;
+
     private String username;
+    private String deliverynote;
 
     private Calendar postingDate;
     private Calendar documentDate;
@@ -54,9 +60,17 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
     private Plant plant;
+    private StorageBin storageBin;
 
     @EJB
     public ManageGoodsReceiptLocal mgrl;
+
+    @EJB
+    public ManageInventoryMovementLocal msul;
+
+    @EJB
+    public ManageStorageLocationLocal msll;
+
     @EJB
     private ManageUserAccountInformationBean staffBean;
 
@@ -73,7 +87,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         System.out.println("@Init GoodsReceiptDocumentManagedBean:  this is the docomentid" + goodsReceiptDocumentId);
         stockList = mgrl.viewStock();
         goodsReceiptDocumentDetaiList = mgrl.viewGoodsReceiptDocumentDetail();
-        
+
         System.out.println("Init");
     }
 
@@ -87,6 +101,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         return "goodsreceiptdocument";
     }
 
+    
+    
+    
+    
+    
+    
     public String editGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
         GoodsReceiptDocumentDetail sa = (GoodsReceiptDocumentDetail) event.getComponent().getAttributes().get("grddId");
         System.out.println("This is the sa.getId(): " + sa.getId());
@@ -104,6 +124,22 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
         mgrl.deleteGoodsReceiptDocumentDetail(goodsReceiptDocumentDetailId);
         return "goodsreceiptdocument";
+    }
+
+    public String addGoodsReceiptDocumentStockUnit(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
+
+//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storagebin", event.getComponent().getAttributes().get("storagebin"));
+//        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storagebin");
+//        storageBin = msll.getStorageBin(storageBinId);
+
+        for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetaiList) {
+            msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+        }
+        return "goodsreceipt";
     }
 
     public Long getPlantId() {
@@ -138,12 +174,28 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.stockId = stockId;
     }
 
+    public Long getStorageBinId() {
+        return storageBinId;
+    }
+
+    public void setStorageBinId(Long storageBinId) {
+        this.storageBinId = storageBinId;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getDeliverynote() {
+        return deliverynote;
+    }
+
+    public void setDeliverynote(String deliverynote) {
+        this.deliverynote = deliverynote;
     }
 
     public Calendar getPostingDate() {
@@ -226,12 +278,36 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.plant = plant;
     }
 
+    public StorageBin getStorageBin() {
+        return storageBin;
+    }
+
+    public void setStorageBin(StorageBin storageBin) {
+        this.storageBin = storageBin;
+    }
+
     public ManageGoodsReceiptLocal getMgrl() {
         return mgrl;
     }
 
     public void setMgrl(ManageGoodsReceiptLocal mgrl) {
         this.mgrl = mgrl;
+    }
+
+    public ManageInventoryMovementLocal getMsul() {
+        return msul;
+    }
+
+    public void setMsul(ManageInventoryMovementLocal msul) {
+        this.msul = msul;
+    }
+
+    public ManageStorageLocationLocal getMsll() {
+        return msll;
+    }
+
+    public void setMsll(ManageStorageLocationLocal msll) {
+        this.msll = msll;
     }
 
     public ManageUserAccountInformationBean getStaffBean() {
@@ -243,5 +319,5 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     }
 
  
-
+   
 }

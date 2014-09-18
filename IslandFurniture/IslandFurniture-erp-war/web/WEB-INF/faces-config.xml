@@ -75,6 +75,10 @@
         <navigation-case>
             <from-outcome>goodsissueddocument</from-outcome>
             <to-view-id>/supplychain/goodsissueddocument.xhtml</to-view-id>
-        </navigation-case>   
+        </navigation-case>
+          <navigation-case>
+            <from-outcome>stockunit</from-outcome>
+            <to-view-id>/supplychain/stockunit.xhtml</to-view-id>
+        </navigation-case>     
     </navigation-rule>
 </faces-config>

@@ -8,9 +8,10 @@ package IslandFurniture.WAR.SupplyChain;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
-import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,9 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -30,11 +29,13 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class storageLocationManagedBean implements Serializable {
+public class InventoryMovementManagedBean implements Serializable {
 
     private Long plantId;
     private Long storageAreaId;
     private Long storageBinId;
+    private Long batchNo;
+    private Long qty;
 
     private String storageAreaName;
     private String storageBinName;
@@ -42,6 +43,7 @@ public class storageLocationManagedBean implements Serializable {
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
+    private List<StockUnit> stockUnitList;
 
     private StorageArea storageArea;
     private StorageBin storageBin;
@@ -49,7 +51,7 @@ public class storageLocationManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageStorageLocationLocal msll;
+    public ManageInventoryMovementLocal msul;
     @EJB
     private ManageUserAccountInformationBean staffBean;
 
@@ -59,49 +61,21 @@ public class storageLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = msll.viewStorageBin(plant);
-        storageAreaList = msll.viewStorageArea(plant);
+        storageBinList = msul.viewStorageBin(plant);
+        stockUnitList = msul.viewStockUnit(plant);
         System.out.println("Init");
     }
 
-    public String addStorageArea() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        storageAreaName = request.getParameter("createStorageArea:storageAreaName");
-        msll.createStorageArea(plant, storageAreaName);
-        return "storagelocation";
+    public String addStockUnit(ActionEvent event) {
+        StockUnit su = (StockUnit) event.getComponent().getAttributes().get("asu");
+        msul.createStockUnit(msul.getStock(su.getStock().getId()), su.getBatchNo(), su.getQty(), msul.getStorageBin(su.getLocation().getId()));
+        return "stockunit";
     }
 
-    public String addStorageBin() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        storageAreaId = Long.parseLong(request.getParameter("createStorageBin:storageAreaId"));
-        storageArea = msll.getStorageArea(storageAreaId);
-        storageBinName = request.getParameter("createStorageBin:storageBinName");
-        msll.createStorageBin(storageArea, storageBinName);
-        return "storagelocation";
-    }
-
-    public String deleteStorageArea() {
-        storageAreaId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageAreaId"));
-        msll.deleteStorageArea(storageAreaId);
-        return "storagelocation";
-    }
-
-    public String deleteStorageBin() {
-        storageBinId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageBinId"));
-        msll.deleteStorageBin(storageBinId);
-        return "storagelocation";
-    }
-
-    public String editStorageArea(ActionEvent event) throws IOException {
-        StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
-        msll.editStorageArea(sa.getId(), sa.getName());
-        return "storagelocation";
-    }
-
-    public String editStorageBin(ActionEvent event) throws IOException {
-        StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
-        msll.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
-        return "storagelocation";
+    public String editStockUnitLocationDefault(ActionEvent event) throws IOException {
+        StockUnit su = (StockUnit) event.getComponent().getAttributes().get("edu");
+        msul.editStockUnitLocationDefault(su.getId(), su.getLocation().getId());
+        return "stockunit";
     }
 
     public Long getPlantId() {
@@ -126,6 +100,22 @@ public class storageLocationManagedBean implements Serializable {
 
     public void setStorageBinId(Long storageBinId) {
         this.storageBinId = storageBinId;
+    }
+
+    public Long getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(Long batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public Long getQty() {
+        return qty;
+    }
+
+    public void setQty(Long qty) {
+        this.qty = qty;
     }
 
     public String getStorageAreaName() {
@@ -168,6 +158,14 @@ public class storageLocationManagedBean implements Serializable {
         this.storageAreaList = storageAreaList;
     }
 
+    public List<StockUnit> getStockUnitList() {
+        return stockUnitList;
+    }
+
+    public void setStockUnitList(List<StockUnit> stockUnitList) {
+        this.stockUnitList = stockUnitList;
+    }
+
     public StorageArea getStorageArea() {
         return storageArea;
     }
@@ -200,12 +198,12 @@ public class storageLocationManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public ManageStorageLocationLocal getMsll() {
-        return msll;
+    public ManageInventoryMovementLocal getMsul() {
+        return msul;
     }
 
-    public void setMsll(ManageStorageLocationLocal msll) {
-        this.msll = msll;
+    public void setMsul(ManageInventoryMovementLocal msul) {
+        this.msul = msul;
     }
 
     public ManageUserAccountInformationBean getStaffBean() {
@@ -215,5 +213,6 @@ public class storageLocationManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
+
 
 }
