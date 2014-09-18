@@ -92,7 +92,7 @@ public class Main {
         System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
         System.out.print("Load and map Staff, Roles and Privilege Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
-            /*if (loadStaffDataBean.loadSampleData()) {
+            if (loadStaffDataBean.loadSampleData()) {
                 System.out.println("Staff data loaded successfully!");
             } else {
                 System.out.println("Failed to load staff data. Check for errors in server log.");
@@ -106,7 +106,7 @@ public class Main {
                 System.out.println("Privilege data loaded successfully!");
             } else {
                 System.out.println("Failed to load privilege data. Check for errors in server log.");
-            }*/
+            }
             if (mapPrivilegeDataBean.loadSampleData()) {
                 System.out.println("Privilege data mapped successfully!");
             } else {
