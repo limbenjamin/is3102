@@ -48,6 +48,7 @@ public class ViewMssrManagedBean implements Serializable {
     private CountryOffice co;
 
     private Map<Stock, List<MonthlyStockSupplyReq>> mssrMap;
+    private List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList;
 
     public ViewMssrManagedBean() {
     }
@@ -62,8 +63,8 @@ public class ViewMssrManagedBean implements Serializable {
         if (plant instanceof CountryOffice) {
             this.co = (CountryOffice) plant;
             this.yearsOfMssr = salesForecastBean.getYearsOfMssr(co);
-            this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size()-1);
-            this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
+            this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size() - 1);
+            this.updateMssrList();
         } else {
             try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -72,6 +73,8 @@ public class ViewMssrManagedBean implements Serializable {
 
             }
         }
+
+        System.out.println("Init()");
     }
 
     public int getYearOfMssr() {
@@ -98,19 +101,27 @@ public class ViewMssrManagedBean implements Serializable {
         this.mssrMap = mssrMap;
     }
 
-    public void updateMssr(AjaxBehaviorEvent event) {
-        this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
+    public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
+        return mssrList;
     }
 
-    public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
-        List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList = new ArrayList();
-        this.init();
-        
-        if (this.mssrMap != null) {
-            mssrList.addAll(this.mssrMap.entrySet());
-        }
+    public void setMssrList(List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList) {
+        this.mssrList = mssrList;
+    }
 
-        return mssrList;
+    public void updateMssr(AjaxBehaviorEvent event) {
+        System.out.println("updateMssr");
+        this.updateMssrList();
+    }
+
+    public void updateMssrList() {
+        this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
+        
+        this.mssrList = new ArrayList();
+
+        if (this.mssrMap != null) {
+            this.mssrList.addAll(this.mssrMap.entrySet());
+        }
     }
 
 }
