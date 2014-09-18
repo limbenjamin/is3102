@@ -112,6 +112,18 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }     
     
     @Override
+    public List<Plant> viewPlants() {
+        Query q = em.createQuery("SELECT s " + "FROM Plant s");
+        return q.getResultList();
+    }    
+    
+    @Override
+    public List<Supplier> viewSuppliers() {
+        Query q = em.createQuery("SELECT s " + "FROM Supplier s");
+        return q.getResultList();
+    }     
+    
+    @Override
     public void deletePurchaseOrder(Long poId) {
         purchaseOrder = getPurchaseOrder(poId);
         em.remove(purchaseOrder);
