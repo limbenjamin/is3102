@@ -19,6 +19,12 @@
         <navigation-case>
             <from-outcome>messaging2</from-outcome>
             <to-view-id>/common/messaging2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                <name>id</name>  
+                <value>#{messagingManaged2Bean.id}</value>  
+                </view-param>  
+            </redirect> 
         </navigation-case>
         <navigation-case>
             <from-outcome>broadcast</from-outcome>
