@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Notification;
+import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.Calendar;
 import java.util.List;
@@ -44,7 +45,26 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     }
     
     @Override
+    public void createNewNotificationForRole(String title, String content, String link, String linkText, Role role){
+        notification = new Notification();
+        notification.setTitle(title);
+        notification.setContent(content);
+        notification.setLink(link);
+        notification.setLinkText(linkText);
+        notification.setTime(Calendar.getInstance());
+        role.getNotifications().add(notification);
+        em.merge(role);
+    }
+    
+    @Override
     public List<Notification> displayNotificationForStaff(Staff staff){
         return staff.getNotifications();
     }
+    
+    @Override
+    public List<Notification> displayNotificationForRole(Role role){
+        return role.getNotifications();
+    }
+    
+    
 }

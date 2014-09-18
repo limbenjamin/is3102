@@ -62,4 +62,11 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
         return q.getResultList();
     }
     
+    @Override
+    public Privilege getPrivilegeFromName(String privilegeName){
+        Query q = em.createQuery("SELECT p FROM Privilege p WHERE p.name=:name");
+        q.setParameter("name", privilegeName);
+        return (Privilege) q.getSingleResult();
+    }
+    
 }

@@ -136,7 +136,7 @@
                                     <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
                                     <span class="user-info">
                                         #{dashManagedBean.name}<br></br>
-                                        #{dashManagedBean.plantName}<br></br>
+                                        #{dashManagedBean.plantName} #{dashManagedBean.plantType}<br></br>
                                         #{dashManagedBean.countryName}
                                     </span>
                                 </h:link>
@@ -144,85 +144,8 @@
                         </ul> 
 
                         <p class="nav-title">MENU</p>
-                        <ul class="nav sidenav">
-
-                            <li class="active">
-                                <a href="#{application.contextPath}/dash.xhtml">
-                                    <i class="fa fa-home"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="fa fa-star"></i>
-                                    <span>Supply Chain<i class="fa fa-caret-down pull-right"></i></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="#{application.contextPath}/supplychain/storagelocation.xhtml">
-                                            <span>Storage Locations</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}/supplychain/goodsissued.xhtml">
-                                            <span>Goods Issued</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}/supplychain/goodsreceipt.xhtml">
-                                            <span>Goods Receipt</span>
-                                        </a>
-                                    </li>                                
-                                </ul>                            
-                            </li>                        
-                            <li>
-                                <a href="javascript:;">
-                                    <i class="fa fa-star"></i>
-                                    <span>Sales Planning<i class="fa fa-caret-down pull-right"></i></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <li>
-                                        <a href="#{application.contextPath}/salesplanning/viewmssr.xhtml">
-                                            <span>View Monthly Stock Supply Requirements</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}/salesplanning/createforecast.xhtml">
-                                            <span>Make Requirements Forecast</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}/salesplanning/reviewforecast.xhtml">
-                                            <span>Review Forecasts</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#{application.contextPath}/it/manageplant.xhtml">
-                                    <i class="fa fa-desktop"></i><span>Manage Org. Hierarchy</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#{application.contextPath}/it/roleprivilege.xhtml">
-                                    <i class="fa fa-pencil"></i><span>Manage Privileges</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#{application.contextPath}/it/managestaff.xhtml">
-                                    <i class="fa fa-calendar"></i><span>Manage Staff</span>
-                                </a>
-                            </li>   
-                            <li>
-                                <a href="#{application.contextPath}/common/messaging.xhtml">
-                                    <i class="fa fa-envelope"></i><span>Messages</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#{application.contextPath}/common/broadcast.xhtml">
-                                    <i class="fa fa-bullhorn"></i><span>Broadcasts</span>
-                                </a>
-                            </li>
+                        <ul class="nav sidenav">  
+                           <h:outputText value="#{loginManagedBean.menu}" escape="false" />
                         </ul>
                     </nav>
                 </aside>

@@ -19,4 +19,5 @@ public interface ManagePrivilegesBeanLocal {
     void createPrivilege(String name);
     void removePrivilege(Long id);
     List<Privilege> displayPrivilege();
+    Privilege getPrivilegeFromName(String privilegeName);
 }

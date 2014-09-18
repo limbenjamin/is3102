@@ -11,12 +11,14 @@ package IslandFurniture.WAR.CommonInfrastructure;
  */
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -30,13 +32,20 @@ public class LoginManagedBean implements Serializable {
     private String username = null;
     private String password = null;
     private List<Notification> notificationList;
+    private List<Privilege> privilegeList;
     private Notification notification;
     private Integer notificationListSize;
+    private String menu;
+    private Privilege privilege;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     @EJB
     private ManageUserAccountInformationBean muaib;
+    @EJB
+    private ManageStaffAccountsBeanLocal msab;
+    @EJB
+    private ManagePrivilegesBeanLocal mpb;
 
     public String login() {
         boolean result = authBean.authenticate(username, password);
@@ -46,6 +55,39 @@ public class LoginManagedBean implements Serializable {
             staff = muaib.getStaff(username);
             notificationList = staff.getNotifications();
             notificationListSize = notificationList.size();
+            privilegeList = msab.getPrivilegeListforStaff(username);
+            String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            menu = new String();
+            menu += "<li><a href="+ absoluteWebPath +"/dash.xhtml"+"><i class=\"fa fa-home\"></i><span>Dashboard</span></a></li>";
+            menu += "<li><a href="+ absoluteWebPath +"/common/messaging.xhtml"+"><i class=\"fa fa-envelope\"></i><span>Messaging</span></a></li>";
+            privilege = mpb.getPrivilegeFromName("Broadcast");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/common/broadcast.xhtml"+"><i class=\"fa fa-home\"></i><span>Broadcast</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("Manage Plant");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/it/manageplant.xhtml"+"><i class=\"fa fa-desktop\"></i><span>Manage Org. Hierarchy</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("Manage Staff");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/it/managestaff.xhtml"+"><i class=\"fa fa-calendar\"></i><span>Manage Staff</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("Manage Roles");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/it/roleprivilege.xhtml"+"><i class=\"fa fa-pencil\"></i><span>Manage Privileges</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("MSSR");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/salesplanning/viewmssr.xhtml"+"><i class=\"fa fa-home\"></i><span>View Monthly Stock Supply Requirements</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("Material");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/knowledge/material.xhtml"+"><i class=\"fa fa-home\"></i><span>Material</span></a></li>";
+            }
+            privilege = mpb.getPrivilegeFromName("Furniture");
+            if (privilegeList.contains(privilege)){
+                menu += "<li><a href="+ absoluteWebPath +"/knowledge/furniture.xhtml"+"><i class=\"fa fa-home\"></i><span>Furniture</span></a></li>";
+            }
             return "dash";
         } else {
 
@@ -143,6 +185,30 @@ public class LoginManagedBean implements Serializable {
 
     public void setNotificationListSize(Integer notificationListSize) {
         this.notificationListSize = notificationListSize;
+    }
+
+    public List<Privilege> getPrivilegeList() {
+        return privilegeList;
+    }
+
+    public void setPrivilegeList(List<Privilege> privilegeList) {
+        this.privilegeList = privilegeList;
+    }
+
+    public ManageStaffAccountsBeanLocal getMsab() {
+        return msab;
+    }
+
+    public void setMsab(ManageStaffAccountsBeanLocal msab) {
+        this.msab = msab;
+    }
+
+    public String getMenu() {
+        return menu;
+    }
+
+    public void setMenu(String menu) {
+        this.menu = menu;
     }
 
     

@@ -77,11 +77,11 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         };
         
         String[] roles = new String [] {
-            "IT (Store)","Marketing (Store)","IT (Mfg)","General Staff","Supply Chain (Store)","Purchasing (Mfg)",
-            "Management (Store)","IT (Store)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
-            "Shipping (Mfg)","Marketing (Store)","Factory Floor (Mfg)","Management (Mfg)","Production & Ops (Store)",
-            "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
-            "General Staff","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","IT (HQ)","Marketing (HQ)",
+            "IT (Store)","Cust. Service (Store)","IT (Mfg)","General Staff","Warehouse (Store)","Purchasing (Mfg)",
+            "Management (Store)","IT (Store)","Warehouse (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)",
+            "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
+            "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
+            "General Staff","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
             "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };
         
@@ -95,12 +95,11 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         }
         
         //add all roles to rose (SUPER USER) except for general staff which has been added above.;
-        String[] allRoles = new String [] {
-            "IT (Store)","Marketing (Store)","Production & Ops (Store)","Supply Chain (Store)","Management (Store)",
-            "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Sales Planning (Mfg)","Production Planning (Mfg)",
-            "Shipping (Mfg)","Factory Floor (Mfg)","Management (Mfg)",
-            "IT (CO)","Production Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
-            "IT (HQ)","Marketing (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+       String[] allRoles = new String [] {
+        "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
+        "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
+        "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };
         
         for (int i=0; i<allRoles.length; i++){
