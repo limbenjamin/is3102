@@ -34,10 +34,10 @@ import javax.persistence.Query;
 @Entity
 @IdClass(MonthlyProductionPlanPK.class)
 @NamedQueries({
-    @NamedQuery(name = "MonthlyProductionPlan.FindAllInPeriod", query = "select MPP from MonthlyProductionPlan MPP where MPP.month=:m and MPP.year=:y"),
-    @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and MPP.month=:m and MPP.year=:y"),
-    @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false"),
-    @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false order by MPP.furnitureModel.name"),
+    @NamedQuery(name = "MonthlyProductionPlan.FindAllInPeriod", query = "select MPP from MonthlyProductionPlan MPP where MPP.month=:m and MPP.year=:y and MPP.manufacturingFacility=:mf"),
+    @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and MPP.month=:m and MPP.year=:y and MPP.manufacturingFacility=:mf"),
+    @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf"),
+    @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf order by MPP.furnitureModel.name"),
     @NamedQuery(name="MonthlyProductionPlan.FindAllOfMF",query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
 })
 public class MonthlyProductionPlan implements Serializable {

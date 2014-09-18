@@ -114,6 +114,7 @@ public class ManufacturingFacility extends Plant implements Serializable {
         Query q=em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
         q.setParameter("m",m);
         q.setParameter("y",year);
+        q.setParameter("mf",this);
         double cCap=0;
     for(Object o : q.getResultList())
     {

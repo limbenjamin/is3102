@@ -170,18 +170,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
-    public MonthlyProductionPlan getMonthlyProductionPlan(EntityManager em) throws Exception {
-        try {
-            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", this.month);
-            q.setParameter("y", this.year);
-            q.setParameter("fm", this.stock);
 
-            return (MonthlyProductionPlan) q.getResultList().get(0);
-        } catch (Exception ex) {
-            throw new RuntimeException("This MSSR does not have a MPP yet");
-        }
-    }
 
     @Override
     public int hashCode() {
