@@ -51,7 +51,9 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     private List<PurchaseOrderDetail> purchaseOrderDetailList;    
     private Staff staff;
     private Supplier supplier;
+    private List<Supplier> supplierList;
     private Plant plant;
+    private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
     
     @EJB
@@ -70,6 +72,8 @@ public class PurchaseOrderManaged2Bean implements Serializable{
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
         System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid" + purchaseOrderId);
+        plantList = mpol.viewPlants();
+        supplierList = mpol.viewSuppliers();
         procuredStockList = mpol.viewProcuredStocks();
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails();
         
@@ -183,6 +187,22 @@ public class PurchaseOrderManaged2Bean implements Serializable{
 
     public void setProcuredStockList(List<ProcuredStock> procuredStockList) {
         this.procuredStockList = procuredStockList;
+    }    
+    
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
+    }      
+
+    public List<Supplier> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<Supplier> supplierList) {
+        this.supplierList = supplierList;
     }    
     
     public PurchaseOrder getPurchaseOrder() {

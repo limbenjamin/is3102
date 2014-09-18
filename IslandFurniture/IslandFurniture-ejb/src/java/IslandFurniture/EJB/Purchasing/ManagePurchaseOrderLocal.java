@@ -39,6 +39,10 @@ public interface ManagePurchaseOrderLocal {
     PurchaseOrderDetail getPurchaseOrderDetail(Long id);
 
     List<ProcuredStock> viewProcuredStocks();
+    
+    List<Plant> viewPlants();
+    
+    List<Supplier> viewSuppliers();
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails();
 
