@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.StaticClasses.Helper.Helper;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -116,46 +117,7 @@ public class MonthlyProductionPlan implements Serializable {
         this.locked = locked;
     }
 
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs(EntityManager em) {
-        try {
-            Query q = em.createNamedQuery("MonthlyStockSupplyReq.find");
-            q.setParameter("m", this.getMonth());
-            q.setParameter("fm", this.getFurnitureModel());
-            q.setParameter("y", this.getYear());
-
-            return (List<MonthlyStockSupplyReq>) q.getResultList();
-        } catch (Exception er) {
-            return null;
-        }
-    }
-
-    public MonthlyProductionPlan getNextMonthlyProductionPlan(EntityManager em) {
-        try {
-            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", Helper.translateMonth(Helper.addMonth(this.month, this.year, 1, true)));
-            q.setParameter("y", Helper.addMonth(this.month, this.year, -1, false));
-            q.setParameter("fm", this.furnitureModel);
-            return (MonthlyProductionPlan) q.getResultList().get(0);
-        } catch (Exception ex) {
-            return(null);
-        }
-
-    }
-
-    public MonthlyProductionPlan getPrevMonthlyProductionPlan(EntityManager em) {
-
-        try {
-            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", Helper.translateMonth(Helper.addMonth(this.month, this.year, -1, true)));
-            q.setParameter("y", Helper.addMonth(this.month, this.year, -1, false));
-            q.setParameter("fm", this.furnitureModel);
-
-            return (MonthlyProductionPlan) q.getResultList().get(0);
-        } catch (Exception ex) {
-            
-            return(null);
-        }
-    }
+   
 
     @Override
     public int hashCode() {
@@ -182,16 +144,7 @@ public class MonthlyProductionPlan implements Serializable {
         return "MonthlyProductionPlan[ id=" + this.manufacturingFacility.getId() + ", " + this.furnitureModel.getId() + ", " + this.month + ", " + this.year + " ]";
     }
 
-    // Extra Methods
-    public long getTotalDemand(EntityManager em) {
-        long total = 0;
 
-        for (MonthlyStockSupplyReq mssr : this.getMonthlyStockSupplyReqs(em)) {
-            total += mssr.getQtyRequested();
-        }
-
-        return (total);
-    }
 
     public int getNumWorkDays() {
 

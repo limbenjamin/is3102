@@ -9,13 +9,13 @@
     </h:head>
     <h:body>            <h:form id="page">
 
-            <div style="border:1px solid black; width:800px;padding-bottom: 10px">
+            <div style="border:1px solid black; width:auto;padding-bottom: 10px">
 
                 <h3>Select Manufacturing Facility:</h3>
                 <h:selectOneMenu value="#{DemandPlanning.MF}" id="select_mf">
                     <f:selectItem itemValue="#{null}" itemLabel="--Select Manufacturing Facility --" />
                     <f:selectItems value="#{DemandPlanning.MF_LIST}"/>
-                    <f:ajax execute="select_mf" render="mf_status" listener="#{DemandPlanning.mfListerner()}"></f:ajax>
+                    <f:ajax execute="select_mf" render="page" listener="#{DemandPlanning.mfListerner()}"></f:ajax>
 
 
                 </h:selectOneMenu>
@@ -23,22 +23,30 @@
 
             </div>
             <br/>
-            <div style="border:1px solid black; width:800px;padding-bottom: 10px">
+            <div style="border:1px solid black; width:auto;padding-bottom: 10px">
                 <h3>
-                 <h:outputText id="mf_status" value="Current Selected Manufacturing Facility:#{DemandPlanning.MF}"></h:outputText>
+                    <h:outputText id="mf_status" value="Current Selected Manufacturing Facility:#{DemandPlanning.MF}"></h:outputText>
                 </h3>
-                 <p:dataTable></p:dataTable>
-                 
+                <p:dataTable widgetVar="MPP" var="MPP" value="#{DemandPlanning.dtRows}" resizableColumns="true">
+                    <p:columns  value="#{DemandPlanning.dates_columns}" var="column" columnIndexVar="colIndex">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}" />
+                        </f:facet>
+                        <h:outputText value="#{MPP.getStrValue((column.index))}" />
+                    </p:columns>
+
+                </p:dataTable>
+
             </div>
             <br/>
             <div style="border:1px solid black; width:800px;padding-bottom: 10px">
-                                <h3>Options</h3>
-            <h:commandButton id="plan_mpp" value="Automatic Production Scheduling" type="button">
+                <h3>Options</h3>
+                <h:commandButton id="plan_mpp" value="Automatic Production Scheduling" type="button">
 
-                
-                
-                <f:ajax execute="plan_mpp" listener="#{DemandPlanning.automaticPlanning}" render="page"></f:ajax>
-            </h:commandButton>
+
+
+                    <f:ajax execute="plan_mpp" listener="#{DemandPlanning.automaticPlanning}" render="page"></f:ajax>
+                </h:commandButton>
             </div>
 
         </h:form></h:body>
