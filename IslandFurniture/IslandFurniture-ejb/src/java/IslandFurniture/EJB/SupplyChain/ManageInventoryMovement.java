@@ -62,6 +62,9 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal  {
    
     @Override
     public void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin) {
+        
+        System.out.println("it also went here!");
+        
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);

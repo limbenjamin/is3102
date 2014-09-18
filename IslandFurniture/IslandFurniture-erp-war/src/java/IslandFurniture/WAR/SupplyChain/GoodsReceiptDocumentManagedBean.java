@@ -132,6 +132,8 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
 
+        System.out.println("it went here!");
+        
 //        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storagebin", event.getComponent().getAttributes().get("storagebin"));
 //        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storagebin");
 //        storageBin = msll.getStorageBin(storageBinId);

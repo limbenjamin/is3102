@@ -68,7 +68,7 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
-                                        <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
+                                    <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
                                         <li class="list-group-item">
                                             <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}">
                                                 <div class="m-body">
@@ -78,17 +78,17 @@
                                                 </div>
                                             </a>
                                         </li>
-                                        </c:forEach>
+                                    </c:forEach>
                                     <h:form id="newNotification"> 
-                                    <li class="list-group-item">
-                                        <a href="#{application.contextPath}#{loginManagedBean.notification.link}">
-                                            <div class="m-body">
-                                                <small><h6>#{loginManagedBean.notification.title}:</h6></small>
-                                                <span>#{loginManagedBean.notification.content}</span><br></br>
-                                                <span class="small"><i class="fa fa-clock-o"></i> </span>
-                                            </div>
-                                        </a>
-                                    </li>
+                                        <li class="list-group-item">
+                                            <a href="#{application.contextPath}#{loginManagedBean.notification.link}">
+                                                <div class="m-body">
+                                                    <small><h6>#{loginManagedBean.notification.title}:</h6></small>
+                                                    <span>#{loginManagedBean.notification.content}</span><br></br>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
+                                                </div>
+                                            </a>
+                                        </li>
                                         <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
                                     </h:form>
                                 </ul>
@@ -172,7 +172,17 @@
                                         <a href="#{application.contextPath}/supplychain/goodsreceipt.xhtml">
                                             <span>Goods Receipt</span>
                                         </a>
-                                    </li>                                
+                                    </li>       
+                                    <li>
+                                        <a href="#{application.contextPath}/supplychain/inventorymonitoring.xhtml">
+                                            <span>Inventory Monitoring</span>
+                                        </a>
+                                    </li>  
+                                    <li>
+                                        <a href="#{application.contextPath}/supplychain/inventorymovement.xhtml">
+                                            <span>Inventory Movement</span>
+                                        </a>
+                                    </li>  
                                 </ul>                            
                             </li>                        
                             <li>
