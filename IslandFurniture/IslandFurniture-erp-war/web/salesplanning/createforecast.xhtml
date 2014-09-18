@@ -6,14 +6,21 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:form>
-            <h:outputText value="Select a year: " />
-            <h:selectOneMenu value="#{viewMssrManagedBean.yearOfMssr}" id="yearsOfMssr">
-                <f:selectItems value="#{viewMssrManagedBean.yearsOfMssr}" var="years" 
-                               itemLabel="#{years}" itemValue="#{years}" />
-                <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />
+            <h:outputText value="Select the ending period of this forecast: " />
+            <h:selectOneMenu value="#{createForecastManagedBean.endYear}">
+                <f:selectItem itemLabel="Select Year" noSelectionOption="true" />
+                <f:selectItems value="#{createForecastManagedBean.endYears}" var="year" 
+                               itemLabel="#{year}" itemValue="#{year}" />
+                <f:ajax render="endMonths" listener="#{createForecastManagedBean.updateMonths}" />
+            </h:selectOneMenu>
+            <h:selectOneMenu value="#{createForecastManagedBean.endMonth}" id="endMonths">
+                <f:selectItem itemLabel="Select Month" noSelectionOption="true" />
+                <f:selectItems value="#{createForecastManagedBean.endMonths}" var="month" 
+                               itemLabel="#{month.key}" itemValue="#{month.value}" />
+                <f:ajax render="mssrTable" listener="#{createForecastManagedBean.updateMssr}" />
             </h:selectOneMenu>
             <br /><br />
-            <p:accordionPanel id="mssrTable" value="#{viewMssrManagedBean.mssrList}" var="mssrEntry" multiple="true">
+            <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrList}" var="mssrEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
                 <p:tab title="#{mssrEntry.key.name} (id:#{mssrEntry.key.id})">
                     <table>
                         <thead>
@@ -82,4 +89,3 @@
         </h:form>
     </ui:define>
 </ui:composition>
-

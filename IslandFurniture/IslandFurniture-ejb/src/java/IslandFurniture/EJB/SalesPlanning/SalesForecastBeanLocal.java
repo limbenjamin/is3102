@@ -26,6 +26,8 @@ public interface SalesForecastBeanLocal {
     public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
 
     public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, int year);
+    
+    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
 
     public List<Integer> getYearsOfMssr(CountryOffice co);
     

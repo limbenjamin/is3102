@@ -26,14 +26,16 @@
                                 </div>
                                   <ui:repeat value="#{staffManaged2Bean.roleList}" var="role">
                                     <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
-                                          <h5><strong>#{role.name}</strong></h5>
+                                      <a href="#" class="list-group-item">
                                         <h:form>
-                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{staffManaged2Bean.removeRoleFromStaff}">
+                                            <div class="pull-right btn-group">
+                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{staffManaged2Bean.removeRoleFromStaff}">
                                                     <f:param name="staffId" value="#{staff.id}" />
                                                     <f:param name="roleId" value="#{role.id}" />
                                                 </h:commandButton>
-                                        </h:form>
+                                            </div>
+                                        </h:form>                                          
+                                        <h5><strong>#{role.name}</strong></h5>
                                       </a>                                  
                                     </div>
                                 </ui:repeat>

@@ -17,8 +17,7 @@ import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
-import java.util.ArrayList;
+import IslandFurniture.EJB.Entities.Supplier;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -86,6 +85,13 @@ public class QueryMethods {
         } catch (NoResultException nrex) {
             return null;
         }
+    }
+
+    public static List<Supplier> findSupplierByName(EntityManager em, String supplierName) {
+        Query q = em.createNamedQuery("findSupplierByName");
+        q.setParameter("name", supplierName);
+
+        return (List<Supplier>) q.getResultList();
     }
 
     public static List<StockSupplied> getStockSuppliedToStore(EntityManager em, Store store) {
