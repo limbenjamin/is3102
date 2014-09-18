@@ -11,20 +11,12 @@ import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.WAR.HELPER.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import org.primefaces.component.datatable.DataTable;
 
 @SessionScoped
 @ManagedBean(name = "DemandPlanning")
