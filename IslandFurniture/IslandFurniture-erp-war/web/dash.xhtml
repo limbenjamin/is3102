@@ -100,7 +100,12 @@
                 <div class="col-md-6">                      
                   <section class="panel">
                     <div class="panel-heading dashboard-title-panel">
-                      To-Do List
+                        <span class="pull-right">
+                            <a class="btn btn-panel-right" data-toggle="modal" data-target="#addTodo">
+                                <span class="fa fa-plus"></span> New
+                            </a>
+                        </span>                        
+                        To-Do List
                     </div>
                       <c:forEach var="i" begin="0" end="#{dashManagedBean.todoList.size()-1}">
                         <a class="list-group-item">
@@ -116,9 +121,7 @@
                         </a>
                     </c:forEach>       
                     <div class="panel-footer">
-                        <a href="#" class="no-decor" data-toggle="modal" data-target="#addTodo">
-                            Add To-Dos <i class="fa fa-arrow-circle-o-right"></i>
-                        </a>
+                        <p>Your To-Dos</p>
                     </div>
                   </section>
                 </div>                
