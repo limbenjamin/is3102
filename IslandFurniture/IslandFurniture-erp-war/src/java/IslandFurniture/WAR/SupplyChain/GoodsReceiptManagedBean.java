@@ -36,9 +36,10 @@ public class GoodsReceiptManagedBean implements Serializable {
     private Long goodsReceiptDocumentId;
 
     private String username;
+    private String deliverynote;
 
     private Calendar postingDate;
-    private Calendar receiptDate;
+    
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
 
@@ -68,19 +69,6 @@ public class GoodsReceiptManagedBean implements Serializable {
         postingDate = cal;
         mgrl.createGoodsReceiptDocument(plant, postingDate);
         return "goodsreceipt";
-    }
-
-    public String editGoodsReceiptDocument(ActionEvent event) throws IOException {
-        GoodsReceiptDocument gr = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
-
-        Calendar cal = gr.getReceiptDate();
-        Date date = new Date();
-        cal.setTime(date);
-        receiptDate = cal;
-
-        // The purchase order is currently null
-        mgrl.editGoodsReceiptDocument(gr.getId(), receiptDate, null, gr.getDeliveryNote());
-        return "goodsreceiptdocument";
     }
 
     public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
@@ -120,14 +108,6 @@ public class GoodsReceiptManagedBean implements Serializable {
 
     public void setPostingDate(Calendar postingDate) {
         this.postingDate = postingDate;
-    }
-
-    public Calendar getDocumentDate() {
-        return receiptDate;
-    }
-
-    public void setDocumentDate(Calendar documentDate) {
-        this.receiptDate = documentDate;
     }
 
     public List<GoodsReceiptDocument> getGoodsReceiptDocumentList() {
@@ -177,5 +157,8 @@ public class GoodsReceiptManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
+
+
+   
 
 }
