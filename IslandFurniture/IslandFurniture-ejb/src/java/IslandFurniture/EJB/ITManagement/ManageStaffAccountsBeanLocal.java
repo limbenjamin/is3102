@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.ITManagement;
 
+import IslandFurniture.EJB.Entities.Privilege;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.List;
 import javax.ejb.Local;
@@ -23,4 +24,6 @@ public interface ManageStaffAccountsBeanLocal {
     void removeRoleFromStaff(Long staffId, Long roleId);
     void addRoleToStaff(Long staffId, String roleName);
     void addRoleToStaffByUsername(String staffName, String roleName);
+    boolean checkIfStaffHasPrivilege(String staffName, Privilege privilege);
+    List<Privilege> getPrivilegeListforStaff(String staffName);
 }

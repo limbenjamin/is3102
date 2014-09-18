@@ -73,7 +73,7 @@ public class ManageRolesBean implements ManageRolesBeanLocal {
     public Role getRoleFromName(String roleName){
         Query query = em.createQuery("FROM Role r where r.name=:name");
         query.setParameter("name", roleName);
-        return role;
+        return (Role) query.getSingleResult();
     }
     
     @Override

@@ -8,11 +8,13 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -29,6 +31,8 @@ public class Role implements Serializable {
     private List<Staff> staffs;
     @ManyToMany(mappedBy="roles")
     private List<Privilege> privileges;
+    @OneToMany(cascade={CascadeType.ALL})
+    private List<Notification> notifications;
 
     public Long getId() {
         return id;
@@ -62,6 +66,16 @@ public class Role implements Serializable {
         this.privileges = privileges;
     }
 
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    
+    
     
     @Override
     public int hashCode() {

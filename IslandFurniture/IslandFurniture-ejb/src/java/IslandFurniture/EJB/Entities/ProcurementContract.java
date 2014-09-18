@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -24,6 +25,8 @@ public class ProcurementContract implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @OneToOne
+    private Supplier supplier;
     @OneToMany(mappedBy="procurementContract")
     private List<ProcurementContractDetail> procurementContractDetails;
 
@@ -33,6 +36,14 @@ public class ProcurementContract implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Supplier getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(Supplier supplier) {
+        this.supplier = supplier;
     }
 
     public List<ProcurementContractDetail> getProcurementContractDetails() {

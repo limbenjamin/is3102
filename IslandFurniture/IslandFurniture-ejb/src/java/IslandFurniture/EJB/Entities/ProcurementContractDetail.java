@@ -26,8 +26,6 @@ public class ProcurementContractDetail implements Serializable {
     private Long id;
     @ManyToOne
     private ProcurementContract procurementContract;
-    @OneToOne
-    private Supplier supplier;
     @ManyToOne
     private ProcuredStock procuredStock;
     @OneToOne
@@ -47,14 +45,6 @@ public class ProcurementContractDetail implements Serializable {
 
     public void setProcurementContract(ProcurementContract procurementContract) {
         this.procurementContract = procurementContract;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
     }
 
     public ProcuredStock getProcuredStock() {

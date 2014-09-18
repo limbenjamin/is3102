@@ -18,7 +18,11 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
+import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -108,28 +112,36 @@ public class QueryMethods {
         return (List<StockSupplied>) q.getResultList();
     }
 
-    public static MonthlyStockSupplyReq findMssrByMonth(EntityManager em, Month month, int year) {
-        return null;
-    }
-
     public static List<MonthlyStockSupplyReq> GetRelevantMSSRAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
 
+        Query l = em.createNamedQuery("StockSupplied.FindByMf");
+        l.setParameter("mf", MF);
+        ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
 
+        for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockBefore");
+            q.setParameter("y", year);
+            try {
+                q.setParameter("m", Helper.translateMonth(m).value);
 
+            } catch (Exception ex) {
+            }
+            q.setParameter("nm", year); //2 months in advance
+            try {
+                q.setParameter("ny", Helper.translateMonth(m).value);
+            } catch (Exception ex) {
+            }
+            q.setParameter("co", ss.getCountryOffice());
+            q.setParameter("stock", ss.getStock());
 
+            try {
+                RelevantMSSR.addAll(q.getResultList());
+            } catch (Exception err) {
+            }
 
-        Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockAT");
-        q.setParameter("y", year);
-        try {
-            q.setParameter("m", Helper.translateMonth(m).value);
-
-        } catch (Exception ex) {
         }
-        q.setParameter("co", MF.getCountryOffice());
-        q.setParameter("stock", s);
-        List<MonthlyStockSupplyReq> RelevantMSSR=(List<MonthlyStockSupplyReq>) q.getResultList();
-        System.out.println("GetRelevantMSSRAtPT(): " + MF.getName() + " UNTIL " + m + "/" + year +" Returned:"+RelevantMSSR.size());
-        return (RelevantMSSR);
+        System.out.println("GetRelevantMSSRAtPT(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
+        return RelevantMSSR;
     }
 
     public static List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs(EntityManager em, MonthlyProductionPlan MPP, ManufacturingFacility MF) {
@@ -148,6 +160,7 @@ public class QueryMethods {
             q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, true)));
             q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, false));
             q.setParameter("fm", MPP.getFurnitureModel());
+            q.setParameter("mf", MPP.getManufacturingFacility());
             return (MonthlyProductionPlan) q.getResultList().get(0);
         } catch (Exception ex) {
             return (null);
@@ -162,7 +175,7 @@ public class QueryMethods {
             q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, true)));
             q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, false));
             q.setParameter("fm", MPP.getFurnitureModel());
-
+            q.setParameter("mf", MPP.getManufacturingFacility());
             return (MonthlyProductionPlan) q.getResultList().get(0);
         } catch (Exception ex) {
 
@@ -181,6 +194,20 @@ public class QueryMethods {
         }
 
         return (total);
+    }
+
+    public MonthlyProductionPlan getMonthlyProductionPlan(EntityManager em, MonthlyStockSupplyReq MSSR) throws Exception {
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", MSSR.getMonth());
+            q.setParameter("y", MSSR.getYear());
+            q.setParameter("fm", MSSR.getStock());
+            q.setParameter("mf", MSSR);
+
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+            throw new RuntimeException("This MSSR does not have a MPP yet");
+        }
     }
 
 }

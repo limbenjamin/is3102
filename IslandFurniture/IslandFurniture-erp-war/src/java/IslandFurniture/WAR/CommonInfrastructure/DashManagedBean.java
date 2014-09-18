@@ -55,6 +55,7 @@ public class DashManagedBean implements Serializable {
     private Date date;
     private String dateString;
     private Long id;
+    private String plantType;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -74,6 +75,15 @@ public class DashManagedBean implements Serializable {
         this.staff = staffBean.getStaff(username);
         this.notes = staff.getNotes();
         this.name = staff.getName();
+        plantType = (String) staff.getPlant().getClass().getSimpleName();
+        //For spacing purpose when displaying in front end
+        if (plantType.equals("ManufacturingFacility")){
+            plantType = "Manufacturing Facility";
+        }else if (plantType.equals("CountryOffice")){
+            plantType = "Country Office";
+        }else if (plantType.equals("GlobalHQ")){
+            plantType = ""; //no need cos global HQ global HQ looks ugly
+        }
         this.plantName = staff.getPlant().getName();
         this.countryName = staff.getPlant().getCountry().getName();
         this.lastLogon = staff.getLastLogon();
@@ -315,5 +325,15 @@ public class DashManagedBean implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getPlantType() {
+        return plantType;
+    }
+
+    public void setPlantType(String plantType) {
+        this.plantType = plantType;
+    }
+    
+    
 
 }

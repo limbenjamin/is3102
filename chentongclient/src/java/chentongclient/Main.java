@@ -7,10 +7,12 @@ package chentongclient;
 
 import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
 import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadPrivilegeBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStocksBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
+import IslandFurniture.StaticClasses.Helper.MapPrivilegeDataBeanRemote;
 import IslandFurniture.StaticClasses.Helper.MapStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
@@ -43,6 +45,12 @@ public class Main {
 
     @EJB
     private static LoadJamesTestDataRemote loadJamesTestData;
+    
+    @EJB
+    private static LoadPrivilegeBeanRemote loadPrivilegeBean;
+    
+    @EJB
+    private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
 
     /**
      * @param args the command line arguments
@@ -82,9 +90,9 @@ public class Main {
 
         // Load Staff Data
         System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
-        System.out.print("Load and map Staff and Roles Data? (y/n):");
+        System.out.print("Load and map Staff, Roles and Privilege Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
-            if (loadStaffDataBean.loadSampleData()) {
+            /*if (loadStaffDataBean.loadSampleData()) {
                 System.out.println("Staff data loaded successfully!");
             } else {
                 System.out.println("Failed to load staff data. Check for errors in server log.");
@@ -93,6 +101,16 @@ public class Main {
                 System.out.println("Staff data mapped successfully!");
             } else {
                 System.out.println("Failed to map staff data. Check for errors in server log.");
+            }
+            if (loadPrivilegeBean.loadSampleData()) {
+                System.out.println("Privilege data loaded successfully!");
+            } else {
+                System.out.println("Failed to load privilege data. Check for errors in server log.");
+            }*/
+            if (mapPrivilegeDataBean.loadSampleData()) {
+                System.out.println("Privilege data mapped successfully!");
+            } else {
+                System.out.println("Failed to map privilege data. Check for errors in server log.");
             }
         }
 

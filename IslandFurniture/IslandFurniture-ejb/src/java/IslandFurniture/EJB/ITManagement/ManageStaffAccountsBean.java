@@ -48,6 +48,10 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     private Country country;
     private MessageThread messageThread;
     private Role role;
+    private List<Role> roleList;
+    private List<Privilege> privilegeList;
+    private List<Privilege> rolePrivilegeList;
+    private Privilege privilege;
     
 
 
@@ -144,7 +148,6 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     
     @Override
     public void addRoleToStaffByUsername(String staffName, String roleName){
-        System.err.println("here "+staffName+roleName);
         Query query = em.createQuery("FROM Staff s where s.username=:name");
         query.setParameter("name", staffName);
         staff = (Staff) query.getSingleResult();
@@ -156,5 +159,41 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         em.merge(role);
         em.merge(staff);
     }
-
+    
+    @Override
+    public boolean checkIfStaffHasPrivilege(String staffName, Privilege privilege){
+        Query query = em.createQuery("FROM Staff s where s.username=:name");
+        query.setParameter("name", staffName);
+        staff = (Staff) query.getSingleResult();
+        roleList = staff.getRoles();
+        Iterator<Role> iterator = roleList.iterator();
+        while (iterator.hasNext()) {
+            role = iterator.next();
+            if (role.getPrivileges().contains(privilege)){
+                return true;
+            }
+	}
+        return false;
+    }
+    
+    @Override
+    public List<Privilege> getPrivilegeListforStaff(String staffName){
+        Query query = em.createQuery("FROM Staff s where s.username=:name");
+        query.setParameter("name", staffName);
+        staff = (Staff) query.getSingleResult();
+        roleList = staff.getRoles();
+        Iterator<Role> iterator = roleList.iterator();
+        Iterator<Privilege> iterator2;
+        privilegeList = new ArrayList<Privilege>();
+        while (iterator.hasNext()) {
+            role = iterator.next();
+            rolePrivilegeList = role.getPrivileges();
+            iterator2 = rolePrivilegeList.iterator();
+            while (iterator2.hasNext()){
+                privilege = iterator2.next();
+                privilegeList.add(privilege);
+            }
+        }
+        return privilegeList;
+    }
 }
