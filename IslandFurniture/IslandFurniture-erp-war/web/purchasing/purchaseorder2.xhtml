@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <f:metadata>
+        <f:viewParam name="podId2" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
+        <f:viewAction action="#{purchaseOrderManaged2Bean.init}" />
+    </f:metadata>
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Purchase Order Details</h4><hr></hr> 
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Purchase Order ID</th>
+                                <th>Order Date</th>
+                                <th>Supplier</th>                                
+                                <th>Supply To</th>
+                                <th>Save</th>
+                            </tr>
+                            <h:form id="viewPODetail" class="form-horizontal">
+                                <tr>
+                                    <td>#{purchaseOrderManaged2Bean.purchaseOrder.id}</td>
+                                    <td><h:inputText id="eventTimeString" value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate}" p:type="date" class="form-control"></h:inputText></td>
+                                    <td><h:selectOneMenu id="supplierId" class="form-control" value="#{pod.supplier.id}">
+                                            <f:selectItems value="#{purchaseOrderManaged2Bean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                    <td><h:selectOneMenu id="plantId" class="form-control" value="#{pod.plant.id}">
+                                            <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                    <td>
+                                        <h:commandButton actionListener="#{purchaseOrderManaged2Bean.editPurchaseOrder}"  value="Update" class="btn btn-success btn-sm"> 
+                                            <f:attribute name="po" value="#{purchaseOrderManaged2Bean.purchaseOrder}" />
+                                        </h:commandButton>
+                                    </td>
+                                </tr>
+                            </h:form> 
+                        </table>
+
+                        <section name="createPurchaseOrderDetail">        
+                            <h:form id="createPODetail" class="form-horizontal">
+                                <div class="form-group">
+                                </div>
+                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.addPurchaseOrderDetail}" value="Add Stock" class="btn btn-default pull-right"> 
+                                    <f:attribute name="POid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
+                                </h:commandButton>
+                            </h:form>
+                        </section>
+
+
+                        <section name="PurchaseOrderDetails">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>Procured Stock</th>
+                                    <th>Quantity</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <h:form class="form-horizontal">
+
+                                    <ui:repeat value="#{purchaseOrderManaged2Bean.purchaseOrderDetailList}" var="pod">
+                                        <tr>
+                                            <td><h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
+                                                    <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                </h:selectOneMenu></td>
+
+                                            <td><h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText></td>
+                                            <td><h:commandButton actionListener="#{purchaseOrderManaged2Bean.editPurchaseOrderDetail}"  value="Update" class="btn btn-success btn-sm"> 
+                                                    <f:attribute name="PODid" value="#{pod.id}" />
+                                                </h:commandButton>
+                                            </td>
+                                            <td>
+                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                    <f:attribute name="PODid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
+                                                    <f:attribute name="PODId" value="#{pod.id}" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>
+                        </section>
+
+
+                        <section name="Confirm & Send Order">     
+                            <h:form class="form-horizontal">
+                                <button type="button" class="btn btn-round btn-success pull-right">
+                                    Edit Links
+                                </button>
+                            </h:form>
+                        </section>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

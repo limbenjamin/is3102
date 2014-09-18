@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h:form id="createGRD" class="form-horizontal">
+                            <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="Create Goods Receipt Document" class="btn btn-default pull-right"></h:commandButton>
+                            <br></br>
+                        </h:form>
+                        <h4>Purchase Orders</h4><hr></hr>   
+                    </div>
+                    <div class="col-md-8">
+                        <section name="viewPO" class="panel">
+                            <div class="panel-heading dashboard-title-panel">
+                                All Purchase Orders
+                            </div> 
+                            <div class="list-group-item">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Order Date</th>
+                                    <th>Edit</th>
+                                </tr>
+                                <h:form id="viewPO" class="form-horizontal">
+                                    <ui:repeat value="#{purchaseOrderManagedBean.purchaseOrderList}" var="PO">
+                                        <tr>
+                                            <td>#{PO.id}</td>
+                                            <td>
+                                                <h:outputText value="#{PO.orderDate.time}" >
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.plant.timeZoneID}"  />
+                                                </h:outputText>
+                                            </td>
+                                            <td> <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                    <f:attribute name="POid" value="#{PO.id}" />
+                                                </h:commandButton>
+                                            </td>                                            
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>    
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

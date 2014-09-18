@@ -68,6 +68,8 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                                 MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
                                 eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - oldMssr.getPlannedInventory());
                             }
+                            
+                            eachMssr.setApproved(true);
 
                             System.out.println(eachMssr);
                         }

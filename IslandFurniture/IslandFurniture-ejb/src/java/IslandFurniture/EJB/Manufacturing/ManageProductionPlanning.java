@@ -265,6 +265,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         Query l = em.createNamedQuery("MonthlyProductionPlan.FindUntilAllModel");
         l.setParameter("m", m);
         l.setParameter("y", year);
+        l.setParameter("mf", this.MF);
         for (MonthlyProductionPlan mpp : (List<MonthlyProductionPlan>) l.getResultList()) {
             mpp.setQTY(0);
         }
