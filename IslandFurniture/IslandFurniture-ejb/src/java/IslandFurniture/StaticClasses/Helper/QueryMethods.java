@@ -10,18 +10,22 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.RetailItem;
+import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 /**
- * This java class contains static methods to implement all the various named 
+ * This java class contains static methods to implement all the various named
  * queries that are reusable
  *
  * @author Chen Tong <chentong@nus.edu.sg>
@@ -101,4 +105,76 @@ public class QueryMethods {
     public static MonthlyStockSupplyReq findMssrByMonth(EntityManager em, Month month, int year) {
         return null;
     }
+
+    public static List<MonthlyStockSupplyReq> GetRelevantMSSRAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
+
+
+
+
+
+        Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockAT");
+        q.setParameter("y", year);
+        try {
+            q.setParameter("m", Helper.translateMonth(m).value);
+
+        } catch (Exception ex) {
+        }
+        q.setParameter("co", MF.getCountryOffice());
+        q.setParameter("stock", s);
+        List<MonthlyStockSupplyReq> RelevantMSSR=(List<MonthlyStockSupplyReq>) q.getResultList();
+        System.out.println("GetRelevantMSSRAtPT(): " + MF.getName() + " UNTIL " + m + "/" + year +" Returned:"+RelevantMSSR.size());
+        return (RelevantMSSR);
+    }
+
+    public static List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs(EntityManager em, MonthlyProductionPlan MPP, ManufacturingFacility MF) {
+        try {
+
+            return (GetRelevantMSSRAtPT(em, MPP.getMonth().value, MPP.getYear(), MF, MPP.getFurnitureModel()));
+
+        } catch (Exception er) {
+            return null;
+        }
+    }
+
+    public static MonthlyProductionPlan getNextMonthlyProductionPlan(EntityManager em, MonthlyProductionPlan MPP) {
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, true)));
+            q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, false));
+            q.setParameter("fm", MPP.getFurnitureModel());
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+            return (null);
+        }
+
+    }
+
+    public static MonthlyProductionPlan getPrevMonthlyProductionPlan(EntityManager em, MonthlyProductionPlan MPP) {
+
+        try {
+            Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, true)));
+            q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, false));
+            q.setParameter("fm", MPP.getFurnitureModel());
+
+            return (MonthlyProductionPlan) q.getResultList().get(0);
+        } catch (Exception ex) {
+
+            return (null);
+        }
+    }
+
+    // Extra Methods
+    public static long getTotalDemand(EntityManager em, MonthlyProductionPlan MPP, ManufacturingFacility MF) {
+        long total = 0;
+        try {
+            for (MonthlyStockSupplyReq mssr : QueryMethods.getMonthlyStockSupplyReqs(em, MPP, MF)) {
+                total += mssr.getQtyRequested();
+            }
+        } catch (Exception ex) {
+        }
+
+        return (total);
+    }
+
 }

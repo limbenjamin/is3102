@@ -36,8 +36,16 @@ import javax.persistence.Query;
             + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
             + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
-            name = "MonthlyStockSupplyReq.FindByCoStock",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.committed=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
+            name = "MonthlyStockSupplyReq.FindByCoStockBefore",
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.approved=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)"),
+    @NamedQuery(
+            name = "MonthlyStockSupplyReq.FindByCoStockAT",
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)=:y*12+(:m+1) and MSSR.approved=TRUE"),
+    
+
+        
+        
+        
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
@@ -72,6 +80,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     public void setStock(Stock stock) {
         this.stock = stock;
+        
     }
 
     public CountryOffice getCountryOffice() {

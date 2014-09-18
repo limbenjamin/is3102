@@ -54,7 +54,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
                         continue;
                     }
 
-                    Query M = em.createQuery("SELECT MAX(MSSR.qtyRequested) from MonthlyStockSupplyReq MSSR where MSSR.stock=:stk and MSSR.countryOffice:co");
+                    Query M = em.createQuery("SELECT MAX(MSSR.qtyRequested) from MonthlyStockSupplyReq MSSR where MSSR.stock=:stk and MSSR.countryOffice=:co");
                     M.setParameter("co", SS.getCountryOffice());
                     M.setParameter("stk", SS.getStock());
                     int max = (int) M.getSingleResult();
@@ -70,7 +70,6 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
 
                         int i_month = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), i, true);
                         int i_year = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), i, false);
-                        
 
                         MonthlyStockSupplyReq MSSR=new MonthlyStockSupplyReq();
                         MSSR.setMonth(Helper.translateMonth(i_month));

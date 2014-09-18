@@ -13,9 +13,10 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
-import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
+import IslandFurniture.StaticClasses.Helper.Helper;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ import javax.persistence.Query;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ManageProductionPlanning implements ManageProductionPlanningRemote {
 
-    private static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
+    public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -103,16 +104,17 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             Logger.getLogger(ManageProductionPlanning.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+//Factory Perspective
 
     private List<MonthlyStockSupplyReq> GetRelevantMSSR(int m, int year) {
 
-        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year);
+
         Query l = em.createNamedQuery("StockSupplied.FindByMf");
         l.setParameter("mf", this.MF);
         ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
 
         for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
-            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStock");
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockBefore");
             q.setParameter("y", year);
             try {
                 q.setParameter("m", Helper.translateMonth(m).value);
@@ -130,7 +132,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             }
 
         }
-
+        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year +" Returned:"+RelevantMSSR.size());
         return RelevantMSSR;
     }
 
@@ -238,8 +240,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     public double getReqCapacity(int year, int m) throws Exception {
         //Calculate Required Capacity First
         double reqCapacity = 0;
-        
-        
+
         for (Object o : GetRelevantMSSR(m, year)) {
             MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
             double maxCapacity = MF.findProductionCapacity((FurnitureModel) mssr.getStock()).getCapacity(mssr.getMonth(), mssr.getYear());
@@ -268,18 +269,18 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             mpp.setQTY(0);
         }
 
+        double reqCapacity = getReqCapacity(year, m);
+        double AvaCapacity = getAvailCapacity(year, m);
+
+        if (reqCapacity > AvaCapacity) {
+            throw new RuntimeException("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
+        }
+
         for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
-
-            double reqCapacity = getReqCapacity(year, m);
-            double AvaCapacity = getAvailCapacity(year, m);
-
-            if (reqCapacity > AvaCapacity) {
-                throw new RuntimeException("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
-            }
 
             int deficit = 0;
             String endmonth = planTillMonthCursor.getMonth().toString();
-            while (planTillMonthCursor.getPrevMonthlyProductionPlan(em) != null) {
+            while (QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor) != null) {
 
                 if (planTillMonthCursor.isLocked()) {
                     break;
@@ -287,17 +288,17 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
                 int avaCapacity = planTillMonthCursor.getManufacturingFacility().findProductionCapacity(planTillMonthCursor.getFurnitureModel()).getCapacity(planTillMonthCursor.getMonth(), planTillMonthCursor.getYear());
                 avaCapacity = (int) (avaCapacity * planTillMonthCursor.getManufacturingFacility().getCurrentFreeCapacity(em, planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
 
-                int requirement = (int) (planTillMonthCursor.getTotalDemand(em));
+                int requirement = (int) (QueryMethods.getTotalDemand(em, planTillMonthCursor, MF));
                 int fufill = Math.min(requirement + deficit, avaCapacity);
                 planTillMonthCursor.setQTY(fufill);
                 deficit += requirement - fufill;
 
-                System.out.println("balanceProductionTill(): Planned capacity for " + planTillMonthCursor.getFurnitureModel().getName() + " Period @ Year:" + planTillMonthCursor.getYear() + " month:" + planTillMonthCursor.getMonth().toString() + " PRODUCE=" + fufill + " Resultant Plant Free Capacity @" + planTillMonthCursor.getManufacturingFacility().getCurrentFreeCapacity(em, planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
+                System.out.println("balanceProductionTill(): Planned production for " + planTillMonthCursor.getFurnitureModel().getName() + " Period @ Year:" + planTillMonthCursor.getYear() + " month:" + planTillMonthCursor.getMonth().toString() + " PRODUCE=" + fufill + " Resultant Plant Free Capacity @" + planTillMonthCursor.getManufacturingFacility().getCurrentFreeCapacity(em, planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
 
                 planWeekMPP(planTillMonthCursor);
                 em.persist(planTillMonthCursor);
 
-                planTillMonthCursor = planTillMonthCursor.getPrevMonthlyProductionPlan(em);
+                planTillMonthCursor = QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor);
             }
 
             if (deficit > 0) {
