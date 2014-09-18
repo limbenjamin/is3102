@@ -13,7 +13,8 @@
                     <div class="col-md-6">
 
                         <section name="createGRD">
-                            <h4>Create Goods Receipt Document</h4><hr></hr> 
+                            <h4>Create Goods Receipt Document</h4><hr></hr><br></br>
+                            
                             <h:form id="createGRD" class="form-horizontal">
                                 <div class="form-group">
                                 </div>
@@ -43,7 +44,7 @@
                                             </td>
                                             <td>#{GRD.receiptDate}</td>
                                             <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>

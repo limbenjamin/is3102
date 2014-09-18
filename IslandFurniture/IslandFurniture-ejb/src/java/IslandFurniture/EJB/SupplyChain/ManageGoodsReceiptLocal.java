@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.Stock;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,12 +21,27 @@ public interface ManageGoodsReceiptLocal {
 
     void createGoodsReceiptDocument(Plant plant, Calendar postingDate);
 
+    void createGoodsReceiptDocumentDetail(Long grdId, Long stockId);
+
     void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId);
 
-    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar documentDate, PurchaseOrder po, String deliveryNote);
+    void deleteGoodsReceiptDocumentDetail(Long goodsReceiptDocumentDetailId);
+
+    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, PurchaseOrder po, String deliveryNote);
+
+    void editGoodsReceiptDocumentDetail(Long grddId, Long stockId, Integer qty);
+
+    Stock getStock(Long id);
 
     GoodsReceiptDocument getGoodsReceiptDocument(Long id);
 
+    GoodsReceiptDocumentDetail getGoodsReceiptDocumentDetail(Long id);
+
+    List<Stock> viewStock();
+
     List<GoodsReceiptDocument> viewGoodsReceiptDocument();
-    
+
+//    List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail();
+    List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail();
+
 }

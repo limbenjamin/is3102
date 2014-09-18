@@ -94,8 +94,6 @@ public class storageLocationManagedBean implements Serializable {
 
     public String editStorageArea(ActionEvent event) throws IOException {
         StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
-//        storageAreaId = sa.getId();
-//        storageAreaName = sa.getName();
         mslr.editStorageArea(sa.getId(), sa.getName());
         return "storagelocation";
     }
