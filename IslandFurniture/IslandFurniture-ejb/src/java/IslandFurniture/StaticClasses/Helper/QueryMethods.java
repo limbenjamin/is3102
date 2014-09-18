@@ -114,21 +114,17 @@ public class QueryMethods {
 
     public static List<MonthlyStockSupplyReq> GetRelevantMSSRAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
 
-        Query l = em.createNamedQuery("StockSupplied.FindByMf");
+        Query l = em.createNamedQuery("StockSupplied.FindByMfAndS");
         l.setParameter("mf", MF);
+        l.setParameter("s", s);
         ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
 
         for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
-            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockBefore");
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockAT");
             q.setParameter("y", year);
             try {
                 q.setParameter("m", Helper.translateMonth(m).value);
 
-            } catch (Exception ex) {
-            }
-            q.setParameter("nm", year); //2 months in advance
-            try {
-                q.setParameter("ny", Helper.translateMonth(m).value);
             } catch (Exception ex) {
             }
             q.setParameter("co", ss.getCountryOffice());
@@ -157,7 +153,7 @@ public class QueryMethods {
     public static MonthlyProductionPlan getNextMonthlyProductionPlan(EntityManager em, MonthlyProductionPlan MPP) {
         try {
             Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, true)));
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, true)).value);
             q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), 1, false));
             q.setParameter("fm", MPP.getFurnitureModel());
             q.setParameter("mf", MPP.getManufacturingFacility());
@@ -172,7 +168,7 @@ public class QueryMethods {
 
         try {
             Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, true)));
+            q.setParameter("m", Helper.translateMonth(Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, true)).value);
             q.setParameter("y", Helper.addMonth(MPP.getMonth(), MPP.getYear(), -1, false));
             q.setParameter("fm", MPP.getFurnitureModel());
             q.setParameter("mf", MPP.getManufacturingFacility());
@@ -199,7 +195,7 @@ public class QueryMethods {
     public MonthlyProductionPlan getMonthlyProductionPlan(EntityManager em, MonthlyStockSupplyReq MSSR) throws Exception {
         try {
             Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
-            q.setParameter("m", MSSR.getMonth());
+            q.setParameter("m", MSSR.getMonth().value);
             q.setParameter("y", MSSR.getYear());
             q.setParameter("fm", MSSR.getStock());
             q.setParameter("mf", MSSR);
