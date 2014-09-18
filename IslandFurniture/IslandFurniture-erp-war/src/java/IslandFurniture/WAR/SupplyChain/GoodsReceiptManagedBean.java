@@ -67,8 +67,6 @@ public class GoodsReceiptManagedBean implements Serializable {
         cal.setTime(date);
         postingDate = cal;
         mgrl.createGoodsReceiptDocument(plant, postingDate);
-        
-        
         return "goodsreceipt";
     }
 
@@ -83,6 +81,13 @@ public class GoodsReceiptManagedBean implements Serializable {
         // The purchase order is currently null
         mgrl.editGoodsReceiptDocument(gr.getId(), receiptDate, null, gr.getDeliveryNote());
         return "goodsreceiptdocument";
+    }
+
+    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        System.out.println("this is the docomentid at MAIN Mgd Bean" + goodsReceiptDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
     public Long getPlantId() {
