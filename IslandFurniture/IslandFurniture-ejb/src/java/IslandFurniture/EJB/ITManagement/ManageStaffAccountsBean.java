@@ -12,6 +12,7 @@ import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurniture.EJB.Exceptions.InvalidCountryException;
 import IslandFurniture.EJB.Exceptions.InvalidPlantException;
+import IslandFurniture.StaticClasses.Helper.SendEmailByPost;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -100,6 +101,11 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         }
         em.persist(staff);
         em.flush();
+        try {
+            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Account created", "Your new account has been created with password: "+password);
+        } catch (Exception ex) {
+            Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
