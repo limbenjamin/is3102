@@ -30,7 +30,7 @@ public class RetailItem extends ProcuredStock implements Serializable {
     private Double price;
 
     public Double getPrice() {
-        return price;
+        return price; 
     }
 
     public void setPrice(Double price) {
