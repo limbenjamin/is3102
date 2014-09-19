@@ -81,9 +81,13 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
 
         this.goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        
+        if (goodsReceiptDocumentId == null) goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
+        
         if (goodsReceiptDocumentId != null) {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
+        
         System.out.println("@Init GoodsReceiptDocumentManagedBean:  this is the docomentid" + goodsReceiptDocumentId);
         stockList = mgrl.viewStock();
         goodsReceiptDocumentDetaiList = mgrl.viewGoodsReceiptDocumentDetail();
