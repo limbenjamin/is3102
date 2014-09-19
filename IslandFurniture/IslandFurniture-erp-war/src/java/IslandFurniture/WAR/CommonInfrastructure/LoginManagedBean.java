@@ -9,7 +9,9 @@ package IslandFurniture.WAR.CommonInfrastructure;
  *
  * @author Benjamin
  */
-import IslandFurniture.EJB.CommonInfrastructure.*;
+
+import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
@@ -41,7 +43,7 @@ public class LoginManagedBean implements Serializable {
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     @EJB
-    private ManageUserAccountInformationBean muaib;
+    private ManageUserAccountBeanLocal muab;
     @EJB
     private ManageStaffAccountsBeanLocal msab;
     @EJB
@@ -52,7 +54,7 @@ public class LoginManagedBean implements Serializable {
         if (result) {
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
-            staff = muaib.getStaff(username);
+            staff = muab.getStaff(username);
             notificationList = staff.getNotifications();
             notificationListSize = notificationList.size();
             count = 0;
@@ -105,11 +107,9 @@ public class LoginManagedBean implements Serializable {
     }
     
     public void pullNotification() {
-        staff = muaib.getStaff(username);
+        staff = muab.getStaff(username);
         notificationList = staff.getNotifications();
-        System.err.print("here pulling " + notificationList.size() +" "+ notificationListSize );
         if (notificationList.size() != notificationListSize){
-            System.err.print("here new message");
             count++;
             notificationListSize = notificationList.size();
             notification = notificationList.get(notificationList.size()-1);
@@ -169,12 +169,12 @@ public class LoginManagedBean implements Serializable {
         this.notificationList = notificationList;
     }
 
-    public ManageUserAccountInformationBean getMuaib() {
-        return muaib;
+    public ManageUserAccountBeanLocal getMuaib() {
+        return muab;
     }
 
-    public void setMuaib(ManageUserAccountInformationBean muaib) {
-        this.muaib = muaib;
+    public void setMuaib(ManageUserAccountBeanLocal muab) {
+        this.muab = muab;
     }
 
     public Notification getNotification() {

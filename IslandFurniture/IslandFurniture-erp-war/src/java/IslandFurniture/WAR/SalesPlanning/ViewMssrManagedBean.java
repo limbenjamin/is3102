@@ -5,19 +5,19 @@
  */
 package IslandFurniture.WAR.SalesPlanning;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
+import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -39,7 +39,7 @@ public class ViewMssrManagedBean implements Serializable {
     private SalesForecastBeanLocal salesForecastBean;
 
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBeanLocal staffBean;
 
     private int yearOfMssr;
     private List<Integer> yearsOfMssr = new ArrayList();
@@ -47,8 +47,7 @@ public class ViewMssrManagedBean implements Serializable {
     private Staff staff;
     private CountryOffice co;
 
-    private Map<Stock, List<MonthlyStockSupplyReq>> mssrMap;
-    private List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList;
+    private List<Couple<Stock, List<MonthlyStockSupplyReq>>> mssrList;
 
     public ViewMssrManagedBean() {
     }
@@ -77,6 +76,15 @@ public class ViewMssrManagedBean implements Serializable {
         System.out.println("Init()");
     }
 
+    public void updateMssr(AjaxBehaviorEvent event) {
+        System.out.println("updateMssr");
+        this.updateMssrList();
+    }
+
+    public void updateMssrList() {
+        this.mssrList = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
+    }
+
     public int getYearOfMssr() {
         return yearOfMssr;
     }
@@ -93,35 +101,12 @@ public class ViewMssrManagedBean implements Serializable {
         this.yearsOfMssr = yearsOfMssr;
     }
 
-    public Map<Stock, List<MonthlyStockSupplyReq>> getMssrMap() {
-        return mssrMap;
-    }
-
-    public void setMssrMap(Map<Stock, List<MonthlyStockSupplyReq>> mssrMap) {
-        this.mssrMap = mssrMap;
-    }
-
-    public List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
+    public List<Couple<Stock, List<MonthlyStockSupplyReq>>> getMssrList() {
         return mssrList;
     }
 
-    public void setMssrList(List<Map.Entry<Stock, List<MonthlyStockSupplyReq>>> mssrList) {
+    public void setMssrList(List<Couple<Stock, List<MonthlyStockSupplyReq>>> mssrList) {
         this.mssrList = mssrList;
-    }
-
-    public void updateMssr(AjaxBehaviorEvent event) {
-        System.out.println("updateMssr");
-        this.updateMssrList();
-    }
-
-    public void updateMssrList() {
-        this.mssrMap = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
-        
-        this.mssrList = new ArrayList();
-
-        if (this.mssrMap != null) {
-            this.mssrList.addAll(this.mssrMap.entrySet());
-        }
     }
 
 }

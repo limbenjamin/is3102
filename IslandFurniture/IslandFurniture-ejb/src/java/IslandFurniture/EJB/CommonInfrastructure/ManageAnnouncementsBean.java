@@ -36,7 +36,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     private List<Announcement> announcementList;
     
     @EJB
-    private ManageUserAccountInformationBean staffbean;
+    private ManageUserAccountBeanLocal staffbean;
     
     @Override
     public void addAnnouncement(String username, String title, String content, Date activeDate, Date expireDate){

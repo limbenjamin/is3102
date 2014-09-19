@@ -34,7 +34,7 @@ public class ManageTodoBean implements ManageTodoBeanLocal {
     private List<Todo> todoList;
     
     @EJB
-    private ManageUserAccountInformationBean staffbean;
+    private ManageUserAccountBeanLocal staffbean;
     
     public ManageTodoBean(){
         

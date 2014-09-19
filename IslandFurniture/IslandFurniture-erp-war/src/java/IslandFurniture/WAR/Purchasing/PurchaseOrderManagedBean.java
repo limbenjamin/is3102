@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Purchasing;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
@@ -46,7 +46,7 @@ public class PurchaseOrderManagedBean implements Serializable{
     private Staff staff;
     
     @EJB
-    private ManageUserAccountInformationBean staffBean; 
+    private ManageUserAccountBeanLocal staffBean; 
     @EJB
     public ManagePurchaseOrderLocal mpol;
     
@@ -153,5 +153,15 @@ public class PurchaseOrderManagedBean implements Serializable{
 
     public void setMgrl(ManagePurchaseOrderLocal mpol) {
         this.mpol = mpol;
-    }    
+    } 
+
+    public ManageUserAccountBeanLocal getStaffBean() {
+        return staffBean;
+    }
+
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
+        this.staffBean = staffBean;
+    }
+    
+    
 }

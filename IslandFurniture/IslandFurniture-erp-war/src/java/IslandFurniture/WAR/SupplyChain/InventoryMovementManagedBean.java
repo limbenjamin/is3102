@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StockUnit;
@@ -53,7 +53,7 @@ public class InventoryMovementManagedBean implements Serializable {
     @EJB
     public ManageInventoryMovementLocal msul;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
 
     @PostConstruct
     public void init() {
@@ -206,11 +206,11 @@ public class InventoryMovementManagedBean implements Serializable {
         this.msul = msul;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 

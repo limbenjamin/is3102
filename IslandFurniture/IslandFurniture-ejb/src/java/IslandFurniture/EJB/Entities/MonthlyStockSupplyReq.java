@@ -5,11 +5,12 @@
  */
 package IslandFurniture.EJB.Entities;
 
+import IslandFurniture.StaticClasses.Helper.Couple;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
-import javax.persistence.Query;
 
 /**
  *
@@ -170,8 +170,6 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
-
-
     @Override
     public int hashCode() {
         int hash = 5;
@@ -219,6 +217,19 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     @Override
     public String toString() {
         return "MonthlyStockSupplyReq[ id=" + stock + ", " + countryOffice + ", " + month + ", " + year + " ]";
+    }
+
+    // Extra Methods
+    public static List<Couple<String, String>> getLabels() {
+        List<Couple<String, String>> labels = new ArrayList();
+        labels.add(new Couple("qtyForecasted", "Quantity Forecasted"));
+        labels.add(new Couple("plannedInventory", "Planned Inventory"));
+        labels.add(new Couple("qtySold","Quantity Sold"));
+        labels.add(new Couple("actualInventory", "Actual Inventory"));
+        labels.add(new Couple("varianceOffset", "Variance Offset"));
+        labels.add(new Couple("qtyRequested", "Quantity Requested"));
+
+        return labels;
     }
 
     // Entity Callbacks
