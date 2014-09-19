@@ -12,8 +12,8 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
-import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -36,9 +36,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
-@ManagedBean(name = "createForecastManagedBean")
+@ManagedBean(name = "createForecastManagedBean2")
 @ViewScoped
-public class CreateForecastManagedBean implements Serializable {
+public class CreateForecastManagedBean2 implements Serializable {
 
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
@@ -49,6 +49,10 @@ public class CreateForecastManagedBean implements Serializable {
     private Staff staff;
     private CountryOffice co;
 
+    private long stockId;
+    private Stock stock;
+    private List<Stock> stocks;
+
     private int endYear;
     private List<Integer> endYears;
 
@@ -58,20 +62,17 @@ public class CreateForecastManagedBean implements Serializable {
     String panelActive = "0";
     String statusMessage = "";
 
-    private List<Couple<String, String>> mssrLabels = new ArrayList();
-    private List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> mssrPairedList;
+    List<MonthlyStockSupplyReq> mssrList;
+    List<MonthlyStockSupplyReq> newMssrList;
 
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
-        
+
         Plant plant = staff.getPlant();
 
         if (plant instanceof CountryOffice) {
-            // Populate MSSR labels and formatted labels
-            this.mssrLabels = MonthlyStockSupplyReq.getLabels();
-            
             this.co = (CountryOffice) plant;
             Calendar cal = Calendar.getInstance();
 
@@ -83,6 +84,14 @@ public class CreateForecastManagedBean implements Serializable {
             for (int i = cal.get(Calendar.YEAR); i <= cal.get(Calendar.YEAR) + 1; i++) {
                 endYears.add(i);
             }
+
+            // Populate Stocks
+            stocks = new ArrayList();
+            for (StockSupplied ss : co.getSuppliedWithFrom()) {
+                stocks.add(ss.getStock());
+            }
+            stock = stocks.get(0);
+            stockId = stock.getId();
 
             this.loadPrevMssr();
         } else {
@@ -116,6 +125,11 @@ public class CreateForecastManagedBean implements Serializable {
         }
     }
 
+    public void updatePrevMssr(AjaxBehaviorEvent event){
+        stock = salesForecastBean.getStockById(stockId);
+        loadPrevMssr();
+    }
+    
     public void updateMssr(AjaxBehaviorEvent event) {
         System.err.println("UPDATE MSSR");
         Calendar start = Calendar.getInstance();
@@ -125,20 +139,16 @@ public class CreateForecastManagedBean implements Serializable {
         Calendar end = Calendar.getInstance();
         end.set(endYear, endMonth, 2);
 
-        for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> eachPair : this.mssrPairedList) {
-            eachPair.getSecond().getSecond().clear();
-        }
+        newMssrList = new ArrayList();
 
         while (start.compareTo(end) <= 0) {
-            for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> eachPair : this.mssrPairedList) {
-                MonthlyStockSupplyReq mssr = new MonthlyStockSupplyReq();
-                mssr.setCountryOffice(co);
-                mssr.setStock(eachPair.getFirst());
-                mssr.setMonth(Month.getMonth(start.get(Calendar.MONTH)));
-                mssr.setYear(start.get(Calendar.YEAR));
+            MonthlyStockSupplyReq mssr = new MonthlyStockSupplyReq();
+            mssr.setCountryOffice(co);
+            mssr.setStock(stock);
+            mssr.setMonth(Month.getMonth(start.get(Calendar.MONTH)));
+            mssr.setYear(start.get(Calendar.YEAR));
 
-                eachPair.getSecond().getSecond().add(mssr);
-            }
+            this.newMssrList.add(mssr);
 
             start.add(Calendar.MONTH, 1);
         }
@@ -148,34 +158,15 @@ public class CreateForecastManagedBean implements Serializable {
         Calendar sixMthsBefore = Calendar.getInstance();
         sixMthsBefore.add(Calendar.MONTH, -6);
 
-        Calendar thisMth = Calendar.getInstance();
+        Calendar prevMth = Calendar.getInstance();
+        prevMth.add(Calendar.MONTH, -1);
 
-        List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList = salesForecastBean.retrieveMssrForCo(this.co, Month.getMonth(sixMthsBefore.get(Calendar.MONTH)), sixMthsBefore.get(Calendar.YEAR), Month.getMonth(thisMth.get(Calendar.MONTH)), thisMth.get(Calendar.YEAR));
-
-        if (stockMssrList != null) {
-            this.mssrPairedList = new ArrayList();
-
-            for (Couple<Stock, List<MonthlyStockSupplyReq>> stockMssr : stockMssrList) {
-                Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>> pair;
-                pair = new Couple(stockMssr.getSecond(), new ArrayList());
-                this.mssrPairedList.add(new Couple(stockMssr.getFirst(), pair));
-            }
-        }
-
-        for (int i = 1; i < this.mssrPairedList.size(); i++) {
-            this.panelActive += "," + i;
-        }
+        mssrList = salesForecastBean.retrieveMssrForCoStock(this.co, this.stock, Month.getMonth(sixMthsBefore.get(Calendar.MONTH)), sixMthsBefore.get(Calendar.YEAR), Month.getMonth(prevMth.get(Calendar.MONTH)), prevMth.get(Calendar.YEAR));
     }
 
     public void saveForecast(AjaxBehaviorEvent event) {
-        System.out.println("Ajax call");
-        
         try {
-            for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> mssrEntry : this.mssrPairedList) {
-                System.out.println(mssrEntry.getSecond().getSecond().get(0).getQtyForecasted());
-
-                salesForecastBean.saveMonthlyStockSupplyReq(mssrEntry.getSecond().getSecond());
-            }
+            salesForecastBean.saveMonthlyStockSupplyReq(newMssrList);
 
             statusMessage = "Saved Successfully!";
         } catch (Exception ex) {
@@ -186,7 +177,7 @@ public class CreateForecastManagedBean implements Serializable {
     /**
      * Creates a new instance of CreateForecastManagedBean
      */
-    public CreateForecastManagedBean() {
+    public CreateForecastManagedBean2() {
     }
 
     public int getEndYear() {
@@ -237,21 +228,44 @@ public class CreateForecastManagedBean implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> getMssrPairedList() {
-        return mssrPairedList;
+    public Stock getStock() {
+        return stock;
     }
 
-    public void setMssrPairedList(List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> mssrPairedList) {
-        this.mssrPairedList = mssrPairedList;
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
-    public List<Couple<String, String>> getMssrLabels() {
-        return mssrLabels;
+    public List<Stock> getStocks() {
+        return stocks;
     }
 
-    public void setMssrLabels(List<Couple<String, String>> mssrLabels) {
-        this.mssrLabels = mssrLabels;
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
     }
 
+    public List<MonthlyStockSupplyReq> getMssrList() {
+        return mssrList;
+    }
+
+    public void setMssrList(List<MonthlyStockSupplyReq> mssrList) {
+        this.mssrList = mssrList;
+    }
+
+    public List<MonthlyStockSupplyReq> getNewMssrList() {
+        return newMssrList;
+    }
+
+    public void setNewMssrList(List<MonthlyStockSupplyReq> newMssrList) {
+        this.newMssrList = newMssrList;
+    }
+
+    public long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(long stockId) {
+        this.stockId = stockId;
+    }
 
 }
