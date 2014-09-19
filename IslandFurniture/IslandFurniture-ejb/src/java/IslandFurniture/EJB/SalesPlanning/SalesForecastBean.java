@@ -17,13 +17,12 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Transaction;
+import IslandFurniture.StaticClasses.Helper.Couple;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -188,13 +187,13 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, int year) {
+    public List<Couple<Stock, List<MonthlyStockSupplyReq>>> retrieveMssrForCo(CountryOffice co, int year) {
         return this.retrieveMssrForCo(co, Month.JAN, year, Month.DEC, year);
     }
 
     @Override
-    public Map<Stock, List<MonthlyStockSupplyReq>> retrieveMssrForCo(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear) {
-        Map<Stock, List<MonthlyStockSupplyReq>> mssrMap = new HashMap();
+    public List<Couple<Stock, List<MonthlyStockSupplyReq>>> retrieveMssrForCo(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear) {
+        List<Couple<Stock, List<MonthlyStockSupplyReq>>> coupleList = new ArrayList();
 
         for (StockSupplied ss : co.getSuppliedWithFrom()) {
             List<MonthlyStockSupplyReq> stockMssrList = this.retrieveMssrForCoStock(co, ss.getStock(), startMonth, startYear, endMonth, endYear);
@@ -225,10 +224,10 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
             stockMssrList.sort(null);
 
-            mssrMap.put(ss.getStock(), stockMssrList);
+            coupleList.add(new Couple(ss.getStock(), stockMssrList));
         }
 
-        return mssrMap;
+        return coupleList;
     }
 
     @Override
@@ -245,6 +244,11 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         yearsOfMssr.sort(null);
 
         return yearsOfMssr;
+    }
+    
+    @Override
+    public Stock getStockById(long stockId){
+        return em.find(Stock.class, stockId);
     }
 
 }
