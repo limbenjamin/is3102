@@ -24,7 +24,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -45,20 +44,17 @@ public class PurchaseOrderManagedBean implements Serializable{
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> purchaseOrderList;
     private Staff staff;
-    private Supplier supplier;
-    private Plant plant;
     
     @EJB
     private ManageUserAccountInformationBean staffBean; 
     @EJB
-    private ManagePurchaseOrderLocal mpol;
+    public ManagePurchaseOrderLocal mpol;
     
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
-        plant = staff.getPlant();
         purchaseOrderList = mpol.viewPurchaseOrders();
         System.out.println("Init");
     }
@@ -68,21 +64,8 @@ public class PurchaseOrderManagedBean implements Serializable{
         Date date = new Date();
         cal.setTime(date);
         orderDate = cal;
-        mpol.createPurchaseOrder(plant, orderDate, supplier);
+        mpol.createPurchaseOrder(orderDate);
         return "purchaseorder";
-    }
-    
-    public String editPurchaseOrder(ActionEvent event) throws IOException {
-        PurchaseOrder po = (PurchaseOrder) event.getComponent().getAttributes().get("po");
-
-        Calendar cal = po.getOrderDate();
-        Date date = new Date();
-        cal.setTime(date);
-        orderDate = cal;
-
-        // The purchase order is currently null
-        mpol.editPurchaseOrder(po.getId(), plant, orderDate, supplier);
-        return "purchaseorder2";
     }   
     
     public void purchaseOrderDetailActionListener(ActionEvent event) throws IOException {
@@ -154,23 +137,7 @@ public class PurchaseOrderManagedBean implements Serializable{
 
     public void setStaff(Staff staff) {
         this.staff = staff;
-    }
-    
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public void setPlant(Plant plant) {
-        this.plant = plant;
-    }
-    
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }    
+    }   
     
     public ManagePurchaseOrderLocal getMpol() {
         return mpol;

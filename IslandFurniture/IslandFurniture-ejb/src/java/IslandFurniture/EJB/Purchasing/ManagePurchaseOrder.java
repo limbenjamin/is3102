@@ -55,10 +55,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void createPurchaseOrder(Plant plant, Calendar orderDate, Supplier supplier) {
+    public void createPurchaseOrder(Calendar orderDate) {
         purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setShipsTo(plant);
-        purchaseOrder.setSupplier(supplier);
         purchaseOrder.setOrderDate(orderDate);
         em.persist(purchaseOrder);
         em.flush();
