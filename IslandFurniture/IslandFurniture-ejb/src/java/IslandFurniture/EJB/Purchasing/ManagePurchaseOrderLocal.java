@@ -13,14 +13,15 @@ import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.Calendar;
 import java.util.List;
-
+import javax.ejb.Local;
 /**
  *
  * @author Zee
  */
+@Local
 public interface ManagePurchaseOrderLocal {
 
-    void createPurchaseOrder(Plant plant, Calendar orderDate, Supplier supplier);
+    void createPurchaseOrder(Calendar orderDate, String status);
 
     void createPurchaseOrderDetail(Long poId, Long psId);
 
@@ -28,7 +29,7 @@ public interface ManagePurchaseOrderLocal {
 
     void deletePurchaseOrderDetail(Long podId);
 
-    void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, Supplier supplier);
+    void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, String status);
 
     void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
 

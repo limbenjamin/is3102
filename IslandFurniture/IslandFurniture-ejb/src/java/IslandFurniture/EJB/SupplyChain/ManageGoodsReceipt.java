@@ -45,12 +45,13 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public void createGoodsReceiptDocument(Plant plant, Calendar postingDate) {
+    public GoodsReceiptDocument createGoodsReceiptDocument(Plant plant, Calendar postingDate) {
         goodsReceiptDocument = new GoodsReceiptDocument();
         goodsReceiptDocument.setPlant(plant);
         goodsReceiptDocument.setPostingDate(postingDate);
         em.persist(goodsReceiptDocument);
         em.flush();
+        return goodsReceiptDocument;
     }
 
     @Override

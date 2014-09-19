@@ -14,29 +14,25 @@
                             <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="Create Goods Receipt Document" class="btn btn-default pull-right"></h:commandButton>
                             <br></br>
                         </h:form>
-                        <h4>Purchase Orders</h4><hr></hr>   
+                        <h4>Purchase Orders</h4><hr></hr>
                     </div>
                     <div class="col-md-8">
                         <section name="viewPO" class="panel">
                             <div class="panel-heading dashboard-title-panel">
                                 All Purchase Orders
-                            </div> 
+                            </div>
                             <div class="list-group-item">
                             <table class="table table-hover">
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Order Date</th>
+                                    <th>Status</th>
                                     <th>Edit</th>
                                 </tr>
                                 <h:form id="viewPO" class="form-horizontal">
                                     <ui:repeat value="#{purchaseOrderManagedBean.purchaseOrderList}" var="PO">
                                         <tr>
                                             <td>#{PO.id}</td>
-                                            <td>
-                                                <h:outputText value="#{PO.orderDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.plant.timeZoneID}"  />
-                                                </h:outputText>
-                                            </td>
+                                            <td>#{PO.status}</td>
                                             <td> <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
                                                     <f:attribute name="POid" value="#{PO.id}" />
                                                 </h:commandButton>
