@@ -141,7 +141,7 @@ public class MonthlyProductionPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "MonthlyProductionPlan[ id=" + this.manufacturingFacility.getId() + ", " + this.furnitureModel.getId() + ", " + this.month + ", " + this.year + " ]";
+        return this.manufacturingFacility.getId() + "|" + this.furnitureModel.getId() + "|" + this.month + "|" + this.year;
     }
 
 

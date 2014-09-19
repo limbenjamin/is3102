@@ -21,4 +21,5 @@ public interface MaterialResourcePlanningView {
         public HashMap<String, String>
             getAuthorizedMF(String AUTH);
         JDataTable<String> getDemandPlanningTable(String MF);
+        boolean changeMPP(String mppID, int newValue);
 }

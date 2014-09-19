@@ -33,10 +33,62 @@ public class JDataTable<T> implements Serializable {
         }
     }
 
-    public static class Row<T> implements Serializable {
+    public static class Cell implements Serializable {
 
-        public ArrayList<T> rowdata = new ArrayList<T>();
-        public boolean Editable=false;
+        private String EditCmd;
+        public String Value = null;
+        private String displaytype="String";
+
+        public Cell(String s) {
+            this.Value = s;
+
+        }
+
+        public Cell(String s, String displaytype) {
+            this.Value = s;
+            this.displaytype = displaytype;
+
+        }
+
+        public Cell(String s, String displaytype, String EditCmd) {
+            this.Value = s;
+            this.EditCmd = EditCmd;
+            this.displaytype = displaytype;
+
+        }
+
+        public String getEditCmd() {
+            return EditCmd;
+        }
+
+        public void setEditCmd(String EditCmd) {
+            this.EditCmd = EditCmd;
+        }
+
+        public String getValue() {
+
+            return transform(Value);
+        }
+
+        public void setValue(String Value) {
+        }
+
+        private String transform(String sx) {
+            if (displaytype.equals("String")) {
+
+                return (sx);
+            } else if (displaytype.equals("percentage.2dp")) {
+
+                return String.valueOf((Math.round(Double.valueOf(sx.toString()) * 10000) / 100.00)) + "%";
+            }
+            return (sx);
+        }
+    }
+
+    public static class Row<V> implements Serializable {
+
+        public ArrayList<Cell> rowdata = new ArrayList<Cell>();
+        public boolean Editable = false;
 
         public Row(String dt) {
             this.displaytype = dt;
@@ -45,8 +97,26 @@ public class JDataTable<T> implements Serializable {
         public Row() {
 
         }
+
+        public Cell newCell(String s) {
+            Cell c = new Cell(s, this.displaytype);
+            rowdata.add(c);
+            return (c);
+        }
+
+        public Cell newCell(String s, String identify) {
+            Cell c = new Cell(s, this.displaytype, identify);
+            rowdata.add(c);
+            return (c);
+        }
+
         public String rowheader;
         public String rowgroup;
+        private String ColorClass;
+
+        public void setColorClass(String ColorClass) {
+            this.ColorClass = ColorClass;
+        }
 
         public String displaytype = "string";
 
@@ -61,33 +131,27 @@ public class JDataTable<T> implements Serializable {
             if (i == -1) {
                 return (Any) rowheader;
             }
-            return (Any) rowdata.get(i);
+            return (Any) rowdata.get(i).getValue();
         }
 
-        public String getStrValue(int i) {
+        public Cell getCell(int i) {
             if (i == -2) {
-                return (String) rowgroup;
+                Cell r_cell = new Cell(this.rowgroup);
+
+                return r_cell;
+
             }
             if (i == -1) {
-                return (String) rowheader;
+                Cell r_cell = new Cell(this.rowheader);
+
+                return r_cell;
+
             }
-            return (String) transform(rowdata.get(i).toString());
+            return rowdata.get(i);
         }
 
-        public String transform(String s) {
-            try {
-                switch (displaytype) {
-                    case "string":
-                        return s;
-                    case "percentage.2dp":
-                        
-                        return String.valueOf(Math.round(Double.valueOf(s) * 10000) / 100.00) + "%";
-
-                }
-            } catch (Exception ex) {
-
-            }
-            return s;
+        public String getColorClass() {
+            return ColorClass;
         }
 
     }
@@ -111,8 +175,8 @@ public class JDataTable<T> implements Serializable {
         return (r);
 
     }
-    
-        public JDataTable.Row NewRowDefered() {
+
+    public JDataTable.Row NewRowDefered() {
         Row<T> r = new Row<T>();
         return (r);
 
@@ -137,21 +201,6 @@ public class JDataTable<T> implements Serializable {
         return Internalrows.get(i);
     }
 
-    public T getCell(int i, int j) {
-        return (T) ((Row) Internalrows.get(i)).rowdata.get(j);
-    }
-
-    public String getCellStr(int i, int j) {
-        return ((Row) Internalrows.get(i)).rowdata.get(j).toString();
-    }
-
-    public void setCell(int i, int j, Object Value) {
-        ((Row) Internalrows.get(i)).rowdata.set(j, Value);
-    }
-
-    public void setCell(Object Value) {
-        ArrayList<T> cr = getRow(Internalrows.size() - 1).rowdata;
-        cr.add((T) Value);
-    }
+   
 
 }

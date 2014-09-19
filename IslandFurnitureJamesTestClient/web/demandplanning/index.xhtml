@@ -6,8 +6,23 @@
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Island Furniture | Demand Planning</title>
+        <style>
+            .summary{
+                background-color: yellowgreen;
+            }
+            .editable{
+                background-color: white;
+            }
+
+            .normal{
+                background-color: grey;
+            }
+
+        </style>
     </h:head>
-    <h:body>            <h:form id="form">
+    <h:body>  
+        <p:outputLabel value="#{DemandPlanning.updateTable()}"/>
+        <h:form id="form">
 
 
             <div style="border:1px solid black; width:auto;padding-bottom: 10px">
@@ -30,16 +45,18 @@
                 </h3>
 
 
-                <p:dataTable id="MPP_dt" widgetVar="MPPCell" var="MPP" value="#{DemandPlanning.dtRows}" resizableColumns="true">
+                <p:dataTable rowStyleClass="#{MPP.colorClass}" id="MPP_dt" widgetVar="MPPCell" var="MPP" value="#{DemandPlanning.dtRows}" resizableColumns="true" rowIndexVar="ri">
 
 
                     <p:columns  value="#{DemandPlanning.dates_columns}" var="column" columnIndexVar="colIndex" >
                         <f:facet name="header">
                             <h:outputText value="#{column.header}" />
                         </f:facet>
-                        <p:outputLabel value="#{MPP.getStrValue((column.index))}" style="width:96%" rendered="#{!(MPP.getStrValue(-1)=='Planned Quantity' and colIndex>1)}"/>
-                        <p:inputText  value="#{MPP.getStrValue((column.index))}" style="width:96%"  rendered="#{(MPP.getStrValue(-1)=='Planned Quantity' and colIndex>1)}" />
-                        
+                        <p:outputLabel value="#{MPP.getCell(column.index)['value']}" style="width:96%" rendered="#{!(MPP.getCell(-1)['value']=='Planned Quantity' and column.index>-1 and MPP.getCell(column.index)['value']!='LOCKED')}"/>
+                        <h:inputText valueChangeListener="#{DemandPlanning.updateMPP}" alt="#{MPP.getCell(column.index)['editCmd']}" value="#{MPP.getCell(column.index)['value']}"  style="width:96%"  rendered="#{MPP.getCell(-1)['value']=='Planned Quantity' and MPP.getCell(column.index)['value']!='LOCKED'}">
+
+                        </h:inputText>
+
 
 
                     </p:columns>
@@ -50,8 +67,11 @@
             <br/>
             <div style="border:1px solid black; width:800px;padding-bottom: 10px">
                 <h3>Options</h3>
-                <p:commandButton value="Auto-Mode Plan" actionListener="#{DemandPlanning.automaticPlanning()}"/>
-                <p:commandButton value="Manual Edit" actionListener="#{DemandPlanning.automaticPlanning()}"/>
+
+                <h:button value="Auto-Mode Plan">
+                    <p:ajax event="click" update="MPP_dt" listener="#{DemandPlanning.automaticPlanning}" />
+                </h:button>
+                <h:commandButton value="Manual Edit"/>
             </div>
 
         </h:form></h:body>

@@ -19,6 +19,14 @@ public class MonthlyProductionPlanPK implements Serializable {
     private Long furnitureModel;
     private Month month;
     private Integer year;
+    
+    public MonthlyProductionPlanPK(Long MF,Long fm,Month m,Integer year){
+        this.manufacturingFacility=MF;
+        this.furnitureModel=fm;
+        this.month=m;
+        this.year=year;
+        
+    }
 
     @Override
     public boolean equals(Object object) {
