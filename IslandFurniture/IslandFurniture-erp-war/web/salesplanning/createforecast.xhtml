@@ -46,12 +46,13 @@
                         </p:columns>
                         <p:columns value="#{mssrPairedEntry.second.second}" var="mssr">
                             <f:facet name="header">
-                                <h:outputText value="#{mssr.month} #{mssr.year}" />
+                                <h:outputText value="#{mssr.month}" />
+                                <br />
+                                <h:outputText value="#{mssr.year}" />
                             </f:facet>
                             <p:inputText value="#{mssr[label.first]}" />
                         </p:columns>
                     </p:dataTable>
-
                 </p:tab>
             </p:accordionPanel>
         </h:form>

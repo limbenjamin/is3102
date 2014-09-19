@@ -39,7 +39,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    private TimeZone TimeZone;
 
     private List<Transaction> getStoreTransactions(Store store, Month month, int year) {
         TimeZone tz = TimeZone.getTimeZone(store.getTimeZoneID());
@@ -244,11 +243,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         yearsOfMssr.sort(null);
 
         return yearsOfMssr;
-    }
-    
-    @Override
-    public Stock getStockById(long stockId){
-        return em.find(Stock.class, stockId);
     }
 
 }

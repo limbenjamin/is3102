@@ -47,6 +47,7 @@ public class ViewMssrManagedBean implements Serializable {
     private Staff staff;
     private CountryOffice co;
 
+    private List<Couple<String, String>> mssrLabels = new ArrayList();
     private List<Couple<Stock, List<MonthlyStockSupplyReq>>> mssrList;
 
     public ViewMssrManagedBean() {
@@ -60,7 +61,11 @@ public class ViewMssrManagedBean implements Serializable {
         Plant plant = staff.getPlant();
 
         if (plant instanceof CountryOffice) {
+            // Populate MSSR labels and formatted labels
+            this.mssrLabels = MonthlyStockSupplyReq.getLabels();
+            
             this.co = (CountryOffice) plant;
+            
             this.yearsOfMssr = salesForecastBean.getYearsOfMssr(co);
             this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size() - 1);
             this.updateMssrList();
@@ -72,12 +77,9 @@ public class ViewMssrManagedBean implements Serializable {
 
             }
         }
-
-        System.out.println("Init()");
     }
 
     public void updateMssr(AjaxBehaviorEvent event) {
-        System.out.println("updateMssr");
         this.updateMssrList();
     }
 
@@ -107,6 +109,14 @@ public class ViewMssrManagedBean implements Serializable {
 
     public void setMssrList(List<Couple<Stock, List<MonthlyStockSupplyReq>>> mssrList) {
         this.mssrList = mssrList;
+    }
+
+    public List<Couple<String, String>> getMssrLabels() {
+        return mssrLabels;
+    }
+
+    public void setMssrLabels(List<Couple<String, String>> mssrLabels) {
+        this.mssrLabels = mssrLabels;
     }
 
 }

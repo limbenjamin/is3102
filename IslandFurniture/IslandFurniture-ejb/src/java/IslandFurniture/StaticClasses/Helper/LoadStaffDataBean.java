@@ -11,7 +11,6 @@ import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
-import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -55,7 +54,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
             { "amelia", "pass", "Amelia J. Decker", "AmeliaJDecker@rhyta.com", "785-527-3170","China","Su Zhou - Su Zhou Industrial Park"},
             { "john", "pass", "John P. Akin", "JohnPAkin@dayrep.com", "504-348-5535","Indonesia","Surabaya"},
             { "francisco", "pass", "Francisco D. Jackson", "FranciscoDJackson@rhyta.com", "203-318-1598","Cambodia","Krong Chbar Mon"},  
-            { "alan", "pass", "Alan D. Sykora", "AlanDSykora@armyspy.com", "806-533-8110","Vietnam","Chiang Mai"},  
+            { "alan", "pass", "Alan D. Sykora", "AlanDSykora@armyspy.com", "806-533-8110","Vietnam","Ho Chi Minh"},  
             { "alfonso", "pass", "Alfonso D. Miller", "AlfonsoDMiller@jourrapide.com", "218-299-6704","Canada","Toronto"},  
             { "brenda", "pass", "Brenda D. Benbow", "BrendaDBenbow@teleworm.us", "406-945-7121","Indonesia","Surabaya"},  
             { "daniel", "pass", "Daniel D. Jackson", "DanielDJackson@jourrapide.com", "615-727-7075","Indonesia","Surabaya"},  

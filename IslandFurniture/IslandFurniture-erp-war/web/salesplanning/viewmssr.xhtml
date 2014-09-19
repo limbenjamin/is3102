@@ -15,68 +15,22 @@
             <br /><br />
             <p:accordionPanel id="mssrTable" value="#{viewMssrManagedBean.mssrList}" var="mssrEntry" multiple="true">
                 <p:tab title="#{mssrEntry.first.name} (id:#{mssrEntry.first.id})">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <th>
-                                        <h:outputText value="#{stockMssr.month} #{stockMssr.year}" />
-                                    </th>
-                                </ui:repeat>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Quantity Forecasted</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.qtyForecasted}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Planned Inventory</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.plannedInventory}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Quantity Sold</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.qtySold}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Actual Inventory</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.actualInventory}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Variance Offset</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.varianceOffset}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                            <tr>
-                                <th>Quantity Requested</th>
-                                <ui:repeat value="#{mssrEntry.second}" var="stockMssr">
-                                    <td>
-                                        <h:outputText value="#{stockMssr.qtyRequested}" />
-                                    </td>
-                                </ui:repeat>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <p:dataTable value="#{viewMssrManagedBean.mssrLabels}" var="label">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Month" />
+                            </f:facet>
+                            <h:outputText value="#{label.second}" />
+                        </p:column>
+                        <p:columns value="#{mssrEntry.second}" var="mssr">
+                            <f:facet name="header">
+                                <h:outputText value="#{mssr.month}" />
+                                <br />
+                                <h:outputText value="#{mssr.year}" />
+                            </f:facet>
+                            <h:outputText value="#{mssr[label.first]}" />
+                        </p:columns>
+                    </p:dataTable>
                 </p:tab>
             </p:accordionPanel>
         </h:form>

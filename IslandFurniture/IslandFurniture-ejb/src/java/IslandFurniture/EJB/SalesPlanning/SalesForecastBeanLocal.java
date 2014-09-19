@@ -32,6 +32,4 @@ public interface SalesForecastBeanLocal {
 
     public List<Integer> getYearsOfMssr(CountryOffice co);
 
-    public Stock getStockById(long stockId);
-
 }
