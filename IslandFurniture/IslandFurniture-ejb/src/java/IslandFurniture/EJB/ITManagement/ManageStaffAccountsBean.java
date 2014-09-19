@@ -101,11 +101,11 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         }
         em.persist(staff);
         em.flush();
-        try {
+        /*try {
             SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Account created", "Your new account has been created with password: "+password);
         } catch (Exception ex) {
             Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
     
     @Override

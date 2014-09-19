@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,8 +28,12 @@ public class ProcurementContract implements Serializable {
     private Long id;
     @OneToOne
     private Supplier supplier;
-    @OneToMany(mappedBy="procurementContract")
+    @OneToMany(mappedBy="procurementContract", cascade={CascadeType.PERSIST})
     private List<ProcurementContractDetail> procurementContractDetails;
+    
+    public ProcurementContract() {
+        
+    }
 
     public Long getId() {
         return id;

@@ -6,6 +6,9 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.ProcuredStock;
+import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,5 +27,15 @@ public interface SupplierManagerLocal {
     public void editSupplier(Long id, String name, String countryName);
 
     public void deleteSupplier(Long id);
+
+    public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID);
+
+    public void deleteProcurementContractDetail(Long id);
+
+    public List<ProcuredStock> displayProcuredStock();
+
+    public List<ManufacturingFacility> displayManufacturingFacility();
+
+    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID);
     
 }
