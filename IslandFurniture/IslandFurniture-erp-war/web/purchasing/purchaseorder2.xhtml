@@ -19,7 +19,7 @@
                             <tr>
                                 <th>Purchase Order ID</th>
                                 <th>Order Date</th>
-                                <th>Supplier</th>                                
+                                <th>Status</th>                                
                                 <th>Supply To</th>
                                 <th>Save</th>
                             </tr>
@@ -27,11 +27,14 @@
                                 <tr>
                                     <td>#{purchaseOrderManaged2Bean.purchaseOrder.id}</td>
                                     <td><h:inputText id="eventTimeString" value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate}" p:type="date" class="form-control"></h:inputText></td>
-                                    <td><h:selectOneMenu id="supplierId" class="form-control" value="#{pod.supplier.id}">
-                                            <f:selectItems value="#{purchaseOrderManaged2Bean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    <td>
+                                        <h:selectOneMenu id="status" class="form-control" value="#{po.status}">
+                                            <f:selectItem itemValue="planned" itemLabel="Planned" />
+                                            <f:selectItem itemValue="confirmed" itemLabel="Confirmed" />
                                         </h:selectOneMenu>
                                     </td>
-                                    <td><h:selectOneMenu id="plantId" class="form-control" value="#{pod.plant.id}">
+                                    <td>
+                                        <h:selectOneMenu id="plantId" class="form-control" value="#{po.plant.id}">
                                             <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
                                         </h:selectOneMenu>
                                     </td>
@@ -86,15 +89,6 @@
                                     </ui:repeat>
                                 </h:form> 
                             </table>
-                        </section>
-
-
-                        <section name="Confirm & Send Order">     
-                            <h:form class="form-horizontal">
-                                <button type="button" class="btn btn-round btn-success pull-right">
-                                    Edit Links
-                                </button>
-                            </h:form>
                         </section>
                     </div>
                 </div>

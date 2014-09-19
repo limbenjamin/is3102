@@ -5,17 +5,23 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Manufacturing.MaterialResourcePlanningView;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import IslandFurniture.EJB.Manufacturing.MaterialResourcePlanningView;
 import IslandFurniture.WAR.HELPER.helper;
 import IslandFurnitures.DataStructures.JDataTable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 @SessionScoped
@@ -96,6 +102,11 @@ public class ViewProductionPlanning implements Serializable {
             mpp.CreateProductionPlanFromForecast();
         } catch (Exception ex) {
         }
+
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(".");
+        } catch (IOException ex) {
+        }
     }
 
     public List<ColumnModel> getDates_columns() {
@@ -122,6 +133,16 @@ public class ViewProductionPlanning implements Serializable {
 
         public int getIndex() {
             return index;
+        }
+    }
+
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+
+        if (newValue != null && !newValue.equals(oldValue)) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
 

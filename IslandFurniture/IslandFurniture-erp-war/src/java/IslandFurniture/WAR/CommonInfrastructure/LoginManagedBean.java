@@ -9,7 +9,9 @@ package IslandFurniture.WAR.CommonInfrastructure;
  *
  * @author Benjamin
  */
-import IslandFurniture.EJB.CommonInfrastructure.*;
+
+import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
@@ -27,7 +29,6 @@ import javax.servlet.http.HttpSession;
 public class LoginManagedBean implements Serializable {
 
     private static final long serialVersionUID = 5443351151396868724L;
-    private String absolutepath = "/IslandFurniture-erp-war/";
     private Staff staff;
     private String username = null;
     private String password = null;
@@ -37,11 +38,12 @@ public class LoginManagedBean implements Serializable {
     private Integer notificationListSize;
     private String menu;
     private Privilege privilege;
+    private Integer count;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     @EJB
-    private ManageUserAccountInformationBean muaib;
+    private ManageUserAccountBeanLocal muab;
     @EJB
     private ManageStaffAccountsBeanLocal msab;
     @EJB
@@ -52,9 +54,10 @@ public class LoginManagedBean implements Serializable {
         if (result) {
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
-            staff = muaib.getStaff(username);
+            staff = muab.getStaff(username);
             notificationList = staff.getNotifications();
             notificationListSize = notificationList.size();
+            count = 0;
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             menu = new String();
@@ -104,11 +107,22 @@ public class LoginManagedBean implements Serializable {
     }
     
     public void pullNotification() {
+        staff = muab.getStaff(username);
         notificationList = staff.getNotifications();
         if (notificationList.size() != notificationListSize){
+            count++;
+            notificationListSize = notificationList.size();
             notification = notificationList.get(notificationList.size()-1);
             this.setNotification(notification);
         }
+    }
+    
+    public void pullCount() {
+        
+    }
+    
+    public void resetCount() {
+        count = 0;
     }
 
     public String getUsername() {
@@ -147,14 +161,6 @@ public class LoginManagedBean implements Serializable {
         return serialVersionUID;
     }
 
-    public String getAbsolutepath() {
-        return absolutepath;
-    }
-
-    public void setAbsolutepath(String absolutepath) {
-        this.absolutepath = absolutepath;
-    }
-
     public List<Notification> getNotificationList() {
         return notificationList;
     }
@@ -163,12 +169,12 @@ public class LoginManagedBean implements Serializable {
         this.notificationList = notificationList;
     }
 
-    public ManageUserAccountInformationBean getMuaib() {
-        return muaib;
+    public ManageUserAccountBeanLocal getMuaib() {
+        return muab;
     }
 
-    public void setMuaib(ManageUserAccountInformationBean muaib) {
-        this.muaib = muaib;
+    public void setMuaib(ManageUserAccountBeanLocal muab) {
+        this.muab = muab;
     }
 
     public Notification getNotification() {
@@ -209,6 +215,30 @@ public class LoginManagedBean implements Serializable {
 
     public void setMenu(String menu) {
         this.menu = menu;
+    }
+
+    public Privilege getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(Privilege privilege) {
+        this.privilege = privilege;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public ManagePrivilegesBeanLocal getMpb() {
+        return mpb;
+    }
+
+    public void setMpb(ManagePrivilegesBeanLocal mpb) {
+        this.mpb = mpb;
     }
 
     

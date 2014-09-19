@@ -59,7 +59,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
                     M.setParameter("stk", SS.getStock());
                     int max = (int) M.getSingleResult();
                     Random r = new Random();
-                    int Capacity =  (int)(max*0.5) + r.nextInt((int)(max/2.0));
+                    int Capacity =  (int)(max*5) + r.nextInt((int)(max*3));
                     Capacity=Capacity/30;
                     mpp.createOrUpdateCapacity(SS.getStock().getName(), MF.getName(), Capacity);
 

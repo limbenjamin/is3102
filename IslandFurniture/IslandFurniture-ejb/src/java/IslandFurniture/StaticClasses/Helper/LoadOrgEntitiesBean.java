@@ -181,7 +181,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             country = this.addCountry("Vietnam");
             if (country != null) {
                 co = this.addCountryOffice("Vietnam", country, "Asia/Ho_Chi_Minh");
-                this.addManufacturingFacility("Chiang Mai", country, "Asia/Ho_Chi_Minh", co);
+                this.addManufacturingFacility("Ho_Chi_Minh", country, "Asia/Ho_Chi_Minh", co);
             }
 
             country = this.addCountry("Laos");

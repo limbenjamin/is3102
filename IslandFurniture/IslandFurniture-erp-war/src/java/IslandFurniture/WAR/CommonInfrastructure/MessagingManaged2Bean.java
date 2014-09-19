@@ -8,7 +8,7 @@ package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.Message;
 import IslandFurniture.EJB.Entities.MessageThread;
 import IslandFurniture.EJB.Entities.Staff;
@@ -47,7 +47,7 @@ public class MessagingManaged2Bean implements Serializable {
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
     @EJB 
     private ManageNotificationsBeanLocal notificationBean;  
     
@@ -90,7 +90,7 @@ public class MessagingManaged2Bean implements Serializable {
       Iterator<Staff> iterator = staffList.iterator();
         while (iterator.hasNext()) {
                 staff = (Staff) iterator.next();
-		notificationBean.createNewNotificationForStaff("Messaging System", "New message received in "+messageThread.getTitle(), "/common/messaging.xhtml", "Read", staff);
+		notificationBean.createNewNotificationForStaff("New Message", username + " : " + content, "/common/messaging2.xhtml?id="+id, "Read", staff);
 	}
       return "messaging2";
     }
@@ -163,11 +163,11 @@ public class MessagingManaged2Bean implements Serializable {
         this.messageBean = messageBean;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 

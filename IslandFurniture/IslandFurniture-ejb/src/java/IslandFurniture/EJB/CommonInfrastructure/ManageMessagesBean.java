@@ -39,7 +39,7 @@ public class ManageMessagesBean implements ManageMessagesBeanLocal {
     private List<Staff> listStaff;
     
     @EJB
-    private ManageUserAccountInformationBean staffbean;
+    private ManageUserAccountBeanLocal staffbean;
 
     @Override
     public void ManageMessagesBean(){

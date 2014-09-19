@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -72,7 +72,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     public ManageStorageLocationLocal msll;
 
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
 
     @PostConstruct
     public void init() {
@@ -81,9 +81,13 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
 
         this.goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        
+        if (goodsReceiptDocumentId == null) goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
+        
         if (goodsReceiptDocumentId != null) {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
+        
         System.out.println("@Init GoodsReceiptDocumentManagedBean:  this is the docomentid" + goodsReceiptDocumentId);
         stockList = mgrl.viewStock();
         goodsReceiptDocumentDetaiList = mgrl.viewGoodsReceiptDocumentDetail();
@@ -312,11 +316,11 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.msll = msll;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 

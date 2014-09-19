@@ -9,6 +9,7 @@ package IslandFurniture.WAR.SupplyChain;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -29,6 +31,7 @@ public class MaterialManagedBean implements Serializable {
     private List<Material> materialList = null;
     private int rowCount = 1;
     private List<Material> filteredList = null;
+    private Material material = null;
 
     public List<Material> getFilteredList() {
         return filteredList;
@@ -64,46 +67,37 @@ public class MaterialManagedBean implements Serializable {
     
     public String addMaterial() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("MaterialManagedBean: 1");
+        System.out.println("MaterialManagedBean.addMaterial()");
         String name = request.getParameter("addMaterialForm:name");
-        Double weight = Double.parseDouble(request.getParameter("addMaterialForm:weight"));
+        String temp = request.getParameter("addMaterialForm:weight");
+        
+        Double weight;
+        if(!temp.isEmpty()) {
+            System.out.println("Temp is " + temp);
+            weight = Double.parseDouble(temp);
+        }
+        else 
+            weight = 0.0;
         stockManager.addMaterial(name, weight);
         return "material";
     }
-    public boolean editMaterial() {
+    public String editMaterial(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String input;
-        Long id = null;
-        String name = null;
-        Double weight = null;
-        input = request.getParameter("editMaterialForm:id");
-        if(!input.isEmpty())
-            id = Long.parseLong(input);
-        
-        input = request.getParameter("editMaterialForm:name");
-        if(!input.isEmpty())
-            name = input;
-        
-        input = request.getParameter("editMaterialForm:weight");
-        if(!input.isEmpty())
-            weight = Double.parseDouble(input);
-        
-        stockManager.updateMaterial(id, name, weight);
-        return true;
+        System.out.println("MaterialManagedBean.editMaterial()");
+        material = (Material) event.getComponent().getAttributes().get("toEdit");
+        stockManager.updateMaterial(material.getId(), material.getName(), material.getMaterialWeight());
+        return "material";
     }
     public List<Material> displayMaterialList() {
         System.out.println("MaterialManagedBean.displayMaterialList(): 1");
         materialList = stockManager.displayMaterialList();
         return materialList;
     }
+
     public String deleteMaterial() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String materialName = request.getParameter("deleteMaterialForm:name");
-        stockManager.deleteMaterial(materialName);
+        System.out.println("MaterialManagedBean.deleteMaterial()");
+        Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("materialID"));
+        stockManager.deleteMaterial(id);
         return "material";
-    }
-    public int rowCounter() {
-        System.out.println(rowCount);
-        return rowCount++;
-    }
+    } 
 }

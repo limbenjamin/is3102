@@ -21,7 +21,11 @@
         <script src="#{application.contextPath}/assets/plugins/modernizr.js"></script>
     </h:head>
     <h:body>
-
+        <h:outputScript>
+            function callbutton(){ 
+                document.getElementById("Frm1" + ":vendbtn").click();
+            } 
+        </h:outputScript>
         <div class="app">
             <!-- top header -->
             <header class="header header-fixed navbar">
@@ -60,7 +64,10 @@
                         <a href="#" data-toggle="dropdown">
                             <i class="fa fa-bell"></i>
                             <div class="badge badge-top">
-                                <span>3</span>
+                                <h:form id="updateCount">
+                                    <span>#{loginManagedBean.count}</span>
+                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount}" update="updateCount" />
+                                </h:form>
                             </div>
                         </a>
                         <div class="dropdown-menu">
@@ -68,6 +75,18 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
+                                    <h:form id="newNotification"> 
+                                        <li class="list-group-item">
+                                            <a href="#{application.contextPath}#{loginManagedBean.notification.link}" onclick="callbutton();">
+                                                <div class="m-body">
+                                                    <small><h6>#{loginManagedBean.notification.title}:</h6></small>
+                                                    <span>#{loginManagedBean.notification.content}</span><br></br>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                    </h:form>
                                     <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
                                         <li class="list-group-item">
                                             <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}">
@@ -79,18 +98,6 @@
                                             </a>
                                         </li>
                                     </c:forEach>
-                                    <h:form id="newNotification"> 
-                                        <li class="list-group-item">
-                                            <a href="#{application.contextPath}#{loginManagedBean.notification.link}">
-                                                <div class="m-body">
-                                                    <small><h6>#{loginManagedBean.notification.title}:</h6></small>
-                                                    <span>#{loginManagedBean.notification.content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
-                                    </h:form>
                                 </ul>
                             </div>
                         </div>
@@ -172,7 +179,10 @@
                 <!-- /main content -->
             </section>
         </div>
-
+        <h:form id="Frm1">
+            <h:commandButton id="vendbtn" value="" action="#{loginManagedBean.resetCount}" immediate="true" 
+            style="visibility:hidden;" /> 
+        </h:form> 
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>

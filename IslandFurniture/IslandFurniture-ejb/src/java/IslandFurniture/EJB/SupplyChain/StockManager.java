@@ -10,9 +10,10 @@ import IslandFurniture.EJB.Entities.BOM;
 import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import IslandFurniture.EJB.Entities.RetailItem;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findMaterialByName;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findRetailItemByName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -67,8 +68,8 @@ public class StockManager implements StockManagerLocal {
     public boolean updateMaterial(Long id, String name, Double weight) {
         Material material;
         try {
+            System.out.println("StockManager.updateMaterial()");
             material = findMaterialByName(em, name);
-            System.out.println(material.getName());
             if(weight != null) {
                 System.out.println("Changing weight to " + weight);
                 material.setMaterialWeight(weight);
@@ -79,10 +80,12 @@ public class StockManager implements StockManagerLocal {
             return false;
         }
     }
-    public void deleteMaterial(String materialName) {
+    public void deleteMaterial(Long materialID) {
         Material material;
         try{
-            material = findMaterialByName(em, materialName);
+            System.out.println("StockManager.deleteMaterial()");
+            material = em.find(Material.class, materialID);
+            System.out.println("Don't forget to check for constraints");
             material.setHidden(true);
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -200,6 +203,66 @@ public class StockManager implements StockManagerLocal {
         } catch(NoResultException NRE) {
             System.err.println("No Furniture called " + furnitureName);
             return null;
+        }
+    }
+    public List<RetailItem> displayItemList() {
+        List<RetailItem> itemList;
+        try {
+            itemList = em.createNamedQuery("getAllRetailItems", RetailItem.class).getResultList();
+            return itemList;
+        } catch(NoResultException NRE) {
+            System.err.println("No results found");
+            return null;
+        }
+        
+    }
+    public void editRetailItem(Long itemID, String itemName, Double itemPrice) {
+        RetailItem item;
+        try {
+            System.out.println("StockManager.editRetailItem()");
+            item = em.find(RetailItem.class, itemID);
+            item.setName(itemName);
+            item.setPrice(itemPrice);
+        } catch(Exception ex) {
+            System.out.println("Something went wrong");
+        }
+    }
+    public boolean deleteRetailItem(Long itemID) {
+        RetailItem item;
+        try {
+            System.out.println("StockManager.deleteRetailItem()");
+            item = em.find(RetailItem.class, itemID);
+            if(item.getSoldBy() != null) {
+                System.err.println("Can't delete " + item.getName() +".\n But still gonna delete for now to remind myself I need to perform logical deletion");
+                em.remove(item);
+                em.flush();
+                return false;
+            } else {
+                em.remove(item);
+                em.flush();
+                return true;
+            }
+        } catch(Exception ex) {
+            System.err.println("Something went wrong");
+            return false;
+        }
+    }
+    public boolean addRetailItem(String itemName, Double itemPrice) {
+        RetailItem item;
+        try {
+            System.out.println("StockManager.addRetailItem()");
+            item = findRetailItemByName(em, itemName);
+            if(item == null) {
+                item = new RetailItem();
+                item.setName(itemName);
+                item.setPrice(itemPrice);
+                em.persist(item);
+                return true;
+            } else
+                return false;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return false;
         }
     }
 }

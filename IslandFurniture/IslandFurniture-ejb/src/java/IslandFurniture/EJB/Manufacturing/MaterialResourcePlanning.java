@@ -7,7 +7,6 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
@@ -58,6 +57,7 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
         String Cur_FM = "";
         ArrayList<String> demand_row = null;
         ArrayList<String> planned_row = null;
+        ArrayList<String> max_CAP = null;
         ArrayList<String> cc_row = null;
 //Finally Summarize MF Capacity
 
@@ -80,8 +80,13 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
                 new_Row.rowgroup = Cur_FM;
                 planned_row = new_Row.rowdata;
 
+                new_Row = dt.NewRow();
+                new_Row.rowheader = "Month Max Capacity";
+                new_Row.rowgroup = Cur_FM;
+               max_CAP = new_Row.rowdata;
+
                 new_Row = dt.NewRow("percentage.2dp");
-                new_Row.rowheader = "Used Capacity";
+                new_Row.rowheader = "Required Capacity";
                 new_Row.rowgroup = Cur_FM;
                 cc_row = new_Row.rowdata;
             }
@@ -94,9 +99,11 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
             //Start off with Demand Requirement.
             demand_row.add(String.valueOf(QueryMethods.getTotalDemand(em, pp, MF)));
             planned_row.add(String.valueOf(pp.getQTY()));
-            double used_capacity = (QueryMethods.getTotalDemand(em, pp, MF) + 0.0) / pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getQty();
+            double used_capacity = (QueryMethods.getTotalDemand(em, pp, MF) + 0.0) / pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear());
             cc_row.add(String.valueOf(used_capacity));
-
+            if (pp.isLocked()){max_CAP.add("LOCKED");}else{
+            max_CAP.add(String.valueOf(pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear())));
+            }
         }
 
         dt.Internalrows.add(fcc_Row);

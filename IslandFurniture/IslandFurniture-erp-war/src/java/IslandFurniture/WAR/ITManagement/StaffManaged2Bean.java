@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.ITManagement;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
@@ -42,7 +42,7 @@ public class StaffManaged2Bean  implements Serializable  {
     private Role role;
     
     @EJB
-    private ManageUserAccountInformationBean muaib;
+    private ManageUserAccountBeanLocal muaib;
     @EJB
     private ManageRolesBeanLocal mrbl;
     @EJB
@@ -118,13 +118,14 @@ public class StaffManaged2Bean  implements Serializable  {
         this.name = name;
     }
 
-    public ManageUserAccountInformationBean getMuaib() {
+    public ManageUserAccountBeanLocal getMuaib() {
         return muaib;
     }
 
-    public void setMuaib(ManageUserAccountInformationBean muaib) {
+    public void setMuaib(ManageUserAccountBeanLocal muaib) {
         this.muaib = muaib;
     }
+
 
     public Long getStaffId() {
         return staffId;

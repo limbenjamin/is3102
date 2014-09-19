@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SalesPlanning;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
@@ -39,7 +39,7 @@ public class ViewMssrManagedBean implements Serializable {
     private SalesForecastBeanLocal salesForecastBean;
 
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBeanLocal staffBean;
 
     private int yearOfMssr;
     private List<Integer> yearsOfMssr = new ArrayList();

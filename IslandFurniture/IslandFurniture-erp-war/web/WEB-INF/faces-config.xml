@@ -1,8 +1,8 @@
-<?xml version='1.0' encoding='UTF-8'?>  
-<faces-config version="2.2"
-              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+              version="2.2">
+
     <navigation-rule>
         <navigation-case>
             <from-outcome>dash</from-outcome>
@@ -19,6 +19,12 @@
         <navigation-case>
             <from-outcome>messaging2</from-outcome>
             <to-view-id>/common/messaging2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{messagingManaged2Bean.id}</value>  
+                </view-param>  
+            </redirect> 
         </navigation-case>
         <navigation-case>
             <from-outcome>broadcast</from-outcome>
@@ -76,9 +82,21 @@
             <from-outcome>goodsissueddocument</from-outcome>
             <to-view-id>/supplychain/goodsissueddocument.xhtml</to-view-id>
         </navigation-case>
-          <navigation-case>
-            <from-outcome>stockunit</from-outcome>
-            <to-view-id>/supplychain/stockunit.xhtml</to-view-id>
-        </navigation-case>     
+        <navigation-case>
+            <from-outcome>inventorytransfer</from-outcome>
+            <to-view-id>/supplychain/inventorytransfer.xhtml</to-view-id>
+        </navigation-case>       
+        <navigation-case>
+            <from-outcome>inventorymonitoring_location</from-outcome>
+            <to-view-id>/supplychain/inventorymonitoring_location.xhtml</to-view-id>
+        </navigation-case>    
+        <navigation-case>
+            <from-outcome>inventorymonitoring_stock</from-outcome>
+            <to-view-id>/supplychain/inventorymonitoring_stock.xhtml</to-view-id>
+        </navigation-case> 
+        <navigation-case>
+            <from-outcome>retailItem</from-outcome>
+            <to-view-id>/knowledge/retailItem.xhtml</to-view-id>
+        </navigation-case> 
     </navigation-rule>
 </faces-config>

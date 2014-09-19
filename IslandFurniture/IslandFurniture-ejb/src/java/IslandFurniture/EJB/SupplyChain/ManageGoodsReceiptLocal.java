@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface ManageGoodsReceiptLocal {
 
-    void createGoodsReceiptDocument(Plant plant, Calendar postingDate);
+    GoodsReceiptDocument createGoodsReceiptDocument(Plant plant, Calendar postingDate);
 
     void createGoodsReceiptDocumentDetail(Long grdId, Long stockId);
 

@@ -6,15 +6,14 @@
 
 package IslandFurniture.EJB.SupplyChain;
 
-import IslandFurniture.SupplyChainModule.ManageInventoryStatusRemote;
 import javax.ejb.Stateful;
 
 /**
  *
- * @author a0101774
+ * @author KamilulAshraf
  */
 @Stateful
-public class ManageInventoryStatus implements ManageInventoryStatusRemote, ManageInventoryStatusLocal {
+public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

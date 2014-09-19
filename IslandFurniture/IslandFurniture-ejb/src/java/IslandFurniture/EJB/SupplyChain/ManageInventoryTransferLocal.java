@@ -10,9 +10,9 @@ import javax.ejb.Local;
 
 /**
  *
- * @author a0101774
+ * @author KamilulAshraf
  */
 @Local
-public interface ManageStockIssueLocal {
+public interface ManageInventoryTransferLocal {
     
 }

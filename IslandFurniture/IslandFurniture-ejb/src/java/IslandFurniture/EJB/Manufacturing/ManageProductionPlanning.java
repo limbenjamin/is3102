@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
+import javax.ejb.StatefulTimeout;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
@@ -37,6 +39,7 @@ import javax.persistence.Query;
  * manufacturing facility
  */
 @Stateful
+@StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ManageProductionPlanning implements ManageProductionPlanningRemote {
 
@@ -95,19 +98,18 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
     @Override
     //Plan Production Planning 6 months in advance that are relevant to MF
     public void CreateProductionPlanFromForecast() throws Exception {
+        int m = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, true);
+        int y = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, false);
         try {
-            int m = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, true);
-            int y = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, false);
+
             System.out.println("CreateProductionPlanFromForecast(): Planning Production Planning 6 months in advance until " + Helper.translateMonth(m).toString() + "/" + y);
-            CreateProductionPlanFromForecast(m, y);
         } catch (Exception ex) {
-            Logger.getLogger(ManageProductionPlanning.class.getName()).log(Level.SEVERE, null, ex);
         }
+        CreateProductionPlanFromForecast(m, y);
     }
 //Factory Perspective
 
     private List<MonthlyStockSupplyReq> GetRelevantMSSR(int m, int year) {
-
 
         Query l = em.createNamedQuery("StockSupplied.FindByMf");
         l.setParameter("mf", this.MF);
@@ -132,7 +134,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             }
 
         }
-        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year +" Returned:"+RelevantMSSR.size());
+        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
         return RelevantMSSR;
     }
 
@@ -233,23 +235,26 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
 
     @Override
     public double getAvailCapacity(int year, int m) throws Exception {
-        return (year - Helper.getCurrentYear()) * 12 + (m - Helper.getCurrentMonth().value);
+        return (year - Helper.getCurrentYear()) * 12 + (m - Helper.getCurrentMonth().value-FORWARDLOCK);
     }
 
     @Override
     public double getReqCapacity(int year, int m) throws Exception {
         //Calculate Required Capacity First
         double reqCapacity = 0;
+        double sum=0;
 
         for (Object o : GetRelevantMSSR(m, year)) {
             MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
             double maxCapacity = MF.findProductionCapacity((FurnitureModel) mssr.getStock()).getCapacity(mssr.getMonth(), mssr.getYear());
             reqCapacity += mssr.getQtyRequested() / maxCapacity;
+             sum+=mssr.getQtyRequested();
         }
 
         return (reqCapacity);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void balanceProductionTill() throws Exception {
         MonthlyProductionPlan latest = (MonthlyProductionPlan) em.createQuery("select mpp from MonthlyProductionPlan mpp where mpp.manufacturingFacility.name='" + MF.getName() + "' order by mpp.year*12 + mpp.month DESC").getResultList().get(0);
         balanceProductionTill(latest.getYear(), latest.getMonth().value);

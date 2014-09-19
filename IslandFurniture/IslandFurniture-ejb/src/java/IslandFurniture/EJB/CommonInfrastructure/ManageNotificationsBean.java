@@ -42,6 +42,7 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         notification.setTime(Calendar.getInstance());
         staff.getNotifications().add(notification);
         em.merge(staff);
+        em.flush();
     }
     
     @Override
@@ -54,6 +55,7 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         notification.setTime(Calendar.getInstance());
         role.getNotifications().add(notification);
         em.merge(role);
+        em.flush();
     }
     
     @Override
