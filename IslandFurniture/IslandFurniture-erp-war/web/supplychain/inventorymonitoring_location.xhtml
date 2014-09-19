@@ -13,9 +13,31 @@
                     <div class="col-md-6">
 
                         <section name="View Contents of Storage Location">
-                            <h4>View Contents of Storage Location: #{InventoryMonitoringLocationManagedBean.param}</h4><hr></hr><br></br>
+                            <h4>View Contents of Storage Location: #{inventoryMonitoringLocationManagedBean.storageBin.name}</h4><hr></hr><br></br>
                         </section>
 
+                        <section name="Table of Contents of the Stock Items">
+                                                       
+                            <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Stock</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Batch Number</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{inventoryMonitoringLocationManagedBean.stockUnitList}" var="s">
+                                            <tr>
+                                                <td>#{s.stock.name}</td>
+                                                <td>#{s.qty}</td>
+                                                <td>#{s.location}</td>
+                                                <td>#{s.batchNo}</td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            
+                        </section>       
                     </div>
                 </div>
             </ui:define>

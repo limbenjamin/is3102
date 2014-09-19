@@ -54,11 +54,13 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        getParam();
+        stockUnitList = miml.viewStockUnit(plant);
         System.out.println("Init");
+        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
+        storageBin = miml.getStorageBin(storageBinId);
     }
 
-    public String getParam() {
+        public String getParam() {
         return (String) FacesContext.getCurrentInstance().getExternalContext()
                 .getFlash().get("param");
     }
@@ -142,5 +144,8 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
+
+    
+   
 
 }
