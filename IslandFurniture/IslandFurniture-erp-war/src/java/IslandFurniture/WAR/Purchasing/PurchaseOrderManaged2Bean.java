@@ -44,7 +44,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     private Long plantId;
     
     private Calendar orderDate;
-    
+    private String status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> purchaseOrderList;
     private PurchaseOrderDetail purchaseOrderDetail;
@@ -59,7 +59,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     @EJB
     private ManageUserAccountInformationBean staffBean; 
     @EJB
-    private ManagePurchaseOrderLocal mpol;
+    public ManagePurchaseOrderLocal mpol;
     
     @PostConstruct
     public void init() {
@@ -76,6 +76,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         supplierList = mpol.viewSuppliers();
         procuredStockList = mpol.viewProcuredStocks();
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails();
+
         
         System.out.println("Init");
     }    
@@ -87,6 +88,14 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         procuredStockId = Long.parseLong("34");
         mpol.createPurchaseOrderDetail(purchaseOrderId, procuredStockId);
         System.out.println("addPurchaseOrderDetail: Created! with " + purchaseOrderId);
+        return "purchaseorder2";
+    }
+
+    public String editPurchaseOrder(ActionEvent event) throws IOException {
+        System.out.println("This is purchase Order Id:" + purchaseOrderId);
+        PurchaseOrder po = (PurchaseOrder) event.getComponent().getAttributes().get("po");
+        System.out.println("This is purchase Order Id:" + purchaseOrderId);
+        mpol.editPurchaseOrder(po.getId(), po.getShipsTo(), po.getOrderDate(), po.getStatus());
         return "purchaseorder2";
     }    
     
@@ -163,6 +172,14 @@ public class PurchaseOrderManaged2Bean implements Serializable{
 
     public void setOrderDate(Calendar orderDate) {
         this.orderDate = orderDate;
+    }    
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }    
     
     public List<PurchaseOrder> getPurchaseOrderList() {
@@ -244,4 +261,20 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     public void setMgrl(ManagePurchaseOrderLocal mpol) {
         this.mpol = mpol;
     }    
+
+    public PurchaseOrderDetail getPurchaseOrderDetail() {
+        return purchaseOrderDetail;
+    }
+
+    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        this.purchaseOrderDetail = purchaseOrderDetail;
+    }
+
+    public ManageUserAccountInformationBean getStaffBean() {
+        return staffBean;
+    }
+
+    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+        this.staffBean = staffBean;
+    }
 }

@@ -55,9 +55,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void createPurchaseOrder(Calendar orderDate) {
+    public void createPurchaseOrder(Calendar orderDate, String status) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
+        purchaseOrder.setStatus(status);
         em.persist(purchaseOrder);
         em.flush();
     }
@@ -65,7 +66,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public void createPurchaseOrderDetail(Long poId, Long psId) {
         purchaseOrderDetail = new PurchaseOrderDetail();
-        purchaseOrder = getPurchaseOrder(poId);        
+        purchaseOrder = getPurchaseOrder(poId);
         procuredStock = getProcuredStock(psId);
         purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
         purchaseOrderDetail.setProcuredStock(procuredStock);
@@ -74,10 +75,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, Supplier supplier) {
+    public void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, String status) {
         purchaseOrder = getPurchaseOrder(poId);
         purchaseOrder.setShipsTo(plant);
-        purchaseOrder.setSupplier(supplier);
+        purchaseOrder.setStatus(status);
         purchaseOrder.setOrderDate(orderDate);
         em.persist(purchaseOrder);
         em.flush();        

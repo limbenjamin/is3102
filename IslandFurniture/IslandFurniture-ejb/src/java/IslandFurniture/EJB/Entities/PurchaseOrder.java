@@ -35,6 +35,7 @@ public class PurchaseOrder implements Serializable {
     private GoodsReceiptDocument goodsReceiptDocument;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar orderDate;
+    private String status;
     
     public Long getId() {
         return id;
@@ -107,6 +108,20 @@ public class PurchaseOrder implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

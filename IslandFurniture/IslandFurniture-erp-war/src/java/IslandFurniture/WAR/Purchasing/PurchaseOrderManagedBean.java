@@ -40,7 +40,7 @@ public class PurchaseOrderManagedBean implements Serializable{
     private Long plantId;
     
     private Calendar orderDate;
-    
+    private String status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> purchaseOrderList;
     private Staff staff;
@@ -64,7 +64,7 @@ public class PurchaseOrderManagedBean implements Serializable{
         Date date = new Date();
         cal.setTime(date);
         orderDate = cal;
-        mpol.createPurchaseOrder(orderDate);
+        mpol.createPurchaseOrder(orderDate, "planned");
         return "purchaseorder";
     }   
     
@@ -113,6 +113,14 @@ public class PurchaseOrderManagedBean implements Serializable{
 
     public void setOrderDate(Calendar orderDate) {
         this.orderDate = orderDate;
+    } 
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }    
     
     public List<PurchaseOrder> getPurchaseOrderList() {

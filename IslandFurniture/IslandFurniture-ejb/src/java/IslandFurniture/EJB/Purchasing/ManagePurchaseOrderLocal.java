@@ -21,7 +21,7 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    void createPurchaseOrder(Calendar orderDate);
+    void createPurchaseOrder(Calendar orderDate, String status);
 
     void createPurchaseOrderDetail(Long poId, Long psId);
 
@@ -29,7 +29,7 @@ public interface ManagePurchaseOrderLocal {
 
     void deletePurchaseOrderDetail(Long podId);
 
-    void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, Supplier supplier);
+    void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, String status);
 
     void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
 
