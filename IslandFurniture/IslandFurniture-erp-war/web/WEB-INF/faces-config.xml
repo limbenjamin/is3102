@@ -85,6 +85,10 @@
         <navigation-case>
         <from-outcome>inventorytransfer</from-outcome>
             <to-view-id>/supplychain/inventorytransfer.xhtml</to-view-id>
+        </navigation-case>       
+          <navigation-case>
+        <from-outcome>inventorymonitoring_location</from-outcome>
+            <to-view-id>/supplychain/inventorymonitoring_location.xhtml</to-view-id>
         </navigation-case>    
     </navigation-rule>
 </faces-config>

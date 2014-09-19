@@ -1,16 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <section name="View All Location of Selected Stock">
+                            <h4>View All Location of Selected Stock</h4><hr></hr><br></br>
+                        </section>
+
+                        <section name="View Contents of Storage Location">
+                            <h4>View Contents of Storage Location</h4><hr></hr><br></br>
+                            <h:form id="viewStorageLocation" class="form-horizontal">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Storage Location</label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                                <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>                                     
+                                </div>
+                                <div class="modal-footer">
+                                    
+                                    <h:commandButton action="#{inventoryMonitoringManagedBean.viewStorageLocation}" value="View" class="btn btn-success btn-round">
+                                    </h:commandButton>
+                                </div>
+                            </h:form> 
+                        </section>
+
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>
+
+
