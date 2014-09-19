@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StorageArea;
@@ -51,7 +51,7 @@ public class storageLocationManagedBean implements Serializable {
     @EJB
     public ManageStorageLocationLocal msll;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
 
     @PostConstruct
     public void init() {
@@ -101,6 +101,7 @@ public class storageLocationManagedBean implements Serializable {
     public String editStorageBin(ActionEvent event) throws IOException {
         StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
         msll.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
+        storageBinList = msll.viewStorageBin(plant);
         return "storagelocation";
     }
 
@@ -208,11 +209,11 @@ public class storageLocationManagedBean implements Serializable {
         this.msll = msll;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 

@@ -35,7 +35,7 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     private List<Event> eventList;
     
     @EJB
-    private ManageUserAccountInformationBean staffbean;
+    private ManageUserAccountBeanLocal staffbean;
     
     @Override
     public void addEvent(String name, String description, Calendar eventTime, String username){

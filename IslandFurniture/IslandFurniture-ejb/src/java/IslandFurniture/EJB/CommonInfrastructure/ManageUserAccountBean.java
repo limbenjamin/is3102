@@ -21,7 +21,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageUserAccountInformationBean{
+public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
     
     @PersistenceContext
     EntityManager em;
@@ -29,10 +29,11 @@ public class ManageUserAccountInformationBean{
     @Resource SessionContext ctx;
     private Staff staff;
 
-    public ManageUserAccountInformationBean(){
+    public ManageUserAccountBean(){
         
     }
     
+    @Override
     public Staff getStaff(String username){
         Query query = em.createQuery("FROM Staff s where s.username=:username");
         query.setParameter("username", username);
@@ -40,11 +41,13 @@ public class ManageUserAccountInformationBean{
         return staff;
     }
     
+    @Override
     public Staff getStaffFromId(Long staffId){
         staff = (Staff) em.find(Staff.class, staffId);
         return staff;
     }
     
+    @Override
     public void modifyNote(String username, String notes){
         staff = getStaff(username);
         staff.setNotes(notes);
@@ -52,6 +55,7 @@ public class ManageUserAccountInformationBean{
         em.flush();
     }
 
+    @Override
     public void modifyPersonalParticulars(String username, String phoneNo, String emailAddress){
         staff = getStaff(username);
         staff.setPhoneNo(phoneNo);
