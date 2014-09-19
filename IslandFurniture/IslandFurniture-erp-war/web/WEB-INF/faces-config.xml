@@ -94,5 +94,9 @@
             <from-outcome>inventorymonitoring_stock</from-outcome>
             <to-view-id>/supplychain/inventorymonitoring_stock.xhtml</to-view-id>
         </navigation-case> 
+        <navigation-case>
+            <from-outcome>retailItem</from-outcome>
+            <to-view-id>/knowledge/retailItem.xhtml</to-view-id>
+        </navigation-case> 
     </navigation-rule>
 </faces-config>

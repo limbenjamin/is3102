@@ -7,13 +7,12 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>flat</param-value>
-    </context-param>    
+    </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-     
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
@@ -26,4 +25,10 @@
     <welcome-file-list>
         <welcome-file>dash.xhtml</welcome-file>
     </welcome-file-list>
+    <ejb-local-ref>
+        <ejb-ref-name>StockManager</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>IslandFurniture.EJB.SupplyChain.StockManagerLocal</local>
+        <ejb-link>IslandFurniture-ejb.jar#StockManager</ejb-link>
+    </ejb-local-ref>
 </web-app>

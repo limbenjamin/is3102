@@ -27,7 +27,19 @@ import javax.persistence.PostPersist;
 public class RetailItem extends ProcuredStock implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private Double price;
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+    
+    public RetailItem() {
+       
+    }
     @Override
     public int hashCode() {
         int hash = 0;

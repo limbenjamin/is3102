@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newItem">
+                            <i class="fa fa-fw fa-plus"></i>New Retail Item
+                        </button>                         
+                        <h4>Retail Items</h4><hr></hr>   
+                    </div>
+                    <div class="col-md-8">
+                        
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="areas">                        
+                        
+                            <section name="viewStorageArea" class="panel">  
+                                <div class="panel-heading dashboard-title-panel">
+                                    View and Edit Material
+                                </div>
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Retail Item</th>
+                                        <th>Price</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <h:form id="editRetailItemForm" class="form-horizontal">
+                                        <ui:repeat value="#{retailItemManagedBean.retailItemList}" var="item">
+                                            <tr>
+                                                <td>
+                                                    <h:outputText id="itemID" value="#{item.id}"></h:outputText>
+                                                </td>
+                                                <td>
+                                                    <h:inputText id="itemName" value="#{item.name}" class="form-control"></h:inputText>
+                                                </td>
+                                                <td>
+                                                    $<h:inputText id="itemPrice" value="#{item.price}" class="form-control"></h:inputText>
+                                                </td>
+                                                <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}"  value="Update" class="btn btn-success btn-sm">
+                                                        <f:attribute name="toEdit" value="#{item}" />
+                                                    </h:commandButton>
+                                                </td>
+                                                <td><h:commandButton action="#{retailItemManagedBean.deleteRetailItem}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                        <f:param name="itemID" value="#{item.id}" />
+                                                    </h:commandButton></td>         
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                            </div>
+                                
+                    </div>            
+                </div>   
+                <!-- Modal for storage area -->
+                <div class="modal fade" id="newItem" aria-hidden="true" name="createStorageArea">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Create New Retail Item</h4>
+                      </div>
+                        <h:form id="addRetailItemForm" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Retail Item Name: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="name" class="form-control"></h:inputText>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Retail Item Price: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="price" class="form-control"></h:inputText>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="#{retailItemManagedBean.addRetailItem}" class="btn btn-success btn-round" value="Add"></h:commandButton>
+                        </div>
+                        </h:form> 
+                    </div>
+                  </div>
+                </div>  
+                </div>
+                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+
