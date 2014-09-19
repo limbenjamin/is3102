@@ -31,6 +31,10 @@ public class ProcurementContractDetail implements Serializable {
     @OneToOne
     private ManufacturingFacility supplierFor;
 
+    public ProcurementContractDetail() {
+        
+    }
+    
     public Long getId() {
         return id;
     }

@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,7 +49,7 @@ public class Supplier implements Serializable {
     private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
     @ManyToMany(mappedBy = "suppliers")
     private List<ProcuredStock> procuredStocks;
-    @OneToOne(mappedBy = "supplier")
+    @OneToOne(mappedBy = "supplier", cascade={CascadeType.PERSIST})
     private ProcurementContract procurementContract;
 
     
