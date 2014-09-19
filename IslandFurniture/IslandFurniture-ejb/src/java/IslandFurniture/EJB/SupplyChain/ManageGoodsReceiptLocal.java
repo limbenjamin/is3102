@@ -21,7 +21,7 @@ public interface ManageGoodsReceiptLocal {
 
     GoodsReceiptDocument createGoodsReceiptDocument(Plant plant, Calendar postingDate);
 
-    void createGoodsReceiptDocumentDetail(Long grdId, Long stockId);
+    void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity);
 
     void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId);
 

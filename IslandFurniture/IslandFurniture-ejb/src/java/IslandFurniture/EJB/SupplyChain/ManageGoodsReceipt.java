@@ -55,13 +55,16 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId) {      
+    public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity) {      
         goodsReceiptDocumentDetail = new GoodsReceiptDocumentDetail();
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         stock = getStock(stockId);
         goodsReceiptDocumentDetail.setGoodsReceiptDocument(goodsReceiptDocument);
         goodsReceiptDocumentDetail.setReceivedStock(stock);
+        goodsReceiptDocumentDetail.setQuantity(quantity);
+        goodsReceiptDocument.getGoodsReceiptDocumentDetails().add(goodsReceiptDocumentDetail);
         em.persist(goodsReceiptDocumentDetail);
+        em.merge(goodsReceiptDocument);
         em.flush();
     }
 

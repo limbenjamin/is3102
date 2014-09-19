@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
@@ -49,7 +49,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     @EJB
     public ManageGoodsReceiptLocal mgrl;
     @EJB
-    private ManageUserAccountBean staffBean;
+    private ManageUserAccountBeanLocal staffBean;
 
     @PostConstruct
     public void init() {
@@ -67,7 +67,7 @@ public class GoodsReceiptManagedBean implements Serializable {
         cal.setTime(date);
         postingDate = cal;
         goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, postingDate);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", goodsReceiptDocument.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         return "goodsreceiptdocument?faces-redirect=true";
 
     }
@@ -151,11 +151,11 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.mgrl = mgrl;
     }
 
-    public ManageUserAccountBean getStaffBean() {
+    public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountBean staffBean) {
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
 
