@@ -6,21 +6,28 @@
 
 package IslandFurniture.WAR.SupplyChain;
 
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryTransferLocal;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author KamilulAshraf
  */
-@Named(value = "inventoryTransferManagedBean")
-@Dependent
+@ManagedBean
+@ViewScoped
 public class InventoryTransferManagedBean {
 
-    /**
-     * Creates a new instance of InventoryTransferManagedBean
-     */
-    public InventoryTransferManagedBean() {
+
+    @EJB
+    public ManageInventoryTransferLocal mitl;
+    
+    
+    @PostConstruct
+    public void init() {
+    
     }
     
 }
