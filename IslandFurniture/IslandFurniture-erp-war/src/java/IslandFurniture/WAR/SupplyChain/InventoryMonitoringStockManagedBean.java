@@ -29,11 +29,10 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class InventoryMonitoringManagedBean implements Serializable {
+public class InventoryMonitoringStockManagedBean implements Serializable {
 
     private Long plantId;
     private Long storageBinId;
-    private Long stockUnitId;
 
     private String username;
 
@@ -41,6 +40,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
     private List<StockUnit> stockUnitList;
 
     private StorageBin storageBin;
+    private StockUnit stockUnit;
     private Staff staff;
     private Plant plant;
 
@@ -55,23 +55,15 @@ public class InventoryMonitoringManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = miml.viewStorageBin(plant);
         stockUnitList = miml.viewStockUnit(plant);
         System.out.println("Init");
+        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
+        storageBin = miml.getStorageBin(storageBinId);
     }
 
-    public String viewStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        storageBinId = Long.parseLong(request.getParameter("viewStorageLocation:storageBinId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", storageBinId);
-        return "inventorymonitoring_location?faces-redirect=true";
-    }
-
-    public String viewStock() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        stockUnitId = Long.parseLong(request.getParameter("viewStockUnit:stockUnitId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", stockUnitId);
-        return "inventorymonitoring_stock?faces-redirect=true";
+        public String getParam() {
+        return (String) FacesContext.getCurrentInstance().getExternalContext()
+                .getFlash().get("param");
     }
 
     public Long getPlantId() {
@@ -88,14 +80,6 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     public void setStorageBinId(Long storageBinId) {
         this.storageBinId = storageBinId;
-    }
-
-    public Long getStockUnitId() {
-        return stockUnitId;
-    }
-
-    public void setStockUnitId(Long stockUnitId) {
-        this.stockUnitId = stockUnitId;
     }
 
     public String getUsername() {
@@ -130,6 +114,14 @@ public class InventoryMonitoringManagedBean implements Serializable {
         this.storageBin = storageBin;
     }
 
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
+    }
+
     public Staff getStaff() {
         return staff;
     }
@@ -161,5 +153,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
+
+   
 
 }

@@ -14,23 +14,38 @@
 
                         <section name="View All Location of Selected Stock">
                             <h4>View All Location of Selected Stock</h4><hr></hr><br></br>
+                            <h:form id="viewStockUnit" class="form-horizontal">
+                                <div>
+
+                                    <label class="col-sm-4 control-label">Stock Units</label>
+                                    <div class="col-sm-8">
+                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.stockUnitId}">
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                        </h:selectOneMenu>
+                                    </div>                                     
+                                </div>
+                                <div class="modal-footer">
+
+                                    <h:commandButton action="#{inventoryMonitoringManagedBean.viewStorageLocation}" value="View" class="btn btn-success btn-round">
+                                    </h:commandButton>
+                                </div>
+                            </h:form> 
+
                         </section>
 
                         <section name="View Contents of Storage Location">
                             <h4>View Contents of Storage Location</h4><hr></hr><br></br>
                             <h:form id="viewStorageLocation" class="form-horizontal">
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label class="col-sm-4 control-label">Storage Location</label>
-                                        <div class="col-sm-8">
-                                            <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
-                                                <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>                                     
-                                </div>
+                                <div>
+                                    <label class="col-sm-4 control-label">Storage Location</label>
+                                    <div class="col-sm-8">
+                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>                                     
+
                                 <div class="modal-footer">
-                                    
                                     <h:commandButton action="#{inventoryMonitoringManagedBean.viewStorageLocation}" value="View" class="btn btn-success btn-round">
                                     </h:commandButton>
                                 </div>
