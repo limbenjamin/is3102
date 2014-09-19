@@ -36,7 +36,7 @@ public interface StockManagerLocal {
 
     public List displayBOM(String furnitureName);
 
-    public void deleteMaterial(String materialName);
+    public void deleteMaterial(Long materialID);
 
     public List<RetailItem> displayItemList();
 

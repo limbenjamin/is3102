@@ -68,8 +68,8 @@ public class StockManager implements StockManagerLocal {
     public boolean updateMaterial(Long id, String name, Double weight) {
         Material material;
         try {
+            System.out.println("StockManager.updateMaterial()");
             material = findMaterialByName(em, name);
-            System.out.println(material.getName());
             if(weight != null) {
                 System.out.println("Changing weight to " + weight);
                 material.setMaterialWeight(weight);
@@ -80,10 +80,12 @@ public class StockManager implements StockManagerLocal {
             return false;
         }
     }
-    public void deleteMaterial(String materialName) {
+    public void deleteMaterial(Long materialID) {
         Material material;
         try{
-            material = findMaterialByName(em, materialName);
+            System.out.println("StockManager.deleteMaterial()");
+            material = em.find(Material.class, materialID);
+            System.out.println("Don't forget to check for constraints");
             material.setHidden(true);
         } catch(Exception ex) {
             ex.printStackTrace();
