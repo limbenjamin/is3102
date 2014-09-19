@@ -60,7 +60,7 @@ public class DashManagedBean implements Serializable {
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBeanLocal staffBean;
     @EJB
     private ManageTodoBeanLocal todoBean;
     @EJB
@@ -170,11 +170,11 @@ public class DashManagedBean implements Serializable {
         this.notes = notes;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
 

@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Message;
 import IslandFurniture.EJB.Entities.MessageThread;
 import IslandFurniture.EJB.Entities.Staff;
@@ -43,7 +43,7 @@ public class MessagingManagedBean implements Serializable {
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBeanLocal staffBean;
     @EJB
     private ManageStaffAccountsBeanLocal msaBean;
     
@@ -125,11 +125,11 @@ public class MessagingManagedBean implements Serializable {
         this.messageBean = messageBean;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
 

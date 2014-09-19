@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.Staff;
 import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
 import IslandFurniture.WAR.CommonInfrastructure.Exceptions.*;
@@ -38,7 +38,7 @@ public class PersonalParticularsManagedBean implements Serializable {
     private String hashedOldPassword = null;
     
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
     @EJB
     private ManageAuthenticationBeanLocal authBean;
     
@@ -113,11 +113,11 @@ public class PersonalParticularsManagedBean implements Serializable {
         this.staff = staff;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 

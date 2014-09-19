@@ -28,7 +28,7 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
     private LogEntry logEntry;
     
     @EJB
-    private ManageUserAccountInformationBean staffbean;
+    private ManageUserAccountBeanLocal staffbean;
     
     public ManageAuthenticationBean(){
         

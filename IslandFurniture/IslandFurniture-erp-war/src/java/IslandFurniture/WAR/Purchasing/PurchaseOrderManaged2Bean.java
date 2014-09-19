@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Purchasing;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -57,7 +57,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     private List<ProcuredStock> procuredStockList;
     
     @EJB
-    private ManageUserAccountInformationBean staffBean; 
+    private ManageUserAccountBean staffBean; 
     @EJB
     private ManagePurchaseOrderLocal mpol;
     

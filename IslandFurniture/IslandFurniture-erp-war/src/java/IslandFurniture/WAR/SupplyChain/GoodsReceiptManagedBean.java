@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.SupplyChain;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountInformationBean;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
@@ -50,7 +50,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     @EJB
     public ManageGoodsReceiptLocal mgrl;
     @EJB
-    private ManageUserAccountInformationBean staffBean;
+    private ManageUserAccountBean staffBean;
 
     @PostConstruct
     public void init() {
@@ -150,11 +150,11 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.mgrl = mgrl;
     }
 
-    public ManageUserAccountInformationBean getStaffBean() {
+    public ManageUserAccountBean getStaffBean() {
         return staffBean;
     }
 
-    public void setStaffBean(ManageUserAccountInformationBean staffBean) {
+    public void setStaffBean(ManageUserAccountBean staffBean) {
         this.staffBean = staffBean;
     }
 
