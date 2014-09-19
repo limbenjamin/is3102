@@ -98,5 +98,9 @@
             <from-outcome>retailItem</from-outcome>
             <to-view-id>/knowledge/retailItem.xhtml</to-view-id>
         </navigation-case> 
+        <navigation-case>
+            <from-outcome>procurementContract</from-outcome>
+            <to-view-id>/salesplanning/procurementContract.xhtml</to-view-id>
+        </navigation-case> 
     </navigation-rule>
 </faces-config>

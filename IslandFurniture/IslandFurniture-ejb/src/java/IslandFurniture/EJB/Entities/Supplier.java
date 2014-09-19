@@ -26,7 +26,10 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "findSupplierByName",
-            query = "SELECT a FROM Supplier a WHERE a.name = :name")
+            query = "SELECT a FROM Supplier a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllSuppliers",
+            query = "SELECT a FROM Supplier a")
 })
 public class Supplier implements Serializable {
 
@@ -48,6 +51,10 @@ public class Supplier implements Serializable {
     @OneToOne(mappedBy = "supplier")
     private ProcurementContract procurementContract;
 
+    
+    public Supplier() {
+        
+    }
     public Long getId() {
         return id;
     }
