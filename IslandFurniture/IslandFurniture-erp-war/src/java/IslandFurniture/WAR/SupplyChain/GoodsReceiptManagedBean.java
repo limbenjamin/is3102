@@ -39,7 +39,6 @@ public class GoodsReceiptManagedBean implements Serializable {
     private String deliverynote;
 
     private Calendar postingDate;
-    
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
 
@@ -67,8 +66,10 @@ public class GoodsReceiptManagedBean implements Serializable {
         Date date = new Date();
         cal.setTime(date);
         postingDate = cal;
-        mgrl.createGoodsReceiptDocument(plant, postingDate);
-        return "goodsreceipt";
+        goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, postingDate);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", goodsReceiptDocument.getId());
+        return "goodsreceiptdocument?faces-redirect=true";
+
     }
 
     public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
@@ -157,8 +158,5 @@ public class GoodsReceiptManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountInformationBean staffBean) {
         this.staffBean = staffBean;
     }
-
-
-   
 
 }

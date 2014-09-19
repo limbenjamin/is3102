@@ -101,6 +101,7 @@ public class storageLocationManagedBean implements Serializable {
     public String editStorageBin(ActionEvent event) throws IOException {
         StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
         msll.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
+        storageBinList = msll.viewStorageBin(plant);
         return "storagelocation";
     }
 
