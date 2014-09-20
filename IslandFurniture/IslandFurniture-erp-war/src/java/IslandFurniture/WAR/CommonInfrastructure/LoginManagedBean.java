@@ -11,6 +11,7 @@ package IslandFurniture.WAR.CommonInfrastructure;
  */
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
@@ -39,6 +40,7 @@ public class LoginManagedBean implements Serializable {
     private String menu;
     private Privilege privilege;
     private Integer count;
+    private Notification tempNotification;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -48,6 +50,8 @@ public class LoginManagedBean implements Serializable {
     private ManageStaffAccountsBeanLocal msab;
     @EJB
     private ManagePrivilegesBeanLocal mpb;
+    @EJB
+    private ManageNotificationsBeanLocal mnb;
 
     public String login() {
         boolean result = authBean.authenticate(username, password);
@@ -55,7 +59,7 @@ public class LoginManagedBean implements Serializable {
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
             staff = muab.getStaff(username);
-            notificationList = staff.getNotifications();
+            notificationList = mnb.displayNotificationForStaff(staff);
             notificationListSize = notificationList.size();
             count = 0;
             privilegeList = msab.getPrivilegeListforStaff(username);
@@ -108,7 +112,7 @@ public class LoginManagedBean implements Serializable {
     
     public void pullNotification() {
         staff = muab.getStaff(username);
-        notificationList = staff.getNotifications();
+        notificationList = mnb.displayNotificationForStaff(staff);
         if (notificationList.size() != notificationListSize){
             count++;
             notificationListSize = notificationList.size();
@@ -123,6 +127,10 @@ public class LoginManagedBean implements Serializable {
     
     public void resetCount() {
         count = 0;
+    }
+    
+    public void reduceCount() {
+        count--;
     }
 
     public String getUsername() {
@@ -179,6 +187,7 @@ public class LoginManagedBean implements Serializable {
 
     public Notification getNotification() {
         return notification;
+        
     }
 
     public void setNotification(Notification notification) {
@@ -239,6 +248,30 @@ public class LoginManagedBean implements Serializable {
 
     public void setMpb(ManagePrivilegesBeanLocal mpb) {
         this.mpb = mpb;
+    }
+
+    public Notification getTempNotification() {
+        return tempNotification;
+    }
+
+    public void setTempNotification(Notification tempNotification) {
+        this.tempNotification = tempNotification;
+    }
+
+    public ManageUserAccountBeanLocal getMuab() {
+        return muab;
+    }
+
+    public void setMuab(ManageUserAccountBeanLocal muab) {
+        this.muab = muab;
+    }
+
+    public ManageNotificationsBeanLocal getMnb() {
+        return mnb;
+    }
+
+    public void setMnb(ManageNotificationsBeanLocal mnb) {
+        this.mnb = mnb;
     }
 
     

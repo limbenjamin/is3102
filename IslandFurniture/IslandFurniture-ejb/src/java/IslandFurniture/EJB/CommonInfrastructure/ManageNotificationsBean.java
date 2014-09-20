@@ -9,13 +9,17 @@ package IslandFurniture.EJB.CommonInfrastructure;
 import IslandFurniture.EJB.Entities.Notification;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
+import com.google.common.collect.Lists;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -60,12 +64,16 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     
     @Override
     public List<Notification> displayNotificationForStaff(Staff staff){
-        return staff.getNotifications();
+        notificationList = staff.getNotifications();
+        Collections.reverse(notificationList);
+        return notificationList;
     }
     
     @Override
     public List<Notification> displayNotificationForRole(Role role){
-        return role.getNotifications();
+        notificationList = role.getNotifications();
+        Collections.reverse(notificationList);
+        return notificationList;
     }
     
     

@@ -21,11 +21,6 @@
         <script src="#{application.contextPath}/assets/plugins/modernizr.js"></script>
     </h:head>
     <h:body>
-        <h:outputScript>
-            function callbutton(){ 
-                document.getElementById("Frm1" + ":vendbtn").click();
-            } 
-        </h:outputScript>
         <div class="app">
             <!-- top header -->
             <header class="header header-fixed navbar">
@@ -75,18 +70,21 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
-                                    <h:form id="newNotification"> 
-                                        <li class="list-group-item">
-                                            <a href="#{application.contextPath}#{loginManagedBean.notification.link}" onclick="callbutton();">
-                                                <div class="m-body">
-                                                    <small><h6>#{loginManagedBean.notification.title}:</h6></small>
-                                                    <span>#{loginManagedBean.notification.content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
-                                    </h:form>
+                                    <li class="list-group-item" id="new-notification">
+                                        <h:form id="newNotification"> 
+                                                <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.reduceCount}" />
+                                                <c:if test="${loginManagedBean.notification != null}">
+                                                    <a href="#{application.contextPath}#{loginManagedBean.notification.link}" onclick="callbutton();">
+                                                        <div class="m-body">
+                                                            <small><h6>#{loginManagedBean.notification.title}:</h6></small>
+                                                            <span>#{loginManagedBean.notification.content}</span><br></br>
+                                                            <span class="small"><i class="fa fa-clock-o"></i> </span>
+                                                        </div>
+                                                    </a>                                              
+                                                </c:if>
+                                            <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                        </h:form>
+                                    </li>    
                                     <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
                                         <li class="list-group-item">
                                             <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}">
@@ -179,10 +177,6 @@
                 <!-- /main content -->
             </section>
         </div>
-        <h:form id="Frm1">
-            <h:commandButton id="vendbtn" value="" action="#{loginManagedBean.resetCount}" immediate="true" 
-            style="visibility:hidden;" /> 
-        </h:form> 
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
