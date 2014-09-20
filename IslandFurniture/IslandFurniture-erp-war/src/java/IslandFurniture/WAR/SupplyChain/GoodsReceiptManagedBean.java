@@ -41,6 +41,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     private Calendar postingDate;
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
+    private List<GoodsReceiptDocument> goodsReceiptDocumentPostedList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
@@ -58,15 +59,16 @@ public class GoodsReceiptManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted();
         System.out.println("Init");
     }
 
     public String addGoodsReceiptDocument() {
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        postingDate = cal;
-        goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, postingDate);
+//        Calendar cal = Calendar.getInstance();
+//        Date date = new Date();
+//        cal.setTime(date);
+//        postingDate = cal;
+        goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         return "goodsreceiptdocument?faces-redirect=true";
 
@@ -102,6 +104,14 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.username = username;
     }
 
+    public String getDeliverynote() {
+        return deliverynote;
+    }
+
+    public void setDeliverynote(String deliverynote) {
+        this.deliverynote = deliverynote;
+    }
+
     public Calendar getPostingDate() {
         return postingDate;
     }
@@ -116,6 +126,14 @@ public class GoodsReceiptManagedBean implements Serializable {
 
     public void setGoodsReceiptDocumentList(List<GoodsReceiptDocument> goodsReceiptDocumentList) {
         this.goodsReceiptDocumentList = goodsReceiptDocumentList;
+    }
+
+    public List<GoodsReceiptDocument> getGoodsReceiptDocumentPostedList() {
+        return goodsReceiptDocumentPostedList;
+    }
+
+    public void setGoodsReceiptDocumentPostedList(List<GoodsReceiptDocument> goodsReceiptDocumentPostedList) {
+        this.goodsReceiptDocumentPostedList = goodsReceiptDocumentPostedList;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {

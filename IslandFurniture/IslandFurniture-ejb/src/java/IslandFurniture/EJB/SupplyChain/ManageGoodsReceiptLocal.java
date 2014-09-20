@@ -45,10 +45,14 @@ public interface ManageGoodsReceiptLocal {
 
     List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail(GoodsReceiptDocument grd);
 
-    void createGoodsReceiptDocumentStockUnit(Long grdId);
+    void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate);
 
     List<StorageArea> viewStorageArea(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
+
+    List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd);
+
+    List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted();
 
 }

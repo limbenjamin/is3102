@@ -4,7 +4,6 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StorageArea;
@@ -15,8 +14,12 @@ import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -41,11 +44,14 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private Long storageBinId;
     private Long storageAreaid;
 
+    private String receiptDateString;
+    private Date receiptDateType;
+
     private String username;
     private String deliverynote;
 
     private Calendar postingDate;
-    private Calendar documentDate;
+    private Calendar receiptDate;
 
     private Stock stock;
     private Integer quantity;
@@ -85,17 +91,17 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         if (this.goodsReceiptDocumentId == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             this.goodsReceiptDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
-        }
-
-        if (goodsReceiptDocumentId != null) {
+        } else {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
 
+//      Ask Ben = To ask on how to display current date
+//      receiptDateString = goodsReceiptDocument.getPostingDate().getTime().toString();
         System.out.println("GoodsReceiptDocumentId: " + goodsReceiptDocumentId);
-
         goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         storageBinList = mgrl.viewStorageBin(plant);
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);
         stockList = mgrl.viewStock();
 
         System.out.println("Init");
@@ -117,11 +123,15 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
     }
 
-    public String editGoodsReceiptDocument(ActionEvent event) throws IOException {
-         System.out.println("It went here!");
+    public String editGoodsReceiptDocument(ActionEvent event) throws ParseException {
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
-        mgrl.editGoodsReceiptDocument(grd.getId(), grd.getReceiptDate(), null, grd.getDeliveryNote());
-       
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
+        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
+        receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
+        Calendar receiptDateCal = Calendar.getInstance();
+        Date date = receiptDateType;
+        receiptDateCal.setTime(date);
+        mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, null, grd.getDeliveryNote());
         return "goodsreceiptdocument";
     }
 
@@ -153,7 +163,13 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetailList) {
             msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
         }
-        mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId);
+
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        postingDate = cal;
+
+        mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
         return "goodsreceipt";
     }
 
@@ -205,6 +221,22 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.storageAreaid = storageAreaid;
     }
 
+    public String getReceiptDateString() {
+        return receiptDateString;
+    }
+
+    public void setReceiptDateString(String receiptDateString) {
+        this.receiptDateString = receiptDateString;
+    }
+
+    public Date getReceiptDateType() {
+        return receiptDateType;
+    }
+
+    public void setReceiptDateType(Date receiptDateType) {
+        this.receiptDateType = receiptDateType;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -229,12 +261,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.postingDate = postingDate;
     }
 
-    public Calendar getDocumentDate() {
-        return documentDate;
+    public Calendar getReceiptDate() {
+        return receiptDate;
     }
 
-    public void setDocumentDate(Calendar documentDate) {
-        this.documentDate = documentDate;
+    public void setReceiptDate(Calendar receiptDate) {
+        this.receiptDate = receiptDate;
     }
 
     public Stock getStock() {
