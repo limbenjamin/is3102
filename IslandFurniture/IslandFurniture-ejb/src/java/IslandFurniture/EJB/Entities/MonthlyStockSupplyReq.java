@@ -62,13 +62,15 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     @Id
     private Integer year;
 
-    private int qtyForecasted;
-    private int plannedInventory;
-    private int qtySold;
-    private int actualInventory;
-    private int varianceOffset;
-    private int qtyRequested;
-    private boolean approved;
+    private int qtyForecasted = 0;
+    private int plannedInventory = 0;
+    private int qtySold = 0;
+    private int actualInventory = 0;
+    private int varianceOffset = 0;
+    private int qtyRequested = 0;
+    
+    private boolean forecasted = false;
+    private boolean approved = false;
 
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
@@ -152,6 +154,14 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     public void setQtyRequested(int qtyRequested) {
         this.qtyRequested = qtyRequested;
+    }
+
+    public boolean isForecasted() {
+        return forecasted;
+    }
+
+    public void setForecasted(boolean forecasted) {
+        this.forecasted = forecasted;
     }
 
     public boolean isApproved() {
