@@ -23,24 +23,25 @@
                                 <th>Supply To</th>
                                 <th>Save</th>
                             </tr>
-                            <h:form id="viewPODetail" class="form-horizontal">
+                            <h:form id="editPO" class="form-horizontal">
                                 <tr>
-                                    <td>#{purchaseOrderManaged2Bean.purchaseOrder.id}</td>
-                                    <td><h:inputText id="eventTimeString" value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate}" p:type="date" class="form-control"></h:inputText></td>
                                     <td>
-                                        <h:selectOneMenu id="status" class="form-control" value="#{po.status}">
+                                        <h:outputText value="#{purchaseOrderManaged2Bean.purchaseOrder.id}"></h:outputText>
+                                    </td>
+                                    <td><h:inputText id="orderDate" value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate}" p:type="date" class="form-control"></h:inputText></td>
+                                    <td>
+                                        <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status}">
                                             <f:selectItem itemValue="planned" itemLabel="Planned" />
                                             <f:selectItem itemValue="confirmed" itemLabel="Confirmed" />
                                         </h:selectOneMenu>
                                     </td>
                                     <td>
-                                        <h:selectOneMenu id="plantId" class="form-control" value="#{po.plant.id}">
+                                        <h:selectOneMenu id="plantId" class="form-control">
                                             <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
                                         </h:selectOneMenu>
                                     </td>
                                     <td>
-                                        <h:commandButton actionListener="#{purchaseOrderManaged2Bean.editPurchaseOrder}"  value="Update" class="btn btn-success btn-sm"> 
-                                            <f:attribute name="po" value="#{purchaseOrderManaged2Bean.purchaseOrder}" />
+                                        <h:commandButton action="#{purchaseOrderManaged2Bean.editPurchaseOrder}" value="Update" class="btn btn-success btn-sm"> 
                                         </h:commandButton>
                                     </td>
                                 </tr>
