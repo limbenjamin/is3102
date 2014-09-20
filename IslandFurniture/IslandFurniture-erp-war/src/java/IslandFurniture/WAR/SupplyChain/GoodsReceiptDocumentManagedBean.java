@@ -117,7 +117,6 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     public void addGoodsReceiptDocumentDetail(ActionEvent event) {
         System.out.println(goodsReceiptDocumentId == null);
-
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocumentId, Long.parseLong(request.getParameter("createGRDD:stockId")), Integer.parseInt(request.getParameter("createGRDD:stockQuantity")));
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
