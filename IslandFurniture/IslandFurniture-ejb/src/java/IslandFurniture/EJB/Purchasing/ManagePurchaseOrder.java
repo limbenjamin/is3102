@@ -34,7 +34,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     
     private PurchaseOrder purchaseOrder;
     private PurchaseOrderDetail purchaseOrderDetail;
-    private ProcuredStock procuredStock;    
+    private ProcuredStock procuredStock;   
+    private Plant plant;  
     
     @Override
     public PurchaseOrder getPurchaseOrder(Long id) {
@@ -75,12 +76,15 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, String status) {
+    public void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status) {
+        System.out.println("MEOW: edit purchase order");
         purchaseOrder = getPurchaseOrder(poId);
+        plant = (Plant) em.find(Plant.class, plantId);
         purchaseOrder.setShipsTo(plant);
         purchaseOrder.setStatus(status);
         purchaseOrder.setOrderDate(orderDate);
         em.persist(purchaseOrder);
+        System.out.println("MEOW: purchase order persisted");
         em.flush();        
     }
     
@@ -134,5 +138,19 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         purchaseOrderDetail = getPurchaseOrderDetail(podId);
         em.remove(purchaseOrderDetail);
         em.flush();
-    }     
+    } 
+    
+    @Override
+    public List<PurchaseOrder> viewPlannedPurchaseOrders() {
+        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status");
+        q.setParameter("status", "planned");
+        return q.getResultList();
+    }  
+    
+    @Override
+    public List<PurchaseOrder> viewConfirmedPurchaseOrders() {
+        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status");
+        q.setParameter("status", "confirmed");
+        return q.getResultList();
+    }    
 }
