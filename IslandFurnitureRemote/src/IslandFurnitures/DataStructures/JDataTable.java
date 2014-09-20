@@ -6,19 +6,23 @@
 package IslandFurnitures.DataStructures;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author James Imitates C#.NET datatable behaviour First in the universe. HEHE
- * !
+ * @author James super data structure !
  */
+@SuppressWarnings("unchecked")
 public class JDataTable<T> implements Serializable {
 
     public JDataTable.Columns<T> columns = new JDataTable.Columns<T>();
     public String Title = "TABLE";
-    public ArrayList<Row<T>> Internalrows;
+    public ArrayList<Row> Internalrows;
 
     public static class Columns<T> implements Serializable {
 
@@ -35,9 +39,28 @@ public class JDataTable<T> implements Serializable {
 
     public static class Cell implements Serializable {
 
-        private String EditCmd;
         public String Value = null;
-        private String displaytype="String";
+        private String displaytype = "String";
+        private Serializable binded_entity = null;
+        private String propertyname;
+        private Boolean isEditable = false;
+        private Boolean stateChanged = false;
+
+        public Object getBinded_entity() {
+            return binded_entity;
+        }
+
+        public Boolean isBinded() {
+            return (binded_entity != null);
+        }
+
+        public String getPropertyname() {
+            return propertyname;
+        }
+
+        public void setPropertyname(String propertyname) {
+            this.propertyname = propertyname;
+        }
 
         public Cell(String s) {
             this.Value = s;
@@ -50,27 +73,69 @@ public class JDataTable<T> implements Serializable {
 
         }
 
-        public Cell(String s, String displaytype, String EditCmd) {
-            this.Value = s;
-            this.EditCmd = EditCmd;
-            this.displaytype = displaytype;
-
+        public Cell setBinded_entity(Serializable binded_entity) {
+            this.binded_entity = binded_entity;
+            return (this);
         }
 
-        public String getEditCmd() {
-            return EditCmd;
+        public Object getValue() {
+            if (!this.isBinded()) {
+                return transform(Value.toString());
+            }
+            try {
+                Method m = binded_entity.getClass().getDeclaredMethod("get" + this.propertyname);
+                return m.invoke(binded_entity).toString();
+            } catch (NoSuchMethodException ex) {
+
+            } catch (SecurityException ex) {
+                System.err.println(ex.getMessage());
+            } catch (IllegalAccessException ex) {
+                System.err.println(ex.getMessage());
+            } catch (IllegalArgumentException ex) {
+                System.err.println(ex.getMessage());
+            } catch (InvocationTargetException ex) {
+                System.err.println(ex.getMessage());
+            }
+            System.out.println("JDataTable() Binding Failed to get property[" + propertyname + "] !");
+            return "[ERROR]";
         }
 
-        public void setEditCmd(String EditCmd) {
-            this.EditCmd = EditCmd;
-        }
+        public void setValue(Object Value) {
+            if (!isEditable) {
+                return;
+            }
+            if (!this.isBinded()) {
+                return;
+            }
 
-        public String getValue() {
+            if (Value.equals(this.Value)) {
+                return;
+            }
 
-            return transform(Value);
-        }
+            Method[] methods = binded_entity.getClass().getDeclaredMethods();
+            for (Method m : methods) {
+                try {
+                    if (m.getName().equals("set" + this.propertyname)) {
+                        //Conversion
+                        //if (m.getParameterTypes()[1].getComponentType().getClass().is)
 
-        public void setValue(String Value) {
+                        m.invoke(binded_entity, ObjectConverter.convert(Value, m.getParameterTypes()[0]));
+                        stateChanged = true;
+                        System.out.println("JDataTable" + binded_entity.getClass().toString() + "[" + propertyname + "] updated to " + Value);
+                        return;
+                    }
+                    continue;
+
+                } catch (IllegalAccessException ex) {
+                    System.err.println(ex.getMessage());
+                } catch (IllegalArgumentException ex) {
+                    System.err.println(ex.getMessage());
+                } catch (InvocationTargetException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            }
+
+            System.out.println("JDataTable() Binding Failed to set property[" + propertyname + "] !");
         }
 
         private String transform(String sx) {
@@ -83,12 +148,21 @@ public class JDataTable<T> implements Serializable {
             }
             return (sx);
         }
+
+        public Boolean getIsEditable() {
+            return isEditable;
+        }
+
+        public void setIsEditable(Boolean isEditable) {
+            this.isEditable = isEditable;
+        }
     }
 
-    public static class Row<V> implements Serializable {
+    public static class Row implements Serializable {
 
         public ArrayList<Cell> rowdata = new ArrayList<Cell>();
         public boolean Editable = false;
+        private Serializable binded_entity;
 
         public Row(String dt) {
             this.displaytype = dt;
@@ -98,14 +172,24 @@ public class JDataTable<T> implements Serializable {
 
         }
 
+        public Row(Serializable binded) {
+            binded_entity = binded;
+        }
+
         public Cell newCell(String s) {
             Cell c = new Cell(s, this.displaytype);
             rowdata.add(c);
             return (c);
         }
 
-        public Cell newCell(String s, String identify) {
-            Cell c = new Cell(s, this.displaytype, identify);
+        public Serializable getBinded_entity() {
+            return binded_entity;
+        }
+
+        public Cell newBindedCell(String s, String propertyName) {
+            Cell c = new Cell(s, this.displaytype);
+            c.setBinded_entity(binded_entity);
+            c.setPropertyname(propertyName);
             rowdata.add(c);
             return (c);
         }
@@ -158,18 +242,26 @@ public class JDataTable<T> implements Serializable {
 
 //Constructor
     public JDataTable() {
-        this.Internalrows = new ArrayList<Row<T>>();
+        this.Internalrows = new ArrayList<Row>();
     }
 
-    public JDataTable.Row NewRow() {
-        Row<T> r = new Row<T>();
+    public JDataTable.Row newRow() {
+        Row r = new Row();
         Internalrows.add(r);
         return (r);
 
     }
 
-    public JDataTable.Row NewRow(String dt) {
-        Row<T> r = new Row<T>(dt);
+    public JDataTable.Row newBindedRow(Serializable entity) {
+        Row r = new Row(entity);
+
+        Internalrows.add(r);
+        return (r);
+
+    }
+
+    public JDataTable.Row newRow(String dt) {
+        Row r = new Row(dt);
 
         Internalrows.add(r);
         return (r);
@@ -177,13 +269,13 @@ public class JDataTable<T> implements Serializable {
     }
 
     public JDataTable.Row NewRowDefered() {
-        Row<T> r = new Row<T>();
+        Row r = new Row();
         return (r);
 
     }
 
     public JDataTable.Row NewRowDefered(String dt) {
-        Row<T> r = new Row<T>(dt);
+        Row r = new Row(dt);
 
         return (r);
 
@@ -201,6 +293,16 @@ public class JDataTable<T> implements Serializable {
         return Internalrows.get(i);
     }
 
-   
+    public ArrayList<Object> getStateChangedEntities() {
+        ArrayList<Object> ro = new ArrayList<Object>();
+        for (Row r : this.Internalrows) {
+            for (Cell c : r.rowdata) {
+                if (c.stateChanged) {
+                    ro.add(c.binded_entity);
+                }
+            }
+        }
+        return (ro);
+    }
 
 }

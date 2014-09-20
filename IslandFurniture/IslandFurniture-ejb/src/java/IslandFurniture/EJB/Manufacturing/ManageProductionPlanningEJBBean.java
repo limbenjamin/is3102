@@ -31,7 +31,7 @@ import javax.persistence.Query;
  * @author James
  */
 @Stateless
-public class MaterialResourcePlanning implements MaterialResourcePlanningView {
+public class ManageProductionPlanningEJBBean implements ManageProductionPlanningEJBBeanInterface {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -50,7 +50,7 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
     }
 
     @Override
-    public JDataTable<String> getDemandPlanningTable(String MF) {
+    public Object getDemandPlanningTable(String MF) {
         ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MF + "'").getSingleResult();
         return (getDemandPlanningTable(mff));
     }
@@ -73,51 +73,88 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
         return true;
     }
 
+    @Override
+    public boolean updateListOfEntities(ArrayList<Object> listOfEntities) throws Exception {
+        for (Object o : listOfEntities) {
+
+            MonthlyProductionPlan mpp = (MonthlyProductionPlan) o;
+
+            int capacity=mpp.getManufacturingFacility().findProductionCapacity(mpp.getFurnitureModel()).getCapacity(mpp.getMonth(), mpp.getYear());
+            if (mpp.getQTY() > capacity) {
+                throw new Exception(mpp.getMonth() + "/" + mpp.getYear() + " PLANNED CAPCITY @" + mpp.getQTY() + " exceeds Capacity of" + capacity);
+            }
+            
+            if (mpp.getQTY()<0){
+                throw new Exception("A number greater than zero is expected !");
+            }
+
+            em.merge(o);
+
+        }
+        System.out.println("updateListOfEntities(): Success");
+        return true;
+    }
+
     public JDataTable<String> getDemandPlanningTable(ManufacturingFacility MF) {
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF");
         q.setParameter("mf", MF);
         JDataTable<String> dt = new JDataTable<String>();
 
         String Cur_FM = "";
-        JDataTable.Row<String> demand_row = null;
-        JDataTable.Row<String> planned_row = null;
-        JDataTable.Row<String> max_CAP = null;
-        JDataTable.Row<String> cc_row = null;
-//Finally Summarize MF Capacity
+        JDataTable.Row demand_row = null;
+        JDataTable.Row planned_row = null;
+        JDataTable.Row max_CAP = null;
+        JDataTable.Row cc_row = null;
+        JDataTable.Row pc_row = null;
 
-        JDataTable.Row<String> fcc_Row = dt.NewRowDefered("percentage.2dp");
+//Finally Summarize MF Capacity
+        JDataTable.Row fcc_Row = dt.NewRowDefered("percentage.2dp");
         fcc_Row.rowheader = "Remaining Capacity";
         fcc_Row.rowgroup = "Summary";
         fcc_Row.setColorClass("summary");
 
+        String colorclass = "normal_even";
+
         for (MonthlyProductionPlan pp : (List<MonthlyProductionPlan>) q.getResultList()) {
 
             if (!Cur_FM.equals(pp.getFurnitureModel().getName())) {
+                if (colorclass.equals("normal_odd")) {
+                    colorclass = "normal_even";
+                } else {
+                    colorclass = "normal_odd";
+                }
+
                 Cur_FM = pp.getFurnitureModel().getName();
 
-                JDataTable.Row<String> new_Row = dt.NewRow();
+                JDataTable.Row new_Row = dt.newRow();
                 new_Row.rowheader = "Required Quantity";
                 new_Row.rowgroup = Cur_FM;
-                new_Row.setColorClass("normal");
+                new_Row.setColorClass(colorclass);
                 demand_row = new_Row;
 
-                new_Row = dt.NewRow();
+                new_Row = dt.newRow();
                 new_Row.rowheader = "Planned Quantity";
-                new_Row.setColorClass("editable");
+                new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
                 planned_row = new_Row;
 
-                new_Row = dt.NewRow();
+                new_Row = dt.newRow();
                 new_Row.rowheader = "Month Max Capacity";
-                new_Row.setColorClass("normal");
+                new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
                 max_CAP = new_Row;
 
-                new_Row = dt.NewRow("percentage.2dp");
+                new_Row = dt.newRow("percentage.2dp");
                 new_Row.rowheader = "Required Capacity";
-                new_Row.setColorClass("normal");
+                new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
                 cc_row = new_Row;
+
+                new_Row = dt.newRow("percentage.2dp");
+                new_Row.rowheader = "Consumed Capacity";
+                new_Row.setColorClass(colorclass);
+                new_Row.rowgroup = Cur_FM;
+                pc_row = new_Row;
             }
 
             if (!dt.columns.ColumnsHeader.contains(pp.getMonth().toString() + "/" + pp.getYear())) {
@@ -132,16 +169,20 @@ public class MaterialResourcePlanning implements MaterialResourcePlanningView {
             cc_row.newCell((String.valueOf(used_capacity)));
 
             if (pp.isLocked()) {
-                planned_row.newCell(("LOCKED"));
-                max_CAP.newCell(("LOCKED"));
+                planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp).setIsEditable(false); //Editable Cell
+                pc_row.newCell(String.valueOf(((pp.getQTY() + 0.0) / pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear()))));
+
             } else {
-                planned_row.newCell(String.valueOf(pp.getQTY()), pp.toString());
-                max_CAP.newCell(String.valueOf(pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear())));
+                planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp).setIsEditable(true); //Editable Cell
+                pc_row.newCell(String.valueOf(((pp.getQTY() + 0.0) / pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear()))));
+
             }
+            max_CAP.newCell(String.valueOf(pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear())));
+
         }
 
         dt.Internalrows.add(fcc_Row);
-
+        System.out.println("getDemandPlanningTable(): SUCCESS ! @" + MF.getName());
         return dt;
     }
 
