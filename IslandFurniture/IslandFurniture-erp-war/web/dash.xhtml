@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition template="./template.xhtml"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -37,6 +39,12 @@
 
         </h:outputScript>
         <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                  <strong>Welcome back #{dashManagedBean.name}!</strong>
+                </div>                
+            </div>
             <div class="col-md-9">
                 <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
                 <h4>Quick Links</h4>

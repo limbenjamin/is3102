@@ -17,7 +17,13 @@ import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -40,7 +46,10 @@ public class LoginManagedBean implements Serializable {
     private String menu;
     private Privilege privilege;
     private Integer count;
-    private Notification tempNotification;
+    private Long nid;
+    private LocalDateTime localDateTime;
+    private Instant instant;
+    private List<LocalDateTime> localDateTimeList;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -62,6 +71,17 @@ public class LoginManagedBean implements Serializable {
             notificationList = mnb.displayNotificationForStaff(staff);
             notificationListSize = notificationList.size();
             count = 0;
+            localDateTimeList = new ArrayList();
+            Iterator<Notification> iterator = notificationList.iterator();
+            while (iterator.hasNext()) {
+                notification = iterator.next();
+                instant = notification.getTime().toInstant();
+                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                localDateTimeList.add(localDateTime);
+                if (notification.isIsread() == false){
+                    count++;
+                }
+            }
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             menu = new String();
@@ -114,10 +134,17 @@ public class LoginManagedBean implements Serializable {
         staff = muab.getStaff(username);
         notificationList = mnb.displayNotificationForStaff(staff);
         if (notificationList.size() != notificationListSize){
-            count++;
+            count += notificationList.size() - notificationListSize;
             notificationListSize = notificationList.size();
-            notification = notificationList.get(notificationList.size()-1);
-            this.setNotification(notification);
+            this.setNotificationList(notificationList);
+            localDateTimeList = new ArrayList();
+            Iterator<Notification> iterator = notificationList.iterator();
+            while (iterator.hasNext()) {
+                notification = iterator.next();
+                instant = notification.getTime().toInstant();
+                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                localDateTimeList.add(localDateTime);
+            }
         }
     }
     
@@ -129,8 +156,16 @@ public class LoginManagedBean implements Serializable {
         count = 0;
     }
     
-    public void reduceCount() {
-        count--;
+    public void read() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+        nid = Long.valueOf(params.get("nid"));
+        notification = mnb.getNotification(nid);
+        if (notification.isIsread() == false){
+            count--;
+            mnb.setNotificationToRead(notification);
+        }
+        
     }
 
     public String getUsername() {
@@ -250,14 +285,6 @@ public class LoginManagedBean implements Serializable {
         this.mpb = mpb;
     }
 
-    public Notification getTempNotification() {
-        return tempNotification;
-    }
-
-    public void setTempNotification(Notification tempNotification) {
-        this.tempNotification = tempNotification;
-    }
-
     public ManageUserAccountBeanLocal getMuab() {
         return muab;
     }
@@ -272,6 +299,38 @@ public class LoginManagedBean implements Serializable {
 
     public void setMnb(ManageNotificationsBeanLocal mnb) {
         this.mnb = mnb;
+    }
+
+    public Long getNid() {
+        return nid;
+    }
+
+    public void setNid(Long nid) {
+        this.nid = nid;
+    }
+
+    public List<LocalDateTime> getLocalDateTimeList() {
+        return localDateTimeList;
+    }
+
+    public void setLocalDateTimeList(List<LocalDateTime> localDateTimeList) {
+        this.localDateTimeList = localDateTimeList;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public Instant getInstant() {
+        return instant;
+    }
+
+    public void setInstant(Instant instant) {
+        this.instant = instant;
     }
 
     
