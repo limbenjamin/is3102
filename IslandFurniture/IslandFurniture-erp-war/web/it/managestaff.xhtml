@@ -30,10 +30,10 @@
                                           <h5><strong>#{staff.name}</strong></h5>
                                         <h:form>
                                             <div class="pull-right btn-group">
-                                                <h:commandButton value="Update Roles" class="btn" action="#{staffManaged2Bean.displayRoles()}">
+                                                <h:commandButton value="Update Roles" class="btn btn-sm" action="#{staffManaged2Bean.displayRoles()}">
                                                     <f:param name="id" value="#{staff.id}" />
                                                 </h:commandButton>
-                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{staffManagedBean.deleteStaff}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{staffManagedBean.deleteStaff}">
                                                     <f:param name="id" value="#{staff.id}" />
                                                 </h:commandButton>
                                             </div>
