@@ -36,12 +36,7 @@ public class GoodsIssuedDocument implements Serializable {
     Date documentDate;
     @Temporal(javax.persistence.TemporalType.DATE)
     Date postingDate;
-
-    public void create(Date documentDate, Date postingDate, Store store) {
-        this.setDocumentDate(documentDate);
-        this.setPostingDate(postingDate);
-        this.setStore(store);
-    }
+    private Boolean confirm;
 
     public Long getId() {
         return id;
@@ -83,7 +78,13 @@ public class GoodsIssuedDocument implements Serializable {
         this.postingDate = postingDate;
     }
 
+    public Boolean isConfirm() {
+        return confirm;
+    }
 
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
+    }
 
     @Override
     public int hashCode() {

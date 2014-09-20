@@ -29,19 +29,20 @@ public class GoodsReceiptDocument implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar postingDate;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar receiptDate;
     private String deliveryNote;
-    
+
     @ManyToOne
     private Plant plant;
     @OneToOne(mappedBy = "goodsReceiptDocument")
     private PurchaseOrder receiveFrom;
     @OneToMany(mappedBy = "goodsReceiptDocument")
-    private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;        
+    private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;
+    private Boolean confirm;
 
     public Long getId() {
         return id;
@@ -98,7 +99,15 @@ public class GoodsReceiptDocument implements Serializable {
     public void setGoodsReceiptDocumentDetails(List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails) {
         this.goodsReceiptDocumentDetails = goodsReceiptDocumentDetails;
     }
-            
+
+    public Boolean isConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -11,38 +11,86 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h:form id="createGRD" class="form-horizontal">
-                            <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="Create Goods Receipt Document" class="btn btn-default pull-right"></h:commandButton>
+                            <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success pull-right"></h:commandButton>
                             <br></br>
                         </h:form>
                         <h4>Purchase Orders</h4><hr></hr>
                     </div>
                     <div class="col-md-8">
-                        <section name="viewPO" class="panel">
-                            <div class="panel-heading dashboard-title-panel">
-                                All Purchase Orders
+                        
+                        <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                          <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
+                          <li><a href="#confirmed" role="tab" data-toggle="tab">Confirmed</a></li>
+                        </ul>
+                        
+                            <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="planned">                     
+                        
+                            <section name="viewPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Planned Purchase Orders
+                                </div>
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <h:form id="viewPO" class="form-horizontal">
+                                        <ui:repeat value="#{purchaseOrderManagedBean.plannedOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>#{PO.status}</td>
+                                                <td><h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                </td>  
+                                                <td>
+                                                    <h:commandButton value="Delete" class="btn btn-danger btn-xs" action="#{purchaseOrderManagedBean.deletePurchaseOrder}">
+                                                        <f:param name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                </td>                                                
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
                             </div>
-                            <div class="list-group-item">
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Status</th>
-                                    <th>Edit</th>
-                                </tr>
-                                <h:form id="viewPO" class="form-horizontal">
-                                    <ui:repeat value="#{purchaseOrderManagedBean.purchaseOrderList}" var="PO">
-                                        <tr>
-                                            <td>#{PO.id}</td>
-                                            <td>#{PO.status}</td>
-                                            <td> <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:attribute name="POid" value="#{PO.id}" />
-                                                </h:commandButton>
-                                            </td>                                            
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>
-                            </div>
-                        </section>
+                            <div class="tab-pane" id="confirmed" >
+                            <section name="viewStorageBin" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Confirmed Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    <h:form id="viewPOconfirmed" class="form-horizontal">
+                                        <ui:repeat value="#{purchaseOrderManagedBean.confirmedOrderList}" var="CO">
+                                            <tr>
+                                                <td>#{CO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{CO.orderDate.time}" >
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{CO.shipsTo.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{CO.status}</td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                        </div>                            
+                    </div>
                     </div>
                 </div>    
             </ui:define>
