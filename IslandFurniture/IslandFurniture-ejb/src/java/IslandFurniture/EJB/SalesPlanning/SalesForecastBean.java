@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Exceptions.ForecastFailureException;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
@@ -17,8 +18,9 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Transaction;
-import IslandFurniture.EJB.Exceptions.MssrLockedException;
+import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.StaticClasses.Helper.Couple;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_HORIZON;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;
 import IslandFurniture.StaticClasses.Helper.TimeMethods;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -56,7 +60,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 mssr = this.addMonthlyStockSupplyReq(eachStockSupplied.getStock(), co, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
 
                 // Reset all qtySold to prevent duplicate counting
-                mssr.setQtySold(0);
+                mssr.setQtySold(-1);
             }
 
             // Grab list of transactions in given store in a month
@@ -70,7 +74,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 //            System.out.println("--------");
 //            System.out.println(dateYearFormat.format(start.getTime()));
 //            System.out.println("--------");
-
             // Loops through each transaction and increment qtySold in relevant MSSR
             for (Transaction eachTrans : listOfTrans) {
                 // Prints Tansaction to system log
@@ -113,20 +116,83 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public void saveMonthlyStockSupplyReq(List<MonthlyStockSupplyReq> mssrList) throws MssrLockedException {
+    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrieveNaiveForecast(CountryOffice co, int mthsHist)
+        throws IllegalArgumentException, ForecastFailureException {
+        if (mthsHist < 0) {
+            throw new IllegalArgumentException("Number of History MSSR Months must be zero or positive");
+        }
+
+        Calendar lockedOutStart = TimeMethods.getPlantCurrTime(co);
+        lockedOutStart.add(Calendar.MONTH, mthsHist * -1);
+
+        Calendar lockedOutEnd = TimeMethods.getPlantCurrTime(co);
+        lockedOutEnd.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
+
+        Calendar planningStart = TimeMethods.getPlantCurrTime(co);
+        planningStart.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS + 1);
+
+        Calendar planningEnd = TimeMethods.getPlantCurrTime(co);
+        planningEnd.add(Calendar.MONTH, FORECAST_HORIZON);
+
+        List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> pairedMssrList = new ArrayList();
+
+        for (StockSupplied ss : co.getSuppliedWithFrom()) {
+
+            List<MonthlyStockSupplyReq> lockedMssrList;
+            lockedMssrList = this.retrieveMssrForCoStock(co, ss.getStock(), Month.getMonth(lockedOutStart.get(Calendar.MONTH)), lockedOutStart.get(Calendar.YEAR), Month.getMonth(lockedOutEnd.get(Calendar.MONTH)), lockedOutEnd.get(Calendar.YEAR));
+
+            List<MonthlyStockSupplyReq> unlockedMssrList;
+            unlockedMssrList = this.retrieveMssrForCoStock(co, ss.getStock(), Month.getMonth(planningStart.get(Calendar.MONTH)), planningStart.get(Calendar.YEAR), Month.getMonth(planningEnd.get(Calendar.MONTH)), planningEnd.get(Calendar.YEAR));
+            
+            for(int i = 0; i < unlockedMssrList.size(); i++){
+                MonthlyStockSupplyReq mssr = unlockedMssrList.get(i);
+                MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -12);
+                MonthlyStockSupplyReq prevMssr;
+                
+                if(i <= 0){
+                    prevMssr = QueryMethods.findNextMssr(em, mssr, -1);
+                } else{
+                    prevMssr = unlockedMssrList.get(i-1);
+                }
+                
+                if(oldMssr == null || prevMssr == null){
+                    throw new ForecastFailureException("Previous forecasted values do not exist!");
+                }
+                
+                em.detach(mssr);
+                mssr.setQtyForecasted(oldMssr.getQtyForecasted());
+                mssr.setPlannedInventory(oldMssr.getPlannedInventory());
+                mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory());
+            }
+
+            pairedMssrList.add(new Couple(ss.getStock(), new Couple(lockedMssrList, unlockedMssrList)));
+        }
+
+        return pairedMssrList;
+    }
+    
+    @Override
+    @TransactionAttribute(REQUIRED)
+    public void saveMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList) throws InvalidMssrException {
         Calendar lockoutCutoff;
 
-        for (MonthlyStockSupplyReq mssr : mssrList) {
-            lockoutCutoff = TimeMethods.getPlantCurrTime(mssr.getCountryOffice());
-            lockoutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
+        for (Couple<Stock, List<MonthlyStockSupplyReq>> mssrList : stockMssrList) {
+            for (MonthlyStockSupplyReq mssr : mssrList.getSecond()) {
+                lockoutCutoff = TimeMethods.getPlantCurrTime(mssr.getCountryOffice());
+                lockoutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
+                
+                if(mssr.getQtyForecasted() < 0 || mssr.getPlannedInventory() < 0 || mssr.getQtyRequested() < 0){
+                    throw new InvalidMssrException("Invalid entry for " + mssr.getStock().getName() + ", " + mssr.getMonth() + " " + mssr.getYear());
+                }
 
-            if (TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear()).compareTo(lockoutCutoff) > 0) {
-                mssr.setForecasted(true);
-                mssr.setApproved(false);
+                if (TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear()).compareTo(lockoutCutoff) > 0) {
+                    mssr.setForecasted(true);
+                    mssr.setApproved(false);
 
-                em.merge(mssr);
-            } else {
-                throw new MssrLockedException("Monthly Stock Supply Requirements for " + mssr.getMonth() + " " + mssr.getYear() + " falls within the lockout period and cannot be edited.");
+                    em.merge(mssr);
+                } else {
+                    throw new InvalidMssrException("Monthly Stock Supply Requirements for " + mssr.getMonth() + " " + mssr.getYear() + " falls within the lockout period and cannot be edited.");
+                }
             }
         }
     }
@@ -148,9 +214,9 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
         Calendar lockedOutEnd = TimeMethods.getPlantCurrTime(co);
         lockedOutEnd.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
-        
+
         Calendar planningStart = TimeMethods.getPlantCurrTime(co);
-        planningStart.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS+1);
+        planningStart.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS + 1);
 
         Calendar planningEnd = TimeMethods.getPlantCurrTime(co);
         planningEnd.add(Calendar.MONTH, FORECAST_HORIZON);
@@ -219,7 +285,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
             start.add(Calendar.MONTH, 1);
         }
-        
+
         stockMssrList.sort(null);
 
         return stockMssrList;

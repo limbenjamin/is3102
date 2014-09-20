@@ -9,7 +9,8 @@ import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Exceptions.MssrLockedException;
+import IslandFurniture.EJB.Exceptions.ForecastFailureException;
+import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import java.util.List;
 import javax.ejb.Local;
@@ -21,14 +22,18 @@ import javax.ejb.Local;
 @Local
 public interface SalesForecastBeanLocal {
 
-    public void saveMonthlyStockSupplyReq(List<MonthlyStockSupplyReq> mssrList) throws MssrLockedException;
-
     public List<MonthlyStockSupplyReq> generateSalesFigures(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
+
+    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrieveNaiveForecast(CountryOffice co, int mthsHist)
+            throws IllegalArgumentException, ForecastFailureException;
+
+    public void saveMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList) throws InvalidMssrException;
 
     public List<Couple<Stock, List<MonthlyStockSupplyReq>>> retrieveMssrForCo(CountryOffice co, int year);
 
-    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrievePairedMssrForCo(CountryOffice co, int mthsHist);
-    
+    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrievePairedMssrForCo(CountryOffice co, int mthsHist)
+            throws IllegalArgumentException;
+
     public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
 
     public List<Integer> getYearsOfMssr(CountryOffice co);

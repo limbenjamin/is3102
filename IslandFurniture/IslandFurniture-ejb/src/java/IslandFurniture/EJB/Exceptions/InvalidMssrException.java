@@ -12,12 +12,12 @@ import java.io.Serializable;
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
-public class MssrLockedException extends Exception implements Serializable  {
+public class InvalidMssrException extends Exception implements Serializable  {
 
-    public MssrLockedException() {
+    public InvalidMssrException() {
     }
     
-    public MssrLockedException(String message){
+    public InvalidMssrException(String message){
         super(message);
     }
 }
