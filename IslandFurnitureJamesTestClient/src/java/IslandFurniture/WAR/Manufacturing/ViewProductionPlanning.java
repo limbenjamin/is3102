@@ -40,6 +40,15 @@ public class ViewProductionPlanning implements Serializable {
 
     private String success_msg;
 
+    private List<SelectItem> MF_LIST;
+    private String MF;
+
+    private String error_msg = "";
+
+    private IslandFurnitures.DataStructures.JDataTable<String> dt;
+
+    private IslandFurnitures.DataStructures.JDataTable<String> capacity_dt;
+
     public String getSuccess_msg() {
         return success_msg;
     }
@@ -52,18 +61,25 @@ public class ViewProductionPlanning implements Serializable {
         return error_msg;
     }
 
+    public JDataTable<String> getDt() {
+        return dt;
+    }
+
+    public void setDt(JDataTable<String> dt) {
+        this.dt = dt;
+    }
+
     public void setError_msg(String error_msg) {
         this.error_msg = error_msg;
     }
 
-    private List<SelectItem> MF_LIST;
-    private String MF;
-    private List<ColumnModel> dates_columns = new ArrayList<ColumnModel>();
+    public JDataTable<String> getCapacity_dt() {
+        return capacity_dt;
+    }
 
-    private String error_msg = "";
-
-    private IslandFurnitures.DataStructures.JDataTable<String> dt;
-    private ArrayList<JDataTable.Row> dtRows = new ArrayList<JDataTable.Row>();
+    public void setCapacity_dt(JDataTable<String> capacity_dt) {
+        this.capacity_dt = capacity_dt;
+    }
 
     static public class ColumnModel implements Serializable {
 
@@ -119,11 +135,11 @@ public class ViewProductionPlanning implements Serializable {
         success_msg = "Status: Switched TO" + MF;
         System.out.println("ViewProductionPlanning() MF Changed to " + MF);
         //Create the Datatable
-        pullTableFromBean();
+        pullPPTableFromBean();
 
     }
 
-    public void updateTableToBean() {
+    public void updatePPTableToBean() {
         try {
             ArrayList<Object> o = dt.getStateChangedEntities();
             dpv.updateListOfEntities(o);
@@ -133,32 +149,36 @@ public class ViewProductionPlanning implements Serializable {
             success_msg = "";
             error_msg = ex.getMessage();
         }
-        pullTableFromBean();
+        pullPPTableFromBean();
     }
 
-    public String pullTableFromBean() {
+    public void pullPPTableFromBean() {
         try {
             if (!MF.isEmpty()) {
                 dt = (JDataTable<String>) dpv.getDemandPlanningTable(MF);
-                dates_columns.clear();
-                dates_columns.add(new ColumnModel("Furniture", -2));
-                dates_columns.add(new ColumnModel("Data Type", -1));
                 Integer i = 0;
-                for (String s : dt.columns.ColumnsHeader) {
-                    dates_columns.add(new ColumnModel(s, i));
-                    i++;
-                }
-
-                dtRows.clear();
-                dtRows = dt.Internalrows;
                 success_msg = "Status: Successfully pulled planning table for " + MF;
-                System.out.println("updateTable(): Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
+                System.out.println("updateTable(): Production Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
             }
         } catch (Exception ex) {
 
         }
-        return "";
+        return;
 
+    }
+
+    public void updateCapacityTableFromBean() {
+        try {
+            if (!MF.isEmpty()) {
+                dt = (JDataTable<String>) dpv.getCapacityList(MF);
+
+                success_msg = "Status: Successfully pulled Capacity table for " + MF;
+                System.out.println("updateTable(): Capacity Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
+            }
+        } catch (Exception ex) {
+
+        }
+        return;
     }
 
     public String automaticPlanning() {
@@ -167,7 +187,7 @@ public class ViewProductionPlanning implements Serializable {
             try {
                 mpp.CreateProductionPlanFromForecast();
                 mpp.setMF(MF);
-                pullTableFromBean();
+                pullPPTableFromBean();
             } catch (Exception ex) {
                 success_msg = "";
                 error_msg = ex.getMessage();
@@ -179,14 +199,6 @@ public class ViewProductionPlanning implements Serializable {
             error_msg = ex.getMessage();
         }
         return ".";
-    }
-
-    public List<ColumnModel> getDates_columns() {
-        return dates_columns;
-    }
-
-    public ArrayList<JDataTable.Row> getDtRows() {
-        return dtRows;
     }
 
 }

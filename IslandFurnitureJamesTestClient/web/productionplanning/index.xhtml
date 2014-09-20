@@ -30,7 +30,7 @@
         <h:form id="form">
             <h:panelGroup layout="block" >
                 <span style='color:red'>
-                    <h:outputLabel rendered="#{ProductionPlanning.dtRows.size() le 1  and ProductionPlanning.MF.length() gt 0}" value="Error: No Stock Supply Requirement to plan anything ! &lt;br/&gt; " escape="false"/>
+                    <h:outputLabel rendered="#{ProductionPlanning.dt.internalrows.size() le 1  and ProductionPlanning.MF.length() gt 0}" value="Error: No Stock Supply Requirement to plan anything ! &lt;br/&gt; " escape="false"/>
                     <h:outputLabel rendered="#{ProductionPlanning.error_msg.length() gt 0}" value="#{ProductionPlanning.error_msg} &lt;br/&gt;" escape="false"/>
 
                 </span>
@@ -55,15 +55,15 @@
             <br/>
             <p:tabView id="panel">
                 <p:tab title="Production Planning">
-                    <p:dataTable rowStyleClass="#{MPP.colorClass}" id="MPP_dt" widgetVar="MPPCell" var="MPP" value="#{ProductionPlanning.dtRows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dtRows.size()>1}">
+                    <p:dataTable rowStyleClass="#{row.colorClass}" id="MPP_dt" widgetVar="MPPCell" var="row" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
 
 
-                        <p:columns  value="#{ProductionPlanning.dates_columns}" var="column" columnIndexVar="colIndex" >
+                        <p:columns  value="#{ProductionPlanning.dt.columns.columnsHeader}" var="column" columnIndexVar="cIndex" >
                             <f:facet name="header">
-                                <h:outputText value="#{column.header}" />
+                                <h:outputText value="#{column}" />
                             </f:facet>
-                            <p:outputLabel value="#{MPP.getCell(column.index)['value']}" style="width:96%" rendered="#{MPP.getCell(column.index)['isEditable']==false}"/>
-                            <h:inputText value="#{MPP.getCell(column.index)['value']}"  style="width:96%"  rendered="#{MPP.getCell(column.index)['isEditable']==true}"/>
+                            <p:outputLabel value="#{row.getCell(cIndex)['value']}" style="width:96%" rendered="#{row.getCell(cIndex)['isEditable']==false}"/>
+                            <h:inputText value="#{row.getCell(cIndex)['value']}"  style="width:96%"  rendered="#{row.getCell(cIndex)['isEditable']==true}"/>
 
 
                         </p:columns>
@@ -79,7 +79,7 @@
 
 
                         <p:commandButton value="Manual Edit" id="me">
-                            <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updateTableToBean()}" />
+                            <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updatePPTableToBean()}" />
                         </p:commandButton>
                         <p:commandButton  value="Auto-Mode Plan" id="auto">
                             <f:ajax event="click" render=":form" execute="@all" listener="#{ProductionPlanning.automaticPlanning()}"/>
@@ -87,7 +87,7 @@
                     </h:panelGroup>
                 </p:tab>
                 <p:tab title="Capacity Management">
-                    <p:dataTable var="capacity"></p:dataTable>
+
                 </p:tab>
 
             </p:tabView>
