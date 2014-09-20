@@ -42,7 +42,8 @@ public class PurchaseOrderManagedBean implements Serializable{
     private Calendar orderDate;
     private String status;
     private PurchaseOrder purchaseOrder;
-    private List<PurchaseOrder> purchaseOrderList;
+    private List<PurchaseOrder> plannedOrderList;
+    private List<PurchaseOrder> confirmedOrderList;
     private Staff staff;
     
     @EJB
@@ -55,7 +56,8 @@ public class PurchaseOrderManagedBean implements Serializable{
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
-        purchaseOrderList = mpol.viewPurchaseOrders();
+        plannedOrderList = mpol.viewPlannedPurchaseOrders();
+        confirmedOrderList = mpol.viewConfirmedPurchaseOrders();
         System.out.println("Init");
     }
     
@@ -74,6 +76,14 @@ public class PurchaseOrderManagedBean implements Serializable{
         System.out.println("this is the purchase order id at MAIN Mgd Bean" + purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("purchaseorder2.xhtml");
     }
+    
+    public String deletePurchaseOrder() {
+        System.out.println("deleting some order");
+        purchaseOrderId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("POid"));
+        mpol.deletePurchaseOrder(purchaseOrderId);
+        plannedOrderList = mpol.viewPlannedPurchaseOrders();        
+        return "purchaseOrder";
+    }    
     
     public String getUsername() {
         return username;
@@ -123,12 +133,12 @@ public class PurchaseOrderManagedBean implements Serializable{
         this.status = status;
     }    
     
-    public List<PurchaseOrder> getPurchaseOrderList() {
-        return purchaseOrderList;
+    public List<PurchaseOrder> getPlannedOrderList() {
+        return plannedOrderList;
     }
 
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
-        this.purchaseOrderList = purchaseOrderList;
+    public void setPlannedOrderList(List<PurchaseOrder> plannedOrderList) {
+        this.plannedOrderList = plannedOrderList;
     }    
     
     public PurchaseOrder getPurchaseOrder() {
@@ -153,7 +163,16 @@ public class PurchaseOrderManagedBean implements Serializable{
 
     public void setMgrl(ManagePurchaseOrderLocal mpol) {
         this.mpol = mpol;
-    } 
+    }    
+
+    public List<PurchaseOrder> getConfirmedOrderList() {
+        return confirmedOrderList;
+    }
+
+    public void setConfirmedOrderList(List<PurchaseOrder> confirmedOrderList) {
+        this.confirmedOrderList = confirmedOrderList;
+    }
+
 
     public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
@@ -162,6 +181,5 @@ public class PurchaseOrderManagedBean implements Serializable{
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
-    
     
 }

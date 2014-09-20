@@ -13,34 +13,8 @@
                             <div class="col-md-12">
                                 <h4>Manage Roles and Privileges</h4>
                                 <hr></hr>       
-                            </div>                        
-                            <div class="col-md-5 col-sm-5">                                               
-                              <section class="panel">
-                                <div class="panel-heading dashboard-title-panel">
-                                    <span class="pull-right">
-                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newPrivilege">
-                                            <span class="fa fa-plus"></span> New
-                                        </a>
-                                    </span>
-                                    Privilege List
-                                </div>
-                                  <ui:repeat value="#{rolePrivilegeManagedBean.privilegeList}" var="privilege">
-                                    <div class="list-group">                          
-                                      <a href="#" class="list-group-item">    
-                                        <h:form>
-                                            <div class="pull-right btn-group">
-                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{rolePrivilegeManagedBean.deletePrivilege}">
-                                                    <f:param name="id" value="#{privilege.id}" />
-                                                </h:commandButton>
-                                            </div>
-                                        </h:form>                                          
-                                        <h5><strong>#{privilege.name}</strong></h5>
-                                      </a>                                  
-                                    </div>
-                                </ui:repeat>
-                              </section>
                             </div>
-                            <div class="col-md-5 col-sm-5">                                               
+                            <div class="col-md-7 col-sm-7">                                               
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                     <span class="pull-right">
@@ -69,34 +43,22 @@
                                 </ui:repeat>
                               </section>
                             </div>
-
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="newPrivilege" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Create A New Privilege</h4>
-                                  </div>
-                                  <h:form id="privilegeForm" class="form-horizontal">
-                                      <div class="modal-body">
-                                          <div class="form-group">
-                                            <label class="col-sm-3 control-label">Privilege Name: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-bookmark"></i>
-                                              <h:inputText id="privilegeName" class="form-control"></h:inputText>
-                                            </div>
-                                          </div>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{rolePrivilegeManagedBean.addPrivilege}" class="btn btn-success" value="Add Privilege"></h:commandButton>
-                                      </div>
-                                  </h:form>
+                            <div class="col-md-3 col-sm-3">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    Privilege List
                                 </div>
-                              </div>
+                                  <ui:repeat value="#{rolePrivilegeManagedBean.privilegeList}" var="privilege">
+                                    <div class="list-group">                          
+                                      <a href="#" class="list-group-item">                                             
+                                        <h5><strong>#{privilege.name}</strong></h5>
+                                      </a>                                  
+                                    </div>
+                                </ui:repeat>
+                              </section>
                             </div>
+                            
+
                             
                             <!-- Modal -->
                             <div class="modal fade" id="newRole" aria-hidden="true">

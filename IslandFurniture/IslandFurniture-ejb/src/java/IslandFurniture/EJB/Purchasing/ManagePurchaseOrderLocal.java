@@ -29,7 +29,7 @@ public interface ManagePurchaseOrderLocal {
 
     void deletePurchaseOrderDetail(Long podId);
 
-    void editPurchaseOrder(Long poId, Plant plant, Calendar orderDate, String status);
+    void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status);
 
     void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
 
@@ -49,4 +49,7 @@ public interface ManagePurchaseOrderLocal {
 
     List<PurchaseOrder> viewPurchaseOrders();
     
+    List<PurchaseOrder> viewPlannedPurchaseOrders();
+    
+    List<PurchaseOrder> viewConfirmedPurchaseOrders();    
 }
