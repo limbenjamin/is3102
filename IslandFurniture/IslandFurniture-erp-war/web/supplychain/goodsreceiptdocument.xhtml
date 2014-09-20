@@ -44,8 +44,8 @@
                                     <td> <h:outputText value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument.postingDate.time}" >
                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument.plant.timeZoneID}"  />
                                         </h:outputText></td>
-                                    <td><h:inputText id="eventTimeString" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument.receiptDate}" p:type="date" class="form-control"></h:inputText></td>
-                                    <td></td>
+                                    <td><h:inputText value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument.receiptDate}" p:type="date" class="form-control"></h:inputText></td>
+                                    <td><h:inputText value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocument.deliveryNote}" class="form-control"></h:inputText></td>
 
                                     <td></td>
                                     <td>
@@ -102,11 +102,14 @@
                         <section name="Post Goods Receipt Document"> 
 
                             <h:form class="form-horizontal">
-                                <div class="form-group">
-                                </div>
+                                <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}">
+                                    <f:selectItem itemLabel="Select Storage Bin"></f:selectItem>
+                                    <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                </h:selectOneMenu>
                                 <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right"> 
                                     <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
                                     <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                    <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
                                 </h:commandButton>
                             </h:form>
                         </section>
