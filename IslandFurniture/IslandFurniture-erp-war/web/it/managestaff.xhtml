@@ -10,18 +10,16 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
-                            <div class="col-md-12">
-                                <h4>Staff</h4>
+                            <div class="col-md-8">
+                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newStaff">
+                                    <i class="fa fa-fw fa-plus"></i>New Staff
+                                </button>                                
+                                <h4>Manage Staff</h4>
                                 <hr></hr>
                             </div>                        
-                            <div class="col-md-7">                                               
+                            <div class="col-md-8">                                               
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
-                                    <span class="pull-right">
-                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newStaff">
-                                            <span class="fa fa-plus"></span> New
-                                        </a>
-                                    </span>
                                     Staff List
                                 </div>
                                   <ui:repeat value="#{staffManagedBean.staffList}" var="staff">
@@ -108,8 +106,8 @@
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{staffManagedBean.createStaff}" class="btn btn-success" value="Add Staff"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{staffManagedBean.createStaff}" class="btn btn-success btn-round" value="Add Staff"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
