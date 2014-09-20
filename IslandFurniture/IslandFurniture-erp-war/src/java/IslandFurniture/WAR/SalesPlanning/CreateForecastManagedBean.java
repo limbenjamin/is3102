@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -46,6 +47,8 @@ public class CreateForecastManagedBean implements Serializable {
 
     String panelActive = "0";
     String statusMessage = "";
+
+    Future<Boolean> asyncResult;
 
     private List<Couple<String, String>> mssrLabels = new ArrayList();
     private List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> mssrPairedList;
@@ -82,17 +85,28 @@ public class CreateForecastManagedBean implements Serializable {
         }
     }
 
+    public void naiveForecast() {
+        try {
+            this.mssrPairedList = salesForecastBean.retrieveNaiveForecast(co, 6);
+            statusMessage = "Naive forecast performed successfullly!";
+        } catch (Exception ex) {
+            statusMessage = "Failed to forecast: " + ex.getMessage();
+        }
+    }
+
     public void saveForecast(AjaxBehaviorEvent event) {
         System.out.println("Ajax call");
 
         try {
-            for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> mssrEntry : this.mssrPairedList) {
-                System.out.println(mssrEntry.getSecond().getSecond().get(0).getQtyForecasted());
+            List<Couple<Stock, List<MonthlyStockSupplyReq>>> coupleList = new ArrayList();
 
-                salesForecastBean.saveMonthlyStockSupplyReq(mssrEntry.getSecond().getSecond());
+            for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> mssrEntry : this.mssrPairedList) {
+                coupleList.add(new Couple(mssrEntry.getFirst(), mssrEntry.getSecond().getSecond()));
             }
 
-            statusMessage = "Saved Successfully!";
+            salesForecastBean.saveMonthlyStockSupplyReq(coupleList);
+
+            statusMessage = "Forecast saved successfully!";
         } catch (Exception ex) {
             statusMessage = "Error saving forecast: " + ex.getMessage();
         }
