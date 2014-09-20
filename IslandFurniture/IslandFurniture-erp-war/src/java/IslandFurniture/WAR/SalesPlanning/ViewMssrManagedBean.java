@@ -63,12 +63,14 @@ public class ViewMssrManagedBean implements Serializable {
         if (plant instanceof CountryOffice) {
             // Populate MSSR labels and formatted labels
             this.mssrLabels = MonthlyStockSupplyReq.getLabels();
-            
+
             this.co = (CountryOffice) plant;
-            
+
             this.yearsOfMssr = salesForecastBean.getYearsOfMssr(co);
-            this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size() - 1);
-            this.updateMssrList();
+            if (!this.yearsOfMssr.isEmpty()) {
+                this.yearOfMssr = this.yearsOfMssr.get(this.yearsOfMssr.size() - 1);
+                this.updateMssrList();
+            }
         } else {
             try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();

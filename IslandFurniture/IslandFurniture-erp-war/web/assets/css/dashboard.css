@@ -18,6 +18,24 @@
     margin: 0px 5px;
 }
 
+.transparent-button {
+    position: relative;
+    background-color: transparent;
+    border: transparent;
+    z-index: 20;    
+}
+
+.transparent-button:hover {
+    background-color: transparent;
+}
+
+.icon-button {
+    position: relative;
+    z-index: 1;
+    top:3px;
+    margin-left: -20px;
+}
+
 .centered-title {
     display: block;
     float: none;
@@ -84,6 +102,11 @@ img{
 .transparent-form {
     background-color: transparent;
     border: transparent;
+    border-radius: 3px;
+}
+
+.transparent-form:focus {
+    border: 1px solid #bdc3c7;
 }
 
 .inner-addon { 
@@ -96,7 +119,13 @@ img{
   pointer-events: none;
 }
 
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
 .right-addon .glyphicon { right: 20px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
 
 /************************* dashboard login page ***********************************/
 
