@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -17,6 +18,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -33,6 +35,15 @@ public class FurnitureManagedBean implements Serializable {
     private List<FurnitureModel> furnitureList = null;
     private List<FurnitureModel> filteredList = null;
     private List<Material> BOMList = null;
+    private Long furnitureID = null;
+
+    public Long getFurnitureID() {
+        return furnitureID;
+    }
+
+    public void setFurnitureID(Long furnitureID) {
+        this.furnitureID = furnitureID;
+    }
 
     public List<Material> getBOMList() {        return BOMList;    }
     public void setBOMList(List<Material> BOMList) {        this.BOMList = BOMList;    }
@@ -47,25 +58,34 @@ public class FurnitureManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         furnitureList = stockManager.displayFurnitureList();
+        System.out.println("init");
     }
-    public void addFurnitureModel() {
+    public String addFurnitureModel() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("FurnitureManagedBean.addFurnitureModel()");
         String name = request.getParameter("addFurnitureForm:name");
-        stockManager.addFurnitureModel(name);
+        String price = request.getParameter("addFurnitureForm:price");
+        furniture = stockManager.addFurnitureModel(name, Double.parseDouble(price));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom?faces-redirect=true";
     }
     public List<FurnitureModel> displayFurnitureList() {
         System.out.println("FurnitureManagedBean.displayFurnitureList()");
         furnitureList = stockManager.displayFurnitureList();
         return furnitureList;
     }
-    public void editFurnitureModel() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    public String editFurnitureModel(ActionEvent event) throws IOException {
         System.out.println("FurnitureManagedBean.editFurnitureModel()");
-        String name = request.getParameter("editFurnitureForm:name");
-        String price = request.getParameter("editFurnitureForm:price");
-        stockManager.editFurnitureModel(name, price);
-        displayFurnitureList();
+        furniture = (FurnitureModel) event.getComponent().getAttributes().get("toEdit");
+        stockManager.editFurnitureModel(furniture.getId(), furniture.getName(), furniture.getPrice());
+        return "retailItem";
+    }
+    public String deleteFurnitureModel() {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        System.out.println("FurnitureManagedBean.deleteFurnitureModel()");
+        Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fID"));
+        stockManager.deleteFurnitureModel(id);
+        return "furniture";
     }
     public String addFurnitureColour() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -75,41 +95,9 @@ public class FurnitureManagedBean implements Serializable {
         stockManager.addFurnitureColour(name, colour);
         return "furniture";
     }
-    public String addToBOM() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("FurnitureManagedBean:addToBOM()");
-        try {
-            String furnitureName = request.getParameter("addBOMForm:furnitureName");
-            String materialName= request.getParameter("addBOMForm:materialName");
-            stockManager.addToBOM(materialName, furnitureName);
-            return "furniture";
-        } catch(Exception ex) {
-            System.err.println("Something went wrong");
-            return "furniture";
-        }
-    }
-    public void displayBOM() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("FurnitureManagedBean:displayBOM()");
-        String furnitureName = null;
-        try {
-            furnitureName = request.getParameter("displayBOMForm:name");
-            BOMList = stockManager.displayBOM(furnitureName);
-            System.out.println(BOMList.size());
-  //          return "furniture";
-        } catch(Exception ex) {
-            System.err.println("Something went wrong");
-  //          return "furniture";
-        }
-    }
-    public List<Material> displayBOMList() {
-        System.out.println("FurnitureManagedBean:displayBOMList()");
-        if(BOMList != null) {
-            for(int i=0; i<BOMList.size(); i++) {
-                System.out.println(BOMList.get(i).getName());
-            }
-        } else
-            System.out.println("BOMList is null");
-        return BOMList;
-    }
+    public void bomActionListener(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", event.getComponent().getAttributes().get("fID"));
+        furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("bom.xhtml");
+    }   
 }

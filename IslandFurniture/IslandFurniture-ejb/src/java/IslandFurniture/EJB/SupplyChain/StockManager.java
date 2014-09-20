@@ -91,22 +91,34 @@ public class StockManager implements StockManagerLocal {
             ex.printStackTrace();
         }
     }
-    public boolean addFurnitureModel(String name) {
+    public FurnitureModel addFurnitureModel(String name, Double price) {
         FurnitureModel fm;
         try {
-            System.out.println("StockManager:addFurnitureModel()");
+            System.out.println("StockManager.addFurnitureModel()");
             fm = new FurnitureModel(name);
+            fm.setPrice(price);
             em.persist(fm);
-            return true;
+            return fm;
         } catch(Exception ex) {
             ex.printStackTrace();
-            return false;
+            return null;
+        }
+    }
+    public FurnitureModel getFurniture(Long id) {
+        FurnitureModel furniture;
+        try {
+            System.out.println("StockManager.getFurniture()");
+            furniture = em.find(FurnitureModel.class, id);
+            return furniture;            
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;
         }
     }
     public List<FurnitureModel> displayFurnitureList() {
         List furnitureList;
         try {
-            System.out.println("StockManager:displayFurnitureList()");
+            System.out.println("StockManager.displayFurnitureList()");
             furnitureList = em.createNamedQuery("getAllFurnitureModels", FurnitureModel.class).getResultList();
             return furnitureList;
         } catch(Exception ex) {
@@ -115,28 +127,40 @@ public class StockManager implements StockManagerLocal {
         }
     }
     
-    public void editFurnitureModel(String furnitureName, String price) {
+    public void editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
         FurnitureModel fm;
         try {
-            System.out.println("StockManager:editFurnitureModel()");
-            fm = findFurnitureByName(em, furnitureName);
+            System.out.println("StockManager.editFurnitureModel()");
+            fm = em.find(FurnitureModel.class, furnitureID);
             System.out.println("Updating furniture information of " + fm.getName());
-            if(price != null && fm.getPrice() != null) {
-                System.out.println("Changing price from " + fm.getPrice().toString() + " to " + price);
-                fm.setPrice(Double.parseDouble(price));
-            } else if(price != null) {
-                System.out.println("Changing price from null to " + price);
-                fm.setPrice(Double.parseDouble(price));
-            } else ;
+            fm.setName(furnitureName);
+            fm.setPrice(price);
+            em.persist(fm);
         } catch(NoResultException ex) {
             System.err.println("Can't find name");
+        }
+    }
+    public void deleteFurnitureModel(Long furnitureID) {
+        FurnitureModel fm;
+        try {
+            System.out.println("StockManager.deleteFurnitureModel()");
+            System.out.println(furnitureID);
+            fm = em.find(FurnitureModel.class, furnitureID);
+            if(fm.getBom() == null || fm.getBom().getBomDetails() == null) {
+                em.remove(fm);
+                System.out.println("Successfully deleted FurnitureModel");
+            } else {
+                System.out.println("Invalid deletion due to existence of BOM");
+            }
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
         }
     }
     public void addFurnitureColour(String furnitureName, String colour) {
         FurnitureModel fm;
         List colourList;
         try {
-            System.out.println("StockManager:addFurnitureColour()");
+            System.out.println("StockManager.addFurnitureColour()");
             fm = findFurnitureByName(em, furnitureName);
             System.out.println("Adding new furniture colour of " + fm.getName());
             if(colour != null) {
@@ -158,15 +182,15 @@ public class StockManager implements StockManagerLocal {
             System.err.println("Can't find name");
         }
     }
-    public void addToBOM(String materialName, String furnitureName) {
+    public void addToBOM(Long furnitureID, Long materialID, Integer materialQuantity) {
         Material material;
         FurnitureModel fm;
         BOM bom;
         BOMDetail BOMdetail ;
         try {
             System.out.println("StockManager:addToBOM");
-            material = findMaterialByName(em, materialName);
-            fm = findFurnitureByName(em, furnitureName);
+            material = em.find(Material.class, materialID);
+            fm = em.find(FurnitureModel.class, furnitureID);
             if(fm.getBom() == null) {
                 System.out.println("BOM is null");
                 bom = new BOM();
@@ -178,32 +202,47 @@ public class StockManager implements StockManagerLocal {
             
             BOMdetail = new BOMDetail();
             BOMdetail.setMaterial(material);
+            BOMdetail.setQuantity(materialQuantity);
             BOMdetail.setBom(bom);
             bom.getBomDetails().add(BOMdetail);
+            System.out.println("Successfully added new BOMDetail");
             em.flush();
            
         } catch(NoResultException NRE) {
             System.err.println("Can't find name");
         }
     }
-    public List displayBOM(String furnitureName) {
+    public List displayBOM(Long furnitureID) {
         FurnitureModel fm;
-        List<Material> materialList;
         List<BOMDetail> BOMdetailsList;
         try {
-            System.out.println("StockManager:displayBOM()");
-            fm = findFurnitureByName(em, furnitureName);
+            System.out.println("StockManager.displayBOM()");
+            fm = em.find(FurnitureModel.class, furnitureID);
             BOMdetailsList = fm.getBom().getBomDetails();
-            materialList = new ArrayList<Material>();
-            for(int i=0; i<BOMdetailsList.size(); i++) {
-                materialList.add(BOMdetailsList.get(i).getMaterial());
-                System.out.println(BOMdetailsList.get(i).getMaterial().getName());
-            }
-            return materialList;
+            return BOMdetailsList;
         } catch(NoResultException NRE) {
-            System.err.println("No Furniture called " + furnitureName);
+            System.err.println("No such Furniture found");
             return null;
         }
+    }
+    public void editBOMDetail(Long BOMDetailID, Integer quantity) {
+        BOMDetail BOMdetail;
+        try {
+            BOMdetail = em.find(BOMDetail.class, BOMDetailID);
+            BOMdetail.setQuantity(quantity);
+            em.persist(BOMdetail);
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        }
+    }
+    public void deleteBOMDetail(Long BOMDetailID) {
+        BOMDetail BOMdetail;
+        try {
+            BOMdetail = em.find(BOMDetail.class, BOMDetailID);
+            em.remove(BOMdetail);
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        } 
     }
     public List<RetailItem> displayItemList() {
         List<RetailItem> itemList;

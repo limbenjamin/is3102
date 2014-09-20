@@ -102,5 +102,9 @@
             <from-outcome>procurementContract</from-outcome>
             <to-view-id>/salesplanning/procurementContract.xhtml</to-view-id>
         </navigation-case> 
+        <navigation-case>
+            <from-outcome>bom</from-outcome>
+            <to-view-id>/knowledge/bom.xhtml</to-view-id>
+        </navigation-case> 
     </navigation-rule>
 </faces-config>
