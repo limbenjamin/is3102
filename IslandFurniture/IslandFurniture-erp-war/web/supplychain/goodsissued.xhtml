@@ -12,9 +12,9 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h:form id="createGRD1"> 
-                            <h:commandButton action="#{goodsReceiptManagedBean.addGoodsReceiptDocument}" value="Create Goods Receipt Document" class="btn btn-success pull-right btn-right-margin"></h:commandButton>
+                            <h:commandButton action="#{goodsIssuedManagedBean.addGoodsIssuedDocument}" value="Create Goods issued Document" class="btn btn-success pull-right btn-right-margin"></h:commandButton>
                         </h:form>    
-                        <h4>Pending Goods Receipt</h4><hr></hr>
+                        <h4>Pending Goods Issued</h4><hr></hr>
                     </div>
 
                     <div class="col-md-8">
@@ -24,15 +24,14 @@
 
                             <table class="table table-hover">
                                 <tr>
-                                    <th>Goods Receipt ID</th>
+                                    <th>Goods Issued ID</th>
                                     <th>Posting Date</th>
                                     <th>Document Date</th>
-                                    <th>Purchase Order Number</th>
                                     <th>Edit</th>
 
                                 </tr>
                                 <h:form id="viewGRD" class="form-horizontal">
-                                    <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentList}" var="GRD">
+                                    <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentList}" var="GRD">
                                         <tr>
                                             <td>#{GRD.id}</td>
                                             <td>
@@ -41,11 +40,10 @@
                                                 </h:outputText>
                                             </td>
                                             <td>
-                                                <h:outputText value="#{GRD.receiptDate.time}" >
+                                                <h:outputText value="#{GRD.issuedDate.time}" >
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                 </h:outputText></td>
-                                            <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>
@@ -57,17 +55,16 @@
 
 
                         <section name="postedGRD">
-                            <h4>Posted Goods Receipt</h4><hr></hr>
+                            <h4>Posted Goods Issued</h4><hr></hr>
                             <table class="table table-hover">
                                 <tr>
-                                    <th>Goods Receipt ID</th>
+                                    <th>Goods Issued ID</th>
                                     <th>Posting Date</th>
                                     <th>Document Date</th>
-                                    <th>Purchase Order Number</th>
                                     <th></th>
                                 </tr>
                                 <h:form class="form-horizontal">
-                                    <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentPostedList}" var="GRD">
+                                    <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" var="GRD">
                                         <tr>
                                             <td>#{GRD.id}</td>
                                             <td>
@@ -76,11 +73,10 @@
                                                 </h:outputText>
                                             </td>
                                             <td>
-                                                <h:outputText value="#{GRD.receiptDate.time}" >
+                                                <h:outputText value="#{GRD.issuedDate.time}" >
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                 </h:outputText></td>
-                                            <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>
@@ -89,8 +85,6 @@
                                 </h:form> 
                             </table>
                         </section>
-
-
                     </div>
                 </div>
             </ui:define>

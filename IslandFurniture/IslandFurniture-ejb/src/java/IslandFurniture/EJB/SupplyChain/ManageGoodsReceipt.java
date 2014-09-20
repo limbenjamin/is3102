@@ -58,15 +58,19 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public void createGoodsReceiptDocumentStockUnit(Long grdId) {
+    public void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate) {
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         goodsReceiptDocument.setConfirm(true);
+        goodsReceiptDocument.setPostingDate(postingDate);
         em.merge(goodsReceiptDocument);
         em.flush();
     }
 
     @Override
     public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity) {
+        
+        System.out.println("The documentId is: " + grdId);
+        
         goodsReceiptDocumentDetail = new GoodsReceiptDocumentDetail();
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         stock = getStock(stockId);
@@ -102,7 +106,19 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public List<GoodsReceiptDocument> viewGoodsReceiptDocument() {
-        Query q = em.createQuery("SELECT s " + "FROM GoodsReceiptDocument s");
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE");
+        return q.getResultList();
+    }
+    
+        @Override
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted() {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=TRUE");
+        return q.getResultList();
+    }
+
+    @Override
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd) {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.id=" + grd.getId());
         return q.getResultList();
     }
 
@@ -131,14 +147,13 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         em.remove(goodsReceiptDocumentDetail);
         em.flush();
     }
-    
-        @Override
+
+    @Override
     public List<StorageArea> viewStorageArea(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
         return q.getResultList();
     }
 
-   
     @Override
     public List<StorageBin> viewStorageBin(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());

@@ -70,32 +70,21 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
-                                    <li class="list-group-item" id="new-notification">
-                                        <h:form id="newNotification"> 
-                                                <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.reduceCount}" />
-                                                <c:if test="${loginManagedBean.notification != null}">
-                                                    <a href="#{application.contextPath}#{loginManagedBean.notification.link}" onclick="callbutton();">
-                                                        <div class="m-body">
-                                                            <small><h6>#{loginManagedBean.notification.title}:</h6></small>
-                                                            <span>#{loginManagedBean.notification.content}</span><br></br>
-                                                            <span class="small"><i class="fa fa-clock-o"></i> </span>
-                                                        </div>
-                                                    </a>                                              
-                                                </c:if>
-                                            <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
-                                        </h:form>
-                                    </li>    
+                                <h:form id="newNotification">                                      
                                     <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
+                                        <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
                                         <li class="list-group-item">
-                                            <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}">
+                                            <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name :'nid' , value : '#{loginManagedBean.notificationList.get(i).id}'}]);">
                                                 <div class="m-body">
                                                     <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
                                                     <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i> </span>
+                                                    <span class="small"><i class="fa fa-clock-o"></i>#{loginManagedBean.localDateTimeList.get(i).toString()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
                                                 </div>
                                             </a>
                                         </li>
                                     </c:forEach>
+                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                </h:form>
                                 </ul>
                             </div>
                         </div>

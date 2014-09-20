@@ -27,6 +27,15 @@ public class BOMDetail implements Serializable {
     private BOM bom;
     @ManyToOne
     private Material material;
+    private Integer quantity;
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
     public BOMDetail() {
         

@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Notification;
+import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.List;
@@ -22,8 +23,18 @@ public interface ManageNotificationsBeanLocal {
     void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff);
 
     List<Notification> displayNotificationForStaff(Staff staff);
-
-    List<Notification> displayNotificationForRole(Role role);
     
     void createNewNotificationForRole(String title, String content, String link, String linkText, Role role);
+    
+    Notification getNotification(Long id);
+    
+    void setNotificationToRead(Notification notification);
+ 
+    void createNewNotificationForRoleFromPlant(String title, String content, String link, String linkText, Role role, Plant plant);
+    
+    void deleteNotification(Long id);
+    
+    List<Notification> getAllNotifications();
+    
+    
 }
