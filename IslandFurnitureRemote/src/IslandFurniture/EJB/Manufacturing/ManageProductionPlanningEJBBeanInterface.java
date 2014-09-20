@@ -24,6 +24,8 @@ public interface ManageProductionPlanningEJBBeanInterface {
     Object getDemandPlanningTable(String MF);
 
     boolean changeMPP(String mppID, int newValue);
-    
+
     boolean updateListOfEntities(ArrayList<Object> listOfEntities) throws Exception;
+
+    Object getCapacityList(String MF);
 }

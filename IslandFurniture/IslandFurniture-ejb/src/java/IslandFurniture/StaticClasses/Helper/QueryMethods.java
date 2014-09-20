@@ -96,13 +96,13 @@ public class QueryMethods {
 
         return (List<Supplier>) q.getResultList();
     }
-    
-    public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset){
+
+    public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
         cal.add(Calendar.MONTH, monthsOffset);
-        
+
         MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(mssr.getStock().getId(), mssr.getCountryOffice().getId(), Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
-        
+
         return em.find(MonthlyStockSupplyReq.class, mssrPK);
     }
 
@@ -212,6 +212,25 @@ public class QueryMethods {
         } catch (Exception ex) {
             throw new RuntimeException("This MSSR does not have a MPP yet");
         }
+    }
+
+    public static double getCurrentFreeCapacity(EntityManager em,ManufacturingFacility MF, Month m, int year) {
+
+        Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
+        q.setParameter("m", m);
+        q.setParameter("y", year);
+        q.setParameter("mf", MF);
+        double cCap = 0;
+        for (Object o : q.getResultList()) {
+            MonthlyProductionPlan mpp = (MonthlyProductionPlan) o;
+            if (mpp.isLocked()) {
+                return 0; //out of bound
+            }
+            cCap += mpp.getQTY() / (0.0 + MF.findProductionCapacity(mpp.getFurnitureModel()).getCapacity(m, year));
+        }
+
+        return 1 - cCap;
+
     }
 
 }

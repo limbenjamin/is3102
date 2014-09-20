@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,22 +21,20 @@ import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 public class JDataTable<T> implements Serializable {
 
-    public JDataTable.Columns<T> columns = new JDataTable.Columns<T>();
+    public ArrayList<String> columns = new ArrayList<String>();
     public String Title = "TABLE";
-    public ArrayList<Row> Internalrows;
+    public List<Row> Internalrows;
 
-    public static class Columns<T> implements Serializable {
-
-        public ArrayList<T> ColumnsHeader = new ArrayList<T>();
-
-        public Columns() {
-
-        }
-
-        public int getColumnCount() {
-            return (ColumnsHeader.size());
-        }
+    public List<Row> getInternalrows() {
+        return Internalrows;
     }
+
+    public void setInternalrows(ArrayList<Row> Internalrows) {
+        this.Internalrows = Internalrows;
+    }
+
+
+
 
     public static class Cell implements Serializable {
 
@@ -45,9 +44,31 @@ public class JDataTable<T> implements Serializable {
         private String propertyname;
         private Boolean isEditable = false;
         private Boolean stateChanged = false;
+        private int Index = 0;
+
+        @Override
+        public boolean equals(Object object) {
+
+            if (!(object instanceof Cell)) {
+
+                return object.equals(this.Value);
+
+            }
+
+            return (this.Value.equals(((Cell) object).getValue()));
+
+        }
 
         public Object getBinded_entity() {
             return binded_entity;
+        }
+
+        public int getIndex() {
+            return Index;
+        }
+
+        public void setIndex(int Index) {
+            this.Index = Index;
         }
 
         public Boolean isBinded() {
@@ -139,12 +160,16 @@ public class JDataTable<T> implements Serializable {
         }
 
         private String transform(String sx) {
-            if (displaytype.equals("String")) {
+            try {
+                if (displaytype.equals("String")) {
 
-                return (sx);
-            } else if (displaytype.equals("percentage.2dp")) {
+                    return (sx);
+                } else if (displaytype.equals("percentage.2dp")) {
 
-                return String.valueOf((Math.round(Double.valueOf(sx.toString()) * 10000) / 100.00)) + "%";
+                    return String.valueOf((Math.round(Double.valueOf(sx.toString()) * 10000) / 100.00)) + "%";
+                }
+            } catch (Exception ex) {
+
             }
             return (sx);
         }
@@ -252,6 +277,16 @@ public class JDataTable<T> implements Serializable {
 
     }
 
+    public ArrayList<String> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(ArrayList<String> columns) {
+        this.columns = columns;
+    }
+    
+    
+
     public JDataTable.Row newBindedRow(Serializable entity) {
         Row r = new Row(entity);
 
@@ -283,10 +318,6 @@ public class JDataTable<T> implements Serializable {
 
     public int getRowCount() {
         return Internalrows.size();
-    }
-
-    public int getColumnCount() {
-        return columns.getColumnCount();
     }
 
     public Row getRow(int i) {

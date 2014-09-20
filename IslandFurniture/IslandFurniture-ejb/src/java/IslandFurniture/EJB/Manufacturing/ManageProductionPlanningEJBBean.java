@@ -50,6 +50,29 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
     }
 
     @Override
+    public Object getCapacityList(String MF) {
+        ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MF + "'").getSingleResult();
+        Query q = em.createNamedQuery("ProductionCapacity.findPCbyMF");
+        q.setParameter("MFNAME", MF);
+        JDataTable<String> dt = new JDataTable<String>();
+        dt.Title = "Capacity Management";
+
+        dt.columns.add("Furniture Model");
+        dt.columns.add("Maximum Daily Production");
+
+        for (ProductionCapacity pc : (List<ProductionCapacity>) q.getResultList()) {
+
+            JDataTable.Row r = dt.newBindedRow(pc);
+            r.newCell(pc.getFurnitureModel().getName()).setIsEditable(true);
+            r.newBindedCell(pc.getQty().toString(), "Qty");
+
+        }
+
+        return dt;
+
+    }
+
+    @Override
     public Object getDemandPlanningTable(String MF) {
         ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MF + "'").getSingleResult();
         return (getDemandPlanningTable(mff));
@@ -79,12 +102,12 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
 
             MonthlyProductionPlan mpp = (MonthlyProductionPlan) o;
 
-            int capacity=mpp.getManufacturingFacility().findProductionCapacity(mpp.getFurnitureModel()).getCapacity(mpp.getMonth(), mpp.getYear());
+            int capacity = mpp.getManufacturingFacility().findProductionCapacity(mpp.getFurnitureModel()).getCapacity(mpp.getMonth(), mpp.getYear());
             if (mpp.getQTY() > capacity) {
                 throw new Exception(mpp.getMonth() + "/" + mpp.getYear() + " PLANNED CAPCITY @" + mpp.getQTY() + " exceeds Capacity of" + capacity);
             }
-            
-            if (mpp.getQTY()<0){
+
+            if (mpp.getQTY() < 0) {
                 throw new Exception("A number greater than zero is expected !");
             }
 
@@ -99,7 +122,8 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF");
         q.setParameter("mf", MF);
         JDataTable<String> dt = new JDataTable<String>();
-
+        dt.columns.add("Furniture Model");
+        dt.columns.add("Data");
         String Cur_FM = "";
         JDataTable.Row demand_row = null;
         JDataTable.Row planned_row = null;
@@ -112,7 +136,11 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
         fcc_Row.rowheader = "Remaining Capacity";
         fcc_Row.rowgroup = "Summary";
         fcc_Row.setColorClass("summary");
+        fcc_Row.newCell("");
+        fcc_Row.newCell("Remaining Capacity");
+        
 
+        
         String colorclass = "normal_even";
 
         for (MonthlyProductionPlan pp : (List<MonthlyProductionPlan>) q.getResultList()) {
@@ -130,36 +158,46 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
                 new_Row.rowheader = "Required Quantity";
                 new_Row.rowgroup = Cur_FM;
                 new_Row.setColorClass(colorclass);
+                new_Row.newCell(Cur_FM); //first column
+                new_Row.newCell(new_Row.rowheader); //second
                 demand_row = new_Row;
 
                 new_Row = dt.newRow();
                 new_Row.rowheader = "Planned Quantity";
                 new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
+                new_Row.newCell(Cur_FM); //first column
+                new_Row.newCell(new_Row.rowheader); //second
                 planned_row = new_Row;
 
                 new_Row = dt.newRow();
                 new_Row.rowheader = "Month Max Capacity";
                 new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
+                new_Row.newCell(Cur_FM); //first column
+                new_Row.newCell(new_Row.rowheader); //second
                 max_CAP = new_Row;
 
                 new_Row = dt.newRow("percentage.2dp");
                 new_Row.rowheader = "Required Capacity";
                 new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
+                new_Row.newCell(Cur_FM); //first column
+                new_Row.newCell(new_Row.rowheader); //second
                 cc_row = new_Row;
 
                 new_Row = dt.newRow("percentage.2dp");
                 new_Row.rowheader = "Consumed Capacity";
                 new_Row.setColorClass(colorclass);
                 new_Row.rowgroup = Cur_FM;
+                new_Row.newCell(Cur_FM); //first column
+                new_Row.newCell(new_Row.rowheader); //second
                 pc_row = new_Row;
             }
 
-            if (!dt.columns.ColumnsHeader.contains(pp.getMonth().toString() + "/" + pp.getYear())) {
-                dt.columns.ColumnsHeader.add(pp.getMonth().toString() + "/" + pp.getYear());
-                fcc_Row.newCell(String.valueOf(pp.getManufacturingFacility().getCurrentFreeCapacity(em, pp.getMonth(), pp.getYear())));
+            if (!dt.columns.contains(pp.getMonth().toString() + "/" + pp.getYear())) {
+                dt.columns.add(pp.getMonth().toString() + "/" + pp.getYear());
+                fcc_Row.newCell(String.valueOf(QueryMethods.getCurrentFreeCapacity(em, pp.getManufacturingFacility(), pp.getMonth(), pp.getYear())));
             }
 
             //Start off with Demand Requirement.

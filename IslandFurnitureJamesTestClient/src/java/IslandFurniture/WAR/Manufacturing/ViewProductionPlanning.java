@@ -167,13 +167,28 @@ public class ViewProductionPlanning implements Serializable {
 
     }
 
-    public void updateCapacityTableFromBean() {
+    public void updatePPTableFromBean() {
         try {
             if (!MF.isEmpty()) {
                 dt = (JDataTable<String>) dpv.getCapacityList(MF);
 
                 success_msg = "Status: Successfully pulled Capacity table for " + MF;
-                System.out.println("updateTable(): Capacity Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
+                System.out.println("updateTable(): Production Capacity Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
+            }
+        } catch (Exception ex) {
+
+        }
+        return;
+    }
+
+    public void pullcapacityTableToBean() {
+        try {
+            if (!MF.isEmpty()) {
+                
+                capacity_dt = (JDataTable<String>) dpv.getCapacityList(MF);
+                Integer i = 0;
+                success_msg = "Status: Successfully pulled capacity table for " + MF;
+                System.out.println("updateTable(): Capacity Reconstructed for " + MF + " Rows Count:" + capacity_dt.getRowCount());
             }
         } catch (Exception ex) {
 

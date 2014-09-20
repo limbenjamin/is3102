@@ -55,15 +55,15 @@
             <br/>
             <p:tabView id="panel">
                 <p:tab title="Production Planning">
-                    <p:dataTable rowStyleClass="#{row.colorClass}" id="MPP_dt" widgetVar="MPPCell" var="row" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
+                    <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
 
 
-                        <p:columns  value="#{ProductionPlanning.dt.columns.columnsHeader}" var="column" columnIndexVar="cIndex" >
+                        <p:columns  value="#{ProductionPlanning.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
                             <f:facet name="header">
-                                <h:outputText value="#{column}" />
+                                #{datacolumn}
                             </f:facet>
-                            <p:outputLabel value="#{row.getCell(cIndex)['value']}" style="width:96%" rendered="#{row.getCell(cIndex)['isEditable']==false}"/>
-                            <h:inputText value="#{row.getCell(cIndex)['value']}"  style="width:96%"  rendered="#{row.getCell(cIndex)['isEditable']==true}"/>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
 
 
                         </p:columns>
@@ -87,7 +87,20 @@
                     </h:panelGroup>
                 </p:tab>
                 <p:tab title="Capacity Management">
+                    <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.capacity_dt}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
 
+
+                        <p:columns  value="#{ProductionPlanning.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
+                            <f:facet name="header">
+                                #{datacolumn}
+                            </f:facet>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+
+
+                        </p:columns>
+
+                    </p:dataTable>
                 </p:tab>
 
             </p:tabView>
