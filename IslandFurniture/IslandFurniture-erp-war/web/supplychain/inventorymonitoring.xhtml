@@ -20,7 +20,7 @@
                                     <label class="col-sm-4 control-label">Stock Units</label>
                                     <div class="col-sm-8">
                                         <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.stockUnitId}">
-                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.id}" />
                                         </h:selectOneMenu>
                                     </div>                                     
                                 </div>

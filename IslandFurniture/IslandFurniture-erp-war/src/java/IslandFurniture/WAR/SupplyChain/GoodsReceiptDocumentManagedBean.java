@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
@@ -39,12 +36,10 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     private Long plantId;
     private Long goodsReceiptDocumentId;
-    private Long temp;
-
     private Long goodsReceiptDocumentDetailId;
     private Long stockId;
-
     private Long storageBinId;
+    private Long storageAreaid;
 
     private String username;
     private String deliverynote;
@@ -58,6 +53,8 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
     private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetailList;
     private List<Stock> stockList;
+    private List<StorageBin> storageBinList;
+    private List<StorageArea> storageAreaList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
@@ -81,24 +78,24 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
+        plant = staff.getPlant();
 
         this.goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        System.out.println("First: " + goodsReceiptDocumentId);
 
         if (this.goodsReceiptDocumentId == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             this.goodsReceiptDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
         }
 
-//        if (goodsReceiptDocumentId == null) {
-//            // change to param
-//            goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-//        }
         if (goodsReceiptDocumentId != null) {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
 
-        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail();
+        System.out.println("GoodsReceiptDocumentId: " + goodsReceiptDocumentId);
+
+        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
+        storageBinList = mgrl.viewStorageBin(plant);
+        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         stockList = mgrl.viewStock();
 
         System.out.println("Init");
@@ -116,9 +113,16 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         System.out.println(goodsReceiptDocumentId == null);
 
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        temp = goodsReceiptDocumentId;
-        mgrl.createGoodsReceiptDocumentDetail(temp, Long.parseLong(request.getParameter("createGRDD:stockId")), Integer.parseInt(request.getParameter("createGRDD:stockQuantity")));
-        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail();
+        mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocumentId, Long.parseLong(request.getParameter("createGRDD:stockId")), Integer.parseInt(request.getParameter("createGRDD:stockQuantity")));
+        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
+    }
+
+    public String editGoodsReceiptDocument(ActionEvent event) throws IOException {
+         System.out.println("It went here!");
+        GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
+        mgrl.editGoodsReceiptDocument(grd.getId(), grd.getReceiptDate(), null, grd.getDeliveryNote());
+       
+        return "goodsreceiptdocument";
     }
 
     public String editGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
@@ -133,19 +137,23 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
         mgrl.deleteGoodsReceiptDocumentDetail(goodsReceiptDocumentDetailId);
-        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail();
+        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         return "goodsreceiptdocument";
     }
 
     public String addGoodsReceiptDocumentStockUnit(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
-
+        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
+        System.out.println("This is the storageBinId: " + storageBinId);
+        storageBin = msll.getStorageBin(storageBinId);
         for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetailList) {
             msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
         }
+        mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId);
         return "goodsreceipt";
     }
 
@@ -187,6 +195,14 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     public void setStorageBinId(Long storageBinId) {
         this.storageBinId = storageBinId;
+    }
+
+    public Long getStorageAreaid() {
+        return storageAreaid;
+    }
+
+    public void setStorageAreaid(Long storageAreaid) {
+        this.storageAreaid = storageAreaid;
     }
 
     public String getUsername() {
@@ -259,6 +275,22 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     public void setStockList(List<Stock> stockList) {
         this.stockList = stockList;
+    }
+
+    public List<StorageBin> getStorageBinList() {
+        return storageBinList;
+    }
+
+    public void setStorageBinList(List<StorageBin> storageBinList) {
+        this.storageBinList = storageBinList;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {
