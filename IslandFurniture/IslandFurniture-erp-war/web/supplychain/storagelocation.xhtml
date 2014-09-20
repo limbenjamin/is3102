@@ -81,23 +81,35 @@
                                     <tr>
                                         <th>Storage Area</th>
                                         <th>Storage Bin</th>
-                                        <th>Edit</th>
+                                        <th>Save</th>
                                         <th>Delete</th>
                                     </tr>
                                     <h:form class="form-horizontal">
                                         <ui:repeat value="#{storageLocationManagedBean.storageBinList}" var="StorageBin">
                                             <tr>
-                                                <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{StorageBin.storageArea.id}">
+                                                <td>
+                                                    <h:selectOneMenu id="storageAreaId" class="form-control" value="#{StorageBin.storageArea.id}">
                                                         <f:selectItems value="#{storageLocationManagedBean.storageAreaList}" var="sArea" itemLabel="#{sArea.name}" itemValue="#{sArea.id}" />
-                                                    </h:selectOneMenu></td>
-                                                <td><h:inputText id="storageBinName" value="#{StorageBin.name}" class="form-control"></h:inputText></td>
-                                                <td><h:commandButton actionListener="#{storageLocationManagedBean.editStorageBin}"  value="Update" class="btn btn-success btn-xs"> 
+                                                    </h:selectOneMenu>
+                                                </td>
+                                                <td>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="storageBinName" value="#{StorageBin.name}" class="form-control transparent-form"></h:inputText>
+                                                    </div>                                                    
+                                                </td>
+                                                <td>
+                                                    <h:commandButton actionListener="#{storageLocationManagedBean.editStorageBin}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="sbid" value="#{StorageBin}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{storageLocationManagedBean.deleteStorageBin}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                <td>
+                                                    <h:commandButton action="#{storageLocationManagedBean.deleteStorageBin}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="storageBinId" value="#{StorageBin.id}" />
-                                                    </h:commandButton></td>
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
