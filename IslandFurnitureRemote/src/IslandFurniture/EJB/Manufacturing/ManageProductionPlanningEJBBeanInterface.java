@@ -3,23 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurnitures.DataStructures.JDataTable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import javax.ejb.Local;
 import javax.ejb.Remote;
 
 /**
  *
  * @author James
  */
-@Remote
-public interface MaterialResourcePlanningView {
+@Local
+public interface ManageProductionPlanningEJBBeanInterface {
 
-    
-        public HashMap<String, String>
+    public HashMap<String, String>
             getAuthorizedMF(String AUTH);
-        JDataTable<String> getDemandPlanningTable(String MF);
-        boolean changeMPP(String mppID, int newValue);
+
+    Object getDemandPlanningTable(String MF);
+
+    boolean changeMPP(String mppID, int newValue);
+    
+    boolean updateListOfEntities(ArrayList<Object> listOfEntities) throws Exception;
 }
