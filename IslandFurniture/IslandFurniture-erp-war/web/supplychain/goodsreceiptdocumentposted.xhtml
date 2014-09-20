@@ -42,15 +42,16 @@
                                                         <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
                                                     </h:outputText></td>
                                                 <td></td>
-                                                <td><<h:outputText value="#{grd.deliveryNote}"></h:outputText></td>
+                                                <td><h:outputText value="#{grd.deliveryNote}"></h:outputText></td>
                                             </tr>     
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
                             </table>
                         </section>
-                        \
+                        
                         <section name="GoodsReceiptDocumentDetail">
+                             <h5>List of Stock Items</h5>
                             <table class="table table-hover">
                                 <tr>
                                     <th>Stock</th>

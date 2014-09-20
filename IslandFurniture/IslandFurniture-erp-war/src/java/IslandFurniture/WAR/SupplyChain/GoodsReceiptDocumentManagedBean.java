@@ -151,7 +151,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         return "goodsreceiptdocument";
     }
 
-    public String addGoodsReceiptDocumentStockUnit(ActionEvent event) {
+    public void addGoodsReceiptDocumentStockUnit(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
@@ -170,7 +170,11 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         postingDate = cal;
 
         mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
-        return "goodsreceipt";
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
+
     }
 
     public Long getPlantId() {
