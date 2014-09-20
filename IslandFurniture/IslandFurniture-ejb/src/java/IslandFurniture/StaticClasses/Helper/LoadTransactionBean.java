@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -84,9 +83,9 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
         try {
             // Add Transactions for stores
-            Calendar cal;
+            Calendar cal = Calendar.getInstance();
             Calendar curr;
-            TimeZone tz;
+
             Random rand = new Random(1); // Seed to ensure always same sample transactions
 
             List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
@@ -95,16 +94,13 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
             for (Store eachStore : stores) {
-                tz = TimeZone.getTimeZone(eachStore.getTimeZoneID());
+                    // Get current time in store's timezone
+                    curr = TimeMethods.getPlantCurrTime(eachStore);
 
                 for (int i = 0; i < 800; i++) {
                     // Add Furniture Transaction & Retail Item Transaction
                     fTransDetails.clear();
                     riTransDetails.clear();
-
-                    // Get current time in store's timezone
-                    curr = Calendar.getInstance();
-                    curr.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
 
                     for (Stock stock : eachStore.getSells()) {
                         if (rand.nextBoolean()) {
@@ -117,26 +113,22 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     }
 
                     if (!fTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance();
-
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
                         do {
                             cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                            cal.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
                         } while (cal.after(curr));
 
+                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
                         this.addFurnitureTransaction(eachStore, fTransDetails, cal);
                     }
 
                     if (!riTransDetails.isEmpty()) {
-                        cal = Calendar.getInstance();
-
                         // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
                         do {
                             cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                            cal.add(Calendar.MILLISECOND, tz.getRawOffset() * -1);
                         } while (cal.after(curr));
 
+                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
                         this.addRetailItemTransaction(eachStore, riTransDetails, cal);
                     }
                 }

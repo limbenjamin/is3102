@@ -6,21 +6,6 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:form>
-            <h:outputText value="Select the ending period of this forecast: " />
-            <h:selectOneMenu value="#{createForecastManagedBean.endYear}">
-                <f:selectItem itemLabel="Select Year" noSelectionOption="true" />
-                <f:selectItems value="#{createForecastManagedBean.endYears}" var="year" 
-                               itemLabel="#{year}" itemValue="#{year}" />
-                <f:ajax render="endMonths" listener="#{createForecastManagedBean.updateMonths}" />
-            </h:selectOneMenu>
-            <h:selectOneMenu value="#{createForecastManagedBean.endMonth}" id="endMonths">
-                <f:selectItem itemLabel="Select Month" noSelectionOption="true" />
-                <f:selectItems value="#{createForecastManagedBean.endMonths}" var="month" 
-                               itemLabel="#{month.key}" itemValue="#{month.value}" />
-            </h:selectOneMenu>
-            <h:commandButton value="Create Forecast">
-                <f:ajax execute="@form" render="mssrTable" listener="#{createForecastManagedBean.updateMssr}" />
-            </h:commandButton>
             <h:commandButton value="Save forecast">
                 <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
             </h:commandButton>
