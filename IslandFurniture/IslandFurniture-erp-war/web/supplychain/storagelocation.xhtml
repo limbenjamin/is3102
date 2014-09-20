@@ -38,22 +38,30 @@
                                 <table class="table table-hover">
                                     <tr>
                                         <th>Storage Area</th>
-                                        <th>Edit</th>
+                                        <th>Save</th>
                                         <th>Delete</th>
                                     </tr>
                                     <h:form id="editStorageArea" class="form-horizontal">
                                         <ui:repeat value="#{storageLocationManagedBean.storageAreaList}" var="StorageArea">
                                             <tr>
                                                 <td>
-                                                    <h:inputText id="storageAreaName" value="#{StorageArea.name}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="storageAreaName" value="#{StorageArea.name}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
-                                                <td><h:commandButton actionListener="#{storageLocationManagedBean.editStorageArea}"  value="Update" class="btn btn-success btn-sm">
+                                                <td>
+                                                    <h:commandButton actionListener="#{storageLocationManagedBean.editStorageArea}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="said" value="#{StorageArea}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{storageLocationManagedBean.deleteStorageArea}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td>
+                                                    <h:commandButton action="#{storageLocationManagedBean.deleteStorageArea}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="storageAreaId" value="#{StorageArea.id}" />
-                                                    </h:commandButton></td>
+                                                    </h:commandButton>                                                    
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
