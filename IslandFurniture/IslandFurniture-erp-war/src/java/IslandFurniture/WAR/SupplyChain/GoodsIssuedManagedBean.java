@@ -6,10 +6,10 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
+import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,25 +30,25 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class GoodsReceiptManagedBean implements Serializable {
+public class GoodsIssuedManagedBean implements Serializable {
 
     private Long plantId;
-    private Long goodsReceiptDocumentId;
+    private Long goodsIssuedDocumentId;
 
     private String username;
     private String deliverynote;
 
     private Calendar postingDate;
 
-    private List<GoodsReceiptDocument> goodsReceiptDocumentList;
-    private List<GoodsReceiptDocument> goodsReceiptDocumentPostedList;
+    private List<GoodsIssuedDocument> goodsIssuedDocumentList;
+    private List<GoodsIssuedDocument> goodsIssuedDocumentPostedList;
 
-    private GoodsReceiptDocument goodsReceiptDocument;
+    private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
     private Plant plant;
 
     @EJB
-    public ManageGoodsReceiptLocal mgrl;
+    public ManageGoodsIssuedLocal mgrl;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
 
@@ -58,32 +58,32 @@ public class GoodsReceiptManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
-        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted();
+        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument();
+        goodsIssuedDocumentPostedList = mgrl.viewGoodsIssuedDocumentPosted();
         System.out.println("Init");
     }
 
-    public String addGoodsReceiptDocument() {
+    public String addGoodsIssuedDocument() {
 //        Calendar cal = Calendar.getInstance();
 //        Date date = new Date();
 //        cal.setTime(date);
 //        postingDate = cal;
-        goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
-        return "goodsreceiptdocument?faces-redirect=true";
+        goodsIssuedDocument = mgrl.createGoodsIssuedDocument(plant, null);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocument.getId());
+        return "goodsissueddocument?faces-redirect=true";
 
     }
 
-    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
+    public void goodsIssuedDocumentDetailActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
     }
 
-    public void goodsReceiptDocumentDetailActionListener2(ActionEvent event) throws IOException {
+    public void goodsIssuedDocumentDetailActionListener2(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
     public Long getPlantId() {
@@ -94,12 +94,12 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.plantId = plantId;
     }
 
-    public Long getGoodsReceiptDocumentId() {
-        return goodsReceiptDocumentId;
+    public Long getGoodsIssuedDocumentId() {
+        return goodsIssuedDocumentId;
     }
 
-    public void setGoodsReceiptDocumentId(Long goodsReceiptDocumentId) {
-        this.goodsReceiptDocumentId = goodsReceiptDocumentId;
+    public void setGoodsIssuedDocumentId(Long goodsIssuedDocumentId) {
+        this.goodsIssuedDocumentId = goodsIssuedDocumentId;
     }
 
     public String getUsername() {
@@ -126,28 +126,28 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.postingDate = postingDate;
     }
 
-    public List<GoodsReceiptDocument> getGoodsReceiptDocumentList() {
-        return goodsReceiptDocumentList;
+    public List<GoodsIssuedDocument> getGoodsIssuedDocumentList() {
+        return goodsIssuedDocumentList;
     }
 
-    public void setGoodsReceiptDocumentList(List<GoodsReceiptDocument> goodsReceiptDocumentList) {
-        this.goodsReceiptDocumentList = goodsReceiptDocumentList;
+    public void setGoodsIssuedDocumentList(List<GoodsIssuedDocument> goodsIssuedDocumentList) {
+        this.goodsIssuedDocumentList = goodsIssuedDocumentList;
     }
 
-    public List<GoodsReceiptDocument> getGoodsReceiptDocumentPostedList() {
-        return goodsReceiptDocumentPostedList;
+    public List<GoodsIssuedDocument> getGoodsIssuedDocumentPostedList() {
+        return goodsIssuedDocumentPostedList;
     }
 
-    public void setGoodsReceiptDocumentPostedList(List<GoodsReceiptDocument> goodsReceiptDocumentPostedList) {
-        this.goodsReceiptDocumentPostedList = goodsReceiptDocumentPostedList;
+    public void setGoodsIssuedDocumentPostedList(List<GoodsIssuedDocument> goodsIssuedDocumentPostedList) {
+        this.goodsIssuedDocumentPostedList = goodsIssuedDocumentPostedList;
     }
 
-    public GoodsReceiptDocument getGoodsReceiptDocument() {
-        return goodsReceiptDocument;
+    public GoodsIssuedDocument getGoodsIssuedDocument() {
+        return goodsIssuedDocument;
     }
 
-    public void setGoodsReceiptDocument(GoodsReceiptDocument goodsReceiptDocument) {
-        this.goodsReceiptDocument = goodsReceiptDocument;
+    public void setGoodsIssuedDocument(GoodsIssuedDocument goodsIssuedDocument) {
+        this.goodsIssuedDocument = goodsIssuedDocument;
     }
 
     public Staff getStaff() {
@@ -166,11 +166,11 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public ManageGoodsReceiptLocal getMgrl() {
+    public ManageGoodsIssuedLocal getMgrl() {
         return mgrl;
     }
 
-    public void setMgrl(ManageGoodsReceiptLocal mgrl) {
+    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
         this.mgrl = mgrl;
     }
 

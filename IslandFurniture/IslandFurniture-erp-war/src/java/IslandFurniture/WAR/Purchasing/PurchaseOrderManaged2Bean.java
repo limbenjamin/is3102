@@ -17,7 +17,11 @@ import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -26,6 +30,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -55,6 +60,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     private Plant plant;
     private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
+    private String someDate = null;
     
     @EJB
     private ManageUserAccountBeanLocal staffBean; 
@@ -71,12 +77,12 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         if (purchaseOrderId != null) {
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
-        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid" + purchaseOrderId);
+        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
         plantList = mpol.viewPlants();
         supplierList = mpol.viewSuppliers();
         procuredStockList = mpol.viewProcuredStocks();
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails();
-
+        System.out.println("loaded some lists");
         
         System.out.println("Init");
     }    
@@ -91,11 +97,20 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         return "purchaseorder2";
     }
 
-    public String editPurchaseOrder(ActionEvent event) throws IOException {
-        System.out.println("This is purchase Order Id:" + purchaseOrderId);
-        PurchaseOrder po = (PurchaseOrder) event.getComponent().getAttributes().get("po");
-        System.out.println("This is purchase Order Id:" + purchaseOrderId);
-        mpol.editPurchaseOrder(po.getId(), po.getShipsTo(), po.getOrderDate(), po.getStatus());
+    public String editPurchaseOrder() throws ParseException {
+        System.out.println("MEOW: called editPurchaseOrder()");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        System.out.println("MEOW: called editPurchaseOrder()");
+        someDate = request.getParameter("editPO:orderDate");
+          DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+          Date date = (Date)formatter.parse(someDate); 
+          Calendar cal=Calendar.getInstance();
+          cal.setTime(date);
+        orderDate = cal;
+        status = request.getParameter("editPO:status");  
+        plantId = Long.valueOf(request.getParameter("editPO:plantId"));
+        System.out.println("MEOW: this is the plant id " + plantId);
+        mpol.editPurchaseOrder(purchaseOrderId, plantId, orderDate, status);
         return "purchaseorder2";
     }    
     

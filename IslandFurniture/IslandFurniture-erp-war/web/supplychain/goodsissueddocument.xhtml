@@ -7,12 +7,12 @@
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
 
     <f:metadata>
-        <f:viewParam name="grddId2" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-        <f:viewAction action="#{goodsReceiptDocumentManagedBean.init}" />
+        <f:viewParam name="grddId2" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
+        <f:viewAction action="#{goodsIssuedDocumentManagedBean.init}" />
     </f:metadata>
 
     <h:body>
-        <h:outputLabel value="#{goodsReceiptDocumentManagedBean.krefresh()}"/>
+        <h:outputLabel value="#{goodsIssuedDocumentManagedBean.krefresh()}"/>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
@@ -22,34 +22,30 @@
                                 <i class="fa fa-fw fa-plus"></i>Add Stock
                             </button>  
                         </h:form>    
-                        <h4>Goods Receipt Document</h4><hr></hr>
+                        <h4>Goods Issued Document</h4><hr></hr>
                     </div>
 
                     <div class="col-md-8">                      
                         <section name="EditGRD">
                             <table class="table table-hover">
                                 <tr>
-                                    <th>Goods Receipt ID</th>
+                                    <th>Goods Issued ID</th>
                                     <th>Posting Date</th>
-                                    <th>Receipt Date</th>
-                                    <th>Purchase Order Number</th>
-                                    <th>Delivery Note</th>
+                                    <th>Issued Date</th>
                                     <th>Save</th>
                                 </tr>
                                 <h:form id="editGRD" class="form-horizontal">
-                                    <ui:repeat value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentList}" var="grd">
+                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentList}" var="grd">
                                         <tr>
                                             <tr>
                                                 <td><h:outputText value="#{grd.id}"></h:outputText></td>
                                                 <td> <h:outputText value="#{grd.postingDate.time}" >
                                                         <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
                                                     </h:outputText></td>
-                                                <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" p:type="date" class="form-control"></h:inputText></td>
-                                                <td></td>
-                                                <td><h:inputText value="#{grd.deliveryNote}" class="form-control"></h:inputText></td>
-                                                <td><h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocument}"  value="Update" class="btn btn-success btn-xs"> 
+                                                <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" p:type="date" class="form-control"></h:inputText></td>
+                                                <td><h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.editGoodsIssuedDocument}"  value="Update" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="grd" value="#{grd}" />
-                                                        <f:attribute name="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" />
+                                                        <f:attribute name="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" />
                                                     </h:commandButton>
                                                 </td>
                                             </tr>     
@@ -61,7 +57,7 @@
 
 
 
-                        <section name="GoodsReceiptDocumentDetail">
+                        <section name="GoodsIssuedDocumentDetail">
                             <table class="table table-hover">
                                 <tr>
 
@@ -72,20 +68,20 @@
                                 </tr>
                                 <h:form class="form-horizontal">
 
-                                    <ui:repeat value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentDetailList}" var="grdd">
+                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentDetailList}" var="grdd">
                                         <tr>
-                                            <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{grdd.receivedStock.id}">
-                                                    <f:selectItems value="#{goodsReceiptDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                            <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{grdd.stock.id}">
+                                                    <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                 </h:selectOneMenu></td>
 
                                             <td><h:inputText id="storageBinName" value="#{grdd.quantity}" class="form-control"></h:inputText></td>
-                                            <td><h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocumentDetail}"  value="Update" class="btn btn-success btn-xs"> 
+                                            <td><h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.editGoodsIssuedDocumentDetail}"  value="Update" class="btn btn-success btn-xs"> 
                                                     <f:attribute name="grddId" value="#{grdd}" />
                                                 </h:commandButton>
                                             </td>
                                             <td>
-                                                <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.deleteGoodsReceiptDocumentDetail}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentDetail}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                                     <f:attribute name="grddId" value="#{grdd.id}" />
                                                 </h:commandButton>
                                             </td>
@@ -96,17 +92,17 @@
                         </section>
 
 
-                        <section name="Post Goods Receipt Document"> 
+                        <section name="Post Goods Issued Document"> 
 
                             <h:form class="form-horizontal">
-                                <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}">
+                                <h:selectOneMenu class="form-control" value="#{goodsIssuedDocumentManagedBean.storageBinId}">
                                     <f:selectItem itemLabel="Select Storage Bin"></f:selectItem>
-                                    <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    <f:selectItems value="#{goodsIssuedDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                 </h:selectOneMenu>
-                                <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right"> 
-                                    <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                    <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                    <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
+                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right"> 
+                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
+                                    <f:attribute name="grddId" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
+                                    <f:attribute name="storageBinId" value="#{goodsIssuedDocumentManagedBean.storageBinId}" />
                                 </h:commandButton>
                             </h:form>
                         </section>
@@ -119,17 +115,17 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Add Stock to Goods Receipt Document</h4>
+                                        <h4 class="modal-title" id="myModalLabel">Add Stock to Goods Issued Document</h4>
                                     </div>
                                     <h:form id="createGRDD" class="form-horizontal">
-                                        <h:inputHidden value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" id="GRDid" />
+                                        <h:inputHidden value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" id="GRDid" />
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Stock: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
-                                                    <h:selectOneMenu id="stockId" class="form-control" value="#{goodsReceiptDocumentManagedBean.stockId}">
-                                                        <f:selectItems value="#{goodsReceiptDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                    <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentManagedBean.stockId}">
+                                                        <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
@@ -137,14 +133,14 @@
                                                 <label class="col-sm-3 control-label">Quantity: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-user"></i>
-                                                    <h:inputText id="stockQuantity" class="form-control" value="#{goodsReceiptDocumentManagedBean.quantity}"></h:inputText>
+                                                    <h:inputText id="stockQuantity" class="form-control" value="#{goodsIssuedDocumentManagedBean.quantity}"></h:inputText>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="goodsreceiptdocument.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
-                                                <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                            <h:commandButton action="goodsissueddocument.xhtml" actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
+                                                <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                             </h:commandButton>
                                         </div>
                                     </h:form>

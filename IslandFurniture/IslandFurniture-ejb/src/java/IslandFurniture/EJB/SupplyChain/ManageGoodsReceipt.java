@@ -5,6 +5,8 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -49,13 +51,26 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         goodsReceiptDocument = new GoodsReceiptDocument();
         goodsReceiptDocument.setPlant(plant);
         goodsReceiptDocument.setPostingDate(postingDate);
+        goodsReceiptDocument.setConfirm(false);
         em.persist(goodsReceiptDocument);
         em.flush();
         return goodsReceiptDocument;
     }
 
     @Override
-    public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity) {      
+    public void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate) {
+        goodsReceiptDocument = getGoodsReceiptDocument(grdId);
+        goodsReceiptDocument.setConfirm(true);
+        goodsReceiptDocument.setPostingDate(postingDate);
+        em.merge(goodsReceiptDocument);
+        em.flush();
+    }
+
+    @Override
+    public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity) {
+        
+        System.out.println("The documentId is: " + grdId);
+        
         goodsReceiptDocumentDetail = new GoodsReceiptDocumentDetail();
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         stock = getStock(stockId);
@@ -91,25 +106,33 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public List<GoodsReceiptDocument> viewGoodsReceiptDocument() {
-        Query q = em.createQuery("SELECT s " + "FROM GoodsReceiptDocument s");
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE");
+        return q.getResultList();
+    }
+    
+        @Override
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted() {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=TRUE");
         return q.getResultList();
     }
 
     @Override
-    public List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail() {
-        Query q = em.createQuery("SELECT s " + "FROM GoodsReceiptDocumentDetail s");
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd) {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.id=" + grd.getId());
         return q.getResultList();
     }
-   
+
+    @Override
+    public List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail(GoodsReceiptDocument grd) {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocumentDetail s WHERE s.goodsReceiptDocument.id=" + grd.getId());
+        return q.getResultList();
+    }
+
     @Override
     public List<Stock> viewStock() {
         Query q = em.createQuery("SELECT s " + "FROM Stock s");
         return q.getResultList();
     }
-    
-    
-    
-    
 
     @Override
     public void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId) {
@@ -123,6 +146,18 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         goodsReceiptDocumentDetail = getGoodsReceiptDocumentDetail(goodsReceiptDocumentDetailId);
         em.remove(goodsReceiptDocumentDetail);
         em.flush();
+    }
+
+    @Override
+    public List<StorageArea> viewStorageArea(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StorageBin> viewStorageBin(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
+        return q.getResultList();
     }
 
 }

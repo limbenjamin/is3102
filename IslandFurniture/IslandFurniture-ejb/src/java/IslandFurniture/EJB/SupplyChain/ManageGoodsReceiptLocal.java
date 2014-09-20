@@ -10,6 +10,8 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 
@@ -41,7 +43,16 @@ public interface ManageGoodsReceiptLocal {
 
     List<GoodsReceiptDocument> viewGoodsReceiptDocument();
 
-//    List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail();
-    List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail();
+    List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail(GoodsReceiptDocument grd);
+
+    void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate);
+
+    List<StorageArea> viewStorageArea(Plant plant);
+
+    List<StorageBin> viewStorageBin(Plant plant);
+
+    List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd);
+
+    List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted();
 
 }

@@ -31,8 +31,6 @@ public class Role implements Serializable {
     private List<Staff> staffs;
     @ManyToMany(mappedBy="roles")
     private List<Privilege> privileges;
-    @OneToMany(cascade={CascadeType.ALL})
-    private List<Notification> notifications;
 
     public Long getId() {
         return id;
@@ -64,14 +62,6 @@ public class Role implements Serializable {
 
     public void setPrivileges(List<Privilege> privileges) {
         this.privileges = privileges;
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
     }
 
     

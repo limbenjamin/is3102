@@ -19,23 +19,27 @@
                         </button>                           
                         <h4>Procurement Contract</h4><hr></hr>   
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                         <h:form id="selectSupplier" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Supplier: </label>
-                                <div class="col-sm-6 inner-addon right-addon">
-                                    <h:selectOneMenu id="supplierID" class="form-control" value="Select Supplier">
-                                        <f:selectItems value="#{procurementContractManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                    </h:selectOneMenu>
-                                    <h:commandButton action="procurementContract.xhtml" actionListener="#{procurementContractManagedBean.displayContractDetails}" value="View" class="btn btn-success pull-right btn-right-margin"> 
-                                        <f:attribute name="supplyID" value="#{procurementContractManagedBean.supplier.id}" />
-                                        <f:ajax execute="selectSupplier" render=":deletePCDForm" ></f:ajax>
-                                    </h:commandButton>
-                                </div>
+                                <label class="col-xs-3 control-label">Select A Supplier:</label>
+                                <div class="col-xs-9">
+                                    <div class="input-group">
+                                        <h:selectOneMenu id="supplierID" class="form-control" value="Select Supplier" style="height:34px;">
+                                            <f:selectItems value="#{procurementContractManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                        </h:selectOneMenu>
+                                        <span class="input-group-btn">
+                                        <h:commandButton action="procurementContract.xhtml" actionListener="#{procurementContractManagedBean.displayContractDetails}" value="View" class="btn btn-success pull-right btn-right-margin"> 
+                                            <f:attribute name="supplyID" value="#{procurementContractManagedBean.supplier.id}" />
+                                            <f:ajax execute="selectSupplier" render=":deletePCDForm" ></f:ajax>
+                                        </h:commandButton>                                            
+                                        </span>
+                                    </div>
+                                </div>                                
                             </div>
                         </h:form>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         
                         <!-- Tab panes -->
                         <div class="tab-content">

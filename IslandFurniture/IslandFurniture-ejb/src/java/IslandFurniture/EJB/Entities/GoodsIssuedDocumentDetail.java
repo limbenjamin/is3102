@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
@@ -21,6 +20,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 public class GoodsIssuedDocumentDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,12 +31,13 @@ public class GoodsIssuedDocumentDetail implements Serializable {
     private Stock stock;
     @ManyToOne
     @JoinColumns({
-        @JoinColumn(name="STOCK_ID", referencedColumnName="STOCK_ID", insertable=false, updatable=false),
-        @JoinColumn(name="COUNTRYOFFICE_ID", referencedColumnName="COUNTRYOFFICE_ID"),
-        @JoinColumn(name="MONTH", referencedColumnName="MONTH"),
-        @JoinColumn(name="YEAR", referencedColumnName="YEAR")
-            })
+        @JoinColumn(name = "STOCK_ID", referencedColumnName = "STOCK_ID", insertable = false, updatable = false),
+        @JoinColumn(name = "COUNTRYOFFICE_ID", referencedColumnName = "COUNTRYOFFICE_ID"),
+        @JoinColumn(name = "MONTH", referencedColumnName = "MONTH"),
+        @JoinColumn(name = "YEAR", referencedColumnName = "YEAR")
+    })
     private MonthlyStockSupplyReq monthlyStockSupplyReq;
+    private Integer quantity;
 
     public Long getId() {
         return id;
@@ -70,6 +71,14 @@ public class GoodsIssuedDocumentDetail implements Serializable {
         this.monthlyStockSupplyReq = monthlyStockSupplyReq;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -94,5 +103,5 @@ public class GoodsIssuedDocumentDetail implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocumentDetail[ id=" + id + " ]";
     }
-    
+
 }

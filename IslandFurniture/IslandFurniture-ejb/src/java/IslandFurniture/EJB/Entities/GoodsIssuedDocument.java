@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.time.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -29,19 +31,16 @@ public class GoodsIssuedDocument implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
+    private Plant plant;
+    @ManyToOne
     private Store store;
     @OneToMany(mappedBy = "goodsIssuedDocument")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    Date documentDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    Date postingDate;
-
-    public void create(Date documentDate, Date postingDate, Store store) {
-        this.setDocumentDate(documentDate);
-        this.setPostingDate(postingDate);
-        this.setStore(store);
-    }
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar postingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar issuedDate;
+    private Boolean confirm;
 
     public Long getId() {
         return id;
@@ -49,6 +48,14 @@ public class GoodsIssuedDocument implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
     public Store getStore() {
@@ -67,23 +74,31 @@ public class GoodsIssuedDocument implements Serializable {
         this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
-    public Date getDocumentDate() {
-        return documentDate;
-    }
-
-    public void setDocumentDate(Date documentDate) {
-        this.documentDate = documentDate;
-    }
-
-    public Date getPostingDate() {
+    public Calendar getPostingDate() {
         return postingDate;
     }
 
-    public void setPostingDate(Date postingDate) {
+    public void setPostingDate(Calendar postingDate) {
         this.postingDate = postingDate;
     }
 
+    public Calendar getIssuedDate() {
+        return issuedDate;
+    }
 
+    public void setIssuedDate(Calendar issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
+    public Boolean isConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        this.confirm = confirm;
+    }
+
+    
 
     @Override
     public int hashCode() {
