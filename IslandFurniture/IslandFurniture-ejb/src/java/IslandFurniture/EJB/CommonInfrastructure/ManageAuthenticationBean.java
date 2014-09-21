@@ -8,7 +8,10 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.*;
 import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
+import IslandFurniture.StaticClasses.Helper.SendEmailByPost;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.*;
 import javax.ejb.*;
 import javax.persistence.*;
@@ -74,4 +77,42 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         em.merge(staff);
         em.flush();
     }
+    
+    @Override
+    public boolean forgetPassword(String username){
+        try{
+            Query query = em.createQuery("FROM Staff s where s.username=:username");
+            query.setParameter("username", username);
+            staff = (Staff) query.getSingleResult();
+        }catch(NoResultException | NonUniqueResultException nre){
+            return false;
+        }
+        String forgottenPasswordCode = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        staff.setForgottenPasswordCode(forgottenPasswordCode);
+        em.merge(staff);
+        em.flush();
+        try {
+            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Reset Request", "Click this link to reset your password: http://localhost:8080/IslandFurniture-erp-war/it/resetpassword.xhtml?code="+forgottenPasswordCode);
+        } catch (Exception ex) {
+            Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+    
+    @Override
+    public boolean resetPassword(String code, String password){
+        Query query = em.createQuery("FROM Staff s where s.forgottenPasswordCode=:code");
+        query.setParameter("code", code);
+        try{
+            staff = (Staff) query.getSingleResult();
+        }catch(NoResultException | NonUniqueResultException nre){
+            return false;
+        }
+        staff.setPassword(password);
+        staff.setForgottenPasswordCode(null);
+        em.merge(staff);
+        em.flush();
+        return true;
+    }
+    
 }

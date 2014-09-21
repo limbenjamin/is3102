@@ -45,6 +45,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long storageBinId;
     private Long storageAreaid;
     private Long stockUnitId;
+    private Long oldStockUnitId;
 
     private String issuedDateString;
     private Date issuedDateType;
@@ -58,8 +59,8 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long stockUnitQuantity;
 
     private List<StockUnit> stockUnitByIdList;
+    private List<StockUnit> stockUnitByIdList2;
     private List<StockUnit> stockUnitByIdAndGRDList;
-
 
     private GoodsIssuedDocument goodsIssuedDocument;
     private StorageBin storageBin;
@@ -102,6 +103,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         stock = mgrl.getStock(stockId);
 
         stockUnitByIdList = mgrl.viewStockUnitById(plant, stock);
+        stockUnitByIdList2 = mgrl.viewStockUnitById2(plant, stock, goodsIssuedDocument);
         stockUnitByIdAndGRDList = mgrl.viewStockUnitByIdAndGrdId(stock, goodsIssuedDocument);
 
         System.out.println("Init");
@@ -123,10 +125,28 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         commitDate = cal;
 
         msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), commitDate, goodsIssuedDocument);
-        
+        msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+    }
+
+    public void deleteGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
+        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        msul.deleteStockUnit(stockUnit.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+    }
+
+    public void continueWithGoodsIssueDocument(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
     }
 
     public Long getPlantId() {
@@ -225,14 +245,6 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.issuedDate = issuedDate;
     }
 
-    public Stock getStock() {
-        return stock;
-    }
-
-    public void setStock(Stock stock) {
-        this.stock = stock;
-    }
-
     public Long getStockUnitQuantity() {
         return stockUnitQuantity;
     }
@@ -247,6 +259,14 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
 
     public void setStockUnitByIdList(List<StockUnit> stockUnitByIdList) {
         this.stockUnitByIdList = stockUnitByIdList;
+    }
+
+    public List<StockUnit> getStockUnitByIdList2() {
+        return stockUnitByIdList2;
+    }
+
+    public void setStockUnitByIdList2(List<StockUnit> stockUnitByIdList2) {
+        this.stockUnitByIdList2 = stockUnitByIdList2;
     }
 
     public List<StockUnit> getStockUnitByIdAndGRDList() {
@@ -271,6 +291,14 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
 
     public void setStorageBin(StorageBin storageBin) {
         this.storageBin = storageBin;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     public StockUnit getStockUnit() {
@@ -328,7 +356,5 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
-
-    
 
 }

@@ -13,33 +13,27 @@
                     <div class="col-md-8">
                         <h:form id="createGRD1"> 
                             <h:commandButton action="#{goodsReceiptManagedBean.addGoodsReceiptDocument}" value="Create Goods Receipt Document" class="btn btn-success pull-right btn-right-margin"></h:commandButton>
-                        </h:form>    
-                        <h4>Pending Goods Receipt</h4><hr></hr>
-                    </div>
-
-                    <div class="col-md-8">
+                        </h:form> 
+                        
+                        <h4>Goods Receipt</h4><hr></hr>
 
 
                         <section name="viewGRD">
 
+                            <h5>Pending Goods Receipt</h5>
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Receipt ID</th>
-                                    <th>Posting Date</th>
                                     <th>Document Date</th>
                                     <th>Purchase Order Number</th>
                                     <th>Edit</th>
+                                    <th>Delete</th>
 
                                 </tr>
                                 <h:form id="viewGRD" class="form-horizontal">
                                     <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentList}" var="GRD">
                                         <tr>
                                             <td>#{GRD.id}</td>
-                                            <td>
-                                                <h:outputText value="#{GRD.postingDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                </h:outputText>
-                                            </td>
                                             <td>
                                                 <h:outputText value="#{GRD.receiptDate.time}" >
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
@@ -49,6 +43,9 @@
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>
+                                            <td><h:commandButton actionListener="#{goodsReceiptManagedBean.deleteGoodsReceiptDocument}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                </h:commandButton></td>
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
@@ -57,14 +54,14 @@
 
 
                         <section name="postedGRD">
-                            <h4>Posted Goods Receipt</h4><hr></hr>
+                            <h5>Posted Goods Receipt</h5>
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Receipt ID</th>
                                     <th>Posting Date</th>
                                     <th>Document Date</th>
                                     <th>Purchase Order Number</th>
-                                    <th></th>
+                                    <th>View</th>
                                 </tr>
                                 <h:form class="form-horizontal">
                                     <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentPostedList}" var="GRD">

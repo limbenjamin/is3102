@@ -21,17 +21,20 @@
                         <h3>#{bOMManagedBean.furniture.name}</h3>
                         <table class="table table-hover">
                             <tr>
+                                <th>ID</th>
                                 <th>Material</th>
                                 <th>Quantity</th>
                                 <th>Update</th>
                                 <th>Delete</th>
                             </tr>
-                            <h:form class="form-horizontal">
-                                <ui:repeat value="#{bOMManagedBean.bomList}" var="bom">
+                            <h:form class="form-horizontal" id="bomForm">
+                                <ui:repeat value="#{bOMManagedBean.bomList}" var="bom" id="BOMListTable">
                                     <tr>
-                                        <td><h:selectOneMenu id="MaterialID" class="form-control" value="#{bOMManagedBean.materialList}">
-                                                <f:selectItems value="#{bOMManagedBean.materialList}" var="m" itemLabel="#{m.name}" itemValue="#{m.id}" />
-                                            </h:selectOneMenu>
+                                        <td>
+                                            <h:outputText value="#{bom.id}"></h:outputText>
+                                        </td>
+                                        <td>
+                                            <h:outputText value="#{bom.material.name}"></h:outputText>
                                         </td>
                                         <td>
                                             <div class="inner-addon left-addon">
@@ -46,7 +49,7 @@
                                         </td>
                                         <td>
                                             <h:commandButton action="#{bOMManagedBean.deleteBOM()}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                <f:param name="fID" value="#{f.id}" />
+                                                <f:param name="bomID" value="#{bom.id}" />
                                             </h:commandButton>
                                             <i class="fa fa-lg fa-trash-o icon-button"></i>
                                         </td> 
@@ -91,7 +94,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <button class="btn btn-default" href="furniture.xhtml">Back</button>
+                        <a href="furniture.xhtml"><button class="btn btn-default">Back</button></a>
                 </div>
             </ui:define>
         </ui:composition>

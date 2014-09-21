@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -19,6 +20,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -43,6 +45,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     private List<Country> countryList;
     private Country country;
     private String countryString;
+    private Store store;
+    private ManufacturingFacility mf;
     
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohBean;
@@ -77,7 +81,31 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         return "manageplant";
     }
     
-        public String addCountryOffice(){
+    public String editStore(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        store = (Store) event.getComponent().getAttributes().get("toEdit");
+        store.setCountryOffice(mohBean.findCountryOfficeByName(store.getCountryOffice().getName()));
+        mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), store.getCountryOffice());
+        return "manageplant";
+    }
+    
+    public String editMF(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
+        mf.setCountryOffice(mohBean.findCountryOfficeByName(mf.getCountryOffice().getName()));
+        mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), mf.getCountryOffice());
+        return "manageplant";
+    }
+    
+    public String editCO(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
+        countryOffice.setCountry(mohBean.findCountryByName(countryOffice.getCountry().getName()));
+        mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), countryOffice.getCountry(), countryOffice.getTimeZoneID());
+        return "manageplant";
+    }
+    
+    public String addCountryOffice(){
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         plantName = request.getParameter("coForm:plantName");
         countryString = request.getParameter("coForm:country");
@@ -218,6 +246,22 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
 
     public void setCountryString(String countryString) {
         this.countryString = countryString;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public ManufacturingFacility getMf() {
+        return mf;
+    }
+
+    public void setMf(ManufacturingFacility mf) {
+        this.mf = mf;
     }
     
     

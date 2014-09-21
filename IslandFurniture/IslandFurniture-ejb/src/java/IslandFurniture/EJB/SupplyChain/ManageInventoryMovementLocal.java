@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
@@ -22,6 +23,10 @@ public interface ManageInventoryMovementLocal {
 
     void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin);
 
+    void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid);
+
+    void deleteStockUnit(Long stockUnitId);
+
     void editStockUnitLocationDefault(Long stockUnitId, Long storageBinId);
 
     Stock getStock(Long stockId);
@@ -32,14 +37,10 @@ public interface ManageInventoryMovementLocal {
 
     StorageBin getStorageBin(Long storageBinId);
 
+    void editStockUnitQuantity(Long stockUnitId, Long qty);
+
     List<StockUnit> viewStockUnit(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-
-    void deleteStockUnit(Long stockUnitId);
     
-    void deleteStockUnitQty(Long stockUnitId, Long qty);
-    
-    void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid);
-
 }

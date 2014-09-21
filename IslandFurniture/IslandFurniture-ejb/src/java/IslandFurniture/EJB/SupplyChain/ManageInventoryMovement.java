@@ -68,8 +68,8 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         em.persist(stockUnit);
         em.flush();
     }
-    
-        @Override
+
+    @Override
     public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
@@ -101,7 +101,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void deleteStockUnitQty(Long stockUnitId, Long qty) {
+    public void editStockUnitQuantity(Long stockUnitId, Long qty) {
         stockUnit = getStockUnit(stockUnitId);
         stockUnit.setQty(qty);
         em.merge(stockUnit);
