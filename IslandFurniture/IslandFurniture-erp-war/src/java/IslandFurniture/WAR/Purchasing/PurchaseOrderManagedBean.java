@@ -66,8 +66,10 @@ public class PurchaseOrderManagedBean implements Serializable{
         Date date = new Date();
         cal.setTime(date);
         orderDate = cal;
-        mpol.createPurchaseOrder(orderDate, "planned");
-        return "purchaseorder";
+        purchaseOrder = mpol.createPurchaseOrder(orderDate, "planned");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid",purchaseOrder.getId());
+        return "purchaseorder2?faces-redirect=true";
+        
     }   
     
     public void purchaseOrderDetailActionListener(ActionEvent event) throws IOException {

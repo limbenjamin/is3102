@@ -21,7 +21,7 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    void createPurchaseOrder(Calendar orderDate, String status);
+    PurchaseOrder createPurchaseOrder(Calendar orderDate, String status);
 
     void createPurchaseOrderDetail(Long poId, Long psId);
 

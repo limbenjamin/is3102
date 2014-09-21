@@ -56,12 +56,13 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void createPurchaseOrder(Calendar orderDate, String status) {
+    public PurchaseOrder createPurchaseOrder(Calendar orderDate, String status) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
         em.persist(purchaseOrder);
         em.flush();
+        return purchaseOrder;
     }
     
     @Override
