@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
@@ -31,8 +30,6 @@ public interface ManageGoodsIssuedLocal {
     void deleteGoodsIssuedDocument(Long goodsIssuedDocumentId);
 
     void deleteGoodsIssuedDocumentDetail(Long goodsIssuedDocumentDetailId);
-
-    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar IssuedDate);
 
     GoodsIssuedDocument getGoodsIssuedDocument(Long id);
 
@@ -65,5 +62,9 @@ public interface ManageGoodsIssuedLocal {
     List<StorageArea> viewStorageArea(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-    
+
+    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate);
+
+    void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
+
 }

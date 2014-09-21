@@ -174,11 +174,11 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
-        issuedDate = cal;
+        postingDate = cal;
         
         for (StockUnit g : stockUnitMainList) {       
             mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
-            mgrl.editGoodsIssuedDocument(goodsIssuedDocumentId, issuedDate);
+            mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
             msul.deleteStockUnit(g.getId());
         }
 
