@@ -6,11 +6,13 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -25,6 +27,12 @@ public class StockUnit implements Serializable {
     private Long id;
     private Long batchNo;
     private Long qty = 0l;
+    private Boolean available;
+    private Long commitStockUnitId;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Calendar commitTime;
+    @ManyToOne
+    private GoodsIssuedDocument goodsIssuedDocument;
     @ManyToOne
     private Stock stock;
     @ManyToOne
@@ -54,6 +62,38 @@ public class StockUnit implements Serializable {
         this.qty = qty;
     }
 
+    public Boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+    public Long getCommitStockUnitId() {
+        return commitStockUnitId;
+    }
+
+    public void setCommitStockUnitId(Long commitStockUnitId) {
+        this.commitStockUnitId = commitStockUnitId;
+    }
+
+    public Calendar getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(Calendar commitTime) {
+        this.commitTime = commitTime;
+    }
+
+    public GoodsIssuedDocument getGoodsIssuedDocument() {
+        return goodsIssuedDocument;
+    }
+
+    public void setGoodsIssuedDocument(GoodsIssuedDocument goodsIssuedDocument) {
+        this.goodsIssuedDocument = goodsIssuedDocument;
+    }
+
     public Stock getStock() {
         return stock;
     }
@@ -69,6 +109,8 @@ public class StockUnit implements Serializable {
     public void setLocation(StorageBin location) {
         this.location = location;
     }
+
+    
 
     @Override
     public int hashCode() {

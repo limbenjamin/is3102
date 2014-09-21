@@ -100,7 +100,7 @@
                                     <f:selectItem itemLabel="Select Storage Bin"></f:selectItem>
                                     <f:selectItems value="#{goodsIssuedDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                 </h:selectOneMenu>
-                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right"> 
+                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right"> 
                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                     <f:attribute name="grddId" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                     <f:attribute name="storageBinId" value="#{goodsIssuedDocumentManagedBean.storageBinId}" />
@@ -116,7 +116,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Add Stock to Goods Issued Document</h4>
+                                        <h4 class="modal-title" id="myModalLabel">Select Stock to add in Goods Issued Document</h4>
                                     </div>
                                     <h:form id="createGRDD" class="form-horizontal">
                                         <h:inputHidden value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" id="GRDid" />
@@ -126,21 +126,14 @@
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
                                                     <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentManagedBean.stockId}">
-                                                        <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                        <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                                     </h:selectOneMenu>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Quantity: </label>
-                                                <div class="col-sm-9 inner-addon right-addon">
-                                                    <i class="glyphicon glyphicon-user"></i>
-                                                    <h:inputText id="stockQuantity" class="form-control" value="#{goodsIssuedDocumentManagedBean.quantity}"></h:inputText>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="goodsissueddocument.xhtml" actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
+                                            <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.viewStockUnit}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
                                                 <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                             </h:commandButton>
                                         </div>
