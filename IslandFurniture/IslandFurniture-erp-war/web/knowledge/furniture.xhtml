@@ -33,7 +33,7 @@
 
                                 </tr>
                                 <h:form id="displayFurniture" class="form-horizontal">
-                                    <ui:repeat value="#{furnitureManagedBean.furnitureList}" var="f">
+                                    <ui:repeat value="#{furnitureManagedBean.furnitureList}" var="f" id="furnitureList">
                                         <tr>
                                             <td>
                                                 <h:outputText id="fID" value="#{f.id}"></h:outputText>
@@ -58,12 +58,14 @@
                                             <td>
                                                 <h:commandButton actionListener="#{furnitureManagedBean.editFurnitureModel}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{f}" />
+                                                    <f:ajax execute="@form" render=":displayFurniture:furnitureList"/>
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>                                                
                                             </td>
                                             <td>
                                                 <h:commandButton action="#{furnitureManagedBean.deleteFurnitureModel()}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="fID" value="#{f.id}" />
+                                                    <f:ajax execute="@form" render=":displayFurniture:furnitureList"/>
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </td>         
