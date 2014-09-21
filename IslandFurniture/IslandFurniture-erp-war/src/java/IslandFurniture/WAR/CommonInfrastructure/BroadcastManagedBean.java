@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageAnnouncementsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageEventsBeanLocal;
 import IslandFurniture.EJB.Entities.Announcement;
 import IslandFurniture.EJB.Entities.Event;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,6 +23,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -48,6 +50,8 @@ public class BroadcastManagedBean implements Serializable {
     private String eventTimeString = null;
     private String idString = null;
     private List<Event> eventList = null;
+    private Announcement announcement;
+    private Event event;
     
     @EJB
     private ManageAnnouncementsBeanLocal announcementBean;
@@ -75,17 +79,10 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
-    public String editAnnouncement() throws ParseException {
+    public String editAnnouncement(ActionEvent event) throws IOException, ParseException {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      idString = request.getParameter("editAnnouncementForm:id");
-      id = Long.valueOf(idString);
-      title = request.getParameter("editAnnouncementForm:title");
-      content = request.getParameter("editAnnouncementForm:content");
-      activeDateString = request.getParameter("editAnnouncementForm:activeDateString");
-      expireDateString = request.getParameter("editAnnouncementForm:expireDateString");
-      activeDate = new SimpleDateFormat("yyyy-MM-dd").parse(activeDateString);
-      expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expireDateString);
-      announcementBean.editAnnouncement(id, title, content, activeDate, expireDate);
+      announcement = (Announcement) event.getComponent().getAttributes().get("toEdit");
+      announcementBean.editAnnouncement(announcement.getId(),announcement.getTitle(),announcement.getContent(),announcement.getActiveDate(),announcement.getExpireDate());
       announcementList = announcementBean.getMyAnnouncements(username);
       return "broadcast";
     }
@@ -112,19 +109,11 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
-    public String editEvent() throws ParseException{
+    //Aevent used for action event since event already used 
+    public String editEvent(ActionEvent Aevent) throws IOException, ParseException{
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      idString = request.getParameter("editAnnouncementForm:id");
-      id = Long.valueOf(idString);
-      name = request.getParameter("editEventForm:name");
-      description = request.getParameter("editEventForm:description");
-      eventTimeString = request.getParameter("editEventForm:eventTimeString");
-      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-      Date date = (Date)formatter.parse(eventTimeString); 
-      Calendar cal=Calendar.getInstance();
-      cal.setTime(date);
-      eventTime = cal;
-      eventBean.editEvent(name, description, eventTime, id);
+      event = (Event) Aevent.getComponent().getAttributes().get("toEdit");
+      eventBean.editEvent(event.getName(), event.getDescription(), event.getEventTime(), event.getId());
       eventList = eventBean.getMyEvents(username);
       return "broadcast";
     }
@@ -271,6 +260,27 @@ public class BroadcastManagedBean implements Serializable {
     public void setEventBean(ManageEventsBeanLocal eventBean) {
         this.eventBean = eventBean;
     }
+
+    public Announcement getAnnouncement() {
+        return announcement;
+    }
+
+    public void setAnnouncement(Announcement announcement) {
+        this.announcement = announcement;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+ 
+    
+
+
     
     
     
