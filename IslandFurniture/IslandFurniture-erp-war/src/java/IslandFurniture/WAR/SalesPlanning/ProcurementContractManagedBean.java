@@ -88,7 +88,10 @@ public class ProcurementContractManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = Util.getSession();
+        HttpSession session = Util.getSession();        
+        this.supplierID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("supplierID");
+        System.out.println("FurnitureID is " + supplierID);
+        supplier = supplierManager.getSupplier(supplierID);
         supplierList = supplierManager.displaySupplierList();
         stockList = supplierManager.displayProcuredStock();
         mfList = supplierManager.displayManufacturingFacility();

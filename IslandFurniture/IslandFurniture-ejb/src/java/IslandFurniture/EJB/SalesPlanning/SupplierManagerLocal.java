@@ -37,5 +37,7 @@ public interface SupplierManagerLocal {
     public List<ManufacturingFacility> displayManufacturingFacility();
 
     public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID);
+
+    public Supplier getSupplier(Long id);
     
 }

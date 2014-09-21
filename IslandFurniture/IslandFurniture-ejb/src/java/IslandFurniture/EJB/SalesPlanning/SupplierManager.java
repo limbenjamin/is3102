@@ -54,6 +54,16 @@ public class SupplierManager implements SupplierManagerLocal {
             System.err.println("No records found");
         }
     }
+    public Supplier getSupplier(Long id) {
+        Supplier supplier;
+        try {
+            supplier = em.find(Supplier.class, id);
+            return supplier;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;
+        }
+    }
     public void editSupplier(Long id, String name, String countryName) {
         Supplier supplier;
         Country country;
