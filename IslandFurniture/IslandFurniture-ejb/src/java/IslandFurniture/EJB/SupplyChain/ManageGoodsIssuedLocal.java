@@ -56,9 +56,11 @@ public interface ManageGoodsIssuedLocal {
     List<StorageBin> viewStorageBin(Plant plant);
 
     List<StockUnit> viewStockUnitById(Plant plant, Stock stock);
-
-    List<StorageBin> viewStorageBinByStockUnitId(Plant plant, Stock stock);
+    
+    List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid);
 
     StockUnit getStockUnit(Long id);
+    
+    List<StockUnit> viewStockUnit(Plant plant);
 
 }

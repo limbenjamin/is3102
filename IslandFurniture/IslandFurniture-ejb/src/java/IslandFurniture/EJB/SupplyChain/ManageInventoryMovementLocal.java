@@ -5,11 +5,13 @@
  */
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -37,5 +39,7 @@ public interface ManageInventoryMovementLocal {
     void deleteStockUnit(Long stockUnitId);
     
     void deleteStockUnitQty(Long stockUnitId, Long qty);
+    
+    void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid);
 
 }

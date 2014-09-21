@@ -10,15 +10,23 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-6">
-
+                    <div class="col-md-8">
+                        <h:form> 
+                            <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
+                                <i class="fa fa-fw fa-plus"></i>Add Stock
+                            </button>  
+                        </h:form>    
                         <h4>Goods Issued Document: Stock Information for #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
+                    </div>
 
+
+                    <div class="col-md-6">
                         <section name="Storage Location of Stock">
                             <h5>Storage Location</h5>
                             <table class="table table-hover table-condensed">
                                 <tr>
-                                    
+
+                                    <th>Stock Unit Number</th>
                                     <th>Storage Area</th>
                                     <th>Storage Bin</th>
                                     <th>Quantity</th>
@@ -27,7 +35,7 @@
                                 <h:form class="form-horizontal">
                                     <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s">
                                         <tr>
-                                            
+                                            <td>#{s.id}</td>
                                             <td>#{s.location.storageArea.name}</td>
                                             <td>#{s.location.name}</td>
                                             <td>#{s.qty}</td>
@@ -36,6 +44,51 @@
                                     </ui:repeat>
                                 </h:form> 
                             </table>  
+                        </section>
+
+                        <section name="Add Stock">
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="newGRDD" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Select Stock</h4>
+                                        </div>
+                                        <h:form id="createGRDD" class="form-horizontal">
+                                            <h:inputHidden value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" id="GRDid" />
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Stock: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}">
+                                                            <f:selectItem itemLabel="Select Stock Unit ID" />
+                                                            <f:selectItems value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Quantity: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-user"></i>
+                                                        <h:inputText id="stockQuantity" class="form-control" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitQuantity}"></h:inputText>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addGoodsIssuedDocumentStockUnit}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
+                                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
+                                                    <f:attribute name="stockUnitId" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}" />
+                                                    <f:attribute name="stockUnitQuantity" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitQuantity}" />
+                                                </h:commandButton>
+                                            </div>
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>    
                         </section>
 
                     </div>

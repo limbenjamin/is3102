@@ -165,18 +165,24 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
 
     @Override
     public List<StockUnit> viewStockUnitById(Plant plant, Stock stock) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId");
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE)");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
         return q.getResultList();
     }
 
     @Override
-    public List<StorageBin> viewStorageBinByStockUnitId(Plant plant, Stock stock) {      
-        // Need fixing!
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId");
+    public List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.stock.id=:stockId AND s.goodsIssuedDocument.id=:gidId");
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("gidId", gid.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StockUnit> viewStockUnit(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId GROUP BY s.stock.name");
         q.setParameter("plantId", plant.getId());
-//        q.setParameter("stockId", stock.getId());
         return q.getResultList();
     }
 

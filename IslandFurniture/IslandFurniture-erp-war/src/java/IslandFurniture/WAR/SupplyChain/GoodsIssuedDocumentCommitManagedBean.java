@@ -7,6 +7,7 @@ package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
@@ -16,6 +17,7 @@ import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,6 +27,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -49,17 +52,18 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private String username;
     private String deliverynote;
 
-    private Calendar postingDate;
+    private Calendar commitDate;
     private Calendar issuedDate;
 
-    private Stock stock;
-    private Integer quantity;
+    private Long stockUnitQuantity;
 
     private List<StockUnit> stockUnitByIdList;
-    private List<StorageBin> storageBinByStockUnitIdList;
+    private List<StockUnit> stockUnitByIdAndGRDList;
+
 
     private GoodsIssuedDocument goodsIssuedDocument;
     private StorageBin storageBin;
+    private Stock stock;
     private StockUnit stockUnit;
     private Staff staff;
     private Plant plant;
@@ -98,9 +102,31 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         stock = mgrl.getStock(stockId);
 
         stockUnitByIdList = mgrl.viewStockUnitById(plant, stock);
-        storageBinByStockUnitIdList = mgrl.viewStorageBinByStockUnitId(plant, stock);
+        stockUnitByIdAndGRDList = mgrl.viewStockUnitByIdAndGrdId(stock, goodsIssuedDocument);
 
         System.out.println("Init");
+    }
+
+    public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
+        stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        stockUnit = mgrl.getStockUnit(stockUnitId);
+
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        commitDate = cal;
+
+        msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), commitDate, goodsIssuedDocument);
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
     }
 
     public Long getPlantId() {
@@ -183,12 +209,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.deliverynote = deliverynote;
     }
 
-    public Calendar getPostingDate() {
-        return postingDate;
+    public Calendar getCommitDate() {
+        return commitDate;
     }
 
-    public void setPostingDate(Calendar postingDate) {
-        this.postingDate = postingDate;
+    public void setCommitDate(Calendar commitDate) {
+        this.commitDate = commitDate;
     }
 
     public Calendar getIssuedDate() {
@@ -207,12 +233,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.stock = stock;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Long getStockUnitQuantity() {
+        return stockUnitQuantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setStockUnitQuantity(Long stockUnitQuantity) {
+        this.stockUnitQuantity = stockUnitQuantity;
     }
 
     public List<StockUnit> getStockUnitByIdList() {
@@ -223,12 +249,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.stockUnitByIdList = stockUnitByIdList;
     }
 
-    public List<StorageBin> getStorageBinByStockUnitIdList() {
-        return storageBinByStockUnitIdList;
+    public List<StockUnit> getStockUnitByIdAndGRDList() {
+        return stockUnitByIdAndGRDList;
     }
 
-    public void setStorageBinByStockUnitIdList(List<StorageBin> storageBinByStockUnitIdList) {
-        this.storageBinByStockUnitIdList = storageBinByStockUnitIdList;
+    public void setStockUnitByIdAndGRDList(List<StockUnit> stockUnitByIdAndGRDList) {
+        this.stockUnitByIdAndGRDList = stockUnitByIdAndGRDList;
     }
 
     public GoodsIssuedDocument getGoodsIssuedDocument() {
@@ -302,5 +328,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
+
+    
 
 }

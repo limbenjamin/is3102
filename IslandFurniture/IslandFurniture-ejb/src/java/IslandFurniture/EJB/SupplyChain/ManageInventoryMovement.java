@@ -5,11 +5,13 @@
  */
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -57,15 +59,27 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
 
     @Override
     public void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin) {
-
-        System.out.println("it also went here!");
-
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
         stockUnit.setQty(quantity);
         stockUnit.setLocation(storageBin);
         stockUnit.setAvailable(true);
+        em.persist(stockUnit);
+        em.flush();
+    }
+    
+        @Override
+    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid) {
+        stockUnit = new StockUnit();
+        stockUnit.setStock(stock);
+        stockUnit.setBatchNo(batchNo);
+        stockUnit.setQty(quantity);
+        stockUnit.setLocation(storageBin);
+        stockUnit.setAvailable(false);
+        stockUnit.setCommitStockUnitId(stockUnitId);
+        stockUnit.setCommitTime(commitTime);
+        stockUnit.setGoodsIssuedDocument(gid);
         em.persist(stockUnit);
         em.flush();
     }

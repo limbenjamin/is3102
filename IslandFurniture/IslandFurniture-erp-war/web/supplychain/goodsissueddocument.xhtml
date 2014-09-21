@@ -126,6 +126,7 @@
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
                                                     <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentManagedBean.stockId}">
+                                                        <f:selectItem itemLabel="Select Stock" />
                                                         <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                                     </h:selectOneMenu>
                                                 </div>

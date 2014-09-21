@@ -108,7 +108,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         storageBinList = mgrl.viewStorageBin(plant);
         goodsIssuedDocumentDetailList = mgrl.viewGoodsIssuedDocumentDetail(goodsIssuedDocument);
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
-        stockUnitList = miml.viewStockUnit(plant);
+        stockUnitList = mgrl.viewStockUnit(plant);
         System.out.println("Init");
     }
 
@@ -184,10 +184,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         goodsIssuedDocumentId = Long.parseLong(request.getParameter("createGRDD:GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
-        System.out.println("It went here!");
-        
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
-//        return "goodsissueddocumentcommit?faces-redirect=true";
     }
 
     public Long getPlantId() {
