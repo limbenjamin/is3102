@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -28,6 +29,8 @@ public class Privilege implements Serializable {
     private String name;
     @ManyToMany
     private List<Role> roles;
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="privilege")
+    private List<Url> menuLink;
 
     public Long getId() {
         return id;
@@ -52,6 +55,16 @@ public class Privilege implements Serializable {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
+
+    public List<Url> getMenuLink() {
+        return menuLink;
+    }
+
+    public void setMenuLink(List<Url> menuLink) {
+        this.menuLink = menuLink;
+    }
+    
+    
 
     @Override
     public boolean equals(Object object) {

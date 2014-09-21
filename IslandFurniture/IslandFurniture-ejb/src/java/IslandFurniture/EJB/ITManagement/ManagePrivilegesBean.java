@@ -9,6 +9,7 @@ package IslandFurniture.EJB.ITManagement;
 import IslandFurniture.EJB.Entities.Privilege;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.Url;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
@@ -34,11 +35,18 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
     private List<Privilege> privilegeList;
     private Role role;
     private List<Role> roleList;
+    private Url url;
     
     @Override
-    public void createPrivilege(String name) {
+    public void createPrivilege(String name, List<Url> urlList) {
         privilege = new Privilege();
         privilege.setName(name);
+        Iterator<Url> iterator = urlList.iterator();
+        while (iterator.hasNext()) {
+            url = iterator.next();
+            url.setPrivilege(privilege);
+        }
+        privilege.setMenuLink(urlList);
         em.persist(privilege);
     }
     
@@ -69,4 +77,13 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
         return (Privilege) q.getSingleResult();
     }
     
+    @Override
+    public Url createUrl(String link, String icon, String menuItemName, boolean visible){
+        url = new Url();
+        url.setIcon(icon);
+        url.setLink(link);
+        url.setMenuItemName(menuItemName);
+        url.setVisible(visible);
+        return url;
+    }
 }

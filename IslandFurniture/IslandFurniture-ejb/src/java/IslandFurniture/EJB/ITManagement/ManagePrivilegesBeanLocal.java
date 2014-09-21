@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.EJB.Entities.Privilege;
+import IslandFurniture.EJB.Entities.Url;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -16,8 +17,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface ManagePrivilegesBeanLocal {
-    void createPrivilege(String name);
+    void createPrivilege(String name, List<Url> urlList);
     void removePrivilege(Long id);
     List<Privilege> displayPrivilege();
     Privilege getPrivilegeFromName(String privilegeName);
+    Url createUrl(String link, String icon, String menuItemName, boolean visible);
 }
