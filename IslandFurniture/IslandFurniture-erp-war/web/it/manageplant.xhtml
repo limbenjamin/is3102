@@ -34,15 +34,26 @@
                                     
                                 <!-- Stores Tab -->
                                 <section class="panel">                                     
-                
+                                <h:form id="editPlantForm" class="form-horizontal">
                                     <p:dataTable value="#{organizationalHierarchyManagedBean.storeList}" var="store">
 
                                         <p:column headerText="Branch" sortBy="#{store.name}">
-                                            <h:outputText value="#{store.name}" />
+                                            <h:inputText id="plantName" value="#{store.name}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
 
-                                        <p:column headerText="Country" sortBy="#{store.country.name}">
-                                            <h:outputText value="#{store.country.name}" />
+                                        <p:column headerText="Country Office" sortBy="#{store.countryOffice.name}">
+                                            <h:inputText id="countryOfficeString" value="#{store.countryOffice.name}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Time Zone" sortBy="#{store.timeZoneID}">
+                                            <h:inputText id="timeZoneString" value="#{store.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Update">
+                                            <h:commandButton actionListener="#{organizationalHierarchyManagedBean.editStore}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:attribute name="toEdit" value="#{store}" />
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>
                                         </p:column>
 
                                         <p:column headerText="Remove" style="text-align: center;">
@@ -56,7 +67,7 @@
                                         </p:column>                        
 
                                     </p:dataTable>
-
+                                </h:form>
                                 </section>
                                 </div>
                                 
@@ -64,14 +75,26 @@
                                     
                                 <!-- Manufacturing Facilities Tab -->
                                 <section class="panel">
+                                <h:form id="editMFForm" class="form-horizontal">
                                     <p:dataTable value="#{organizationalHierarchyManagedBean.mfList}" var="mf">
 
                                         <p:column headerText="Branch" sortBy="#{mf.name}">
-                                            <h:outputText value="#{mf.name}" />
+                                            <h:inputText id="plantName" value="#{mf.name}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
                                         
-                                        <p:column headerText="Country" sortBy="#{mf.country.name}">
-                                            <h:outputText value="#{mf.country.name}" />
+                                        <p:column headerText="Country Office" sortBy="#{mf.countryOffice.name}">
+                                            <h:inputText id="countryOfficeString" value="#{mf.countryOffice.name}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Time Zone" sortBy="#{mf.timeZoneID}">
+                                            <h:inputText id="timeZoneString" value="#{mf.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Update">
+                                            <h:commandButton actionListener="#{organizationalHierarchyManagedBean.editMF}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:attribute name="toEdit" value="#{mf}" />
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>
                                         </p:column>
                                         
                                         <p:column headerText="Remove" style="text-align: center;">
@@ -85,6 +108,7 @@
                                         </p:column>                        
 
                                     </p:dataTable>
+                                </h:form>
                                 </section>
                                 </div>
                                 
@@ -92,15 +116,27 @@
                                     
                                 <!-- Country Offices Tab -->
                                 <section class="panel">
+                                <h:form id="editCOForm" class="form-horizontal">
                                     <p:dataTable value="#{organizationalHierarchyManagedBean.coList}" var="co">
 
                                         <p:column headerText="Branch" sortBy="#{co.name}">
-                                            <h:outputText value="#{co.name}" />
+                                            <h:inputText id="plantName" value="#{co.name}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
                                         
                                         <p:column headerText="Country" sortBy="#{co.country.name}">
-                                            <h:outputText value="#{co.country.name}" />
+                                            <h:inputText id="countryString" value="#{co.country.name}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
+                                        
+                                        <p:column headerText="Time Zone" sortBy="#{co.timeZoneID}">
+                                            <h:inputText id="timeZoneString" value="#{co.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Update">
+                                            <h:commandButton actionListener="#{organizationalHierarchyManagedBean.editCO}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:attribute name="toEdit" value="#{co}" />
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>
+                                        </p:column>                                        
                                         
                                         <p:column headerText="Remove" style="text-align: center;">
                                             <h:form>
@@ -113,6 +149,7 @@
                                         </p:column>                        
 
                                     </p:dataTable>
+                                </h:form>
                                 </section>
                                 </div>
                             </div>                                

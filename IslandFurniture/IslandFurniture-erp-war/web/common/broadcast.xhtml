@@ -24,23 +24,29 @@
                                     </span>
                                     My Announcements
                                 </div>
+                                <h:form>
                                 <ui:repeat value="#{broadcastManagedBean.announcementList}" var="announcement">
-                                <div class="list-group">                          
-                                  <div class="list-group-item">                                      
-                                      <h5><strong>#{announcement.title}</strong></h5>
-                                    <h:form>
-                                        <div class="pull-right btn-group">
-                                          <button type="button" class="btn btn-default btn-edit">Edit</button>
-                                            <h:commandButton value="Delete" class="btn btn-default btn-delete" action="#{broadcastManagedBean.deleteAnnouncement}">
-                                                <f:param name="id" value="#{announcement.id}" />
-                                            </h:commandButton>
-                                        </div>
-                                    </h:form>                                      
-                                      <p><span class="fa fa-clock-o"></span> #{announcement.activeDate}</p>
-                                      <p>#{announcement.content}</p>
-                                  </div>                                  
-                                </div>
-                                </ui:repeat>
+                                    <div class="list-group">                          
+                                      <div class="list-group-item">                                      
+                                          <h5><strong><h:inputText id="title" value="#{announcement.title}" class="form-control transparent-form"></h:inputText></strong></h5>
+
+                                            <span class="pull-right">
+                                                <h:commandButton actionListener="#{broadcastManagedBean.editAnnouncement}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{announcement}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>
+                                                <h:commandButton class="btn btn-sm transparent-button" action="#{broadcastManagedBean.deleteAnnouncement}">
+                                                    <f:param name="id" value="#{announcement.id}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                            </span>
+
+                                          <p><span class="fa fa-clock-o"></span> #{announcement.activeDate}</p>
+                                          <p><h:inputText id="content" value="#{announcement.content}" class="form-control transparent-form"></h:inputText></p>
+                                      </div>                                  
+                                    </div>
+                                    </ui:repeat>
+                                </h:form>    
                               </section>
                             </div>
 
@@ -101,22 +107,29 @@
                                     </span>
                                     Events
                                 </div>
+                                <h:form>
                                 <ui:repeat value="#{broadcastManagedBean.eventList}" var="event">
                                 <div class="list-group">                          
                                   <a href="#" class="list-group-item">
-                                      <h5><strong>#{event.name}</strong></h5>
-                                    <h:form>
+                                      <h5><strong><h:inputText id="name" value="#{event.name}" class="form-control transparent-form"></h:inputText></strong></h5>
+                                    
                                         <span class="pull-right">
-                                            <h:commandButton value="Delete" class="btn btn-danger btn-block" action="#{broadcastManagedBean.deleteEvent}">
+                                            <h:commandButton actionListener="#{broadcastManagedBean.editEvent}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{event}" />
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>
+                                            <h:commandButton  class="btn btn-sm transparent-button" action="#{broadcastManagedBean.deleteEvent}">
                                                 <f:param name="id" value="#{event.id}" />
                                             </h:commandButton>
+                                            <i class="fa fa-lg fa-trash-o icon-button"></i>
                                         </span>
-                                    </h:form>                                      
+                                      
                                       <p><span class="fa fa-clock-o"></span> #{event.eventTime.time}</p>
-                                      <p>#{event.description}</p>
+                                      <p><h:inputText id="description" value="#{event.description}" class="form-control transparent-form"></h:inputText></p>
                                   </a>
                                 </div>
                                 </ui:repeat>
+                                </h:form>
                               </section>
                             </div>  
 

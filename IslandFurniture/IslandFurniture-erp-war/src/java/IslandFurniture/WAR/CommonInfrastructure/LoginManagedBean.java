@@ -29,6 +29,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.servlet.http.HttpSession;
 
 @ManagedBean
@@ -39,6 +40,7 @@ public class LoginManagedBean implements Serializable {
     private Staff staff;
     private String username = null;
     private String password = null;
+    private String confirmPassword = null;
     private List<Notification> notificationList;
     private List<Privilege> privilegeList;
     private Notification notification;
@@ -53,6 +55,7 @@ public class LoginManagedBean implements Serializable {
     private List<Url> urlList;
     private List<Url> existingUrlList;
     private Url url;
+    private String code;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -342,6 +345,22 @@ public class LoginManagedBean implements Serializable {
 
     public void setExistingUrlList(List<Url> existingUrlList) {
         this.existingUrlList = existingUrlList;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     
