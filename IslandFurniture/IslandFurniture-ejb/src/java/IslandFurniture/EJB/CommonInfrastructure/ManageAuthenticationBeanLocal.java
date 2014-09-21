@@ -21,4 +21,8 @@ public interface ManageAuthenticationBeanLocal {
 
     void log(String EntityName, Long EntityId, String UserAction, String ChangeMessage, Long StaffId);
     
+    boolean forgetPassword(String username);
+    
+    boolean resetPassword(String code, String password);
+    
 }

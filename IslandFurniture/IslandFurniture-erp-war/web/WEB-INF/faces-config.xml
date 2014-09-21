@@ -39,6 +39,20 @@
             <to-view-id>/login.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>resetpassword</from-outcome>
+            <to-view-id>/it/resetpassword.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>code</name>  
+                    <value>#{loginManagedBean.code}</value>  
+                </view-param>  
+            </redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>forgotpassword</from-outcome>
+            <to-view-id>/it/forgotpassword.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>notification</from-outcome>
             <to-view-id>/it/notification.xhtml</to-view-id>
         </navigation-case>
