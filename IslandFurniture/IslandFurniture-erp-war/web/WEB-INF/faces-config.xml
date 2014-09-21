@@ -144,7 +144,17 @@
             <from-outcome>inventorymonitoring_ststock</from-outcome>
             <to-view-id>/supplychain/inventorymonitoring_ststock.xhtml</to-view-id>
         </navigation-case> 
-          
-            
+        <navigation-case>
+            <from-outcome>goodsreceiptinbound</from-outcome>
+            <to-view-id>/supplychain/goodsreceiptinbound.xhtml</to-view-id>
+        </navigation-case>   
+        <navigation-case>
+            <from-outcome>inventorytransfer_movementlocation</from-outcome>
+            <to-view-id>/supplychain/inventorytransfer_movementlocation.xhtml</to-view-id>
+        </navigation-case> 
+        <navigation-case>
+            <from-outcome>inventorytransfer_movementstock</from-outcome>
+            <to-view-id>/supplychain/inventorytransfer_movementstock.xhtml</to-view-id>
+        </navigation-case>  
     </navigation-rule>
 </faces-config>

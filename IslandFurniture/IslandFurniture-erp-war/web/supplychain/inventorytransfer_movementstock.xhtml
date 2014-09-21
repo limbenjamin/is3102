@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h:form> 
+                            <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
+                                <i class="fa fa-fw fa-plus"></i>Move Stock
+                            </button>  
+                        </h:form>
+
+                        <h4>Inventory Movement of Stock: #{inventoryTransferMovementStockManagedBean.stock.name}</h4><hr></hr>
+                        <section name="Table of Contents of the Stock Items">
+                            <h5>Storage Location of Stock</h5>
+                            <table class="table table-hover table-condensed">
+                                <tr>
+                                    <th>Stock Unit Number</th>
+                                    <th>Storage Area</th>
+                                    <th>Storage Bin</th>
+                                    <th>Quantity</th>
+                                    <th>Batch Number</th>
+                                </tr>
+                                <h:form class="form-horizontal">
+                                    <ui:repeat value="#{inventoryTransferMovementStockManagedBean.stockUnitList}" var="s">
+                                        <tr>
+                                            <td>#{s.id}</td>
+                                            <td>#{s.location.storageArea.name}</td>
+                                            <td>#{s.location.name}</td>
+                                            <td>#{s.qty}</td>
+                                            <td>#{s.batchNo}</td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>                        
+                        </section>   
+
+                        <section name="Move Stock">
+                            <!-- Modal -->
+                            <div class="modal fade" id="newStockUnit" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Select Stock</h4>
+                                        </div>
+                                        <h:form id="newStockUnit1" class="form-horizontal">
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Stock Unit: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}">
+                                                            <f:selectItem itemLabel="Select Stock Unit ID" />
+                                                            <f:selectItems value="#{inventoryTransferMovementStockManagedBean.stockUnitList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Storage Bin: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementStockManagedBean.storageBinId}">
+                                                            <f:selectItem itemLabel="Select Storage Bin" />
+                                                            <f:selectItems value="#{inventoryTransferMovementStockManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Quantity: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-user"></i>
+                                                        <h:inputText class="form-control" value="#{inventoryTransferMovementStockManagedBean.stockUnitQuantity}"></h:inputText>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                                <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.addStockUnitTemp}" value="Add Stock" class="btn btn-success pull-right btn-right-margin">
+                                                    <f:attribute name="stockId" value="#{inventoryTransferMovementStockManagedBean.stock.id}" />
+                                                    <f:attribute name="stockUnitId" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}" />
+                                                    <f:attribute name="storageBinId" value="#{inventoryTransferMovementStockManagedBean.storageBinId}" />
+                                                    <f:attribute name="stockUnitQuantity" value="#{inventoryTransferMovementStockManagedBean.stockUnitQuantity}" />
+                                                </h:commandButton>
+                                            </div>
+                                        </h:form>
+                                    </div>
+                                </div>
+                            </div>    
+                        </section>
+
+
+                       
+
+
+                        <section name="Edit Stock">
+                            <h5>Pending Movement of Stock</h5>
+                            <table class="table table-hover table-condensed">
+                                <tr>
+                                    <th>Storage Area</th>
+                                    <th>Storage Bin</th>
+                                    <th>Quantity</th>
+                                    <th>Batch Number</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <h:form class="form-horizontal">
+                                    <ui:repeat value="#{inventoryTransferMovementStockManagedBean.stockUnitMovementList}" var="s">
+                                        <tr>
+                                            <td>#{s.location.storageArea.name}</td>
+                                            <td>#{s.location.name}</td>
+                                            <td>#{s.qty}</td>
+                                            <td>#{s.batchNo}</td>
+                                            <td>
+                                                <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                    <f:attribute name="stockId" value="#{s.stock.id}" />
+                                                    <f:attribute name="stockUnit" value="#{s}" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>  
+                        </section>
+
+                         <section name="Continue with Goods Issue Document"> 
+
+                            <h:form class="form-horizontal">
+                                <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.confirmStockUnit}" value="Confirm Stock Movement" class="btn btn-primary pull-right"> 
+                                    <f:attribute name="stockId" value="#{inventoryTransferMovementStockManagedBean.stock.id}" />
+                                    <f:attribute name="stockUnitId" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}" />
+                                </h:commandButton>
+                            </h:form>
+                        </section>
+                        
+
+
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

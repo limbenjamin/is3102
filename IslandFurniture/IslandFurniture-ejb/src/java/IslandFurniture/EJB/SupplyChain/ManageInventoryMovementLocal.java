@@ -43,4 +43,10 @@ public interface ManageInventoryMovementLocal {
 
     List<StorageBin> viewStorageBin(Plant plant);
     
+    void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime);
+    
+    List<StockUnit> viewStockUnitMovement(Plant plant, Stock stock);
+    
+    void confirmStockUnitMovement(Long stockUnitId);
+    
 }
