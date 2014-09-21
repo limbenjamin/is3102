@@ -151,17 +151,13 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         return "goodsissueddocument";
     }
 
-    public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+    public void deleteGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId")); 
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         goodsIssuedDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
-        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
-        System.out.println("This is the storageBinId: " + storageBinId);
-        storageBin = msll.getStorageBin(storageBinId);
         for (GoodsIssuedDocumentDetail g : goodsIssuedDocumentDetailList) {
-            msul.createStockUnit(g.getStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+            msul.deleteStockUnitQty(stockId, plantId);
         }
 
         Calendar cal = Calendar.getInstance();
