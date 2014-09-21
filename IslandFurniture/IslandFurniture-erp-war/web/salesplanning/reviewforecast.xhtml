@@ -6,16 +6,16 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:form>
-            <h:commandButton value="Send for approval">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
+            <h:commandButton value="Approve Pending Forecasts">
+                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.approveForecast}" />
             </h:commandButton>
-            <h:commandButton value="Forecast By Naive Method">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.naiveForecast}" />
+            <h:commandButton value="Reject Pending Forecasts">
+                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.rejectForecast}" />
             </h:commandButton>
             <br /><br />
 
-            <h:outputText id="statusMessage" value="#{createForecastManagedBean.statusMessage}"/>
-            <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
+            <h:outputText id="statusMessage" value="#{reviewForecastManagedBean.statusMessage}"/>
+            <p:accordionPanel id="mssrTable" value="#{reviewForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{reviewForecastManagedBean.panelActive}">
                 <p:tab title="#{mssrPairedEntry.first.name} (id:#{mssrPairedEntry.first.id})">
                     <p:dataTable value="#{createForecastManagedBean.mssrLabels}" var="label">
                         <p:column>
@@ -41,11 +41,11 @@
                                 <br />
                                 <h:outputText value="#{mssr.year}" />
                             </f:facet>
-                            <h:outputText value="-" rendered="#{(label.first == 'varianceOffset' and mssr.varianceUpdated == false) or (label.first == 'status' and mssr.status == null)}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{(label.first == 'varianceOffset' and mssr.varianceUpdated == true) or (label.first == 'status' and mssr.status != null)}" />
-                            <h:outputText value="-" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory')}" />
-                            <p:inputText value="#{mssr[label.first]}" rendered="#{(mssr.status == 'REJECTED' or mssr.status == null) and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{!(mssr.status == 'REJECTED' or mssr.status == null) and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
+                            <h:outputText value="-" rendered="#{mssr.status == null}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == true}" />
+                            <h:outputText value="-" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == false}" />
+                            <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory')}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}" />
                         </p:columns>
                     </p:dataTable>
                 </p:tab>

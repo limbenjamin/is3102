@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
+import IslandFurniture.EJB.Entities.MssrStatus;
 import IslandFurniture.EJB.Entities.RetailItemTransaction;
 import IslandFurniture.EJB.Entities.RetailItemTransactionDetail;
 import IslandFurniture.EJB.Entities.Stock;
@@ -60,7 +61,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 mssr = this.addMonthlyStockSupplyReq(eachStockSupplied.getStock(), co, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
 
                 // Reset all qtySold to prevent duplicate counting
-                mssr.setQtySold(-1);
+                mssr.setQtySold(0);
             }
 
             // Grab list of transactions in given store in a month
@@ -117,10 +118,12 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
     @Override
     public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrieveNaiveForecast(CountryOffice co, int mthsHist)
-        throws IllegalArgumentException, ForecastFailureException {
+            throws IllegalArgumentException, ForecastFailureException {
         if (mthsHist < 0) {
             throw new IllegalArgumentException("Number of History MSSR Months must be zero or positive");
         }
+
+        boolean impacted = false;
 
         Calendar lockedOutStart = TimeMethods.getPlantCurrTime(co);
         lockedOutStart.add(Calendar.MONTH, mthsHist * -1);
@@ -143,57 +146,108 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
             List<MonthlyStockSupplyReq> unlockedMssrList;
             unlockedMssrList = this.retrieveMssrForCoStock(co, ss.getStock(), Month.getMonth(planningStart.get(Calendar.MONTH)), planningStart.get(Calendar.YEAR), Month.getMonth(planningEnd.get(Calendar.MONTH)), planningEnd.get(Calendar.YEAR));
-            
-            for(int i = 0; i < unlockedMssrList.size(); i++){
+
+            for (int i = 0; i < unlockedMssrList.size(); i++) {
                 MonthlyStockSupplyReq mssr = unlockedMssrList.get(i);
                 MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -12);
                 MonthlyStockSupplyReq prevMssr;
-                
-                if(i <= 0){
+
+                if (i <= 0) {
                     prevMssr = QueryMethods.findNextMssr(em, mssr, -1);
-                } else{
-                    prevMssr = unlockedMssrList.get(i-1);
+                } else {
+                    prevMssr = unlockedMssrList.get(i - 1);
                 }
-                
-                if(oldMssr == null || prevMssr == null){
+
+                if (oldMssr == null || prevMssr == null) {
                     throw new ForecastFailureException("Previous forecasted values do not exist!");
                 }
-                
-                em.detach(mssr);
-                mssr.setQtyForecasted(oldMssr.getQtyForecasted());
-                mssr.setPlannedInventory(oldMssr.getPlannedInventory());
-                mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory());
+
+                if (mssr.getStatus() != MssrStatus.APPROVED) {
+                    em.detach(mssr);
+                    mssr.setQtyForecasted(oldMssr.getQtyForecasted());
+                    mssr.setPlannedInventory(oldMssr.getPlannedInventory());
+                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory());
+                    impacted = true;
+                }
             }
 
             pairedMssrList.add(new Couple(ss.getStock(), new Couple(lockedMssrList, unlockedMssrList)));
         }
 
+        if (!impacted) {
+            throw new ForecastFailureException("There are no available months of forecast!");
+        }
+
         return pairedMssrList;
     }
-    
+
     @Override
     @TransactionAttribute(REQUIRED)
     public void saveMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList) throws InvalidMssrException {
         Calendar lockoutCutoff;
+        boolean impacted = false;
 
         for (Couple<Stock, List<MonthlyStockSupplyReq>> mssrList : stockMssrList) {
             for (MonthlyStockSupplyReq mssr : mssrList.getSecond()) {
                 lockoutCutoff = TimeMethods.getPlantCurrTime(mssr.getCountryOffice());
                 lockoutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
-                
-                if(mssr.getQtyForecasted() < 0 || mssr.getPlannedInventory() < 0 || mssr.getQtyRequested() < 0){
-                    throw new InvalidMssrException("Invalid entry for " + mssr.getStock().getName() + ", " + mssr.getMonth() + " " + mssr.getYear());
+
+                if (mssr.getStatus() != MssrStatus.APPROVED && mssr.getStatus() != MssrStatus.PENDING) {
+
+                    if (mssr.getQtyForecasted() < 0 || mssr.getPlannedInventory() < 0 || mssr.getQtyRequested() < 0) {
+                        throw new InvalidMssrException("Invalid entry for " + mssr.getStock().getName() + ", " + mssr.getMonth() + " " + mssr.getYear());
+                    }
+
+                    if (TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear()).compareTo(lockoutCutoff) > 0) {
+                        mssr.setStatus(MssrStatus.PENDING);
+                        mssr.setApproved(false);
+
+                        em.merge(mssr);
+                        impacted = true;
+                    } else {
+                        throw new InvalidMssrException("Monthly Stock Supply Requirements for " + mssr.getMonth() + " " + mssr.getYear() + " falls within the lockout period and cannot be edited.");
+                    }
                 }
+            }
+        }
+        if(!impacted){
+            throw new InvalidMssrException("All forecast entries are either pending approval or have already been approved.");
+        }
+    }
 
+    @Override
+    @TransactionAttribute(REQUIRED)
+    public void reviewMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList, boolean approved) throws InvalidMssrException {
+        Calendar lockoutCutoff;
+        boolean impacted = false;
+
+        for (Couple<Stock, List<MonthlyStockSupplyReq>> mssrList : stockMssrList) {
+            for (MonthlyStockSupplyReq mssr : mssrList.getSecond()) {
+                lockoutCutoff = TimeMethods.getPlantCurrTime(mssr.getCountryOffice());
+                lockoutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
+
+//                if (mssr.getStatus() != MssrStatus.PENDING) {
+//                    throw new InvalidMssrException("Entry for " + mssr.getStock().getName() + ", " + mssr.getMonth() + " " + mssr.getYear() + " has not been submitted for approval yet.");
+//                }
                 if (TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear()).compareTo(lockoutCutoff) > 0) {
-                    mssr.setForecasted(true);
-                    mssr.setApproved(false);
-
-                    em.merge(mssr);
+                    if (mssr.getStatus() == MssrStatus.PENDING) {
+                        if (approved == true) {
+                            mssr.setStatus(MssrStatus.APPROVED);
+                            mssr.setApproved(true);
+                        } else {
+                            mssr.setStatus(MssrStatus.REJECTED);
+                        }
+                        em.merge(mssr);
+                        impacted = true;
+                    }
                 } else {
                     throw new InvalidMssrException("Monthly Stock Supply Requirements for " + mssr.getMonth() + " " + mssr.getYear() + " falls within the lockout period and cannot be edited.");
                 }
             }
+        }
+        
+        if(!impacted){
+            throw new InvalidMssrException("There are no pending forecasts to approve or reject!");
         }
     }
 

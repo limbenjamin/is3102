@@ -69,7 +69,9 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private int varianceOffset = 0;
     private int qtyRequested = 0;
     
-    private boolean forecasted = false;
+    private MssrStatus status;
+    private boolean endMthUpdated = false;
+    private boolean varianceUpdated = false;
     private boolean approved = false;
 
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
@@ -156,12 +158,28 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         this.qtyRequested = qtyRequested;
     }
 
-    public boolean isForecasted() {
-        return forecasted;
+    public MssrStatus getStatus() {
+        return status;
     }
 
-    public void setForecasted(boolean forecasted) {
-        this.forecasted = forecasted;
+    public void setStatus(MssrStatus status) {
+        this.status = status;
+    }
+
+    public boolean isEndMthUpdated() {
+        return endMthUpdated;
+    }
+
+    public void setEndMthUpdated(boolean endMthUpdated) {
+        this.endMthUpdated = endMthUpdated;
+    }
+
+    public boolean isVarianceUpdated() {
+        return varianceUpdated;
+    }
+
+    public void setVarianceUpdated(boolean varianceUpdated) {
+        this.varianceUpdated = varianceUpdated;
     }
 
     public boolean isApproved() {
@@ -238,6 +256,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
         labels.add(new Couple("actualInventory", "Actual Inventory"));
         labels.add(new Couple("varianceOffset", "Variance Offset"));
         labels.add(new Couple("qtyRequested", "Quantity Requested"));
+        labels.add(new Couple("status", "Status"));
 
         return labels;
     }
