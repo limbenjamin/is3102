@@ -39,7 +39,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
     public boolean loadSampleData() {
         
         String[] privileges = new String [] {
-        "Login","Modify Particulars","Messaging","Broadcast","Dashboard",
+        "Login","Modify Particulars","Dashboard","Messaging","Broadcast",
         "Change Password","Manage Plant","Manage Staff","Manage Roles","MSSR",
         "Material","Furniture","Retail Item","Create Forecast","View Notifications"};
         

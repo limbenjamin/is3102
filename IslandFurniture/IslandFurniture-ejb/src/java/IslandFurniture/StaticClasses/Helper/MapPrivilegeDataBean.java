@@ -34,10 +34,6 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
         
         Role role;
         
-        String[] privileges = new String [] {
-        "Login","Modify Particulars","Messaging","Broadcast","Dashboard",
-        "Change Password","Manage Plant","Manage Staff","Manage Roles","MSSR",
-        "Material","Furniture"};
         
         String[] roles = new String [] {
         "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
@@ -49,9 +45,9 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
             try {
                 role = mrbl.getRoleFromName("General Staff");                
                 mrbl.addPrivilegeToRole(role.getId(), "Login");
+                mrbl.addPrivilegeToRole(role.getId(), "Dashboard");
                 mrbl.addPrivilegeToRole(role.getId(), "Modify Particulars");
                 mrbl.addPrivilegeToRole(role.getId(), "Messaging");
-                mrbl.addPrivilegeToRole(role.getId(), "Dashboard");
                 mrbl.addPrivilegeToRole(role.getId(), "Change Password");
 
                 role = mrbl.getRoleFromName("IT (Store)");
