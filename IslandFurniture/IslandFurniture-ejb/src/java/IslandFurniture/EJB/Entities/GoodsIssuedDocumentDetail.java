@@ -37,7 +37,7 @@ public class GoodsIssuedDocumentDetail implements Serializable {
         @JoinColumn(name = "YEAR", referencedColumnName = "YEAR")
     })
     private MonthlyStockSupplyReq monthlyStockSupplyReq;
-    private Integer quantity;
+    private Long quantity;
 
     public Long getId() {
         return id;
@@ -71,11 +71,11 @@ public class GoodsIssuedDocumentDetail implements Serializable {
         this.monthlyStockSupplyReq = monthlyStockSupplyReq;
     }
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

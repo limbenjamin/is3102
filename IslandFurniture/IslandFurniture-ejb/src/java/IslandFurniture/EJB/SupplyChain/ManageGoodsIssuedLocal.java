@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
@@ -23,7 +24,7 @@ public interface ManageGoodsIssuedLocal {
 
     GoodsIssuedDocument createGoodsIssuedDocument(Plant plant, Calendar postingDate);
 
-    void createGoodsIssuedDocumentDetail(Long grdId, Long stockId, Integer quantity);
+    void createGoodsIssuedDocumentDetail(Long grdId, Long stockId, Long quantity);
 
     void createGoodsIssuedDocumentStockUnit(Long grdId, Calendar postingDate);
 
@@ -33,13 +34,13 @@ public interface ManageGoodsIssuedLocal {
 
     void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar IssuedDate);
 
-    void editGoodsIssuedDocumentDetail(Long grddId, Long stockId, Integer qty);
-
     GoodsIssuedDocument getGoodsIssuedDocument(Long id);
 
     GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail(Long id);
 
     Stock getStock(Long id);
+
+    StockUnit getStockUnit(Long id);
 
     List<GoodsIssuedDocument> viewGoodsIssuedDocument();
 
@@ -51,16 +52,18 @@ public interface ManageGoodsIssuedLocal {
 
     List<Stock> viewStock();
 
+    List<StockUnit> viewStockUnit(Plant plant);
+
+    List<StockUnit> viewStockUnitById(Plant plant, Stock stock);
+
+    List<StockUnit> viewStockUnitById2(Plant plant, Stock stock, GoodsIssuedDocument gid);
+
+    List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid);
+
+    List<StockUnit> viewStockUnitByIdMain(Plant plant, GoodsIssuedDocument gid);
+
     List<StorageArea> viewStorageArea(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-
-    List<StockUnit> viewStockUnitById(Plant plant, Stock stock);
     
-    List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid);
-
-    StockUnit getStockUnit(Long id);
-    
-    List<StockUnit> viewStockUnit(Plant plant);
-
 }

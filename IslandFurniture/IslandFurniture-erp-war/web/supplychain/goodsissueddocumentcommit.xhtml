@@ -10,41 +10,78 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <h:form> 
                             <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
                                 <i class="fa fa-fw fa-plus"></i>Add Stock
                             </button>  
                         </h:form>    
                         <h4>Goods Issued Document: Stock Information for #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
-                    </div>
 
 
-                    <div class="col-md-6">
+
                         <section name="Storage Location of Stock">
-                            <h5>Storage Location</h5>
+                            <h5>Storage Location of Stock</h5>
                             <table class="table table-hover table-condensed">
                                 <tr>
-
-                                    <th>Stock Unit Number</th>
                                     <th>Storage Area</th>
                                     <th>Storage Bin</th>
                                     <th>Quantity</th>
                                     <th>Batch Number</th>
+                                    <th>Stock Unit Number</th>
                                 </tr>
                                 <h:form class="form-horizontal">
                                     <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s">
-                                        <tr>
-                                            <td>#{s.id}</td>
+                                        <tr> 
                                             <td>#{s.location.storageArea.name}</td>
                                             <td>#{s.location.name}</td>
                                             <td>#{s.qty}</td>
                                             <td>#{s.batchNo}</td>
+                                            <td>#{s.id}</td>
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
                             </table>  
                         </section>
+
+                        <section name="Edit Stock">
+                            <h5>Pending Committed Stock</h5>
+                            <table class="table table-hover table-condensed">
+                                <tr>
+                                    <th>Storage Area</th>
+                                    <th>Storage Bin</th>
+                                    <th>Quantity</th>
+                                    <th>Batch Number</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <h:form class="form-horizontal">
+                                    <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList2}" var="s">
+                                        <tr>
+                                            <td>#{s.location.storageArea.name}</td>
+                                            <td>#{s.location.name}</td>
+                                            <td>#{s.qty}</td>
+                                            <td>#{s.batchNo}</td>
+                                            <td>
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
+                                                    <f:attribute name="stockUnit" value="#{s}" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>  
+                        </section>
+
+                        <section name="Continue with Goods Issue Document"> 
+
+                            <h:form class="form-horizontal">
+                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.continueWithGoodsIssueDocument}" value="Back to Goods Issued Document" class="btn btn-primary pull-right"> 
+                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
+                                </h:commandButton>
+                            </h:form>
+                        </section>
+
 
                         <section name="Add Stock">
 
@@ -60,7 +97,7 @@
                                             <h:inputHidden value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" id="GRDid" />
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">Stock: </label>
+                                                    <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
                                                         <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}">
