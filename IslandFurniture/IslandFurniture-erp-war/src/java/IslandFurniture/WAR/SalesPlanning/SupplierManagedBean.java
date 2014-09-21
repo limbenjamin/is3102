@@ -32,6 +32,15 @@ public class SupplierManagedBean implements Serializable {
     private SupplierManagerLocal supplierManager;
     
     private List<Supplier> supplierList;
+    private Long supplierID;
+
+    public Long getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(Long supplierID) {
+        this.supplierID = supplierID;
+    }
 
     public List<Supplier> getSupplierList() {
         return supplierList;
@@ -76,5 +85,9 @@ public class SupplierManagedBean implements Serializable {
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("supplierID"));
         supplierManager.deleteSupplier(id);
         return "supplier";
+    }
+    public void pcActionListener(ActionEvent event) throws IOException{
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", event.getComponent().getAttributes().get("supplierID"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("procurementContract.xhtml");
     }
 }
