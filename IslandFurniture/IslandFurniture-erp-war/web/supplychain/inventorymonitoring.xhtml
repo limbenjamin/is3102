@@ -11,21 +11,20 @@
             <ui:define name="content">
                 <div class="row">
                     <div class="col-md-6">
-
                         <section name="View All Location of Selected Stock">
-                            <h4>View All Location of Selected Stock</h4><hr></hr><br></br>
+                            <h4>Inventory Monitoring</h4><hr></hr><br></br>
+                            <h5>View Storage Locations of Selected Stock</h5>
                             <h:form id="viewStockUnit" class="form-horizontal">
                                 <div>
-
                                     <label class="col-sm-4 control-label">Stock Units</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.stockUnitId}">
-                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.id}" />
+                                        <h:selectOneMenu id="stockId" class="form-control" value="#{inventoryMonitoringManagedBean.stockId}">
+                                            <f:selectItem itemLabel="Select Stock" />
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                         </h:selectOneMenu>
                                     </div>                                     
                                 </div>
                                 <div class="modal-footer">
-
                                     <h:commandButton action="#{inventoryMonitoringManagedBean.viewStock}" value="View" class="btn btn-success btn-round">
                                     </h:commandButton>
                                 </div>
@@ -34,17 +33,17 @@
                         </section>
 
                         <section name="View Contents of Storage Location">
-                            <h4>View Contents of Storage Location</h4><hr></hr><br></br>
+                            <h5>View Contents of Storage Location</h5>
                             <h:form id="viewStorageLocation" class="form-horizontal">
                                 <div>
-                                    <label class="col-sm-4 control-label">Storage Location</label>
+                                    <label class="col-sm-4 control-label">Storage Bins</label>
                                     <div class="col-sm-8">
                                         <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                            <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
                                 </div>                                     
-
                                 <div class="modal-footer">
                                     <h:commandButton action="#{inventoryMonitoringManagedBean.viewStorageLocation}" value="View" class="btn btn-success btn-round">
                                     </h:commandButton>
@@ -52,6 +51,46 @@
                             </h:form> 
                         </section>
 
+                        <section name="Perform Stock Taking">
+                            <h5>Perform Stock Taking</h5>
+                            <h:form class="form-horizontal">
+                                <div>
+                                    <label class="col-sm-4 control-label">Stock Take by Stock ID</label>
+                                    <div class="col-sm-8">
+                                        <h:selectOneMenu id="stockId" class="form-control" value="#{inventoryMonitoringManagedBean.stockId}">
+                                            <f:selectItem itemLabel="Select Stock" />
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
+                                        </h:selectOneMenu>
+                                    </div>                                     
+                                </div>
+                                <div class="modal-footer">
+                                    <h:commandButton action="#{inventoryMonitoringManagedBean.viewStockTakebyStock}" value="View" class="btn btn-success btn-round">
+                                    </h:commandButton>
+                                </div>
+                            </h:form> 
+
+                            <h:form class="form-horizontal">
+                                <div>
+                                    <label class="col-sm-4 control-label">Stock Take by Storage Bins</label>
+                                    <div class="col-sm-8">
+                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                            <f:selectItem itemLabel="Select Storage Bin" />
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>                                     
+                                <div class="modal-footer">
+                                    <h:commandButton action="#{inventoryMonitoringManagedBean.viewStockTakebyLocation}" value="View" class="btn btn-success btn-round">
+                                    </h:commandButton>
+                                </div>
+                            </h:form> 
+
+
+
+
+
+
+                        </section>
                     </div>
                 </div>
             </ui:define>
