@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -17,18 +16,21 @@
                         <h4>Purchase Order Details</h4><hr></hr> 
                         <table class="table table-hover">
                             <tr>
-                                <th>Purchase Order ID</th>
-                                <th>Order Date</th>
-                                <th>Status</th>                                
+                                <th>ID</th>
+                                <th>Order Date: #{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</th>
+                                <th>Status</th>  
+                                <th>Supplier</th>
                                 <th>Supply To</th>
                                 <th>Save</th>
                             </tr>
-                            <h:form id="editPO" class="form-horizontal">
+                            <h:form id="updatePurchaseOrder" class="form-horizontal">
                                 <tr>
                                     <td>
                                         <h:outputText value="#{purchaseOrderManaged2Bean.purchaseOrder.id}"></h:outputText>
                                     </td>
-                                    <td><h:inputText id="orderDate" value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate}" p:type="date" class="form-control"></h:inputText></td>
+                                    <td>
+                                        <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
+                                    </td>
                                     <td>
                                         <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status}">
                                             <f:selectItem itemValue="planned" itemLabel="Planned" />
@@ -36,12 +38,17 @@
                                         </h:selectOneMenu>
                                     </td>
                                     <td>
-                                        <h:selectOneMenu id="plantId" class="form-control">
+                                        <h:selectOneMenu id="supplierId" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.supplier.id}">
+                                            <f:selectItems value="#{purchaseOrderManaged2Bean.supplierList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
+                                        </h:selectOneMenu>
+                                    </td>                                    
+                                    <td>
+                                        <h:selectOneMenu id="plantId" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.id}">
                                             <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
                                         </h:selectOneMenu>
                                     </td>
                                     <td>
-                                        <h:commandButton action="#{purchaseOrderManaged2Bean.editPurchaseOrder}" value="Update" class="btn btn-success btn-sm"> 
+                                        <h:commandButton action="#{purchaseOrderManaged2Bean.updatePurchaseOrder}" value="Update" class="btn btn-success btn-sm"> 
                                         </h:commandButton>
                                     </td>
                                 </tr>

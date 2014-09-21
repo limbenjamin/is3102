@@ -37,6 +37,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     private ProcuredStock procuredStock;   
     private Plant plant;  
     
+    private Long plantId;
+    
     @Override
     public PurchaseOrder getPurchaseOrder(Long id) {
         purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, id);
@@ -56,6 +58,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
+    public Long getPlantOfOrder(Long orderId) {
+        Query query = em.createQuery("SELECT p.shipsTo FROM PurchaseOrder p where p.id=" + orderId);
+        return Long.valueOf(query.getFirstResult());
+    }
+    
+    @Override
     public PurchaseOrder createPurchaseOrder(Calendar orderDate, String status) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
@@ -63,6 +71,18 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         em.persist(purchaseOrder);
         em.flush();
         return purchaseOrder;
+    }
+    
+    @Override
+    public void createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate) {
+        purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setOrderDate(orderDate);
+        purchaseOrder.setStatus(status);
+        purchaseOrder.setSupplier(supplier);
+        plant = (Plant) em.find(Plant.class, plantId);
+        purchaseOrder.setShipsTo(plant);        
+        em.persist(purchaseOrder);
+        em.flush();        
     }
     
     @Override
@@ -87,6 +107,18 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         em.persist(purchaseOrder);
         System.out.println("MEOW: purchase order persisted");
         em.flush();        
+    }
+    
+    @Override
+    public void updatePurchaseOrder(Long poId, String status, Supplier supplier, Long plantId, Calendar orderDate) {
+        purchaseOrder = getPurchaseOrder(poId);
+        purchaseOrder.setOrderDate(orderDate);
+        purchaseOrder.setStatus(status);
+        purchaseOrder.setSupplier(supplier);
+        plant = (Plant) em.find(Plant.class, plantId);
+        purchaseOrder.setShipsTo(plant);
+        em.persist(purchaseOrder);
+        em.flush();
     }
     
     @Override

@@ -1,20 +1,21 @@
-<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
                     <div class="col-md-8">
-                        <h:form id="createGRD" class="form-horizontal">
-                            <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success pull-right"></h:commandButton>
-                            <br></br>
-                        </h:form>
-                        <h4>Purchase Orders</h4><hr></hr>
+                        <span class="pull-right">
+                        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newPurchaseOrder">
+                            <i class="fa fa-fw fa-plus"></i>New Purchase Order
+                        </button>
+                        </span>
+                        <h4>Manage Purchase Orders</h4><hr></hr>
                     </div>
                     <div class="col-md-8">
                         
@@ -44,7 +45,8 @@
                                             <tr>
                                                 <td>#{PO.id}</td>
                                                 <td>#{PO.status}</td>
-                                                <td><h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                <td>
+                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
                                                 </td>  
@@ -92,7 +94,49 @@
                         </div>                            
                     </div>
                     </div>
-                </div>    
+                </div>   
+                
+                <!-- Purchase Order Modal -->
+                <div class="modal fade" id="newPurchaseOrder" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add Purchase Order</h4>
+                      </div>
+                      <h:form id="createPurchaseOrder" class="form-horizontal">
+                          <div class="modal-body">
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">Supplier: </label>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu id="supplierId" class="form-control">
+                                        <f:selectItems value="#{purchaseOrderManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    </h:selectOneMenu>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                  <label class="col-sm-3 control-label">Order Date: </label>
+                                <div class="col-sm-9">
+                                  <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
+                                </div>
+                              </div>          
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">Ship to: </label>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu id="plantId" class="form-control">
+                                        <f:selectItems value="#{purchaseOrderManagedBean.plantList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    </h:selectOneMenu>
+                                </div>
+                              </div>                                                                           
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="#{purchaseOrderManagedBean.addNewPurchaseOrder}" value="New Order" class="btn btn-success btn-round"></h:commandButton>
+                          </div>
+                      </h:form>
+                    </div>
+                  </div>
+                </div>
             </ui:define>
         </ui:composition>
     </h:body>

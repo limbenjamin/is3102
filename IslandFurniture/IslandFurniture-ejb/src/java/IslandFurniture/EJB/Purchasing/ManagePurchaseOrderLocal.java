@@ -22,6 +22,8 @@ import javax.ejb.Local;
 public interface ManagePurchaseOrderLocal {
 
     PurchaseOrder createPurchaseOrder(Calendar orderDate, String status);
+    
+    void createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate);
 
     void createPurchaseOrderDetail(Long poId, Long psId);
 
@@ -30,6 +32,8 @@ public interface ManagePurchaseOrderLocal {
     void deletePurchaseOrderDetail(Long podId);
 
     void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status);
+    
+    void updatePurchaseOrder(Long poId, String status, Supplier supplier, Long plantId, Calendar orderDate);    
 
     void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
 
@@ -38,6 +42,8 @@ public interface ManagePurchaseOrderLocal {
     PurchaseOrder getPurchaseOrder(Long id);
 
     PurchaseOrderDetail getPurchaseOrderDetail(Long id);
+    
+    Long getPlantOfOrder(Long orderId);
 
     List<ProcuredStock> viewProcuredStocks();
     

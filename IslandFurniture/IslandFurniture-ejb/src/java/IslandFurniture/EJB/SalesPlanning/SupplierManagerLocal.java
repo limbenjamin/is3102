@@ -21,6 +21,8 @@ import javax.ejb.Local;
 public interface SupplierManagerLocal {
 
     public List<Supplier> displaySupplierList();
+    
+    public Supplier getSupplier(Long supplierId);
 
     public void addSupplier(String supplierName, String countryName);
 
