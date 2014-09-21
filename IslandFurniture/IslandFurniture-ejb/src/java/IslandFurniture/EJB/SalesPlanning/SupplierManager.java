@@ -30,6 +30,8 @@ public class SupplierManager implements SupplierManagerLocal {
     @PersistenceContext 
     EntityManager em;
     
+    private Supplier supplier;
+    
     public List<Supplier> displaySupplierList() {
         List<Supplier> supplierList;
         try {
@@ -39,6 +41,10 @@ public class SupplierManager implements SupplierManagerLocal {
             System.err.println("No results found");
             return null;
         }
+    }
+    public Supplier getSupplier(Long supplierId) {
+        supplier = (Supplier) em.find(Supplier.class, supplierId);
+        return supplier;
     }
     public void addSupplier(String supplierName, String countryName) {
         Country country;
@@ -52,16 +58,6 @@ public class SupplierManager implements SupplierManagerLocal {
             em.persist(supplier);
         } catch(NoResultException NRE) {
             System.err.println("No records found");
-        }
-    }
-    public Supplier getSupplier(Long id) {
-        Supplier supplier;
-        try {
-            supplier = em.find(Supplier.class, id);
-            return supplier;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here");
-            return null;
         }
     }
     public void editSupplier(Long id, String name, String countryName) {

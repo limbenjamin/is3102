@@ -8,9 +8,10 @@ package IslandFurniture.WAR.SupplyChain;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockUnit;
-import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -33,6 +34,9 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
 
     private Long plantId;
     private Long storageBinId;
+    private Long stockId;
+    private Long stockTakeQuantity;
+    private Long stockUnitId;
 
     private String username;
 
@@ -41,9 +45,12 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
 
     private StorageBin storageBin;
     private StockUnit stockUnit;
+    private Stock stock;
     private Staff staff;
     private Plant plant;
 
+    @EJB
+    public ManageGoodsIssuedLocal mgrl;
     @EJB
     public ManageInventoryMonitoringLocal miml;
     @EJB
@@ -55,15 +62,25 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        stockUnitList = miml.viewStockUnit(plant);
         System.out.println("Init");
-        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
-        storageBin = miml.getStorageBin(storageBinId);
+        stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
+        stock = miml.getStock(stockId);
+        stockUnitList = mgrl.viewStockUnitById(plant, stock);
+        stockTakeQuantity = null;
     }
 
-        public String getParam() {
-        return (String) FacesContext.getCurrentInstance().getExternalContext()
-                .getFlash().get("param");
+    public String editStockTakeQuantity(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
+        stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
+        stock = miml.getStock(stockId);
+        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
+        stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
+        miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
+        stockTakeQuantity = null;
+        stockUnitList = mgrl.viewStockUnitById(plant, stock);
+        return "inventorymonitoring_ststock";
     }
 
     public Long getPlantId() {
@@ -80,6 +97,22 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
 
     public void setStorageBinId(Long storageBinId) {
         this.storageBinId = storageBinId;
+    }
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
+    }
+
+    public Long getStockTakeQuantity() {
+        return stockTakeQuantity;
+    }
+
+    public void setStockTakeQuantity(Long stockTakeQuantity) {
+        this.stockTakeQuantity = stockTakeQuantity;
     }
 
     public String getUsername() {
@@ -122,6 +155,14 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         this.stockUnit = stockUnit;
     }
 
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
     public Staff getStaff() {
         return staff;
     }
@@ -136,6 +177,14 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
 
     public void setPlant(Plant plant) {
         this.plant = plant;
+    }
+
+    public ManageGoodsIssuedLocal getMgrl() {
+        return mgrl;
+    }
+
+    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
+        this.mgrl = mgrl;
     }
 
     public ManageInventoryMonitoringLocal getMiml() {
@@ -153,7 +202,5 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
-
-   
 
 }

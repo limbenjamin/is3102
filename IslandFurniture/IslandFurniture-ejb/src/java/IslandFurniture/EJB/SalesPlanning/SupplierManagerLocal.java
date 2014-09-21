@@ -21,6 +21,8 @@ import javax.ejb.Local;
 public interface SupplierManagerLocal {
 
     public List<Supplier> displaySupplierList();
+    
+    public Supplier getSupplier(Long supplierId);
 
     public void addSupplier(String supplierName, String countryName);
 
@@ -37,7 +39,5 @@ public interface SupplierManagerLocal {
     public List<ManufacturingFacility> displayManufacturingFacility();
 
     public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID);
-
-    public Supplier getSupplier(Long id);
     
 }

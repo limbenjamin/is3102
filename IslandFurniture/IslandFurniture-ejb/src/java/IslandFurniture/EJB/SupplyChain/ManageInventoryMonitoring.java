@@ -39,15 +39,37 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
     }
 
     @Override
+    public Stock getStock(Long id) {
+        stock = (Stock) em.find(Stock.class, id);
+        return stock;
+    }
+
+    @Override
+    public StockUnit getStockUnit(Long id) {
+        stockUnit = (StockUnit) em.find(StockUnit.class, id);
+        return stockUnit;
+    }
+
+    @Override
     public List<StockUnit> viewStockUnit(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=" + plant.getId());
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.location.storageArea.plant.id=:plantId AND s.available=TRUE) GROUP BY s.stock.name");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
 
     @Override
     public List<StorageBin> viewStorageBin(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
+    }
+
+    @Override
+    public void editStockUnitQuantity(Long stockUnitId, Long qty) {
+        stockUnit = getStockUnit(stockUnitId);
+        stockUnit.setQty(qty);
+        em.merge(stockUnit);
+        em.flush();
     }
 
 }

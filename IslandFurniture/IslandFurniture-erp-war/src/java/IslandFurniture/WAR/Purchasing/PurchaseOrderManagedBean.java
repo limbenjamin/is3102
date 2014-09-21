@@ -12,9 +12,13 @@ import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
+import IslandFurniture.EJB.SalesPlanning.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -44,12 +49,18 @@ public class PurchaseOrderManagedBean implements Serializable{
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
+    private List<Supplier> supplierList;
+    private List<Plant> plantList;
     private Staff staff;
+    private Supplier supplier;
+    private String orderDateString = null;
     
     @EJB
     private ManageUserAccountBeanLocal staffBean; 
     @EJB
     public ManagePurchaseOrderLocal mpol;
+    @EJB
+    public SupplierManagerLocal sml;
     
     @PostConstruct
     public void init() {
@@ -58,6 +69,8 @@ public class PurchaseOrderManagedBean implements Serializable{
         staff = staffBean.getStaff(username);
         plannedOrderList = mpol.viewPlannedPurchaseOrders();
         confirmedOrderList = mpol.viewConfirmedPurchaseOrders();
+        supplierList = sml.displaySupplierList();
+        plantList = mpol.viewPlants();
         System.out.println("Init");
     }
     
@@ -66,9 +79,26 @@ public class PurchaseOrderManagedBean implements Serializable{
         Date date = new Date();
         cal.setTime(date);
         orderDate = cal;
-        mpol.createPurchaseOrder(orderDate, "planned");
-        return "purchaseorder";
+        purchaseOrder = mpol.createPurchaseOrder(orderDate, "planned");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid",purchaseOrder.getId());
+        return "purchaseorder2?faces-redirect=true";
+        
     }   
+    
+    public String addNewPurchaseOrder() throws ParseException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
+        supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
+        supplier = sml.getSupplier(supplierId);
+        plantId = Long.parseLong(request.getParameter("createPurchaseOrder:plantId"));
+        orderDateString = request.getParameter("createPurchaseOrder:orderDateString");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date date = (Date)formatter.parse(orderDateString); 
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(date);
+        orderDate = cal;        
+        mpol.createNewPurchaseOrder("planned", supplier, plantId, orderDate);
+        return "purchaseorder";
+    }    
     
     public void purchaseOrderDetailActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
@@ -180,6 +210,30 @@ public class PurchaseOrderManagedBean implements Serializable{
 
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
+    }
+
+    public List<Supplier> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<Supplier> supplierList) {
+        this.supplierList = supplierList;
+    }
+
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
+    }
+
+    public SupplierManagerLocal getSml() {
+        return sml;
+    }
+
+    public void setSml(SupplierManagerLocal sml) {
+        this.sml = sml;
     }
     
 }

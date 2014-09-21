@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
     private Long plantId;
     private Long storageBinId;
     private Long stockUnitId;
+    private Long stockId;
 
     private String username;
     ;
@@ -48,6 +50,8 @@ public class InventoryMonitoringManagedBean implements Serializable {
     public ManageInventoryMonitoringLocal miml;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+     @EJB
+    public ManageGoodsIssuedLocal mgrl;
 
     @PostConstruct
     public void init() {
@@ -61,17 +65,23 @@ public class InventoryMonitoringManagedBean implements Serializable {
     }
 
     public String viewStorageLocation() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        storageBinId = Long.parseLong(request.getParameter("viewStorageLocation:storageBinId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", storageBinId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         return "inventorymonitoring_location?faces-redirect=true";
+    }
+    
+        public String viewStockTakebyLocation() {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
+        return "inventorymonitoring_stlocation?faces-redirect=true";
     }
 
     public String viewStock() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        stockUnitId = Long.parseLong(request.getParameter("viewStockUnit:stockUnitId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", stockUnitId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         return "inventorymonitoring_stock?faces-redirect=true";
+    }
+    
+        public String viewStockTakebyStock() {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
+        return "inventorymonitoring_ststock?faces-redirect=true";
     }
 
     public Long getPlantId() {
@@ -96,6 +106,14 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     public void setStockUnitId(Long stockUnitId) {
         this.stockUnitId = stockUnitId;
+    }
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
     }
 
     public String getUsername() {
@@ -160,6 +178,14 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
+    }
+
+    public ManageGoodsIssuedLocal getMgrl() {
+        return mgrl;
+    }
+
+    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
+        this.mgrl = mgrl;
     }
 
 }

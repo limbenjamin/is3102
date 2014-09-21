@@ -11,11 +11,11 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -53,6 +53,8 @@ public class GoodsIssuedManagedBean implements Serializable {
     public ManageGoodsIssuedLocal mgrl;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+    @EJB
+    public ManageInventoryMovementLocal msul;
 
     @PostConstruct
     public void init() {
@@ -91,16 +93,11 @@ public class GoodsIssuedManagedBean implements Serializable {
     public String deleteGoodsIssuedDocument(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(plantId);
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
 
         for (StockUnit g : mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument)) {
-//            mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
-//            mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
-//            msul.deleteStockUnit(g.getId());
-//
-//            msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
-//            msul.deleteStockUnit(stockUnit.getId());
-
+            msul.editStockUnitQuantity(g.getCommitStockUnitId(), msul.getStockUnit(g.getCommitStockUnitId()).getQty() + g.getQty());
+            msul.deleteStockUnit(g.getId());
         }
 
         mgrl.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
@@ -164,6 +161,14 @@ public class GoodsIssuedManagedBean implements Serializable {
         this.goodsIssuedDocumentPostedList = goodsIssuedDocumentPostedList;
     }
 
+    public List<StockUnit> getStockUnitMainList() {
+        return stockUnitMainList;
+    }
+
+    public void setStockUnitMainList(List<StockUnit> stockUnitMainList) {
+        this.stockUnitMainList = stockUnitMainList;
+    }
+
     public GoodsIssuedDocument getGoodsIssuedDocument() {
         return goodsIssuedDocument;
     }
@@ -203,5 +208,15 @@ public class GoodsIssuedManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
+
+    public ManageInventoryMovementLocal getMsul() {
+        return msul;
+    }
+
+    public void setMsul(ManageInventoryMovementLocal msul) {
+        this.msul = msul;
+    }
+
+   
 
 }
