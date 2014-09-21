@@ -4,7 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -29,7 +30,7 @@
                                       <a href="#" class="list-group-item">     
                                         <h:form>
                                             <div class="pull-right btn-group">
-                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{rolePrivilegeManaged2Bean.removePrivilegeFromRole}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{rolePrivilegeManaged2Bean.removePrivilegeFromRole}">
                                                     <f:param name="privilegeId" value="#{privilege.id}" />
                                                 </h:commandButton>
                                             </div>
@@ -54,9 +55,8 @@
                                       <div class="modal-body">
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Privilege Name: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-bookmark"></i>
-                                                <h:selectOneMenu id="privilegeName">
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="privilegeName" class="form-control">
                                                     <c:forEach var="i" begin="0" end="#{rolePrivilegeManaged2Bean.globalPrivilegeList.size()-1}">
                                                         <f:selectItem itemLabel="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" itemValue="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" />
                                                     </c:forEach>
@@ -65,15 +65,13 @@
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{rolePrivilegeManaged2Bean.addPrivilegeToRole}" class="btn btn-success" value="Add Privilege"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{rolePrivilegeManaged2Bean.addPrivilegeToRole}" class="btn btn-success btn-round" value="Add Privilege"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
                               </div>
-                            </div>
-                           
-                                                  
+                            </div>                    
                         </div>                
                 </ui:define>
         </ui:composition>
