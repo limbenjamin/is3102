@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.Plant;
@@ -34,5 +33,9 @@ public interface ManageInventoryMovementLocal {
     List<StockUnit> viewStockUnit(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
+
+    void deleteStockUnit(Long stockUnitId);
     
+    void deleteStockUnitQty(Long stockUnitId, Long qty);
+
 }

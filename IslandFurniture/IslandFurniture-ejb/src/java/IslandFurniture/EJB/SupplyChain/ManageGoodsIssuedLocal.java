@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.SupplyChain;
 
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.Calendar;
@@ -55,5 +54,11 @@ public interface ManageGoodsIssuedLocal {
     List<StorageArea> viewStorageArea(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-    
+
+    List<StockUnit> viewStockUnitById(Plant plant, Stock stock);
+
+    List<StorageBin> viewStorageBinByStockUnitId(Plant plant, Stock stock);
+
+    StockUnit getStockUnit(Long id);
+
 }
