@@ -10,18 +10,16 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
+                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newRole">
+                                    <i class="fa fa-fw fa-plus"></i>New Role
+                                </button>                                
                                 <h4>Manage Roles and Privileges</h4>
                                 <hr></hr>       
                             </div>
-                            <div class="col-md-7 col-sm-7">                                               
+                            <div class="col-md-7">                                               
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
-                                    <span class="pull-right">
-                                        <a class="btn btn-panel-right" data-toggle="modal" data-target="#newRole">
-                                            <span class="fa fa-plus"></span> New
-                                        </a>
-                                    </span>
                                     Role List
                                 </div>
                                   <ui:repeat value="#{rolePrivilegeManagedBean.roleList}" var="role">
@@ -29,10 +27,10 @@
                                       <a href="#" class="list-group-item">                                      
                                         <h:form>
                                             <div class="pull-right btn-group">
-                                                <h:commandButton value="Update Privilege" class="btn" action="#{rolePrivilegeManaged2Bean.displayPrivileges}">
+                                                <h:commandButton value="Edit Privilege(s)" class="btn btn-sm" action="#{rolePrivilegeManaged2Bean.displayPrivileges}">
                                                     <f:param name="id" value="#{role.id}" />
                                                 </h:commandButton>
-                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{rolePrivilegeManagedBean.deleteRole}">
+                                                <h:commandButton value="Delete" class="btn btn-danger btn-sm" action="#{rolePrivilegeManagedBean.deleteRole}">
                                                     <f:param name="id" value="#{role.id}" />
                                                 </h:commandButton>
                                             </div>
@@ -43,7 +41,7 @@
                                 </ui:repeat>
                               </section>
                             </div>
-                            <div class="col-md-3 col-sm-3">                                               
+                            <div class="col-md-3">                                               
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                     Privilege List
@@ -72,15 +70,14 @@
                                       <div class="modal-body">
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Role Name: </label>
-                                            <div class="col-sm-9 inner-addon right-addon">
-                                              <i class="glyphicon glyphicon-bookmark"></i>
+                                            <div class="col-sm-9">
                                               <h:inputText id="roleName" class="form-control"></h:inputText>
                                             </div>
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{rolePrivilegeManagedBean.addRole()}" class="btn btn-success" value="Add Role"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{rolePrivilegeManagedBean.addRole()}" class="btn btn-success btn-round" value="Add Role"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>

@@ -23,7 +23,7 @@
                             <tr>
                                 <th>Material</th>
                                 <th>Quantity</th>
-                                <th>Edit</th>
+                                <th>Update</th>
                                 <th>Delete</th>
                             </tr>
                             <h:form class="form-horizontal">
@@ -31,13 +31,25 @@
                                     <tr>
                                         <td><h:selectOneMenu id="MaterialID" class="form-control" value="#{bOMManagedBean.materialList}">
                                                 <f:selectItems value="#{bOMManagedBean.materialList}" var="m" itemLabel="#{m.name}" itemValue="#{m.id}" />
-                                            </h:selectOneMenu></td>
-
-                                        <td><h:inputText id="storageBinName" value="#{bom.quantity}" class="form-control"></h:inputText></td>
-                                        <td></td>
-                                        <td><h:commandButton action="#{bOMManagedBean.deleteBOM()}" value="Delete" class="btn btn-danger btn-sm"> 
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <td>
+                                            <div class="inner-addon left-addon">
+                                            <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>                                            
+                                            <h:inputText id="storageBinName" value="#{bom.quantity}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>                                            
+                                        </td>
+                                        <td>
+                                            <h:commandButton action="#{bOMManagedBean.deleteBOM()}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                 <f:param name="fID" value="#{f.id}" />
-                                            </h:commandButton></td> 
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                        </td> 
                                     </tr>
                                 </ui:repeat>
                             </h:form> 
@@ -56,8 +68,7 @@
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Material: </label>
-                                                <div class="col-sm-9 inner-addon right-addon">
-                                                    <i class="glyphicon glyphicon-bookmark"></i>
+                                                <div class="col-sm-9">
                                                     <h:selectOneMenu id="materialID" class="form-control" value="Select">
                                                         <f:selectItems value="#{bOMManagedBean.materialList}" var="m" itemLabel="#{m.name}" itemValue="#{m.id}" />
                                                     </h:selectOneMenu>
@@ -65,24 +76,22 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Quantity: </label>
-                                                <div class="col-sm-9 inner-addon right-addon">
-                                                    <i class="glyphicon glyphicon-user"></i>
+                                                <div class="col-sm-9">
                                                     <h:inputText id="materialQuantity" class="form-control"></h:inputText>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="bom.xhtml" actionListener="#{bOMManagedBean.addToBOM}" value="Add to BOM" class="btn btn-success pull-right btn-right-margin"> 
+                                            <h:commandButton action="bom.xhtml" actionListener="#{bOMManagedBean.addToBOM}" value="Add to BOM" class="btn btn-success btn-round"> 
                                                 <f:attribute name="fID" value="#{bOMManagedBean.furnitureID}" />
-
                                             </h:commandButton>
                                         </div>
                                     </h:form>
                                 </div>
                             </div>
                         </div> 
-                        <button class="btn btn-danger" href="furniture.xhtml">Back</button>
+                        <button class="btn btn-default" href="furniture.xhtml">Back</button>
                 </div>
             </ui:define>
         </ui:composition>

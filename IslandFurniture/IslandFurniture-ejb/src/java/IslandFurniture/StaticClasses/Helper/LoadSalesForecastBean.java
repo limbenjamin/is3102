@@ -10,10 +10,10 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
+import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -33,56 +33,60 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
     @Override
     public boolean loadSampleData() {
-//        try {
-            Calendar curr;
-            Random rand = new Random(1);
-            List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
+        Calendar curr;
+        Calendar lockedOutCutoff;
 
-            for (CountryOffice eachCo : countryOffices) {
-                curr = Calendar.getInstance(TimeZone.getTimeZone(eachCo.getTimeZoneID()));
-                curr.add(Calendar.MONTH, -1);
-                Month prevMth = Month.getMonth(curr.get(Calendar.MONTH));
+        Random rand = new Random(1);
+        List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
 
-                System.out.println(eachCo);
-                salesForecastBean.generateSalesFigures(eachCo, Month.JAN, 2013, prevMth, curr.get(Calendar.YEAR));
+        for (CountryOffice eachCo : countryOffices) {
+            lockedOutCutoff = TimeMethods.getPlantCurrTime(eachCo);
+            lockedOutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
 
-                for (StockSupplied ss : eachCo.getSuppliedWithFrom()) {
-                    List<MonthlyStockSupplyReq> listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.JAN, 2013, prevMth, curr.get(Calendar.YEAR));
-                    if (listOfMssr != null) {
-                        listOfMssr.sort(null);
+            curr = TimeMethods.getPlantCurrTime(eachCo);
 
-                        for (int i = 0; i < listOfMssr.size(); i++) {
-                            MonthlyStockSupplyReq eachMssr = listOfMssr.get(i);
+            System.out.println(eachCo);
+            salesForecastBean.generateSalesFigures(eachCo, Month.JAN, 2013, Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
 
+            for (StockSupplied ss : eachCo.getSuppliedWithFrom()) {
+                List<MonthlyStockSupplyReq> listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.JAN, 2013, Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+                listOfMssr.sort(null);
+
+                for (int i = 0; i < listOfMssr.size(); i++) {
+                    MonthlyStockSupplyReq eachMssr = listOfMssr.get(i);
+
+                    eachMssr.setPlannedInventory(rand.nextInt(6) * 50);
+
+                    if (i < listOfMssr.size() - FORECAST_LOCKOUT_MONTHS) {
+                        do {
                             eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(200) - 100);
-                            eachMssr.setPlannedInventory(rand.nextInt(6) * 50);
-
-                            eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
-
-                            if (i >= 3) {
-                                MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 3);
-                                eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
-                            }
-
-                            if (i >= 1) {
-                                MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
-                                eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - oldMssr.getPlannedInventory());
-                            }
-                            
-                            eachMssr.setApproved(true);
-
-                            System.out.println(eachMssr);
-                        }
+                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
+                        
+                        eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
+                    } else {
+                        eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
+
+                    if (i >= FORECAST_LOCKOUT_MONTHS + 1) {
+                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 1));
+                        eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
+                    }
+
+                    if (i >= 1) {
+                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
+                        eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getVarianceOffset() - oldMssr.getPlannedInventory());
+                    } else {
+                        eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory());
+                    }
+
+                    eachMssr.setApproved(true);
+                    eachMssr.setForecasted(true);
+
+                    System.out.println(eachMssr);
                 }
             }
-
-            return true;
-//        } catch (Exception ex) {
-//            System.out.println(ex.getMessage());
-//
-//            return false; // Stub - incomplete function
-//        }
+        }
+        return true;
     }
 
 }

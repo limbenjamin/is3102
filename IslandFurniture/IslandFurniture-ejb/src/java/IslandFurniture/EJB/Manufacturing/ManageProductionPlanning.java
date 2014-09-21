@@ -284,14 +284,16 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
                     break;
                 }
                 int avaCapacity = planTillMonthCursor.getManufacturingFacility().findProductionCapacity(planTillMonthCursor.getFurnitureModel()).getCapacity(planTillMonthCursor.getMonth(), planTillMonthCursor.getYear());
-                avaCapacity = (int) (avaCapacity * planTillMonthCursor.getManufacturingFacility().getCurrentFreeCapacity(em, planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
+                avaCapacity = (int) (avaCapacity * QueryMethods.getCurrentFreeCapacity(em, planTillMonthCursor.getManufacturingFacility(),planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
+                
+                
                 
                 int requirement = (int) (QueryMethods.getTotalDemand(em, planTillMonthCursor, MF));
                 int fufill = Math.min(requirement + deficit, avaCapacity);
                 planTillMonthCursor.setQTY(fufill);
                 deficit += requirement - fufill;
                 
-                System.out.println("balanceProductionTill(): Planned production for " + planTillMonthCursor.getFurnitureModel().getName() + " Period @ Year:" + planTillMonthCursor.getYear() + " month:" + planTillMonthCursor.getMonth().toString() + " PRODUCE=" + fufill + " Resultant Plant Free Capacity @" + planTillMonthCursor.getManufacturingFacility().getCurrentFreeCapacity(em, planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
+                System.out.println("balanceProductionTill(): Planned production for " + planTillMonthCursor.getFurnitureModel().getName() + " Period @ Year:" + planTillMonthCursor.getYear() + " month:" + planTillMonthCursor.getMonth().toString() + " PRODUCE=" + fufill + " Resultant Plant Free Capacity @" + QueryMethods.getCurrentFreeCapacity(em,planTillMonthCursor.getManufacturingFacility(), planTillMonthCursor.getMonth(), planTillMonthCursor.getYear()));
                 
                 planWeekMPP(planTillMonthCursor);
                 em.persist(planTillMonthCursor);

@@ -34,8 +34,8 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Material</th>
-                                        <th>Weight</th>
-                                        <th>Edit</th>
+                                        <th>Weight (g)</th>
+                                        <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
                                     <h:form id="editMaterialItemForm" class="form-horizontal">
@@ -45,18 +45,29 @@
                                                     <h:outputText id="materialID" value="#{material.id}"></h:outputText>
                                                 </td>
                                                 <td>
-                                                    <h:inputText id="materialName" value="#{material.name}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="materialName" value="#{material.name}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <h:inputText id="materialWeight" value="#{material.materialWeight}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="materialWeight" value="#{material.materialWeight}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                    </div>
                                                 </td>
-                                                <td><h:commandButton actionListener="#{materialManagedBean.editMaterial}"  value="Update" class="btn btn-success btn-sm">
+                                                <td>
+                                                    <h:commandButton actionListener="#{materialManagedBean.editMaterial}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{material}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{materialManagedBean.deleteMaterial}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td>
+                                                    <h:commandButton action="#{materialManagedBean.deleteMaterial}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="materialID" value="#{material.id}" />
-                                                    </h:commandButton></td>         
+                                                    </h:commandButton>
+                                                     <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                </td>         
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 

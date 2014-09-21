@@ -6,23 +6,11 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
         <h:form>
-            <h:outputText value="Select the ending period of this forecast: " />
-            <h:selectOneMenu value="#{createForecastManagedBean.endYear}">
-                <f:selectItem itemLabel="Select Year" noSelectionOption="true" />
-                <f:selectItems value="#{createForecastManagedBean.endYears}" var="year" 
-                               itemLabel="#{year}" itemValue="#{year}" />
-                <f:ajax render="endMonths" listener="#{createForecastManagedBean.updateMonths}" />
-            </h:selectOneMenu>
-            <h:selectOneMenu value="#{createForecastManagedBean.endMonth}" id="endMonths">
-                <f:selectItem itemLabel="Select Month" noSelectionOption="true" />
-                <f:selectItems value="#{createForecastManagedBean.endMonths}" var="month" 
-                               itemLabel="#{month.key}" itemValue="#{month.value}" />
-            </h:selectOneMenu>
-            <h:commandButton value="Create Forecast">
-                <f:ajax execute="@form" render="mssrTable" listener="#{createForecastManagedBean.updateMssr}" />
-            </h:commandButton>
             <h:commandButton value="Save forecast">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
+                <f:ajax execute="@form" render="statusMessage" listener="#{createForecastManagedBean.saveForecast}" />
+            </h:commandButton>
+            <h:commandButton value="Forecast By Naive Method">
+                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.naiveForecast}" />
             </h:commandButton>
             <br /><br />
 
@@ -42,7 +30,9 @@
                                 <br />
                                 <h:outputText value="#{mssr.year}" />
                             </f:facet>
-                            <h:outputText value="#{mssr[label.first]}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold ge 0}" />
+                            <h:outputText value="-" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold lt 0}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested' or label.first == 'varianceOffset'}" />
                         </p:columns>
                         <p:columns value="#{mssrPairedEntry.second.second}" var="mssr">
                             <f:facet name="header">
@@ -50,7 +40,10 @@
                                 <br />
                                 <h:outputText value="#{mssr.year}" />
                             </f:facet>
-                            <p:inputText value="#{mssr[label.first]}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{label.first == 'varianceOffset'}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold ge 0}" />
+                            <h:outputText value="-" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold lt 0}" />
+                            <p:inputText value="#{mssr[label.first]}" rendered="#{label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested'}" />
                         </p:columns>
                     </p:dataTable>
                 </p:tab>

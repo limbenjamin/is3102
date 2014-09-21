@@ -45,12 +45,13 @@
                                             <h:outputText value="#{store.country.name}" />
                                         </p:column>
 
-                                        <p:column>
+                                        <p:column headerText="Remove" style="text-align: center;">
                                             <h:form>
-                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
-                                                <f:param name="id" value="#{store.id}" />
-                                                <f:param name="plantType" value="Store" />
+                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:param name="id" value="#{store.id}" />
+                                                    <f:param name="plantType" value="Store" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </h:form>
                                         </p:column>                        
 
@@ -73,12 +74,13 @@
                                             <h:outputText value="#{mf.country.name}" />
                                         </p:column>
                                         
-                                        <p:column>
+                                        <p:column headerText="Remove" style="text-align: center;">
                                             <h:form>
-                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:param name="id" value="#{mf.id}" />
                                                     <f:param name="plantType" value="Manufacturing Facility" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </h:form>
                                         </p:column>                        
 
@@ -100,12 +102,13 @@
                                             <h:outputText value="#{co.country.name}" />
                                         </p:column>
                                         
-                                        <p:column>
+                                        <p:column headerText="Remove" style="text-align: center;">
                                             <h:form>
-                                                <h:commandButton value="Delete" class="pull-right btn btn-danger btn-xs" action="#{organizationalHierarchyManagedBean.deletePlant}">
+                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:param name="id" value="#{co.id}" />
                                                     <f:param name="plantType" value="Country Office" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </h:form>
                                         </p:column>                        
 

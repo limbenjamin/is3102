@@ -12,17 +12,16 @@ import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
-import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -96,6 +95,15 @@ public class QueryMethods {
         q.setParameter("name", supplierName);
 
         return (List<Supplier>) q.getResultList();
+    }
+
+    public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
+        Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
+        cal.add(Calendar.MONTH, monthsOffset);
+
+        MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(mssr.getStock().getId(), mssr.getCountryOffice().getId(), Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
+
+        return em.find(MonthlyStockSupplyReq.class, mssrPK);
     }
 
     public static List<StockSupplied> getStockSuppliedToStore(EntityManager em, Store store) {
@@ -204,6 +212,25 @@ public class QueryMethods {
         } catch (Exception ex) {
             throw new RuntimeException("This MSSR does not have a MPP yet");
         }
+    }
+
+    public static double getCurrentFreeCapacity(EntityManager em,ManufacturingFacility MF, Month m, int year) {
+
+        Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
+        q.setParameter("m", m);
+        q.setParameter("y", year);
+        q.setParameter("mf", MF);
+        double cCap = 0;
+        for (Object o : q.getResultList()) {
+            MonthlyProductionPlan mpp = (MonthlyProductionPlan) o;
+            if (mpp.isLocked()) {
+                return 0; //out of bound
+            }
+            cCap += mpp.getQTY() / (0.0 + MF.findProductionCapacity(mpp.getFurnitureModel()).getCapacity(m, year));
+        }
+
+        return 1 - cCap;
+
     }
 
 }

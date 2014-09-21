@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Island Furniture | Production Planning</title>
+        <style>
+            .summary{
+                background-color: yellowgreen;
+            }
+            .editable{
+            }
+
+            .normal_odd{
+                background-color: #cccccc;
+            }
+            .normal_even{
+                background-color: white;
+            }
+
+
+        </style>
+    </h:head>
+    <h:body id="page">
+
+
+
+        <h:form id="form">
+            <h:panelGroup layout="block" >
+                <span style='color:red'>
+                    <h:outputLabel rendered="#{ProductionPlanning.dt.internalrows.size() le 1  and ProductionPlanning.MF.length() gt 0}" value="Error: No Stock Supply Requirement to plan anything ! &lt;br/&gt; " escape="false"/>
+                    <h:outputLabel rendered="#{ProductionPlanning.error_msg.length() gt 0}" value="#{ProductionPlanning.error_msg} &lt;br/&gt;" escape="false"/>
+
+                </span>
+                <span style='color:green'>
+                    <h:outputLabel rendered="#{ProductionPlanning.success_msg.length() gt 0}" value="#{ProductionPlanning.success_msg} &lt;br/&gt;" escape="false"/>
+                </span>
+            </h:panelGroup>
+
+
+            <h:panelGroup layout="block" >
+                <h3>Select Manufacturing Facility:</h3>
+                <h:selectOneMenu value="#{ProductionPlanning.MF}" id="select_mf">
+                    <f:ajax execute="@all" render=":form:panel" listener="#{ProductionPlanning.mfListerner()}"></f:ajax>
+                    <f:selectItem itemValue="#{null}" itemLabel="--Select Manufacturing Facility --" />
+                    <f:selectItems value="#{ProductionPlanning.MF_LIST}"/>
+
+
+                </h:selectOneMenu>
+
+            </h:panelGroup>
+            <br/>
+            <br/>
+            <p:tabView id="panel">
+                <p:tab title="Production Planning">
+                    <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
+
+
+                        <p:columns  value="#{ProductionPlanning.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
+                            <f:facet name="header">
+                                #{datacolumn}
+                            </f:facet>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+
+
+                        </p:columns>
+
+                    </p:dataTable>
+
+
+
+                    <br/>
+                    <h:panelGroup layout="block">
+                        <h3>Options</h3>
+
+
+
+                        <p:commandButton value="Manual Edit" id="me">
+                            <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updatePPTableToBean()}" />
+                        </p:commandButton>
+                        <p:commandButton  value="Auto-Mode Plan" id="auto">
+                            <f:ajax event="click" render=":form" execute="@all" listener="#{ProductionPlanning.automaticPlanning()}"/>
+                        </p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+                <p:tab title="Capacity Management">
+                    <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.capacity_dt}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 1}">
+
+
+                        <p:columns  value="#{ProductionPlanning.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
+                            <f:facet name="header">
+                                #{datacolumn}
+                            </f:facet>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+
+
+                        </p:columns>
+
+                    </p:dataTable>
+                </p:tab>
+
+            </p:tabView>
+        </h:form>
+
+
+    </h:body>
+</html>
+

@@ -28,7 +28,10 @@
                                 <br />
                                 <h:outputText value="#{mssr.year}" />
                             </f:facet>
-                            <h:outputText value="#{mssr[label.first]}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.forecasted == true and label.first != 'qtySold' and label.first != 'actualInventory'}"/>
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.forecasted == true and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold ge 0}"/>
+                            <h:outputText value="-" rendered="#{mssr.forecasted == true and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.qtySold lt 0}"/>
+                            <h:outputText value="-" rendered="#{mssr.forecasted == false}"/>
                         </p:columns>
                     </p:dataTable>
                 </p:tab>

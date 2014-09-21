@@ -108,27 +108,7 @@ public class ManufacturingFacility extends Plant implements Serializable {
         return null;
     }
     
-        public double getCurrentFreeCapacity(EntityManager em,Month m,int year)
-    {
-        
-       
-        
-        Query q=em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
-        q.setParameter("m",m);
-        q.setParameter("y",year);
-        q.setParameter("mf",this);
-        double cCap=0;
-    for(Object o : q.getResultList())
-    {
-        MonthlyProductionPlan mpp=(MonthlyProductionPlan) o;
-       if (mpp.isLocked()) return 0; //out of bound
-        
-        cCap+=mpp.getQTY()/(0.0+this.findProductionCapacity(mpp.getFurnitureModel()).getCapacity(m, year));
-    }
-    
-    return 1-cCap;
-    
-    }
+
     
     
     // Entity Callbacks
