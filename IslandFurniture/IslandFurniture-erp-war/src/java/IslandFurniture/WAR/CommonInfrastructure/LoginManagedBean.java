@@ -50,6 +50,9 @@ public class LoginManagedBean implements Serializable {
     private LocalDateTime localDateTime;
     private Instant instant;
     private List<LocalDateTime> localDateTimeList;
+    private List<Url> urlList;
+    private List<Url> existingUrlList;
+    private Url url;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -85,35 +88,19 @@ public class LoginManagedBean implements Serializable {
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             menu = new String();
-            menu += "<li><a href="+ absoluteWebPath +"/dash.xhtml"+"><i class=\"fa fa-home\"></i><span>Dashboard</span></a></li>";
-            menu += "<li><a href="+ absoluteWebPath +"/common/messaging.xhtml"+"><i class=\"fa fa-envelope\"></i><span>Messaging</span></a></li>";
-            privilege = mpb.getPrivilegeFromName("Broadcast");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/common/broadcast.xhtml"+"><i class=\"fa fa-home\"></i><span>Broadcast</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("Manage Plant");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/it/manageplant.xhtml"+"><i class=\"fa fa-desktop\"></i><span>Manage Org. Hierarchy</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("Manage Staff");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/it/managestaff.xhtml"+"><i class=\"fa fa-calendar\"></i><span>Manage Staff</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("Manage Roles");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/it/roleprivilege.xhtml"+"><i class=\"fa fa-pencil\"></i><span>Manage Privileges</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("MSSR");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/salesplanning/viewmssr.xhtml"+"><i class=\"fa fa-home\"></i><span>View Monthly Stock Supply Requirements</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("Material");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/knowledge/material.xhtml"+"><i class=\"fa fa-home\"></i><span>Material</span></a></li>";
-            }
-            privilege = mpb.getPrivilegeFromName("Furniture");
-            if (privilegeList.contains(privilege)){
-                menu += "<li><a href="+ absoluteWebPath +"/knowledge/furniture.xhtml"+"><i class=\"fa fa-home\"></i><span>Furniture</span></a></li>";
+            existingUrlList = new ArrayList<Url>();
+            Iterator<Privilege> iterator2 = privilegeList.iterator();
+            while (iterator2.hasNext()) {
+                privilege = iterator2.next();
+                urlList = privilege.getMenuLink();
+                Iterator<Url> iterator3 = urlList.iterator();
+                while (iterator3.hasNext()) {
+                    url = iterator3.next();
+                    if (url.isVisible() == true && !existingUrlList.contains(url)){
+                        menu += "<li><a href="+ absoluteWebPath +url.getLink()+"><i class=\"fa "+url.getIcon()+"\"></i><span>"+url.getMenuItemName()+"</span></a></li>";
+                        existingUrlList.add(url);
+                    }
+                }
             }
             return "dash";
         } else {
@@ -331,6 +318,30 @@ public class LoginManagedBean implements Serializable {
 
     public void setInstant(Instant instant) {
         this.instant = instant;
+    }
+
+    public List<Url> getUrlList() {
+        return urlList;
+    }
+
+    public void setUrlList(List<Url> urlList) {
+        this.urlList = urlList;
+    }
+
+    public Url getUrl() {
+        return url;
+    }
+
+    public void setUrl(Url url) {
+        this.url = url;
+    }
+
+    public List<Url> getExistingUrlList() {
+        return existingUrlList;
+    }
+
+    public void setExistingUrlList(List<Url> existingUrlList) {
+        this.existingUrlList = existingUrlList;
     }
 
     

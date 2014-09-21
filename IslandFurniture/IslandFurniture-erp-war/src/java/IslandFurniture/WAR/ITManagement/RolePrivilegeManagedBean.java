@@ -54,13 +54,6 @@ public class RolePrivilegeManagedBean  implements Serializable  {
         roleList = mrbl.displayRole();
     }
     
-    public String addPrivilege(){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        privilegeName = request.getParameter("privilegeForm:privilegeName");
-        mpbl.createPrivilege(privilegeName);
-        return "roleprivilege";
-    }
-    
     public String deletePrivilege(){
         privilegeId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mpbl.removePrivilege(privilegeId);
