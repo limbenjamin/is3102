@@ -58,6 +58,7 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
 
                 role = mrbl.getRoleFromName("Sales Planning (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "MSSR");
+                mrbl.addPrivilegeToRole(role.getId(), "Create Forecast");
 
                 role = mrbl.getRoleFromName("IT (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Staff"); 
@@ -75,14 +76,17 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Plant");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Staff");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Roles");
+                mrbl.addPrivilegeToRole(role.getId(), "View Notifications");
 
                 role = mrbl.getRoleFromName("Production & Ops (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Material");
                 mrbl.addPrivilegeToRole(role.getId(), "Furniture");
+                mrbl.addPrivilegeToRole(role.getId(), "Retail Item");
 
                 role = mrbl.getRoleFromName("Supply Chain (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Material");
                 mrbl.addPrivilegeToRole(role.getId(), "Furniture");
+                mrbl.addPrivilegeToRole(role.getId(), "Retail Item");
 
                 role = mrbl.getRoleFromName("Management (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
