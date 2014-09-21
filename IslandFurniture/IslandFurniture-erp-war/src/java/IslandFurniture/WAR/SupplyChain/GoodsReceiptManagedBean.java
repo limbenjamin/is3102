@@ -85,6 +85,14 @@ public class GoodsReceiptManagedBean implements Serializable {
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
     }
+    
+        public String deleteGoodsReceiptDocument(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        return "goodsreceiptdocument";
+    }
 
     public Long getPlantId() {
         return plantId;

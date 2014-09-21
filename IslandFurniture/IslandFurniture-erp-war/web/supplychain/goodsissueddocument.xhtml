@@ -30,7 +30,6 @@
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Issued ID</th>
-                                    <th>Posting Date</th>
                                     <th>Issued Date</th>
                                     <th>Save</th>
                                 </tr>
@@ -39,9 +38,6 @@
                                         <tr>
                                             <tr>
                                                 <td><h:outputText value="#{grd.id}"></h:outputText></td>
-                                                <td> <h:outputText value="#{grd.postingDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
-                                                    </h:outputText></td>
                                                 <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" p:type="date" class="form-control"></h:inputText></td>
                                                 <td><h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.editGoodsIssuedDocument}"  value="Update" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="grd" value="#{grd}" />
@@ -58,52 +54,43 @@
 
 
 
-                        <section name="GoodsIssuedDocumentDetail">
-                            <table class="table table-hover">
+                           <section name="Display Stock Unit">
+                            <h5>Pending Committed Stock</h5>
+                            <table class="table table-hover table-condensed">
                                 <tr>
-
                                     <th>Stock</th>
+                                    <th>Storage Area</th>
+                                    <th>Storage Bin</th>
                                     <th>Quantity</th>
-                                    <th>Edit</th>
+                                    <th>Batch Number</th>
                                     <th>Delete</th>
                                 </tr>
                                 <h:form class="form-horizontal">
-
-                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentDetailList}" var="grdd">
+                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.stockUnitMainList}" var="s">
                                         <tr>
-                                            <td><h:selectOneMenu id="storageAreaId" class="form-control" value="#{grdd.stock.id}">
-                                                    <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                                </h:selectOneMenu></td>
-
-                                            <td><h:inputText id="storageBinName" value="#{grdd.quantity}" class="form-control"></h:inputText></td>
-                                            <td><h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.editGoodsIssuedDocumentDetail}"  value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:attribute name="grddId" value="#{grdd}" />
-                                                </h:commandButton>
-                                            </td>
+                                            <td>#{s.stock.name}</td>
+                                            <td>#{s.location.storageArea.name}</td>
+                                            <td>#{s.location.name}</td>
+                                            <td>#{s.qty}</td>
+                                            <td>#{s.batchNo}</td>
                                             <td>
-                                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentDetail}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
                                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
-                                                    <f:attribute name="grddId" value="#{grdd.id}" />
+                                                    <f:attribute name="stockUnit" value="#{s}" />
                                                 </h:commandButton>
                                             </td>
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
-                            </table>
+                            </table>  
                         </section>
 
 
                         <section name="Post Goods Issued Document"> 
 
                             <h:form class="form-horizontal">
-                                <h:selectOneMenu class="form-control" value="#{goodsIssuedDocumentManagedBean.storageBinId}">
-                                    <f:selectItem itemLabel="Select Storage Bin"></f:selectItem>
-                                    <f:selectItems value="#{goodsIssuedDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                </h:selectOneMenu>
-                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right"> 
+                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right"> 
                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
-                                    <f:attribute name="grddId" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
-                                    <f:attribute name="storageBinId" value="#{goodsIssuedDocumentManagedBean.storageBinId}" />
                                 </h:commandButton>
                             </h:form>
                         </section>

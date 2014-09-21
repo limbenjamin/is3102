@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class GoodsIssuedManagedBean implements Serializable {
 
     private List<GoodsIssuedDocument> goodsIssuedDocumentList;
     private List<GoodsIssuedDocument> goodsIssuedDocumentPostedList;
+    private List<StockUnit> stockUnitMainList;
 
     private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
@@ -84,6 +86,26 @@ public class GoodsIssuedManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
+    }
+
+    public String deleteGoodsIssuedDocument(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(plantId);
+
+        for (StockUnit g : mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument)) {
+//            mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
+//            mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
+//            msul.deleteStockUnit(g.getId());
+//
+//            msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+//            msul.deleteStockUnit(stockUnit.getId());
+
+        }
+
+        mgrl.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
+        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument();
+        return "goodsreceiptdocument";
     }
 
     public Long getPlantId() {

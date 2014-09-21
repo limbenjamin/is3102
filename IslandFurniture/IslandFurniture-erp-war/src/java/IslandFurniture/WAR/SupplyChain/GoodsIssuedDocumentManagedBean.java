@@ -61,6 +61,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private List<GoodsIssuedDocument> goodsIssuedDocumentList;
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetailList;
     private List<StockUnit> stockUnitList;
+    private List<StockUnit> stockUnitMainList;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
@@ -69,6 +70,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private Staff staff;
     private Plant plant;
     private StorageBin storageBin;
+    private StockUnit stockUnit;
 
     @EJB
     public ManageGoodsIssuedLocal mgrl;
@@ -109,6 +111,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         goodsIssuedDocumentDetailList = mgrl.viewGoodsIssuedDocumentDetail(goodsIssuedDocument);
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
         stockUnitList = mgrl.viewStockUnit(plant);
+        stockUnitMainList = mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument);
         System.out.println("Init");
     }
 
@@ -120,14 +123,6 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         return "";
     }
 
-    public void addGoodsIssuedDocumentDetail(ActionEvent event) {
-        System.out.println(goodsIssuedDocumentId == null);
-
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, Long.parseLong(request.getParameter("createGRDD:stockId")), Integer.parseInt(request.getParameter("createGRDD:stockQuantity")));
-        goodsIssuedDocumentDetailList = mgrl.viewGoodsIssuedDocumentDetail(goodsIssuedDocument);
-    }
-
     public String editGoodsIssuedDocument(ActionEvent event) throws ParseException {
         GoodsIssuedDocument grd = (GoodsIssuedDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
@@ -137,12 +132,6 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         Date date = issuedDateType;
         issuedDateCal.setTime(date);
         mgrl.editGoodsIssuedDocument(grd.getId(), issuedDateCal);
-        return "goodsissueddocument";
-    }
-
-    public String editGoodsIssuedDocumentDetail(ActionEvent event) throws IOException {
-        GoodsIssuedDocumentDetail sa = (GoodsIssuedDocumentDetail) event.getComponent().getAttributes().get("grddId");
-        mgrl.editGoodsIssuedDocumentDetail(sa.getId(), sa.getStock().getId(), sa.getQuantity());
         return "goodsissueddocument";
     }
 
@@ -158,24 +147,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     public void deleteGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        goodsIssuedDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
-        for (GoodsIssuedDocumentDetail g : goodsIssuedDocumentDetailList) {
-            msul.deleteStockUnitQty(stockId, plantId);
-        }
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        postingDate = cal;
-
-        mgrl.createGoodsIssuedDocumentStockUnit(goodsIssuedDocumentId, postingDate);
-
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
-
+        stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
+        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        msul.deleteStockUnit(stockUnit.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
     }
 
     public void viewStockUnit() throws IOException {
@@ -185,6 +164,26 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         goodsIssuedDocumentId = Long.parseLong(request.getParameter("createGRDD:GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+    }
+    
+    
+    public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        postingDate = cal;
+        
+        for (StockUnit g : stockUnitMainList) {       
+            mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
+            mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
+            msul.deleteStockUnit(g.getId());
+        }
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
     public Long getPlantId() {
@@ -331,6 +330,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.stockUnitList = stockUnitList;
     }
 
+    public List<StockUnit> getStockUnitMainList() {
+        return stockUnitMainList;
+    }
+
+    public void setStockUnitMainList(List<StockUnit> stockUnitMainList) {
+        this.stockUnitMainList = stockUnitMainList;
+    }
+
     public List<StorageBin> getStorageBinList() {
         return storageBinList;
     }
@@ -379,6 +386,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.storageBin = storageBin;
     }
 
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
+    }
+
     public ManageGoodsIssuedLocal getMgrl() {
         return mgrl;
     }
@@ -418,5 +433,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public void setMiml(ManageInventoryMonitoringLocal miml) {
         this.miml = miml;
     }
+    
+    
 
 }
