@@ -93,10 +93,17 @@ public class StockManager implements StockManagerLocal {
     }
     public FurnitureModel addFurnitureModel(String name, Double price) {
         FurnitureModel fm;
+        BOM bom;
+        List<BOMDetail> bomList;
         try {
             System.out.println("StockManager.addFurnitureModel()");
             fm = new FurnitureModel(name);
+            bom = new BOM();
+            bomList = new ArrayList<BOMDetail>();
+            
+            bom.setBomDetails(bomList);
             fm.setPrice(price);
+            fm.setBom(bom);
             em.persist(fm);
             return fm;
         } catch(Exception ex) {
@@ -146,7 +153,7 @@ public class StockManager implements StockManagerLocal {
             System.out.println("StockManager.deleteFurnitureModel()");
             System.out.println(furnitureID);
             fm = em.find(FurnitureModel.class, furnitureID);
-            if(fm.getBom() == null || fm.getBom().getBomDetails() == null) {
+            if(fm.getBom().getBomDetails().size() < 1) {
                 em.remove(fm);
                 System.out.println("Successfully deleted FurnitureModel");
             } else {
@@ -228,6 +235,7 @@ public class StockManager implements StockManagerLocal {
     public void editBOMDetail(Long BOMDetailID, Integer quantity) {
         BOMDetail BOMdetail;
         try {
+            System.out.println("StockManager.editBOMDetail()");
             BOMdetail = em.find(BOMDetail.class, BOMDetailID);
             BOMdetail.setQuantity(quantity);
             em.persist(BOMdetail);
@@ -237,9 +245,14 @@ public class StockManager implements StockManagerLocal {
     }
     public void deleteBOMDetail(Long BOMDetailID) {
         BOMDetail BOMdetail;
+        BOM bom;
         try {
+            System.out.println("StockManager.deleteBOMDetail()");
             BOMdetail = em.find(BOMDetail.class, BOMDetailID);
+            bom = BOMdetail.getBom();
+            bom.getBomDetails().remove(BOMdetail);
             em.remove(BOMdetail);
+            em.persist(bom);
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
         } 

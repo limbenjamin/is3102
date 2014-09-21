@@ -59,7 +59,6 @@ public class Staff implements Serializable {
     private String phoneNo;
     private Boolean active;
     private Integer invalidPasswordCount;
-    @Column(unique=true)
     private String emailAddress;
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)

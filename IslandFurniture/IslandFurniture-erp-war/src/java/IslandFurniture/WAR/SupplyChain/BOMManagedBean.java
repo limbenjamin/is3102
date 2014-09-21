@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -28,14 +29,14 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class BOMManagedBean {
+public class BOMManagedBean implements Serializable {
     @EJB
     private StockManagerLocal stockManager;
     
-    private FurnitureModel furniture;
-    private BOMDetail BOMdetail;
+    private FurnitureModel furniture = null;
+    private BOMDetail BOMdetail = null;
     private Long furnitureID;
-    private List<BOMDetail> bomList;
+    private List<BOMDetail> bomList = null;
     private List<Material> materialList;
 
     public BOMDetail getBOMdetail() {
@@ -84,17 +85,13 @@ public class BOMManagedBean {
         this.furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fID");
         System.out.println("FurnitureID is " + furnitureID);
         this.furniture = stockManager.getFurniture(furnitureID);
-        if(this.furniture.getBom() == null) {
-            this.bomList = null;
-        } else if(this.furniture.getBom().getBomDetails() == null) {
-            this.bomList = null;
-        } else
-            this.bomList = this.furniture.getBom().getBomDetails();
         this.materialList = stockManager.displayMaterialList();
+        this.bomList = stockManager.displayBOM(furnitureID);
+        System.out.println("BOMDetailList has " + this.bomList.size() + " items");
         System.out.println("init");
     }
     
-    public void addToBOM(ActionEvent event) {
+    public String addToBOM(ActionEvent event) {
         System.out.println("BOMManagedBean.addBOM()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String furID = request.getParameter("addToBOMForm:fID");
@@ -102,7 +99,8 @@ public class BOMManagedBean {
         String mQuantity = request.getParameter("addToBOMForm:materialQuantity");
         System.out.println("FurnitureID is " + furID + ". materialID is " + mID + ". materialQuantity is " + mQuantity);
         stockManager.addToBOM(Long.parseLong(furID), Long.parseLong(mID), Integer.parseInt(mQuantity));
-        bomList = stockManager.displayBOM(furnitureID);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
     }
     
     public void editBOM(ActionEvent event) throws IOException {
@@ -112,7 +110,11 @@ public class BOMManagedBean {
     }
     public void deleteBOM() {
         System.out.println("BOMManagedBean.deleteBOM()");
-        Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemID"));
+        String ID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bomID");
+        System.out.println("ID is " + ID);
+        Long id = new Long(ID);
         stockManager.deleteBOMDetail(id);
+        this.bomList = stockManager.displayBOM(furnitureID);
+        System.out.println("After deletion, BOMDetailList has " + bomList.size() + " items");
     }
 }
