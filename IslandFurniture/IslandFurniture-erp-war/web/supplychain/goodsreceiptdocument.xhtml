@@ -44,7 +44,11 @@
                                                 <td> <h:outputText value="#{grd.postingDate.time}" >
                                                         <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
                                                     </h:outputText></td>
-                                                <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" p:type="date" class="form-control"></h:inputText></td>
+                                                <td>
+                                                    <h:inputText id="date" value="#{grd.receiptDate.time}" p:type="date" class="form-control">
+                                                        <f:convertDateTime pattern="yyyy-MM-dd" timeZone="#{grd.plant.timeZoneID}"  />
+                                                    </h:inputText>
+                                                </td>
                                                 <td></td>
                                                 <td><h:inputText value="#{grd.deliveryNote}" class="form-control"></h:inputText></td>
                                                 <td><h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocument}"  value="Update" class="btn btn-success btn-xs"> 

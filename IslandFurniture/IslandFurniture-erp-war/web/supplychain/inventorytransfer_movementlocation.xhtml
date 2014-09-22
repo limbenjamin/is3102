@@ -10,27 +10,28 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
 
                         <section name="View Contents of Storage Location">
-                            <h4>View Contents of Storage Location: #{inventoryMonitoringLocationManagedBean.storageBin.name}</h4><hr></hr><br></br>
+                            <h4>Inventory Movement of Storage Location: #{inventoryTransferMovementLocationManagedBean.storageBin.name}</h4><hr></hr>
                         </section>
 
                         <section name="Table of Contents of the Stock Items">
-                                                       
+                            <h5>Contents of the Storage Bin</h5>                           
                             <table class="table table-hover table-condensed">
                                     <tr>
                                         <th>Stock</th>
+                                        <th>Stock Unit Number</th>
                                         <th>Quantity</th>
                                         <th>Location</th>
                                         <th>Batch Number</th>
                                     </tr>
                                     <h:form class="form-horizontal">
-                                        <ui:repeat value="#{inventoryMonitoringLocationManagedBean.stockUnitBinList}" var="s">
+                                        <ui:repeat value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s">
                                             <tr>
                                                 <td>#{s.stock.name}</td>
+                                                <td>#{s.id}</td>
                                                 <td>#{s.qty}</td>
-                                                <td>#{s.location.name}</td>
                                                 <td>#{s.batchNo}</td>
                                             </tr>
                                         </ui:repeat>

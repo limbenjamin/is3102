@@ -85,6 +85,37 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
+    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime) {
+        stockUnit = new StockUnit();
+        stockUnit.setStock(stock);
+        stockUnit.setBatchNo(batchNo);
+        stockUnit.setQty(quantity);
+        stockUnit.setLocation(storageBin);
+        stockUnit.setAvailable(false);
+        stockUnit.setCommitStockUnitId(stockUnitId);
+        stockUnit.setCommitTime(commitTime);
+        stockUnit.setGoodsIssuedDocument(null);
+        em.persist(stockUnit);
+        em.flush();
+    }
+
+    @Override
+    public List<StockUnit> viewStockUnitMovement(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public void confirmStockUnitMovement(Long stockUnitId) {
+        stockUnit = getStockUnit(stockUnitId);
+        stockUnit.setAvailable(true);
+        em.merge(stockUnit);
+        em.flush();
+    }
+
+    @Override
     public void editStockUnitLocationDefault(Long stockUnitId, Long storageBinId) {
         stockUnit = getStockUnit(stockUnitId);
         storageBin = getStorageBin(storageBinId);

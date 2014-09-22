@@ -123,18 +123,20 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     }
 
     public String editGoodsReceiptDocument(ActionEvent event) throws ParseException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
-        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-        receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
+//        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
+//        receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
         Calendar receiptDateCal = Calendar.getInstance();
-        Date date = receiptDateType;
+        Date date = grd.getReceiptDate().getTime();
         receiptDateCal.setTime(date);
-        mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, null, grd.getDeliveryNote());
+        mgrl.editGoodsReceiptDocument(grd.getId(),receiptDateCal , null, grd.getDeliveryNote());
         return "goodsreceiptdocument";
     }
 
     public String editGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocumentDetail sa = (GoodsReceiptDocumentDetail) event.getComponent().getAttributes().get("grddId");
         mgrl.editGoodsReceiptDocumentDetail(sa.getId(), sa.getReceivedStock().getId(), sa.getQuantity());
         return "goodsreceiptdocument";

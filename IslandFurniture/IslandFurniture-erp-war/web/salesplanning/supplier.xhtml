@@ -54,7 +54,12 @@
                                                 </td>
                                                 <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" value="Delete" class="btn btn-danger btn-sm"> 
                                                         <f:param name="supplierID" value="#{supplier.id}" />
-                                                    </h:commandButton></td>        
+                                                    </h:commandButton></td>   
+                                                <td>
+                                                    <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
+                                                        <f:attribute name="sID" value="#{supplier.id}" />
+                                                    </h:commandButton>
+                                                </td>     
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 

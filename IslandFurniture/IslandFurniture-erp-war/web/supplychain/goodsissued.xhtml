@@ -34,11 +34,13 @@
                                                 <h:outputText value="#{GRD.issuedDate.time}" >
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                 </h:outputText></td>
-                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" value="Update" class="btn btn-success btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
                                             </td>
-                                            <td></td>
+                                            <td><h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                </h:commandButton></td>
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
