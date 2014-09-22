@@ -311,6 +311,6 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
     
     public Object getWeeklyPlans()
     {
-        
+        return null;
     }
 }
