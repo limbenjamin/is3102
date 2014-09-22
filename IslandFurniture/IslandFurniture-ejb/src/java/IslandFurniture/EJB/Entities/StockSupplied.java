@@ -71,8 +71,9 @@ public class StockSupplied implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.stock);
-        hash = 41 * hash + Objects.hashCode(this.countryOffice);
+        hash = 17 * hash + Objects.hashCode(this.stock);
+        hash = 17 * hash + Objects.hashCode(this.countryOffice);
+        hash = 17 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
 
@@ -83,7 +84,7 @@ public class StockSupplied implements Serializable {
             return false;
         }
         StockSupplied other = (StockSupplied) object;
-        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice) && this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override
