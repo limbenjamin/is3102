@@ -7,10 +7,12 @@ package IslandFurniture.WAR.SalesPlanning;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.CountryOffice;
+import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -86,8 +88,23 @@ public class ViewMssrManagedBean implements Serializable {
     }
 
     public void updateMssrList() {
-        this.mssrList = salesForecastBean.retrieveMssrForCo(this.co, this.yearOfMssr);
+        this.mssrList = new ArrayList();
+
+        for (StockSupplied ss : co.getSuppliedWithFrom()) {
+            this.mssrList.add(new Couple(ss.getStock(), salesForecastBean.retrieveMssrForCoStock(this.co, ss.getStock(), this.yearOfMssr)));
+        }
+        
     }
+    
+    public void monthlyUpdate(AjaxBehaviorEvent event){
+        salesForecastBean.updateMonthlyStockSupplyReq(co, Month.JAN, yearOfMssr, Month.DEC, yearOfMssr);
+        
+        this.updateMssrList();
+    }
+    
+    //
+    // Getters & Setters
+    //
 
     public int getYearOfMssr() {
         return yearOfMssr;

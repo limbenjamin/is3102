@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -76,7 +77,14 @@ public class ReviewForecast {
 
     public void loadMssr() {
         this.mssrLabels = MonthlyStockSupplyReq.getLabels();
-        this.mssrPairedList = salesForecastBean.retrievePairedMssrForCo(co, 6);
+        this.mssrPairedList = new ArrayList();
+
+        for (StockSupplied ss : co.getSuppliedWithFrom()) {
+            List<MonthlyStockSupplyReq> lockedMssrList = salesForecastBean.retrieveLockedMssrForCoStock(co, ss.getStock(), 6);
+            List<MonthlyStockSupplyReq> unlockedMssrList = salesForecastBean.retrieveUnlockedMssrForCoStock(co, ss.getStock());
+            
+            this.mssrPairedList.add(new Couple(ss.getStock(), new Couple(lockedMssrList, unlockedMssrList)));
+        }
 
         // Expand all accordion panels by default
         for (int i = 1; i < this.mssrPairedList.size(); i++) {

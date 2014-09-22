@@ -34,20 +34,21 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
     @Override
     public boolean loadSampleData() {
-        Calendar curr;
+        Calendar prevMth;
         Calendar lockedOutCutoff;
 
         Random rand = new Random(1);
         List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
 
         for (CountryOffice eachCo : countryOffices) {
+            prevMth = TimeMethods.getPlantCurrTime(eachCo);
+            prevMth.add(Calendar.MONTH, -1);
+            
             lockedOutCutoff = TimeMethods.getPlantCurrTime(eachCo);
             lockedOutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
 
-            curr = TimeMethods.getPlantCurrTime(eachCo);
-
             System.out.println(eachCo);
-            salesForecastBean.generateSalesFigures(eachCo, Month.JAN, 2013, Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+            salesForecastBean.updateMonthlyStockSupplyReq(eachCo, Month.JAN, 2013, Month.getMonth(prevMth.get(Calendar.MONTH)), prevMth.get(Calendar.YEAR));
 
             for (StockSupplied ss : eachCo.getSuppliedWithFrom()) {
                 List<MonthlyStockSupplyReq> listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.JAN, 2013, Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
@@ -64,7 +65,6 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
                         
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
-                        eachMssr.setEndMthUpdated(true);
                     } else {
                         eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
