@@ -36,12 +36,12 @@
                                             <td>#{s.qty}</td>
                                             <td>
                                                 <div class="col-sm-9 inner-addon right-addon">
-                                                    <h:inputText class="form-control" value="#{inventoryMonitoringStockManagedBean.stockTakeQuantity}"></h:inputText>
+                                                    <h:inputText class="form-control" value="#{s.qty}"></h:inputText>
                                                 </div></td>
                                             <td><h:commandButton actionListener="#{inventoryMonitoringStockManagedBean.editStockTakeQuantity}"  value="Update" class="btn btn-success btn-xs">
                                                     <f:attribute name="stockId" value="#{inventoryMonitoringStockManagedBean.stock.id}" />
                                                     <f:attribute name="stockUnitId" value="#{s.id}" />
-                                                    <f:attribute name="stockTakeQuantity" value="#{inventoryMonitoringStockManagedBean.stockTakeQuantity}" />
+                                                    <f:attribute name="stockTakeQuantity" value="#{s.qty}" />
                                                 </h:commandButton></td>
                                         </tr>
                                     </ui:repeat>

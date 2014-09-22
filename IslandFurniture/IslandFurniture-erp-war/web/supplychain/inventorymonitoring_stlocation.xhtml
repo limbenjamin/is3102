@@ -27,7 +27,7 @@
                                     <th>Stock Take Quantity</th>
                                 </tr>
                                 <h:form class="form-horizontal">
-                                    <ui:repeat value="#{inventoryMonitoringLocationManagedBean.stockUnitList}" var="s">
+                                    <ui:repeat value="#{inventoryMonitoringLocationManagedBean.stockUnitBinList}" var="s">
                                         <tr>
                                             <td>#{s.stock.name}</td>
                                             <td>#{s.id}</td>
@@ -35,12 +35,13 @@
                                             <td>#{s.qty}</td>
                                             <td>
                                                 <div class="col-sm-9 inner-addon right-addon">
-                                                    <h:inputText class="form-control" value="#{inventoryMonitoringLocationManagedBean.stockTakeQuantity}"></h:inputText>
+                                                    <h:inputText class="form-control" value="#{s.qty}"></h:inputText>
                                                 </div></td>
                                             <td><h:commandButton actionListener="#{inventoryMonitoringLocationManagedBean.editStockTakeQuantity}"  value="Update" class="btn btn-success btn-xs">
                                                     <f:attribute name="storageBinId" value="#{inventoryMonitoringLocationManagedBean.storageBin.id}" />
                                                     <f:attribute name="stockUnitId" value="#{s.id}" />
-                                                    <f:attribute name="stockTakeQuantity" value="#{inventoryMonitoringLocationManagedBean.stockTakeQuantity}" />
+                                                    <f:attribute name="stockTakeQuantity" value="#{s.qty}" />
+                                                    <f:attribute name="su" value="#{s}" />
                                                 </h:commandButton></td>
                                         </tr>
                                     </ui:repeat>
