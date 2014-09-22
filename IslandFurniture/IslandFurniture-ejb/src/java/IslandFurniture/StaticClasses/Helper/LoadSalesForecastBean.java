@@ -8,6 +8,7 @@ package IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.MssrStatus;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;
@@ -63,6 +64,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
                         
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
+                        eachMssr.setEndMthUpdated(true);
                     } else {
                         eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
@@ -70,6 +72,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     if (i >= FORECAST_LOCKOUT_MONTHS + 1) {
                         MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 1));
                         eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
+                        eachMssr.setVarianceUpdated(true);
                     }
 
                     if (i >= 1) {
@@ -80,7 +83,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     }
 
                     eachMssr.setApproved(true);
-                    eachMssr.setForecasted(true);
+                    eachMssr.setStatus(MssrStatus.APPROVED);
 
                     System.out.println(eachMssr);
                 }
