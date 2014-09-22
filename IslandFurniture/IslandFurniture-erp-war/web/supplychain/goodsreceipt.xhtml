@@ -20,7 +20,10 @@
 
                         <section name="viewGRD">
 
-                            <h5>Pending Goods Receipt</h5>
+                            <div class="panel-heading dashboard-title-panel">
+                                Pending Goods Receipt
+                                </div>
+                            <div class="list-group-item">
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Receipt ID</th>
@@ -39,22 +42,30 @@
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                 </h:outputText></td>
                                             <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
-                                            </td>
-                                            <td><h:commandButton actionListener="#{goodsReceiptManagedBean.deleteGoodsReceiptDocument}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
+                                            <td><h:commandButton actionListener="#{goodsReceiptManagedBean.deleteGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                </h:commandButton></td>
+                                                </h:commandButton>
+                                            <i class="fa fa-lg fa-trash-o icon-button"></i></td> 
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
                             </table>
+                            </div>
                         </section>
-
+                        
+                        <br></br>
 
                         <section name="postedGRD">
-                            <h5>Posted Goods Receipt</h5>
+                            
+                            
+                            <div class="panel-heading dashboard-title-panel">
+                                Posted Goods Receipt
+                                </div>
+                            <div class="list-group-item">
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Receipt ID</th>
@@ -63,6 +74,7 @@
                                     <th>Purchase Order Number</th>
                                     <th>View</th>
                                 </tr>
+                                
                                 <h:form class="form-horizontal">
                                     <ui:repeat value="#{goodsReceiptManagedBean.goodsReceiptDocumentPostedList}" var="GRD">
                                         <tr>
@@ -77,14 +89,15 @@
                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                 </h:outputText></td>
                                             <td>#{GRD.receiveFrom.id}</td>
-                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
+                                            <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener2}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:attribute name="GRDid" value="#{GRD.id}" />
                                                 </h:commandButton>
-                                            </td>
+                                            <i class="fa fa-lg fa-search-plus icon-button"></i></td> 
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
                             </table>
+                            </div>
                         </section>
 
 
@@ -94,5 +107,3 @@
         </ui:composition>
     </h:body>
 </html>
-
-
