@@ -124,6 +124,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     }
 
     public String editGoodsIssuedDocument(ActionEvent event) throws ParseException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsIssuedDocument grd = (GoodsIssuedDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         issuedDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");

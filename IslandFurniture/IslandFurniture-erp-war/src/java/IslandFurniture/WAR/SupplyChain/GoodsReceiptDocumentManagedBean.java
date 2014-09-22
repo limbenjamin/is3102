@@ -123,6 +123,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     }
 
     public String editGoodsReceiptDocument(ActionEvent event) throws ParseException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
@@ -135,6 +136,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     }
 
     public String editGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocumentDetail sa = (GoodsReceiptDocumentDetail) event.getComponent().getAttributes().get("grddId");
         mgrl.editGoodsReceiptDocumentDetail(sa.getId(), sa.getReceivedStock().getId(), sa.getQuantity());
         return "goodsreceiptdocument";
