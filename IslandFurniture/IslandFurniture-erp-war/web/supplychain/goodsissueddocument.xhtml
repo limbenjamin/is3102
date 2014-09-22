@@ -31,6 +31,7 @@
                                 <tr>
                                     <th>Goods Issued ID</th>
                                     <th>Issued Date</th>
+                                    <th>Issue To</th>
                                     <th>Save</th>
                                 </tr>
                                 <h:form id="editGRD" class="form-horizontal">
@@ -39,10 +40,15 @@
                                             <tr>
                                                 <td><h:outputText value="#{grd.id}"></h:outputText></td>
                                                 <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" p:type="date" class="form-control"></h:inputText></td>
+                                                <td> <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentManagedBean.plantId}">
+                                                        <f:selectItem itemLabel="Select Plant" />
+                                                        <f:selectItems value="#{goodsIssuedDocumentManagedBean.plantList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                    </h:selectOneMenu></td>
                                                 <td><h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.editGoodsIssuedDocument}"  value="Update" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="grd" value="#{grd}" />
                                                         <f:attribute name="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" />
-                                                        <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                                        <f:attribute name="plantId" value="#{goodsIssuedDocumentManagedBean.plantId}" />
+                                                        <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                                     </h:commandButton>
                                                 </td>
                                             </tr>     

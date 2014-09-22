@@ -33,12 +33,12 @@ public class GoodsIssuedDocument implements Serializable {
     @ManyToOne
     private Plant plant;
     @ManyToOne
-    private Store store;
+    private Plant deliverTo;
     @OneToMany(mappedBy = "goodsIssuedDocument")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar postingDate;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar issuedDate;
     private Boolean confirm;
 
@@ -58,12 +58,12 @@ public class GoodsIssuedDocument implements Serializable {
         this.plant = plant;
     }
 
-    public Store getStore() {
-        return store;
+    public Plant getDeliverTo() {
+        return deliverTo;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setDeliverTo(Plant deliverTo) {
+        this.deliverTo = deliverTo;
     }
 
     public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {

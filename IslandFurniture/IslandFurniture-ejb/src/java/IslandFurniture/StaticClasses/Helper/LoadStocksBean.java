@@ -5,6 +5,7 @@
  */
 package IslandFurniture.StaticClasses.Helper;
 
+import IslandFurniture.EJB.Entities.BOM;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
@@ -35,8 +36,10 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         FurnitureModel furniture = QueryMethods.findFurnitureByName(em, name);
 
         if (furniture == null) {
+            BOM bom = new BOM();
             furniture = new FurnitureModel();
             furniture.setName(name);
+            furniture.setBom(bom);
             em.persist(furniture);
 
             return furniture;
@@ -81,7 +84,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
     }
 
     private StockSupplied addStockSupplied(Stock stock, CountryOffice co, ManufacturingFacility mf) {
-        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId());
+        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId(), mf.getId());
 
         StockSupplied stockSupplied = em.find(StockSupplied.class, stockSuppliedPK);
 

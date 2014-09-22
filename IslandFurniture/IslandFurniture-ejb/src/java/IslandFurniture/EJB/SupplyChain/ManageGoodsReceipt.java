@@ -1,5 +1,7 @@
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -58,6 +60,17 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
+    public GoodsReceiptDocument createGoodsReceiptDocumentfromInbound(Plant plant, Calendar receiptDate) {
+        goodsReceiptDocument = new GoodsReceiptDocument();
+        goodsReceiptDocument.setPlant(plant);
+        goodsReceiptDocument.setConfirm(false);
+        goodsReceiptDocument.setReceiptDate(receiptDate);
+        em.persist(goodsReceiptDocument);
+        em.flush();
+        return goodsReceiptDocument;
+    }
+
+    @Override
     public void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate) {
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         goodsReceiptDocument.setConfirm(true);
@@ -68,9 +81,9 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity) {
-        
+
         System.out.println("The documentId is: " + grdId);
-        
+
         goodsReceiptDocumentDetail = new GoodsReceiptDocumentDetail();
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
         stock = getStock(stockId);
@@ -109,8 +122,22 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE");
         return q.getResultList();
     }
-    
-        @Override
+
+    @Override
+    public List<GoodsIssuedDocument> viewInboundShipment(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE and s.deliverTo.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<GoodsIssuedDocumentDetail> viewInboundShipmentByDetail(Long id) {
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocumentDetail s WHERE s.goodsIssuedDocument.id=:id");
+        q.setParameter("id", id);
+        return q.getResultList();
+    }
+
+    @Override
     public List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted() {
         Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=TRUE");
         return q.getResultList();

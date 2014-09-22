@@ -46,18 +46,30 @@ public class SupplierManager implements SupplierManagerLocal {
         supplier = (Supplier) em.find(Supplier.class, supplierId);
         return supplier;
     }
-    public void addSupplier(String supplierName, String countryName) {
+    public Supplier addSupplier(String supplierName, String countryName) {
         Country country;
         Supplier supplier;
+        ProcurementContract pc;
+        List<ProcurementContractDetail> pcdList;
         try {
             System.out.println("SupplierManager.addSupplier()");
             country = findCountryByName(em, countryName);
             supplier = new Supplier();
+            pc = new ProcurementContract();
+            pcdList = new ArrayList<ProcurementContractDetail>();
+            
+            pc.setSupplier(supplier);
+            pc.setProcurementContractDetails(pcdList);
+            
             supplier.setName(supplierName);
             supplier.setCountry(country);
+            supplier.setProcurementContract(pc);
+            
             em.persist(supplier);
+            return supplier;
         } catch(NoResultException NRE) {
             System.err.println("No records found");
+            return null;
         }
     }
     public void editSupplier(Long id, String name, String countryName) {
@@ -82,6 +94,7 @@ public class SupplierManager implements SupplierManagerLocal {
             System.out.println("SupplierManager.deleteSupplier()");
             supplier = em.find(Supplier.class, id);
             System.out.println("Don't forget to mind the constraints. I'm gonna just delete for now");
+            em.remove(supplier.getProcurementContract());
             em.remove(supplier);
             em.flush();
         } catch(Exception ex) {
@@ -124,19 +137,22 @@ public class SupplierManager implements SupplierManagerLocal {
             return null;   
         }
     }
-    public void deleteProcurementContractDetail(Long id) {
+    public void deleteProcurementContractDetail(Long id, Long supplierID) {
         ProcurementContractDetail pcd;
+        Supplier supplier;
         try {
             System.out.println("SupplierManager.deleteProcurementContractDetails()");
             pcd = em.find(ProcurementContractDetail.class, id);
+            supplier = em.find(Supplier.class, supplierID);
             System.out.println("Don't forget to check for constraints here. Gonna just delete for now");
+            supplier.getProcurementContract().getProcurementContractDetails().remove(pcd);
             em.remove(pcd);
             em.flush();
         } catch(Exception ex) {
             System.err.println("Something went wrong");
         }
     }
-    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID) {
+    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime) {
         Supplier supplier;
         ManufacturingFacility mf;
         ProcuredStock stock;
@@ -148,6 +164,8 @@ public class SupplierManager implements SupplierManagerLocal {
             mf = em.find(ManufacturingFacility.class, mfID);
             stock = em.find(ProcuredStock.class, stockID);
             supplier = em.find(Supplier.class, supplierID);
+            System.out.println("MF is " + mf.getName() + ", Stock is " + stock.getName() + ". Supplier is " + supplier.getName());
+            
             pc = supplier.getProcurementContract();
             if(pc == null) {
                 pc = new ProcurementContract();
@@ -158,18 +176,28 @@ public class SupplierManager implements SupplierManagerLocal {
             }
             
             pcd = new ProcurementContractDetail();
-            System.out.println("1");
             pcd.setProcuredStock(stock);
-            System.out.println("2");
             pcd.setSupplierFor(mf);
-            System.out.println("3");
             pcd.setProcurementContract(pc);
-            System.out.println("4");
+            pcd.setLeadTimeInDays(leadTime);
+            pcd.setLotSize(size);
             
             pc.getProcurementContractDetails().add(pcd);
             System.out.println("5");
         } catch(Exception ex) {
             ex.printStackTrace();
+            System.err.println("Something went wrong here");
+        }
+    }
+    public void editProcurementContractDetail(Long id, Integer size, Integer leadTime) {
+        ProcurementContractDetail pcd;
+        try {
+            System.out.println("SupplierManager.editProcurementContractDetails()");
+            pcd = em.find(ProcurementContractDetail.class, id);
+            pcd.setLeadTimeInDays(leadTime);
+            pcd.setLotSize(size);
+            em.persist(pcd);
+        } catch(Exception ex) {
             System.err.println("Something went wrong here");
         }
     }

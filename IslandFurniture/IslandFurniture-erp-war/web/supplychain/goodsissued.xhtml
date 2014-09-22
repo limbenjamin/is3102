@@ -17,67 +17,76 @@
                         <h4>Goods Issued</h4><hr></hr>
 
                         <section name="viewGRD">
-                            <h5>Pending Goods Issued Document</h5>  
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>Goods Issued ID</th>
-                                    <th>Document Date</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-
-                                </tr>
-                                <h:form id="viewGRD" class="form-horizontal">
-                                    <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentList}" var="GRD">
-                                        <tr>
-                                            <td>#{GRD.id}</td>
-                                            <td>
-                                                <h:outputText value="#{GRD.issuedDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                </h:outputText></td>
-                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                </h:commandButton>
-                                            </td>
-                                            <td><h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                </h:commandButton></td>
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>
+                            <div class="panel-heading dashboard-title-panel">
+                                Pending Goods Issued
+                            </div>
+                            <div class="list-group-item">  
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Goods Issued ID</th>
+                                        <th>Issued Date</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <h:form id="viewGRD" class="form-horizontal">
+                                        <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentList}" var="GRD">
+                                            <tr>
+                                                <td>#{GRD.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{GRD.issuedDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                    </h:outputText></td>
+                                                <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                    </h:commandButton>
+                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
+                                                <td><h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                    </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i></td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
                         </section>
 
+                        <br/>
 
                         <section name="postedGRD">
-                            <h5>Posted Goods Issued Document</h5>
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>Goods Issued ID</th>
-                                    <th>Posting Date</th>
-                                    <th>Document Date</th>
-                                    <th>View</th>
-                                </tr>
-                                <h:form class="form-horizontal">
-                                    <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" var="GRD">
-                                        <tr>
-                                            <td>#{GRD.id}</td>
-                                            <td>
-                                                <h:outputText value="#{GRD.postingDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                </h:outputText>
-                                            </td>
-                                            <td>
-                                                <h:outputText value="#{GRD.issuedDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                </h:outputText></td>
-                                            <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                </h:commandButton>
-                                            </td>
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>
+                            <div class="panel-heading dashboard-title-panel">
+                                Posted Goods Issued
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Goods Issued ID</th>
+                                        <th>Posting Date</th>
+                                        <th>Document Date</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" var="GRD">
+                                            <tr>
+                                                <td>#{GRD.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{GRD.postingDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{GRD.issuedDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                    </h:outputText></td>
+                                                <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
+                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                    </h:commandButton>
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
                         </section>
                     </div>
                 </div>

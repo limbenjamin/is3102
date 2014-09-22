@@ -16,6 +16,7 @@ import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +49,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     private String issuedDateString;
     private Date issuedDateType;
+    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     private String username;
     private String deliverynote;
@@ -65,6 +67,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
+    private List<Plant> plantList;
 
     private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
@@ -103,8 +106,6 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
             goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
         }
 
-//      Ask Ben = To ask on how to display current date
-//      issuedDateString = goodsIssuedDocument.getPostingDate().getTime().toString();
         System.out.println("GoodsIssuedDocumentId: " + goodsIssuedDocumentId);
         goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
         storageBinList = mgrl.viewStorageBin(plant);
@@ -112,7 +113,17 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
         stockUnitList = mgrl.viewStockUnit(plant);
         stockUnitMainList = mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument);
+        if (goodsIssuedDocument.getIssuedDate() != null) {
+            issuedDateString = df.format(goodsIssuedDocument.getIssuedDate().getTime());
+        }
+        
+        if (goodsIssuedDocument.getDeliverTo() != null) {
+            plantId = goodsIssuedDocument.getDeliverTo().getId();
+        }
+        
+        plantList = mgrl.viewPlant(plant);
         System.out.println("Init");
+        
     }
 
     public String krefresh() {
@@ -126,13 +137,15 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public String editGoodsIssuedDocument(ActionEvent event) throws ParseException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsIssuedDocument grd = (GoodsIssuedDocument) event.getComponent().getAttributes().get("grd");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("plantId", event.getComponent().getAttributes().get("plantId"));
+        plantId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("plantId");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         issuedDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
         issuedDateType = new SimpleDateFormat("yyyy-MM-dd").parse(issuedDateString);
         Calendar issuedDateCal = Calendar.getInstance();
         Date date = issuedDateType;
         issuedDateCal.setTime(date);
-        mgrl.editGoodsIssuedDocument(grd.getId(), issuedDateCal);
+        mgrl.editGoodsIssuedDocument(grd.getId(), issuedDateCal, plantId);
         return "goodsissueddocument";
     }
 
@@ -166,18 +179,17 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
     }
-    
-    
+
     public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        
+
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
         postingDate = cal;
-        
-        for (StockUnit g : stockUnitMainList) {       
+
+        for (StockUnit g : stockUnitMainList) {
             mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
             mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
             msul.deleteStockUnit(g.getId());
@@ -257,6 +269,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     public void setIssuedDateType(Date issuedDateType) {
         this.issuedDateType = issuedDateType;
+    }
+
+    public DateFormat getDf() {
+        return df;
+    }
+
+    public void setDf(DateFormat df) {
+        this.df = df;
     }
 
     public String getUsername() {
@@ -355,6 +375,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.storageAreaList = storageAreaList;
     }
 
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
+    }
+
     public GoodsIssuedDocument getGoodsIssuedDocument() {
         return goodsIssuedDocument;
     }
@@ -434,7 +462,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public void setMiml(ManageInventoryMonitoringLocal miml) {
         this.miml = miml;
     }
-    
-    
 
-}
+    
+    
+  }

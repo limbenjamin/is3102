@@ -31,12 +31,30 @@ public class ProcurementContractDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer leadTimeInDays;
+    private Integer lotSize;
     @ManyToOne
     private ProcurementContract procurementContract;
     @ManyToOne
     private ProcuredStock procuredStock;
     @OneToOne
     private ManufacturingFacility supplierFor;
+
+    public Integer getLeadTimeInDays() {
+        return leadTimeInDays;
+    }
+
+    public void setLeadTimeInDays(Integer leadTimeInDays) {
+        this.leadTimeInDays = leadTimeInDays;
+    }
+
+    public Integer getLotSize() {
+        return lotSize;
+    }
+
+    public void setLotSize(Integer lotSize) {
+        this.lotSize = lotSize;
+    }
 
     public ProcurementContractDetail() {
         

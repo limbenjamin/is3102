@@ -36,6 +36,7 @@ public class StockSupplied implements Serializable {
     @Id
     @ManyToOne
     private CountryOffice countryOffice;
+    @Id
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
 
