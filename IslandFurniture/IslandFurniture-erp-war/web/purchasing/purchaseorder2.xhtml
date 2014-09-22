@@ -14,13 +14,13 @@
                 <div class="row">
                     <div class="col-md-8">                      
                         <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
-                        <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong></h5>
+                        <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong>
+                            | Supplied to: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.name}</strong></h5>
                         <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong></h5>
                         <table class="table table-hover">
                             <tr>
                                 <th>Change Order Date</th>
-                                <th>Status</th>  
-                                <th>Supply To</th>
+                                <th>Status</th>
                                 <th>Update</th>
                             </tr>
                             <h:form id="updatePurchaseOrder" class="form-horizontal">
@@ -34,11 +34,6 @@
                                             <f:selectItem itemValue="confirmed" itemLabel="Confirmed" />
                                         </h:selectOneMenu>
                                     </td>                                   
-                                    <td>
-                                        <h:selectOneMenu id="plantId" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.id}">
-                                            <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
-                                        </h:selectOneMenu>
-                                    </td>
                                     <td>
                                         <h:commandButton action="#{purchaseOrderManaged2Bean.updatePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                         </h:commandButton>
@@ -86,8 +81,7 @@
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" value="Delete" class="btn btn-danger btn-sm"> 
-                                                    <f:attribute name="PODid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
-                                                    <f:attribute name="PODId" value="#{pod.id}" />
+                                                    <f:param name="PODid" value="#{pod.id}" />
                                                 </h:commandButton>
                                             </td>
                                         </tr>
