@@ -66,7 +66,7 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
         stock = miml.getStock(stockId);
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
-        stockTakeQuantity = null;
+        
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
@@ -78,8 +78,8 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
         miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        stockTakeQuantity = null;
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
+        stockTakeQuantity = null;
         return "inventorymonitoring_ststock";
     }
 

@@ -38,6 +38,8 @@ public interface ManageGoodsIssuedLocal {
     Stock getStock(Long id);
 
     StockUnit getStockUnit(Long id);
+    
+    Plant getPlant(Long id);
 
     List<GoodsIssuedDocument> viewGoodsIssuedDocument();
 
@@ -63,8 +65,10 @@ public interface ManageGoodsIssuedLocal {
 
     List<StorageBin> viewStorageBin(Plant plant);
 
-    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate);
+    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Long plantId);
 
     void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
+    
+    List<Plant> viewPlant(Plant plant);
 
 }

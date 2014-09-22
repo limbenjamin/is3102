@@ -10,10 +10,7 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
-                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newSupplier">
-                            <i class="fa fa-fw fa-plus"></i>New Supplier
-                        </button>                         
+                    <div class="col-md-8">                    
                         <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newPCD">
                             <i class="fa fa-fw fa-plus"></i>New Procurement Contract Detail
                         </button>                           
@@ -54,20 +51,37 @@
                                     <tr>
                                         <th>Stock Supplied</th>
                                         <th>Manufacturing Facility</th>
+                                        <th>Lot Size</th>
+                                        <th>Lead Time (Days)</th>
+                                        <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
                                     <h:form id="deletePCDForm" class="form-horizontal">
-                                        <ui:repeat value="#{procurementContractManagedBean.detailList}" var="PCD">
+                                        <ui:repeat value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">
                                             <tr>
                                                 <td>
-                                                    <h:inputText id="stockName" value="#{PCD.procuredStock.name}" class="form-control"></h:inputText>
+                                                    <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="form-control"></h:outputText>
                                                 </td>
                                                 <td>
-                                                    <h:inputText id="MFName" value="#{PCD.supplierFor.name}" class="form-control"></h:inputText>
+                                                    <h:outputText id="MFName" value="#{PCD.supplierFor.name}" class="form-control"></h:outputText>
                                                 </td>
-                                                <td><h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td>
+                                                    <h:inputText id="size" value="#{PCD.lotSize}" class="form-control"></h:inputText>
+                                                </td>
+                                                <td>
+                                                    <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control"></h:inputText>
+                                                </td>
+                                                <td>
+                                                    <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                        <f:attribute name="toEdit" value="#{PCD}" />
+                                                        <f:ajax execute="@form" render=":deletePCDForm:PCDList"/>
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>                                                
+                                                </td>
+                                                <td><h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="pcdID" value="#{PCD.id}" />
-                                                    </h:commandButton></td>         
+                                                    </h:commandButton></td>    
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
@@ -77,7 +91,7 @@
                             </div>
                         </div>
                     </div>  
-            <!-- Modal for storage area -->
+            <!-- Modal for New Procurement Contract Detail  -->
             <div class="modal fade" id="newPCD" aria-hidden="true" name="createStorageArea">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -104,6 +118,18 @@
                                 </h:selectOneMenu>
                             </div>
                         </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Lot Size: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="size" class="form-control" required="true"></h:inputText>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Lead Time: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="leadTime" class="form-control" required="true"></h:inputText>
+                                </div>
+                            </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
@@ -113,6 +139,7 @@
                 </div>
               </div>
             </div>  
+                        <a href="supplier.xhtml"><button class="btn btn-default">Back</button></a>
                 </div>
             </ui:define>
         </ui:composition>

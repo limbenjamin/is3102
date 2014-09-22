@@ -21,7 +21,7 @@ public interface ManageProductionPlanningEJBBeanInterface {
     public HashMap<String, String>
             getAuthorizedMF(String AUTH);
 
-    Object getDemandPlanningTable(String MF);
+    Object getDemandPlanningTable(String MF) throws Exception;
 
     boolean changeMPP(String mppID, int newValue);
 

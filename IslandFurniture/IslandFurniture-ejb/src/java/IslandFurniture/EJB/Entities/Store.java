@@ -33,9 +33,6 @@ public class Store extends Plant implements Serializable {
     private CountryOffice countryOffice;
     
     @OneToMany(mappedBy = "store")
-    private List<GoodsIssuedDocument> goodsIssuedDocument = new ArrayList();
-    
-    @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
     
     @ManyToMany
@@ -47,14 +44,6 @@ public class Store extends Plant implements Serializable {
 
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
-    }
-
-    public List<GoodsIssuedDocument> getGoodsIssuedDocument() {
-        return goodsIssuedDocument;
-    }
-
-    public void setGoodsIssuedDocument(List<GoodsIssuedDocument> goodsIssuedDocument) {
-        this.goodsIssuedDocument = goodsIssuedDocument;
     }
 
     public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {

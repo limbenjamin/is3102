@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 /**
@@ -19,17 +21,40 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getStockList",
+            query = "SELECT a.procuredStock FROM ProcurementContractDetail a WHERE a.procurementContract.supplier = :supplier AND a.supplierFor = :mf")
+})
 public class ProcurementContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer leadTimeInDays;
+    private Integer lotSize;
     @ManyToOne
     private ProcurementContract procurementContract;
     @ManyToOne
     private ProcuredStock procuredStock;
     @OneToOne
     private ManufacturingFacility supplierFor;
+
+    public Integer getLeadTimeInDays() {
+        return leadTimeInDays;
+    }
+
+    public void setLeadTimeInDays(Integer leadTimeInDays) {
+        this.leadTimeInDays = leadTimeInDays;
+    }
+
+    public Integer getLotSize() {
+        return lotSize;
+    }
+
+    public void setLotSize(Integer lotSize) {
+        this.lotSize = lotSize;
+    }
 
     public ProcurementContractDetail() {
         

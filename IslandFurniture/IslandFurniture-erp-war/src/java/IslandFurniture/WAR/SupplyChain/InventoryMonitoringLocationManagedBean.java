@@ -42,6 +42,7 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
 
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
+    private List<StockUnit> stockUnitBinList;
 
     private StorageBin storageBin;
     private Stock stock;
@@ -65,21 +66,23 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         System.out.println("Init");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = miml.getStorageBin(storageBinId);
-
+        stockUnitBinList = miml.viewStockUnitBin(storageBin);
+        
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
+        StockUnit su = (StockUnit) event.getComponent().getAttributes().get("su");
+        
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
         
-        System.out.println("OMG this is the stockTakeQuantity: " + stockTakeQuantity);
+        System.out.println("the stock take quantity is: "+ stockTakeQuantity);
         
         miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        
-        stockUnitList = miml.viewStockUnit(plant);
+        stockUnitBinList = miml.viewStockUnitBin(storageBin);
         stockTakeQuantity = null;
         return "inventorymonitoring_stlocation";
     }
@@ -148,6 +151,14 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         this.stockUnitList = stockUnitList;
     }
 
+    public List<StockUnit> getStockUnitBinList() {
+        return stockUnitBinList;
+    }
+
+    public void setStockUnitBinList(List<StockUnit> stockUnitBinList) {
+        this.stockUnitBinList = stockUnitBinList;
+    }
+
     public StorageBin getStorageBin() {
         return storageBin;
     }
@@ -204,5 +215,6 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
+    
 
 }

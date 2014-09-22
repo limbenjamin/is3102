@@ -19,6 +19,7 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
+import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -120,14 +121,54 @@ public class QueryMethods {
         return (List<StockSupplied>) q.getResultList();
     }
 
+    public static List<MonthlyStockSupplyReq> GetRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
+
+        Query l = em.createNamedQuery("StockSupplied.FindByMf");
+        l.setParameter("mf", MF);
+
+        ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
+
+        for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
+
+            if (!(ss.getStock() instanceof FurnitureModel)) {
+                continue;
+            }
+
+            Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockBefore");
+            q.setParameter("y", year);
+            try {
+                q.setParameter("m", Helper.translateMonth(m).value);
+
+            } catch (Exception ex) {
+            }
+            q.setParameter("nm", Helper.getCurrentMonth().value + FORWARDLOCK + 1); //2 months in advance
+            q.setParameter("ny", Helper.getCurrentYear());
+            q.setParameter("co", ss.getCountryOffice());
+            q.setParameter("stock", ss.getStock());
+
+            try {
+                RelevantMSSR.addAll(q.getResultList());
+            } catch (Exception err) {
+            }
+
+        }
+        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
+        return RelevantMSSR;
+    }
+
     public static List<MonthlyStockSupplyReq> GetRelevantMSSRAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
 
         Query l = em.createNamedQuery("StockSupplied.FindByMfAndS");
         l.setParameter("mf", MF);
         l.setParameter("s", s);
+
         ArrayList<MonthlyStockSupplyReq> RelevantMSSR = new ArrayList<MonthlyStockSupplyReq>();
 
         for (StockSupplied ss : (List<StockSupplied>) l.getResultList()) {
+
+            if (!(ss.getStock() instanceof FurnitureModel)) {
+                continue;
+            }
             Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockAT");
             q.setParameter("y", year);
             try {
@@ -214,7 +255,7 @@ public class QueryMethods {
         }
     }
 
-    public static double getCurrentFreeCapacity(EntityManager em,ManufacturingFacility MF, Month m, int year) {
+    public static double getCurrentFreeCapacity(EntityManager em, ManufacturingFacility MF, Month m, int year) {
 
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllInPeriod");
         q.setParameter("m", m);

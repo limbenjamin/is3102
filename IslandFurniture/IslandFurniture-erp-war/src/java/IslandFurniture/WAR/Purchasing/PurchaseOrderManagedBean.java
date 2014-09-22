@@ -74,18 +74,22 @@ public class PurchaseOrderManagedBean implements Serializable{
         System.out.println("Init");
     }
     
-    public String addPurchaseOrder() {
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
+    public String addPurchaseOrder() throws ParseException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
+        supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
+        supplier = sml.getSupplier(supplierId);
+        plantId = staff.getPlant().getId();
+        orderDateString = request.getParameter("createPurchaseOrder:orderDateString");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date date = (Date)formatter.parse(orderDateString); 
+        Calendar cal=Calendar.getInstance();
         cal.setTime(date);
-        orderDate = cal;
-        purchaseOrder = mpol.createPurchaseOrder(orderDate, "planned");
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid",purchaseOrder.getId());
-        return "purchaseorder2?faces-redirect=true";
-        
+        orderDate = cal;        
+        mpol.createNewPurchaseOrder("planned", supplier, plantId, orderDate);
+        return "purchaseorder";
     }   
     
-    public String addNewPurchaseOrder() throws ParseException {
+    /*public String addNewPurchaseOrder() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
         supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
         supplier = sml.getSupplier(supplierId);
@@ -98,7 +102,7 @@ public class PurchaseOrderManagedBean implements Serializable{
         orderDate = cal;        
         mpol.createNewPurchaseOrder("planned", supplier, plantId, orderDate);
         return "purchaseorder";
-    }    
+    }*/    
     
     public void purchaseOrderDetailActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));

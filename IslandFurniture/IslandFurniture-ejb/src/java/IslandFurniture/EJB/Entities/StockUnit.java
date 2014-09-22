@@ -29,7 +29,7 @@ public class StockUnit implements Serializable {
     private Long qty = 0l;
     private Boolean available;
     private Long commitStockUnitId;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar commitTime;
     @ManyToOne
     private GoodsIssuedDocument goodsIssuedDocument;

@@ -6,9 +6,12 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,7 +27,7 @@ public interface SupplierManagerLocal {
     
     public Supplier getSupplier(Long supplierId);
 
-    public void addSupplier(String supplierName, String countryName);
+    public Supplier addSupplier(String supplierName, String countryName);
 
     public void editSupplier(Long id, String name, String countryName);
 
@@ -32,12 +35,26 @@ public interface SupplierManagerLocal {
 
     public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID);
 
-    public void deleteProcurementContractDetail(Long id);
-
     public List<ProcuredStock> displayProcuredStock();
 
     public List<ManufacturingFacility> displayManufacturingFacility();
 
-    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID);
+    public void deleteProcurementContractDetail(Long id, Long supplierID);
+
+    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime);
+
+    public void editProcurementContractDetail(Long id, Integer size, Integer leadTime);
+
+    public List<StockSupplied> getAllStockSupplied();
+
+    public void deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID);
+
+    public List<CountryOffice> getListOfCountryOffice();
+
+    public List<ManufacturingFacility> getListOfMF();
+
+    public void addStockSupplyRequest(Long stockID, Long mfID, Long countryID);
+
+    public List<Stock> getListOfStock();
     
 }

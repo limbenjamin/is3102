@@ -33,6 +33,7 @@ public class SupplierManagedBean implements Serializable {
     
     private List<Supplier> supplierList;
     private Long supplierID;
+    private Supplier supplier;
 
     public Long getSupplierID() {
         return supplierID;
@@ -57,7 +58,6 @@ public class SupplierManagedBean implements Serializable {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
-    private Supplier supplier;
     
     @PostConstruct
     public void init() {
@@ -71,8 +71,9 @@ public class SupplierManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String supplierName = request.getParameter("addSupplierForm:name");
         String supplierCountry = request.getParameter("addSupplierForm:country");
-        supplierManager.addSupplier(supplierName, supplierCountry);
-        return "supplier";
+        supplier = supplierManager.addSupplier(supplierName, supplierCountry);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
+        return "procurementContract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()");
@@ -87,7 +88,9 @@ public class SupplierManagedBean implements Serializable {
         return "supplier";
     }
     public void pcActionListener(ActionEvent event) throws IOException{
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", event.getComponent().getAttributes().get("supplierID"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", event.getComponent().getAttributes().get("sID"));
+        supplierID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("supplierID");
+        System.out.println("While inside SupplierManagedBean, the supplierID is " + supplierID);
         FacesContext.getCurrentInstance().getExternalContext().redirect("procurementContract.xhtml");
     }
 }

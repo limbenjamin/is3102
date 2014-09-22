@@ -25,7 +25,8 @@ import javax.persistence.PostPersist;
 @IdClass(StockSuppliedPK.class)
 @NamedQueries({
 @NamedQuery(name = "StockSupplied.FindByMf",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf"),
-    @NamedQuery(name = "StockSupplied.FindByMfAndS",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s")
+    @NamedQuery(name = "StockSupplied.FindByMfAndS",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s"),
+    @NamedQuery(name = "getAllStockSupplied",query = "select ss from StockSupplied SS")
 })
 public class StockSupplied implements Serializable {
 
@@ -36,9 +37,13 @@ public class StockSupplied implements Serializable {
     @Id
     @ManyToOne
     private CountryOffice countryOffice;
+    @Id
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
 
+    public StockSupplied() {
+        
+    }
     public Stock getStock() {
         return stock;
     }

@@ -38,13 +38,22 @@ public class JDataTable<T> implements Serializable {
 
     public static class Cell implements Serializable {
 
-        public String Value = null;
+        public String Value = "";
         private String displaytype = "String";
         private Serializable binded_entity = null;
         private String propertyname;
         private Boolean isEditable = false;
         private Boolean stateChanged = false;
         private int Index = 0;
+        private String colorClass="";
+
+        public String getColorClass() {
+            return colorClass;
+        }
+
+        public void setColorClass(String colorClass) {
+            this.colorClass = colorClass;
+        }
 
         @Override
         public boolean equals(Object object) {
@@ -100,8 +109,12 @@ public class JDataTable<T> implements Serializable {
         }
 
         public Object getValue() {
+            try{
             if (!this.isBinded()) {
                 return transform(Value.toString());
+            }
+            }catch(Exception ex){
+            return "[Error]";
             }
             try {
                 Method m = binded_entity.getClass().getDeclaredMethod("get" + this.propertyname);
@@ -221,7 +234,7 @@ public class JDataTable<T> implements Serializable {
 
         public String rowheader;
         public String rowgroup;
-        private String ColorClass;
+        private String ColorClass="";
 
         public void setColorClass(String ColorClass) {
             this.ColorClass = ColorClass;

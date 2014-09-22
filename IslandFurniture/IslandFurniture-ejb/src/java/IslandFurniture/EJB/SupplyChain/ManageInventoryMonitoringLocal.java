@@ -28,4 +28,6 @@ public interface ManageInventoryMonitoringLocal {
     void editStockUnitQuantity(Long stockUnitId, Long qty);
     
     StockUnit getStockUnit(Long id);
+    
+    List<StockUnit> viewStockUnitBin(StorageBin storageBin);
 }

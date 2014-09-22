@@ -6,11 +6,15 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
+import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -34,16 +38,20 @@ public class GoodsReceiptManagedBean implements Serializable {
 
     private Long plantId;
     private Long goodsReceiptDocumentId;
+    private Long goodsIssuedDocumentId;
 
     private String username;
     private String deliverynote;
 
     private Calendar postingDate;
+    private Calendar receiptDate;
 
     private List<GoodsReceiptDocument> goodsReceiptDocumentList;
     private List<GoodsReceiptDocument> goodsReceiptDocumentPostedList;
+    private List<GoodsIssuedDocument> inboundShipmentList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
+    private GoodsIssuedDocumentDetail goodsIssuedDocumentDetail;
     private Staff staff;
     private Plant plant;
 
@@ -60,6 +68,7 @@ public class GoodsReceiptManagedBean implements Serializable {
         plant = staff.getPlant();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
         goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted();
+        inboundShipmentList = mgrl.viewInboundShipment(plant);
         System.out.println("Init");
     }
 
@@ -85,13 +94,39 @@ public class GoodsReceiptManagedBean implements Serializable {
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
     }
-    
-        public String deleteGoodsReceiptDocument(ActionEvent event) {
+
+    public String deleteGoodsReceiptDocument(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
+
+        for (GoodsReceiptDocumentDetail g : mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument)) {
+            mgrl.deleteGoodsReceiptDocumentDetail(g.getId());
+        }
+
         mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
         return "goodsreceiptdocument";
+    }
+
+    public void addGoodsReceiptDocumentfromInbound(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
+       
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        receiptDate = cal;
+        
+        goodsReceiptDocument = mgrl.createGoodsReceiptDocumentfromInbound(plant, receiptDate);
+        
+        for (GoodsIssuedDocumentDetail g : mgrl.viewInboundShipmentByDetail(goodsIssuedDocumentId)) {
+            mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), g.getStock().getId(), g.getQuantity().intValue());
+        }
+        
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
     public Long getPlantId() {
@@ -134,6 +169,14 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.postingDate = postingDate;
     }
 
+    public Calendar getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Calendar receiptDate) {
+        this.receiptDate = receiptDate;
+    }
+
     public List<GoodsReceiptDocument> getGoodsReceiptDocumentList() {
         return goodsReceiptDocumentList;
     }
@@ -148,6 +191,14 @@ public class GoodsReceiptManagedBean implements Serializable {
 
     public void setGoodsReceiptDocumentPostedList(List<GoodsReceiptDocument> goodsReceiptDocumentPostedList) {
         this.goodsReceiptDocumentPostedList = goodsReceiptDocumentPostedList;
+    }
+
+    public List<GoodsIssuedDocument> getInboundShipmentList() {
+        return inboundShipmentList;
+    }
+
+    public void setInboundShipmentList(List<GoodsIssuedDocument> inboundShipmentList) {
+        this.inboundShipmentList = inboundShipmentList;
     }
 
     public GoodsReceiptDocument getGoodsReceiptDocument() {
