@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -21,6 +23,11 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getSupplierList",
+            query = "SELECT a.supplier FROM ProcurementContract a WHERE a.supplier = :supplier")
+})
 public class ProcurementContract implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
