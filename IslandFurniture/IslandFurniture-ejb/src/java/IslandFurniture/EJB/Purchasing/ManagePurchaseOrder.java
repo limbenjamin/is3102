@@ -96,11 +96,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
         purchaseOrderDetail.setProcuredStock(procuredStock);
         purchaseOrderDetail.setQuantity(quantity);
-        List<PurchaseOrderDetail> stockList = purchaseOrder.getPurchaseOrderDetails();
-        stockList.add(purchaseOrderDetail);
+        
+        purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
         em.persist(purchaseOrderDetail);
-        purchaseOrder.setPurchaseOrderDetails(stockList);
-        em.persist(purchaseOrder);
+
         em.flush();
     }
     
@@ -118,12 +117,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void updatePurchaseOrder(Long poId, String status, Long plantId, Calendar orderDate) {
+    public void updatePurchaseOrder(Long poId, String status, Calendar orderDate) {
         purchaseOrder = getPurchaseOrder(poId);
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
-        plant = (Plant) em.find(Plant.class, plantId);
-        purchaseOrder.setShipsTo(plant);
         em.persist(purchaseOrder);
         em.flush();
     }
@@ -146,6 +143,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId) {
         purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
+        em.refresh(purchaseOrder);
+        
         List<PurchaseOrderDetail> stockOrders = purchaseOrder.getPurchaseOrderDetails();
         return stockOrders;
     }     
@@ -197,6 +196,13 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         em.remove(purchaseOrderDetail);
         em.flush();
     } 
+    
+    public List<Supplier> viewContractedSuppliers(Long supplierId) {
+        supplier = (Supplier) em.find(Supplier.class, supplierId);
+        Query q = em.createNamedQuery("getSupplierList");        
+        q.setParameter("supplier", supplier);
+        return (List<Supplier>)q.getResultList();
+    }    
     
     @Override
     public List<PurchaseOrder> viewPlannedPurchaseOrders() {
