@@ -126,12 +126,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
-        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-        receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
+//        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
+//        receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
         Calendar receiptDateCal = Calendar.getInstance();
-        Date date = receiptDateType;
+        Date date = grd.getReceiptDate().getTime();
         receiptDateCal.setTime(date);
-        mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, null, grd.getDeliveryNote());
+        mgrl.editGoodsReceiptDocument(grd.getId(),receiptDateCal , null, grd.getDeliveryNote());
         return "goodsreceiptdocument";
     }
 

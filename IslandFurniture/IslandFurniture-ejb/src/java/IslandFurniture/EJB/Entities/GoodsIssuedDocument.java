@@ -36,9 +36,9 @@ public class GoodsIssuedDocument implements Serializable {
     private Store store;
     @OneToMany(mappedBy = "goodsIssuedDocument")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar postingDate;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar issuedDate;
     private Boolean confirm;
 
