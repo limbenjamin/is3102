@@ -58,6 +58,7 @@
                         <section name="PurchaseOrderDetails">
                             <table class="table table-hover">
                                 <tr>
+                                    <th>ID</th>
                                     <th>Stock</th>
                                     <th>Quantity</th>
                                     <th>Update</th>
@@ -67,6 +68,9 @@
                                     <ui:repeat value="#{purchaseOrderManaged2Bean.purchaseOrderDetailList}" var="pod">
                                         <tr>
                                             <td>
+                                                #{pod.id}
+                                            </td>                                            
+                                            <td>
                                                 <h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
                                                     <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                 </h:selectOneMenu>
@@ -75,9 +79,10 @@
                                                 <h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText>
                                             </td>
                                             <td>
-                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.updatePurchaseOrderDetail}"  value="Update" class="btn btn-success btn-sm"> 
+                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.updateStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:attribute name="PODid" value="#{pod.id}" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" value="Delete" class="btn btn-danger btn-sm"> 

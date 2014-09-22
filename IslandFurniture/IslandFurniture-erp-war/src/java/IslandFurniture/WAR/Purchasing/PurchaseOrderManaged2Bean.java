@@ -97,6 +97,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
         mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         return "purchaseorder2?faces-redirect=true";
     }
 
@@ -116,14 +117,24 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         return "purchaseorder2?faces-redirect=true";
     } 
     
-    public String updatePurchaseOrderDetail(ActionEvent event) throws IOException {
+    public String updateStock(ActionEvent event) throws ParseException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Long podId = (Long) event.getComponent().getAttributes().get("PODid");
+        purchaseOrderDetail = mpol.getPurchaseOrderDetail(podId);
+        String psId = request.getParameter("viewPODetail:procuredStockId");
+        procuredStockId = Long.valueOf(psId);
+        quantity = Integer.parseInt(request.getParameter("viewPODetail:quantity"));
+        mpol.updatePurchaseOrderDetail(purchaseOrderDetail, procuredStockId, quantity);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+        return "purchaseorder2?faces-redirect=true";
+    }
+    
+    public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
-        System.out.println("This is the pod.getId(): " + pod.getId());
-        System.out.println("This is the pod.getQuantity(): " + pod.getQuantity());
-        System.out.println("This is the pod.getReceivedStock().getId(): " + pod.getProcuredStock().getId());
-
-        mpol.editPurchaseOrderDetail(pod.getId(), pod.getProcuredStock().getId(), pod.getQuantity());
-        return "purchaseorder2";
+        mpol.updatePurchaseOrderDetail(pod, pod.getProcuredStock().getId(), pod.getQuantity());
+        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+        return "purchaseorder2?faces-redirect=true";
     }    
     
     public String deletePurchaseOrderDetail(ActionEvent event) {

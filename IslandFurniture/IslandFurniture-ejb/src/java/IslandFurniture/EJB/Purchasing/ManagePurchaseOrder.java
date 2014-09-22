@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.Purchasing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -128,11 +129,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void editPurchaseOrderDetail(Long podId, Long psId, Integer qty) {    
-        purchaseOrderDetail = getPurchaseOrderDetail(podId);
+    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty) {    
         procuredStock = getProcuredStock(psId);
-        purchaseOrderDetail.setProcuredStock(procuredStock);
-        purchaseOrderDetail.setQuantity(qty);
+        pod.setProcuredStock(procuredStock);
+        pod.setQuantity(qty);
+        em.persist(pod);
+        em.flush();        
     }
     
     @Override
@@ -155,11 +157,14 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public List<ProcuredStock> viewSupplierProcuredStocks(Long orderId) {
+    public List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf) {
         purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
         supplier = purchaseOrder.getSupplier();
-        List<ProcuredStock> supplies = supplier.getProcuredStocks();
-        return supplies;
+        
+        Query q = em.createNamedQuery("getStockList");
+        q.setParameter("supplier", supplier);
+        q.setParameter("mf", mf);
+        return (List<ProcuredStock>) q.getResultList();
     }    
     
     @Override

@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.Purchasing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -35,7 +36,7 @@ public interface ManagePurchaseOrderLocal {
     
     void updatePurchaseOrder(Long poId, String status, Long plantId, Calendar orderDate);    
 
-    void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
+    void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty);
 
     ProcuredStock getProcuredStock(Long id);
 
@@ -53,7 +54,7 @@ public interface ManagePurchaseOrderLocal {
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
     
-    List<ProcuredStock> viewSupplierProcuredStocks(Long orderId);
+    List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf);
 
     List<PurchaseOrder> viewPurchaseOrders();
     
