@@ -5,6 +5,8 @@
  */
 package IslandFurniture.EJB.SupplyChain;
 
+import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
+import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -54,5 +56,11 @@ public interface ManageGoodsReceiptLocal {
     List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd);
 
     List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted();
+    
+    List<GoodsIssuedDocument> viewInboundShipment(Plant plant);
+    
+    GoodsReceiptDocument createGoodsReceiptDocumentfromInbound(Plant plant, Calendar receiptDate);
+    
+    List<GoodsIssuedDocumentDetail> viewInboundShipmentByDetail(Long id);
 
 }
