@@ -6,12 +6,14 @@
 
 package IslandFurniture.EJB.Purchasing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
@@ -36,6 +38,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     private PurchaseOrderDetail purchaseOrderDetail;
     private ProcuredStock procuredStock;   
     private Plant plant;  
+    private Supplier supplier;
     
     private Long plantId;
     
@@ -86,13 +89,18 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void createPurchaseOrderDetail(Long poId, Long psId) {
+    public void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) {
         purchaseOrderDetail = new PurchaseOrderDetail();
         purchaseOrder = getPurchaseOrder(poId);
-        procuredStock = getProcuredStock(psId);
+        procuredStock = getProcuredStock(stockId);
         purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
         purchaseOrderDetail.setProcuredStock(procuredStock);
+        purchaseOrderDetail.setQuantity(quantity);
+        List<PurchaseOrderDetail> stockList = purchaseOrder.getPurchaseOrderDetails();
+        stockList.add(purchaseOrderDetail);
         em.persist(purchaseOrderDetail);
+        purchaseOrder.setPurchaseOrderDetails(stockList);
+        em.persist(purchaseOrder);
         em.flush();
     }
     
@@ -110,11 +118,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void updatePurchaseOrder(Long poId, String status, Supplier supplier, Long plantId, Calendar orderDate) {
+    public void updatePurchaseOrder(Long poId, String status, Long plantId, Calendar orderDate) {
         purchaseOrder = getPurchaseOrder(poId);
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
-        purchaseOrder.setSupplier(supplier);
         plant = (Plant) em.find(Plant.class, plantId);
         purchaseOrder.setShipsTo(plant);
         em.persist(purchaseOrder);
@@ -122,11 +129,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void editPurchaseOrderDetail(Long podId, Long psId, Integer qty) {    
-        purchaseOrderDetail = getPurchaseOrderDetail(podId);
+    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty) {    
         procuredStock = getProcuredStock(psId);
-        purchaseOrderDetail.setProcuredStock(procuredStock);
-        purchaseOrderDetail.setQuantity(qty);
+        pod.setProcuredStock(procuredStock);
+        pod.setQuantity(qty);
+        em.persist(pod);
+        em.flush();        
     }
     
     @Override
@@ -136,16 +144,28 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }    
     
     @Override
-    public List<PurchaseOrderDetail> viewPurchaseOrderDetails() {
-        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrderDetail s");
-        return q.getResultList();
+    public List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId) {
+        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
+        List<PurchaseOrderDetail> stockOrders = purchaseOrder.getPurchaseOrderDetails();
+        return stockOrders;
     }     
     
     @Override
     public List<ProcuredStock> viewProcuredStocks() {
         Query q = em.createQuery("SELECT s " + "FROM ProcuredStock s");
         return q.getResultList();
-    }     
+    }
+    
+    @Override
+    public List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf) {
+        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
+        supplier = purchaseOrder.getSupplier();
+        
+        Query q = em.createNamedQuery("getStockList");
+        q.setParameter("supplier", supplier);
+        q.setParameter("mf", mf);
+        return (List<ProcuredStock>) q.getResultList();
+    }    
     
     @Override
     public List<Plant> viewPlants() {
@@ -162,6 +182,11 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public void deletePurchaseOrder(Long poId) {
         purchaseOrder = getPurchaseOrder(poId);
+        List<PurchaseOrderDetail> oldList = purchaseOrder.getPurchaseOrderDetails();
+        Iterator<PurchaseOrderDetail> iterator = oldList.iterator();
+        while (iterator.hasNext()) {
+            em.remove(iterator.next());
+        }
         em.remove(purchaseOrder);
         em.flush();
     }    

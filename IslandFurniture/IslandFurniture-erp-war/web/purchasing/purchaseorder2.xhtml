@@ -12,22 +12,19 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
-                        <h4>Purchase Order Details</h4><hr></hr> 
+                    <div class="col-md-8">                      
+                        <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
+                        <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong></h5>
+                        <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong></h5>
                         <table class="table table-hover">
                             <tr>
-                                <th>ID</th>
-                                <th>Order Date: #{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</th>
+                                <th>Change Order Date</th>
                                 <th>Status</th>  
-                                <th>Supplier</th>
                                 <th>Supply To</th>
-                                <th>Save</th>
+                                <th>Update</th>
                             </tr>
                             <h:form id="updatePurchaseOrder" class="form-horizontal">
                                 <tr>
-                                    <td>
-                                        <h:outputText value="#{purchaseOrderManaged2Bean.purchaseOrder.id}"></h:outputText>
-                                    </td>
                                     <td>
                                         <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
                                     </td>
@@ -36,56 +33,56 @@
                                             <f:selectItem itemValue="planned" itemLabel="Planned" />
                                             <f:selectItem itemValue="confirmed" itemLabel="Confirmed" />
                                         </h:selectOneMenu>
-                                    </td>
-                                    <td>
-                                        <h:selectOneMenu id="supplierId" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.supplier.id}">
-                                            <f:selectItems value="#{purchaseOrderManaged2Bean.supplierList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
-                                        </h:selectOneMenu>
-                                    </td>                                    
+                                    </td>                                   
                                     <td>
                                         <h:selectOneMenu id="plantId" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.id}">
                                             <f:selectItems value="#{purchaseOrderManaged2Bean.plantList}" var="p" itemLabel="#{p.name}" itemValue="#{p.id}" />
                                         </h:selectOneMenu>
                                     </td>
                                     <td>
-                                        <h:commandButton action="#{purchaseOrderManaged2Bean.updatePurchaseOrder}" value="Update" class="btn btn-success btn-sm"> 
+                                        <h:commandButton action="#{purchaseOrderManaged2Bean.updatePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                         </h:commandButton>
+                                        <i class="fa fa-lg fa-save icon-button"></i>
                                     </td>
                                 </tr>
                             </h:form> 
                         </table>
-
-                        <section name="createPurchaseOrderDetail">        
-                            <h:form id="createPODetail" class="form-horizontal">
-                                <div class="form-group">
-                                </div>
-                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.addPurchaseOrderDetail}" value="Add Stock" class="btn btn-default pull-right"> 
-                                    <f:attribute name="POid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
-                                </h:commandButton>
-                            </h:form>
-                        </section>
-
-
+                        <br></br>
+                        <span class="pull-right">
+                        <button type="button" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#newStock">
+                            <i class="fa fa-fw fa-plus"></i>Add Stock
+                        </button>
+                        </span>                        
+                        <h4>Items Added to this Order:</h4>
+                        <hr></hr>
                         <section name="PurchaseOrderDetails">
                             <table class="table table-hover">
                                 <tr>
-                                    <th>Procured Stock</th>
+                                    <th>ID</th>
+                                    <th>Stock</th>
                                     <th>Quantity</th>
-                                    <th>Edit</th>
+                                    <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
-                                <h:form class="form-horizontal">
-
+                                <h:form id="viewPODetail" class="form-horizontal">
                                     <ui:repeat value="#{purchaseOrderManaged2Bean.purchaseOrderDetailList}" var="pod">
                                         <tr>
-                                            <td><h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
+                                            <td>
+                                                #{pod.id}
+                                            </td>                                            
+                                            <td>
+                                                <h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
                                                     <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                                </h:selectOneMenu></td>
-
-                                            <td><h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText></td>
-                                            <td><h:commandButton actionListener="#{purchaseOrderManaged2Bean.editPurchaseOrderDetail}"  value="Update" class="btn btn-success btn-sm"> 
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <td>
+                                                <h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText>
+                                            </td>
+                                            <td>
+                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.updateStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:attribute name="PODid" value="#{pod.id}" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" value="Delete" class="btn btn-danger btn-sm"> 
@@ -100,6 +97,44 @@
                         </section>
                     </div>
                 </div>
+                
+                <!-- Purchase Order Detail Modal -->
+                <div class="modal fade" id="newStock" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add Stock to Purchase Order</h4>
+                      </div>
+                      <h:form id="createPODetail" class="form-horizontal">
+                          <div class="modal-body">
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">Item Stock: </label>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu id="procuredStockId" class="form-control">
+                                        <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    </h:selectOneMenu>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                  <label class="col-sm-3 control-label">Quantity: </label>
+                                <div class="col-sm-9">
+                                    <h:inputText id="quantity" class="form-control">
+                                        <f:convertNumber integerOnly="true" type="number" />
+                                    </h:inputText>
+                                </div>
+                              </div>                                                                                     
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton actionListener="#{purchaseOrderManaged2Bean.addStock}" value="Add Stock" class="btn btn-success btn-round"> 
+                                <f:attribute name="POid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
+                            </h:commandButton>
+                          </div>
+                      </h:form>
+                    </div>
+                  </div>
+                </div>                
             </ui:define>
         </ui:composition>
     </h:body>
