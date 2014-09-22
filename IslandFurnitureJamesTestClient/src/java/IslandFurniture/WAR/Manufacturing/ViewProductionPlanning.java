@@ -5,7 +5,9 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
+import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
 import IslandFurniture.WAR.HELPER.helper;
@@ -136,6 +138,7 @@ public class ViewProductionPlanning implements Serializable {
         System.out.println("ViewProductionPlanning() MF Changed to " + MF);
         //Create the Datatable
         pullPPTableFromBean();
+        pullcapacityTableFromBean();
 
     }
 
@@ -144,7 +147,7 @@ public class ViewProductionPlanning implements Serializable {
             ArrayList<Object> o = dt.getStateChangedEntities();
             dpv.updateListOfEntities(o);
             MonthlyProductionPlan mpp = (MonthlyProductionPlan) o.get(0);
-            success_msg = "Status: Update Planning Capacity Success new value=" + mpp.getQTY() + " FOR " + MF;
+            success_msg += "Status: Update Planning Capacity Success new value=" + mpp.getQTY() + " FOR " + MF;
         } catch (Exception ex) {
             success_msg = "";
             error_msg = ex.getMessage();
@@ -157,61 +160,57 @@ public class ViewProductionPlanning implements Serializable {
             if (!MF.isEmpty()) {
                 dt = (JDataTable<String>) dpv.getDemandPlanningTable(MF);
                 Integer i = 0;
-                success_msg = "Status: Successfully pulled planning table for " + MF;
+                success_msg += "Status: Successfully pulled planning table for " + MF;
                 System.out.println("updateTable(): Production Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
             }
         } catch (Exception ex) {
-
+            success_msg = "";
+            error_msg = ex.getMessage();
         }
         return;
 
     }
 
-    public void updatePPTableFromBean() {
+    public void pullcapacityTableFromBean() {
         try {
             if (!MF.isEmpty()) {
-                dt = (JDataTable<String>) dpv.getCapacityList(MF);
 
-                success_msg = "Status: Successfully pulled Capacity table for " + MF;
-                System.out.println("updateTable(): Production Capacity Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
-            }
-        } catch (Exception ex) {
-
-        }
-        return;
-    }
-
-    public void pullcapacityTableToBean() {
-        try {
-            if (!MF.isEmpty()) {
-                
                 capacity_dt = (JDataTable<String>) dpv.getCapacityList(MF);
                 Integer i = 0;
-                success_msg = "Status: Successfully pulled capacity table for " + MF;
+                success_msg += "Status: Successfully pulled capacity table for " + MF;
                 System.out.println("updateTable(): Capacity Reconstructed for " + MF + " Rows Count:" + capacity_dt.getRowCount());
             }
         } catch (Exception ex) {
-
+            success_msg = "";
+            error_msg = ex.getMessage();
         }
         return;
+    }
+
+    public void updatePCTableToBean() {
+        try {
+            ArrayList<Object> o = capacity_dt.getStateChangedEntities();
+            dpv.updateListOfEntities(o);
+            ProductionCapacity pc = (ProductionCapacity) o.get(0);
+            success_msg += "Status: Update Production Daily Capacity Success. new value=" + pc.getQty() + " FOR " + MF + ". Please re-do production planning !";
+        } catch (Exception ex) {
+            success_msg = "";
+            error_msg = ex.getMessage();
+        }
+        
+        pullcapacityTableFromBean();
+ 
     }
 
     public String automaticPlanning() {
         try {
             System.out.println("ViewProductionPlanning() User Triggered Production Planning Algorithm");
-            try {
                 mpp.CreateProductionPlanFromForecast();
                 mpp.setMF(MF);
                 pullPPTableFromBean();
-            } catch (Exception ex) {
-                success_msg = "";
-                error_msg = ex.getMessage();
-            }
-
             FacesContext.getCurrentInstance().getExternalContext().redirect(".");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             success_msg = "";
-            error_msg = ex.getMessage();
         }
         return ".";
     }

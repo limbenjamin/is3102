@@ -24,7 +24,7 @@ import javax.persistence.PostPersist;
 @Entity
 @IdClass(StockSuppliedPK.class)
 @NamedQueries({
-@NamedQuery(name = "StockSupplied.FindByMf",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf"),
+@NamedQuery(name = "StockSupplied.FindByMf",query = "select SS from StockSupplied SS where SS.manufacturingFacility=:mf"),
     @NamedQuery(name = "StockSupplied.FindByMfAndS",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s")
 })
 public class StockSupplied implements Serializable {
