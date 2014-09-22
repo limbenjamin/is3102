@@ -25,7 +25,7 @@ public interface ManagePurchaseOrderLocal {
     
     void createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate);
 
-    void createPurchaseOrderDetail(Long poId, Long psId);
+    void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity);
 
     void deletePurchaseOrder(Long poId);
 
@@ -33,7 +33,7 @@ public interface ManagePurchaseOrderLocal {
 
     void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status);
     
-    void updatePurchaseOrder(Long poId, String status, Supplier supplier, Long plantId, Calendar orderDate);    
+    void updatePurchaseOrder(Long poId, String status, Long plantId, Calendar orderDate);    
 
     void editPurchaseOrderDetail(Long podId, Long psId, Integer qty);
 
@@ -51,7 +51,9 @@ public interface ManagePurchaseOrderLocal {
     
     List<Supplier> viewSuppliers();
 
-    List<PurchaseOrderDetail> viewPurchaseOrderDetails();
+    List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
+    
+    List<ProcuredStock> viewSupplierProcuredStocks(Long orderId);
 
     List<PurchaseOrder> viewPurchaseOrders();
     
