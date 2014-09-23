@@ -784,19 +784,16 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
-        <basename file="${file.reference.commons-codec-1.9.jar}" property="manifest.file.reference.commons-codec-1.9.jar"/>
         <basename file="${reference.IslandFurnitureRemote.jar}" property="manifest.reference.IslandFurnitureRemote.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.commons-codec-1.9.jar}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.reference.IslandFurnitureRemote.jar}"/>
+            <attribute name="Extension-List" value="jar-1 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.reference.IslandFurnitureRemote.jar}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${file.reference.commons-codec-1.9.jar}" manifestproperty="manifest.file.reference.commons-codec-1.9.jar" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.IslandFurnitureRemote.jar}" manifestproperty="manifest.reference.IslandFurnitureRemote.jar" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.file.reference.commons-codec-1.9.jar} lib/${manifest.file.reference.commons-codec-1.9.jar} ${manifest.reference.IslandFurnitureRemote.jar} lib/${manifest.reference.IslandFurnitureRemote.jar} "/>
+            <attribute name="Class-Path" value="${manifest.reference.IslandFurnitureRemote.jar} lib/${manifest.reference.IslandFurnitureRemote.jar} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">

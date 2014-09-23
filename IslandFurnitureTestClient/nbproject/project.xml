@@ -11,7 +11,6 @@
             <test-roots>
                 <root id="test.src.dir"/>
             </test-roots>
-            <included-library dirs="200">file.reference.commons-codec-1.9.jar</included-library>
             <included-library dirs="200">reference.IslandFurnitureRemote.jar</included-library>
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
