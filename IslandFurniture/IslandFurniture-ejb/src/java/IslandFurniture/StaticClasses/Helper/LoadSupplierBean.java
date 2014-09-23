@@ -90,16 +90,19 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
                 }
 
                 for (Material eachMat : reqMaterials) {
+                    ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
+                    
                     pcd = new ProcurementContractDetail();
                     pcd.setProcuredStock(eachMat);
                     pcd.setSupplierFor(mf);
                     pcd.setLeadTimeInDays(rand.nextInt(7) + 4);
                     pcd.setLotSize((rand.nextInt(5) + 1) * 100);
+                    pcd.setProcurementContract(pc);
                     em.persist(pcd);
 
                     pcdList.add(pcd);
 
-                    suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract().setProcurementContractDetails(pcdList);
+                    pc.setProcurementContractDetails(pcdList);
                 }
 
                 mf.setSuppliedBy(pcdList);
