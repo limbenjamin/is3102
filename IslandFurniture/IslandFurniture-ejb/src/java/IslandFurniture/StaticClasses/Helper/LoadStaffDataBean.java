@@ -79,7 +79,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
         "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)","General Staff",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Sales Manager (Mfg)"
                                     };
 
         for (int i=0; i<roles.length; i++){
