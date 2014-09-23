@@ -20,23 +20,23 @@
                       <p:dataTable var="mpp" value="#{procurementPlanManagedBean.mppList}"
                                     emptyMessage="No records found with given criteria">
 
-                          <p:column filterBy="#{mpp.month}" headerText="Month" filterMatchMode="contains">
+                          <p:column sortBy="#{mpp.month}" headerText="Month" filterMatchMode="contains">
                                <h:outputText value="#{mpp.month}" />
                            </p:column>
 
-                          <p:column filterBy="#{mpp.year}" headerText="Year" filterMatchMode="contains">
+                          <p:column sortBy="#{mpp.year}" headerText="Year" filterMatchMode="contains">
                                <h:outputText value="#{mpp.year}" />
                            </p:column>
 
-                          <p:column filterBy="#{mpp.manufacturingFacility.name}" headerText="Content" filterMatchMode="contains">
+                          <p:column sortBy="#{mpp.manufacturingFacility.name}" headerText="MF" filterMatchMode="contains">
                                <h:outputText value="#{mpp.manufacturingFacility.name}" />
                            </p:column>
 
-                          <p:column filterBy="#{mpp.retailItem.name}" headerText="Content" filterMatchMode="contains">
+                          <p:column sortBy="#{mpp.retailItem.name}" headerText="Retail Item" filterMatchMode="contains">
                                <h:outputText value="#{mpp.retailItem.name}" />
                            </p:column>
                           
-                          <p:column filterBy="#{mpp.qty}" headerText="Content" filterMatchMode="contains">
+                          <p:column sortBy="#{mpp.qty}" headerText="Qty" filterMatchMode="contains">
                                <h:outputText value="#{mpp.qty}" />
                           </p:column> 
                        </p:dataTable>
