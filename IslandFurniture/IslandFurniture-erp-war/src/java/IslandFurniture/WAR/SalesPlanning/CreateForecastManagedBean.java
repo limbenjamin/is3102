@@ -11,6 +11,10 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Exceptions.ForecastFailureException;
+import IslandFurniture.EJB.Exceptions.InvalidInputException;
+import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -18,7 +22,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -48,7 +51,8 @@ public class CreateForecastManagedBean implements Serializable {
     String panelActive = "0";
     String statusMessage = "";
 
-    Future<Boolean> asyncResult;
+    int numPoints;
+    int plannedInv;
 
     private List<Couple<String, String>> mssrLabels = new ArrayList();
     private List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> mssrPairedList;
@@ -77,7 +81,14 @@ public class CreateForecastManagedBean implements Serializable {
 
     public void loadMssr() {
         this.mssrLabels = MonthlyStockSupplyReq.getLabels();
-        this.mssrPairedList = salesForecastBean.retrievePairedMssrForCo(co, 6);
+        this.mssrPairedList = new ArrayList();
+
+        for (StockSupplied ss : co.getSuppliedWithFrom()) {
+            List<MonthlyStockSupplyReq> lockedMssr = salesForecastBean.retrieveLockedMssrForCoStock(co, ss.getStock(), 6);
+            List<MonthlyStockSupplyReq> unlockedMssr = salesForecastBean.retrieveUnlockedMssrForCoStock(co, ss.getStock());
+
+            this.mssrPairedList.add(new Couple(ss.getStock(), new Couple(lockedMssr, unlockedMssr)));
+        }
 
         // Expand all accordion panels by default
         for (int i = 1; i < this.mssrPairedList.size(); i++) {
@@ -85,12 +96,61 @@ public class CreateForecastManagedBean implements Serializable {
         }
     }
 
-    public void naiveForecast() {
-        try {
-            this.mssrPairedList = salesForecastBean.retrieveNaiveForecast(co, 6);
-            statusMessage = "Naive forecast performed successfullly!";
-        } catch (Exception ex) {
-            statusMessage = "Failed to forecast: " + ex.getMessage();
+    public void naiveForecast(AjaxBehaviorEvent event) {
+        boolean impacted = false;
+        boolean noPrevious = false;
+
+        for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
+            try {
+                couple.getSecond().setSecond(salesForecastBean.retrieveNaiveForecast(co, couple.getFirst()));
+                impacted = true;
+            } catch (ForecastFailureException ex) {
+
+            } catch (InvalidMssrException ex) {
+                noPrevious = true;
+                statusMessage = ex.getMessage();
+            }
+        }
+
+        if (!impacted) {
+            statusMessage = "Failed to forecast: There are no available months to forecast!";
+        } else {
+            if (!noPrevious) {
+                statusMessage = "Naive forecast performed successfullly!";
+            }
+        }
+    }
+
+    public void nPointForecast(AjaxBehaviorEvent event) {
+        boolean impacted = false;
+        boolean illegalArg = false;
+        statusMessage = "";
+
+        for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
+            try {
+                couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
+                impacted = true;
+            } catch (ForecastFailureException ex) {
+                if (ex.getMessage().equals("NoMonths")) {
+                    statusMessage += " " + ex.getMessage() + ",";
+                }
+            } catch (InvalidInputException ex) {
+                illegalArg = true;
+                statusMessage = ex.getMessage();
+                break;
+            }
+        }
+
+        if (!illegalArg) {
+            if (!impacted) {
+                statusMessage = "Failed to forecast: There are no available months to forecast!";
+            } else {
+                if (statusMessage.isEmpty()) {
+                    statusMessage = numPoints + "-Point forecast performed successfullly!";
+                } else {
+                    statusMessage = "No historical data for:" + statusMessage.substring(0, statusMessage.length() - 1);
+                }
+            }
         }
     }
 
@@ -132,6 +192,22 @@ public class CreateForecastManagedBean implements Serializable {
 
     public void setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
+    }
+
+    public int getNumPoints() {
+        return numPoints;
+    }
+
+    public void setNumPoints(int numPoints) {
+        this.numPoints = numPoints;
+    }
+
+    public int getPlannedInv() {
+        return plannedInv;
+    }
+
+    public void setPlannedInv(int plannedInv) {
+        this.plannedInv = plannedInv;
     }
 
     public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> getMssrPairedList() {

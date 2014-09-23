@@ -28,7 +28,7 @@
                                     <th>Furniture</th>
                                     <th>Price ($SGD)</th>
                                     <th>B.O.M</th>
-                                    <th>Update</th>
+                                    <th>Edit</th>
                                     <th>Delete</th>
 
                                 </tr>
@@ -65,7 +65,6 @@
                                             <td>
                                                 <h:commandButton action="#{furnitureManagedBean.deleteFurnitureModel()}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="fID" value="#{f.id}" />
-                                                    <f:ajax execute="@form" render=":displayFurniture:furnitureList"/>
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </td>         

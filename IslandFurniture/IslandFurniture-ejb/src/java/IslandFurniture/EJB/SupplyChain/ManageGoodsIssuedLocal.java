@@ -41,13 +41,13 @@ public interface ManageGoodsIssuedLocal {
     
     Plant getPlant(Long id);
 
-    List<GoodsIssuedDocument> viewGoodsIssuedDocument();
+    List<GoodsIssuedDocument> viewGoodsIssuedDocument(Plant plant);
 
     List<GoodsIssuedDocumentDetail> viewGoodsIssuedDocumentDetail(GoodsIssuedDocument grd);
 
     List<GoodsIssuedDocument> viewGoodsIssuedDocumentIndividual(GoodsIssuedDocument grd);
 
-    List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted();
+    List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted(Plant plant);
 
     List<Stock> viewStock();
 
@@ -70,5 +70,7 @@ public interface ManageGoodsIssuedLocal {
     void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
     
     List<Plant> viewPlant(Plant plant);
+    
+    
 
 }

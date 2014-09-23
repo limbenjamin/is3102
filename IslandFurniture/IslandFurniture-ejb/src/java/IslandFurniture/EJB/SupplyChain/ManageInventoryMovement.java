@@ -70,7 +70,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid) {
+    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
@@ -78,22 +78,21 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         stockUnit.setLocation(storageBin);
         stockUnit.setAvailable(false);
         stockUnit.setCommitStockUnitId(stockUnitId);
-        stockUnit.setCommitTime(commitTime);
         stockUnit.setGoodsIssuedDocument(gid);
         em.persist(stockUnit);
         em.flush();
     }
 
     @Override
-    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime) {
+    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
         stockUnit.setQty(quantity);
         stockUnit.setLocation(storageBin);
+        stockUnit.setPendingLocation(newStorageBin);
         stockUnit.setAvailable(false);
         stockUnit.setCommitStockUnitId(stockUnitId);
-        stockUnit.setCommitTime(commitTime);
         stockUnit.setGoodsIssuedDocument(null);
         em.persist(stockUnit);
         em.flush();
@@ -108,8 +107,24 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
+    public List<StockUnit> viewStockUnitMovementbyStorageBin(StorageBin storageBin) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.id=:id AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        q.setParameter("id", storageBin.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StockUnit> viewStockUnitMovementAll(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
     public void confirmStockUnitMovement(Long stockUnitId) {
         stockUnit = getStockUnit(stockUnitId);
+        stockUnit.setLocation(stockUnit.getPendingLocation());
+        stockUnit.setPendingLocation(null);
         stockUnit.setAvailable(true);
         em.merge(stockUnit);
         em.flush();
@@ -148,6 +163,14 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     @Override
     public List<StorageBin> viewStorageBin(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StockUnit> viewStockUnitByStorageBin(Plant plant, StorageBin storageBin) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.location.storageArea.plant.id=:plantId AND s.location.id=:storageBinId AND s.available=TRUE)");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("storageBinId", storageBin.getId());
         return q.getResultList();
     }
 

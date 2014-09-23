@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Exceptions.ForecastFailureException;
+import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import java.util.List;
@@ -22,21 +23,23 @@ import javax.ejb.Local;
 @Local
 public interface SalesForecastBeanLocal {
 
-    public List<MonthlyStockSupplyReq> generateSalesFigures(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
+    public void updateMonthlyStockSupplyReq(CountryOffice co, Month startMonth, int startYear, Month endMonth, int endYear);
 
-    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrieveNaiveForecast(CountryOffice co, int mthsHist)
-            throws IllegalArgumentException, ForecastFailureException;
+    public List<MonthlyStockSupplyReq> retrieveNaiveForecast(CountryOffice co, Stock stock) throws ForecastFailureException, InvalidMssrException;
+    
+    public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv) throws ForecastFailureException, InvalidInputException;
 
     public void saveMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList) throws InvalidMssrException;
     
     public void reviewMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList, boolean approved) throws InvalidMssrException;
 
-    public List<Couple<Stock, List<MonthlyStockSupplyReq>>> retrieveMssrForCo(CountryOffice co, int year);
-
-    public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> retrievePairedMssrForCo(CountryOffice co, int mthsHist)
-            throws IllegalArgumentException;
-
+    public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, int year);
+    
     public List<MonthlyStockSupplyReq> retrieveMssrForCoStock(CountryOffice co, Stock stock, Month startMonth, int startYear, Month endMonth, int endYear);
+    
+    public List<MonthlyStockSupplyReq> retrieveLockedMssrForCoStock(CountryOffice co, Stock stock, int mthsHist) throws IllegalArgumentException;
+    
+    public List<MonthlyStockSupplyReq> retrieveUnlockedMssrForCoStock(CountryOffice co, Stock stock);
 
     public List<Integer> getYearsOfMssr(CountryOffice co);
 

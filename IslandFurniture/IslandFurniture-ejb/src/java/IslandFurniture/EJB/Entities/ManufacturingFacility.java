@@ -9,14 +9,11 @@ package IslandFurniture.EJB.Entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
-import javax.persistence.Query;
 
 /**
  *
@@ -33,13 +30,15 @@ public class ManufacturingFacility extends Plant implements Serializable {
     
     @ManyToOne
     private CountryOffice countryOffice;
-    @OneToOne(mappedBy="supplierFor")
-    private ProcurementContractDetail suppliedBy;
+    @OneToMany(mappedBy="supplierFor")
+    private List<ProcurementContractDetail> suppliedBy;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<StockSupplied> supplyingWhatTo;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<ProductionCapacity> productionCapacities;
-
+    @OneToMany(mappedBy="manufacturingFacility")
+    private List<MonthlyProcurementPlan> monthlyProcurementPlan;
+    
     public CountryOffice getCountryOffice() {
         return countryOffice;
     }
@@ -48,11 +47,11 @@ public class ManufacturingFacility extends Plant implements Serializable {
         this.countryOffice = countryOffice;
     }
 
-    public ProcurementContractDetail getSuppliedBy() {
+    public List<ProcurementContractDetail> getSuppliedBy() {
         return suppliedBy;
     }
 
-    public void setSuppliedBy(ProcurementContractDetail suppliedBy) {
+    public void setSuppliedBy(List<ProcurementContractDetail> suppliedBy) {
         this.suppliedBy = suppliedBy;
     }
 
@@ -71,6 +70,16 @@ public class ManufacturingFacility extends Plant implements Serializable {
     public void setProductionCapacities(List<ProductionCapacity> productionCapacities) {
         this.productionCapacities = productionCapacities;
     }
+
+    public List<MonthlyProcurementPlan> getMonthlyProcurementPlan() {
+        return monthlyProcurementPlan;
+    }
+
+    public void setMonthlyProcurementPlan(List<MonthlyProcurementPlan> monthlyProcurementPlan) {
+        this.monthlyProcurementPlan = monthlyProcurementPlan;
+    }
+    
+    
 
     @Override
     public int hashCode() {

@@ -45,6 +45,9 @@ public class GoodsIssuedManagedBean implements Serializable {
     private List<GoodsIssuedDocument> goodsIssuedDocumentPostedList;
     private List<StockUnit> stockUnitMainList;
 
+    private boolean ifGoodsIssuedDocumentListEmpty;
+    private boolean ifGoodsIssuedDocumentPostedListEmpty;
+
     private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
     private Plant plant;
@@ -62,16 +65,15 @@ public class GoodsIssuedManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument();
-        goodsIssuedDocumentPostedList = mgrl.viewGoodsIssuedDocumentPosted();
+        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument(plant);
+        goodsIssuedDocumentPostedList = mgrl.viewGoodsIssuedDocumentPosted(plant);
+        ifGoodsIssuedDocumentListEmpty = goodsIssuedDocumentList.isEmpty();
+        ifGoodsIssuedDocumentPostedListEmpty = goodsIssuedDocumentPostedList.isEmpty();
+
         System.out.println("Init");
     }
 
     public String addGoodsIssuedDocument() {
-//        Calendar cal = Calendar.getInstance();
-//        Date date = new Date();
-//        cal.setTime(date);
-//        postingDate = cal;
         goodsIssuedDocument = mgrl.createGoodsIssuedDocument(plant, null);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocument.getId());
         return "goodsissueddocument?faces-redirect=true";
@@ -101,8 +103,25 @@ public class GoodsIssuedManagedBean implements Serializable {
         }
 
         mgrl.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
-        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument();
+        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument(plant);
+        ifGoodsIssuedDocumentListEmpty = goodsIssuedDocumentList.isEmpty();
         return "goodsreceiptdocument";
+    }
+
+    public boolean isIfGoodsIssuedDocumentListEmpty() {
+        return ifGoodsIssuedDocumentListEmpty;
+    }
+
+    public void setIfGoodsIssuedDocumentListEmpty(boolean ifGoodsIssuedDocumentListEmpty) {
+        this.ifGoodsIssuedDocumentListEmpty = ifGoodsIssuedDocumentListEmpty;
+    }
+
+    public boolean isIfGoodsIssuedDocumentPostedListEmpty() {
+        return ifGoodsIssuedDocumentPostedListEmpty;
+    }
+
+    public void setIfGoodsIssuedDocumentPostedListEmpty(boolean ifGoodsIssuedDocumentPostedListEmpty) {
+        this.ifGoodsIssuedDocumentPostedListEmpty = ifGoodsIssuedDocumentPostedListEmpty;
     }
 
     public Long getPlantId() {
@@ -216,7 +235,5 @@ public class GoodsIssuedManagedBean implements Serializable {
     public void setMsul(ManageInventoryMovementLocal msul) {
         this.msul = msul;
     }
-
-   
 
 }

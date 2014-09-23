@@ -26,7 +26,8 @@ import javax.persistence.PostPersist;
 @NamedQueries({
 @NamedQuery(name = "StockSupplied.FindByMf",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf"),
     @NamedQuery(name = "StockSupplied.FindByMfAndS",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s"),
-    @NamedQuery(name = "getAllStockSupplied",query = "select ss from StockSupplied SS")
+    @NamedQuery(name = "getAllStockSupplied",query = "select ss from StockSupplied SS"),
+    @NamedQuery(name = "findByStock",query = "select ss from StockSupplied SS where SS.stock=:s")
 })
 public class StockSupplied implements Serializable {
 
@@ -71,8 +72,9 @@ public class StockSupplied implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.stock);
-        hash = 41 * hash + Objects.hashCode(this.countryOffice);
+        hash = 17 * hash + Objects.hashCode(this.stock);
+        hash = 17 * hash + Objects.hashCode(this.countryOffice);
+        hash = 17 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
 
@@ -83,7 +85,7 @@ public class StockSupplied implements Serializable {
             return false;
         }
         StockSupplied other = (StockSupplied) object;
-        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice);
+        return this.stock.equals(other.stock) && this.countryOffice.equals(other.countryOffice) && this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override

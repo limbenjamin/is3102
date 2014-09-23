@@ -1,0 +1,51 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" >
+    <ui:define name="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>View Monthly Procurement Plan</h4>
+                    <hr></hr>       
+                </div>
+                <div class="col-md-10 col-sm-10">                                               
+                  <section class="panel">
+                    <h:form>
+                        <h:commandButton value="Generate Procurement Plan" class="btn" action="#{procurementPlanManagedBean.generateProcurementPlan}">
+                        </h:commandButton>
+                        <h:commandButton value="Create Purchase Order" class="btn" action="#{procurementPlanManagedBean.createPurchaseOrder}">
+                        </h:commandButton>
+                    </h:form>  
+                      <p:dataTable var="mpp" value="#{procurementPlanManagedBean.mppList}"
+                                    emptyMessage="No records found with given criteria">
+
+                          <p:column sortBy="#{mpp.month}" headerText="Month" filterMatchMode="contains">
+                               <h:outputText value="#{mpp.month}" />
+                           </p:column>
+
+                          <p:column sortBy="#{mpp.year}" headerText="Year" filterMatchMode="contains">
+                               <h:outputText value="#{mpp.year}" />
+                           </p:column>
+
+                          <p:column sortBy="#{mpp.manufacturingFacility.name}" headerText="MF" filterMatchMode="contains">
+                               <h:outputText value="#{mpp.manufacturingFacility.name}" />
+                           </p:column>
+
+                          <p:column sortBy="#{mpp.retailItem.name}" headerText="Retail Item" filterMatchMode="contains">
+                               <h:outputText value="#{mpp.retailItem.name}" />
+                           </p:column>
+                          
+                          <p:column sortBy="#{mpp.qty}" headerText="Qty" filterMatchMode="contains">
+                               <h:outputText value="#{mpp.qty}" />
+                          </p:column> 
+                       </p:dataTable>
+                  </section>
+                </div>
+
+
+            </div>                
+    </ui:define>
+</ui:composition>

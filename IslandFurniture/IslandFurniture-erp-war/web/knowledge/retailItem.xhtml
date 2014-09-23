@@ -42,18 +42,27 @@
                                                     <h:outputText id="itemID" value="#{item.id}"></h:outputText>
                                                 </td>
                                                 <td>
-                                                    <h:inputText id="itemName" value="#{item.name}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="itemName" value="#{item.name}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    $<h:inputText id="itemPrice" value="#{item.price}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                    $<h:inputText id="itemPrice" value="#{item.price}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
-                                                <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}"  value="Update" class="btn btn-success btn-sm">
+                                                <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{item}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{retailItemManagedBean.deleteRetailItem}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td><h:commandButton action="#{retailItemManagedBean.deleteRetailItem}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="itemID" value="#{item.id}" />
-                                                    </h:commandButton></td>         
+                                                    </h:commandButton> 
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>       
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 

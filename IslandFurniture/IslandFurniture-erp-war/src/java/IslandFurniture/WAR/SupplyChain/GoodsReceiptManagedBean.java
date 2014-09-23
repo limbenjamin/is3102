@@ -14,7 +14,6 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
-import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
@@ -39,6 +38,10 @@ public class GoodsReceiptManagedBean implements Serializable {
     private Long plantId;
     private Long goodsReceiptDocumentId;
     private Long goodsIssuedDocumentId;
+
+    private boolean ifGoodsReceiptDocumentListEmpty;
+    private boolean ifgoodsReceiptDocumentPostedListEmpty;
+    private boolean ifInboundShipmentListEmpty;
 
     private String username;
     private String deliverynote;
@@ -66,17 +69,16 @@ public class GoodsReceiptManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
-        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted();
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
+        ifGoodsReceiptDocumentListEmpty = goodsReceiptDocumentList.isEmpty();
+        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted(plant);
+        ifgoodsReceiptDocumentPostedListEmpty = goodsReceiptDocumentPostedList.isEmpty();
         inboundShipmentList = mgrl.viewInboundShipment(plant);
+        ifInboundShipmentListEmpty = inboundShipmentList.isEmpty();
         System.out.println("Init");
     }
 
     public String addGoodsReceiptDocument() {
-//        Calendar cal = Calendar.getInstance();
-//        Date date = new Date();
-//        cal.setTime(date);
-//        postingDate = cal;
         goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         return "goodsreceiptdocument?faces-redirect=true";
@@ -105,28 +107,69 @@ public class GoodsReceiptManagedBean implements Serializable {
         }
 
         mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
+        ifGoodsReceiptDocumentListEmpty = goodsReceiptDocumentList.isEmpty();
         return "goodsreceiptdocument";
     }
 
     public void addGoodsReceiptDocumentfromInbound(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
-       
+
         Calendar cal = Calendar.getInstance();
         Date date = new Date();
         cal.setTime(date);
         receiptDate = cal;
-        
+
         goodsReceiptDocument = mgrl.createGoodsReceiptDocumentfromInbound(plant, receiptDate);
-        
+
         for (GoodsIssuedDocumentDetail g : mgrl.viewInboundShipmentByDetail(goodsIssuedDocumentId)) {
             mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), g.getStock().getId(), g.getQuantity().intValue());
         }
-        
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
+    }
+
+    public Long getGoodsIssuedDocumentId() {
+        return goodsIssuedDocumentId;
+    }
+
+    public void setGoodsIssuedDocumentId(Long goodsIssuedDocumentId) {
+        this.goodsIssuedDocumentId = goodsIssuedDocumentId;
+    }
+
+    public boolean isIfGoodsReceiptDocumentListEmpty() {
+        return ifGoodsReceiptDocumentListEmpty;
+    }
+
+    public void setIfGoodsReceiptDocumentListEmpty(boolean ifGoodsReceiptDocumentListEmpty) {
+        this.ifGoodsReceiptDocumentListEmpty = ifGoodsReceiptDocumentListEmpty;
+    }
+
+    public boolean isIfgoodsReceiptDocumentPostedListEmpty() {
+        return ifgoodsReceiptDocumentPostedListEmpty;
+    }
+
+    public void setIfgoodsReceiptDocumentPostedListEmpty(boolean ifgoodsReceiptDocumentPostedListEmpty) {
+        this.ifgoodsReceiptDocumentPostedListEmpty = ifgoodsReceiptDocumentPostedListEmpty;
+    }
+
+    public boolean isIfInboundShipmentListEmpty() {
+        return ifInboundShipmentListEmpty;
+    }
+
+    public void setIfInboundShipmentListEmpty(boolean ifInboundShipmentListEmpty) {
+        this.ifInboundShipmentListEmpty = ifInboundShipmentListEmpty;
+    }
+
+    public GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail() {
+        return goodsIssuedDocumentDetail;
+    }
+
+    public void setGoodsIssuedDocumentDetail(GoodsIssuedDocumentDetail goodsIssuedDocumentDetail) {
+        this.goodsIssuedDocumentDetail = goodsIssuedDocumentDetail;
     }
 
     public Long getPlantId() {
