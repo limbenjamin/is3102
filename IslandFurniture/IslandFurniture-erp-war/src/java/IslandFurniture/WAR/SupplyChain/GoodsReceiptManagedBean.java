@@ -66,8 +66,8 @@ public class GoodsReceiptManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
-        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted();
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
+        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted(plant);
         inboundShipmentList = mgrl.viewInboundShipment(plant);
         System.out.println("Init");
     }
@@ -105,7 +105,7 @@ public class GoodsReceiptManagedBean implements Serializable {
         }
 
         mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
         return "goodsreceiptdocument";
     }
 
@@ -124,7 +124,7 @@ public class GoodsReceiptManagedBean implements Serializable {
             mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), g.getStock().getId(), g.getQuantity().intValue());
         }
         
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument();
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }

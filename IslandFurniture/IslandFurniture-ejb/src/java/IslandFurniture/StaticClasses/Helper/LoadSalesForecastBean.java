@@ -69,11 +69,14 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
 
-//                    if (i >= FORECAST_LOCKOUT_MONTHS + 1) {
-//                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 1));
-//                        eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
-//                        eachMssr.setVarianceUpdated(true);
-//                    }
+                    if (i >= FORECAST_LOCKOUT_MONTHS + 2) {
+                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 2));
+                        if (oldMssr.isEndMthUpdated()) {
+                            eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
+                            eachMssr.setVarianceUpdated(true);
+                        }
+                    }
+
                     if (i >= 1) {
                         MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getVarianceOffset() - oldMssr.getPlannedInventory());

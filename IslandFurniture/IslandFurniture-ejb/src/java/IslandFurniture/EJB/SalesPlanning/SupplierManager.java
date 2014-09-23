@@ -226,13 +226,15 @@ public class SupplierManager implements SupplierManagerLocal {
             pk = new StockSuppliedPK(stockID, countryID, mfID);
             ss = em.find(StockSupplied.class, pk);
             System.out.println("Found StockSupplied");
+            if(ss == null)
+                System.out.println("StockSupplied is null");
             mf = em.find(ManufacturingFacility.class, mfID);
             System.out.println("1");
             co = em.find(CountryOffice.class, countryID);
             System.out.println("2");
             
             mf.getSupplyingWhatTo().remove(ss);
-            System.out.println("3");
+            System.out.println("3"); 
             co.getSuppliedWithFrom().remove(ss);
             System.out.println("4");
             

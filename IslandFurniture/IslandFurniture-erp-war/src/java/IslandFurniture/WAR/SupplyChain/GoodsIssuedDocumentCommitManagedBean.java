@@ -119,12 +119,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
         stockUnit = mgrl.getStockUnit(stockUnitId);
 
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        commitDate = cal;
-
-        msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), commitDate, goodsIssuedDocument);
+        msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), goodsIssuedDocument);
         msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
