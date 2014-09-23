@@ -5,6 +5,7 @@
  */
 package IslandFurniture.StaticClasses.Helper;
 
+import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
@@ -119,6 +120,20 @@ public class QueryMethods {
         q.setParameter("mf", mf);
 
         return (List<StockSupplied>) q.getResultList();
+    }
+
+    public static List<StockSupplied> getStockSuppliedByStock(EntityManager em, Stock s) {
+        Query q = em.createNamedQuery("findByStock", StockSupplied.class);
+        q.setParameter("s", s);
+
+        return (List<StockSupplied>) q.getResultList();
+    }
+
+    public static List<BOMDetail> getBOMDetailByMaterial(EntityManager em, Material m) {
+        Query q = em.createNamedQuery("findBOMDetailByMaterial", BOMDetail.class);
+        q.setParameter("m", m);
+
+        return (List<BOMDetail>) q.getResultList();
     }
 
     public static List<MonthlyStockSupplyReq> GetRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
