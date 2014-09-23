@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -55,16 +56,7 @@ public class FurnitureManagedBean implements Serializable {
     public void setFilteredList(List<FurnitureModel> filteredList) {        this.filteredList = filteredList;    }
     
     // Testing area
-    private String colorPopup;
- 
-    public String getColorPopup() {
-        return colorPopup;
-    }
- 
-    public void setColorPopup(String colorPopup) {
-        this.colorPopup = colorPopup;
-    } 
-    
+
     // End Testing Area
     
     @PostConstruct

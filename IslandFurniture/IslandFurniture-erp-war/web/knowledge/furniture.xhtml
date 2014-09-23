@@ -124,12 +124,13 @@
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                         <h4 class="modal-title" id="myModalLabel">Add New Colour</h4>
                       </div>
-                        <h:form id="addColourForm" class="form-horizontal">
+                        <h:form id="addColourForm" class="form-horizontal"> 
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Furniture Name: </label>
+                                <label class="col-sm-4 control-label">Colour: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="name" class="form-control" required="true"></h:inputText>
+                                    <p:colorPicker value="#000" mode="inline"></p:colorPicker>
+                                    <h:inputText id="colour" class="form-control" required="true"></h:inputText>
                                 </div>
                             </div>
                         </div>
