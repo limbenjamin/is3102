@@ -5,15 +5,19 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
+import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.EJB.Entities.Supplier;
 import java.util.HashMap;
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 /**
  *
  * @author James
  */
-@Remote
-public interface ManageProductionPlanningRemote {
+@Local
+public interface ManageProductionPlanningLocal {
+
+    HashMap<Material, Long> getMaterialsNeeded(int WeekNo, int Year, int Month);
 
     void CreateProductionPlanFromForecast() throws Exception;
 
@@ -30,11 +34,12 @@ public interface ManageProductionPlanningRemote {
     void createCapacityIFDoNotExist();
 
     void planWeekMPP(String MF_NAME, String furniture_model_name, int m, long year) throws Exception;
-    
+
     void uncommitWPP(Integer wppID) throws Exception;
-    
+
     void commitWPP(Integer wppID) throws Exception;
     
+    Supplier getSupplierSize(Material m);
 
-
+    int getLotSize(Material m);
 }

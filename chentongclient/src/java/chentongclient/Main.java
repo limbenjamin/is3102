@@ -60,6 +60,8 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        
+        if (0==0){
 
         // Load Organisation Entities (Store, Manufacturing Facility, Country Office)
         System.out.print("Load Organisation Data? (y/n):");
@@ -136,6 +138,8 @@ public class Main {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
             }
         }
+        
+        }
 
         // Load Production Capacity Data
         //Added by James
@@ -149,9 +153,7 @@ public class Main {
             }
         }
 
-        if (1 == 1) {
-            return;
-        }
+
 
     }
 

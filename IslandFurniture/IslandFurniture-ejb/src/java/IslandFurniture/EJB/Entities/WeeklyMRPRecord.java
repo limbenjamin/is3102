@@ -34,7 +34,7 @@ public class WeeklyMRPRecord implements Serializable {
     @Id
     private Integer year;
     @OneToOne
-    private WeeklyProductionPlan weeklyProductionPlan;
+    private WeeklyProductionPlan weeklyProductionPlan; // This is useless . remove it next time
     @OneToOne
     private PurchaseOrderDetail purchaseOrderDetail;
 

@@ -38,6 +38,11 @@
                 filter: alpha(opacity=80);
             }
 
+            .ERROR
+            {
+                background-color: red;
+            }
+
         </style>
     </h:head>
     <h:body id="page">
@@ -116,6 +121,7 @@
 
                             <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
                             <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}" style="text-align:center;width:96%"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('MPP_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
                         </p:columns>
 
@@ -141,7 +147,7 @@
 
                 <!-- Weekly Production Planning -->
 
-                <p:tab title="Weekly Production Planning" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
+                <p:tab id="panel2" title="Weekly Production Planning" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
 
 
                     <p:dataTable rowStyleClass="#{datarow.colorClass}" id="wpp_dt"  var="datarow"  value="#{ProductionPlanning.wpp.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
@@ -156,8 +162,9 @@
                                 <p:outputLabel escape="false" value="#{datacolumn}"/>
 
                             </f:facet>
-                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false"  style="width:96%;text-align:center" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false"  style="width:96%;text-align:center" rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
                             <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%;text-align:center"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('wpp_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
                         </p:columns>
@@ -187,6 +194,7 @@
                             </f:facet>
                             <p:outputLabel value="#{datarow.getCell(dataCIndex).value}"  style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
                             <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="text-align:center;width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('capacity_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
                         </p:columns>

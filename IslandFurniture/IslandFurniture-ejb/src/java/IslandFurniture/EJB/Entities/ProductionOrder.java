@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class ProductionOrder implements Serializable {
     @ManyToOne
     private FurnitureModel furnitureModel;
     @OneToMany
-    private List<StockUnit> stockUnits;
+    private List<StockUnit> stockUnits=new ArrayList<>();
 
     public Long getBatchNo() {
         return batchNo;

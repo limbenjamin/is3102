@@ -23,7 +23,8 @@ import javax.persistence.PostPersist;
             name = "findMaterialByName",
             query = "SELECT a FROM Material a WHERE a.name = :name"),
     @NamedQuery(name = "Material.getMaterialList",
-            query = "SELECT m FROM Material m")
+            query = "SELECT m FROM Material m"),
+    
 })
 public class Material extends ProcuredStock implements Serializable {
 

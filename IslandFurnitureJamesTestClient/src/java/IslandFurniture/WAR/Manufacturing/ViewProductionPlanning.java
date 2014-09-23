@@ -30,6 +30,7 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.event.TabChangeEvent;
 
 @SessionScoped
@@ -281,13 +282,37 @@ public class ViewProductionPlanning implements Serializable {
 
     public void onTabChange(TabChangeEvent event) {
 
-        
         if (event.getTab().getTitle().equals("Production Planning")) {
             pullPPTableFromBean();
         } else if (event.getTab().getTitle().equals("Capacity Management")) {
-           pullcapacityTableFromBean();
-        } else if (event.getTab().getTitle().equals("Weekly Production Planning"))  {
+            pullcapacityTableFromBean();
+        } else if (event.getTab().getTitle().equals("Weekly Production Planning")) {
             drillDownMonth(this.currentDrill);
+        }
+    }
+
+    public void listenToCell(ActionEvent actionEvent) {
+        try {
+            CommandButton button = (CommandButton) actionEvent.getComponent();
+            String ID = button.getAlt();
+            String command = button.getLabel();
+
+            switch (command) {
+                case "COMMIT_WPP":
+                    mpp.commitWPP(Integer.valueOf(ID));
+                    drillDownMonth(this.currentDrill);
+                    break;
+                case "UNCOMMIT_WPP":
+                    mpp.uncommitWPP(Integer.valueOf(ID));
+                    drillDownMonth(this.currentDrill);
+                    break;
+
+            }
+            success_msg += "Successfully Toggled Production Order";
+            System.out.println("listenToCell(): " + command + " ON " + ID);
+        } catch (Exception ex) {
+            success_msg = "";
+            error_msg = ex.getMessage();
         }
     }
 

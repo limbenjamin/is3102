@@ -43,6 +43,24 @@ public class JDataTable<T> implements Serializable {
         private Boolean stateChanged = false;
         private int Index = 0;
         private String colorClass = "";
+        private String Identifier = ""; //set this for action button
+        private String Command = "";
+
+        public String getIdentifier() {
+            return Identifier;
+        }
+
+        public void setIdentifier(String Identifier) {
+            this.Identifier = Identifier;
+        }
+
+        public String getCommand() {
+            return Command;
+        }
+
+        public void setCommand(String Command) {
+            this.Command = Command;
+        }
 
         public String getColorClass() {
             return colorClass;
@@ -188,8 +206,9 @@ public class JDataTable<T> implements Serializable {
             return isEditable;
         }
 
-        public void setIsEditable(Boolean isEditable) {
+        public Cell setIsEditable(Boolean isEditable) {
             this.isEditable = isEditable;
+            return (this);
         }
     }
 
@@ -276,8 +295,11 @@ public class JDataTable<T> implements Serializable {
 
             }
             //System.out.println("JDataTable: getCell():"+this.rowNo +","+ i);
-
-            return rowdata.get(i);
+            try {
+                return rowdata.get(i);
+            } catch (Exception ex) {
+                return null;
+            }
         }
 
         public String getColorClass() {

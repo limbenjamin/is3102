@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
@@ -20,6 +21,7 @@ import ch.qos.cal10n.util.Token;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,10 +37,10 @@ import javax.persistence.Query;
  * @author James
  */
 @Stateless
-public class ManageProductionPlanningEJBBean implements ManageProductionPlanningEJBBeanInterface {
+public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningEJBBeanInterface {
 
     @EJB
-    private ManageProductionPlanningRemote mpp;
+    private ManageProductionPlanningLocal mpp;
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -307,14 +309,19 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
             double planned_capacity = (pp.getQTY() + 0.0) / pp.getManufacturingFacility().findProductionCapacity(pp.getFurnitureModel()).getCapacity(pp.getMonth(), pp.getYear());
             demand_row.newCell(String.valueOf(demand));
             cc_row.newCell((String.valueOf(used_capacity)));
+            Cell pr = planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp);
 
             if (pp.isLocked()) {
-                planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp).setIsEditable(false); //Editable Cell
+                pr.setIsEditable(false); //Editable Cell
 
             } else {
-                planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp).setIsEditable(true); //Editable Cell
+                pr.setIsEditable(true); //Editable Cell
 
             }
+            if (pp.getQTY() < demand) {
+                pr.setColorClass("ERROR");
+            }
+
             Cell p = pc_row.newCell(String.valueOf((planned_capacity)));
             if (planned_capacity < 0.5) {
                 p.setColorClass("LIGHT_WORKLOAD");
@@ -340,7 +347,11 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
     @Override
     public Object getWeeklyPlans(String period, String MFNAME) {
         ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MFNAME + "'").getSingleResult();
+        try {
+            mpp.setMF(mff.getName());
+        } catch (Exception ex) {
 
+        }
         Month requestedMonth = Month.valueOf(period.split("/")[0]);
         int requestedYear = Integer.valueOf(period.split("/")[1]);
         JDataTable<String> jdt = new JDataTable<String>();
@@ -353,6 +364,7 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
         JDataTable.Row daysInWeek = jdt.newRow();
         daysInWeek.newCell("Days In a Week");
         JDataTable.Row PlannedWeekProduction = null;
+        JDataTable.Row ActionRow = null;
 
         String CFM = "";
 
@@ -364,12 +376,29 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
             daysInWeek.newCell(String.valueOf(DaysInMonth));
         }
 
+        HashMap<Material, JDataTable.Row> materialRows = new HashMap<Material, JDataTable.Row>();
         //Iterate WPP
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
             if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
                 CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);
                 PlannedWeekProduction = jdt.newRow();
                 PlannedWeekProduction.newCell(CFM);
+                ActionRow = jdt.newRow();
+                ActionRow.newCell("Commit to Production Order");
+            }
+            Cell d = null;
+            if (wpp.getProductionOrder() == null && !wpp.getMonthlyProductionPlan().isLocked()) {
+                d = ActionRow.newCell("Commit");
+                d.setCommand("COMMIT_WPP");
+                d.setIdentifier(wpp.getId().toString());
+            } else {
+
+                if (!wpp.getMonthlyProductionPlan().isLocked()) {
+                    d = ActionRow.newCell("Uncommit");
+                    d.setCommand("UNCOMMIT_WPP");
+                    d.setIdentifier(wpp.getId().toString());
+
+                }
 
             }
 
@@ -377,6 +406,28 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
             if (wpp.getMonthlyProductionPlan().isLocked() == false) {
                 c.setIsEditable(true);
             }
+
+        }
+
+        JDataTable.Row SPACER = jdt.newRow();
+        SPACER.newCell("Materials Required");
+        for (int i = 1; i <= jdt.columns.size() - 1; i++) {
+
+            //Materials side
+            HashMap<Material, Long> table = mpp.getMaterialsNeeded(i, requestedYear, requestedMonth.value);
+            for (Material m : (Set<Material>) table.keySet()) {
+                if (materialRows.get(m) == null) {
+                    JDataTable.Row r = jdt.newRow();
+                    r.newCell(m.getName());
+                    materialRows.put(m, r);
+                }
+
+                double lotsize = Math.ceil(Double.valueOf(table.get(m)) / mpp.getLotSize(m));
+
+                materialRows.get(m).newCell(table.get(m).toString() + "<br/>[" + lotsize + " lots X" + mpp.getLotSize(m) + "]");
+
+            }
+
         }
 
         System.out.println("getWeeklyPlans() Requesting for wpp for" + requestedMonth + " /" + requestedYear);
