@@ -13,10 +13,14 @@
                     <div class="col-md-8">
 
                         <section name="View Contents of Storage Location">
-                            <h4>Stock Take by Stock ID: #{inventoryMonitoringStockManagedBean.stock.name}</h4><hr></hr><br></br>
+                            <h4>Stock Take of #{inventoryMonitoringStockManagedBean.stock.name}</h4><hr></hr><br></br>
                         </section>
 
                         <section name="Table of Contents of the Stock Items">
+                                                                        <div class="panel-heading dashboard-title-panel">
+                                    List of Storage Locations
+                                </div>
+                                <div class="list-group-item">
                             <table class="table table-hover table-condensed">
                                 <tr>
                                     <th>Stock Unit Number</th>     
@@ -46,7 +50,8 @@
                                         </tr>
                                     </ui:repeat>
                                 </h:form> 
-                            </table>                        
+                            </table> 
+                                </div>
                         </section>       
                     </div>
                 </div>
