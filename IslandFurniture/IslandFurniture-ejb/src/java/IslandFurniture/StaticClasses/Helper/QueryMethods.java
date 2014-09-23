@@ -91,11 +91,15 @@ public class QueryMethods {
         }
     }
 
-    public static List<Supplier> findSupplierByName(EntityManager em, String supplierName) {
+    public static Supplier findSupplierByName(EntityManager em, String supplierName) {
         Query q = em.createNamedQuery("findSupplierByName");
         q.setParameter("name", supplierName);
 
-        return (List<Supplier>) q.getResultList();
+        try {
+            return (Supplier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
     }
 
     public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
