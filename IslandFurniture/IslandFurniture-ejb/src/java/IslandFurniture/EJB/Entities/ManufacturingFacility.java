@@ -39,7 +39,9 @@ public class ManufacturingFacility extends Plant implements Serializable {
     private List<StockSupplied> supplyingWhatTo;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<ProductionCapacity> productionCapacities;
-
+    @OneToMany(mappedBy="manufacturingFacility")
+    private List<MonthlyProcurementPlan> monthlyProcurementPlan;
+    
     public CountryOffice getCountryOffice() {
         return countryOffice;
     }
@@ -71,6 +73,16 @@ public class ManufacturingFacility extends Plant implements Serializable {
     public void setProductionCapacities(List<ProductionCapacity> productionCapacities) {
         this.productionCapacities = productionCapacities;
     }
+
+    public List<MonthlyProcurementPlan> getMonthlyProcurementPlan() {
+        return monthlyProcurementPlan;
+    }
+
+    public void setMonthlyProcurementPlan(List<MonthlyProcurementPlan> monthlyProcurementPlan) {
+        this.monthlyProcurementPlan = monthlyProcurementPlan;
+    }
+    
+    
 
     @Override
     public int hashCode() {
