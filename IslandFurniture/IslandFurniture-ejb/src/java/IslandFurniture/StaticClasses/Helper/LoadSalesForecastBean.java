@@ -43,7 +43,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
         for (CountryOffice eachCo : countryOffices) {
             prevMth = TimeMethods.getPlantCurrTime(eachCo);
             prevMth.add(Calendar.MONTH, -1);
-            
+
             lockedOutCutoff = TimeMethods.getPlantCurrTime(eachCo);
             lockedOutCutoff.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS);
 
@@ -59,22 +59,21 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
                     eachMssr.setPlannedInventory(rand.nextInt(6) * 50);
 
-                    if (i < listOfMssr.size() - FORECAST_LOCKOUT_MONTHS) {
+                    if (i < listOfMssr.size() - (FORECAST_LOCKOUT_MONTHS + 1)) {
                         do {
                             eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(200) - 100);
                         } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
-                        
+
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
                     } else {
                         eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
 
-                    if (i >= FORECAST_LOCKOUT_MONTHS + 1) {
-                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 1));
-                        eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
-                        eachMssr.setVarianceUpdated(true);
-                    }
-
+//                    if (i >= FORECAST_LOCKOUT_MONTHS + 1) {
+//                        MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 1));
+//                        eachMssr.setVarianceOffset(oldMssr.getQtyForecasted() - oldMssr.getQtySold());
+//                        eachMssr.setVarianceUpdated(true);
+//                    }
                     if (i >= 1) {
                         MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getVarianceOffset() - oldMssr.getPlannedInventory());

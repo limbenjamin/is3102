@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Exceptions.ForecastFailureException;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -114,26 +115,33 @@ public class CreateForecastManagedBean implements Serializable {
 
     public void nPointForecast(AjaxBehaviorEvent event) {
         boolean impacted = false;
+        boolean illegalArg = false;
         statusMessage = "";
 
         for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
             try {
                 couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
                 impacted = true;
-            } catch (Exception ex) {
+            } catch (ForecastFailureException ex) {
                 if (!ex.getMessage().equals("NoMonths")) {
                     statusMessage += " " + ex.getMessage() + ",";
                 }
+            } catch (IllegalArgumentException ex) {
+                illegalArg = true;
+                statusMessage = ex.getMessage();
+                break;
             }
         }
 
-        if (!impacted) {
-            statusMessage = "Failed to forecast: There are no available months to forecast!";
-        } else {
-            if (statusMessage.isEmpty()) {
-                statusMessage = numPoints + "-Point forecast performed successfullly!";
+        if (!illegalArg) {
+            if (!impacted) {
+                statusMessage = "Failed to forecast: There are no available months to forecast!";
             } else {
-                statusMessage = "No historical data for:" + statusMessage.substring(0, statusMessage.length() - 1);
+                if (statusMessage.isEmpty()) {
+                    statusMessage = numPoints + "-Point forecast performed successfullly!";
+                } else {
+                    statusMessage = "No historical data for:" + statusMessage.substring(0, statusMessage.length() - 1);
+                }
             }
         }
     }

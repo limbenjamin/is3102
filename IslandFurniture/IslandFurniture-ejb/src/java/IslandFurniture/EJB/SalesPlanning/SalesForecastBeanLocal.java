@@ -26,7 +26,7 @@ public interface SalesForecastBeanLocal {
 
     public List<MonthlyStockSupplyReq> retrieveNaiveForecast(CountryOffice co, Stock stock) throws ForecastFailureException;
     
-    public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv) throws ForecastFailureException;
+    public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv) throws ForecastFailureException, IllegalArgumentException;
 
     public void saveMonthlyStockSupplyReq(List<Couple<Stock, List<MonthlyStockSupplyReq>>> stockMssrList) throws InvalidMssrException;
     

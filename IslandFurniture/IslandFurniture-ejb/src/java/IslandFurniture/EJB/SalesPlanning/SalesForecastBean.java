@@ -117,7 +117,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
         MonthlyStockSupplyReq mssr;
 
-        while (start.compareTo(end) <= 0 /*&& start.compareTo(prevMth) < 0*/) {
+        while (start.compareTo(end) <= 0 && start.compareTo(prevMth) < 0) {
 
             // Get Sales figures in this month
             this.generateSalesFigures(co, Month.getMonth(start.get(Calendar.MONTH)), start.get(Calendar.YEAR));
@@ -181,7 +181,11 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv) throws ForecastFailureException {
+    public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv)
+            throws ForecastFailureException, IllegalArgumentException {
+        if (nPoint <= 0 || plannedInv <= 0) {
+            throw new IllegalArgumentException("Please enter a valid N-Point and Planned Inventory count.");
+        }
         boolean impacted = false;
 
         List<MonthlyStockSupplyReq> unlockedMssrList = this.retrieveUnlockedMssrForCoStock(co, stock);
@@ -207,7 +211,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 }
             }
 
-            for (int j = Math.max(i-nPoint, 0); j < i; j++) {
+            for (int j = Math.max(i - nPoint, 0); j < i; j++) {
                 count++;
 
                 if (unlockedMssrList.get(j).isEndMthUpdated()) {
