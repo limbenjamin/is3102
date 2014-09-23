@@ -40,7 +40,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public Boolean loadProductionCapacityData() {
         try {
             Query q = em.createQuery("select MF from ManufacturingFacility MF");
@@ -65,7 +65,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
 
                 //Create a few fake MSSR
                     for (int i = 2; i <= 12; i++) {
-                        if (Math.random() > 0.5) {
+                        if (Math.random() > 0.8) {
                             continue;
                         }
 

@@ -8,9 +8,16 @@
         <h:form>
             <h:commandButton value="Send for approval">
                 <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
-            </h:commandButton>
+            </h:commandButton><br />
             <h:commandButton value="Forecast By Naive Method">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{createForecastManagedBean.naiveForecast}" />
+                <f:ajax render="statusMessage mssrTable" listener="#{createForecastManagedBean.naiveForecast}" />
+            </h:commandButton><br />
+            <p:outputLabel for="plannedInv" value="Planned Inventory: " />
+            <p:inputText id="plannedInv" value="#{createForecastManagedBean.plannedInv}" />
+            <p:outputLabel for="numPoints" value="Number of Points: " />
+            <p:inputText id="numPoints" value="#{createForecastManagedBean.numPoints}" />
+            <h:commandButton value="Forecast By N-Point Moving Average">
+                <f:ajax execute="plannedInv numPoints" render="statusMessage mssrTable" listener="#{createForecastManagedBean.nPointForecast}" />
             </h:commandButton>
             <br /><br />
 
@@ -44,8 +51,8 @@
                             <h:outputText value="-" rendered="#{(label.first == 'varianceOffset' and mssr.varianceUpdated == false) or (label.first == 'status' and mssr.status == null)}" />
                             <h:outputText value="#{mssr[label.first]}" rendered="#{(label.first == 'varianceOffset' and mssr.varianceUpdated == true) or (label.first == 'status' and mssr.status != null)}" />
                             <h:outputText value="-" rendered="#{(label.first == 'qtySold' or label.first == 'actualInventory')}" />
-                            <p:inputText value="#{mssr[label.first]}" rendered="#{(mssr.status == 'REJECTED' or mssr.status == null) and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{!(mssr.status == 'REJECTED' or mssr.status == null) and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
+                            <p:inputText value="#{mssr[label.first]}" rendered="#{(mssr.status == 'REJECTED' or mssr.status == null or mssr.status == 'NONE') and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{!(mssr.status == 'REJECTED' or mssr.status == null or mssr.status == 'NONE') and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested')}" />
                         </p:columns>
                     </p:dataTable>
                 </p:tab>

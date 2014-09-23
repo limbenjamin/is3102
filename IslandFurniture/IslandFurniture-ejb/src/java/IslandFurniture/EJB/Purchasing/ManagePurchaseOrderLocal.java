@@ -34,7 +34,7 @@ public interface ManagePurchaseOrderLocal {
 
     void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status);
     
-    void updatePurchaseOrder(Long poId, String status, Long plantId, Calendar orderDate);    
+    void updatePurchaseOrder(Long poId, String status, Calendar orderDate);    
 
     void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty);
 

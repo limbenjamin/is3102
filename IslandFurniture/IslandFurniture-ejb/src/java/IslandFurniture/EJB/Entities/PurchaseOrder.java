@@ -36,6 +36,8 @@ public class PurchaseOrder implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar orderDate;
     private String status;
+    @ManyToOne
+    private MonthlyProcurementPlan monthlyProcurementPlan;
     
     public Long getId() {
         return id;

@@ -80,7 +80,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "IT (Store)","Cust. Service (Store)","IT (Mfg)","IT (Store)","Warehouse (Store)","Purchasing (Mfg)",
             "Management (Store)","IT (Store)","Warehouse (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)",
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
-            "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
+            "IT (CO)","Sales Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
             "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
                                     };
@@ -95,12 +95,15 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             }
         }
         
+        //add extra sales manager role to evelyn.
+        msal.addRoleToStaffByUsername("evelyn", "Sales Manager (Mfg)");
+        
         //add all roles to rose (SUPER USER) except for IT (Store) and General Staff which has been added above.;
        String[] allRoles = new String [] {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
                                     };
         
         for (int i=0; i<allRoles.length; i++){

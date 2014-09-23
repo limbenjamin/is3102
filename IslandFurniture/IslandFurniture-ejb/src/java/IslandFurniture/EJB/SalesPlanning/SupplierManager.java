@@ -7,10 +7,14 @@
 package IslandFurniture.EJB.SalesPlanning;
 
 import IslandFurniture.EJB.Entities.Country;
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.Stock;
+import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Entities.StockSuppliedPK;
 import IslandFurniture.EJB.Entities.Supplier;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findCountryByName;
 import java.util.ArrayList;
@@ -199,6 +203,103 @@ public class SupplierManager implements SupplierManagerLocal {
             em.persist(pcd);
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+        }
+    }
+    public List<StockSupplied> getAllStockSupplied() {
+        List<StockSupplied> stockSuppliedList;
+        try {
+            System.out.println("SupplierManager.getAllStockSupplied()");
+            stockSuppliedList = em.createNamedQuery("getAllStockSupplied", StockSupplied.class).getResultList();
+            return stockSuppliedList;
+        } catch(NoResultException NRE) {
+            System.err.println("Something went wrong. Most likely to result found");
+            return null;
+        }
+    }
+    public void deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
+        StockSuppliedPK pk;
+        StockSupplied ss;
+        ManufacturingFacility mf;
+        CountryOffice co;
+        try {
+            System.out.println("SupplierManager.deleteStockSupplyRequest()");
+            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            ss = em.find(StockSupplied.class, pk);
+            System.out.println("Found StockSupplied");
+            mf = em.find(ManufacturingFacility.class, mfID);
+            System.out.println("1");
+            co = em.find(CountryOffice.class, countryID);
+            System.out.println("2");
+            
+            mf.getSupplyingWhatTo().remove(ss);
+            System.out.println("3");
+            co.getSuppliedWithFrom().remove(ss);
+            System.out.println("4");
+            
+            em.remove(ss);
+            System.out.println("5");
+            em.flush();
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        }
+    }
+    public void addStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
+        Stock stock;
+        ManufacturingFacility mf;
+        CountryOffice co;
+        StockSupplied ss;
+        try {
+            System.out.println("SupplierManager.addStockSupplyRequest()");
+            ss = new StockSupplied();
+            stock = em.find(Stock.class, stockID);
+            mf = em.find(ManufacturingFacility.class, mfID);
+            co = em.find(CountryOffice.class, countryID);
+            
+            ss.setCountryOffice(co);
+            ss.setManufacturingFacility(mf);
+            ss.setStock(stock);
+            
+            mf.getSupplyingWhatTo().add(ss);
+            co.getSuppliedWithFrom().add(ss);
+            
+            em.persist(ss);
+            em.flush();
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        }
+    }
+    public List<CountryOffice> getListOfCountryOffice() {
+        List<CountryOffice> COList; 
+        try {
+            System.out.println("SupplierManager.getListOfCountryOffice()");
+            COList = em.createNamedQuery("getAllCountryOffices", CountryOffice.class).getResultList();
+            return COList;
+        } catch(NoResultException NRE) {
+            System.err.println("Something went wrong");
+            return null;
+        }
+    }
+    public List<ManufacturingFacility> getListOfMF() {
+        List<ManufacturingFacility> MFList;
+        try {
+            System.out.println("SupplierManager.getListOfMF()");
+            MFList = em.createNamedQuery("getAllMFs", ManufacturingFacility.class).getResultList();
+            return MFList;
+        } catch(NoResultException NRE) {
+            System.err.println("Something went wrong");
+            return null;
+        }
+    }
+    public List<Stock> getListOfStock() {
+        List<Stock> stockList;
+        ManufacturingFacility mf;
+        try{
+            System.out.println("SupplierManager.getListOfStock()");
+            stockList = em.createNamedQuery("getAllStock", Stock.class).getResultList();
+            return stockList;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;
         }
     }
 }

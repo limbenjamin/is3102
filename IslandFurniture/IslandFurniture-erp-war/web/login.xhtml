@@ -14,49 +14,54 @@
         <!-- template styles -->
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/palette.css"></link>
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/navigation.css"></link>
-        <link rel="stylesheet" href="#{application.contextPath}/assets/css/dashboard.css"></link>        
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/dashboard.css"></link>
+        <script language="text/javascript">
+            window.onload = function() {
+                document.getElementById('loginForm:username').focus();
+            }
+        </script>
     </h:head>
     <h:body>
-    <div class="app login">
-        <!-- top header -->
-        <header class="header header-fixed navbar">
-            <div class="brand">
-                <!-- logo -->
-                <a href="#" class="navbar-brand">
-                    <img src="#{application.contextPath}/assets/img/logo.png" alt=""></img>
-                    <span class="heading-font">
-                        Island Furniture
-                    </span>
-                </a>
-                <!-- /logo -->
-            </div>
-        </header>
-        <!-- /top header -->
+        <div class="app login">
+            <!-- top header -->
+            <header class="header header-fixed navbar">
+                <div class="brand">
+                    <!-- logo -->
+                    <a href="#" class="navbar-brand">
+                        <img src="#{application.contextPath}/assets/img/logo.png" alt=""></img>
+                        <span class="heading-font">
+                            Island Furniture
+                        </span>
+                    </a>
+                    <!-- /logo -->
+                </div>
+            </header>
+            <!-- /top header -->
 
             <div class="container-fluid">
-              <div class="login-container">    
-                <div class="container login-box">
-                  <h5 class="centered-title">Welcome Staff</h5>
-                    <p class="text-center">Sign In To Your Account</p>
-                    <h:form id="loginForm" class="form-horizontal" pt:role="form">                   
-                          <div class="form-group">
-                            <div class="col-sm-12">
-                                <h:inputText id="username" value="#{loginManagedBean.username}" class="form-control" pt:placeholder="User ID" required="true"></h:inputText>
+                <div class="login-container">    
+                    <div class="container login-box">
+                        <h5 class="centered-title">Welcome Staff</h5>
+                        <p class="text-center">Sign In To Your Account</p>
+                        <h:form id="loginForm" class="form-horizontal" pt:role="form">                   
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <h:inputText id="username" value="#{loginManagedBean.username}" class="form-control" pt:placeholder="User ID" required="true"></h:inputText>
+                                </div>
                             </div>
-                          </div>
-                          <div class="form-group">
-                            <div class="col-sm-12">
-                                <h:inputSecret id="password" value="#{loginManagedBean.password}" class="form-control" pt:placeholder="Password" required="true"></h:inputSecret>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <h:inputSecret id="password" value="#{loginManagedBean.password}" class="form-control" pt:placeholder="Password" required="true"></h:inputSecret>
+                                </div>
                             </div>
-                          </div>
                             <br></br>
                             <h:commandButton action="#{loginManagedBean.login}" class="btn btn-lg btn-round btn-success btn-block" value="Login"></h:commandButton>                            
-                    </h:form>
-                    <a href="#{application.contextPath}/it/forgotpassword.xhtml">Forgot Password</a>
+                        </h:form>
+                        <a href="#{application.contextPath}/it/forgotpassword.xhtml">Forgot Password</a>
+                    </div>
                 </div>
-              </div>
             </div>
-    </div>
+        </div>
     </h:body>
 </html>
 

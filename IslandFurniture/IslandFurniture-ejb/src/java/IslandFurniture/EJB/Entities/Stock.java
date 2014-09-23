@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -23,6 +25,9 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "getAllStock", query = "SELECT s FROM Stock s")
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Stock implements Serializable {
 

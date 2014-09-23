@@ -41,7 +41,8 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         String[] privileges = new String [] {
         "Login","Modify Particulars","Dashboard","Messaging","Broadcast",
         "Change Password","Manage Plant","Manage Staff","Manage Roles","MSSR",
-        "Material","Furniture","Retail Item","Create Forecast","View Notifications"};
+        "Material","Furniture","Retail Item","Create Forecast","View Notifications",
+        "Review Forecast"};
         
         String[][] arr = new String [][] { 
             { "Login", "/login.xhtml", "fa-dummy", "dummy", "false"},
@@ -62,6 +63,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Retail Item", "/knowledge/retailItem.xhtml", "fa-home", "Retail Item", "true"},
             { "Create Forecast", "/salesplanning/createforecast.xhtml", "fa-home", "Create Forecast", "true"},
             { "View Notifications", "/it/notification.xhtml", "fa-home", "View Notifications", "true"},
+            { "Review Forecast", "/salesplanning/reviewforecast.xhtml", "fa-home", "Review Forecast", "true"},
         };
         
         for (int i=0; i<privileges.length; i++){

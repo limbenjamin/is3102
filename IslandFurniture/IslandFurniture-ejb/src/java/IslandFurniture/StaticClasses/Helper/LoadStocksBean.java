@@ -193,11 +193,23 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
 
             for (CountryOffice eachCo : countryOffices) {
+                List<Stock> rawStocksSold = new ArrayList();
                 List<Stock> stocksSold = new ArrayList();
-                for(Store eachStore: eachCo.getStores()){
-                    stocksSold.addAll(eachStore.getSells());
+                
+                // Grab all that stores sell and put in a list (with dupes)
+                for (Store eachStore : eachCo.getStores()) {
+                    rawStocksSold.addAll(eachStore.getSells());
                 }
-                for(Stock eachStock: stocksSold){
+                
+                // Remove dupes
+                for (Stock eachStock : rawStocksSold) {
+                    if (!stocksSold.contains(eachStock)) {
+                        stocksSold.add(eachStock);
+                    }
+                }
+                
+                // Assign every item sold to an mf
+                for (Stock eachStock : stocksSold) {
                     this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())));
                 }
             }

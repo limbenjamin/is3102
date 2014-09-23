@@ -39,7 +39,7 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
         "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)","General Staff",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
                                     };
 
             try {
@@ -90,6 +90,9 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
 
                 role = mrbl.getRoleFromName("Management (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
+                
+                role = mrbl.getRoleFromName("Sales Manager (Mfg)");
+                mrbl.addPrivilegeToRole(role.getId(), "Review Forecast");
                 
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());

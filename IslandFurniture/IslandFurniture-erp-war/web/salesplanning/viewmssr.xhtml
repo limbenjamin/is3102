@@ -5,13 +5,16 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
-        <h:form>
+        <h:form rendered="#{!viewMssrManagedBean.yearsOfMssr.isEmpty()}">
             <h:outputText value="Select a year: " />
             <h:selectOneMenu value="#{viewMssrManagedBean.yearOfMssr}" id="yearsOfMssr">
                 <f:selectItems value="#{viewMssrManagedBean.yearsOfMssr}" var="years" 
                                itemLabel="#{years}" itemValue="#{years}" />
                 <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />
             </h:selectOneMenu>
+            <h:commandButton value="Perform Monthly Update">
+                <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.monthlyUpdate}" />
+            </h:commandButton>
             <br /><br />
             <p:accordionPanel id="mssrTable" value="#{viewMssrManagedBean.mssrList}" var="mssrEntry" multiple="true">
                 <p:tab title="#{mssrEntry.first.name} (id:#{mssrEntry.first.id})">
@@ -37,6 +40,7 @@
                 </p:tab>
             </p:accordionPanel>
         </h:form>
+        <h:outputText value="No previous forecast available!" rendered="#{viewMssrManagedBean.yearsOfMssr.isEmpty()}" />
     </ui:define>
 </ui:composition>
 

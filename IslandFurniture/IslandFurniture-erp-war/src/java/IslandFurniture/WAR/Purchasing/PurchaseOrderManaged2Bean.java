@@ -98,9 +98,10 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        return "purchaseorder2?faces-redirect=true";
+        return "purchaseorder2";
     }
-
+    
+    /* old update purchase order method
     public String updatePurchaseOrder() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         status = request.getParameter("updatePurchaseOrder:status");
@@ -115,7 +116,23 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         System.out.println("updated purchase order" + purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
         return "purchaseorder2?faces-redirect=true";
-    } 
+    }*/
+    
+    // new update purchase order method
+    public String updatePurchaseOrder() throws ParseException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        status = request.getParameter("updatePurchaseOrder:status");
+        orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date date = (Date)formatter.parse(orderDateString); 
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(date);
+        orderDate = cal;        
+        mpol.updatePurchaseOrder(purchaseOrderId, "planned", orderDate);
+        System.out.println("updated purchase order" + purchaseOrderId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+        return "purchaseorder2?faces-redirect=true";
+    }     
     
     public String updateStock(ActionEvent event) throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -137,12 +154,10 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         return "purchaseorder2?faces-redirect=true";
     }    
     
-    public String deletePurchaseOrderDetail(ActionEvent event) {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("PODid", event.getComponent().getAttributes().get("PODid"));
-        purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
-        purchaseOrderDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("PODid");
+    public String deletePurchaseOrderDetail() {
+        purchaseOrderDetailId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("PODid"));
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
+        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         return "purchaseorder2";
     }
     
