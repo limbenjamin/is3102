@@ -19,6 +19,15 @@ public class MonthlyProcurementPlanPK implements Serializable {
     private Month month;
     private Integer year;
     private Long retailItem;
+    private Long manufacturingFacility;  
+    
+    public MonthlyProcurementPlanPK(Long MF,Long retailItem,Month m,Integer year){
+        this.manufacturingFacility=MF;
+        this.retailItem=retailItem;
+        this.month=m;
+        this.year=year;
+        
+    }
     
     @Override
     public boolean equals(Object object) {
@@ -26,7 +35,7 @@ public class MonthlyProcurementPlanPK implements Serializable {
             return false;
         }
         MonthlyProcurementPlanPK other = (MonthlyProcurementPlanPK) object;
-        return this.month.equals(other.month) && this.year.equals(other.year) && this.retailItem.equals(other.retailItem);
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.retailItem.equals(other.retailItem)&& this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override
@@ -35,11 +44,12 @@ public class MonthlyProcurementPlanPK implements Serializable {
         hash = 53 * hash + Objects.hashCode(this.month);
         hash = 53 * hash + Objects.hashCode(this.year);
         hash = 53 * hash + Objects.hashCode(this.retailItem);
+        hash = 53 * hash +Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
     
     @Override
     public String toString() {
-        return month + ", " + year + ", " + retailItem;
+        return month + ", " + year + ", " + retailItem + manufacturingFacility;
     }
 }
