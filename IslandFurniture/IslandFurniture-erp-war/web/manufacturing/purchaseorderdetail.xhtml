@@ -1,0 +1,35 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core" >
+    <ui:define name="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>View Purchase Order Detail</h4>
+                    <hr></hr>       
+                </div>
+                <div class="col-md-10 col-sm-10">                                               
+                  <section class="panel">
+                      <p:dataTable var="pod" value="#{purchaseOrderMfgDetailManagedBean.poDetailList}"
+                                    emptyMessage="No records found with given criteria">
+
+                          <p:column sortBy="#{pod.id}" headerText="id" filterMatchMode="contains">
+                              <h:outputText value="#{pod.id}" />
+                           </p:column>
+                          <p:column sortBy="#{pod.procuredStock.name}" headerText="Stock" filterMatchMode="contains">
+                              <h:outputText value="#{pod.procuredStock.name}" />
+                           </p:column>
+                          <p:column sortBy="#{pod.quantity}" headerText="Qty" filterMatchMode="contains">
+                              <h:outputText value="#{pod.quantity}" />
+                           </p:column>
+                       </p:dataTable>
+                  </section>
+                </div>
+
+
+            </div>                
+    </ui:define>
+</ui:composition>

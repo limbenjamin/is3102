@@ -16,6 +16,8 @@
                     <h:form>
                         <h:commandButton value="Generate Procurement Plan" class="btn" action="#{procurementPlanManagedBean.generateProcurementPlan}">
                         </h:commandButton>
+                        <h:commandButton value="Create Purchase Order" class="btn" action="#{procurementPlanManagedBean.createPurchaseOrder}">
+                        </h:commandButton>
                     </h:form>  
                       <p:dataTable var="mpp" value="#{procurementPlanManagedBean.mppList}"
                                     emptyMessage="No records found with given criteria">
