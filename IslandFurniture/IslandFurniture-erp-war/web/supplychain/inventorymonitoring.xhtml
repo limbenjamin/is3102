@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -33,17 +34,32 @@
                         </section>
 
                         <section name="View Contents of Storage Location">
-                            <h5>View Contents of Storage Location</h5>
-                            <h:form id="viewStorageLocation" class="form-horizontal">
+                            <h5>View Contents of Storage Location</h5><hr></hr>
+                            
+                              <h:form id="viewStorageLocation" class="form-horizontal">
                                 <div>
-                                    <label class="col-sm-4 control-label">Storage Bins</label>
+                                    <label class="col-sm-4 control-label">Storage Area</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
-                                            <f:selectItem itemLabel="Select Storage Bin" />
+                                        <h:selectOneMenu id="storageArea" class="form-control" value="#{inventoryMonitoringManagedBean.storageAreaId}">
+                                            <p:ajax listener="#{inventoryMonitoringManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                            <f:selectItem itemLabel="Select Storage Area" noSelectionOption="true"/>
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                <br></br>
+
+                              
+                                
+                                
+                                    <label class="col-sm-4 control-label">Storage Bin</label>
+                                    <div class="col-sm-8" for="storageBinMenu">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                            <f:selectItem itemLabel="Select Storage Bin" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
-                                </div>                                     
+                                </div> 
+
                                 <div class="modal-footer">
                                     <h:commandButton action="#{inventoryMonitoringManagedBean.viewStorageLocation}" value="View" class="btn btn-success btn-round">
                                     </h:commandButton>
