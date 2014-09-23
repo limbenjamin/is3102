@@ -9,10 +9,13 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StockUnit;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -20,7 +23,7 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -35,14 +38,18 @@ public class InventoryTransferManagedBean implements Serializable {
     private Long storageBinId;
     private Long stockUnitId;
     private Long stockId;
+    private Long storageAreaId;
+    private boolean ifStockUnitMovemementAllListEmpty;
 
     private String username;
-    ;
 
     private List<StorageBin> storageBinList;
+    private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
+    private List<StockUnit> stockUnitMovemementAllList;
 
     private StorageBin storageBin;
+    private StockUnit stockUnit;
     private Staff staff;
     private Plant plant;
 
@@ -52,6 +59,8 @@ public class InventoryTransferManagedBean implements Serializable {
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     public ManageGoodsIssuedLocal mgrl;
+    @EJB
+    public ManageInventoryMovementLocal msul;
 
     @PostConstruct
     public void init() {
@@ -59,9 +68,25 @@ public class InventoryTransferManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = miml.viewStorageBin(plant);
+        storageAreaList = miml.viewStorageArea(plant);
         stockUnitList = miml.viewStockUnit(plant);
+        stockUnitMovemementAllList = msul.viewStockUnitMovementAll(plant);
+        ifStockUnitMovemementAllListEmpty = stockUnitMovemementAllList.isEmpty();
         System.out.println("Init");
+    }
+
+    public void onStorageAreaChange() {
+        if (storageAreaId != null) {
+            storageBinList = miml.viewStorageBin(storageAreaId);
+        }
+    }
+
+    public void deleteStockUnitTemp(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
+        stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
+        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        msul.deleteStockUnit(stockUnit.getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
     }
 
     public String viewStockTakebyLocation() {
@@ -72,6 +97,14 @@ public class InventoryTransferManagedBean implements Serializable {
     public String viewStockTakebyStock() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         return "inventorytransfer_movementstock?faces-redirect=true";
+    }
+
+    public boolean isIfStockUnitMovemementAllListEmpty() {
+        return ifStockUnitMovemementAllListEmpty;
+    }
+
+    public void setIfStockUnitMovemementAllListEmpty(boolean ifStockUnitMovemementAllListEmpty) {
+        this.ifStockUnitMovemementAllListEmpty = ifStockUnitMovemementAllListEmpty;
     }
 
     public Long getPlantId() {
@@ -106,6 +139,14 @@ public class InventoryTransferManagedBean implements Serializable {
         this.stockId = stockId;
     }
 
+    public Long getStorageAreaId() {
+        return storageAreaId;
+    }
+
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -122,6 +163,14 @@ public class InventoryTransferManagedBean implements Serializable {
         this.storageBinList = storageBinList;
     }
 
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
+    }
+
     public List<StockUnit> getStockUnitList() {
         return stockUnitList;
     }
@@ -130,12 +179,28 @@ public class InventoryTransferManagedBean implements Serializable {
         this.stockUnitList = stockUnitList;
     }
 
+    public List<StockUnit> getStockUnitMovemementAllList() {
+        return stockUnitMovemementAllList;
+    }
+
+    public void setStockUnitMovemementAllList(List<StockUnit> stockUnitMovemementAllList) {
+        this.stockUnitMovemementAllList = stockUnitMovemementAllList;
+    }
+
     public StorageBin getStorageBin() {
         return storageBin;
     }
 
     public void setStorageBin(StorageBin storageBin) {
         this.storageBin = storageBin;
+    }
+
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
     }
 
     public Staff getStaff() {
@@ -176,6 +241,14 @@ public class InventoryTransferManagedBean implements Serializable {
 
     public void setMgrl(ManageGoodsIssuedLocal mgrl) {
         this.mgrl = mgrl;
+    }
+
+    public ManageInventoryMovementLocal getMsul() {
+        return msul;
+    }
+
+    public void setMsul(ManageInventoryMovementLocal msul) {
+        this.msul = msul;
     }
 
 }

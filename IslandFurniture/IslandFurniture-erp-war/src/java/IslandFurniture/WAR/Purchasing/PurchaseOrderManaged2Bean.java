@@ -81,13 +81,9 @@ public class PurchaseOrderManaged2Bean implements Serializable{
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
         System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        plantList = mpol.viewPlants();
         procuredStockList = mpol.viewProcuredStocks();
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         System.out.println("loaded some lists");
-        
-        plantId = mpol.getPlantOfOrder(purchaseOrderId);
-        System.out.println("this is plant id" + plantId);
         System.out.println("Init");
     }    
     
@@ -97,7 +93,15 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
         mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+        
+        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
+        if (purchaseOrderId != null) {
+            purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+        }
+        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
+        procuredStockList = mpol.viewProcuredStocks();
+        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);        
+        
         return "purchaseorder2";
     }
     

@@ -6,48 +6,49 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
-
-
 
 /**
  *
  * @author Benjamin
  */
 @ManagedBean
-@ViewScoped
-public class ProcurementPlanManagedBean {
+@javax.faces.bean.ViewScoped
+public class PurchaseOrderMfgManagedBean {
 
+    /**
+     * Creates a new instance of PurchaseOrderManagedBean
+     */
+    public PurchaseOrderMfgManagedBean() {
+    }
+    
+    private List<PurchaseOrder> poList;
     private String username;
-    private List<MonthlyProcurementPlan> mppList;
     
     @EJB
     private ManageProcurementPlanLocal mppl;
-    
     
     @PostConstruct
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        mppList = mppl.viewMonthlyProcurementPlan();
+        mppl.viewPurchaseOrder();
     }
-    
-    public String generateProcurementPlan(){
-        mppl.createMonthlyProcumentPlan();
-        return "procurementplan";
+
+    public List<PurchaseOrder> getPoList() {
+        return poList;
     }
-    
-    public String createPurchaseOrder(){
-        mppl.createPurchaseOrder();
-        return "procurementplan";
+
+    public void setPoList(List<PurchaseOrder> poList) {
+        this.poList = poList;
     }
 
     public String getUsername() {
@@ -64,14 +65,6 @@ public class ProcurementPlanManagedBean {
 
     public void setMppl(ManageProcurementPlanLocal mppl) {
         this.mppl = mppl;
-    }
-
-    public List<MonthlyProcurementPlan> getMppList() {
-        return mppList;
-    }
-
-    public void setMppList(List<MonthlyProcurementPlan> mppList) {
-        this.mppList = mppList;
     }
     
     

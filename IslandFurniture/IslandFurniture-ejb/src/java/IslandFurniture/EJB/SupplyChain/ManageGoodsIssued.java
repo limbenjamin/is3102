@@ -114,14 +114,16 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
     }
 
     @Override
-    public List<GoodsIssuedDocument> viewGoodsIssuedDocument() {
-        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=FALSE");
+    public List<GoodsIssuedDocument> viewGoodsIssuedDocument(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=FALSE AND s.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
 
     @Override
-    public List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted() {
-        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE");
+    public List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE AND s.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
 
@@ -149,13 +151,6 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         return q.getResultList();
     }
 
-//  REMEMBER THIS ONE
-//    @Override
-//    public List<Plant> viewPlant(Plant plant) {
-//        Query q = em.createQuery("SELECT s FROM Plant s WHERE s.id!=:plantId");
-//        q.setParameter("plantId", plant.getId());
-//        return q.getResultList();
-//    }
     @Override
     public void deleteGoodsIssuedDocument(Long goodsIssuedDocumentId) {
         goodsIssuedDocument = getGoodsIssuedDocument(goodsIssuedDocumentId);
@@ -189,7 +184,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         q.setParameter("stockId", stock.getId());
         return q.getResultList();
     }
-
+    
     @Override
     public List<StockUnit> viewStockUnitById2(Plant plant, Stock stock, GoodsIssuedDocument gid) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");

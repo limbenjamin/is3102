@@ -43,7 +43,7 @@ public interface ManageGoodsReceiptLocal {
 
     List<Stock> viewStock();
 
-    List<GoodsReceiptDocument> viewGoodsReceiptDocument();
+    List<GoodsReceiptDocument> viewGoodsReceiptDocument(Plant plant);
 
     List<GoodsReceiptDocumentDetail> viewGoodsReceiptDocumentDetail(GoodsReceiptDocument grd);
 
@@ -55,7 +55,7 @@ public interface ManageGoodsReceiptLocal {
 
     List<GoodsReceiptDocument> viewGoodsReceiptDocumentIndividual(GoodsReceiptDocument grd);
 
-    List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted();
+    List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted(Plant plant);
     
     List<GoodsIssuedDocument> viewInboundShipment(Plant plant);
     

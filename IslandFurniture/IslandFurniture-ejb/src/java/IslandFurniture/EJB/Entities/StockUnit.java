@@ -29,14 +29,14 @@ public class StockUnit implements Serializable {
     private Long qty = 0l;
     private Boolean available;
     private Long commitStockUnitId;
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
-    private Calendar commitTime;
     @ManyToOne
     private GoodsIssuedDocument goodsIssuedDocument;
     @ManyToOne
     private Stock stock;
     @ManyToOne
     private StorageBin location;
+    @ManyToOne
+    private StorageBin pendingLocation;
 
     public Long getId() {
         return id;
@@ -78,14 +78,6 @@ public class StockUnit implements Serializable {
         this.commitStockUnitId = commitStockUnitId;
     }
 
-    public Calendar getCommitTime() {
-        return commitTime;
-    }
-
-    public void setCommitTime(Calendar commitTime) {
-        this.commitTime = commitTime;
-    }
-
     public GoodsIssuedDocument getGoodsIssuedDocument() {
         return goodsIssuedDocument;
     }
@@ -110,7 +102,13 @@ public class StockUnit implements Serializable {
         this.location = location;
     }
 
-    
+    public StorageBin getPendingLocation() {
+        return pendingLocation;
+    }
+
+    public void setPendingLocation(StorageBin pendingLocation) {
+        this.pendingLocation = pendingLocation;
+    }
 
     @Override
     public int hashCode() {

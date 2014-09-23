@@ -50,36 +50,24 @@
                 <h4>Quick Links</h4>
                 <hr></hr>
                 <!-- Quick Links -->
-                <div class="col-md-4"><a href="acrm.html">
+                <div class="col-md-4"><a href="./common/modifyparticulars.xhtml">
                     <div class="quick-link">
-                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-bar-chart-o"></i></span>
-                        <h5>CRM Analytics</h5>
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-user"></i></span>
+                        <h5>Modify Particulars</h5>
                     </div></a>
-                </div>       
-                <div class="col-md-4"><a href="acrm.html">
+                </div>                
+                <div class="col-md-4"><a href="./common/broadcast.xhtml">
                     <div class="quick-link">
-                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-globe"></i></span>
-                        <h5>Sales Forecast</h5>
+                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-calendar"></i></span>
+                        <h5>Announcement &amp; Events</h5>
                     </div></a>
-                </div>    
+                </div>           
                 <div class="col-md-4"><a href="./common/messaging.xhtml">
                     <div class="quick-link">
                         <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-envelope"></i></span>
                         <h5>Messages</h5>
                     </div></a>
                 </div> 
-                <div class="col-md-4"><a href="acrm.html">
-                    <div class="quick-link">
-                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-edit"></i></span>
-                        <h5>CRM Operations</h5>
-                    </div></a>
-                </div>    
-                <div class="col-md-4"><a href="acrm.html">
-                    <div class="quick-link">
-                        <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-clock-o"></i></span>
-                        <h5>Transaction History</h5>
-                    </div></a>
-                </div>
 
                 <div class="col-md-12">
                     <hr></hr>
@@ -91,14 +79,14 @@
                     </div>
                     <ui:repeat value="#{dashManagedBean.announcementList}" var="announcement">
                         <a class="list-group-item">
-                            <h4><strong>#{announcement.title}</strong></h4>
+                            <h5><strong>#{announcement.title}</strong></h5>
                             <h5>#{announcement.content}</h5>
                             <br></br>
                             <small>Announced on #{announcement.activeDate}</small>
                         </a>
                     </ui:repeat>    
                     <div class="panel-footer">
-                        <a href="#" class="no-decor">
+                        <a href="./common/broadcast.xhtml" class="no-decor">
                             View All Announcements <i class="fa fa-arrow-circle-o-right"></i>
                         </a>
                     </div>

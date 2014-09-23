@@ -5,13 +5,14 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <h4>Inventory Transfer</h4><hr></hr>
 
                         <section name="Perform Stock Taking">
@@ -34,19 +35,70 @@
 
                             <h:form class="form-horizontal">
                                 <div>
-                                    <label class="col-sm-4 control-label">Transfer by Storage Bins</label>
+                                    <label class="col-sm-4 control-label">Transfer by Storage Location</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}">
+                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferManagedBean.storageAreaId}">
+                                            <p:ajax listener="#{inventoryTransferManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                            <f:selectItem itemLabel="Select Storage Location" />
+                                            <f:selectItems value="#{inventoryTransferManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                        </h:selectOneMenu>
+                                
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}">
                                             <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
-                                </div>                                     
+                                </div>  
+
+
                                 <div class="modal-footer">
                                     <h:commandButton action="#{inventoryTransferManagedBean.viewStockTakebyLocation}" value="View" class="btn btn-success btn-round">
                                     </h:commandButton>
                                 </div>
                             </h:form> 
+
+
+                            <section name="Pending Stock Transfer Table">
+                                <div class="panel-heading dashboard-title-panel">
+                                    Pending Movement of Stock
+                                </div>
+                                <div class="list-group-item">
+                                    <h:outputText rendered="#{inventoryTransferManagedBean.ifStockUnitMovemementAllListEmpty}" value="There are no pending movement of stock"/>
+                                    <h:panelGroup layout="block" rendered="#{!inventoryTransferManagedBean.ifStockUnitMovemementAllListEmpty}">
+                                        <table class="table table-hover table-condensed">
+                                            <tr>
+                                                <th>Stock</th>
+                                                <th>Current Storage Area</th>
+                                                <th>Current Storage Bin</th>
+                                                <th>New Storage Area</th>
+                                                <th>New Storage Bin</th>
+                                                <th>Quantity</th>
+                                                <th>Batch Number</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                            <h:form class="form-horizontal">
+                                                <ui:repeat value="#{inventoryTransferManagedBean.stockUnitMovemementAllList}" var="s">
+                                                    <tr>
+                                                        <td>#{s.stock.name}</td>
+                                                        <td>#{s.location.storageArea.name}</td>
+                                                        <td>#{s.location.name}</td>
+                                                        <td>#{s.pendingLocation.storageArea.name}</td>
+                                                        <td>#{s.pendingLocation.name}</td>
+                                                        <td>#{s.qty}</td>
+                                                        <td>#{s.batchNo}</td>
+                                                        <td>
+                                                            <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                                <f:attribute name="stockId" value="#{s.stock.id}" />
+                                                                <f:attribute name="stockUnit" value="#{s}" />
+                                                            </h:commandButton>
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </h:form> 
+                                        </table>
+                                    </h:panelGroup>
+                                </div>
+                            </section>
 
 
 

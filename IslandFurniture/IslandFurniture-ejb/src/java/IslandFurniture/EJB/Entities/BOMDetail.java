@@ -12,12 +12,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+@NamedQuery(name = "findBOMDetailByMaterial",query = "select bd from BOMDetail bd where bd.material=:m")
+})
 public class BOMDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
