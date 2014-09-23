@@ -10,8 +10,10 @@ import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.ArrayList;
@@ -32,6 +34,18 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
+
+    private ProcurementContractDetail addProcurementContractDetail(ProcurementContract pc, ProcuredStock procuredStock, ManufacturingFacility mf, int leadTime, int lotSize) {
+        ProcurementContractDetail pcd = new ProcurementContractDetail();
+        pcd.setProcuredStock(procuredStock);
+        pcd.setSupplierFor(mf);
+        pcd.setLeadTimeInDays(leadTime);
+        pcd.setLotSize(lotSize);
+        pcd.setProcurementContract(pc);
+        em.persist(pcd);
+        
+        return pcd;
+    }
 
     private Supplier addSupplier(String name, Country country) {
         Supplier supplier = QueryMethods.findSupplierByName(em, name);
@@ -77,6 +91,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
 
             for (ManufacturingFacility mf : mfList) {
                 Set<Material> reqMaterials = new HashSet();
+                Set<RetailItem> reqRi = new HashSet();
                 pcdList = new ArrayList();
 
                 for (StockSupplied ss : mf.getSupplyingWhatTo()) {
@@ -87,22 +102,25 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
                             reqMaterials.add(bomd.getMaterial());
                         }
                     }
+                    if (ss.getStock() instanceof RetailItem) {
+                        reqRi.add((RetailItem) ss.getStock());
+                    }
                 }
 
                 for (Material eachMat : reqMaterials) {
                     ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
-                    
-                    pcd = new ProcurementContractDetail();
-                    pcd.setProcuredStock(eachMat);
-                    pcd.setSupplierFor(mf);
-                    pcd.setLeadTimeInDays(rand.nextInt(7) + 4);
-                    pcd.setLotSize((rand.nextInt(5) + 1) * 100);
-                    pcd.setProcurementContract(pc);
-                    em.persist(pcd);
-
+                    pcd = this.addProcurementContractDetail(pc, eachMat, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
                     pcdList.add(pcd);
 
-                    pc.setProcurementContractDetails(pcdList);
+                    pc.getProcurementContractDetails().add(pcd);
+                }
+                
+                for(RetailItem eachRi:reqRi){
+                    ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
+                    pcd = this.addProcurementContractDetail(pc, eachRi, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
+                    pcdList.add(pcd);
+                    
+                    pc.getProcurementContractDetails().add(pcd);
                 }
 
                 mf.setSuppliedBy(pcdList);
