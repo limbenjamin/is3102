@@ -127,11 +127,10 @@
                         <ul class="nav user-info">
                             <li>
                                 <h:link outcome="modifyparticulars">
-                                    <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left" alt="User Avatar"></img>
+                                    <img src="#{application.contextPath}/assets/img/avatar.png" class="user-avatar pull-left avatar-margin" alt="User Avatar"></img>
                                     <span class="user-info">
                                         #{dashManagedBean.name}<br></br>
-                                        #{dashManagedBean.plantName} #{dashManagedBean.plantType}<br></br>
-                                        #{dashManagedBean.countryName}
+                                        <small>#{dashManagedBean.plantName} #{dashManagedBean.plantType}, #{dashManagedBean.countryName}</small>
                                     </span>
                                 </h:link>
                             </li>

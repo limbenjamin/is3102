@@ -28,8 +28,6 @@ public interface StockManagerLocal {
 
     public List<FurnitureModel> displayFurnitureList();
 
-    public void addFurnitureColour(String furnitureName, String colour);
-
     public void deleteMaterial(Long materialID);
 
     public List<RetailItem> displayItemList();
@@ -53,5 +51,7 @@ public interface StockManagerLocal {
     public void editBOMDetail(Long BOMDetailID, Integer quantity);
 
     public void deleteBOMDetail(Long BOMDetailID);
+
+    public void addFurnitureColour(Long furnitureID, String colour);
     
 }
