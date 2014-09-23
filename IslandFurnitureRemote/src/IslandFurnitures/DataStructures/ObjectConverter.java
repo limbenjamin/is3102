@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurnitures.DataStructures;
 
 /*
@@ -22,11 +21,9 @@ package IslandFurnitures.DataStructures;
  * You should have received a copy of the GNU Lesser General Public License along with this library.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,39 +31,41 @@ import java.util.Map;
  * Generic object converter.
  * <p>
  * <h3>Use examples</h3>
- * 
+ *
  * <pre>
  * Object o1 = Boolean.TRUE;
  * Integer i = ObjectConverter.convert(o1, Integer.class);
  * System.out.println(i); // 1
- * 
+ *
  * Object o2 = "false";
  * Boolean b = ObjectConverter.convert(o2, Boolean.class);
  * System.out.println(b); // false
- * 
+ *
  * Object o3 = new Integer(123);
  * String s = ObjectConverter.convert(o3, String.class);
  * System.out.println(s); // 123
  * </pre>
- * 
- * Not all possible conversions are implemented. You can extend the <tt>ObjectConverter</tt>
- * easily by just adding a new method to it, with the appropriate logic. For example:
- * 
+ *
+ * Not all possible conversions are implemented. You can extend the
+ * <tt>ObjectConverter</tt>
+ * easily by just adding a new method to it, with the appropriate logic. For
+ * example:
+ *
  * <pre>
  * public static ToObject fromObjectToObject(FromObject fromObject) {
  *     // Implement.
  * }
  * </pre>
- * 
- * The method name doesn't matter. It's all about the parameter type and the return type.
- * 
+ *
+ * The method name doesn't matter. It's all about the parameter type and the
+ * return type.
+ *
  * @author BalusC
  * @link http://balusc.blogspot.com/2007/08/generic-object-converter.html
  */
 public final class ObjectConverter {
 
     // Init ---------------------------------------------------------------------------------------
-
     private static final Map<String, Method> CONVERTERS = new HashMap<String, Method>();
 
     static {
@@ -76,7 +75,7 @@ public final class ObjectConverter {
             if (method.getParameterTypes().length == 1) {
                 // Converter should accept 1 argument. This skips the convert() method.
                 CONVERTERS.put(method.getParameterTypes()[0].getName() + "_"
-                    + method.getReturnType().getName(), method);
+                        + method.getReturnType().getName(), method);
             }
         }
     }
@@ -86,16 +85,18 @@ public final class ObjectConverter {
     }
 
     // Action -------------------------------------------------------------------------------------
-
     /**
      * Convert the given object value to the given class.
+     *
      * @param from The object value to be converted.
      * @param to The type class which the given object should be converted to.
      * @return The converted object value.
      * @throws NullPointerException If 'to' is null.
-     * @throws UnsupportedOperationException If no suitable converter can be found.
-     * @throws RuntimeException If conversion failed somehow. This can be caused by at least
-     * an ExceptionInInitializerError, IllegalAccessException or InvocationTargetException.
+     * @throws UnsupportedOperationException If no suitable converter can be
+     * found.
+     * @throws RuntimeException If conversion failed somehow. This can be caused
+     * by at least an ExceptionInInitializerError, IllegalAccessException or
+     * InvocationTargetException.
      */
     public static <T> T convert(Object from, Class<T> to) {
 
@@ -113,25 +114,40 @@ public final class ObjectConverter {
         String converterId = from.getClass().getName() + "_" + to.getName();
         Method converter = CONVERTERS.get(converterId);
         if (converter == null) {
-            throw new UnsupportedOperationException("Cannot convert from " 
-                + from.getClass().getName() + " to " + to.getName()
-                + ". Requested converter does not exist.");
+            throw new UnsupportedOperationException("Cannot convert from "
+                    + from.getClass().getName() + " to " + to.getName()
+                    + ". Requested converter does not exist.");
         }
 
         // Convert the value.
         try {
-            return to.cast(converter.invoke(to, from));
+            if (to.isPrimitive()) {
+                Object o = converter.invoke(to, from);
+                for (Method m : o.getClass().getMethods()) {
+                    if (m.getName().equals(to.getName() + "Value")) {
+
+                        return ((T) m.invoke(o, new Object[0]));
+
+                    }
+
+                }
+
+            } else {
+                return to.cast(converter.invoke(to, from));
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Cannot convert from " 
-                + from.getClass().getName() + " to " + to.getName()
-                + ". Conversion failed with " + e.getMessage(), e);
+            throw new RuntimeException("Cannot convert from "
+                    + from.getClass().getName() + " to " + to.getName()
+                    + ". Conversion failed with " + e.getMessage(), e);
         }
+        return (null);
     }
 
     // Converters ---------------------------------------------------------------------------------
-
     /**
-     * Converts Integer to Boolean. If integer value is 0, then return FALSE, else return TRUE.
+     * Converts Integer to Boolean. If integer value is 0, then return FALSE,
+     * else return TRUE.
+     *
      * @param value The Integer to be converted.
      * @return The converted Boolean value.
      */
@@ -140,7 +156,9 @@ public final class ObjectConverter {
     }
 
     /**
-     * Converts Boolean to Integer. If boolean value is TRUE, then return 1, else return 0.
+     * Converts Boolean to Integer. If boolean value is TRUE, then return 1,
+     * else return 0.
+     *
      * @param value The Boolean to be converted.
      * @return The converted Integer value.
      */
@@ -150,6 +168,7 @@ public final class ObjectConverter {
 
     /**
      * Converts Double to BigDecimal.
+     *
      * @param value The Double to be converted.
      * @return The converted BigDecimal value.
      */
@@ -159,6 +178,7 @@ public final class ObjectConverter {
 
     /**
      * Converts BigDecimal to Double.
+     *
      * @param value The BigDecimal to be converted.
      * @return The converted Double value.
      */
@@ -168,6 +188,7 @@ public final class ObjectConverter {
 
     /**
      * Converts Integer to String.
+     *
      * @param value The Integer to be converted.
      * @return The converted String value.
      */
@@ -177,6 +198,7 @@ public final class ObjectConverter {
 
     /**
      * Converts String to Integer.
+     *
      * @param value The String to be converted.
      * @return The converted Integer value.
      */
@@ -185,7 +207,29 @@ public final class ObjectConverter {
     }
 
     /**
+     * Converts String to Integer.
+     *
+     * @param value The String to be converted.
+     * @return The converted Integer value.
+     */
+    public static int stringToint(String value) {
+
+        return Integer.valueOf(value).intValue();
+    }
+
+    public static long stringTolong(String value) {
+
+        return Long.valueOf(value).longValue();
+    }
+
+    public static double stringTodouble(String value) {
+
+        return Double.valueOf(value).doubleValue();
+    }
+
+    /**
      * Converts Boolean to String.
+     *
      * @param value The Boolean to be converted.
      * @return The converted String value.
      */
@@ -195,6 +239,7 @@ public final class ObjectConverter {
 
     /**
      * Converts String to Boolean.
+     *
      * @param value The String to be converted.
      * @return The converted Boolean value.
      */
@@ -203,5 +248,4 @@ public final class ObjectConverter {
     }
 
     // You can implement more converter methods here.
-
 }

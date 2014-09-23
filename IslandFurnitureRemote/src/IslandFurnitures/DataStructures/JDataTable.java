@@ -33,9 +33,6 @@ public class JDataTable<T> implements Serializable {
         this.Internalrows = Internalrows;
     }
 
-
-
-
     public static class Cell implements Serializable {
 
         public String Value = "";
@@ -45,7 +42,7 @@ public class JDataTable<T> implements Serializable {
         private Boolean isEditable = false;
         private Boolean stateChanged = false;
         private int Index = 0;
-        private String colorClass="";
+        private String colorClass = "";
 
         public String getColorClass() {
             return colorClass;
@@ -109,16 +106,16 @@ public class JDataTable<T> implements Serializable {
         }
 
         public Object getValue() {
-            try{
-            if (!this.isBinded()) {
-                return transform(Value.toString());
-            }
-            }catch(Exception ex){
-            return "[Error]";
+            try {
+                if (!this.isBinded()) {
+                    return transform(Value.toString());
+                }
+            } catch (Exception ex) {
+                return "[Error]";
             }
             try {
                 Method m = binded_entity.getClass().getDeclaredMethod("get" + this.propertyname);
-                return m.invoke(binded_entity).toString();
+                return String.valueOf(m.invoke(binded_entity));
             } catch (NoSuchMethodException ex) {
 
             } catch (SecurityException ex) {
@@ -201,6 +198,15 @@ public class JDataTable<T> implements Serializable {
         public ArrayList<Cell> rowdata = new ArrayList<Cell>();
         public boolean Editable = false;
         private Serializable binded_entity;
+        private int rowNo;
+
+        public int getRowNo() {
+            return rowNo;
+        }
+
+        public void setRowNo(int rowNo) {
+            this.rowNo = rowNo;
+        }
 
         public Row(String dt) {
             this.displaytype = dt;
@@ -234,7 +240,7 @@ public class JDataTable<T> implements Serializable {
 
         public String rowheader;
         public String rowgroup;
-        private String ColorClass="";
+        private String ColorClass = "";
 
         public void setColorClass(String ColorClass) {
             this.ColorClass = ColorClass;
@@ -269,6 +275,8 @@ public class JDataTable<T> implements Serializable {
                 return r_cell;
 
             }
+            //System.out.println("JDataTable: getCell():"+this.rowNo +","+ i);
+
             return rowdata.get(i);
         }
 
@@ -285,6 +293,7 @@ public class JDataTable<T> implements Serializable {
 
     public JDataTable.Row newRow() {
         Row r = new Row();
+        r.setRowNo(this.Internalrows.size());
         Internalrows.add(r);
         return (r);
 
@@ -297,12 +306,10 @@ public class JDataTable<T> implements Serializable {
     public void setColumns(ArrayList<String> columns) {
         this.columns = columns;
     }
-    
-    
 
     public JDataTable.Row newBindedRow(Serializable entity) {
         Row r = new Row(entity);
-
+        r.setRowNo(this.Internalrows.size());
         Internalrows.add(r);
         return (r);
 
@@ -310,7 +317,7 @@ public class JDataTable<T> implements Serializable {
 
     public JDataTable.Row newRow(String dt) {
         Row r = new Row(dt);
-
+        r.setRowNo(this.Internalrows.size());
         Internalrows.add(r);
         return (r);
 

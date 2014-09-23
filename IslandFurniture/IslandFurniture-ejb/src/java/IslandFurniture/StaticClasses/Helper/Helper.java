@@ -52,49 +52,65 @@ public class Helper {
 
     }
 
-    public static Month getCurrentMonth()
-    {
+    public static Month getCurrentMonth() {
         try {
-            return translateMonth((int)Calendar.getInstance().get(Calendar.MONTH));
+            return translateMonth((int) Calendar.getInstance().get(Calendar.MONTH));
         } catch (Exception ex) {
             Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
-    public static int addMonth(Month month,int year,int addFactor,boolean return_month)
-    {
-        if (return_month)
-        {
-            int r=((month.value+addFactor) % 12);
-            if (r<0) r+=12; //Prevent negative modulus
+
+    public static int addMonth(Month month, int year, int addFactor, boolean return_month) {
+        if (return_month) {
+            int r = ((month.value + addFactor) % 12);
+            if (r < 0) {
+                r += 12; //Prevent negative modulus
+            }
             return r;
-        }else
-        {
-            return (int)Math.floor((month.value+addFactor)/12.0+year);
+        } else {
+            return (int) Math.floor((month.value + addFactor) / 12.0 + year);
         }
-    
+
     }
-    
-    public static int getCurrentYear(){
+
+    public static int getCurrentYear() {
         return Calendar.getInstance().get(Calendar.YEAR);
     }
-    
-        public static int getNumWorkDays(Month month,int Year) {
+
+    public static int getNumWorkDays(Month month, int Year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Year, month.value, 1);
 
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    
-    public static <Any> Any getFirstObjectFromQuery(String Query,EntityManager em){
-        try{
-        Query q=em.createQuery(Query);
-        
-        
-        return ((Any)q.getResultList().get(0));
-        }catch(Exception ex){return (null);}
+    public static int getNumOfWeeks(int month, int year) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, 1);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        return (cal.getActualMaximum(Calendar.WEEK_OF_MONTH));
+    }
+
+    public static int getNumOfDaysInWeek(int month, int year, int WeekNo) {
+        Calendar cal = Calendar.getInstance();
+        int DaysinMonth=30;
+        try {
+            DaysinMonth = getNumWorkDays(Helper.translateMonth(month), year);
+        } catch (Exception ex) {
+        }
+
+        return Math.min(DaysinMonth - (WeekNo - 1) * 7, 7);
+    }
+
+    public static <Any> Any getFirstObjectFromQuery(String Query, EntityManager em) {
+        try {
+            Query q = em.createQuery(Query);
+
+            return ((Any) q.getResultList().get(0));
+        } catch (Exception ex) {
+            return (null);
+        }
     }
 
 }

@@ -279,8 +279,20 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             throw new RuntimeException("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
         }
 
+        
+        //Set to zero whole chain of related capacity . else available capacity reading will be wrong
         for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
-            planTillMonthCursor.setQTY(0);
+            while (QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor) != null) {
+
+                if (planTillMonthCursor.isLocked()) {
+                    break;
+                }
+                planTillMonthCursor.setQTY(0);
+                planTillMonthCursor = QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor);
+            }
+        }
+
+        for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
 
             int deficit = 0;
             String endmonth = planTillMonthCursor.getMonth().toString();
@@ -331,40 +343,40 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         return wpp;
 
     }
-    
+
     @Override
-    public void planWeekMPP(String MF_NAME,String furniture_model_name,int m,long year) throws Exception
-    {
-        Query q=em.createNamedQuery("MonthlyProductionPlan.Find");
-        Query k=em.createQuery("select mf from ManufacturingFacility mf where mf.name=:name");
+    public void planWeekMPP(String MF_NAME, String furniture_model_name, int m, long year) throws Exception {
+        Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+        Query k = em.createQuery("select mf from ManufacturingFacility mf where mf.name=:name");
         k.setParameter("name", MF_NAME);
-        
-        Query L=em.createQuery("select fm from FurnitureModel fm where fm.name=:name");
+
+        Query L = em.createQuery("select fm from FurnitureModel fm where fm.name=:name");
         L.setParameter("name", furniture_model_name);
-        
-        
-        
-        
-        q.setParameter("mf",(ManufacturingFacility)k.getResultList().get(0));
+
+        q.setParameter("mf", (ManufacturingFacility) k.getResultList().get(0));
         q.setParameter("m", Helper.translateMonth(m).value);
         q.setParameter("y", year);
         q.setParameter("fm", (FurnitureModel) L.getResultList().get(0));
-        
-        
-        
+
         planWeekMPP((MonthlyProductionPlan) q.getResultList().get(0));
-                
+
     }
 
     //This process plans MPP and split it evenly across weeks
-   
     private void planWeekMPP(MonthlyProductionPlan mpp) throws Exception {
-        Calendar cal = Calendar.getInstance();
-        cal.set(mpp.getYear(), mpp.getMonth().value, 1);
-        int maxWeekNumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeekNumber));
+
+        int maxWeekNumber = Helper.getNumOfWeeks(mpp.getMonth().value, mpp.getYear());
+        int maxDay = Helper.getNumWorkDays(mpp.getMonth(), mpp.getYear());
+        int daysInLastWeek = Helper.getNumOfDaysInWeek(mpp.getMonth().value, mpp.getYear(), maxWeekNumber);
+
+        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxDay) * (maxDay - daysInLastWeek) / (maxWeekNumber - 1));
+
+        for (WeeklyProductionPlan wpp : mpp.getWeeklyProductionPlans()) {
+            em.remove(wpp);
+        }
+        
         mpp.getWeeklyProductionPlans().clear();
+
         for (int i = 1; i <= maxWeekNumber; i++) {
 
             WeeklyProductionPlan wp = addWeeklyPlan(mpp);
@@ -378,6 +390,5 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         }
 
     }
-
 
 }
