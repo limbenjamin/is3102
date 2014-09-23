@@ -89,7 +89,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     @EJB
     public ManageInventoryMonitoringLocal miml;
-
+    
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();

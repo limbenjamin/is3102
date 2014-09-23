@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StockUnit;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
@@ -20,7 +21,6 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -33,6 +33,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     private Long plantId;
     private Long storageBinId;
+    private Long storageAreaId;
     private Long stockUnitId;
     private Long stockId;
 
@@ -40,6 +41,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
     ;
 
     private List<StorageBin> storageBinList;
+    private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
 
     private StorageBin storageBin;
@@ -50,7 +52,7 @@ public class InventoryMonitoringManagedBean implements Serializable {
     public ManageInventoryMonitoringLocal miml;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
-     @EJB
+    @EJB
     public ManageGoodsIssuedLocal mgrl;
 
     @PostConstruct
@@ -59,17 +61,23 @@ public class InventoryMonitoringManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = miml.viewStorageBin(plant);
+        storageAreaList = miml.viewStorageArea(plant);
         stockUnitList = miml.viewStockUnit(plant);
         System.out.println("Init");
+    }
+
+    public void onStorageAreaChange() {
+        if (storageAreaId != null) {
+            storageBinList = miml.viewStorageBin(storageAreaId);
+        }
     }
 
     public String viewStorageLocation() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         return "inventorymonitoring_location?faces-redirect=true";
     }
-    
-        public String viewStockTakebyLocation() {
+
+    public String viewStockTakebyLocation() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         return "inventorymonitoring_stlocation?faces-redirect=true";
     }
@@ -78,8 +86,8 @@ public class InventoryMonitoringManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         return "inventorymonitoring_stock?faces-redirect=true";
     }
-    
-        public String viewStockTakebyStock() {
+
+    public String viewStockTakebyStock() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         return "inventorymonitoring_ststock?faces-redirect=true";
     }
@@ -98,6 +106,14 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     public void setStorageBinId(Long storageBinId) {
         this.storageBinId = storageBinId;
+    }
+
+    public Long getStorageAreaId() {
+        return storageAreaId;
+    }
+
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
     }
 
     public Long getStockUnitId() {
@@ -130,6 +146,14 @@ public class InventoryMonitoringManagedBean implements Serializable {
 
     public void setStorageBinList(List<StorageBin> storageBinList) {
         this.storageBinList = storageBinList;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
     }
 
     public List<StockUnit> getStockUnitList() {

@@ -65,8 +65,15 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
     }
 
     @Override
-    public List<StorageBin> viewStorageBin(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId");
+    public List<StorageBin> viewStorageBin(Long id) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.id=:id");
+        q.setParameter("id", id);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StorageArea> viewStorageArea(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }

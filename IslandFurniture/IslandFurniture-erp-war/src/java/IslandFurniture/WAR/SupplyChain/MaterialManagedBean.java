@@ -11,7 +11,7 @@ import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
+import java.util.List; 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;

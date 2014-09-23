@@ -11,9 +11,12 @@ import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.RetailItem;
+import IslandFurniture.EJB.Entities.StockSupplied;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findMaterialByName;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findRetailItemByName;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.getBOMDetailByMaterial;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.getStockSuppliedByStock;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -82,11 +85,15 @@ public class StockManager implements StockManagerLocal {
     }
     public void deleteMaterial(Long materialID) {
         Material material;
+        List<BOMDetail> bomList;
         try{
             System.out.println("StockManager.deleteMaterial()");
             material = em.find(Material.class, materialID);
-            System.out.println("Don't forget to check for constraints");
-            material.setHidden(true);
+            bomList = getBOMDetailByMaterial(em, material);
+            if(bomList.size() > 0)
+                System.err.println("Invalid deletion due to existing BOM");
+            else
+                em.remove(material);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -149,16 +156,19 @@ public class StockManager implements StockManagerLocal {
     }
     public void deleteFurnitureModel(Long furnitureID) {
         FurnitureModel fm;
+        List<StockSupplied> stockList;
         try {
             System.out.println("StockManager.deleteFurnitureModel()");
             System.out.println(furnitureID);
             fm = em.find(FurnitureModel.class, furnitureID);
-            if(fm.getBom().getBomDetails().size() < 1) {
-                em.remove(fm);
-                System.out.println("Successfully deleted FurnitureModel");
-            } else {
+            stockList = getStockSuppliedByStock(em, fm);
+            if(fm.getBom().getBomDetails().size() >= 1) {
                 System.out.println("Invalid deletion due to existence of BOM");
             }
+            if(stockList.size() >= 1)
+                System.out.println("Invalid delete due to existence of Stock Supply Request");
+            else
+                em.remove(fm);
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
         }
@@ -281,17 +291,19 @@ public class StockManager implements StockManagerLocal {
     }
     public boolean deleteRetailItem(Long itemID) {
         RetailItem item;
+        List<StockSupplied> stockList;
         try {
             System.out.println("StockManager.deleteRetailItem()");
             item = em.find(RetailItem.class, itemID);
-            if(item.getSoldBy() != null) {
-                System.err.println("Can't delete " + item.getName() +".\n But still gonna delete for now to remind myself I need to perform logical deletion");
-                em.remove(item);
-                em.flush();
+            stockList = getStockSuppliedByStock(em, item);
+            if(item.getSoldBy().size() >= 1) {
+                System.err.println("Can't delete " + item.getName() + " because it is currently sold by a store");
+                return false;
+            } else if(stockList.size() >= 1) {
+                System.out.println("Invalid delete due to existence of Stock Supply Request");
                 return false;
             } else {
                 em.remove(item);
-                em.flush();
                 return true;
             }
         } catch(Exception ex) {

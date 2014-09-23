@@ -118,8 +118,9 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public List<GoodsReceiptDocument> viewGoodsReceiptDocument() {
-        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE");
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocument(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE AND s.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
 
@@ -138,8 +139,9 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted() {
-        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=TRUE");
+    public List<GoodsReceiptDocument> viewGoodsReceiptDocumentPosted(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=TRUE AND s.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
 

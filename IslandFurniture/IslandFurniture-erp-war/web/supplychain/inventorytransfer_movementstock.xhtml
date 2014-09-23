@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -23,8 +24,8 @@
                             <table class="table table-hover table-condensed">
                                 <tr>
                                     <th>Stock Unit Number</th>
-                                    <th>Storage Area</th>
-                                    <th>Storage Bin</th>
+                                    <th>Current Storage Area</th>
+                                    <th>Current Storage Bin</th>
                                     <th>Quantity</th>
                                     <th>Batch Number</th>
                                 </tr>
@@ -65,10 +66,23 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">Storage Bin: </label>
+                                                    <label class="col-sm-3 control-label">Storage Area: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementStockManagedBean.storageBinId}">
+                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementStockManagedBean.storageAreaId}">
+                                                            <p:ajax listener="#{inventoryTransferMovementStockManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                                            <f:selectItem itemLabel="Select Storage Area" />
+                                                            <f:selectItems value="#{inventoryTransferMovementStockManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label" >Storage Bin: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferMovementStockManagedBean.storageBinId}">
                                                             <f:selectItem itemLabel="Select Storage Bin" />
                                                             <f:selectItems value="#{inventoryTransferMovementStockManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -99,15 +113,17 @@
                         </section>
 
 
-                       
+
 
 
                         <section name="Edit Stock">
                             <h5>Pending Movement of Stock</h5>
                             <table class="table table-hover table-condensed">
                                 <tr>
-                                    <th>Storage Area</th>
-                                    <th>Storage Bin</th>
+                                    <th>Current Storage Area</th>
+                                    <th>Current Storage Bin</th>
+                                    <th>New Storage Area</th>
+                                    <th>New Storage Bin</th>
                                     <th>Quantity</th>
                                     <th>Batch Number</th>
                                     <th>Delete</th>
@@ -117,6 +133,8 @@
                                         <tr>
                                             <td>#{s.location.storageArea.name}</td>
                                             <td>#{s.location.name}</td>
+                                            <td>#{s.pendingLocation.storageArea.name}</td>
+                                            <td>#{s.pendingLocation.name}</td>
                                             <td>#{s.qty}</td>
                                             <td>#{s.batchNo}</td>
                                             <td>
@@ -131,7 +149,7 @@
                             </table>  
                         </section>
 
-                         <section name="Continue with Goods Issue Document"> 
+                        <section name="Continue with Goods Issue Document"> 
 
                             <h:form class="form-horizontal">
                                 <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.confirmStockUnit}" value="Confirm Stock Movement" class="btn btn-primary pull-right"> 
@@ -140,7 +158,7 @@
                                 </h:commandButton>
                             </h:form>
                         </section>
-                        
+
 
 
                     </div>

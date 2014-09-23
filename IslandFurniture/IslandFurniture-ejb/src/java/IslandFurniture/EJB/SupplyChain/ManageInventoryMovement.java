@@ -70,7 +70,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime, GoodsIssuedDocument gid) {
+    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
@@ -78,22 +78,21 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         stockUnit.setLocation(storageBin);
         stockUnit.setAvailable(false);
         stockUnit.setCommitStockUnitId(stockUnitId);
-        stockUnit.setCommitTime(commitTime);
         stockUnit.setGoodsIssuedDocument(gid);
         em.persist(stockUnit);
         em.flush();
     }
 
     @Override
-    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, Calendar commitTime) {
+    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
         stockUnit.setQty(quantity);
         stockUnit.setLocation(storageBin);
+        stockUnit.setPendingLocation(newStorageBin);
         stockUnit.setAvailable(false);
         stockUnit.setCommitStockUnitId(stockUnitId);
-        stockUnit.setCommitTime(commitTime);
         stockUnit.setGoodsIssuedDocument(null);
         em.persist(stockUnit);
         em.flush();
@@ -106,10 +105,19 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         q.setParameter("stockId", stock.getId());
         return q.getResultList();
     }
+    
+        @Override
+    public List<StockUnit> viewStockUnitMovementAll(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
 
     @Override
     public void confirmStockUnitMovement(Long stockUnitId) {
         stockUnit = getStockUnit(stockUnitId);
+        stockUnit.setLocation(stockUnit.getPendingLocation());
+        stockUnit.setPendingLocation(null);
         stockUnit.setAvailable(true);
         em.merge(stockUnit);
         em.flush();
