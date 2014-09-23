@@ -25,16 +25,13 @@ public interface ManageInventoryMonitoringLocal {
     StorageBin getStorageBin(Long storageBinId);
 
     Stock getStock(Long id);
-    
+
     void editStockUnitQuantity(Long stockUnitId, Long qty);
-    
+
     StockUnit getStockUnit(Long id);
-    
+
     List<StockUnit> viewStockUnitBin(StorageBin storageBin);
-    
+
     List<StorageArea> viewStorageArea(Plant plant);
-    
-    
-    
-    
+
 }

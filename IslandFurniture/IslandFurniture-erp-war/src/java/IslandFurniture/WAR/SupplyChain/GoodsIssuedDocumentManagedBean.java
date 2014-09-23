@@ -59,6 +59,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     private Stock stock;
     private Integer quantity;
+    private boolean ifStockUnitMainListEmpty;
 
     private List<GoodsIssuedDocument> goodsIssuedDocumentList;
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetailList;
@@ -113,6 +114,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
         stockUnitList = mgrl.viewStockUnit(plant);
         stockUnitMainList = mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument);
+        ifStockUnitMainListEmpty = stockUnitMainList.isEmpty();
         if (goodsIssuedDocument.getIssuedDate() != null) {
             issuedDateString = df.format(goodsIssuedDocument.getIssuedDate().getTime());
         }
@@ -199,6 +201,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
+    public boolean isIfStockUnitMainListEmpty() {
+        return ifStockUnitMainListEmpty;
+    }
+
+    public void setIfStockUnitMainListEmpty(boolean ifStockUnitMainListEmpty) {
+        this.ifStockUnitMainListEmpty = ifStockUnitMainListEmpty;
+    }
+        
     public Long getPlantId() {
         return plantId;
     }

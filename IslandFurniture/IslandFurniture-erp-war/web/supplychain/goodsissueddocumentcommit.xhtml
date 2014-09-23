@@ -16,62 +16,77 @@
                                 <i class="fa fa-fw fa-plus"></i>Add Stock
                             </button>  
                         </h:form>    
-                        <h4>Goods Issued Document: Stock Information for #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
-
-
-
+                        <h4>Goods Issued Document: #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
                         <section name="Storage Location of Stock">
-                            <h5>Storage Location of Stock</h5>
-                            <table class="table table-hover table-condensed">
-                                <tr>
-                                    <th>Storage Area</th>
-                                    <th>Storage Bin</th>
-                                    <th>Quantity</th>
-                                    <th>Batch Number</th>
-                                    <th>Stock Unit Number</th>
-                                </tr>
-                                <h:form class="form-horizontal">
-                                    <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s">
-                                        <tr> 
-                                            <td>#{s.location.storageArea.name}</td>
-                                            <td>#{s.location.name}</td>
-                                            <td>#{s.qty}</td>
-                                            <td>#{s.batchNo}</td>
-                                            <td>#{s.id}</td>
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>  
+                            <div class="panel-heading dashboard-title-panel">
+                                Storage Location of Stock
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Storage Area</th>
+                                        <th>Storage Bin</th>
+                                        <th>Quantity</th>
+                                        <th>Batch Number</th>
+                                        <th>Stock Unit Number</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s">
+                                            <tr> 
+                                                <td>#{s.location.storageArea.name}</td>
+                                                <td>#{s.location.name}</td>
+                                                <td>#{s.qty}</td>
+                                                <td>#{s.batchNo}</td>
+                                                <td>#{s.id}</td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
                         </section>
+                        
+                        <br/>
 
                         <section name="Edit Stock">
-                            <h5>Pending Committed Stock</h5>
-                            <table class="table table-hover table-condensed">
-                                <tr>
-                                    <th>Storage Area</th>
-                                    <th>Storage Bin</th>
-                                    <th>Quantity</th>
-                                    <th>Batch Number</th>
-                                    <th>Delete</th>
-                                </tr>
-                                <h:form class="form-horizontal">
-                                    <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList2}" var="s">
+
+                            <div class="panel-heading dashboard-title-panel">
+                                Pending Goods Issued Stock
+                            </div>
+                            <div class="list-group-item">
+                                <h:outputText rendered="#{goodsIssuedDocumentCommitManagedBean.ifstockUnitByIdList2Empty}" value="There are no pending goods issued stock"/>
+                                <h:panelGroup layout="block" rendered="#{!goodsIssuedDocumentCommitManagedBean.ifstockUnitByIdList2Empty}">
+
+                                    <table class="table table-hover table-condensed">
                                         <tr>
-                                            <td>#{s.location.storageArea.name}</td>
-                                            <td>#{s.location.name}</td>
-                                            <td>#{s.qty}</td>
-                                            <td>#{s.batchNo}</td>
-                                            <td>
-                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
-                                                    <f:attribute name="stockUnit" value="#{s}" />
-                                                </h:commandButton>
-                                            </td>
+                                            <th>Storage Area</th>
+                                            <th>Storage Bin</th>
+                                            <th>Quantity</th>
+                                            <th>Batch Number</th>
+                                            <th>Delete</th>
                                         </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>  
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList2}" var="s">
+                                                <tr>
+                                                    <td>#{s.location.storageArea.name}</td>
+                                                    <td>#{s.location.name}</td>
+                                                    <td>#{s.qty}</td>
+                                                    <td>#{s.batchNo}</td>
+                                                    <td>
+                                                        <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                            <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
+                                                            <f:attribute name="stockUnit" value="#{s}" />
+                                                        </h:commandButton>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>  
+                                </h:panelGroup>
+                                </div>
                         </section>
+                        
+                        <br/>
+
 
                         <section name="Continue with Goods Issue Document"> 
 

@@ -10,12 +10,16 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockUnit;
+import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import static javafx.scene.input.KeyCode.I;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -37,14 +41,20 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     private Long stockId;
     private Long stockTakeQuantity;
     private Long stockUnitId;
-
+    private Long stockUnitQuantity;
     private String username;
+    private Long storageAreaId;
 
+    private boolean ifStockUnitMovementListEmpty;
+
+    private List<StorageArea> storageAreaList;
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
+    private List<StockUnit> stockUnitMovementList;
 
     private StorageBin storageBin;
     private Stock stock;
+    private StockUnit stockUnit;
     private Staff staff;
     private Plant plant;
 
@@ -54,6 +64,8 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     public ManageInventoryMonitoringLocal miml;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+    @EJB
+    public ManageInventoryMovementLocal msul;
 
     @PostConstruct
     public void init() {
@@ -61,11 +73,13 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        stockUnitList = miml.viewStockUnit(plant);
         System.out.println("Init");
+        storageAreaList = miml.viewStorageArea(plant);
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = miml.getStorageBin(storageBinId);
-
+        stockUnitList = msul.viewStockUnitByStorageBin(plant, storageBin);
+        stockUnitMovementList = msul.viewStockUnitMovementbyStorageBin(storageBin);
+        ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
@@ -74,14 +88,110 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
-        
-        System.out.println("OMG this is the stockTakeQuantity: " + stockTakeQuantity);
-        
         miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        
         stockUnitList = miml.viewStockUnit(plant);
         stockTakeQuantity = null;
         return "inventorymonitoring_stlocation";
+    }
+
+    public void addStockUnitTemp(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
+
+        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
+        stockUnit = mgrl.getStockUnit(stockUnitId);
+        stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
+        storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
+        storageBin = msul.getStorageBin(storageBinId);
+
+        msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+        msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+    }
+
+    public void deleteStockUnitTemp(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
+        stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
+        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        msul.deleteStockUnit(stockUnit.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+    }
+
+    public void onStorageAreaChange() {
+        if (storageAreaId != null) {
+            storageBinList = miml.viewStorageBin(storageAreaId);
+        }
+    }
+
+    public void confirmStockUnit(ActionEvent event) throws IOException {
+        for (StockUnit g : stockUnitMovementList) {
+            msul.confirmStockUnitMovement(g.getId());
+        }
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+    }
+
+    public List<StockUnit> getStockUnitMovementList() {
+        return stockUnitMovementList;
+    }
+
+    public void setStockUnitMovementList(List<StockUnit> stockUnitMovementList) {
+        this.stockUnitMovementList = stockUnitMovementList;
+    }
+
+    public boolean isIfStockUnitMovementListEmpty() {
+        return ifStockUnitMovementListEmpty;
+    }
+
+    public void setIfStockUnitMovementListEmpty(boolean ifStockUnitMovementListEmpty) {
+        this.ifStockUnitMovementListEmpty = ifStockUnitMovementListEmpty;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
+    }
+
+    public Long getStorageAreaId() {
+        return storageAreaId;
+    }
+
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
+    }
+
+    public ManageInventoryMovementLocal getMsul() {
+        return msul;
+    }
+
+    public void setMsul(ManageInventoryMovementLocal msul) {
+        this.msul = msul;
+    }
+
+    public Long getStockUnitQuantity() {
+        return stockUnitQuantity;
+    }
+
+    public void setStockUnitQuantity(Long stockUnitQuantity) {
+        this.stockUnitQuantity = stockUnitQuantity;
+    }
+
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
     }
 
     public Long getPlantId() {
@@ -203,6 +313,5 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
-
 
 }

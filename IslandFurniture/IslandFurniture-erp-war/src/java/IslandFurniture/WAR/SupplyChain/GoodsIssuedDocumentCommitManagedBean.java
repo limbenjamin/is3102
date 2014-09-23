@@ -7,7 +7,6 @@ package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
@@ -46,10 +45,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long storageAreaid;
     private Long stockUnitId;
     private Long oldStockUnitId;
+    
+    private boolean ifstockUnitByIdList2Empty;
 
     private String issuedDateString;
     private Date issuedDateType;
-
+    
     private String username;
     private String deliverynote;
 
@@ -104,6 +105,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
 
         stockUnitByIdList = mgrl.viewStockUnitById(plant, stock);
         stockUnitByIdList2 = mgrl.viewStockUnitById2(plant, stock, goodsIssuedDocument);
+        ifstockUnitByIdList2Empty = stockUnitByIdList2.isEmpty();
         stockUnitByIdAndGRDList = mgrl.viewStockUnitByIdAndGrdId(stock, goodsIssuedDocument);
 
         System.out.println("Init");
@@ -142,6 +144,22 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     public void continueWithGoodsIssueDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
+    }
+
+    public Long getOldStockUnitId() {
+        return oldStockUnitId;
+    }
+
+    public void setOldStockUnitId(Long oldStockUnitId) {
+        this.oldStockUnitId = oldStockUnitId;
+    }
+
+    public boolean isIfstockUnitByIdList2Empty() {
+        return ifstockUnitByIdList2Empty;
+    }
+
+    public void setIfstockUnitByIdList2Empty(boolean ifstockUnitByIdList2Empty) {
+        this.ifstockUnitByIdList2Empty = ifstockUnitByIdList2Empty;
     }
 
     public Long getPlantId() {

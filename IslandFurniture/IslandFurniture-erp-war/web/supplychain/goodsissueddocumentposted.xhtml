@@ -22,51 +22,62 @@
 
                     <div class="col-md-8">                      
                         <section name="EditGRD">
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>Goods Issued ID</th>
-                                    <th>Posting Date</th>
-                                    <th>Issued Date</th>
-                                    <td>Issued To</td>
-                                </tr>
-                                <h:form id="editGRD" class="form-horizontal">
-                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentList}" var="grd">
-                                        <tr>
+                            <div class="panel-heading dashboard-title-panel">
+                                Goods Issued Document Details
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Goods Issued ID</th>
+                                        <th>Issued Date</th>
+                                        <th>Posting Date</th>
+                                        
+                                        <td>Issued To</td>
+                                    </tr>
+                                    <h:form id="editGRD" class="form-horizontal">
+                                        <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentList}" var="grd">
                                             <tr>
-                                                <td><h:outputText value="#{grd.id}"></h:outputText></td>
-                                                <td><h:outputText value="#{grd.postingDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
-                                                    </h:outputText></td>
-                                                <td><h:outputText value="#{grd.issuedDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
-                                                    </h:outputText></td>
-                                                <td>#{grd.deliverTo.name}</td>
+                                                <tr>
+                                                    <td><h:outputText value="#{grd.id}"></h:outputText></td>
+                                                    <td><h:outputText value="#{grd.issuedDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    <td><h:outputText value="#{grd.postingDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    
+                                                    <td>#{grd.deliverTo.name}</td>
+                                                </tr>
+
                                             </tr>
-                                            
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
                         </section>
                         
+                        <br/>
+
                         <section name="GoodsIssuedDocumentDetail">
-                             <h5>List of Stock Items</h5>
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>Stock</th>
-                                    <th>Quantity</th>
-
-                                </tr>
-                                <h:form class="form-horizontal">
-
-                                    <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentDetailList}" var="grdd">
-                                        <tr>
-                                            <td><h:outputText value="#{grdd.stock.name}"/></td>
-                                            <td><h:outputText value="#{grdd.quantity}"/></td>
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table>
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Stock Items
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Stock</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentDetailList}" var="grdd">
+                                            <tr>
+                                                <td><h:outputText value="#{grdd.stock.name}"/></td>
+                                                <td><h:outputText value="#{grdd.quantity}"/></td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
                         </section>
                     </div>
                 </div>
