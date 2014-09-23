@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurnitures.DataStructures.JDataTable;
@@ -158,6 +159,8 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
                     throw new Exception("A number greater than zero is expected !");
                 }
 
+                em.merge(o);
+
                 //sigh so tedious to don one thing
                 mpp.planWeekMPP(_mpp.getManufacturingFacility().getName(), _mpp.getFurnitureModel().getName(), _mpp.getMonth().value, _mpp.getYear());
 
@@ -170,9 +173,35 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
                     throw new Exception("Production Capacity for " + pc.getFurnitureModel().getName() + " cannot be negative !");
                 }
 
+                em.merge(o);
+
             }
 
-            em.merge(o);
+            if (o instanceof WeeklyProductionPlan) {
+                WeeklyProductionPlan wpp = (WeeklyProductionPlan) o;
+
+                if (wpp.getQTY() < 0) {
+                    throw new Exception("Production Capacity for " + wpp.getWeekNo() + wpp.getMonthlyProductionPlan().getMonth() + "/" + wpp.getMonthlyProductionPlan().getYear() + " cannot be negative !");
+                }
+
+                double totalproduction = 0;
+                int capacity = wpp.getMonthlyProductionPlan().getManufacturingFacility().findProductionCapacity(wpp.getMonthlyProductionPlan().getFurnitureModel()).getCapacity(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear());
+                int delta = 0;
+                for (WeeklyProductionPlan wppz : wpp.getMonthlyProductionPlan().getWeeklyProductionPlans()) {
+
+                    totalproduction += wppz.getQTY();
+                }
+
+                if (totalproduction > capacity) {
+                    throw new Exception("Production Capacity for " + wpp.getWeekNo() + wpp.getMonthlyProductionPlan().getMonth() + "/" + wpp.getMonthlyProductionPlan().getYear() + " exceeded total month capacity of " + capacity);
+
+                }
+
+                em.merge(o);
+                wpp.getMonthlyProductionPlan().setQTY(Double.valueOf(totalproduction).intValue());
+                em.merge(wpp.getMonthlyProductionPlan());
+
+            }
 
         }
         System.out.println("updateListOfEntities(): Success");
@@ -307,10 +336,51 @@ public class ManageProductionPlanningEJBBean implements ManageProductionPlanning
     public void persist(Object object) {
         em.persist(object);
     }
-    
-    
-    public Object getWeeklyPlans()
-    {
-        return null;
+
+    @Override
+    public Object getWeeklyPlans(String period, String MFNAME) {
+        ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MFNAME + "'").getSingleResult();
+
+        Month requestedMonth = Month.valueOf(period.split("/")[0]);
+        int requestedYear = Integer.valueOf(period.split("/")[1]);
+        JDataTable<String> jdt = new JDataTable<String>();
+        jdt.columns.add("DataType");
+        Query q = em.createNamedQuery("WeeklyProductionPlan.getForMF");
+        q.setParameter("m", requestedMonth.value);
+        q.setParameter("y", requestedYear);
+        q.setParameter("MF", mff);
+
+        JDataTable.Row daysInWeek = jdt.newRow();
+        daysInWeek.newCell("Days In a Week");
+        JDataTable.Row PlannedWeekProduction = null;
+
+        String CFM = "";
+
+        //Columns Construction
+        int MaxWeek = Helper.getNumOfWeeks(requestedMonth.value, requestedYear);
+        for (int i = 1; i <= MaxWeek; i++) {
+            jdt.columns.add("Week " + i);
+            int DaysInMonth = Helper.getNumOfDaysInWeek(requestedMonth.value, requestedYear, i);
+            daysInWeek.newCell(String.valueOf(DaysInMonth));
+        }
+
+        //Iterate WPP
+        for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
+            if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
+                CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);
+                PlannedWeekProduction = jdt.newRow();
+                PlannedWeekProduction.newCell(CFM);
+
+            }
+
+            Cell c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
+            if (wpp.getMonthlyProductionPlan().isLocked() == false) {
+                c.setIsEditable(true);
+            }
+        }
+
+        System.out.println("getWeeklyPlans() Requesting for wpp for" + requestedMonth + " /" + requestedYear);
+        return jdt;
     }
+
 }
