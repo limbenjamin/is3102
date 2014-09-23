@@ -38,7 +38,6 @@ public class WeeklyProductionPlan implements Serializable {
     @OneToOne
     private ProductionOrder productionOrder;
 
-    @Column(unique = true)
     private int WeekNo;
 
     private int QTY;
