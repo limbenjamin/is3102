@@ -126,11 +126,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty) {    
+    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty) {
+        Long podId = pod.getId();
+        purchaseOrderDetail = (PurchaseOrderDetail) em.find(PurchaseOrderDetail.class, podId);
         procuredStock = getProcuredStock(psId);
-        pod.setProcuredStock(procuredStock);
-        pod.setQuantity(qty);
-        em.persist(pod);
+        purchaseOrderDetail.setProcuredStock(procuredStock);
+        purchaseOrderDetail.setQuantity(qty);
         em.flush();        
     }
     
