@@ -13,6 +13,8 @@ import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Exceptions.ForecastFailureException;
+import IslandFurniture.EJB.Exceptions.InvalidInputException;
+import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -96,20 +98,26 @@ public class CreateForecastManagedBean implements Serializable {
 
     public void naiveForecast(AjaxBehaviorEvent event) {
         boolean impacted = false;
+        boolean noPrevious = false;
 
         for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
             try {
                 couple.getSecond().setSecond(salesForecastBean.retrieveNaiveForecast(co, couple.getFirst()));
                 impacted = true;
-            } catch (Exception ex) {
-                statusMessage = "Failed to forecast: " + ex.getMessage();
+            } catch (ForecastFailureException ex) {
+
+            } catch (InvalidMssrException ex) {
+                noPrevious = true;
+                statusMessage = ex.getMessage();
             }
         }
 
         if (!impacted) {
             statusMessage = "Failed to forecast: There are no available months to forecast!";
         } else {
-            statusMessage = "Naive forecast performed successfullly!";
+            if (!noPrevious) {
+                statusMessage = "Naive forecast performed successfullly!";
+            }
         }
     }
 
@@ -123,10 +131,10 @@ public class CreateForecastManagedBean implements Serializable {
                 couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
                 impacted = true;
             } catch (ForecastFailureException ex) {
-                if (!ex.getMessage().equals("NoMonths")) {
+                if (ex.getMessage().equals("NoMonths")) {
                     statusMessage += " " + ex.getMessage() + ",";
                 }
-            } catch (IllegalArgumentException ex) {
+            } catch (InvalidInputException ex) {
                 illegalArg = true;
                 statusMessage = ex.getMessage();
                 break;

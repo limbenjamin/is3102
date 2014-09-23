@@ -5,7 +5,6 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
-import IslandFurniture.EJB.Exceptions.ForecastFailureException;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureTransaction;
 import IslandFurniture.EJB.Entities.FurnitureTransactionDetail;
@@ -19,6 +18,8 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Transaction;
+import IslandFurniture.EJB.Exceptions.ForecastFailureException;
+import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
@@ -135,6 +136,14 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
                 futureMssr.setVarianceOffset(mssr.getQtyForecasted() - mssr.getQtySold());
                 futureMssr.setVarianceUpdated(true);
+
+                // Update Quantity requested
+                MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -1);
+                if (oldMssr != null) {
+                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset() - oldMssr.getPlannedInventory());
+                } else {
+                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory());
+                }
             }
 
             // Move on to next month
@@ -143,7 +152,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> retrieveNaiveForecast(CountryOffice co, Stock stock) throws ForecastFailureException {
+    public List<MonthlyStockSupplyReq> retrieveNaiveForecast(CountryOffice co, Stock stock) throws ForecastFailureException, InvalidMssrException {
         boolean impacted = false;
 
         List<MonthlyStockSupplyReq> unlockedMssrList;
@@ -161,10 +170,10 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
             }
 
             if (oldMssr == null || prevMssr == null) {
-                throw new ForecastFailureException("Previous forecasted values do not exist!");
+                throw new InvalidMssrException("Note: Previous forecasted values do not exist for some Stock!");
             }
 
-            if (mssr.getStatus() != MssrStatus.APPROVED) {
+            if (mssr.getStatus() != MssrStatus.APPROVED && mssr.getStatus() != MssrStatus.PENDING) {
                 em.detach(mssr);
                 mssr.setQtyForecasted(oldMssr.getQtyForecasted());
                 mssr.setPlannedInventory(oldMssr.getPlannedInventory());
@@ -182,16 +191,14 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
 
     @Override
     public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv)
-            throws ForecastFailureException, IllegalArgumentException {
-        if (nPoint <= 0 || plannedInv <= 0) {
+            throws ForecastFailureException, InvalidInputException {
+        if (nPoint <= 0 || plannedInv < 0) {
             throw new IllegalArgumentException("Please enter a valid N-Point and Planned Inventory count.");
         }
         boolean impacted = false;
 
         List<MonthlyStockSupplyReq> unlockedMssrList = this.retrieveUnlockedMssrForCoStock(co, stock);
         List<MonthlyStockSupplyReq> lockedMssrList = this.retrieveLockedMssrForCoStock(co, stock, nPoint);
-
-        System.out.println(lockedMssrList.size());
 
         for (int i = 0; i < unlockedMssrList.size(); i++) {
             MonthlyStockSupplyReq mssr = unlockedMssrList.get(i);
@@ -231,7 +238,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 throw new ForecastFailureException(mssr.getStock().getName());
             }
 
-            if (mssr.getStatus() != MssrStatus.APPROVED && count > 0) {
+            if (mssr.getStatus() != MssrStatus.APPROVED && mssr.getStatus() != MssrStatus.PENDING && count > 0) {
                 em.detach(mssr);
                 mssr.setQtyForecasted(sum / count);
                 mssr.setPlannedInventory(plannedInv);
@@ -361,8 +368,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     }
 
     @Override
-    public List<MonthlyStockSupplyReq> retrieveLockedMssrForCoStock(CountryOffice co, Stock stock, int mthsHist)
-            throws IllegalArgumentException {
+    public List<MonthlyStockSupplyReq> retrieveLockedMssrForCoStock(CountryOffice co, Stock stock, int mthsHist) throws IllegalArgumentException {
         if (mthsHist < 0) {
             throw new IllegalArgumentException("Number of History MSSR Months must be zero or positive");
         }
