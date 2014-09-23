@@ -8,8 +8,9 @@ package IslandFurniture.WAR.Manufacturing;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.WAR.HELPER.helper;
 import IslandFurnitures.DataStructures.JDataTable;
 import java.io.IOException;
@@ -29,6 +30,7 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import org.primefaces.event.TabChangeEvent;
 
 @SessionScoped
 @ManagedBean(name = "ProductionPlanning")
@@ -41,15 +43,28 @@ public class ViewProductionPlanning implements Serializable {
     ManageProductionPlanningEJBBeanInterface dpv;
 
     private String success_msg;
+    private String currentDrill = "";
 
     private List<SelectItem> MF_LIST;
     private String MF;
 
     private String error_msg = "";
 
+    private int activePanelIndex = 0;
+
+    public int getActivePanelIndex() {
+        return activePanelIndex;
+    }
+
+    public void setActivePanelIndex(int activePanelIndex) {
+        this.activePanelIndex = activePanelIndex;
+    }
+
     private IslandFurnitures.DataStructures.JDataTable<String> dt;
 
     private IslandFurnitures.DataStructures.JDataTable<String> capacity_dt;
+
+    private IslandFurnitures.DataStructures.JDataTable<String> wpp;
 
     public String getSuccess_msg() {
         return success_msg;
@@ -81,6 +96,14 @@ public class ViewProductionPlanning implements Serializable {
 
     public void setCapacity_dt(JDataTable<String> capacity_dt) {
         this.capacity_dt = capacity_dt;
+    }
+
+    public String getCurrentDrill() {
+        return currentDrill;
+    }
+
+    public void setCurrentDrill(String currentDrill) {
+        this.currentDrill = currentDrill;
     }
 
     static public class ColumnModel implements Serializable {
@@ -139,12 +162,16 @@ public class ViewProductionPlanning implements Serializable {
         //Create the Datatable
         pullPPTableFromBean();
         pullcapacityTableFromBean();
+        wpp = null;
 
     }
 
     public void updatePPTableToBean() {
         try {
             ArrayList<Object> o = dt.getStateChangedEntities();
+            if (o.size() == 0) {
+                return;
+            }
             dpv.updateListOfEntities(o);
             MonthlyProductionPlan mpp = (MonthlyProductionPlan) o.get(0);
             success_msg += "Status: Update Planning Capacity Success new value=" + mpp.getQTY() + " FOR " + MF;
@@ -190,6 +217,9 @@ public class ViewProductionPlanning implements Serializable {
     public void updatePCTableToBean() {
         try {
             ArrayList<Object> o = capacity_dt.getStateChangedEntities();
+            if (o.size() == 0) {
+                return;
+            }
             dpv.updateListOfEntities(o);
             ProductionCapacity pc = (ProductionCapacity) o.get(0);
             success_msg += "Status: Update Production Daily Capacity Success. new value=" + pc.getQty() + " FOR " + MF + ". Please re-do production planning !";
@@ -197,22 +227,68 @@ public class ViewProductionPlanning implements Serializable {
             success_msg = "";
             error_msg = ex.getMessage();
         }
-        
+
         pullcapacityTableFromBean();
- 
+
     }
 
     public String automaticPlanning() {
         try {
             System.out.println("ViewProductionPlanning() User Triggered Production Planning Algorithm");
-                mpp.CreateProductionPlanFromForecast();
-                mpp.setMF(MF);
-                pullPPTableFromBean();
+            mpp.CreateProductionPlanFromForecast();
+            mpp.setMF(MF);
+            pullPPTableFromBean();
             FacesContext.getCurrentInstance().getExternalContext().redirect(".");
         } catch (Exception ex) {
             success_msg = "";
         }
         return ".";
+    }
+
+    public void drillDownMonth(String Month) {
+        currentDrill = Month;
+        System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
+        wpp = (JDataTable<String>) dpv.getWeeklyPlans(Month, this.MF);
+        activePanelIndex = 1;
+
+    }
+
+    public JDataTable<String> getWpp() {
+        return wpp;
+    }
+
+    public void setWpp(JDataTable<String> wpp) {
+        this.wpp = wpp;
+    }
+
+    public void updateWPPTableToBean() {
+        try {
+            ArrayList<Object> o = wpp.getStateChangedEntities();
+            if (o.size() == 0) {
+                return;
+            }
+
+            dpv.updateListOfEntities(o);
+            WeeklyProductionPlan wpp = (WeeklyProductionPlan) o.get(0);
+            success_msg += "<br/>Status: Update Planning Capacity Success new value=" + wpp.getQTY() + " FOR " + MF;
+        } catch (Exception ex) {
+            success_msg = "";
+            error_msg = ex.getMessage();
+        }
+        drillDownMonth(currentDrill);
+
+    }
+
+    public void onTabChange(TabChangeEvent event) {
+
+        
+        if (event.getTab().getTitle().equals("Production Planning")) {
+            pullPPTableFromBean();
+        } else if (event.getTab().getTitle().equals("Capacity Management")) {
+           pullcapacityTableFromBean();
+        } else if (event.getTab().getTitle().equals("Weekly Production Planning"))  {
+            drillDownMonth(this.currentDrill);
+        }
     }
 
 }

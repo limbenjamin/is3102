@@ -70,5 +70,7 @@ public interface ManageGoodsIssuedLocal {
     void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
     
     List<Plant> viewPlant(Plant plant);
+    
+    
 
 }

@@ -70,8 +70,26 @@
             </h:panelGroup>
             <br/>
             <br/>
-            <p:tabView id="panel">
+            <p:tabView id="panel" activeIndex="#{ProductionPlanning.activePanelIndex}" dynamic="true">
+                <p:ajax event="tabChange" listener="#{ProductionPlanning.onTabChange}" update=":form:panel"/>
                 <p:tab title="Production Planning">
+                    <b>Instruction</b>
+                    <ol style="">
+                        <li>
+                            Click on column name to enter weekly planning.
+                        </li>
+                        <li>
+                            Auto-Mode plan is a patented algorithmatic way to plan production planning. However, not all demands are plannable if they exceed capacity.
+                        </li>
+                        <li>
+                            To manually set a production plan. change the cell and click 'Manual Edit'
+                        </li>
+                        <li>
+                            To adjust production plan in weeks . click on the column header.
+                        </li>
+                    </ol>
+
+
                     <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 0}">
                         <f:facet name="header">
                             Production Planning Table
@@ -85,12 +103,19 @@
 
 
                         <p:columns  value="#{ProductionPlanning.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
-                            <f:facet name="header">
-                                #{datacolumn}
-                            </f:facet>
-                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
-                            <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
 
+                            <f:facet name="header">
+                                <p:commandLink ajax="true" actionListener="#{ProductionPlanning.drillDownMonth(datacolumn)}" update="@form">
+                                    #{datacolumn}
+
+
+                                </p:commandLink>
+
+                            </f:facet>
+
+
+                            <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}" style="text-align:center;width:96%"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
 
                         </p:columns>
 
@@ -112,21 +137,56 @@
                         </p:commandButton>
                     </h:panelGroup>
                 </p:tab>
-                <p:tab title="Weekly Production Planning">
 
+
+                <!-- Weekly Production Planning -->
+
+                <p:tab title="Weekly Production Planning" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
+
+
+                    <p:dataTable rowStyleClass="#{datarow.colorClass}" id="wpp_dt"  var="datarow"  value="#{ProductionPlanning.wpp.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
+                        <f:facet name="header">
+                            Weekly Production Plan for <p:outputLabel value="#{ProductionPlanning.currentDrill}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="wpp_dt" trigger="toggler" />
+                        </f:facet>
+
+                        <p:columns  value="#{ProductionPlanning.wpp.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
+                            <f:facet name="header">
+                                <p:outputLabel escape="false" value="#{datacolumn}"/>
+
+                            </f:facet>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false"  style="width:96%;text-align:center" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%;text-align:center"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+
+
+                        </p:columns>
+
+                    </p:dataTable>
+                    <br/>
+                    <p:commandButton value="Manual Update" id="updateWPP">
+                        <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
+                    </p:commandButton>
 
                 </p:tab>
+
+                <!-- Capacity Management -->
+
                 <p:tab title="Capacity Management">
                     <p:dataTable rowStyleClass="#{datarow.colorClass}" id="capacity_dt"  var="datarow"  value="#{ProductionPlanning.capacity_dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.capacity_dt.internalrows.size() gt 0}">
-
+                        <f:facet name="header">
+                            Production Planning Table
+                            <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="capacity_dt" trigger="toggler" />
+                        </f:facet>
 
                         <p:columns  value="#{ProductionPlanning.capacity_dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
                             <f:facet name="header">
                                 <p:outputLabel escape="false" value="#{datacolumn}"/>
-                                
+
                             </f:facet>
                             <p:outputLabel value="#{datarow.getCell(dataCIndex).value}"  style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
-                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="text-align:center;width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
 
 
                         </p:columns>

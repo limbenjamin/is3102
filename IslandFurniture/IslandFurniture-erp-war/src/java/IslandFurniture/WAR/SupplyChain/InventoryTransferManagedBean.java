@@ -39,9 +39,9 @@ public class InventoryTransferManagedBean implements Serializable {
     private Long stockUnitId;
     private Long stockId;
     private Long storageAreaId;
+    private boolean ifStockUnitMovemementAllListEmpty;
 
     private String username;
-    ;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
@@ -71,6 +71,7 @@ public class InventoryTransferManagedBean implements Serializable {
         storageAreaList = miml.viewStorageArea(plant);
         stockUnitList = miml.viewStockUnit(plant);
         stockUnitMovemementAllList = msul.viewStockUnitMovementAll(plant);
+        ifStockUnitMovemementAllListEmpty = stockUnitMovemementAllList.isEmpty();
         System.out.println("Init");
     }
 
@@ -85,7 +86,7 @@ public class InventoryTransferManagedBean implements Serializable {
         stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
         msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
         msul.deleteStockUnit(stockUnit.getId());
-       FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
     }
 
     public String viewStockTakebyLocation() {
@@ -96,6 +97,14 @@ public class InventoryTransferManagedBean implements Serializable {
     public String viewStockTakebyStock() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
         return "inventorytransfer_movementstock?faces-redirect=true";
+    }
+
+    public boolean isIfStockUnitMovemementAllListEmpty() {
+        return ifStockUnitMovemementAllListEmpty;
+    }
+
+    public void setIfStockUnitMovemementAllListEmpty(boolean ifStockUnitMovemementAllListEmpty) {
+        this.ifStockUnitMovemementAllListEmpty = ifStockUnitMovemementAllListEmpty;
     }
 
     public Long getPlantId() {
@@ -242,5 +251,4 @@ public class InventoryTransferManagedBean implements Serializable {
         this.msul = msul;
     }
 
-   
 }

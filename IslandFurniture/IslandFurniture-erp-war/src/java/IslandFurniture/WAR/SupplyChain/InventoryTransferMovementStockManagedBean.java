@@ -19,7 +19,6 @@ import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -44,6 +43,8 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private Long stockUnitId;
     private Long stockUnitQuantity;
     private Long storageAreaId;
+
+    private boolean ifStockUnitMovementListEmpty;
 
     private String username;
 
@@ -82,6 +83,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
         storageAreaList = miml.viewStorageArea(plant);
         stockTakeQuantity = null;
+        ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
     }
 
     public void onStorageAreaChange() {
@@ -198,6 +200,14 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
 
     public void setStorageAreaId(Long storageAreaId) {
         this.storageAreaId = storageAreaId;
+    }
+
+    public boolean isIfStockUnitMovementListEmpty() {
+        return ifStockUnitMovementListEmpty;
+    }
+
+    public void setIfStockUnitMovementListEmpty(boolean ifStockUnitMovementListEmpty) {
+        this.ifStockUnitMovementListEmpty = ifStockUnitMovementListEmpty;
     }
 
     public String getUsername() {
@@ -319,7 +329,5 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     public void setMsul(ManageInventoryMovementLocal msul) {
         this.msul = msul;
     }
-
-   
 
 }

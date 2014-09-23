@@ -85,5 +85,7 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
         em.merge(stockUnit);
         em.flush();
     }
+    
+
 
 }

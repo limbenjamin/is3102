@@ -46,14 +46,16 @@
                                                 <td>#{PO.id}</td>
                                                 <td>#{PO.status}</td>
                                                 <td>
-                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" value="Update" class="btn btn-success btn-xs"> 
+                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>  
                                                 <td>
-                                                    <h:commandButton value="Delete" class="btn btn-danger btn-xs" action="#{purchaseOrderManagedBean.deletePurchaseOrder}">
+                                                    <h:commandButton action="#{purchaseOrderManagedBean.deletePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:param name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
                                                 </td>                                                
                                             </tr>
                                         </ui:repeat>

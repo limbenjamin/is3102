@@ -1,4 +1,4 @@
-/************************* some useful classes ***********************************/
+/************************* special buttons ***********************************/
 
 .btn-round {
     border-radius: 100px;
@@ -20,6 +20,7 @@
 
 .transparent-button {
     position: relative;
+    height:18px;
     background-color: transparent;
     border: transparent;
     z-index: 20;    
@@ -35,6 +36,12 @@
     top:3px;
     margin-left: -20px;
 }
+
+.icon-group {
+    margin: 0px 5px;
+}
+
+/************************* some useful classes ***********************************/
 
 .centered-title {
     display: block;
@@ -66,6 +73,11 @@ hr{
     background-color: #1aae88;
 }
 
+.list-group {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
 /******************************* avatar images *************************************/
 
 img{
@@ -95,6 +107,10 @@ img{
 .user-avatar-sm {
     width: 30px;
     margin-right: 10px;
+}
+
+.avatar-margin {
+    margin-bottom: 20px;
 }
 
 /******************************* special forms *************************************/

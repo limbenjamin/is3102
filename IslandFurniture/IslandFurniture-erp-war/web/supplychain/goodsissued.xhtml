@@ -20,34 +20,37 @@
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Goods Issued
                             </div>
-                            <div class="list-group-item">  
-                                <table class="table table-hover">
-                                    <tr>
-                                        <th>Goods Issued ID</th>
-                                        <th>Issued Date</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                    <h:form id="viewGRD" class="form-horizontal">
-                                        <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentList}" var="GRD">
-                                            <tr>
-                                                <td>#{GRD.id}</td>
-                                                <td>
-                                                    <h:outputText value="#{GRD.issuedDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                    </h:outputText></td>
-                                                <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                    </h:commandButton>
-                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
-                                                <td><h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                    </h:commandButton>
-                                                <i class="fa fa-lg fa-trash-o icon-button"></i></td>
-                                            </tr>
-                                        </ui:repeat>
-                                    </h:form> 
-                                </table>
+                            <div class="list-group-item">
+                                <h:outputText rendered="#{goodsIssuedManagedBean.ifGoodsIssuedDocumentListEmpty}" value="There are no pending goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{!goodsIssuedManagedBean.ifGoodsIssuedDocumentListEmpty}">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Goods Issued ID</th>
+                                            <th>Issued Date</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        <h:form id="viewGRD" class="form-horizontal">
+                                            <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentList}" var="GRD">
+                                                <tr>
+                                                    <td>#{GRD.id}</td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.issuedDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
+                                                    <td><h:commandButton actionListener="#{goodsIssuedManagedBean.deleteGoodsIssuedDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-trash-o icon-button"></i></td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
                             </div>
                         </section>
 
@@ -58,34 +61,37 @@
                                 Posted Goods Issued
                             </div>
                             <div class="list-group-item">
-                                <table class="table table-hover">
-                                    <tr>
-                                        <th>Goods Issued ID</th>
-                                        <th>Posting Date</th>
-                                        <th>Document Date</th>
-                                        <th>View</th>
-                                    </tr>
-                                    <h:form class="form-horizontal">
-                                        <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" var="GRD">
-                                            <tr>
-                                                <td>#{GRD.id}</td>
-                                                <td>
-                                                    <h:outputText value="#{GRD.postingDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                    </h:outputText>
-                                                </td>
-                                                <td>
-                                                    <h:outputText value="#{GRD.issuedDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
-                                                    </h:outputText></td>
-                                                <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
-                                                        <f:attribute name="GRDid" value="#{GRD.id}" />
-                                                    </h:commandButton>
-                                                </td>
-                                            </tr>
-                                        </ui:repeat>
-                                    </h:form> 
-                                </table>
+                                <h:outputText rendered="#{goodsIssuedManagedBean.ifGoodsIssuedDocumentPostedListEmpty}" value="There are no posted goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{!goodsIssuedManagedBean.ifGoodsIssuedDocumentPostedListEmpty}">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Goods Issued ID</th>
+                                            <th>Posting Date</th>
+                                            <th>Document Date</th>
+                                            <th>View</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" var="GRD">
+                                                <tr>
+                                                    <td>#{GRD.id}</td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.postingDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                        </h:outputText>
+                                                    </td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.issuedDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
+                                                            <f:attribute name="GRDid" value="#{GRD.id}" />
+                                                        </h:commandButton>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
                             </div>
                         </section>
                     </div>

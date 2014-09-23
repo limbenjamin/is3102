@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
+import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;
@@ -16,38 +16,33 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpSession;
 
-
-
 /**
  *
  * @author Benjamin
  */
 @ManagedBean
 @ViewScoped
-public class ProcurementPlanManagedBean {
+public class PurchaseOrderMfgDetailManagedBean {
 
+    private List<PurchaseOrderDetail> poDetailList;
     private String username;
-    private List<MonthlyProcurementPlan> mppList;
     
     @EJB
     private ManageProcurementPlanLocal mppl;
-    
     
     @PostConstruct
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        mppList = mppl.viewMonthlyProcurementPlan();
+        poDetailList = mppl.viewPurchaseOrderDetail();
     }
-    
-    public String generateProcurementPlan(){
-        mppl.createMonthlyProcumentPlan();
-        return "procurementplan";
+
+    public List<PurchaseOrderDetail> getPoDetailList() {
+        return poDetailList;
     }
-    
-    public String createPurchaseOrder(){
-        mppl.createPurchaseOrder();
-        return "procurementplan";
+
+    public void setPoDetailList(List<PurchaseOrderDetail> poDetailList) {
+        this.poDetailList = poDetailList;
     }
 
     public String getUsername() {
@@ -66,14 +61,6 @@ public class ProcurementPlanManagedBean {
         this.mppl = mppl;
     }
 
-    public List<MonthlyProcurementPlan> getMppList() {
-        return mppList;
-    }
-
-    public void setMppList(List<MonthlyProcurementPlan> mppList) {
-        this.mppList = mppList;
-    }
-    
     
     
 }

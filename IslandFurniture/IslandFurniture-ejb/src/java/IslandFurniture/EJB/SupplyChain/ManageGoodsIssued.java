@@ -184,7 +184,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         q.setParameter("stockId", stock.getId());
         return q.getResultList();
     }
-
+    
     @Override
     public List<StockUnit> viewStockUnitById2(Plant plant, Stock stock, GoodsIssuedDocument gid) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");

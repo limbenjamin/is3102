@@ -6,6 +6,7 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.BOM;
+import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
@@ -117,34 +118,8 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
     @Override
     public boolean loadSampleData() {
         try {
-            // Add some Furniture Models
-            this.addFurnitureModel("Swivel Chair");
-            this.addFurnitureModel("Round Table");
-            this.addFurnitureModel("Coffee Table");
-            this.addFurnitureModel("Study Table - Dinosaur Edition");
-            this.addFurnitureModel("Bedside Lamp H31");
-            this.addFurnitureModel("Bathroom Rug E64");
-            this.addFurnitureModel("Kitchen Stool");
-
-            // Add some Retail Items
-            this.addRetailItem("Pisang Goreng - Original - Regular");
-            this.addRetailItem("Pisang Goreng - Original - Party Pack");
-            this.addRetailItem("Pisang Goreng - Lightly Salted - Regular");
-            this.addRetailItem("Pisang Goreng - Lightly Salted - Party Pack");
-            this.addRetailItem("Pisang Goreng - Spicy - Regular");
-            this.addRetailItem("Pisang Goreng - Spicy - Party Pack");
-            this.addRetailItem("Merlion Key Chain 01");
-            this.addRetailItem("Merlion Key Chain 02");
-            this.addRetailItem("Merlion Key Chain 03");
-            this.addRetailItem("Orchid Paper Weight 01");
-            this.addRetailItem("Orchid Paper Weight 02");
-            this.addRetailItem("Tote Bag - Esplanade Design");
-            this.addRetailItem("Tote Bag - MBS Design");
-            this.addRetailItem("Tote Bag - Botanic Gardens Design");
-            this.addRetailItem("Durian Crisp - Regular");
-            this.addRetailItem("Durian Crisp - Party Pack");
-            this.addRetailItem("Sambal Cheese Stick - Regular");
-            this.addRetailItem("Sambal Cheese Stick - Party Pack");
+            // Start Random var
+            Random rand = new Random(1);
 
             // Add some Materials
             this.addMaterial("Flathead Screw, Plus (5mm x 15mm)", 10);
@@ -167,8 +142,62 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             this.addMaterial("Steel Knob 02", 52);
             this.addMaterial("Steel Knob 03", 65);
 
+            // Add some Furniture Models
+            this.addFurnitureModel("Swivel Chair");
+            this.addFurnitureModel("Round Table");
+            this.addFurnitureModel("Coffee Table");
+            this.addFurnitureModel("Study Table - Dinosaur Edition");
+            this.addFurnitureModel("Bedside Lamp H31");
+            this.addFurnitureModel("Bathroom Rug E64");
+            this.addFurnitureModel("Kitchen Stool");
+
+            // Add BOM to FurnitureModel
+            List<FurnitureModel> fmList = em.createNamedQuery("getAllFurnitureModels").getResultList();
+            List<Material> materialList = em.createNamedQuery("Material.getMaterialList").getResultList();
+            BOM bom;
+            BOMDetail bomDetail;
+            List<BOMDetail> bomDetails;
+
+            for (FurnitureModel fm : fmList) {
+                bom = new BOM();
+                bomDetails = new ArrayList();
+
+                for (Material material : materialList) {
+                    if (rand.nextBoolean()) {
+                        bomDetail = new BOMDetail();
+                        bomDetail.setMaterial(material);
+                        bomDetail.setQuantity(rand.nextInt(4)+1);
+                        bomDetail.setBom(bom);
+                        
+                        bomDetails.add(bomDetail);
+                    }
+                }
+                bom.setBomDetails(bomDetails);
+
+                fm.setBom(bom);
+            }
+
+            // Add some Retail Items
+            this.addRetailItem("Pisang Goreng - Original - Regular");
+            this.addRetailItem("Pisang Goreng - Original - Party Pack");
+            this.addRetailItem("Pisang Goreng - Lightly Salted - Regular");
+            this.addRetailItem("Pisang Goreng - Lightly Salted - Party Pack");
+            this.addRetailItem("Pisang Goreng - Spicy - Regular");
+            this.addRetailItem("Pisang Goreng - Spicy - Party Pack");
+            this.addRetailItem("Merlion Key Chain 01");
+            this.addRetailItem("Merlion Key Chain 02");
+            this.addRetailItem("Merlion Key Chain 03");
+            this.addRetailItem("Orchid Paper Weight 01");
+            this.addRetailItem("Orchid Paper Weight 02");
+            this.addRetailItem("Tote Bag - Esplanade Design");
+            this.addRetailItem("Tote Bag - MBS Design");
+            this.addRetailItem("Tote Bag - Botanic Gardens Design");
+            this.addRetailItem("Durian Crisp - Regular");
+            this.addRetailItem("Durian Crisp - Party Pack");
+            this.addRetailItem("Sambal Cheese Stick - Regular");
+            this.addRetailItem("Sambal Cheese Stick - Party Pack");
+
             // Add List of stuff each store will sell
-            Random rand = new Random(1);
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
             List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
             List<RetailItem> retailItems = (List<RetailItem>) em.createNamedQuery("getAllRetailItems").getResultList();
@@ -195,19 +224,19 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             for (CountryOffice eachCo : countryOffices) {
                 List<Stock> rawStocksSold = new ArrayList();
                 List<Stock> stocksSold = new ArrayList();
-                
+
                 // Grab all that stores sell and put in a list (with dupes)
                 for (Store eachStore : eachCo.getStores()) {
                     rawStocksSold.addAll(eachStore.getSells());
                 }
-                
+
                 // Remove dupes
                 for (Stock eachStock : rawStocksSold) {
                     if (!stocksSold.contains(eachStock)) {
                         stocksSold.add(eachStock);
                     }
                 }
-                
+
                 // Assign every item sold to an mf
                 for (Stock eachStock : stocksSold) {
                     this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())));

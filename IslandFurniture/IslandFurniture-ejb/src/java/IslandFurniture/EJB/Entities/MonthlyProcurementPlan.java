@@ -31,12 +31,14 @@ public class MonthlyProcurementPlan implements Serializable {
     private Integer year;
     @Id
     private RetailItem retailItem;
+    @Id
+    @ManyToOne
+    private ManufacturingFacility manufacturingFacility;    
     @OneToMany(mappedBy="monthlyProcurementPlan")
     private List<PurchaseOrder> purchaseOrderList;
     private Integer qty;
     private Boolean locked;
-    @ManyToOne
-    private ManufacturingFacility manufacturingFacility;
+
 
     public Month getMonth() {
         return month;

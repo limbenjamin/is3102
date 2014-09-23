@@ -44,6 +44,8 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private Long storageBinId;
     private Long storageAreaid;
 
+    private boolean ifGoodsReceiptDocumentDetailListEmpty;
+    
     private String receiptDateString;
     private Date receiptDateType;
 
@@ -97,12 +99,10 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
 
-//      Ask Ben = To ask on how to display current date
-//      receiptDateString = goodsReceiptDocument.getPostingDate().getTime().toString();
-        System.out.println("GoodsReceiptDocumentId: " + goodsReceiptDocumentId);
         goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         storageBinList = mgrl.viewStorageBin(plant);
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
+        ifGoodsReceiptDocumentDetailListEmpty = goodsReceiptDocumentDetailList.isEmpty();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);
         stockList = mgrl.viewStock();
         if (goodsReceiptDocument.getReceiptDate() != null) {
@@ -182,6 +182,22 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     }
 
+    public DateFormat getDf() {
+        return df;
+    }
+
+    public void setDf(DateFormat df) {
+        this.df = df;
+    }
+
+    public boolean isIfGoodsReceiptDocumentDetailListEmpty() {
+        return ifGoodsReceiptDocumentDetailListEmpty;
+    }
+
+    public void setIfGoodsReceiptDocumentDetailListEmpty(boolean ifGoodsReceiptDocumentDetailListEmpty) {
+        this.ifGoodsReceiptDocumentDetailListEmpty = ifGoodsReceiptDocumentDetailListEmpty;
+    }
+       
     public Long getPlantId() {
         return plantId;
     }

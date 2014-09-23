@@ -38,7 +38,7 @@ import javax.persistence.Query;
     @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)=(:m+1)+:y*12 and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf order by MPP.furnitureModel.name"),
-    @NamedQuery(name="MonthlyProductionPlan.FindAllOfMF",query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
+    @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
 })
 public class MonthlyProductionPlan implements Serializable {
 
@@ -55,6 +55,8 @@ public class MonthlyProductionPlan implements Serializable {
     private Integer year;
 
     @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
+    
+    
     private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
 
     private Integer QTY;
@@ -117,8 +119,6 @@ public class MonthlyProductionPlan implements Serializable {
         this.locked = locked;
     }
 
-   
-
     @Override
     public int hashCode() {
         int hash = 5;
@@ -143,8 +143,6 @@ public class MonthlyProductionPlan implements Serializable {
     public String toString() {
         return this.manufacturingFacility.getId() + "|" + this.furnitureModel.getId() + "|" + this.month + "|" + this.year;
     }
-
-
 
     public int getNumWorkDays() {
 

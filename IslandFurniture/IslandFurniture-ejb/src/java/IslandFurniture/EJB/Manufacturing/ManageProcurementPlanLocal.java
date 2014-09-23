@@ -7,6 +7,8 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,4 +20,8 @@ import javax.ejb.Local;
 public interface ManageProcurementPlanLocal {
     void createMonthlyProcumentPlan();
     List<MonthlyProcurementPlan> viewMonthlyProcurementPlan();
+    void createPurchaseOrder();
+    List<PurchaseOrder> viewPurchaseOrder();
+    List<PurchaseOrderDetail> viewPurchaseOrderDetail();
+    
 }

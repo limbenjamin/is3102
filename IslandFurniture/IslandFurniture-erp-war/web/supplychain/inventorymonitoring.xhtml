@@ -11,7 +11,7 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <section name="View All Location of Selected Stock">
                             <h4>Inventory Monitoring</h4><hr></hr><br></br>
                             <h5>View Storage Locations of Selected Stock</h5>
@@ -35,8 +35,8 @@
 
                         <section name="View Contents of Storage Location">
                             <h5>View Contents of Storage Location</h5><hr></hr>
-                            
-                              <h:form id="viewStorageLocation" class="form-horizontal">
+
+                            <h:form id="viewStorageLocation" class="form-horizontal">
                                 <div>
                                     <label class="col-sm-4 control-label">Storage Area</label>
                                     <div class="col-sm-8">
@@ -46,11 +46,8 @@
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
                                         </h:selectOneMenu>
                                     </div>
-                                <br></br>
+                                    <br></br>
 
-                              
-                                
-                                
                                     <label class="col-sm-4 control-label">Storage Bin</label>
                                     <div class="col-sm-8" for="storageBinMenu">
                                         <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
@@ -87,10 +84,20 @@
 
                             <h:form class="form-horizontal">
                                 <div>
-                                    <label class="col-sm-4 control-label">Stock Take by Storage Bins</label>
+                                    <label class="col-sm-4 control-label">Storage Area</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageBinId" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
-                                            <f:selectItem itemLabel="Select Storage Bin" />
+                                        <h:selectOneMenu id="storageArea" class="form-control" value="#{inventoryMonitoringManagedBean.storageAreaId}">
+                                            <p:ajax listener="#{inventoryMonitoringManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                            <f:selectItem itemLabel="Select Storage Area" noSelectionOption="true"/>
+                                            <f:selectItems value="#{inventoryMonitoringManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                    <br></br>
+
+                                    <label class="col-sm-4 control-label">Storage Bin</label>
+                                    <div class="col-sm-8" for="storageBinMenu">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                            <f:selectItem itemLabel="Select Storage Bin" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
