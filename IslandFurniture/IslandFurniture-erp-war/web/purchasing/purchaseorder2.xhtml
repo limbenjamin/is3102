@@ -64,7 +64,7 @@
                                                 #{pod.id}
                                             </td>                                            
                                             <td>
-                                                <h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
+                                                <h:selectOneMenu id="procuredStockId" class="form-control needauto" value="#{pod.procuredStock.id}">
                                                     <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                 </h:selectOneMenu>
                                             </td>
