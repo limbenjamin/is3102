@@ -20,9 +20,9 @@ import java.util.List;
  */
 public interface ManageInventoryMovementLocal {
 
-    void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin);
+    void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin);
 
-    void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid);
+    void createStockUnit2(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid);
 
     void deleteStockUnit(Long stockUnitId);
 
@@ -42,7 +42,7 @@ public interface ManageInventoryMovementLocal {
 
     List<StorageBin> viewStorageBin(Plant plant);
 
-    void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBIn);
+    void createStockUnitMovement1(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBIn);
 
     List<StockUnit> viewStockUnitMovement(Plant plant, Stock stock);
 
@@ -53,5 +53,7 @@ public interface ManageInventoryMovementLocal {
     List<StockUnit> viewStockUnitByStorageBin(Plant plant, StorageBin storageBin);
 
     List<StockUnit> viewStockUnitMovementbyStorageBin(StorageBin storageBin);
+    
+    void updateBatchNumber(Long id, String batchNumber);
 
 }

@@ -5,7 +5,6 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
@@ -13,22 +12,15 @@ import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterfac
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.WAR.HELPER.helper;
 import IslandFurnitures.DataStructures.JDataTable;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.event.TabChangeEvent;
@@ -168,6 +160,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void updatePPTableToBean() {
+        cleanMsg();
         try {
             ArrayList<Object> o = dt.getStateChangedEntities();
             if (o.size() == 0) {
@@ -184,6 +177,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void pullPPTableFromBean() {
+        cleanMsg();
         try {
             if (!MF.isEmpty()) {
                 dt = (JDataTable<String>) dpv.getDemandPlanningTable(MF);
@@ -200,6 +194,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void pullcapacityTableFromBean() {
+        cleanMsg();
         try {
             if (!MF.isEmpty()) {
 
@@ -216,6 +211,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void updatePCTableToBean() {
+        cleanMsg();
         try {
             ArrayList<Object> o = capacity_dt.getStateChangedEntities();
             if (o.size() == 0) {
@@ -233,7 +229,14 @@ public class ViewProductionPlanning implements Serializable {
 
     }
 
-    public String automaticPlanning() {
+    public void cleanMsg() {
+        success_msg = "";
+        error_msg = "";
+    }
+
+    public void automaticPlanning() {
+        cleanMsg();
+
         try {
             System.out.println("ViewProductionPlanning() User Triggered Production Planning Algorithm");
             mpp.CreateProductionPlanFromForecast();
@@ -242,8 +245,9 @@ public class ViewProductionPlanning implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().redirect(".");
         } catch (Exception ex) {
             success_msg = "";
+            error_msg = "Unable to fufill capacity planning . Might not have solution to planning?";
         }
-        return ".";
+        return;
     }
 
     public void drillDownMonth(String Month) {
@@ -263,6 +267,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void updateWPPTableToBean() {
+        cleanMsg();
         try {
             ArrayList<Object> o = wpp.getStateChangedEntities();
             if (o.size() == 0) {
@@ -292,6 +297,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void listenToCell(ActionEvent actionEvent) {
+        cleanMsg();
         try {
             CommandButton button = (CommandButton) actionEvent.getComponent();
             String ID = button.getAlt();
@@ -305,6 +311,12 @@ public class ViewProductionPlanning implements Serializable {
                 case "UNCOMMIT_WPP":
                     mpp.uncommitWPP(Integer.valueOf(ID));
                     drillDownMonth(this.currentDrill);
+                    break;
+                case "COMMIT_WEEK_WPP":
+                    int weekNo=Integer.valueOf(ID.split("_")[0]);
+                    int monthNo=Integer.valueOf(ID.split("_")[1]);
+                    int yearNo=Integer.valueOf(ID.split("_")[2]);
+                    mpp.orderMaterials(weekNo,monthNo,yearNo);
                     break;
 
             }

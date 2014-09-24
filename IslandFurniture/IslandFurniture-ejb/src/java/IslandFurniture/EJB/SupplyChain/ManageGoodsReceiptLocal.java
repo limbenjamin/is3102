@@ -62,5 +62,7 @@ public interface ManageGoodsReceiptLocal {
     GoodsReceiptDocument createGoodsReceiptDocumentfromInbound(Plant plant, Calendar receiptDate);
     
     List<GoodsIssuedDocumentDetail> viewInboundShipmentByDetail(Long id);
+    
+    List<PurchaseOrder> viewPurchaseOrder(Plant plant);
 
 }

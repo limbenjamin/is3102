@@ -32,7 +32,6 @@
                                 <div class="list-group-item">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Material</th>
                                         <th>Weight (g)</th>
                                         <th>Edit</th>
@@ -41,9 +40,6 @@
                                     <h:form id="editMaterialItemForm" class="form-horizontal">
                                         <ui:repeat value="#{materialManagedBean.materialList}" var="material">
                                             <tr>
-                                                <td>
-                                                    <h:outputText id="materialID" value="#{material.id}"></h:outputText>
-                                                </td>
                                                 <td>
                                                     <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>

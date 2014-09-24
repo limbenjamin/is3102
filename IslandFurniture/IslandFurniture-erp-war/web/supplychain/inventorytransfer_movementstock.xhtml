@@ -31,6 +31,7 @@
                                         <th>Current Storage Bin</th>
                                         <th>Quantity</th>
                                         <th>Batch Number</th>
+                                        <th>Update</th>
                                     </tr>
                                     <h:form class="form-horizontal">
                                         <ui:repeat value="#{inventoryTransferMovementStockManagedBean.stockUnitList}" var="s">
@@ -39,7 +40,12 @@
                                                 <td>#{s.location.storageArea.name}</td>
                                                 <td>#{s.location.name}</td>
                                                 <td>#{s.qty}</td>
-                                                <td>#{s.batchNo}</td>
+                                                <td><h:inputText value="#{s.batchNo}" class="form-control"></h:inputText></td>
+                                                <td><h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.updateBatchNumber}"  value="Update" class="btn btn-success btn-xs"> 
+                                                        <f:attribute name="stockId" value="#{s.stock.id}" />
+                                                        <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                        <f:attribute name="batchNumber" value="#{s.batchNo}" />
+                                                    </h:commandButton></td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
@@ -159,7 +165,7 @@
                                     </table>
                                 </h:panelGroup>
                             </div>
-                            
+
                             <br/>
                             <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementStockManagedBean.ifStockUnitMovementListEmpty}">
                                 <h:form class="form-horizontal">

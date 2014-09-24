@@ -8,10 +8,12 @@ package IslandFurniture.EJB.SalesPlanning;
 
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
+import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.StockSuppliedPK;
@@ -98,6 +100,8 @@ public class SupplierManager implements SupplierManagerLocal {
             System.out.println("SupplierManager.deleteSupplier()");
             supplier = em.find(Supplier.class, id);
             System.out.println("Don't forget to mind the constraints. I'm gonna just delete for now");
+            for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
+                em.remove(supplier.getProcurementContract().getProcurementContractDetails().get(i));
             em.remove(supplier.getProcurementContract());
             em.remove(supplier);
             em.flush();
@@ -294,10 +298,16 @@ public class SupplierManager implements SupplierManagerLocal {
     }
     public List<Stock> getListOfStock() {
         List<Stock> stockList;
+        List<Stock> tempList;
         ManufacturingFacility mf;
         try{
             System.out.println("SupplierManager.getListOfStock()");
-            stockList = em.createNamedQuery("getAllStock", Stock.class).getResultList();
+            tempList = em.createNamedQuery("getAllStock", Stock.class).getResultList();
+            stockList = new ArrayList<Stock>(); 
+            for(int i=0; i<tempList.size(); i++) {
+                if(tempList.get(i) instanceof RetailItem || tempList.get(i) instanceof FurnitureModel)
+                    stockList.add(tempList.get(i));
+            }
             return stockList;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");

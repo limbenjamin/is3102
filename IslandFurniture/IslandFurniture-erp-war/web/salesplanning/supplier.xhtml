@@ -29,32 +29,30 @@
                                 <div class="list-group-item">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Supplier</th>
                                         <th>Country</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
-                                        <th>Procurement Contract Details</th>
+                                        <th>Procurement Contract Details</th> 
                                     </tr>
                                     <h:form id="editSupplierForm" class="form-horizontal">
                                         <ui:repeat value="#{supplierManagedBean.supplierList}" var="supplier">
                                             <tr>
-                                                <td>
-                                                    <h:outputText id="supplierID" value="#{supplier.id}"></h:outputText>
-                                                </td>
                                                 <td>
                                                     <h:inputText id="supplierName" value="#{supplier.name}" class="form-control"></h:inputText>
                                                 </td>
                                                 <td>
                                                     <h:inputText id="supplierCountry" value="#{supplier.country.name}" class="form-control"></h:inputText>
                                                 </td>
-                                                <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}"  value="Update" class="btn btn-success btn-sm">
+                                                <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{supplier}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="supplierID" value="#{supplier.id}" />
-                                                    </h:commandButton></td>   
+                                                    </h:commandButton></td> 
+                                                     <i class="fa fa-lg fa-trash-o icon-button"></i>  
                                                 <td>
                                                     <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="sID" value="#{supplier.id}" />
