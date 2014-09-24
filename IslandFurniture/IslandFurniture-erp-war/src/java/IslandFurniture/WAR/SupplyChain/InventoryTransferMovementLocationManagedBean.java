@@ -50,6 +50,7 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMovementList;
+    private List<StockUnit> stockUnitMovementAnottherList;
 
     private StorageBin storageBin;
     private Stock stock;
@@ -133,7 +134,7 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
 
     public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
         for (StockUnit g : stockUnitMovementList) {
-            anotherStockUnit = msul.viewStockUnitMovementCheck(storageBin, stockUnit.getStock(), g.getBatchNo());
+            stockUnitMovementAnottherList = msul.viewStockUnitMovementCheck(storageBin, g.getStock(), g.getBatchNo());
             
             if (anotherStockUnit== null) {
                 msul.confirmStockUnitMovement(g.getId());
@@ -153,6 +154,14 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
     }
 
+    public List<StockUnit> getStockUnitMovementAnottherList() {
+        return stockUnitMovementAnottherList;
+    }
+
+    public void setStockUnitMovementAnottherList(List<StockUnit> stockUnitMovementAnottherList) {
+        this.stockUnitMovementAnottherList = stockUnitMovementAnottherList;
+    }
+        
     public StockUnit getAnotherStockUnit() {
         return anotherStockUnit;
     }
