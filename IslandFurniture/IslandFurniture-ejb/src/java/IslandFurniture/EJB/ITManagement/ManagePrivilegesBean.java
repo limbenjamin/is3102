@@ -38,9 +38,10 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
     private Url url;
     
     @Override
-    public void createPrivilege(String name, List<Url> urlList) {
+    public void createPrivilege(String name, String description, List<Url> urlList) {
         privilege = new Privilege();
         privilege.setName(name);
+        privilege.setDescription(description);
         Iterator<Url> iterator = urlList.iterator();
         while (iterator.hasNext()) {
             url = iterator.next();

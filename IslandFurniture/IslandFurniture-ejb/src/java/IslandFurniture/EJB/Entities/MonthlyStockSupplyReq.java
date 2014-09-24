@@ -64,7 +64,7 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     private int qtyForecasted = 0;
     private int plannedInventory = 0;
-    private int qtySold = -1;
+    private int qtySold = 0;
     private int actualInventory = 0;
     private int varianceOffset = 0;
     private int qtyRequested = 0;

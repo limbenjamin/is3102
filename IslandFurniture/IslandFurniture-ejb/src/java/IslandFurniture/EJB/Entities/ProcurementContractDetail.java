@@ -24,7 +24,10 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "getStockList",
-            query = "SELECT a.procuredStock FROM ProcurementContractDetail a WHERE a.procurementContract.supplier = :supplier AND a.supplierFor = :mf")
+            query = "SELECT a.procuredStock FROM ProcurementContractDetail a WHERE a.procurementContract.supplier = :supplier AND a.supplierFor = :mf"),
+    @NamedQuery(
+            name = "getProcurementContractDetailByStockMFAndSupplier",
+            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf AND a.procurementContract.supplier = :supplier")
 })
 public class ProcurementContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -54,7 +54,7 @@ public class StaffManagedBean  implements Serializable  {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        staffList = msabl.displayAllStaffAccounts();
+        staffList = msabl.displayStaffAccountsFromPlant(username);
         countryList = mohBean.getCountries();
         plantList = mohBean.displayPlant();
     }
@@ -62,8 +62,8 @@ public class StaffManagedBean  implements Serializable  {
     public String createStaff(){
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         username = request.getParameter("staffForm:username");
-        password = request.getParameter("staffForm:password");
         name = request.getParameter("staffForm:name");
+        password = Long.toHexString(Double.doubleToLongBits(Math.random()));
         emailAddress = request.getParameter("staffForm:emailAddress");
         phoneNo = request.getParameter("staffForm:phoneNo");
         countryName = request.getParameter("staffForm:countryName");

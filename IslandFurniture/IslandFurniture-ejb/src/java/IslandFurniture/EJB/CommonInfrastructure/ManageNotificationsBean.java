@@ -86,6 +86,14 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     }
     
     @Override
+    public Integer getUnreadForStaff(Staff staff){
+        Query query = em.createQuery("SELECT n FROM Notification n WHERE n.staff=:staff AND n.isread=:false");
+        query.setParameter("staff", staff);
+        query.setParameter("false", Boolean.FALSE);
+        return query.getResultList().size();
+    }
+    
+    @Override
     public Notification getNotification(Long id){
         notification = em.find(Notification.class, id);
         return notification;

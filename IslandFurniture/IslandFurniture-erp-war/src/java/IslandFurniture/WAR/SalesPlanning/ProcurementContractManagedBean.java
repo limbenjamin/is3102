@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -86,9 +87,18 @@ public class ProcurementContractManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = Util.getSession();     
+        HttpSession session = Util.getSession(); 
         System.out.println("init:ProcurementContractManagedBean");   
         this.supplierID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("supplierID");
+        try {
+            if(supplierID == null) {
+                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                    ec.redirect("supplier.xhtml");
+            }
+        } catch(IOException ex) {
+            
+        }
+            
         System.out.println("SupplierID is " + supplierID);
         
         supplier = supplierManager.getSupplier(supplierID);

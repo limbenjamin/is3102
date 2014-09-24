@@ -63,6 +63,7 @@ public class MaterialManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         materialList = stockManager.displayMaterialList();
+        System.out.println("init:MaterialManagedBean");
     }
     
     public String addMaterial() {
@@ -73,7 +74,6 @@ public class MaterialManagedBean implements Serializable {
         
         Double weight;
         if(!temp.isEmpty()) {
-            System.out.println("Temp is " + temp);
             weight = Double.parseDouble(temp);
         }
         else 

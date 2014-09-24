@@ -40,7 +40,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class PurchaseOrderManaged2Bean implements Serializable {
+public class PurchaseOrderConfirmedManagedBean {
 
     private String username;
 
@@ -79,7 +79,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
 
-        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
+        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("COid");
         if (purchaseOrderId != null) {
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
@@ -96,59 +96,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
         System.out.println("loaded some lists");
         System.out.println("Init");
-    }
-
-    public String addStock() throws ParseException {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
-        quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
-        mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-
-        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
-        if (purchaseOrderId != null) {
-            purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
-        }
-        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-
-        return "purchaseorder2";
-    }
-
-    // new update purchase order method
-    public String updatePurchaseOrder() throws ParseException {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        status = request.getParameter("updatePurchaseOrder:status");
-        orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = (Date) formatter.parse(orderDateString);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        orderDate = cal;
-        mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
-        System.out.println("updated purchase order" + purchaseOrderId);
-        if (status.equals("confirmed")) {
-            return "purchaseorder";
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-            return "purchaseorder2?faces-redirect=true";
-        }
-    }
-
-    public String editStock(ActionEvent event) throws IOException {
-        PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
-        System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
-        mpol.updatePurchaseOrderDetail(pod, pod.getProcuredStock().getId(), pod.getQuantity());
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-        return "purchaseorder2?faces-redirect=true";
-    }
-
-    public String deletePurchaseOrderDetail() {
-        purchaseOrderDetailId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("PODid"));
-        mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        return "purchaseorder2";
     }
 
     public ManufacturingFacility getMf() {

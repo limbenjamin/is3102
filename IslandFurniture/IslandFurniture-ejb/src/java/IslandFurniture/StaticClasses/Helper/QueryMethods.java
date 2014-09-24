@@ -15,9 +15,13 @@ import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.ProcuredStock;
+import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
 import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
@@ -102,7 +106,43 @@ public class QueryMethods {
             return null;
         }
     }
+    
+    public static StorageArea findStorageAreaByName(EntityManager em, String storageAreaName, Plant plant){
+        Query q = em.createNamedQuery("findStorageAreaByName");
+        q.setParameter("name", storageAreaName);
+        q.setParameter("plant", plant);
 
+        try {
+            return (StorageArea) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        } 
+    }
+    
+    public static StorageBin findStorageBinByName(EntityManager em, String storageBinName, StorageArea sa){
+        Query q = em.createNamedQuery("findStorageBinByName");
+        q.setParameter("name", storageBinName);
+        q.setParameter("sa", sa);
+
+        try {
+            return (StorageBin) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        } 
+    }
+
+    public static ProcurementContractDetail findPCDByStockMFAndSupplier(EntityManager em, ProcuredStock stock, ManufacturingFacility mf, Supplier s) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockMFAndSupplier", ProcurementContractDetail.class);
+        q.setParameter("stock", stock);
+        q.setParameter("mf", mf);
+        q.setParameter("supplier", s);
+        
+        try {
+            return (ProcurementContractDetail) q.getSingleResult();
+        } catch (NoResultException NRE) {
+            return null;
+        }
+    }
     public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
         cal.add(Calendar.MONTH, monthsOffset);
