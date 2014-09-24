@@ -27,6 +27,7 @@ public class Privilege implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String description;
     @ManyToMany
     private List<Role> roles;
     @OneToMany(cascade={CascadeType.ALL},mappedBy="privilege")
@@ -62,6 +63,14 @@ public class Privilege implements Serializable {
 
     public void setMenuLink(List<Url> menuLink) {
         this.menuLink = menuLink;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     

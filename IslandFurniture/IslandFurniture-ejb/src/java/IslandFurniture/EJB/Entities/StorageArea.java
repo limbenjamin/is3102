@@ -22,6 +22,9 @@ import javax.persistence.OneToMany;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "findStorageAreaByName", query = "SELECT s FROM StorageArea s WHERE s.name = :name AND s.plant = :plant")
+})
 public class StorageArea implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

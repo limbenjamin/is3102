@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Announcement;
+import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     private Staff staff;
     private Announcement announcement;
     private List<Announcement> announcementList;
+    private Plant plant;
     
     @EJB
     private ManageUserAccountBeanLocal staffbean;
@@ -47,6 +49,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
         announcement.setActiveDate(activeDate);
         announcement.setExpireDate(expireDate);
         announcement.setCreator(staff);
+        announcement.setPlant(staff.getPlant());
         em.persist(announcement);
         announcementList = staff.getAnnouncements();
         announcementList.add(announcement);
@@ -77,10 +80,13 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     }
     
     @Override
-    public List<Announcement> getActiveAnnouncements(){
+    public List<Announcement> getActiveAnnouncements(String username){
         Date today = new Date(); 
-        Query query = em.createQuery("SELECT a " + "FROM Announcement a " + "WHERE :today BETWEEN a.activeDate AND a.expireDate")
-        .setParameter("today", today, TemporalType.DATE);
+        staff = staffbean.getStaff(username);
+        plant = staff.getPlant();
+        Query query = em.createQuery("SELECT a FROM Announcement a WHERE a.plant=:plant AND :today BETWEEN a.activeDate AND a.expireDate");
+        query.setParameter("today", today, TemporalType.DATE);
+        query.setParameter("plant", plant);
         return query.getResultList();
     }
     
