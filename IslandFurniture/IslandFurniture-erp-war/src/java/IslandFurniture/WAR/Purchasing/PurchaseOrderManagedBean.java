@@ -7,6 +7,7 @@
 package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
@@ -53,6 +54,7 @@ public class PurchaseOrderManagedBean implements Serializable{
     private List<Plant> plantList;
     private Staff staff;
     private Supplier supplier;
+    private ManufacturingFacility mf;
     private String orderDateString = null;
     
     @EJB
@@ -67,9 +69,12 @@ public class PurchaseOrderManagedBean implements Serializable{
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
+        if (staff.getPlant() instanceof ManufacturingFacility) {
+            mf = (ManufacturingFacility) staff.getPlant();
+        }
         plannedOrderList = mpol.viewPlannedPurchaseOrders();
         confirmedOrderList = mpol.viewConfirmedPurchaseOrders();
-        supplierList = sml.displaySupplierList();
+        supplierList = mpol.viewContractedSuppliers(mf);
         plantList = mpol.viewPlants();
         System.out.println("Init");
     }

@@ -7,6 +7,7 @@
 package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -58,6 +59,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     private Staff staff;
     private Supplier supplier;
     private Plant plant;
+    private ManufacturingFacility mf;
     private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
     private String orderDateString = null;
@@ -80,8 +82,11 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         if (purchaseOrderId != null) {
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
+        if (staff.getPlant() instanceof ManufacturingFacility) {
+            mf = (ManufacturingFacility) staff.getPlant();
+        }
         System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        procuredStockList = mpol.viewProcuredStocks();
+        procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         System.out.println("loaded some lists");
         System.out.println("Init");
@@ -99,7 +104,6 @@ public class PurchaseOrderManaged2Bean implements Serializable{
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         }
         System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        procuredStockList = mpol.viewProcuredStocks();
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);        
         
         return "purchaseorder2";
@@ -132,13 +136,18 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         Calendar cal=Calendar.getInstance();
         cal.setTime(date);
         orderDate = cal;        
-        mpol.updatePurchaseOrder(purchaseOrderId, "planned", orderDate);
+        mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
         System.out.println("updated purchase order" + purchaseOrderId);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-        return "purchaseorder2?faces-redirect=true";
+        if (status.equals("confirmed")) {
+            return "purchaseorder";
+        }
+        else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+            return "purchaseorder2?faces-redirect=true";
+        }
     }     
     
-    public String updateStock(ActionEvent event) throws ParseException {
+/**    public String updateStock(ActionEvent event) throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Long podId = (Long) event.getComponent().getAttributes().get("PODid");
         purchaseOrderDetail = mpol.getPurchaseOrderDetail(podId);
@@ -148,7 +157,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
         mpol.updatePurchaseOrderDetail(purchaseOrderDetail, procuredStockId, quantity);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
         return "purchaseorder2?faces-redirect=true";
-    }
+    }**/
     
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");

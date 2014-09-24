@@ -27,7 +27,8 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "getSupplierList",
-            query = "SELECT a.supplier FROM ProcurementContract a WHERE a.supplier = :supplier")
+            query = "SELECT a.supplier FROM ProcurementContract a WHERE EXISTS "
+                    + "(SELECT p FROM ProcurementContractDetail p WHERE p.procurementContract.id = a.id AND p.supplierFor = :mf)")
 })
 public class ProcurementContract implements Serializable {
     private static final long serialVersionUID = 1L;

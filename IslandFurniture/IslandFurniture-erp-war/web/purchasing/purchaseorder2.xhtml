@@ -12,7 +12,9 @@
                         <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.name}</strong></h5>
-                        <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong></h5>
+                        <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong>
+                            | Status: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.status}</strong>
+                        </h5>
                         <table class="table table-hover">
                             <tr>
                                 <th>Change Order Date</th>

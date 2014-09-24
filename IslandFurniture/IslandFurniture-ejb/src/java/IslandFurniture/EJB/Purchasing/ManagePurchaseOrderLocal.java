@@ -51,6 +51,8 @@ public interface ManagePurchaseOrderLocal {
     List<Plant> viewPlants();
     
     List<Supplier> viewSuppliers();
+    
+    List<Supplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
     
