@@ -157,18 +157,25 @@ public class StockManager implements StockManagerLocal {
     public void deleteFurnitureModel(Long furnitureID) {
         FurnitureModel fm;
         List<StockSupplied> stockList;
+        List<BOMDetail> bomDetailList;
+        BOM bom;
         try {
             System.out.println("StockManager.deleteFurnitureModel()");
             System.out.println(furnitureID);
             fm = em.find(FurnitureModel.class, furnitureID);
             stockList = getStockSuppliedByStock(em, fm);
-            if(fm.getBom().getBomDetails().size() >= 1) {
-                System.out.println("Invalid deletion due to existence of BOM");
-            }
+            bom = fm.getBom();
+            bomDetailList = bom.getBomDetails();
+            
+            System.out.println("Will go ahead to delete everything now");
             if(stockList.size() >= 1)
                 System.out.println("Invalid delete due to existence of Stock Supply Request");
-            else
+            else {
+                for(int i=0; i<bomDetailList.size(); i++) 
+                    em.remove(bomDetailList.get(i));
+                em.remove(bom);
                 em.remove(fm);
+            }
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
         }
