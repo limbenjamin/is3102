@@ -38,6 +38,24 @@ public class BOMManagedBean implements Serializable {
     private Long furnitureID;
     private List<BOMDetail> bomList = null;
     private List<Material> materialList;
+    private Integer listSize = null;
+    private boolean uneditable;
+
+    public boolean isUneditable() {
+        return uneditable;
+    }
+
+    public void setUneditable(boolean uneditable) {
+        this.uneditable = uneditable;
+    }
+
+    public Integer getListSize() {
+        return listSize;
+    }
+
+    public void setListSize(Integer listSize) {
+        this.listSize = listSize;
+    }
 
     public BOMDetail getBOMdetail() {
         return BOMdetail;
@@ -87,8 +105,14 @@ public class BOMManagedBean implements Serializable {
         this.furniture = stockManager.getFurniture(furnitureID);
         this.materialList = stockManager.displayMaterialList();
         this.bomList = stockManager.displayBOM(furnitureID);
+        this.uneditable = this.furniture.getBom().isUneditable();
+        if(uneditable) 
+            System.out.println("Furniture's BOM cannot be edited");
+        else
+            System.out.println("Furniture's BOM can be edited");
         System.out.println("BOMDetailList has " + this.bomList.size() + " items");
-        System.out.println("init");
+        this.listSize = this.bomList.size();
+        System.out.println("init:BOMManagedBean");
     }
     
     public String addToBOM(ActionEvent event) {

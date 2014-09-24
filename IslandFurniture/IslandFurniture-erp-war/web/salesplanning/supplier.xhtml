@@ -29,19 +29,15 @@
                                 <div class="list-group-item">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Supplier</th>
                                         <th>Country</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
-                                        <th>Procurement Contract Details</th>
+                                        <th>Procurement Contract Details</th> 
                                     </tr>
                                     <h:form id="editSupplierForm" class="form-horizontal">
                                         <ui:repeat value="#{supplierManagedBean.supplierList}" var="supplier">
                                             <tr>
-                                                <td>
-                                                    <h:outputText id="supplierID" value="#{supplier.id}"></h:outputText>
-                                                </td>
                                                 <td>
                                                     <h:inputText id="supplierName" value="#{supplier.name}" class="form-control"></h:inputText>
                                                 </td>

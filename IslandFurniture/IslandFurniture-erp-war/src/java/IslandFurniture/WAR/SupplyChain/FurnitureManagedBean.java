@@ -63,7 +63,7 @@ public class FurnitureManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         furnitureList = stockManager.displayFurnitureList();
-        System.out.println("init");
+        System.out.println("init:FurnitureManagedBean");
     }
     public String addFurnitureModel() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
