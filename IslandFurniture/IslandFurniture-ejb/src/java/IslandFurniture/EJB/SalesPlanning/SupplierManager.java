@@ -13,6 +13,7 @@ import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
@@ -109,20 +110,33 @@ public class SupplierManager implements SupplierManagerLocal {
         }
     }
     public void deleteSupplier(Long id) {
-        Supplier supplier;
+        Supplier supplier = null;
+        List<PurchaseOrder> poList;
         try {
             System.out.println("SupplierManager.deleteSupplier()");
-            supplier = em.find(Supplier.class, id);
-            for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
-                em.remove(supplier.getProcurementContract().getProcurementContractDetails().get(i));
-            System.out.println("Removed PCD"); 
-            em.remove(supplier.getProcurementContract());
-            System.out.println("Removed PC");
-            em.remove(supplier);
-            System.out.println("Removed supplier");
-            em.flush();
+            poList = em.createNamedQuery("getAllPurchaseOrders", PurchaseOrder.class).getResultList();
+            for(int i=0; i<poList.size(); i++) {
+                if(poList.get(i).getSupplier().getId().equals(id)) {
+                    supplier = poList.get(i).getSupplier();
+                    break;
+                }
+            }
+            
+            if(supplier != null) 
+                System.out.println("Existing purchase order linked to Supplier. Unable to delete");
+            else { 
+                supplier = em.find(Supplier.class, id);
+                for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
+                    em.remove(supplier.getProcurementContract().getProcurementContractDetails().get(i));
+                System.out.println("Removed PCD"); 
+                em.remove(supplier.getProcurementContract());
+                System.out.println("Removed PC");
+                em.remove(supplier);
+                System.out.println("Removed supplier");
+                em.flush();
+            }
         } catch(Exception ex) {
-            System.err.println("Something went wrong");
+            System.err.println("Existing purchase order linked Supplier. Unable to delete");
         }
     }
     public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID) {
