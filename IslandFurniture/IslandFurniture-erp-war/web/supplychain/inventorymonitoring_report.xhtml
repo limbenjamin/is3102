@@ -19,8 +19,8 @@
 
                         <section name="Data Table">
 
-                            <p:accordionPanel id="invTable" value="#{inventoryMonitoringReportManagedBean.invList}" var="invEntry" multiple="true">
-                                <p:tab title="#{invEntry.first.name}">
+                            <p:accordionPanel id="invTable" value="#{inventoryMonitoringReportManagedBean.invList}" var="invEntry" multiple="true" >
+                                <p:tab title="#{invEntry.first.name}" rendered="#{!invEntry.second.isEmpty()}">
                                     <p:dataTable value="#{invEntry.second}" var="su">
                                         <p:column>
                                             <f:facet name="header">
