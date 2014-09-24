@@ -10,13 +10,13 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newSupplier">
                             <i class="fa fa-fw fa-plus"></i>New Supplier
                         </button>                         
                         <h4>Supplier</h4><hr></hr>   
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -48,7 +48,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                        <h:selectOneMenu id="supplierCountry" class="form-control" value="#{supplier.country.name}">          
+                                                        <h:selectOneMenu id="supplierCountry" class="form-control needauto" value="#{supplier.country.name}">    
                                                             <f:selectItem itemLabel="Select Country" noSelectionOption="true" />
                                                             <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
                                                         </h:selectOneMenu>
@@ -56,8 +56,8 @@
                                                 </td>
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                        <h:inputText id="supplierNumber" value="#{supplier.phoneNumber}" class="form-control transparent-form"></h:inputText>
+                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                        <h:inputText id="supplierNumber" value="#{supplier.phoneNumber}" class="form-control transparent-form" style="max-width: 125px;"></h:inputText>
                                                     </div>
                                                 </td> 
                                                 <td>
@@ -110,7 +110,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Supplier Country: </label> 
                                 <div class="col-sm-8">
-                                    <h:selectOneMenu id="country" class="form-control">          
+                                    <h:selectOneMenu id="country" class="form-control needauto">          
                                         <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
                                         <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
                                     </h:selectOneMenu>
