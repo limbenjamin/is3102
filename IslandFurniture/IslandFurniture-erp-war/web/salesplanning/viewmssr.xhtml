@@ -12,10 +12,8 @@
                                itemLabel="#{years}" itemValue="#{years}" />
                 <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.updateMssr}" />
             </h:selectOneMenu>
-            <h:commandButton value="Perform Monthly Update">
-                <f:ajax render="mssrTable" listener="#{viewMssrManagedBean.monthlyUpdate}" />
-            </h:commandButton>
             <br /><br />
+            <p:poll interval="1" listener="#{viewMssrManagedBean.updateMssrList}" update="mssrTable" />
             <p:accordionPanel id="mssrTable" value="#{viewMssrManagedBean.mssrList}" var="mssrEntry" multiple="true">
                 <p:tab title="#{mssrEntry.first.name} (id:#{mssrEntry.first.id})">
                     <p:dataTable value="#{viewMssrManagedBean.mssrLabels}" var="label">
@@ -31,9 +29,11 @@
                                 <br />
                                 <h:outputText value="#{mssr.year}" />
                             </f:facet>
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory'}"/>
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}"/>
                             <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == true}"/>
                             <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == false}"/>
+                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == true}" />
+                            <h:outputText value="-" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == false}" />
                             <h:outputText value="-" rendered="#{mssr.status == null}"/>
                         </p:columns>
                     </p:dataTable>
