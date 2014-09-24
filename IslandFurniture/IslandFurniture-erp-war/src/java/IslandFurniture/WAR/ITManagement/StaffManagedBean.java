@@ -54,7 +54,7 @@ public class StaffManagedBean  implements Serializable  {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        staffList = msabl.displayAllStaffAccounts();
+        staffList = msabl.displayStaffAccountsFromPlant(username);
         countryList = mohBean.getCountries();
         plantList = mohBean.displayPlant();
     }

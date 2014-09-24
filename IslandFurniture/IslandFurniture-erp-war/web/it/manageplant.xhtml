@@ -42,11 +42,15 @@
                                         </p:column>
 
                                         <p:column headerText="Country Office" sortBy="#{store.countryOffice.name}">
-                                            <h:inputText id="countryOfficeString" value="#{store.countryOffice.name}" class="form-control transparent-form"></h:inputText>
+                                            <h:selectOneMenu id="countryOfficeString" class="form-control" value="#{store.countryOffice.name}">
+                                                <f:selectItems itemLabel="#{co.name}" itemValue="#{co.name}" value="#{organizationalHierarchyManagedBean.coList}" var="co"/>
+                                            </h:selectOneMenu>
                                         </p:column>
                                         
                                         <p:column headerText="Time Zone" sortBy="#{store.timeZoneID}">
-                                            <h:inputText id="timeZoneString" value="#{store.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                            <h:selectOneMenu id="roleName" class="form-control" value="#{store.timeZoneID}">
+                                                <f:selectItems itemLabel="#{timezone}" itemValue="#{timezone}" value="#{organizationalHierarchyManagedBean.timezoneList}" var="timezone"/>
+                                            </h:selectOneMenu>
                                         </p:column>
                                         
                                         <p:column headerText="Update">
@@ -57,13 +61,10 @@
                                         </p:column>
 
                                         <p:column headerText="Remove" style="text-align: center;">
-                                            <h:form>
-                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:param name="id" value="#{store.id}" />
-                                                    <f:param name="plantType" value="Store" />
+                                                <h:commandButton actionListener="#{organizationalHierarchyManagedBean.deleteStore}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{store}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
-                                            </h:form>
                                         </p:column>                        
 
                                     </p:dataTable>
@@ -83,11 +84,15 @@
                                         </p:column>
                                         
                                         <p:column headerText="Country Office" sortBy="#{mf.countryOffice.name}">
-                                            <h:inputText id="countryOfficeString" value="#{mf.countryOffice.name}" class="form-control transparent-form"></h:inputText>
+                                            <h:selectOneMenu id="countryOfficeString" class="form-control" value="#{mf.countryOffice.name}">
+                                                <f:selectItems itemLabel="#{co.name}" itemValue="#{co.name}" value="#{organizationalHierarchyManagedBean.coList}" var="co"/>
+                                            </h:selectOneMenu>
                                         </p:column>
                                         
                                         <p:column headerText="Time Zone" sortBy="#{mf.timeZoneID}">
-                                            <h:inputText id="timeZoneString" value="#{mf.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                            <h:selectOneMenu id="roleName" class="form-control" value="#{mf.timeZoneID}">
+                                                <f:selectItems itemLabel="#{timezone}" itemValue="#{timezone}" value="#{organizationalHierarchyManagedBean.timezoneList}" var="timezone"/>
+                                            </h:selectOneMenu>
                                         </p:column>
                                         
                                         <p:column headerText="Update">
@@ -98,13 +103,10 @@
                                         </p:column>
                                         
                                         <p:column headerText="Remove" style="text-align: center;">
-                                            <h:form>
-                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:param name="id" value="#{mf.id}" />
-                                                    <f:param name="plantType" value="Manufacturing Facility" />
+                                                <h:commandButton actionListener="#{organizationalHierarchyManagedBean.deleteMF}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{mf}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
-                                            </h:form>
                                         </p:column>                        
 
                                     </p:dataTable>
@@ -128,7 +130,9 @@
                                         </p:column>
                                         
                                         <p:column headerText="Time Zone" sortBy="#{co.timeZoneID}">
-                                            <h:inputText id="timeZoneString" value="#{co.timeZoneID}" class="form-control transparent-form"></h:inputText>
+                                            <h:selectOneMenu id="roleName" class="form-control" value="#{co.timeZoneID}">
+                                                <f:selectItems itemLabel="#{timezone}" itemValue="#{timezone}" value="#{organizationalHierarchyManagedBean.timezoneList}" var="timezone"/>
+                                            </h:selectOneMenu>
                                         </p:column>
                                         
                                         <p:column headerText="Update">
@@ -139,13 +143,10 @@
                                         </p:column>                                        
                                         
                                         <p:column headerText="Remove" style="text-align: center;">
-                                            <h:form>
-                                                <h:commandButton action="#{organizationalHierarchyManagedBean.deletePlant}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:param name="id" value="#{co.id}" />
-                                                    <f:param name="plantType" value="Country Office" />
+                                                <h:commandButton actionListener="#{organizationalHierarchyManagedBean.deleteCO}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{co}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
-                                            </h:form>
                                         </p:column>                        
 
                                     </p:dataTable>
@@ -177,9 +178,15 @@
                                             <label class="col-sm-3 control-label">Country Office: </label>
                                             <div class="col-sm-9">
                                                 <h:selectOneMenu id="countryOffice" class="form-control">
-                                                    <c:forEach var="i" begin="0" end="#{organizationalHierarchyManagedBean.coList.size()-1}">
-                                                        <f:selectItem itemLabel="#{organizationalHierarchyManagedBean.coList.get(i).name}" itemValue="#{organizationalHierarchyManagedBean.coList.get(i).name}" />
-                                                    </c:forEach>
+                                                    <f:selectItems itemLabel="#{co.name}" itemValue="#{co.name}" value="#{organizationalHierarchyManagedBean.coList}" var="co"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Time Zone: </label>
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="timezone" class="form-control">
+                                                    <f:selectItems itemLabel="#{timezone}" itemValue="#{timezone}" value="#{organizationalHierarchyManagedBean.timezoneList}" var="timezone"/>
                                                 </h:selectOneMenu>
                                             </div>
                                           </div>
@@ -219,12 +226,18 @@
                                             </div>
                                           </div>
                                           <div class="form-group">
+                                            <label class="col-sm-3 control-label">Time Zone: </label>
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="timezone" class="form-control">
+                                                    <f:selectItems itemLabel="#{timezone}" itemValue="#{timezone}" value="#{organizationalHierarchyManagedBean.timezoneList}" var="timezone"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
                                             <label class="col-sm-3 control-label">Country: </label>
                                             <div class="col-sm-9">
                                                 <h:selectOneMenu id="country" class="form-control">
-                                                    <c:forEach var="i" begin="0" end="#{organizationalHierarchyManagedBean.countryList.size()-1}">
-                                                        <f:selectItem itemLabel="#{organizationalHierarchyManagedBean.countryList.get(i).name}" itemValue="#{organizationalHierarchyManagedBean.countryList.get(i).name}" />
-                                                    </c:forEach>
+                                                    <f:selectItems itemLabel="#{co.name}" itemValue="#{co.name}" value="#{organizationalHierarchyManagedBean.countryList}" var="co"/>
                                                 </h:selectOneMenu>
                                             </div>
                                           </div>

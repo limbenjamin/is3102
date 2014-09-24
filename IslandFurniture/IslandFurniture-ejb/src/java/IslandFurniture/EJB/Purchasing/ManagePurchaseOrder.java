@@ -77,7 +77,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate) {
+    public PurchaseOrder createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -85,7 +85,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         plant = (Plant) em.find(Plant.class, plantId);
         purchaseOrder.setShipsTo(plant);        
         em.persist(purchaseOrder);
-        em.flush();        
+        em.flush();
+        return purchaseOrder;
     }
     
     @Override
@@ -198,10 +199,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         em.flush();
     } 
     
-    public List<Supplier> viewContractedSuppliers(Long supplierId) {
-        supplier = (Supplier) em.find(Supplier.class, supplierId);
+    @Override
+    public List<Supplier> viewContractedSuppliers(ManufacturingFacility mf) {
         Query q = em.createNamedQuery("getSupplierList");        
-        q.setParameter("supplier", supplier);
+        q.setParameter("mf", mf);
         return (List<Supplier>)q.getResultList();
     }    
     

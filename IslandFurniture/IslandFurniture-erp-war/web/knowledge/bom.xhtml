@@ -19,11 +19,11 @@
                     </div>
                     <div class="col-md-8">
                         <h3>#{bOMManagedBean.furniture.name}</h3>
+                        <div class="list-group-item">
                         <table class="table table-hover">
                             <tr>
-                                <th>ID</th>
                                 <th>Material</th>
-                                <th>Quantity</th>
+                                <th>Quantity</th> 
                                 <th>Update</th>
                                 <th>Delete</th>
                             </tr>
@@ -31,32 +31,39 @@
                                 <ui:repeat value="#{bOMManagedBean.bomList}" var="bom" id="BOMListTable">
                                     <tr>
                                         <td>
-                                            <h:outputText value="#{bom.id}"></h:outputText>
-                                        </td>
-                                        <td>
-                                            <h:outputText value="#{bom.material.name}"></h:outputText>
+                                            <h:outputText value="#{bom.material.name}"></h:outputText> 
                                         </td>
                                         <td>
                                             <div class="inner-addon left-addon">
-                                            <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>                                            
-                                            <h:inputText id="storageBinName" value="#{bom.quantity}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                <h:panelGroup rendered="#{!bOMManagedBean.uneditable}"> 
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>                                            
+                                                    <h:inputText id="storageBinName" value="#{bom.quantity}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                </h:panelGroup>
+                                                <h:panelGroup rendered="#{bOMManagedBean.uneditable}">                                         
+                                                    <h:outputText value="#{bom.quantity}"  style="max-width:100px;"></h:outputText>
+                                                </h:panelGroup>
                                             </div>
                                         </td>
                                         <td>
-                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
-                                            </h:commandButton>
-                                            <i class="fa fa-lg fa-save icon-button"></i>                                            
+                                            <h:panelGroup rendered="#{!bOMManagedBean.uneditable}"> 
+                                                <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>     
+                                            </h:panelGroup>
                                         </td>
                                         <td>
-                                            <h:commandButton action="#{bOMManagedBean.deleteBOM()}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                <f:param name="bomID" value="#{bom.id}" />
-                                            </h:commandButton>
-                                            <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                            <h:panelGroup rendered="#{!bOMManagedBean.uneditable}"> 
+                                                <h:commandButton action="#{bOMManagedBean.deleteBOM()}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="bomID" value="#{bom.id}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i> 
+                                            </h:panelGroup>
                                         </td> 
                                     </tr>
                                 </ui:repeat>
                             </h:form> 
                         </table>
+                        </div>
                     </div>
                         <!-- Modal -->
                         <div class="modal fade" id="newBOM" aria-hidden="true">

@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Event;
+import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +34,7 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     private Staff creator;
     private Event event;
     private List<Event> eventList;
+    private Plant plant;
     
     @EJB
     private ManageUserAccountBeanLocal staffbean;
@@ -45,6 +47,7 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
         event.setDescription(description);
         event.setEventTime(eventTime);
         event.setCreator(creator);
+        event.setPlant(creator.getPlant());
         em.persist(event);
         eventList = creator.getEvents();
         eventList.add(event);
@@ -77,8 +80,11 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     }
     
     @Override
-    public List<Event> getEvents(){
-        Query query = em.createQuery("SELECT e " + "FROM Event e ");
+    public List<Event> getEvents(String username){
+        creator = staffbean.getStaff(username);
+        plant = creator.getPlant();
+        Query query = em.createQuery("SELECT e FROM Event e WHERE e.plant=:plant");
+        query.setParameter("plant", plant);
         return query.getResultList();
     }
     

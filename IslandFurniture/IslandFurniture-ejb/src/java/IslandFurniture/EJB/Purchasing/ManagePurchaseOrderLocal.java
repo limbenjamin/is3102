@@ -24,7 +24,7 @@ public interface ManagePurchaseOrderLocal {
 
     PurchaseOrder createPurchaseOrder(Calendar orderDate, String status);
     
-    void createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate);
+    PurchaseOrder createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity);
 
@@ -51,6 +51,8 @@ public interface ManagePurchaseOrderLocal {
     List<Plant> viewPlants();
     
     List<Supplier> viewSuppliers();
+    
+    List<Supplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
     

@@ -25,7 +25,7 @@ public class StockUnit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long batchNo;
+    private String batchNo;
     private Long qty = 0l;
     private Boolean available;
     private Long commitStockUnitId;
@@ -45,15 +45,15 @@ public class StockUnit implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Long getBatchNo() {
+    
+    public String getBatchNo() {
         return batchNo;
     }
 
-    public void setBatchNo(Long batchNo) {
+    public void setBatchNo(String batchNo) {
         this.batchNo = batchNo;
     }
-
+        
     public Long getQty() {
         return qty;
     }

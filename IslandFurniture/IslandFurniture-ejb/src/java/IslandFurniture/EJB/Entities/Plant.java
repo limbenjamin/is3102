@@ -55,6 +55,10 @@ public abstract class Plant implements Serializable {
     protected List<PlantStockInventory> plantStockInventories;
     @OneToMany(mappedBy = "plant")
     protected List<StorageArea> storageAreas;
+    @OneToMany(mappedBy = "plant")
+    private List<Announcement> announcementList;
+    @OneToMany(mappedBy = "plant")
+    private List<Event> eventList;
 
     public Long getId() {
         return id;
@@ -111,6 +115,24 @@ public abstract class Plant implements Serializable {
     public void setStorageAreas(List<StorageArea> storageAreas) {
         this.storageAreas = storageAreas;
     }
+
+    public List<Announcement> getAnnouncementList() {
+        return announcementList;
+    }
+
+    public void setAnnouncementList(List<Announcement> announcementList) {
+        this.announcementList = announcementList;
+    }
+
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+    
+    
 
     @Override
     public int hashCode() {

@@ -24,7 +24,7 @@ public interface ManageAnnouncementsBeanLocal {
 
     void editAnnouncement(Long id, String title, String content, Date activeDate, Date expireDate);
 
-    List<Announcement> getActiveAnnouncements();
+    List<Announcement> getActiveAnnouncements(String username);
 
     List<Announcement> getMyAnnouncements(String username);
     

@@ -46,7 +46,7 @@ public class TimerControl {
         if (initialiseServerBean.isUpdateMssrStarted() && cal.compareTo(prevMth) < 0) {
             System.out.println("Update MSSR!");
             
-            List<CountryOffice> coList = em.createNamedQuery("getAllCountryOffices").getResultList();
+            List<CountryOffice> coList = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
             for (CountryOffice co : coList) {
                 salesForecastBean.updateMonthlyStockSupplyReq(co, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR), Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
             }

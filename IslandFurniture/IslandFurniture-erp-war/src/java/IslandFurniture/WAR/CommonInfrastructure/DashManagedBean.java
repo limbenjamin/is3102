@@ -88,8 +88,8 @@ public class DashManagedBean implements Serializable {
         this.countryName = staff.getPlant().getCountry().getName();
         this.lastLogon = staff.getLastLogon();
         this.todoList = staff.getTodoList();
-        this.announcementList = announcementBean.getActiveAnnouncements();
-        this.eventList = eventBean.getEvents();
+        this.announcementList = announcementBean.getActiveAnnouncements(username);
+        this.eventList = eventBean.getEvents(username);
         Iterator<Event> iterator = eventList.iterator();
         localDateTimeList = new ArrayList();
         while (iterator.hasNext()) {

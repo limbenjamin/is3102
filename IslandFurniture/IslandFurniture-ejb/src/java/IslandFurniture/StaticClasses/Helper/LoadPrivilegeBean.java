@@ -39,13 +39,19 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
     public boolean loadSampleData() {
         
         String[] privileges = new String [] {
-        "Login","Modify Particulars","Dashboard","Messaging","Broadcast",
+        "Modify Particulars","Dashboard","Messaging","Broadcast",
         "Change Password","Manage Plant","Manage Staff","Manage Roles","MSSR",
         "Material","Furniture","Retail Item","Create Forecast","View Notifications",
         "Review Forecast"};
         
+        String[] privilegeDescription = new String [] {
+        "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
+        "Change account password","Manage Stores, Manufacturing Facilities and Country Offices","Create staff account and assign roles ","Manage Roles amd privileges for each role","View MSSR",
+        "Add and edit materials","Add and edit furnitures","Add and edit retail item","Create sales forecast","View all notifications",
+        "Review sales forecast"};
+        
+        
         String[][] arr = new String [][] { 
-            { "Login", "/login.xhtml", "fa-dummy", "dummy", "false"},
             { "Modify Particulars", "/common/modifyparticulars.xhtml", "fa-dummy", "dummy", "false"},
             { "Dashboard", "/dash.xhtml", "fa-home", "Dashboard", "true"},
             { "Messaging", "/common/messaging.xhtml", "fa-envelope", "Messaging", "true"},
@@ -76,7 +82,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
                         urlList.add(url);
                     }
                 }
-                mrpl.createPrivilege(privileges[i],urlList);
+                mrpl.createPrivilege(privileges[i], privilegeDescription[i],urlList);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 return false;

@@ -36,5 +36,6 @@ public interface ManageNotificationsBeanLocal {
     
     List<Notification> getAllNotifications();
     
+    Integer getUnreadForStaff(Staff staff);
     
 }
