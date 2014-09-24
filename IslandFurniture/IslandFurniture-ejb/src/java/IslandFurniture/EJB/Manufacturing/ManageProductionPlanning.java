@@ -5,14 +5,20 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
+import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingCapacity;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.EJB.Entities.ProductionOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
@@ -21,6 +27,7 @@ import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -42,7 +49,7 @@ import javax.persistence.Query;
 @Stateful
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
-public class ManageProductionPlanning implements ManageProductionPlanningRemote {
+public class ManageProductionPlanning implements ManageProductionPlanningRemote, ManageProductionPlanningLocal {
 
     public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
 
@@ -279,8 +286,19 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
             throw new RuntimeException("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
         }
 
+        //Set to zero whole chain of related capacity . else available capacity reading will be wrong
         for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
-            planTillMonthCursor.setQTY(0);
+            while (QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor) != null) {
+
+                if (planTillMonthCursor.isLocked()) {
+                    break;
+                }
+                planTillMonthCursor.setQTY(0);
+                planTillMonthCursor = QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor);
+            }
+        }
+
+        for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
 
             int deficit = 0;
             String endmonth = planTillMonthCursor.getMonth().toString();
@@ -331,40 +349,40 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
         return wpp;
 
     }
-    
+
     @Override
-    public void planWeekMPP(String MF_NAME,String furniture_model_name,int m,long year) throws Exception
-    {
-        Query q=em.createNamedQuery("MonthlyProductionPlan.Find");
-        Query k=em.createQuery("select mf from ManufacturingFacility mf where mf.name=:name");
+    public void planWeekMPP(String MF_NAME, String furniture_model_name, int m, long year) throws Exception {
+        Query q = em.createNamedQuery("MonthlyProductionPlan.Find");
+        Query k = em.createQuery("select mf from ManufacturingFacility mf where mf.name=:name");
         k.setParameter("name", MF_NAME);
-        
-        Query L=em.createQuery("select fm from FurnitureModel fm where fm.name=:name");
+
+        Query L = em.createQuery("select fm from FurnitureModel fm where fm.name=:name");
         L.setParameter("name", furniture_model_name);
-        
-        
-        
-        
-        q.setParameter("mf",(ManufacturingFacility)k.getResultList().get(0));
+
+        q.setParameter("mf", (ManufacturingFacility) k.getResultList().get(0));
         q.setParameter("m", Helper.translateMonth(m).value);
         q.setParameter("y", year);
         q.setParameter("fm", (FurnitureModel) L.getResultList().get(0));
-        
-        
-        
+
         planWeekMPP((MonthlyProductionPlan) q.getResultList().get(0));
-                
+
     }
 
     //This process plans MPP and split it evenly across weeks
-   
     private void planWeekMPP(MonthlyProductionPlan mpp) throws Exception {
-        Calendar cal = Calendar.getInstance();
-        cal.set(mpp.getYear(), mpp.getMonth().value, 1);
-        int maxWeekNumber = cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-        int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxWeekNumber));
+
+        int maxWeekNumber = Helper.getNumOfWeeks(mpp.getMonth().value, mpp.getYear());
+        int maxDay = Helper.getNumWorkDays(mpp.getMonth(), mpp.getYear());
+        int daysInLastWeek = Helper.getNumOfDaysInWeek(mpp.getMonth().value, mpp.getYear(), maxWeekNumber);
+
+        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxDay) * (maxDay - daysInLastWeek) / (maxWeekNumber - 1));
+
+        for (WeeklyProductionPlan wpp : mpp.getWeeklyProductionPlans()) {
+            em.remove(wpp);
+        }
+
         mpp.getWeeklyProductionPlans().clear();
+
         for (int i = 1; i <= maxWeekNumber; i++) {
 
             WeeklyProductionPlan wp = addWeeklyPlan(mpp);
@@ -379,5 +397,87 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote 
 
     }
 
+    @Override
+    public void commitWPP(Integer wppID) throws Exception {
+        Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.id=:id");
+        q.setParameter("id", wppID);
+        WeeklyProductionPlan wpp = (WeeklyProductionPlan) q.getResultList().get(0);
+
+        ProductionOrder po = new ProductionOrder();
+        po.setFurnitureModel(wpp.getMonthlyProductionPlan().getFurnitureModel());
+        wpp.setProductionOrder(po);
+        persist(po);
+
+    }
+
+    @Override
+    public void uncommitWPP(Integer wppID) throws Exception {
+        Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.id=:id");
+        q.setParameter("id", wppID);
+        WeeklyProductionPlan wpp = (WeeklyProductionPlan) q.getResultList().get(0);
+
+        ProductionOrder po = wpp.getProductionOrder();
+
+        wpp.setProductionOrder(null);
+
+        em.remove(po);
+
+    }
+
+    @Override
+    public int getLotSize(Material m) {
+        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcurementContractDetail pc : pcs) {
+            if (pc.getProcuredStock().equals(m)) {
+                return pc.getLotSize();
+            }
+        }
+
+        return 1;
+
+    }
+
+    @Override
+    public Supplier getSupplierSize(Material m) {
+        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcurementContractDetail pc : pcs) {
+            if (pc.getProcuredStock().equals(m)) {
+                return pc.getProcurementContract().getSupplier();
+            }
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public HashMap<Material, Long> getMaterialsNeeded(int WeekNo, int Year, int Month) {
+        Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.WeekNo=:wno and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12 and wpp.monthlyProductionPlan.manufacturingFacility=:mf");
+        q.setParameter("mf", this.MF);
+        q.setParameter("y", Year);
+        q.setParameter("m", Month);
+        q.setParameter("wno", WeekNo);
+
+        HashMap<Material, Long> material_map = new HashMap<Material, Long>();
+
+        for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
+            Query l = em.createQuery("select bomd from BOMDetail bomd where bomd.bom=:bom order by bomd.material.name ASC");
+            l.setParameter("bom", wpp.getMonthlyProductionPlan().getFurnitureModel().getBom());
+            for (BOMDetail bomd : (List<BOMDetail>) l.getResultList()) {
+                if (material_map.get(bomd.getMaterial()) == null) {
+                    material_map.put(bomd.getMaterial(), 0L);
+                }
+                System.out.println("getMaterialsNeeded(): WPPID: " + wpp.getId() + " Furniture " + bomd.getMaterial()+" "+ wpp.getMonthlyProductionPlan().getFurnitureModel().getName()
+                        + " required quantity=" + bomd.getQuantity() * wpp.getQTY()
+                );
+                material_map.put(bomd.getMaterial(), material_map.get(bomd.getMaterial()) + bomd.getQuantity() * wpp.getQTY());
+
+            }
+
+        }
+
+        return material_map;
+
+    }
 
 }

@@ -27,6 +27,7 @@
                                     <th>ID</th>
                                     <th>Furniture</th>
                                     <th>Price ($SGD)</th>
+                                    <th>Colours</th>
                                     <th>B.O.M</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
@@ -45,9 +46,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="inner-addon left-addon">
+                                                <div class="inner-addon left-addon"> 
                                                 <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                 <h:inputText id="fPrice" value="#{f.price}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                </div>
+                                            </td>
+                                            <td> 
+                                                <div class="inner-addon left-addon" style="display: inline-block;"> 
+                                                    <ui:repeat id="fColour" value="#{f.colour}" var="colour">
+                                                        <h:panelGroup layout="block" style="width: 10px; height: 10px; background-color: ##{colour}" /> 
+                                                    </ui:repeat>
+                                                    <button type="button" class="btn btn-sm" data-toggle="modal" data-target="#newColour">
+                                                        <i class="fa fa-fw fa-plus"></i>
+                                                    </button>   
                                                 </div>
                                             </td>
                                             <td>
@@ -75,7 +86,7 @@
                         </section>
                     </div>
                 <!-- Modal for furniture -->
-                <div class="modal fade" id="newFurniture" aria-hidden="true" name="createStorageArea">
+                <div class="modal fade" id="newFurniture" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -100,6 +111,32 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
                             <h:commandButton action="#{furnitureManagedBean.addFurnitureModel}" class="btn btn-success btn-round" value="Add"></h:commandButton>
+                        </div>
+                        </h:form> 
+                    </div>
+                  </div>
+                </div> 
+                <!-- Modal for colour -->
+                <div class="modal fade" id="newColour" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add New Colour</h4>
+                      </div>
+                        <h:form id="addColourForm" class="form-horizontal"> 
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Colour: </label>
+                                <div class="col-sm-8">
+                                    <p:colorPicker value="#000" mode="inline"></p:colorPicker>
+                                    <h:inputText id="colour" class="form-control" required="true"></h:inputText>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="#{furnitureManagedBean.addFurnitureColour}" class="btn btn-success btn-round" value="Add"></h:commandButton>
                         </div>
                         </h:form> 
                     </div>

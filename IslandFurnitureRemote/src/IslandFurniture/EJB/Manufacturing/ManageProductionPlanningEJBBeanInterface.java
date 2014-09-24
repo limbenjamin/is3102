@@ -28,4 +28,6 @@ public interface ManageProductionPlanningEJBBeanInterface {
     boolean updateListOfEntities(ArrayList<Object> listOfEntities) throws Exception;
 
     Object getCapacityList(String MF);
+    
+    Object getWeeklyPlans(String period,String MFNAME);
 }

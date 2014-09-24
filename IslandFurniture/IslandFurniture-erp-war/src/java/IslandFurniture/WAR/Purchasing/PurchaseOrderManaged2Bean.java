@@ -152,6 +152,7 @@ public class PurchaseOrderManaged2Bean implements Serializable{
     
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
+        System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
         mpol.updatePurchaseOrderDetail(pod, pod.getProcuredStock().getId(), pod.getQuantity());
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);

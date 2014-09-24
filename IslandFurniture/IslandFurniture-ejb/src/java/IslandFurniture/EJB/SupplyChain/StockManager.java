@@ -173,12 +173,12 @@ public class StockManager implements StockManagerLocal {
             System.err.println("Something went wrong here");
         }
     }
-    public void addFurnitureColour(String furnitureName, String colour) {
+    public void addFurnitureColour(Long furnitureID, String colour) {
         FurnitureModel fm;
         List colourList;
         try {
             System.out.println("StockManager.addFurnitureColour()");
-            fm = findFurnitureByName(em, furnitureName);
+            fm = em.find(FurnitureModel.class, furnitureID);
             System.out.println("Adding new furniture colour of " + fm.getName());
             if(colour != null) {
                 System.out.println("Adding " + colour + " to colour option");

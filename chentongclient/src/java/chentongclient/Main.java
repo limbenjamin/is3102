@@ -11,6 +11,7 @@ import IslandFurniture.StaticClasses.Helper.LoadPrivilegeBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadStocksBeanRemote;
+import IslandFurniture.StaticClasses.Helper.LoadSupplierBeanRemote;
 import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
 import IslandFurniture.StaticClasses.Helper.MapPrivilegeDataBeanRemote;
 import IslandFurniture.StaticClasses.Helper.MapStaffDataBeanRemote;
@@ -25,6 +26,8 @@ import javax.ejb.EJB;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+    @EJB
+    private static LoadSupplierBeanRemote loadSupplierBean;
 
     @EJB
     private static LoadStocksBeanRemote loadStocksBean;
@@ -57,6 +60,8 @@ public class Main {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        
+        if (0==0){
 
         // Load Organisation Entities (Store, Manufacturing Facility, Country Office)
         System.out.print("Load Organisation Data? (y/n):");
@@ -75,6 +80,16 @@ public class Main {
                 System.out.println("Stock data (Furniture Model, Retail Items, Materials, StockSupplied relationships) loaded successfully!");
             } else {
                 System.out.println("Failed to load Stock data. Check for existing data and/or recreate islandFurniture database");
+            }
+        }
+        
+         // Load Stock Entities (FurnitureModel, RetailItem, Materials) & StockSupplied relationships
+        System.out.print("Load Supplier Related Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadSupplierBean.loadSampleData()) {
+                System.out.println("Supplier data (incl. procurement contracts) loaded successfully!");
+            } else {
+                System.out.println("Failed to load Supplier data. Check for existing data and/or recreate islandFurniture database");
             }
         }
 
@@ -123,6 +138,8 @@ public class Main {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
             }
         }
+        
+        }
 
         // Load Production Capacity Data
         //Added by James
@@ -136,9 +153,7 @@ public class Main {
             }
         }
 
-        if (1 == 1) {
-            return;
-        }
+
 
     }
 

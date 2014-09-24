@@ -45,7 +45,6 @@
                         </button>
                         </span>                        
                         <h4>Items Added to this Order:</h4>
-                        <hr></hr>
                         <section name="PurchaseOrderDetails">
                             <table class="table table-hover">
                                 <tr>
@@ -70,8 +69,8 @@
                                                 <h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText>
                                             </td>
                                             <td>
-                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.updateStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                    <f:attribute name="PODid" value="#{pod.id}" />
+                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.editStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:attribute name="PODid" value="#{pod}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>
                                             </td>

@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -54,6 +55,10 @@ public class FurnitureManagedBean implements Serializable {
     public List<FurnitureModel> getFilteredList() {        return filteredList;    }
     public void setFilteredList(List<FurnitureModel> filteredList) {        this.filteredList = filteredList;    }
     
+    // Testing area
+
+    // End Testing Area
+    
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
@@ -87,12 +92,11 @@ public class FurnitureManagedBean implements Serializable {
         stockManager.deleteFurnitureModel(id);
         return "furniture";
     }
-    public String addFurnitureColour() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    public String addFurnitureColour(ActionEvent event) throws IOException {
         System.out.println("FurnitureManagedBean.addFurnitureColour()");
-        String name = request.getParameter("addColourForm:name");
-        String colour = request.getParameter("addColourForm:colour");
-        stockManager.addFurnitureColour(name, colour);
+//        Long id = (Long) event.getComponent().getAttributes().get("addColour");
+//        System.out.println("Furniture ID is " + id);
+        stockManager.addFurnitureColour(Long.parseLong("46"), "000");
         return "furniture";
     }
     public void bomActionListener(ActionEvent event) throws IOException {
