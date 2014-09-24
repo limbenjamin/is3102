@@ -33,7 +33,7 @@ public class PurchaseOrder implements Serializable {
     private Supplier supplier;
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar orderDate;
     private String status;
     @ManyToOne
