@@ -12,12 +12,18 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="col-md-12">
+                            <h4>#{messagingManaged2Bean.messageThread.title}</h4>
+                                <ol class="breadcrumb">
+                                  <li><a href="../dash.xhtml">Home</a></li>
+                                  <li><a href="messaging.xhtml">Messaging</a></li>
+                                  <li class="active"><strong>#{messagingManaged2Bean.messageThread.title}</strong></li>
+                                </ol>
                             <hr></hr>
                         </div>
                         <div class="col-md-12">                      
                           <section class="panel">
                             <div class="panel-heading dashboard-title-panel">
-                                <p>#{messageThread.title}</p>
+                                <p>Messages in '#{messagingManaged2Bean.messageThread.title}'</p>
                             </div>
                            
                                 <c:forEach items="${messagingManaged2Bean.messageList}" var="message">

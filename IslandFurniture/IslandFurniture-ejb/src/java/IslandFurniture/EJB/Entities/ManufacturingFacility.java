@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -38,6 +39,10 @@ public class ManufacturingFacility extends Plant implements Serializable {
     private List<ProductionCapacity> productionCapacities;
     @OneToMany(mappedBy="manufacturingFacility")
     private List<MonthlyProcurementPlan> monthlyProcurementPlan;
+    
+    @OneToMany(mappedBy = "manufacturingFacility")
+    private List<WeeklyMRPRecord> weeklyMRPRecord=new ArrayList<>();
+    
     
     public CountryOffice getCountryOffice() {
         return countryOffice;
