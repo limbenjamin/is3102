@@ -123,7 +123,8 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
             plantId = goodsIssuedDocument.getDeliverTo().getId();
         }
         
-        plantList = mgrl.viewPlant(plant);
+        plantList = mgrl.viewPlant();
+        plantList.remove(plant);
         System.out.println("Init");
         
     }

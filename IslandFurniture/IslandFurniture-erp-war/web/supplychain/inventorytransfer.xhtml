@@ -42,14 +42,13 @@
                                             <f:selectItem itemLabel="Select Storage Location" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                         </h:selectOneMenu>
-                                
+
                                         <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}">
                                             <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
                                 </div>  
-
 
                                 <div class="modal-footer">
                                     <h:commandButton action="#{inventoryTransferManagedBean.viewStockTakebyLocation}" value="View" class="btn btn-success btn-round">
@@ -74,6 +73,7 @@
                                                 <th>New Storage Bin</th>
                                                 <th>Quantity</th>
                                                 <th>Batch Number</th>
+                                                <th>Confirm</th>
                                                 <th>Delete</th>
                                             </tr>
                                             <h:form class="form-horizontal">
@@ -86,12 +86,15 @@
                                                         <td>#{s.pendingLocation.name}</td>
                                                         <td>#{s.qty}</td>
                                                         <td>#{s.batchNo}</td>
-                                                        <td>
-                                                            <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                                <f:attribute name="stockId" value="#{s.stock.id}" />
-                                                                <f:attribute name="stockUnit" value="#{s}" />
-                                                            </h:commandButton>
-                                                        </td>
+                                                        <td><h:commandButton actionListener="#{inventoryTransferManagedBean.confirmStockUnit}" value="Confirm" class="btn btn-success btn-xs"> 
+                                                                <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                            </h:commandButton></td>
+                                                            <td>
+                                                                <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                                    <f:attribute name="stockId" value="#{s.stock.id}" />
+                                                                    <f:attribute name="stockUnit" value="#{s}" />
+                                                                </h:commandButton>
+                                                            </td>
                                                     </tr>
                                                 </ui:repeat>
                                             </h:form> 

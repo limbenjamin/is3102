@@ -37,7 +37,7 @@
                                         <th>Goods Receipt ID</th>
                                         <th>Receipt Date</th>
                                         <th>Purchase Order Number</th>
-                                        <th>Delivery Note</th>
+                                        <th>Shipment Note Number</th>
                                         <th>Save</th>
                                     </tr>
                                     <h:form id="editGRD" class="form-horizontal">
@@ -46,11 +46,15 @@
                                                 <tr>
                                                     <td><h:outputText value="#{grd.id}"></h:outputText></td>
                                                     <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" pt:type="date" class="form-control"></h:inputText></td>
-                                                    <td></td>
+                                                    <td><h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}">
+                                                                <f:selectItem itemLabel="Select Purchase Order" />
+                                                                <f:selectItems value="#{goodsReceiptDocumentManagedBean.purchaseOrderList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
+                                                            </h:selectOneMenu></td>
                                                     <td><h:inputText value="#{grd.deliveryNote}" class="form-control"></h:inputText></td>
                                                     <td><h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocument}"  value="Update" class="btn btn-success btn-xs"> 
                                                             <f:attribute name="grd" value="#{grd}" />
                                                             <f:attribute name="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" />
+                                                            <f:attribute name="purchaseOrderId" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}" />
                                                             <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
                                                         </h:commandButton>
                                                     </td>
@@ -152,6 +156,7 @@
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
                                                     <h:selectOneMenu id="stockId" class="form-control" value="#{goodsReceiptDocumentManagedBean.stockId}">
+                                                        <f:selectItem itemLabel="Select Stock"/>
                                                         <f:selectItems value="#{goodsReceiptDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                     </h:selectOneMenu>
                                                 </div>

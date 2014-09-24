@@ -81,15 +81,21 @@ public class storageLocationManagedBean implements Serializable {
         return "storagelocation";
     }
 
-    public String deleteStorageArea() {
+    public String deleteStorageArea() throws IOException {
         storageAreaId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageAreaId"));
-        msll.deleteStorageArea(storageAreaId);
+        storageArea = msll.getStorageArea(storageAreaId);
+        if (storageArea.getStorageBins().isEmpty()) {
+            msll.deleteStorageArea(storageAreaId);
+        }
         return "storagelocation";
     }
 
-    public String deleteStorageBin() {
+    public String deleteStorageBin() throws IOException {
         storageBinId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageBinId"));
-        msll.deleteStorageBin(storageBinId);
+        storageBin = msll.getStorageBin(storageBinId);
+        if (storageBin.getStockUnits().isEmpty()) {
+            msll.deleteStorageBin(storageBinId);
+        }
         return "storagelocation";
     }
 
