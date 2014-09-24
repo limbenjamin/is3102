@@ -20,6 +20,7 @@ import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
 import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -291,6 +292,51 @@ public class QueryMethods {
 
         return 1 - cCap;
 
+    }
+
+    public static WeeklyMRPRecord getPrevWMRP(EntityManager em, WeeklyMRPRecord WMRP) {
+        try {
+            Query k = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFM");
+            k.setParameter("mf", WMRP.getManufacturingFacility());
+            Calendar cal=Calendar.getInstance();
+            cal.set(Calendar.MONTH, WMRP.getMonth().value);
+            cal.set(Calendar.YEAR, WMRP.getYear());
+            cal.set(Calendar.WEEK_OF_MONTH, WMRP.getWeek());
+            cal.add(Calendar.WEEK_OF_MONTH, -1);
+            
+            k.setParameter("m", Helper.translateMonth(cal.get(Calendar.MONTH)).value);
+            k.setParameter("y", cal.get(Calendar.YEAR));
+            k.setParameter("w", cal.get(Calendar.WEEK_OF_MONTH));
+            k.setParameter("ma", WMRP.getMaterial());
+            return (WeeklyMRPRecord) k.getResultList().get(0);
+
+        } catch (Exception ex) {
+            System.out.println("getPrevMRP(): ERROR !" + ex.getMessage());
+            return null;
+        }
+
+    }
+
+    public static Integer getOrderedatwMRP(EntityManager em, WeeklyMRPRecord WMRP) {
+        try {
+            Query k = em.createNamedQuery("weeklyMRPRecord.findwMRPOrderedatMFM");
+            k.setParameter("mf", WMRP.getManufacturingFacility());
+            k.setParameter("m", WMRP.getMonth());
+            k.setParameter("y", WMRP.getYear());
+            k.setParameter("w", WMRP.getWeek());
+            k.setParameter("ma", WMRP.getMaterial());
+            int sum=0;
+            for (WeeklyMRPRecord wmrp: (List<WeeklyMRPRecord>)k.getResultList()){
+                sum+=wmrp.getOrderAMT();
+            }
+            
+            
+            return sum;
+
+        } catch (Exception ex) {
+            System.out.println("getPrevMRP(): ERROR !" + ex.getMessage());
+            return 0;
+        }
     }
 
 }
