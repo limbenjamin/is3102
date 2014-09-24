@@ -72,7 +72,7 @@
                                             <label class="col-sm-3 control-label">User Contact: </label>
                                             <div class="col-sm-9">
                                                 <h:selectManyListbox class="form-control" value="#{messagingManagedBean.selectedRecipients}">
-                                                    <f:selectItems value="#{staffManagedBean.staffList}" var="s" itemLabel="#{s.name}" itemValue="#{s.username}" />
+                                                    <f:selectItems value="#{messagingManagedBean.listStaff}" var="s" itemLabel="#{s.name}" itemValue="#{s.username}" />
                                                 </h:selectManyListbox>                                              
                                             </div>
                                           </div>
@@ -94,7 +94,7 @@
                                   All Contacts
                                 </div>
                                 <div class="list-group contact-list">                          
-                                    <ui:repeat value="#{staffManagedBean.staffList}" var="staff">
+                                    <ui:repeat value="#{messagingManagedBean.listStaff}" var="staff">
                                       <a href="#" class="list-group-item">
                                           <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
                                           <span class="user-info">

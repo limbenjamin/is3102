@@ -28,6 +28,9 @@
                                           <h5><strong>#{staff.name}</strong></h5>
                                         <h:form>
                                             <div class="pull-right btn-group">
+                                                <h:commandButton value="Reset Password" class="btn btn-sm" action="#{staffManagedBean.resetpassword}">
+                                                    <f:param name="id" value="#{staff.id}" />
+                                                </h:commandButton>
                                                 <h:commandButton value="Update Roles" class="btn btn-sm" action="#{staffManaged2Bean.displayRoles()}">
                                                     <f:param name="id" value="#{staff.id}" />
                                                 </h:commandButton>
@@ -76,26 +79,6 @@
                                             <label class="col-sm-3 control-label">Phone: </label>
                                             <div class="col-sm-9">
                                               <h:inputText id="phoneNo" class="form-control"></h:inputText>
-                                            </div>
-                                          </div>
-                                          <div class="form-group">
-                                            <label class="col-sm-3 control-label">Country: </label>
-                                            <div class="col-sm-9">
-                                                <h:selectOneMenu id="countryName" class="form-control">
-                                                    <c:forEach var="i" begin="0" end="#{staffManagedBean.countryList.size()-1}">
-                                                        <f:selectItem itemLabel="#{staffManagedBean.countryList.get(i).name}" itemValue="#{staffManagedBean.countryList.get(i).name}" />
-                                                    </c:forEach>
-                                                </h:selectOneMenu>
-                                            </div>
-                                          </div>
-                                          <div class="form-group">
-                                            <label class="col-sm-3 control-label">Plant Name: </label>
-                                            <div class="col-sm-9">
-                                                <h:selectOneMenu id="plantName" class="form-control">
-                                                    <c:forEach var="i" begin="0" end="#{staffManagedBean.plantList.size()-1}">
-                                                        <f:selectItem itemLabel="#{staffManagedBean.plantList.get(i).name}" itemValue="#{staffManagedBean.plantList.get(i).name}" />
-                                                    </c:forEach>
-                                                </h:selectOneMenu>
                                             </div>
                                           </div>
                                       </div>
