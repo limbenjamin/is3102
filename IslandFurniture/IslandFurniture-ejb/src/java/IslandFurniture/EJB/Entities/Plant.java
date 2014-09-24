@@ -33,7 +33,10 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(
             name = "findPlantByName",
-            query = "SELECT a FROM Plant a WHERE a.country = :country AND a.name = :name")
+            query = "SELECT a FROM Plant a WHERE a.country = :country AND a.name = :name"),
+    @NamedQuery(
+            name = "getAllPlants",
+            query = "SELECT a FROM Plant a")
 })
 public abstract class Plant implements Serializable {
 

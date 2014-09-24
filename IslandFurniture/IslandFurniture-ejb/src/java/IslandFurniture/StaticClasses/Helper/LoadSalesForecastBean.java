@@ -13,6 +13,7 @@ import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import javax.ejb.EJB;
@@ -59,6 +60,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
                     eachMssr.setPlannedInventory(rand.nextInt(6) * 50);
 
+                    // Update Quantity Forecasted and Actual Inventories
                     if (i < listOfMssr.size() - (FORECAST_LOCKOUT_MONTHS + 1)) {
                         do {
                             eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(200) - 100);
@@ -69,6 +71,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         eachMssr.setQtyForecasted(500 + rand.nextInt(500));
                     }
 
+                    // Update Variances
                     if (i >= FORECAST_LOCKOUT_MONTHS + 2) {
                         MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - (FORECAST_LOCKOUT_MONTHS + 2));
                         if (oldMssr.isEndMthUpdated()) {
@@ -77,6 +80,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         }
                     }
 
+                    // Update Quantity Requested
                     if (i >= 1) {
                         MonthlyStockSupplyReq oldMssr = listOfMssr.get(i - 1);
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getVarianceOffset() - oldMssr.getPlannedInventory());
@@ -88,6 +92,32 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     eachMssr.setStatus(MssrStatus.APPROVED);
 
                     System.out.println(eachMssr);
+                }
+
+                // Remove the quantity sold and actualInventory for demonstration
+                Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.MAR, 2014);
+                listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+
+                for (int i = 0; i < listOfMssr.size(); i++) {
+                    MonthlyStockSupplyReq mssr = listOfMssr.get(i);
+                    mssr.setQtySold(0);
+                    mssr.setActualInventory(0);
+                    mssr.setEndMthUpdated(false);
+                }
+
+                // Remove the varianceOffset for demonstration
+                mthOfDel.add(Calendar.MONTH, FORECAST_LOCKOUT_MONTHS + 1);
+                Calendar noVarEnd = TimeMethods.getCalFromMonthYear(Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+                noVarEnd.add(Calendar.MONTH, 1);
+                listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(noVarEnd.get(Calendar.MONTH)), noVarEnd.get(Calendar.YEAR));
+
+                for (Iterator itr = listOfMssr.iterator(); itr.hasNext();) {
+                    MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) itr.next();
+                    mssr.setVarianceOffset(0);
+                    mssr.setVarianceUpdated(false);
+                    if (mssr.getStatus() != null && mssr.getStatus().equals(MssrStatus.NONE)) {
+                        em.remove(mssr);
+                    }
                 }
             }
         }

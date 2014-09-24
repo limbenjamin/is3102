@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"> 
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -29,7 +30,6 @@
                                 <div class="list-group-item">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>Sn</th>
                                         <th>Retail Item</th>
                                         <th>Price</th>
                                         <th>Edit</th>
@@ -45,9 +45,9 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="inner-addon left-addon">
+                                                    <div class="inner-addon left-addon" style="max-width: 80px;">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
-                                                    $<h:inputText id="itemPrice" value="#{item.price}" class="form-control transparent-form"></h:inputText>
+                                                    <h:inputText id="itemPrice" value="$ #{item.price}" class="form-control transparent-form">                                                    </h:inputText>
                                                     </div>
                                                 </td>
                                                 <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}" class="btn btn-sm transparent-button" style="outline:0;">

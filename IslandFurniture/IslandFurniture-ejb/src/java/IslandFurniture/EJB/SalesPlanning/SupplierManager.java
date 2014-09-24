@@ -19,6 +19,8 @@ import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.StockSuppliedPK;
 import IslandFurniture.EJB.Entities.Supplier;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findCountryByName;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findPCDByStockMFAndSupplier;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findSupplierByName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -52,7 +54,7 @@ public class SupplierManager implements SupplierManagerLocal {
         supplier = (Supplier) em.find(Supplier.class, supplierId);
         return supplier;
     }
-    public Supplier addSupplier(String supplierName, String countryName) {
+    public Supplier addSupplier(String supplierName, String countryName, String phoneNo, String email) {
         Country country;
         Supplier supplier;
         ProcurementContract pc;
@@ -60,6 +62,12 @@ public class SupplierManager implements SupplierManagerLocal {
         try {
             System.out.println("SupplierManager.addSupplier()");
             country = findCountryByName(em, countryName);
+            supplier = findSupplierByName(em, supplierName);
+            if(supplier != null) {
+                System.out.println("Supplier " + supplierName + " already exists");
+                return supplier;
+            }
+            
             supplier = new Supplier();
             pc = new ProcurementContract();
             pcdList = new ArrayList<ProcurementContractDetail>();
@@ -70,6 +78,8 @@ public class SupplierManager implements SupplierManagerLocal {
             supplier.setName(supplierName);
             supplier.setCountry(country);
             supplier.setProcurementContract(pc);
+            supplier.setEmail(email);
+            supplier.setPhoneNumber(phoneNo);
             
             em.persist(supplier);
             return supplier;
@@ -78,7 +88,7 @@ public class SupplierManager implements SupplierManagerLocal {
             return null;
         }
     }
-    public void editSupplier(Long id, String name, String countryName) {
+    public void editSupplier(Long id, String name, String countryName, String phoneNumber, String email) {
         Supplier supplier;
         Country country;
         try {
@@ -89,6 +99,10 @@ public class SupplierManager implements SupplierManagerLocal {
                 supplier.setName(name);
             if(countryName != null) 
                 supplier.setCountry(country);
+            if(phoneNumber != null)
+                supplier.setPhoneNumber(phoneNumber);
+            if(email != null)
+                supplier.setEmail(email);
             em.persist(supplier);
         } catch(Exception ex) {
             System.out.println("Something went wrong");
@@ -99,11 +113,13 @@ public class SupplierManager implements SupplierManagerLocal {
         try {
             System.out.println("SupplierManager.deleteSupplier()");
             supplier = em.find(Supplier.class, id);
-            System.out.println("Don't forget to mind the constraints. I'm gonna just delete for now");
             for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
                 em.remove(supplier.getProcurementContract().getProcurementContractDetails().get(i));
+            System.out.println("Removed PCD"); 
             em.remove(supplier.getProcurementContract());
+            System.out.println("Removed PC");
             em.remove(supplier);
+            System.out.println("Removed supplier");
             em.flush();
         } catch(Exception ex) {
             System.err.println("Something went wrong");
@@ -168,30 +184,35 @@ public class SupplierManager implements SupplierManagerLocal {
         List<ProcurementContractDetail> pcdList;
         ProcurementContractDetail pcd;
         try {
-            System.out.println("SupplierManager.addProcurementContractDetails()");
+            System.out.println("SupplierManager.addProcurementContractDetails()");            
             mf = em.find(ManufacturingFacility.class, mfID);
             stock = em.find(ProcuredStock.class, stockID);
             supplier = em.find(Supplier.class, supplierID);
             System.out.println("MF is " + mf.getName() + ", Stock is " + stock.getName() + ". Supplier is " + supplier.getName());
             
-            pc = supplier.getProcurementContract();
-            if(pc == null) {
-                pc = new ProcurementContract();
-                pcdList = new ArrayList<ProcurementContractDetail>();
-                pc.setProcurementContractDetails(pcdList);
-                pc.setSupplier(supplier);
-                supplier.setProcurementContract(pc);
+            pcd = findPCDByStockMFAndSupplier(em, stock, mf, supplier); 
+            
+            if(pcd != null) 
+                System.out.println("ProcurementContractDetail already exist");
+            else {            
+                pc = supplier.getProcurementContract();
+                if(pc == null) {
+                    pc = new ProcurementContract();
+                    pcdList = new ArrayList<ProcurementContractDetail>();
+                    pc.setProcurementContractDetails(pcdList);
+                    pc.setSupplier(supplier);
+                    supplier.setProcurementContract(pc);
+                }
+
+                pcd = new ProcurementContractDetail();
+                pcd.setProcuredStock(stock);
+                pcd.setSupplierFor(mf);
+                pcd.setProcurementContract(pc);
+                pcd.setLeadTimeInDays(leadTime);
+                pcd.setLotSize(size);
+
+                pc.getProcurementContractDetails().add(pcd);
             }
-            
-            pcd = new ProcurementContractDetail();
-            pcd.setProcuredStock(stock);
-            pcd.setSupplierFor(mf);
-            pcd.setProcurementContract(pc);
-            pcd.setLeadTimeInDays(leadTime);
-            pcd.setLotSize(size);
-            
-            pc.getProcurementContractDetails().add(pcd);
-            System.out.println("5");
         } catch(Exception ex) {
             ex.printStackTrace();
             System.err.println("Something went wrong here");
@@ -229,21 +250,16 @@ public class SupplierManager implements SupplierManagerLocal {
             System.out.println("SupplierManager.deleteStockSupplyRequest()");
             pk = new StockSuppliedPK(stockID, countryID, mfID);
             ss = em.find(StockSupplied.class, pk);
-            System.out.println("Found StockSupplied");
             if(ss == null)
                 System.out.println("StockSupplied is null");
-            mf = em.find(ManufacturingFacility.class, mfID);
-            System.out.println("1");
+            mf = em.find(ManufacturingFacility.class, mfID); 
             co = em.find(CountryOffice.class, countryID);
-            System.out.println("2");
-            
-            mf.getSupplyingWhatTo().remove(ss);
-            System.out.println("3"); 
-            co.getSuppliedWithFrom().remove(ss);
-            System.out.println("4");
             
             em.remove(ss);
-            System.out.println("5");
+            System.out.println("Successfully deleted Stock Supply Request");
+            mf.getSupplyingWhatTo().remove(ss);
+            co.getSuppliedWithFrom().remove(ss);
+            
             em.flush();
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
@@ -254,22 +270,29 @@ public class SupplierManager implements SupplierManagerLocal {
         ManufacturingFacility mf;
         CountryOffice co;
         StockSupplied ss;
+        StockSuppliedPK pk;
         try {
             System.out.println("SupplierManager.addStockSupplyRequest()");
-            ss = new StockSupplied();
-            stock = em.find(Stock.class, stockID);
-            mf = em.find(ManufacturingFacility.class, mfID);
-            co = em.find(CountryOffice.class, countryID);
-            
-            ss.setCountryOffice(co);
-            ss.setManufacturingFacility(mf);
-            ss.setStock(stock);
-            
-            mf.getSupplyingWhatTo().add(ss);
-            co.getSuppliedWithFrom().add(ss);
-            
-            em.persist(ss);
-            em.flush();
+            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            ss = em.find(StockSupplied.class, pk);
+            if(ss != null) 
+                System.out.println("Request already exists");
+            else {            
+                ss = new StockSupplied();
+                stock = em.find(Stock.class, stockID);
+                mf = em.find(ManufacturingFacility.class, mfID);
+                co = em.find(CountryOffice.class, countryID);
+
+                ss.setCountryOffice(co);
+                ss.setManufacturingFacility(mf);
+                ss.setStock(stock);
+
+                mf.getSupplyingWhatTo().add(ss);
+                co.getSuppliedWithFrom().add(ss);
+
+                em.persist(ss);
+                em.flush();
+            }
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
         }

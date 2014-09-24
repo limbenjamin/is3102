@@ -71,14 +71,16 @@ public class SupplierManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String supplierName = request.getParameter("addSupplierForm:name");
         String supplierCountry = request.getParameter("addSupplierForm:country");
-        supplier = supplierManager.addSupplier(supplierName, supplierCountry);
+        String phoneNo = request.getParameter("addSupplierForm:phoneNo");
+        String email = request.getParameter("addSupplierForm:email");
+        supplier = supplierManager.addSupplier(supplierName, supplierCountry, phoneNo, email);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementContract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()");
         supplier = (Supplier) event.getComponent().getAttributes().get("toEdit");
-        supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName());
+        supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail());
         return "supplier";
     }
     public String deleteSupplier() {

@@ -27,10 +27,6 @@ public interface SupplierManagerLocal {
     
     public Supplier getSupplier(Long supplierId);
 
-    public Supplier addSupplier(String supplierName, String countryName);
-
-    public void editSupplier(Long id, String name, String countryName);
-
     public void deleteSupplier(Long id);
 
     public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID);
@@ -56,5 +52,9 @@ public interface SupplierManagerLocal {
     public void addStockSupplyRequest(Long stockID, Long mfID, Long countryID);
 
     public List<Stock> getListOfStock();
+
+    public void editSupplier(Long id, String name, String countryName, String phoneNumber, String email);
+
+    public Supplier addSupplier(String supplierName, String countryName, String phoneNo, String email);
     
 }

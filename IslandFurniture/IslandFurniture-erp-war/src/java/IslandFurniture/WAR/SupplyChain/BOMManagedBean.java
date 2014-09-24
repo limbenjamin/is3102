@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -101,6 +102,14 @@ public class BOMManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         this.furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fID");
+        try {
+            if(furnitureID == null) {
+                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                    ec.redirect("furniture.xhtml"); 
+            }
+        } catch(IOException ex) {
+            
+        }
         System.out.println("FurnitureID is " + furnitureID);
         this.furniture = stockManager.getFurniture(furnitureID);
         this.materialList = stockManager.displayMaterialList();
