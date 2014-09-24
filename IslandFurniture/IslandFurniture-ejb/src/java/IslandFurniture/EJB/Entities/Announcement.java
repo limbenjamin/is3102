@@ -36,6 +36,8 @@ public class Announcement implements Serializable {
     private Date expireDate;
     @ManyToOne
     private Staff creator;
+    @ManyToOne
+    private Plant plant;
 
     public Long getId() {
         return id;
@@ -84,6 +86,16 @@ public class Announcement implements Serializable {
     public void setCreator(Staff creator) {
         this.creator = creator;
     }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+    
+    
 
     @Override
     public int hashCode() {

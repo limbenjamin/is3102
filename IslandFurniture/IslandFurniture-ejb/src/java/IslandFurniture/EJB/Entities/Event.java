@@ -33,6 +33,8 @@ public class Event implements Serializable {
     private Calendar eventTime;
     @ManyToOne
     private Staff creator;
+    @ManyToOne
+    private Plant plant;
 
     public Long getId() {
         return id;
@@ -73,6 +75,15 @@ public class Event implements Serializable {
     public void setCreator(Staff creator) {
         this.creator = creator;
     }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+    
     
 
     @Override
