@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-8">                      
+                        <h4>Purchase Order ##{purchaseOrderConfirmedManagedBean.purchaseOrder.id}</h4>
+                        <h5>Supplier: <strong>#{purchaseOrderConfirmedManagedBean.purchaseOrder.supplier.name}</strong>
+                            | Supplied to: <strong>#{purchaseOrderConfirmedManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
+                        <h5>Scheduled Order Date: <strong><h:outputText value="#{purchaseOrderConfirmedManagedBean.purchaseOrder.orderDate.time}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{purchaseOrderConfirmedManagedBean.plant.timeZoneID}"  /></h:outputText></strong>
+                            | Status: <strong>#{purchaseOrderConfirmedManagedBean.purchaseOrder.status}</strong>
+                        </h5>
+                        <br></br>
+                     
+                        <h4>Items Ordered:</h4>
+                        <section name="PurchaseOrderDetails">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Stock</th>
+                                    <th>Quantity</th>
+                                </tr>
+                                <h:form id="viewPODetail" class="form-horizontal">
+                                    <ui:repeat value="#{purchaseOrderConfirmedManagedBean.purchaseOrderDetailList}" var="pod">
+                                        <tr>
+                                            <td>
+                                                #{pod.id}
+                                            </td>                                            
+                                            <td>
+                                                #{pod.procuredStock.name}
+                                            </td>
+                                            <td>
+                                                #{pod.quantity}
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>
+                        </section>
+                    </div>
+                </div>                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
