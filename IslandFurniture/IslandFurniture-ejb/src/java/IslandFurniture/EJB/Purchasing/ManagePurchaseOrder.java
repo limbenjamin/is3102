@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public PurchaseOrder createPurchaseOrder(Calendar orderDate, String status) {
+    public PurchaseOrder createPurchaseOrder(Calendar orderDate, PurchaseOrderStatus status) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -77,7 +78,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public PurchaseOrder createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate) {
+    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Long plantId, Calendar orderDate) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -105,7 +106,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status) {
+    public void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, PurchaseOrderStatus status) {
         System.out.println("MEOW: edit purchase order");
         purchaseOrder = getPurchaseOrder(poId);
         plant = (Plant) em.find(Plant.class, plantId);
@@ -118,7 +119,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public void updatePurchaseOrder(Long poId, String status, Calendar orderDate) {
+    public void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) {
         purchaseOrder = getPurchaseOrder(poId);
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -209,7 +210,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant) {
         Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status AND s.shipsTo=:plant");
-        q.setParameter("status", "planned");
+        q.setParameter("status", PurchaseOrderStatus.PLANNED);
         q.setParameter("plant", staffPlant);
         return q.getResultList();
     }  
@@ -217,7 +218,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant) {
         Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status AND s.shipsTo=:plant");
-        q.setParameter("status", "confirmed");
+        q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         q.setParameter("plant", staffPlant);
         return q.getResultList();
     }    
