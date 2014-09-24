@@ -55,6 +55,7 @@ public class PurchaseOrderManagedBean implements Serializable {
     private Staff staff;
     private Supplier supplier;
     private ManufacturingFacility mf;
+    private Plant staffPlant;
     private String orderDateString = null;
 
     @EJB
@@ -69,11 +70,12 @@ public class PurchaseOrderManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
-        if (staff.getPlant() instanceof ManufacturingFacility) {
-            mf = (ManufacturingFacility) staff.getPlant();
+        staffPlant = staff.getPlant();
+        if (staffPlant instanceof ManufacturingFacility) {
+            mf = (ManufacturingFacility) staffPlant;
         }
-        plannedOrderList = mpol.viewPlannedPurchaseOrders();
-        confirmedOrderList = mpol.viewConfirmedPurchaseOrders();
+        plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
+        confirmedOrderList = mpol.viewConfirmedPurchaseOrders(staffPlant);
         supplierList = mpol.viewContractedSuppliers(mf);
         plantList = mpol.viewPlants();
         System.out.println("Init");
@@ -120,7 +122,7 @@ public class PurchaseOrderManagedBean implements Serializable {
         System.out.println("deleting some order");
         purchaseOrderId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("POid"));
         mpol.deletePurchaseOrder(purchaseOrderId);
-        plannedOrderList = mpol.viewPlannedPurchaseOrders();
+        plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
         return "purchaseOrder";
     }
 
