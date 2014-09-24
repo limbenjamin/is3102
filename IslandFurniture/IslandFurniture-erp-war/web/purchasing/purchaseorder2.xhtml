@@ -24,7 +24,7 @@
                             <h:form id="updatePurchaseOrder" class="form-horizontal">
                                 <tr>
                                     <td>
-                                        <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
+                                        <h:inputText id="orderDateString" value="#{purchaseOrderManaged2Bean.orderDateString}" p:type="datetime-local" class="form-control"></h:inputText>
                                     </td>
                                     <td>
                                         <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status}">
