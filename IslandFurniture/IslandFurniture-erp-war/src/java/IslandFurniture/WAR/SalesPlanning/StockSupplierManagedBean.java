@@ -90,7 +90,7 @@ public class StockSupplierManagedBean implements Serializable {
         String mfID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mfID");
         String cID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cID");
         System.out.println("CountryID is " + cID + ". MF ID is " + mfID + ". StockID is " + sID);
-        supplierManager.deleteStockSupplyRequest(Long.parseLong(sID), Long.parseLong(cID), Long.parseLong(mfID));
+        supplierManager.deleteStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
         return "stockSupplier";
     }
     public String addStockSupplyRequest(ActionEvent event) {

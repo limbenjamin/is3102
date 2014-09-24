@@ -17,26 +17,6 @@
                         <h4>Procurement Contract</h4><hr></hr>   
                     </div>
                     <div class="col-md-8">
-                        <h:form id="selectSupplier" class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-xs-3 control-label">Select A Supplier:</label>
-                                <div class="col-xs-9">
-                                    <div class="input-group">
-                                        <h:selectOneMenu id="supplierID" class="form-control" value="Select Supplier" style="height:34px;">
-                                            <f:selectItems value="#{procurementContractManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                        </h:selectOneMenu>
-                                        <span class="input-group-btn">
-                                        <h:commandButton action="procurementContract.xhtml" actionListener="#{procurementContractManagedBean.displayContractDetails}" value="View" class="btn btn-success pull-right btn-right-margin"> 
-                                            <f:attribute name="supplyID" value="#{procurementContractManagedBean.supplier.id}" />
-                                            <f:ajax execute="selectSupplier" render=":deletePCDForm" ></f:ajax>
-                                        </h:commandButton>                                            
-                                        </span>
-                                    </div>
-                                </div>                                
-                            </div>
-                        </h:form>
-                    </div>
-                    <div class="col-md-8">
                         
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -60,10 +40,10 @@
                                         <ui:repeat value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">
                                             <tr>
                                                 <td>
-                                                    <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="form-control"></h:outputText>
+                                                    <h:outputText id="stockName" value="#{PCD.procuredStock.name}"></h:outputText>
                                                 </td>
                                                 <td>
-                                                    <h:outputText id="MFName" value="#{PCD.supplierFor.name}" class="form-control"></h:outputText>
+                                                    <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
                                                 </td>
                                                 <td>
                                                     <h:inputText id="size" value="#{PCD.lotSize}" class="form-control"></h:inputText>
@@ -80,8 +60,9 @@
                                                 </td>
                                                 <td><h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="pcdID" value="#{PCD.id}" />
-                                                    </h:commandButton></td>    
-                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
+                                                    </h:commandButton>    
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>     
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
