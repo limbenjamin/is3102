@@ -136,7 +136,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         status = request.getParameter("updatePurchaseOrder:status");
         orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
