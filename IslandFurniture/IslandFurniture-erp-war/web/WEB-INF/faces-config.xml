@@ -170,5 +170,9 @@
             <from-outcome>procurementplan</from-outcome>
             <to-view-id>/manufacturing/procurementplan.xhtml</to-view-id>
         </navigation-case>   
+        <navigation-case>
+            <from-outcome>productionorder</from-outcome>
+            <to-view-id>/manufacturing/productionorder.xhtml</to-view-id>
+        </navigation-case>  
     </navigation-rule>
 </faces-config>

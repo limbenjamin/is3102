@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
@@ -22,23 +21,26 @@ import javax.persistence.PostPersist;
 @Entity
 @NamedQueries({
     @NamedQuery(
-        name="getAllMFs",
-        query="SELECT a FROM ManufacturingFacility a ORDER BY a.country.name, a.name ASC")
+            name = "getAllMFs",
+            query = "SELECT a FROM ManufacturingFacility a ORDER BY a.country.name, a.name ASC")
 })
 public class ManufacturingFacility extends Plant implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @ManyToOne
     private CountryOffice countryOffice;
-    @OneToMany(mappedBy="supplierFor")
+    @OneToMany(mappedBy = "supplierFor")
     private List<ProcurementContractDetail> suppliedBy;
-    @OneToMany(mappedBy="manufacturingFacility")
+    @OneToMany(mappedBy = "manufacturingFacility")
     private List<StockSupplied> supplyingWhatTo;
-    @OneToMany(mappedBy="manufacturingFacility")
+    @OneToMany(mappedBy = "manufacturingFacility")
     private List<ProductionCapacity> productionCapacities;
-    @OneToMany(mappedBy="manufacturingFacility")
+    @OneToMany(mappedBy = "manufacturingFacility")
     private List<MonthlyProcurementPlan> monthlyProcurementPlan;
-    
+    @OneToMany(mappedBy = "mf")
+    private List<ProductionOrder> prodOrders;
+
     public CountryOffice getCountryOffice() {
         return countryOffice;
     }
@@ -78,8 +80,14 @@ public class ManufacturingFacility extends Plant implements Serializable {
     public void setMonthlyProcurementPlan(List<MonthlyProcurementPlan> monthlyProcurementPlan) {
         this.monthlyProcurementPlan = monthlyProcurementPlan;
     }
-    
-    
+
+    public List<ProductionOrder> getProdOrders() {
+        return prodOrders;
+    }
+
+    public void setProdOrders(List<ProductionOrder> prodOrders) {
+        this.prodOrders = prodOrders;
+    }
 
     @Override
     public int hashCode() {
@@ -105,21 +113,18 @@ public class ManufacturingFacility extends Plant implements Serializable {
     public String toString() {
         return "ManufacturingFacility[ id=" + id + " ]";
     }
-    
+
     // Extra Methods
-    public ProductionCapacity findProductionCapacity(FurnitureModel furnitureModel){
-        for(ProductionCapacity eachProdCap: this.productionCapacities){
-            if(eachProdCap.getFurnitureModel().equals(furnitureModel)){
+    public ProductionCapacity findProductionCapacity(FurnitureModel furnitureModel) {
+        for (ProductionCapacity eachProdCap : this.productionCapacities) {
+            if (eachProdCap.getFurnitureModel().equals(furnitureModel)) {
                 return eachProdCap;
             }
         }
-        
+
         return null;
     }
-    
 
-    
-    
     // Entity Callbacks
     @PostPersist
     public void postPersist() {
