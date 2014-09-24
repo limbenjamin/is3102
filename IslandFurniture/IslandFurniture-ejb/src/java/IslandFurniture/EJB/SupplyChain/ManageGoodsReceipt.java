@@ -29,6 +29,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     private GoodsReceiptDocument goodsReceiptDocument;
     private GoodsReceiptDocumentDetail goodsReceiptDocumentDetail;
     private Stock stock;
+    private PurchaseOrder purchaseOrder;
 
     @Override
     public GoodsReceiptDocument getGoodsReceiptDocument(Long id) {
@@ -46,6 +47,12 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     public Stock getStock(Long id) {
         stock = (Stock) em.find(Stock.class, id);
         return stock;
+    }
+
+    @Override
+    public PurchaseOrder getPurchaseOrder(Long id) {
+        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, id);
+        return purchaseOrder;
     }
 
     @Override

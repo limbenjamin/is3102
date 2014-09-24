@@ -146,7 +146,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
     }
 
     @Override
-    public List<Plant> viewPlant(Plant plant) {
+    public List<Plant> viewPlant() {
         Query q = em.createQuery("SELECT s FROM Plant s");
         return q.getResultList();
     }

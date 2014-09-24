@@ -15,12 +15,15 @@ import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.ProcuredStock;
+import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.Entities.Store;
 import IslandFurniture.EJB.Entities.Supplier;
-import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
 import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,7 +106,43 @@ public class QueryMethods {
             return null;
         }
     }
+    
+    public static StorageArea findStorageAreaByName(EntityManager em, String storageAreaName, Plant plant){
+        Query q = em.createNamedQuery("findStorageAreaByName");
+        q.setParameter("name", storageAreaName);
+        q.setParameter("plant", plant);
 
+        try {
+            return (StorageArea) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        } 
+    }
+    
+    public static StorageBin findStorageBinByName(EntityManager em, String storageBinName, StorageArea sa){
+        Query q = em.createNamedQuery("findStorageBinByName");
+        q.setParameter("name", storageBinName);
+        q.setParameter("sa", sa);
+
+        try {
+            return (StorageBin) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        } 
+    }
+
+    public static ProcurementContractDetail findPCDByStockMFAndSupplier(EntityManager em, ProcuredStock stock, ManufacturingFacility mf, Supplier s) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockMFAndSupplier", ProcurementContractDetail.class);
+        q.setParameter("stock", stock);
+        q.setParameter("mf", mf);
+        q.setParameter("supplier", s);
+        
+        try {
+            return (ProcurementContractDetail) q.getSingleResult();
+        } catch (NoResultException NRE) {
+            return null;
+        }
+    }
     public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
         cal.add(Calendar.MONTH, monthsOffset);
@@ -292,51 +331,6 @@ public class QueryMethods {
 
         return 1 - cCap;
 
-    }
-
-    public static WeeklyMRPRecord getPrevWMRP(EntityManager em, WeeklyMRPRecord WMRP) {
-        try {
-            Query k = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFM");
-            k.setParameter("mf", WMRP.getManufacturingFacility());
-            Calendar cal=Calendar.getInstance();
-            cal.set(Calendar.MONTH, WMRP.getMonth().value);
-            cal.set(Calendar.YEAR, WMRP.getYear());
-            cal.set(Calendar.WEEK_OF_MONTH, WMRP.getWeek());
-            cal.add(Calendar.WEEK_OF_MONTH, -1);
-            
-            k.setParameter("m", Helper.translateMonth(cal.get(Calendar.MONTH)).value);
-            k.setParameter("y", cal.get(Calendar.YEAR));
-            k.setParameter("w", cal.get(Calendar.WEEK_OF_MONTH));
-            k.setParameter("ma", WMRP.getMaterial());
-            return (WeeklyMRPRecord) k.getResultList().get(0);
-
-        } catch (Exception ex) {
-            System.out.println("getPrevMRP(): ERROR !" + ex.getMessage());
-            return null;
-        }
-
-    }
-
-    public static Integer getOrderedatwMRP(EntityManager em, WeeklyMRPRecord WMRP) {
-        try {
-            Query k = em.createNamedQuery("weeklyMRPRecord.findwMRPOrderedatMFM");
-            k.setParameter("mf", WMRP.getManufacturingFacility());
-            k.setParameter("m", WMRP.getMonth());
-            k.setParameter("y", WMRP.getYear());
-            k.setParameter("w", WMRP.getWeek());
-            k.setParameter("ma", WMRP.getMaterial());
-            int sum=0;
-            for (WeeklyMRPRecord wmrp: (List<WeeklyMRPRecord>)k.getResultList()){
-                sum+=wmrp.getOrderAMT();
-            }
-            
-            
-            return sum;
-
-        } catch (Exception ex) {
-            System.out.println("getPrevMRP(): ERROR !" + ex.getMessage());
-            return 0;
-        }
     }
 
 }

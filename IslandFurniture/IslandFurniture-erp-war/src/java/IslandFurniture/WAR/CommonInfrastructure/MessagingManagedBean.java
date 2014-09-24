@@ -36,9 +36,10 @@ public class MessagingManagedBean implements Serializable {
     private List<MessageThread> inbox;
     private Message message;
     private String title = null;
-    private String recipients = null;
+    private String recipients = "";
     private Staff staff;
     private List<Staff> listStaff;
+    private String[] selectedRecipients;
     
     @EJB
     private ManageMessagesBeanLocal messageBean;
@@ -57,9 +58,16 @@ public class MessagingManagedBean implements Serializable {
     public String addThread() {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       title = request.getParameter("threadForm:title");
-      recipients = request.getParameter("threadForm:recipients");
-      recipients += ","+username;
+      
+        for (String selectedItem : selectedRecipients) {
+            System.out.println("Selected item: " + selectedItem); 
+            recipients += selectedItem + ",";
+        }      
+      
+      System.out.println("selected recipients: " + recipients);
+      recipients += username;
       messageBean.createNewThread(title, recipients);
+      recipients = "";
       return "messaging";
     }
     
@@ -155,6 +163,14 @@ public class MessagingManagedBean implements Serializable {
 
     public void setMsaBean(ManageStaffAccountsBeanLocal msaBean) {
         this.msaBean = msaBean;
+    }
+
+    public String[] getSelectedRecipients() {
+        return selectedRecipients;
+    }
+
+    public void setSelectedRecipients(String[] selectedRecipients) {
+        this.selectedRecipients = selectedRecipients;
     }
     
     

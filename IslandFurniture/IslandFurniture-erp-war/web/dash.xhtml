@@ -46,7 +46,6 @@
                 </div>                
             </div>
             <div class="col-md-9">
-                <button type="button" class="btn btn-round btn-success pull-right"><i class="fa fa-fw fa-edit"></i>Edit Links</button>
                 <h4>Quick Links</h4>
                 <hr></hr>
                 <!-- Quick Links -->
@@ -59,7 +58,7 @@
                 <div class="col-md-4"><a href="./common/broadcast.xhtml">
                     <div class="quick-link">
                         <span class="quick-link-icon pull-left"><i class="fa fa-2x fa-calendar"></i></span>
-                        <h5>Announcement &amp; Events</h5>
+                        <h5>Announcements &amp; Events</h5>
                     </div></a>
                 </div>           
                 <div class="col-md-4"><a href="./common/messaging.xhtml">
@@ -108,7 +107,7 @@
                           <h5>
                               <label>#{dashManagedBean.todoList.get(i).description}</label>
                               <h:form>
-                                <h:commandButton value="Done" class="btn btn-default btn-success pull-right" action="#{dashManagedBean.deleteTodoItem}">
+                                <h:commandButton value="Done" class="btn btn-xs btn-success pull-right" action="#{dashManagedBean.deleteTodoItem}">
                                       <f:param name="id" value="#{dashManagedBean.todoList.get(i).id}" />
                                 </h:commandButton>
                               </h:form>
@@ -149,7 +148,7 @@
                     </a>   
                     <div class="panel-footer">
                         <a href="#" class="no-decor" data-toggle="modal" data-target="#editNotes">
-                            Modify Notes <i class="fa fa-arrow-circle-o-right"></i>
+                            Modify Notes <i class="fa fa-pencil-square"></i>
                         </a>
                     </div>
               </section>            

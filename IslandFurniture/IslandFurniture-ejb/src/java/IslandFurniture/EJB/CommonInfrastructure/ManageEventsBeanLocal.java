@@ -24,7 +24,7 @@ public interface ManageEventsBeanLocal {
 
     void editEvent(String name, String description, Calendar eventTime, Long id);
 
-    List<Event> getEvents();
+    List<Event> getEvents(String username);
 
     List<Event> getMyEvents(String username);
     

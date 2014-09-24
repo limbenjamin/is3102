@@ -22,6 +22,9 @@ import javax.persistence.OneToMany;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "findStorageAreaByName", query = "SELECT s FROM StorageArea s WHERE s.name = :name AND s.plant = :plant")
+})
 public class StorageArea implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,6 +35,7 @@ public class StorageArea implements Serializable {
     @OneToMany(mappedBy="storageArea")
     private List<StorageBin> storageBins;
     private String name;
+    private StorageAreaType type;
     
     public Long getId() {
         return id;
@@ -63,6 +67,14 @@ public class StorageArea implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public StorageAreaType getType() {
+        return type;
+    }
+
+    public void setType(StorageAreaType type) {
+        this.type = type;
     }
 
     @Override

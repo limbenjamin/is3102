@@ -39,9 +39,12 @@ public class StockManager implements StockManagerLocal {
         try{
             System.out.println("StockManager.addMaterial()");
             material = findMaterialByName(em, name);
-            if(material != null) 
-                material.setHidden(false);
-            else {
+            if(material != null) {
+                if(!material.isHidden())
+                    System.out.println("Material " + name + " already exists in database");
+                else 
+                    material.setHidden(false);
+            } else {
                 material = new Material();
                 material.setName(name);
                 material.setMaterialWeight(weight);
@@ -104,14 +107,18 @@ public class StockManager implements StockManagerLocal {
         List<BOMDetail> bomList;
         try {
             System.out.println("StockManager.addFurnitureModel()");
-            fm = new FurnitureModel(name);
-            bom = new BOM();
-            bomList = new ArrayList<BOMDetail>();
-            
-            bom.setBomDetails(bomList);
-            fm.setPrice(price);
-            fm.setBom(bom);
-            em.persist(fm);
+            fm = findFurnitureByName(em, name);
+            if(fm == null) {
+                fm = new FurnitureModel(name);
+                bom = new BOM();
+                bomList = new ArrayList<BOMDetail>();
+
+                bom.setBomDetails(bomList);
+                fm.setPrice(price);
+                fm.setBom(bom);
+                em.persist(fm);
+            } else 
+                System.out.println("FurnitureModel " + name + " already exists. Directing to its BOM");
             return fm;
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -210,7 +217,7 @@ public class StockManager implements StockManagerLocal {
         Material material;
         FurnitureModel fm;
         BOM bom;
-        BOMDetail BOMdetail ;
+        BOMDetail BOMdetail = null;
         try {
             System.out.println("StockManager:addToBOM");
             material = em.find(Material.class, materialID);
@@ -223,13 +230,22 @@ public class StockManager implements StockManagerLocal {
             } else {
                 bom = fm.getBom();
             }
-            
-            BOMdetail = new BOMDetail();
-            BOMdetail.setMaterial(material);
-            BOMdetail.setQuantity(materialQuantity);
-            BOMdetail.setBom(bom);
-            bom.getBomDetails().add(BOMdetail);
-            System.out.println("Successfully added new BOMDetail");
+            for(int i=0; i<bom.getBomDetails().size(); i++) {
+                if(bom.getBomDetails().get(i).getMaterial().getId().equals(materialID)) {
+                    BOMdetail = bom.getBomDetails().get(i);
+                    break;
+                }
+            }
+            if(BOMdetail != null) {
+                System.out.println("BOMdetail already exists.");
+            } else {
+                BOMdetail = new BOMDetail();
+                BOMdetail.setMaterial(material);
+                BOMdetail.setQuantity(materialQuantity);
+                BOMdetail.setBom(bom);
+                bom.getBomDetails().add(BOMdetail);
+                System.out.println("Successfully added new BOMDetail");
+            }
             em.flush();
            
         } catch(NoResultException NRE) {
@@ -329,8 +345,10 @@ public class StockManager implements StockManagerLocal {
                 item.setPrice(itemPrice);
                 em.persist(item);
                 return true;
-            } else
+            } else {
+                System.out.println("Item " + itemName + " already exist. Unable to add.");
                 return false;
+            }
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return false;

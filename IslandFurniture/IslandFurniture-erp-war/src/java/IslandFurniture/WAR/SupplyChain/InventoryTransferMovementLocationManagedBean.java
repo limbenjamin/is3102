@@ -19,7 +19,6 @@ import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import static javafx.scene.input.KeyCode.I;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -51,10 +50,13 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMovementList;
+    private List<StockUnit> stockUnitMovementAnottherList;
 
     private StorageBin storageBin;
     private Stock stock;
     private StockUnit stockUnit;
+    private StockUnit stockUnitOld;
+    private StockUnit anotherStockUnit;
     private Staff staff;
     private Plant plant;
 
@@ -83,7 +85,7 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
@@ -126,16 +128,54 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     public void onStorageAreaChange() {
         if (storageAreaId != null) {
             storageBinList = miml.viewStorageBin(storageAreaId);
+            storageBinList.remove(storageBin);
         }
     }
 
-    public void confirmStockUnit(ActionEvent event) throws IOException {
+    public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
         for (StockUnit g : stockUnitMovementList) {
-            msul.confirmStockUnitMovement(g.getId());
+            stockUnitMovementAnottherList = msul.viewStockUnitMovementCheck(storageBin, g.getStock(), g.getBatchNo());
+            
+            if (anotherStockUnit== null) {
+                msul.confirmStockUnitMovement(g.getId());
+            } else {
+                msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
+            }
+            
+            // Start: To check if Quantity = 0
+            stockUnitOld = miml.getStockUnit(g.getCommitStockUnitId());
+            if (stockUnitOld.getQty() == 0) {
+                msul.deleteStockUnit(stockUnitOld.getId());
+            }
+            // End
         }
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+    }
+
+    public List<StockUnit> getStockUnitMovementAnottherList() {
+        return stockUnitMovementAnottherList;
+    }
+
+    public void setStockUnitMovementAnottherList(List<StockUnit> stockUnitMovementAnottherList) {
+        this.stockUnitMovementAnottherList = stockUnitMovementAnottherList;
+    }
+        
+    public StockUnit getAnotherStockUnit() {
+        return anotherStockUnit;
+    }
+
+    public void setAnotherStockUnit(StockUnit anotherStockUnit) {
+        this.anotherStockUnit = anotherStockUnit;
+    }
+
+    public StockUnit getStockUnitOld() {
+        return stockUnitOld;
+    }
+
+    public void setStockUnitOld(StockUnit stockUnitOld) {
+        this.stockUnitOld = stockUnitOld;
     }
 
     public List<StockUnit> getStockUnitMovementList() {

@@ -6,7 +6,9 @@
 
 package IslandFurniture.WAR.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.SalesPlanning.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -29,11 +31,22 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class SupplierManagedBean implements Serializable {
     @EJB
+    private ManageOrganizationalHierarchyBeanLocal manageOrganizationalHierarchyBean;
+    @EJB
     private SupplierManagerLocal supplierManager;
     
     private List<Supplier> supplierList;
     private Long supplierID;
     private Supplier supplier;
+    private List<Country> countryList;
+
+    public List<Country> getCountryList() {
+        return countryList;
+    }
+
+    public void setCountryList(List<Country> countryList) {
+        this.countryList = countryList;
+    }
 
     public Long getSupplierID() {
         return supplierID;
@@ -63,6 +76,7 @@ public class SupplierManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         supplierList = supplierManager.displaySupplierList();
+        countryList = manageOrganizationalHierarchyBean.getCountries();
         System.out.println("Init");
     }
     
@@ -71,14 +85,16 @@ public class SupplierManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String supplierName = request.getParameter("addSupplierForm:name");
         String supplierCountry = request.getParameter("addSupplierForm:country");
-        supplier = supplierManager.addSupplier(supplierName, supplierCountry);
+        String phoneNo = request.getParameter("addSupplierForm:phoneNo");
+        String email = request.getParameter("addSupplierForm:email");
+        supplier = supplierManager.addSupplier(supplierName, supplierCountry, phoneNo, email);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementContract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()");
         supplier = (Supplier) event.getComponent().getAttributes().get("toEdit");
-        supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName());
+        supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail());
         return "supplier";
     }
     public String deleteSupplier() {

@@ -17,7 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface ManagePrivilegesBeanLocal {
-    void createPrivilege(String name, List<Url> urlList);
+    void createPrivilege(String name, String description, List<Url> urlList);
     void removePrivilege(Long id);
     List<Privilege> displayPrivilege();
     Privilege getPrivilegeFromName(String privilegeName);

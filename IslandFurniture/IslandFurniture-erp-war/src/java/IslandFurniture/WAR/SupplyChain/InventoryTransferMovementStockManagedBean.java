@@ -53,9 +53,12 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMovementList;
+    private List<StockUnit> stockUnitMovementAnotherList;
 
     private StorageBin storageBin;
     private StockUnit stockUnit;
+    private StockUnit stockUnitOld;
+    private StockUnit anotherStockUnit;
     private Stock stock;
     private Staff staff;
     private Plant plant;
@@ -95,7 +98,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
 
         msul.updateBatchNumber(stockUnitId, batchNumber);
-        
+
         stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
 
@@ -122,7 +125,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     }
 
     public void addStockUnitTemp(ActionEvent event) throws IOException {
-
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
@@ -137,7 +139,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
         msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
     }
 
@@ -147,18 +148,63 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
         msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
         msul.deleteStockUnit(stockUnit.getId());
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
     }
 
-    public void confirmStockUnit(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
-
+    public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
         for (StockUnit g : stockUnitMovementList) {
-            msul.confirmStockUnitMovement(g.getId());
+
+            stockUnitMovementAnotherList = msul.viewStockUnitMovementCheck(g.getLocation(), g.getStock(), g.getBatchNo());
+
+            if (!stockUnitMovementAnotherList.isEmpty()) {
+                System.out.println("The list is not empty!!!!!");
+                anotherStockUnit = stockUnitMovementAnotherList.get(0);
+                msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
+                msul.deleteStockUnit(g.getId());
+            } else {
+                msul.confirmStockUnitMovement(g.getId());
+            }
+
+//            try {
+//                anotherStockUnit = msul.viewStockUnitMovementCheck(g.getLocation(), g.getStock(), g.getBatchNo());
+//                msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
+//            } catch (Exception ex) {
+//               < old code here >
+//            }
+            // Start: To check if Quantity = 0
+            stockUnitOld = miml.getStockUnit(g.getCommitStockUnitId());
+            if (stockUnitOld.getQty() == 0) {
+                msul.deleteStockUnit(stockUnitOld.getId());
+                // End
+            }
         }
 
-        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
+    }
+
+    public List<StockUnit> getStockUnitMovementAnotherList() {
+        return stockUnitMovementAnotherList;
+    }
+
+    public void setStockUnitMovementAnotherList(List<StockUnit> stockUnitMovementAnotherList) {
+        this.stockUnitMovementAnotherList = stockUnitMovementAnotherList;
+    }
+
+    public StockUnit getAnotherStockUnit() {
+        return anotherStockUnit;
+    }
+
+    public void setAnotherStockUnit(StockUnit anotherStockUnit) {
+        this.anotherStockUnit = anotherStockUnit;
+    }
+
+    public StockUnit getStockUnitOld() {
+        return stockUnitOld;
+    }
+
+    public void setStockUnitOld(StockUnit stockUnitOld) {
+        this.stockUnitOld = stockUnitOld;
     }
 
     public String getBatchNumber() {

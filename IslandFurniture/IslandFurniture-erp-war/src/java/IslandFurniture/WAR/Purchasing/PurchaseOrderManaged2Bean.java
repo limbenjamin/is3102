@@ -62,9 +62,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private ManufacturingFacility mf;
     private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
-    private String orderDateString = null;
+    private String orderDateString;
     private int quantity;
-    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -92,9 +92,8 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
         if (purchaseOrder.getOrderDate() != null) {
             orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
-        }   
-        
-        
+        }
+
         System.out.println("loaded some lists");
         System.out.println("Init");
     }
@@ -116,28 +115,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         return "purchaseorder2";
     }
 
-    /* old update purchase order method
-     public String updatePurchaseOrder() throws ParseException {
-     HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-     status = request.getParameter("updatePurchaseOrder:status");
-     plantId = Long.parseLong(request.getParameter("updatePurchaseOrder:plantId"));
-     orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-     DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-     Date date = (Date)formatter.parse(orderDateString); 
-     Calendar cal=Calendar.getInstance();
-     cal.setTime(date);
-     orderDate = cal;        
-     mpol.updatePurchaseOrder(purchaseOrderId, "planned", plantId, orderDate);
-     System.out.println("updated purchase order" + purchaseOrderId);
-     FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-     return "purchaseorder2?faces-redirect=true";
-     }*/
     // new update purchase order method
     public String updatePurchaseOrder() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         status = request.getParameter("updatePurchaseOrder:status");
         orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -152,21 +135,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         }
     }
 
-    /**
-     * public String updateStock(ActionEvent event) throws ParseException {
-     * HttpServletRequest request = (HttpServletRequest)
-     * FacesContext.getCurrentInstance().getExternalContext().getRequest(); Long
-     * podId = (Long) event.getComponent().getAttributes().get("PODid");
-     * purchaseOrderDetail = mpol.getPurchaseOrderDetail(podId); String psId =
-     * request.getParameter("viewPODetail:procuredStockId"); procuredStockId =
-     * Long.valueOf(psId); quantity =
-     * Integer.parseInt(request.getParameter("viewPODetail:quantity"));
-     * mpol.updatePurchaseOrderDetail(purchaseOrderDetail, procuredStockId,
-     * quantity);
-     * FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid",
-     * purchaseOrderId); return "purchaseorder2?faces-redirect=true";
-    }*
-     */
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
@@ -181,6 +149,38 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         return "purchaseorder2";
+    }
+
+    public ManufacturingFacility getMf() {
+        return mf;
+    }
+
+    public void setMf(ManufacturingFacility mf) {
+        this.mf = mf;
+    }
+
+    public String getOrderDateString() {
+        return orderDateString;
+    }
+
+    public void setOrderDateString(String orderDateString) {
+        this.orderDateString = orderDateString;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public SupplierManagerLocal getSml() {
+        return sml;
+    }
+
+    public void setSml(SupplierManagerLocal sml) {
+        this.sml = sml;
     }
 
     public String getUsername() {
@@ -333,46 +333,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
-    }
-
-    public ManufacturingFacility getMf() {
-        return mf;
-    }
-
-    public void setMf(ManufacturingFacility mf) {
-        this.mf = mf;
-    }
-
-    public String getOrderDateString() {
-        return orderDateString;
-    }
-
-    public void setOrderDateString(String orderDateString) {
-        this.orderDateString = orderDateString;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public DateFormat getDf() {
-        return df;
-    }
-
-    public void setDf(DateFormat df) {
-        this.df = df;
-    }
-
-    public SupplierManagerLocal getSml() {
-        return sml;
-    }
-
-    public void setSml(SupplierManagerLocal sml) {
-        this.sml = sml;
     }
 
 }

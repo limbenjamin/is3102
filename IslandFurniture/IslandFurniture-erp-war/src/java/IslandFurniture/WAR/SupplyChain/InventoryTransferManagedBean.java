@@ -50,6 +50,7 @@ public class InventoryTransferManagedBean implements Serializable {
 
     private StorageBin storageBin;
     private StockUnit stockUnit;
+    private StockUnit stockUnitOld;
     private Staff staff;
     private Plant plant;
 
@@ -89,6 +90,29 @@ public class InventoryTransferManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
     }
 
+    public void confirmStockUnit(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
+        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
+        stockUnit = miml.getStockUnit(stockUnitId);
+        msul.confirmStockUnitMovement(stockUnitId);
+
+        stockUnitOld = miml.getStockUnit(stockUnit.getCommitStockUnitId());
+        if (stockUnitOld.getQty() == 0) {
+            msul.deleteStockUnit(stockUnitOld.getId());
+        }
+
+        stockUnitMovemementAllList = msul.viewStockUnitMovementAll(plant);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
+    }
+
+    public StockUnit getStockUnitOld() {
+        return stockUnitOld;
+    }
+
+    public void setStockUnitOld(StockUnit stockUnitOld) {
+        this.stockUnitOld = stockUnitOld;
+    }   
+    
     public String viewStockTakebyLocation() {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         return "inventorytransfer_movementlocation?faces-redirect=true";

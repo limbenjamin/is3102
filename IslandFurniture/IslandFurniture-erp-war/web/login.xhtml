@@ -43,6 +43,7 @@
                     <div class="container login-box">
                         <h5 class="centered-title">Welcome Staff</h5>
                         <p class="text-center">Sign In To Your Account</p>
+                        <h:outputText value="#{flash.keep.message.summary}" />
                         <h:form id="loginForm" class="form-horizontal" pt:role="form">                   
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -57,7 +58,7 @@
                             <br></br>
                             <h:commandButton action="#{loginManagedBean.login}" class="btn btn-lg btn-round btn-success btn-block" value="Login"></h:commandButton>                            
                         </h:form>
-                        <a href="#{application.contextPath}/it/forgotpassword.xhtml">Forgot Password</a>
+                        <p class="text-center"><a href="#{application.contextPath}/it/forgotpassword.xhtml" class="password">Forgot Password</a></p>
                     </div>
                 </div>
             </div>

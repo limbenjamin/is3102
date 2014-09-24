@@ -10,13 +10,13 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newSupplier">
                             <i class="fa fa-fw fa-plus"></i>New Supplier
                         </button>                         
                         <h4>Supplier</h4><hr></hr>   
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -27,22 +27,44 @@
                                     View and Edit Supplier
                                 </div>
                                 <div class="list-group-item">
-                                <table class="table table-hover">
+                                <table class="table table-hover"> 
                                     <tr>
                                         <th>Supplier</th>
                                         <th>Country</th>
+                                        <th>Contact No.</th>
+                                        <th>Email</th> 
                                         <th>Edit</th>
                                         <th>Delete</th>
-                                        <th>Procurement Contract Details</th> 
+                                        <th>Details</th>
                                     </tr>
                                     <h:form id="editSupplierForm" class="form-horizontal">
                                         <ui:repeat value="#{supplierManagedBean.supplierList}" var="supplier">
                                             <tr>
                                                 <td>
-                                                    <h:inputText id="supplierName" value="#{supplier.name}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                        <h:inputText id="supplierName" value="#{supplier.name}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <h:inputText id="supplierCountry" value="#{supplier.country.name}" class="form-control"></h:inputText>
+                                                    <div class="inner-addon left-addon">
+                                                        <h:selectOneMenu id="supplierCountry" class="form-control needauto" value="#{supplier.country.name}">    
+                                                            <f:selectItem itemLabel="Select Country" noSelectionOption="true" />
+                                                            <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="inner-addon left-addon">
+                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                        <h:inputText id="supplierNumber" value="#{supplier.phoneNumber}" class="form-control transparent-form" style="max-width: 125px;"></h:inputText>
+                                                    </div>
+                                                </td> 
+                                                <td>
+                                                    <div class="inner-addon left-addon">
+                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                        <h:inputText id="supplierEmail" value="#{supplier.email}" class="form-control transparent-form"></h:inputText>
+                                                    </div>
                                                 </td>
                                                 <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{supplier}" />
@@ -51,8 +73,9 @@
                                                 </td>
                                                 <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="supplierID" value="#{supplier.id}" />
-                                                    </h:commandButton></td> 
+                                                    </h:commandButton>
                                                      <i class="fa fa-lg fa-trash-o icon-button"></i>  
+                                                </td>
                                                 <td>
                                                     <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="sID" value="#{supplier.id}" />
@@ -85,9 +108,24 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Supplier Country: </label>
+                                <label class="col-sm-4 control-label">Supplier Country: </label> 
                                 <div class="col-sm-8">
-                                    <h:inputText id="country" class="form-control"></h:inputText>
+                                    <h:selectOneMenu id="country" class="form-control needauto">          
+                                        <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Contact Number: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="phoneNo" class="form-control"></h:inputText>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Email: </label>
+                                <div class="col-sm-8">
+                                    <h:inputText id="email" class="form-control"></h:inputText>
                                 </div>
                             </div>
                         </div>

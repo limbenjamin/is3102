@@ -9,6 +9,8 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockUnit;
 import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageAreaType;
+import static IslandFurniture.EJB.Entities.StorageAreaType.RECEIVING;
 import IslandFurniture.EJB.Entities.StorageBin;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -83,6 +85,14 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
     public List<StorageArea> viewStorageArea(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId");
         q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StorageArea> viewStorageAreaReceiving(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId AND s.type=:type");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("type", RECEIVING);
         return q.getResultList();
     }
 

@@ -7,11 +7,12 @@
 package IslandFurniture.EJB.ITManagement;
 
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
-import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurniture.EJB.Exceptions.InvalidCountryException;
 import IslandFurniture.EJB.Exceptions.InvalidPlantException;
+import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurniture.StaticClasses.Helper.SendEmailByPost;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -53,6 +55,9 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     private List<Privilege> privilegeList;
     private List<Privilege> rolePrivilegeList;
     private Privilege privilege;
+    
+    @EJB
+    private ManageUserAccountBeanLocal muab;
     
 
 
@@ -111,6 +116,14 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     @Override
     public List<Staff> displayAllStaffAccounts(){
         Query query = em.createQuery("SELECT s FROM Staff S");
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Staff> displayStaffAccountsFromPlant(String username){
+        Query query = em.createQuery("SELECT s FROM Staff S WHERE S.plant=:plant");
+        staff = muab.getStaff(username);
+        query.setParameter("plant", staff.getPlant());
         return query.getResultList();
     }
     

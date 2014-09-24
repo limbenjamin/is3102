@@ -61,6 +61,10 @@
     padding: 10px;
 }
 
+.password {
+    color:#9fa2b1;
+}
+
 hr{
     display:block;
     margin:1em 0;
@@ -142,6 +146,13 @@ img{
 /* add padding  */
 .left-addon input  { padding-left:  30px; }
 .right-addon input { padding-right: 30px; }
+
+.select2-container-multi, .select2-choices {
+    -webkit-appearance: none;
+    background-image: none;
+    border-radius: 3px;
+    border: 1px solid #e3e6f3;
+}
 
 /************************* dashboard login page ***********************************/
 

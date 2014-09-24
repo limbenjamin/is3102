@@ -76,6 +76,7 @@
                                         <th>Order ID</th>
                                         <th>Order Date</th>
                                         <th>Status</th>
+                                        <th>View</th>
                                     </tr>
                                     <h:form id="viewPOconfirmed" class="form-horizontal">
                                         <ui:repeat value="#{purchaseOrderManagedBean.confirmedOrderList}" var="CO">
@@ -87,6 +88,12 @@
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{CO.status}</td>
+                                                <td>
+                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderConfirmedActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="COid" value="#{CO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
@@ -111,7 +118,8 @@
                               <div class="form-group">
                                 <label class="col-sm-3 control-label">Supplier: </label>
                                 <div class="col-sm-9">
-                                    <h:selectOneMenu id="supplierId" class="form-control">
+                                    <h:selectOneMenu id="supplierId" class="form-control needauto">
+                                        <f:selectItem itemLabel="Select Supplier"/>
                                         <f:selectItems value="#{purchaseOrderManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                     </h:selectOneMenu>
                                 </div>
@@ -119,7 +127,7 @@
                               <div class="form-group">
                                   <label class="col-sm-3 control-label">Order Date: </label>
                                 <div class="col-sm-9">
-                                  <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
+                                  <h:inputText id="orderDateString" p:type="date" class="form-control"></h:inputText>
                                 </div>
                               </div>                                                                                     
                           </div>

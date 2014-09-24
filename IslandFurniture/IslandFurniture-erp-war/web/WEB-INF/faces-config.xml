@@ -67,6 +67,12 @@
         <navigation-case>
             <from-outcome>roleprivilege2</from-outcome>
             <to-view-id>/it/roleprivilege2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{rolePrivilegeManaged2Bean.id}</value>  
+                </view-param>  
+            </redirect>
         </navigation-case>
         <navigation-case>
             <from-outcome>roleprivilege</from-outcome>

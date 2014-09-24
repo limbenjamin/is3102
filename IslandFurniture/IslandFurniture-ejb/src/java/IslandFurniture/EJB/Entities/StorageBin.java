@@ -12,10 +12,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "findStorageBinByName", query = "SELECT s FROM StorageBin s WHERE s.name = :name AND s.storageArea = :sa")
+})
 public class StorageBin implements Serializable {
 
     private static final long serialVersionUID = 1L;

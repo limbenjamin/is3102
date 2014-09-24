@@ -40,6 +40,7 @@ public class Supplier implements Serializable {
     private Long id;
     private String name;
     private String phoneNumber;
+    private String email;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -56,7 +57,6 @@ public class Supplier implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    private String email;
     @ManyToMany
     private List<Ingredient> ingredients;
     @OneToMany(mappedBy = "supplier")

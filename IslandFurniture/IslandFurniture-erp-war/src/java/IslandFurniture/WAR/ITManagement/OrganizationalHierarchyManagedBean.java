@@ -15,6 +15,7 @@ import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -47,6 +48,9 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     private String countryString;
     private Store store;
     private ManufacturingFacility mf;
+    private String[] timezoneList;
+    private Integer timezonelistlength;
+    private String timezone;
     
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohBean;
@@ -59,6 +63,7 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         mfList = mohBean.displayManufacturingFacility();
         coList = mohBean.displayCountryOffice();
         countryList = mohBean.getCountries();
+        timezoneList = TimeZone.getAvailableIDs();
     }
     
     public String addPlant(){
@@ -66,13 +71,16 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         plantName = request.getParameter("plantForm:plantName");
         countryOfficeString = request.getParameter("plantForm:countryOffice");
         countryOffice = mohBean.findCountryOfficeByName(countryOfficeString);
+        timezone = request.getParameter("plantForm:timezone");
         plantType = request.getParameter("plantForm:plantType");
         switch (plantType) {
             case "Store":
-                mohBean.addStore(plantName, "Asia/Singapore", countryOffice);
+                mohBean.addStore(plantName, timezone, countryOffice);
+                storeList = mohBean.displayStore();
                 break;
             case "Manufacturing Facility":
-                mohBean.addManufacturingFacility(plantName, "Asia/Singapore", countryOffice);
+                mohBean.addManufacturingFacility(plantName, timezone, countryOffice);
+                mfList = mohBean.displayManufacturingFacility();
                 break;
             default:
                 break;
@@ -84,24 +92,32 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public String editStore(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         store = (Store) event.getComponent().getAttributes().get("toEdit");
-        store.setCountryOffice(mohBean.findCountryOfficeByName(store.getCountryOffice().getName()));
-        mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), store.getCountryOffice());
+        String temp = store.getCountryOffice().getName();
+        System.err.println("herehere "+temp);
+        countryOffice = mohBean.findCountryOfficeByName(temp);
+        System.err.println("herehere "+countryOffice.getName());
+        mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), countryOffice);
+        storeList = mohBean.displayStore();
         return "manageplant";
     }
     
     public String editMF(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
-        mf.setCountryOffice(mohBean.findCountryOfficeByName(mf.getCountryOffice().getName()));
-        mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), mf.getCountryOffice());
+        String temp = mf.getCountryOffice().getName();
+        countryOffice = mohBean.findCountryOfficeByName(temp);
+        mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), countryOffice);
+        mfList = mohBean.displayManufacturingFacility();
         return "manageplant";
     }
     
     public String editCO(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
-        countryOffice.setCountry(mohBean.findCountryByName(countryOffice.getCountry().getName()));
-        mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), countryOffice.getCountry(), countryOffice.getTimeZoneID());
+        String temp = countryOffice.getCountry().getName();
+        country = mohBean.findCountryByName(temp);
+        mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), country, countryOffice.getTimeZoneID());
+        coList = mohBean.displayCountryOffice();
         return "manageplant";
     }
     
@@ -110,31 +126,36 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         plantName = request.getParameter("coForm:plantName");
         countryString = request.getParameter("coForm:country");
         country = mohBean.findCountryByName(countryString);
-        plantType = request.getParameter("plantForm:plantType");
-        mohBean.addCountryOffice(plantName, country, "Asia/Singapore");
-        
+        timezone = request.getParameter("coForm:timezone");
+        mohBean.addCountryOffice(plantName, country, timezone);
+        coList = mohBean.displayCountryOffice();
         return "manageplant";
     }
     
-    public String deletePlant(){
-        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        plantType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("plantType");
-        switch (plantType) {
-            case "Store":
-                mohBean.deleteStore(id);
-                break;
-            case "Manufacturing Facility":
-                mohBean.deleteManufacturingFacility(id);
-                break;
-            case "Country Office":
-                mohBean.deleteCountryOffice(id);
-                break;
-            default:
-                break;
-        }
-        
+    public String deleteStore(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        store = (Store) event.getComponent().getAttributes().get("toEdit");
+        mohBean.deleteStore(store.getId());
+        storeList = mohBean.displayStore();
         return "manageplant";
     }
+    
+    public String deleteMF(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
+        mohBean.deleteManufacturingFacility(mf.getId());
+        mfList = mohBean.displayManufacturingFacility();
+        return "manageplant";
+    }
+    
+    public String deleteCO(ActionEvent event) throws IOException {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
+        mohBean.deleteCountryOffice(countryOffice.getId());
+        coList = mohBean.displayCountryOffice();
+        return "manageplant";
+    }
+    
 
     public Long getId() {
         return id;
@@ -263,7 +284,30 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public void setMf(ManufacturingFacility mf) {
         this.mf = mf;
     }
-    
+
+    public String[] getTimezoneList() {
+        return timezoneList;
+    }
+
+    public void setTimezoneList(String[] timezoneList) {
+        this.timezoneList = timezoneList;
+    }
+
+    public Integer getTimezonelistlength() {
+        return timezonelistlength;
+    }
+
+    public void setTimezonelistlength(Integer timezonelistlength) {
+        this.timezonelistlength = timezonelistlength;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
     
     
 }
