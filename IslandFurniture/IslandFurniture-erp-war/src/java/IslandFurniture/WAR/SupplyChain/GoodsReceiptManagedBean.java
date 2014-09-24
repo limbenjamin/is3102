@@ -42,6 +42,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     private boolean ifGoodsReceiptDocumentListEmpty;
     private boolean ifgoodsReceiptDocumentPostedListEmpty;
     private boolean ifInboundShipmentListEmpty;
+    private boolean ifShipmentReceived;
 
     private String username;
     private String deliverynote;
@@ -82,7 +83,17 @@ public class GoodsReceiptManagedBean implements Serializable {
         goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         return "goodsreceiptdocument?faces-redirect=true";
+    }
 
+    public String updateIncomingShipmentStatus(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
+         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("shipmentStatus", event.getComponent().getAttributes().get("shipmentStatus"));
+         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
+        ifShipmentReceived = (boolean) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("shipmentStatus");
+        if (ifShipmentReceived) mgrl.updateIncomingShipmentStatus(goodsIssuedDocumentId);
+        inboundShipmentList = mgrl.viewInboundShipment(plant);
+        return "goodsreceiptdocument?faces-redirect=true";
     }
 
     public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
@@ -132,6 +143,14 @@ public class GoodsReceiptManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
+    public boolean isIfShipmentReceived() {
+        return ifShipmentReceived;
+    }
+
+    public void setIfShipmentReceived(boolean ifShipmentReceived) {
+        this.ifShipmentReceived = ifShipmentReceived;
+    }
+    
     public Long getGoodsIssuedDocumentId() {
         return goodsIssuedDocumentId;
     }

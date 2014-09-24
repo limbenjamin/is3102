@@ -119,7 +119,9 @@
                                             <th>Issued Date</th>
                                             <th>Posting Date</th>
                                             <th>Issued From</th>
-                                            <th>Create Goods Receipt Document</th>
+                                            <th>Create Document</th>
+                                            <td>Received Status</td>
+                                            <td>Update</td>
                                         </tr>
 
                                         <h:form class="form-horizontal">
@@ -135,11 +137,18 @@
                                                         <h:outputText value="#{GRD.postingDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
-                                                    <td>#{GRD.plant.name}</td>
+                                                    <td>#{GRD.deliverTo.name}</td>
                                                     <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.addGoodsReceiptDocumentfromInbound}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GIDid" value="#{GRD.id}" />
                                                         </h:commandButton>
-                                                        <i class="fa fa-lg fa-file-text-o icon-button"></i></td> 
+                                                        <i class="fa fa-lg fa-file-text-o icon-button"></i></td>
+                                                    <td><h:selectBooleanCheckbox value="#{GRD.isReceived()}"/></td>
+                                                    <td><h:commandButton actionListener="#{goodsReceiptManagedBean.updateIncomingShipmentStatus}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                            <f:attribute name="GIDid" value="#{GRD.id}" />
+                                                            <f:attribute name="shipmentStatus" value="#{GRD.isReceived}" />   
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-save icon-button"></i></td>
+
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 

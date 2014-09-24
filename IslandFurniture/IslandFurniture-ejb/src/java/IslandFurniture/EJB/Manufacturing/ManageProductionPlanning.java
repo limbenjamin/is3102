@@ -7,7 +7,6 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
-import IslandFurniture.EJB.Entities.ManufacturingCapacity;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
@@ -16,28 +15,27 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.ProductionOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -451,8 +449,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     }
 
     @Override
-    public HashMap<Material, Long> getMaterialsNeeded(int WeekNo, int Year, int Month) {
-        Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.WeekNo=:wno and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12 and wpp.monthlyProductionPlan.manufacturingFacility=:mf");
+    public HashMap<Material, Long> getMaterialsNeededForCommited(int WeekNo, int Year, int Month) {
+        Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.WeekNo=:wno and wpp.productionOrder!=null and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12 and wpp.monthlyProductionPlan.manufacturingFacility=:mf");
         q.setParameter("mf", this.MF);
         q.setParameter("y", Year);
         q.setParameter("m", Month);
@@ -467,7 +465,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
                 if (material_map.get(bomd.getMaterial()) == null) {
                     material_map.put(bomd.getMaterial(), 0L);
                 }
-                System.out.println("getMaterialsNeeded(): WPPID: " + wpp.getId() + " Furniture " + bomd.getMaterial()+" "+ wpp.getMonthlyProductionPlan().getFurnitureModel().getName()
+                System.out.println("getMaterialsNeeded(): WPPID: " + wpp.getId() + " Furniture " + bomd.getMaterial() + " " + wpp.getMonthlyProductionPlan().getFurnitureModel().getName()
                         + " required quantity=" + bomd.getQuantity() * wpp.getQTY()
                 );
                 material_map.put(bomd.getMaterial(), material_map.get(bomd.getMaterial()) + bomd.getQuantity() * wpp.getQTY());
@@ -478,6 +476,160 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
 
         return material_map;
 
+    }
+
+    @Override
+    public void orderMaterials(int weekNo, int monthNo, int YearNo) throws Exception {
+        HashMap<Material, Long> hm = getMaterialsNeededForCommited(weekNo, YearNo, monthNo);
+        boolean persist = true;
+
+        for (Material m : (Set<Material>) hm.keySet()) {
+
+            WeeklyMRPRecord wMRP = new WeeklyMRPRecord();
+            wMRP.setMaterial(m);
+            try {
+                wMRP.setMonth(Helper.translateMonth(monthNo));
+            } catch (Exception ex) {
+            }
+            wMRP.setWeek(weekNo);
+            wMRP.setYear(YearNo);
+            wMRP.setManufacturingFacility(MF);
+
+            Query q = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFM");
+            q.setParameter("mf", wMRP.getManufacturingFacility());
+            q.setParameter("y", wMRP.getYear());
+            q.setParameter("m", wMRP.getMonth().value);
+            q.setParameter("w", wMRP.getWeek());
+            q.setParameter("ma",wMRP.getMaterial());
+
+            if (q.getResultList().size() > 0) {
+                wMRP = (WeeklyMRPRecord) q.getResultList().get(0);
+                persist = false;
+            }
+
+            wMRP.setQtyReq(hm.get(m).intValue());
+            wMRP.setLeadTime(getLeadTime(m));
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.WEEK_OF_MONTH, weekNo);
+            cal.set(Calendar.YEAR, YearNo);
+            cal.set(Calendar.MONTH, monthNo);
+            Calendar order_date = ((Calendar) cal.clone());
+            order_date.add(Calendar.DATE, -getLeadTime(m));
+
+            //hey james . add wmrp for those where the orders are being sent
+            try {
+                wMRP.setOrderMonth(Helper.translateMonth(order_date.get(Calendar.MONTH)));
+            } catch (Exception ex) {
+            }
+            wMRP.setOrderYear(order_date.get(Calendar.YEAR));
+            wMRP.setOrderWeek(order_date.get(Calendar.WEEK_OF_MONTH));
+
+            //get first WMRP 
+            Calendar cal_first = Calendar.getInstance();
+
+            Query jk = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.material=:ma order by wmrp.month*4+wmrp.year*52+wmrp.week asc");
+            jk.setParameter("mf", wMRP.getManufacturingFacility());
+            jk.setParameter("ma", wMRP.getMaterial());
+
+            if (!(jk.getResultList().size() == 0)) {
+                WeeklyMRPRecord firstRecord = (WeeklyMRPRecord) jk.getResultList().get(0);
+                cal_first.set(Calendar.WEEK_OF_MONTH, firstRecord.getWeek());
+                cal_first.set(Calendar.YEAR, firstRecord.getYear());
+                cal_first.set(Calendar.MONTH, firstRecord.getMonth().value);
+            }
+
+            Calendar calendarPointer = Calendar.getInstance();
+            calendarPointer.set(Calendar.WEEK_OF_MONTH, order_date.get(Calendar.WEEK_OF_MONTH));
+            calendarPointer.set(Calendar.YEAR, order_date.get(Calendar.YEAR));
+            calendarPointer.set(Calendar.MONTH, order_date.get(Calendar.MONTH));
+
+            if (calendarPointer.after(cal_first)) {
+                calendarPointer = cal_first;
+            }
+
+            int qtyOnHand = 0;
+
+            while (calendarPointer.before(cal)) {
+
+                Query z = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFM");
+                z.setParameter("mf", wMRP.getManufacturingFacility());
+                z.setParameter("y", calendarPointer.get(Calendar.YEAR));
+                z.setParameter("m", Helper.translateMonth(calendarPointer.get(Calendar.MONTH)).value);
+                z.setParameter("w", calendarPointer.get(Calendar.WEEK_OF_MONTH));
+                z.setParameter("ma", wMRP.getMaterial());
+
+                if (z.getResultList().size() == 0) {
+                    WeeklyMRPRecord dummy_wMRP = new WeeklyMRPRecord();
+                    dummy_wMRP.setManufacturingFacility(wMRP.getManufacturingFacility());
+                    dummy_wMRP.setMaterial(wMRP.getMaterial());
+                    dummy_wMRP.setMonth(Helper.translateMonth(calendarPointer.get(Calendar.MONTH)));
+                    dummy_wMRP.setYear(calendarPointer.get(Calendar.YEAR));
+                    dummy_wMRP.setWeek(calendarPointer.get(Calendar.WEEK_OF_MONTH));
+                    dummy_wMRP.setOnHand(qtyOnHand);
+                    em.persist(dummy_wMRP);
+                    System.out.println("orderMaterials(): Created WeeklyMRP For: Week:" + dummy_wMRP.getWeek() + "Month:" + dummy_wMRP.getMonth().value + "year:" + dummy_wMRP.getYear() + " for material" + m.getName());
+                } else {
+                    WeeklyMRPRecord dummy_wMRP = (WeeklyMRPRecord) z.getResultList().get(0);
+                    qtyOnHand = dummy_wMRP.getOnHand();
+                }
+
+                calendarPointer.add(Calendar.WEEK_OF_MONTH, 1);
+
+            }
+
+            if (order_date.getTime().before(Calendar.getInstance().getTime())) {
+                throw (new Exception("Material " + m.getName() + " cannot be ordered in time !"));
+            }
+
+            int prevONHand = (QueryMethods.getPrevWMRP(em, wMRP) == null ? 0 : QueryMethods.getPrevWMRP(em, wMRP).getOnHand());
+            Integer Required = Math.max(0, wMRP.getQtyReq() - prevONHand);
+            Double orderLot = Math.ceil(Required.doubleValue() / getLotSize(m));
+            Double orderamt = (orderLot * getLotSize(m));
+            wMRP.setOrderAMT(orderamt.intValue());
+            wMRP.setOrderLot(orderLot.intValue());
+            wMRP.setOnHand(orderamt.intValue() - Required.intValue());
+
+            Double requiredLot = Math.ceil(Double.valueOf(hm.get(m)) / getLotSize(m));
+            wMRP.setLotSize(getLotSize(m));
+            if (persist) {
+                em.persist(wMRP);
+            } else {
+                em.merge(wMRP);
+            }
+            System.out.println("orderMaterials(): Created WeeklyMRP For: Week:" + weekNo + "Month:" + monthNo + "year:" + YearNo + " for material" + m.getName());
+
+        }
+        System.out.println("orderMaterials(): Success For: Week:" + weekNo + "Month:" + monthNo + "year:" + YearNo);
+
+    }
+
+    @Override
+    public void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception {
+
+        Query qq = em.createNamedQuery("weeklyMRPRecord.findwMRPatMF");
+        qq.setParameter("mf", this.MF);
+        qq.setParameter("m", Helper.translateMonth(monthNo));
+        qq.setParameter("y", YearNo);
+        qq.setParameter("w", weekNo);
+
+        for (WeeklyMRPRecord wMRP : (List< WeeklyMRPRecord>) qq.getResultList()) {
+            em.remove(wMRP);
+
+        }
+        System.out.println("unOrderMaterials() Success");
+    }
+
+    @Override
+    public int getLeadTime(Material m) {
+        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcurementContractDetail pc : pcs) {
+            if (pc.getProcuredStock().equals(m)) {
+                return pc.getLeadTimeInDays();
+            }
+        }
+
+        return 1;
     }
 
 }

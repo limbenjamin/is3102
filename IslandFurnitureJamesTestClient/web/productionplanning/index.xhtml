@@ -179,7 +179,30 @@
                 
                 <!-- Material Resource Planning -->
                 
-                <p:tab title="Material Resource Planning"></p:tab>
+                <p:tab title="Material Resource Planning" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
+                 <p:dataTable rowStyleClass="#{datarow.colorClass}" id="mrp_dt"  var="datarow"  value="#{ProductionPlanning.mrp.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
+                        <f:facet name="header">
+                            Material Resource Plan for <p:outputLabel value="#{ProductionPlanning.currentDrill}"/>
+                            <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="mrp_dt" trigger="toggler" />
+                        </f:facet>
+
+                        <p:columns  value="#{ProductionPlanning.mrp.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
+                            <f:facet name="header">
+                                <p:outputLabel escape="false" value="#{datacolumn}"/>
+
+                            </f:facet>
+                            <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false"  style="width:96%;text-align:center" rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%;text-align:center"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('mrp_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
+
+
+                        </p:columns>
+
+                    </p:dataTable>
+                
+                
+                </p:tab>
                 
 
                 <!-- Capacity Management -->

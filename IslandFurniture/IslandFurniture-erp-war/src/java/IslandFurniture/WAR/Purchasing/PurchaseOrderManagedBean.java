@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
@@ -46,7 +47,7 @@ public class PurchaseOrderManagedBean implements Serializable {
     private Long plantId;
 
     private Calendar orderDate;
-    private String status;
+    private PurchaseOrderStatus status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
@@ -92,7 +93,7 @@ public class PurchaseOrderManagedBean implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         orderDate = cal;
-        purchaseOrder = mpol.createNewPurchaseOrder("planned", supplier, plantId, orderDate);
+        purchaseOrder = mpol.createNewPurchaseOrder(PurchaseOrderStatus.PLANNED, supplier, plantId, orderDate);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrder.getId());
         return "purchaseorder2?faces-redirect=true";
     }
@@ -182,11 +183,11 @@ public class PurchaseOrderManagedBean implements Serializable {
         this.orderDate = orderDate;
     }
 
-    public String getStatus() {
+    public PurchaseOrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
     }
 

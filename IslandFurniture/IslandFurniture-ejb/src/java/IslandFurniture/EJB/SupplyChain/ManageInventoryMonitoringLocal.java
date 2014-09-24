@@ -37,5 +37,7 @@ public interface ManageInventoryMonitoringLocal {
     List<StorageBin> viewStorageBinExcludeTheBin(Long id, Long currentId);
     
     List<StorageArea> viewStorageAreaReceiving(Plant plant);
+    
+    List<StockUnit> viewStockUnitbyStock(Stock stock);
 
 }

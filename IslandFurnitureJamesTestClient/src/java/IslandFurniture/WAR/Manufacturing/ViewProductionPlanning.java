@@ -5,6 +5,7 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
@@ -59,6 +60,8 @@ public class ViewProductionPlanning implements Serializable {
 
     private IslandFurnitures.DataStructures.JDataTable<String> wpp;
 
+    private IslandFurnitures.DataStructures.JDataTable<String> mrp;
+
     public String getSuccess_msg() {
         return success_msg;
     }
@@ -99,24 +102,7 @@ public class ViewProductionPlanning implements Serializable {
         this.currentDrill = currentDrill;
     }
 
-    static public class ColumnModel implements Serializable {
-
-        private String header;
-        private int index;
-
-        public ColumnModel(String header, int ind) {
-            this.header = header;
-            this.index = ind;
-        }
-
-        public String getHeader() {
-            return header;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-    }
+    
 
     @PostConstruct
     public void init() {
@@ -210,6 +196,23 @@ public class ViewProductionPlanning implements Serializable {
         return;
     }
 
+    public void pullMRPTableFromBean(String month) {
+        cleanMsg();
+        try {
+            if (!MF.isEmpty()) {
+
+                mrp = (JDataTable<String>) dpv.getWeeklyMRPTable(currentDrill, MF);
+                Integer i = 0;
+                success_msg += "Status: Successfully pulled MRP table for " + MF + " " + month;
+                System.out.println("updateTable(): MRP Reconstructed for " + MF + " " + month + " Rows Count:" + capacity_dt.getRowCount());
+            }
+        } catch (Exception ex) {
+            success_msg = "";
+            error_msg = ex.getMessage();
+        }
+        return;
+    }
+
     public void updatePCTableToBean() {
         cleanMsg();
         try {
@@ -255,6 +258,7 @@ public class ViewProductionPlanning implements Serializable {
         System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
         wpp = (JDataTable<String>) dpv.getWeeklyPlans(Month, this.MF);
         activePanelIndex = 1;
+        pullMRPTableFromBean(this.currentDrill);
 
     }
 
@@ -282,7 +286,16 @@ public class ViewProductionPlanning implements Serializable {
             error_msg = ex.getMessage();
         }
         drillDownMonth(currentDrill);
+        pullMRPTableFromBean(currentDrill);
 
+    }
+
+    public JDataTable<String> getMrp() {
+        return mrp;
+    }
+
+    public void setMrp(JDataTable<String> mrp) {
+        this.mrp = mrp;
     }
 
     public void onTabChange(TabChangeEvent event) {
@@ -293,6 +306,9 @@ public class ViewProductionPlanning implements Serializable {
             pullcapacityTableFromBean();
         } else if (event.getTab().getTitle().equals("Weekly Production Planning")) {
             drillDownMonth(this.currentDrill);
+        } else if (event.getTab().getTitle().equals("Material Resource Planning")) {
+            pullMRPTableFromBean(this.currentDrill);
+
         }
     }
 
@@ -313,10 +329,19 @@ public class ViewProductionPlanning implements Serializable {
                     drillDownMonth(this.currentDrill);
                     break;
                 case "COMMIT_WEEK_WPP":
-                    int weekNo=Integer.valueOf(ID.split("_")[0]);
-                    int monthNo=Integer.valueOf(ID.split("_")[1]);
-                    int yearNo=Integer.valueOf(ID.split("_")[2]);
-                    mpp.orderMaterials(weekNo,monthNo,yearNo);
+                    int weekNo = Integer.valueOf(ID.split("_")[0]);
+                    int monthNo = Month.valueOf(ID.split("_")[1]).value;
+                    int yearNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.orderMaterials(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
+                    break;
+
+                case "UNCOMMIT_WEEK_WPP":
+                    weekNo = Integer.valueOf(ID.split("_")[0]);
+                    monthNo = Month.valueOf(ID.split("_")[1]).value;
+                    yearNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.unOrderMaterials(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
                     break;
 
             }

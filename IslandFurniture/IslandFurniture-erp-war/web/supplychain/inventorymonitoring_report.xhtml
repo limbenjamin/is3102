@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -16,6 +17,46 @@
                             <h4>Inventory Report of #{inventoryMonitoringReportManagedBean.plant.name} #{inventoryMonitoringReportManagedBean.plantType}</h4><hr></hr>
                         </section>
 
+                        <section name="Data Table">
+
+                            <p:accordionPanel id="invTable" value="#{inventoryMonitoringReportManagedBean.invList}" var="invEntry" multiple="true" >
+                                <p:tab title="#{invEntry.first.name}" rendered="#{!invEntry.second.isEmpty()}">
+                                    <p:dataTable value="#{invEntry.second}" var="su">
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Storage Area" />
+                                            </f:facet>
+                                            <h:outputText value="#{su.location.storageArea.name}" />
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Storage Bin" />
+                                            </f:facet>
+                                            <h:outputText value="#{su.location.name}" />
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Stock Unit" />
+                                            </f:facet>
+                                            <h:outputText value="#{su.id}" />
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Quantity" />
+                                            </f:facet>
+                                            <h:outputText value="#{su.qty}" />
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Batch Number" />
+                                            </f:facet>
+                                            <h:outputText value="#{su.batchNo}" />
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:tab>
+                            </p:accordionPanel>
+                        </section>
                     </div>
                 </div>
             </ui:define>
