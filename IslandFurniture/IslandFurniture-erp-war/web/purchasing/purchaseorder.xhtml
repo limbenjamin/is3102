@@ -76,6 +76,7 @@
                                         <th>Order ID</th>
                                         <th>Order Date</th>
                                         <th>Status</th>
+                                        <th>View</th>
                                     </tr>
                                     <h:form id="viewPOconfirmed" class="form-horizontal">
                                         <ui:repeat value="#{purchaseOrderManagedBean.confirmedOrderList}" var="CO">
@@ -87,6 +88,12 @@
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{CO.status}</td>
+                                                <td>
+                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderConfirmedActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="COid" value="#{CO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 

@@ -60,7 +60,7 @@ public interface ManagePurchaseOrderLocal {
 
     List<PurchaseOrder> viewPurchaseOrders();
     
-    List<PurchaseOrder> viewPlannedPurchaseOrders();
+    List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant);
     
-    List<PurchaseOrder> viewConfirmedPurchaseOrders();    
+    List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant);    
 }

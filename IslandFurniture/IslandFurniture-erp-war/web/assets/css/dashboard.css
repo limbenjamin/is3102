@@ -61,6 +61,10 @@
     padding: 10px;
 }
 
+.password {
+    color:#9fa2b1;
+}
+
 hr{
     display:block;
     margin:1em 0;

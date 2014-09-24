@@ -48,8 +48,10 @@
                                                 </td>
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                        <h:inputText id="supplierCountry" value="#{supplier.country.name}" class="form-control transparent-form"></h:inputText>
+                                                        <h:selectOneMenu id="supplierCountry" class="form-control" value="#{supplier.country.name}">          
+                                                            <f:selectItem itemLabel="Select Country" noSelectionOption="true" />
+                                                            <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
+                                                        </h:selectOneMenu>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -106,9 +108,12 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Supplier Country: </label>
+                                <label class="col-sm-4 control-label">Supplier Country: </label> 
                                 <div class="col-sm-8">
-                                    <h:inputText id="country" class="form-control"></h:inputText>
+                                    <h:selectOneMenu id="country" class="form-control">          
+                                        <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
+                                    </h:selectOneMenu>
                                 </div>
                             </div>
                             <div class="form-group">
