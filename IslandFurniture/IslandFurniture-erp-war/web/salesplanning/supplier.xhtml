@@ -44,13 +44,15 @@
                                                 <td>
                                                     <h:inputText id="supplierCountry" value="#{supplier.country.name}" class="form-control"></h:inputText>
                                                 </td>
-                                                <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}"  value="Update" class="btn btn-success btn-sm">
+                                                <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{supplier}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-lg fa-save icon-button"></i>
                                                 </td>
-                                                <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <td><h:commandButton action="#{supplierManagedBean.deleteSupplier}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:param name="supplierID" value="#{supplier.id}" />
-                                                    </h:commandButton></td>   
+                                                    </h:commandButton></td> 
+                                                     <i class="fa fa-lg fa-trash-o icon-button"></i>  
                                                 <td>
                                                     <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
                                                         <f:attribute name="sID" value="#{supplier.id}" />

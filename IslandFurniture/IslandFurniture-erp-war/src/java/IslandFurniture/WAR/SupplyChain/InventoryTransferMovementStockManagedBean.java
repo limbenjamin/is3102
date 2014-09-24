@@ -43,6 +43,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private Long stockUnitId;
     private Long stockUnitQuantity;
     private Long storageAreaId;
+    private String batchNumber;
 
     private boolean ifStockUnitMovementListEmpty;
 
@@ -84,6 +85,20 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         storageAreaList = miml.viewStorageArea(plant);
         stockTakeQuantity = null;
         ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
+    }
+
+    public void updateBatchNumber(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNumber", event.getComponent().getAttributes().get("batchNumber"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
+        batchNumber = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNumber");
+        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
+
+        msul.updateBatchNumber(stockUnitId, batchNumber);
+        
+        stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
+
     }
 
     public void onStorageAreaChange() {
@@ -144,6 +159,14 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         }
 
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
+    }
+
+    public String getBatchNumber() {
+        return batchNumber;
+    }
+
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
     }
 
     public Long getPlantId() {
