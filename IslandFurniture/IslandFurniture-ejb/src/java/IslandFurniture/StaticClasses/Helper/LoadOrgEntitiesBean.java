@@ -10,6 +10,7 @@ import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Store;
+import java.util.Locale;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -54,7 +55,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             store.setTimeZoneID(timeZoneID);
             store.setCountryOffice(co);
             em.persist(store);
-            
+
             co.getStores().add(store);
 
             return store;
@@ -75,7 +76,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             mf.setTimeZoneID(timeZoneID);
             mf.setCountryOffice(co);
             em.persist(mf);
-            
+
             co.getManufacturingFacilities().add(mf);
 
             return mf;
@@ -111,14 +112,8 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             country = new Country();
             country.setName(countryName);
             em.persist(country);
-
-            return country;
-        } else {
-            System.out.println("The country \"" + countryName + "\" already exists!");
-
-            return null;
         }
-
+        return country;
     }
 
     /**
@@ -135,66 +130,58 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             Country country;
             CountryOffice co;
 
+            // Add ll Countries listed in Java
+            String[] locales = Locale.getISOCountries();
+
+            for (String countryCode : locales) {
+                Locale locale = new Locale("", countryCode);
+
+                this.addCountry(locale.getDisplayCountry());
+            }
+
             // Add Countries and Plants
             country = this.addCountry("Singapore");
-            if (country != null) {
-                this.addGlobalHQ("Global HQ", country, "Asia/Singapore");
-                co = this.addCountryOffice("Singapore", country, "Asia/Singapore");
-                this.addStore("Alexandra", country, "Asia/Singapore", co);
-                this.addStore("Tampines", country, "Asia/Singapore", co);
-                this.addManufacturingFacility("Tuas", country, "Asia/Singapore", co);
-            }
+
+            this.addGlobalHQ("Global HQ", country, "Asia/Singapore");
+            co = this.addCountryOffice("Singapore", country, "Asia/Singapore");
+            this.addStore("Alexandra", country, "Asia/Singapore", co);
+            this.addStore("Tampines", country, "Asia/Singapore", co);
+            this.addManufacturingFacility("Tuas", country, "Asia/Singapore", co);
 
             country = this.addCountry("Malaysia");
-            if (country != null) {
-                co = this.addCountryOffice("Malaysia", country, "Asia/Kuala_Lumpur");
-                this.addStore("Johor Bahru - Kulai", country, "Asia/Kuala_Lumpur", co);
-            }
+            co = this.addCountryOffice("Malaysia", country, "Asia/Kuala_Lumpur");
+            this.addStore("Johor Bahru - Kulai", country, "Asia/Kuala_Lumpur", co);
 
             country = this.addCountry("China");
-            if (country != null) {
-                co = this.addCountryOffice("China", country, "Asia/Shanghai");
-                this.addStore("Yunnan - Yuanjiang", country, "Asia/Shanghai", co);
-                this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country, "Asia/Shanghai", co);
-            }
+            co = this.addCountryOffice("China", country, "Asia/Shanghai");
+            this.addStore("Yunnan - Yuanjiang", country, "Asia/Shanghai", co);
+            this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country, "Asia/Shanghai", co);
 
             country = this.addCountry("Indonesia");
-            if (country != null) {
-                co = this.addCountryOffice("Indonesia", country, "Asia/Jakarta");
-                this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co);
-                this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co);
-            }
+            co = this.addCountryOffice("Indonesia", country, "Asia/Jakarta");
+            this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co);
+            this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co);
 
             country = this.addCountry("Cambodia");
-            if (country != null) {
-                co = this.addCountryOffice("Cambodia", country, "Asia/Phnom_Penh");
-                this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co);
-            }
+            co = this.addCountryOffice("Cambodia", country, "Asia/Phnom_Penh");
+            this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co);
 
             country = this.addCountry("Thailand");
-            if (country != null) {
-                co = this.addCountryOffice("Thailand", country, "Asia/Bangkok");
-                this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co);
-                this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co);
-            }
+            co = this.addCountryOffice("Thailand", country, "Asia/Bangkok");
+            this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co);
+            this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co);
 
             country = this.addCountry("Vietnam");
-            if (country != null) {
-                co = this.addCountryOffice("Vietnam", country, "Asia/Ho_Chi_Minh");
-                this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co);
-            }
+            co = this.addCountryOffice("Vietnam", country, "Asia/Ho_Chi_Minh");
+            this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co);
 
             country = this.addCountry("Laos");
-            if (country != null) {
-                co = this.addCountryOffice("Laos", country, "Asia/Vientiane");
-                this.addStore("Vientiane", country, "Asia/Vientiane", co);
-            }
+            co = this.addCountryOffice("Laos", country, "Asia/Vientiane");
+            this.addStore("Vientiane", country, "Asia/Vientiane", co);
 
             country = this.addCountry("Canada");
-            if (country != null) {
-                co = this.addCountryOffice("Canada", country, "Canada/Pacific");
-                this.addStore("Toronto", country, "Canada/Eastern", co);
-            }
+            co = this.addCountryOffice("Canada", country, "Canada/Pacific");
+            this.addStore("Toronto", country, "Canada/Eastern", co);
 
             em.flush();
 
