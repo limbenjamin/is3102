@@ -56,16 +56,16 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     private PurchaseOrderDetail purchaseOrderDetail;
     
     @Override
-    public void createMonthlyProcumentPlan(){
+    public void createMonthlyProcumentPlan(ManufacturingFacility mf){
         Query query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock.id IN (SELECT p.id FROM ProcuredStock p)");
         mssrList = query.getResultList();
         Iterator<MonthlyStockSupplyReq> iterator = mssrList.iterator();
         while(iterator.hasNext()){
             mssr = iterator.next();
-            query = em.createQuery("Select ss.manufacturingFacility FROM StockSupplied ss WHERE ss.countryOffice.id=:co AND ss.stock.id=:stock");
-            query.setParameter("co", mssr.getCountryOffice().getId());
-            query.setParameter("stock", mssr.getStock().getId());
-            mf = (ManufacturingFacility) query.getSingleResult();
+            //query = em.createQuery("Select ss.manufacturingFacility FROM StockSupplied ss WHERE ss.countryOffice.id=:co AND ss.stock.id=:stock");
+            //query.setParameter("co", mssr.getCountryOffice().getId());
+            //query.setParameter("stock", mssr.getStock().getId());
+            //mf = (ManufacturingFacility) query.getSingleResult();
             month= mssr.getMonth();
             Integer year = mssr.getYear();
             mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),mssr.getStock().getId(),month,year));

@@ -6,7 +6,10 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
+import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;
@@ -28,9 +31,12 @@ public class ProcurementPlanManagedBean {
 
     private String username;
     private List<MonthlyProcurementPlan> mppList;
+    private Staff staff;
     
     @EJB
     private ManageProcurementPlanLocal mppl;
+    @EJB
+    private ManageUserAccountBeanLocal  muabl;
     
     
     @PostConstruct
@@ -41,7 +47,8 @@ public class ProcurementPlanManagedBean {
     }
     
     public String generateProcurementPlan(){
-        mppl.createMonthlyProcumentPlan();
+        staff = muabl.getStaff(username);
+        mppl.createMonthlyProcumentPlan((ManufacturingFacility) staff.getPlant());
         return "procurementplan";
     }
     
@@ -72,6 +79,22 @@ public class ProcurementPlanManagedBean {
 
     public void setMppList(List<MonthlyProcurementPlan> mppList) {
         this.mppList = mppList;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public ManageUserAccountBeanLocal getMuabl() {
+        return muabl;
+    }
+
+    public void setMuabl(ManageUserAccountBeanLocal muabl) {
+        this.muabl = muabl;
     }
     
     
