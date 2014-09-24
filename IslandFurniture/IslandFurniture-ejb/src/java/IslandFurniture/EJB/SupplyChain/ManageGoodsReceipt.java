@@ -118,6 +118,13 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
+    public List<PurchaseOrder> viewPurchaseOrder(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.shipsTo.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+
+    @Override
     public List<GoodsReceiptDocument> viewGoodsReceiptDocument(Plant plant) {
         Query q = em.createQuery("SELECT s FROM GoodsReceiptDocument s WHERE s.confirm=FALSE AND s.plant.id=:plantId");
         q.setParameter("plantId", plant.getId());

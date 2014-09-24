@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
 
     <f:metadata>
         <f:viewParam name="grddId2" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
@@ -44,8 +45,7 @@
                                             <tr>
                                                 <tr>
                                                     <td><h:outputText value="#{grd.id}"></h:outputText></td>
-                                                    <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" p:type="date" class="form-control">
-                                                        </h:inputText></td>
+                                                    <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" pt:type="date" class="form-control"></h:inputText></td>
                                                     <td></td>
                                                     <td><h:inputText value="#{grd.deliveryNote}" class="form-control"></h:inputText></td>
                                                     <td><h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocument}"  value="Update" class="btn btn-success btn-xs"> 
@@ -62,7 +62,7 @@
                             </div>
                         </section>
 
-<br/>
+                        <br/>
 
                         <section name="GoodsReceiptDocumentDetail">
                             <div class="panel-heading dashboard-title-panel">
@@ -105,23 +105,33 @@
                             </div>
                         </section>
 
-<br></br>
+                        <br></br>
 
 
                         <section name="Post Goods Receipt Document"> 
-<h:panelGroup layout="block" rendered="#{!goodsReceiptDocumentManagedBean.ifGoodsReceiptDocumentDetailListEmpty}">
-                            <h:form class="form-horizontal">
-                                <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}">
-                                    <f:selectItem itemLabel="Select Storage Bin"></f:selectItem>
-                                    <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                </h:selectOneMenu>
-                                <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right"> 
-                                    <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                    <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                    <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
-                                </h:commandButton>
-                            </h:form>
-</h:panelGroup>
+                            <h:panelGroup layout="block" rendered="#{!goodsReceiptDocumentManagedBean.ifGoodsReceiptDocumentDetailListEmpty}">
+                                <h:form class="form-horizontal">
+
+                                    <div class="col-sm-8">
+                                        <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageAreaId}">
+                                            <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                            <f:selectItem itemLabel="Select Storage Location" />
+                                            <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                        </h:selectOneMenu>
+
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}">
+                                            <f:selectItem itemLabel="Select Storage Bin" />
+                                            <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
+                                        </h:selectOneMenu>
+                                    </div>            
+
+                                    <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right"> 
+                                        <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                        <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                        <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
+                                    </h:commandButton>
+                                </h:form>
+                            </h:panelGroup>
                         </section>
 
 

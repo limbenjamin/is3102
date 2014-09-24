@@ -72,6 +72,14 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
     }
 
     @Override
+    public List<StorageBin> viewStorageBinExcludeTheBin(Long id, Long currentId) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.id=:id AND s.id!=:currentId");
+        q.setParameter("id", id);
+        q.setParameter("currentId", currentId);
+        return q.getResultList();
+    }
+
+    @Override
     public List<StorageArea> viewStorageArea(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId");
         q.setParameter("plantId", plant.getId());
@@ -85,7 +93,5 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
         em.merge(stockUnit);
         em.flush();
     }
-    
-
 
 }
