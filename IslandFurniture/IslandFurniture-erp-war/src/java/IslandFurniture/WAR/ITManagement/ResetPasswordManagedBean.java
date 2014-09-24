@@ -69,7 +69,6 @@ public class ResetPasswordManagedBean {
     
     public void resetpassword() {
         if (password.equals(confirmPassword)){
-            System.err.println("herehere "+password+code);
             boolean result = authBean.resetPassword(code,password);
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             if (result) {
@@ -79,6 +78,9 @@ public class ResetPasswordManagedBean {
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
 	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, unable to reset password",""));
             }
+        }else{
+             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, passwords not the same",""));
         }
     }
 

@@ -44,7 +44,6 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
 
             try {
                 role = mrbl.getRoleFromName("General Staff");                
-                mrbl.addPrivilegeToRole(role.getId(), "Login");
                 mrbl.addPrivilegeToRole(role.getId(), "Dashboard");
                 mrbl.addPrivilegeToRole(role.getId(), "Modify Particulars");
                 mrbl.addPrivilegeToRole(role.getId(), "Messaging");

@@ -47,6 +47,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             globalhq = new GlobalHQ();
             globalhq.setName(name);
             globalhq.setCountry(country);
+            globalhq.setTimeZoneID(tz);
             em.persist(globalhq);
 
             return globalhq;
@@ -66,6 +67,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             store.setName(storeName);
             store.setCountry(co.getCountry());
             store.setCountryOffice(co);
+            store.setTimeZoneID(tz);
             em.persist(store);
 
             return store;
@@ -84,6 +86,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             store.setName(name);
             store.setCountry(co.getCountry());
             store.setCountryOffice(co);
+            store.setTimeZoneID(tz);
             em.persist(store);
             em.flush();
         } else {
@@ -121,6 +124,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             mf.setName(mfName);
             mf.setCountry(co.getCountry());
             mf.setCountryOffice(co);
+            mf.setTimeZoneID(tz);
             em.persist(mf);
 
             return mf;
@@ -139,6 +143,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             mf.setName(name);
             mf.setCountry(co.getCountry());
             mf.setCountryOffice(co);
+            mf.setTimeZoneID(tz);
             em.persist(mf);
             em.flush();
         } else {
@@ -181,6 +186,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             co = new CountryOffice();
             co.setName(coName);
             co.setCountry(country);
+            co.setTimeZoneID(tz);
             em.persist(co);
 
             return co;
@@ -198,6 +204,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         if (co != null) {
             co.setName(name);
             co.setCountry(country);
+            co.setTimeZoneID(tz);
             em.persist(co);
             em.flush();
         } else {

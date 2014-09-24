@@ -62,9 +62,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private ManufacturingFacility mf;
     private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
-    private String orderDateString = null;
+    private String orderDateString;
     private int quantity;
-    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -92,9 +92,8 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
         if (purchaseOrder.getOrderDate() != null) {
             orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
-        }   
-        
-        
+        }
+
         System.out.println("loaded some lists");
         System.out.println("Init");
     }
@@ -137,7 +136,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         status = request.getParameter("updatePurchaseOrder:status");
         orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -181,6 +180,38 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         return "purchaseorder2";
+    }
+
+    public ManufacturingFacility getMf() {
+        return mf;
+    }
+
+    public void setMf(ManufacturingFacility mf) {
+        this.mf = mf;
+    }
+
+    public String getOrderDateString() {
+        return orderDateString;
+    }
+
+    public void setOrderDateString(String orderDateString) {
+        this.orderDateString = orderDateString;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public SupplierManagerLocal getSml() {
+        return sml;
+    }
+
+    public void setSml(SupplierManagerLocal sml) {
+        this.sml = sml;
     }
 
     public String getUsername() {
@@ -333,46 +364,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
-    }
-
-    public ManufacturingFacility getMf() {
-        return mf;
-    }
-
-    public void setMf(ManufacturingFacility mf) {
-        this.mf = mf;
-    }
-
-    public String getOrderDateString() {
-        return orderDateString;
-    }
-
-    public void setOrderDateString(String orderDateString) {
-        this.orderDateString = orderDateString;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public DateFormat getDf() {
-        return df;
-    }
-
-    public void setDf(DateFormat df) {
-        this.df = df;
-    }
-
-    public SupplierManagerLocal getSml() {
-        return sml;
-    }
-
-    public void setSml(SupplierManagerLocal sml) {
-        this.sml = sml;
     }
 
 }
