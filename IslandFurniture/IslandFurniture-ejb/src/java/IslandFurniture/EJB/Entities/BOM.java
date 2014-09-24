@@ -27,9 +27,17 @@ public class BOM implements Serializable {
     private Long id;
     @OneToMany(mappedBy="bom", cascade={CascadeType.PERSIST})
     private List<BOMDetail> bomDetails;
+    private boolean uneditable = false;
+
+    public boolean isUneditable() {
+        return uneditable;
+    }
+
+    public void setUneditable(boolean uneditable) {
+        this.uneditable = uneditable;
+    }
 
     public BOM() {
-        
     }
     public Long getId() {
         return id;

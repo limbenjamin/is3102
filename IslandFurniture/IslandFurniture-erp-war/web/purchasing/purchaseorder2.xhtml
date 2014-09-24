@@ -12,7 +12,9 @@
                         <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.name}</strong></h5>
-                        <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong></h5>
+                        <h5>Scheduled Order Date: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}</strong>
+                            | Status: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.status}</strong>
+                        </h5>
                         <table class="table table-hover">
                             <tr>
                                 <th>Change Order Date</th>
@@ -22,7 +24,7 @@
                             <h:form id="updatePurchaseOrder" class="form-horizontal">
                                 <tr>
                                     <td>
-                                        <h:inputText id="orderDateString" p:type="datetime-local" class="form-control"></h:inputText>
+                                        <h:inputText id="orderDateString" value="#{purchaseOrderManaged2Bean.orderDateString}" p:type="datetime-local" class="form-control"></h:inputText>
                                     </td>
                                     <td>
                                         <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status}">

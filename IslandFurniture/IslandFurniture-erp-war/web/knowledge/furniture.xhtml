@@ -18,13 +18,16 @@
                         <h4>Furniture</h4><hr></hr>
                     </div>
                     <div class="col-md-8">
-
-
-                        <section name="displayFurniture">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="areas">  
+                            <section name="viewStorageArea" class="panel">  
+                                <div class="panel-heading dashboard-title-panel">
+                                    View and Edit Furniture
+                                </div>
+                                <div class="list-group-item">
                            
                             <table class="table table-hover">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Furniture</th>
                                     <th>Price ($SGD)</th>
                                     <th>Colours</th>
@@ -36,9 +39,6 @@
                                 <h:form id="displayFurniture" class="form-horizontal">
                                     <ui:repeat value="#{furnitureManagedBean.furnitureList}" var="f" id="furnitureList">
                                         <tr>
-                                            <td>
-                                                <h:outputText id="fID" value="#{f.id}"></h:outputText>
-                                            </td>
                                             <td>
                                                 <div class="inner-addon left-addon">
                                                 <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -83,8 +83,12 @@
                                     </ui:repeat>
                                 </h:form> 
                             </table>
+                                </div>
                         </section>
+                            </div>
                     </div>
+                    </div>
+                </div>
                 <!-- Modal for furniture -->
                 <div class="modal fade" id="newFurniture" aria-hidden="true">
                   <div class="modal-dialog">
@@ -142,7 +146,6 @@
                     </div>
                   </div>
                 </div> 
-                </div>
             </ui:define>
         </ui:composition>
     </h:body>

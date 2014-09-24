@@ -4,11 +4,13 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsReceiptLocal;
+import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMovementLocal;
 import IslandFurniture.EJB.SupplyChain.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -26,6 +28,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -42,10 +45,11 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private Long goodsReceiptDocumentDetailId;
     private Long stockId;
     private Long storageBinId;
-    private Long storageAreaid;
+    private Long storageAreaId;
+    private Long purchaseOrderId;
 
     private boolean ifGoodsReceiptDocumentDetailListEmpty;
-    
+
     private String receiptDateString;
     private Date receiptDateType;
 
@@ -64,24 +68,23 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private List<Stock> stockList;
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
+    private List<PurchaseOrder> purchaseOrderList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
     private Plant plant;
     private StorageBin storageBin;
-    
 
     @EJB
     public ManageGoodsReceiptLocal mgrl;
-
     @EJB
     public ManageInventoryMovementLocal msul;
-
     @EJB
     public ManageStorageLocationLocal msll;
-
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+    @EJB
+    public ManageInventoryMonitoringLocal miml;
 
     @PostConstruct
     public void init() {
@@ -100,15 +103,22 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         }
 
         goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
-        storageBinList = mgrl.viewStorageBin(plant);
+        storageAreaList = miml.viewStorageArea(plant);
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         ifGoodsReceiptDocumentDetailListEmpty = goodsReceiptDocumentDetailList.isEmpty();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);
+        purchaseOrderList = mgrl.viewPurchaseOrder(plant);
         stockList = mgrl.viewStock();
         if (goodsReceiptDocument.getReceiptDate() != null) {
             receiptDateString = df.format(goodsReceiptDocument.getReceiptDate().getTime());
-        }   
+        }
         System.out.println("Init");
+    }
+
+    public void onStorageAreaChange(AjaxBehaviorEvent event) {
+        if (storageAreaId != null) {
+            storageBinList = miml.viewStorageBin(storageAreaId);
+        }
     }
 
     public String krefresh() {
@@ -182,6 +192,30 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
     }
 
+    public Long getPurchaseOrderId() {
+        return purchaseOrderId;
+    }
+
+    public void setPurchaseOrderId(Long purchaseOrderId) {
+        this.purchaseOrderId = purchaseOrderId;
+    }   
+    
+    public List<PurchaseOrder> getPurchaseOrderList() {
+        return purchaseOrderList;
+    }
+
+    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+        this.purchaseOrderList = purchaseOrderList;
+    }
+        
+    public ManageInventoryMonitoringLocal getMiml() {
+        return miml;
+    }
+
+    public void setMiml(ManageInventoryMonitoringLocal miml) {
+        this.miml = miml;
+    }
+
     public DateFormat getDf() {
         return df;
     }
@@ -197,7 +231,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     public void setIfGoodsReceiptDocumentDetailListEmpty(boolean ifGoodsReceiptDocumentDetailListEmpty) {
         this.ifGoodsReceiptDocumentDetailListEmpty = ifGoodsReceiptDocumentDetailListEmpty;
     }
-       
+
     public Long getPlantId() {
         return plantId;
     }
@@ -238,12 +272,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.storageBinId = storageBinId;
     }
 
-    public Long getStorageAreaid() {
-        return storageAreaid;
+    public Long getStorageAreaId() {
+        return storageAreaId;
     }
 
-    public void setStorageAreaid(Long storageAreaid) {
-        this.storageAreaid = storageAreaid;
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
     }
 
     public String getReceiptDateString() {

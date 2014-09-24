@@ -198,10 +198,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         em.flush();
     } 
     
-    public List<Supplier> viewContractedSuppliers(Long supplierId) {
-        supplier = (Supplier) em.find(Supplier.class, supplierId);
+    @Override
+    public List<Supplier> viewContractedSuppliers(ManufacturingFacility mf) {
         Query q = em.createNamedQuery("getSupplierList");        
-        q.setParameter("supplier", supplier);
+        q.setParameter("mf", mf);
         return (List<Supplier>)q.getResultList();
     }    
     

@@ -58,7 +58,15 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void createStockUnit(Stock stock, Long batchNo, Long quantity, StorageBin storageBin) {
+    public void updateBatchNumber(Long id, String batchNumber) {
+        stockUnit = getStockUnit(id);
+        stockUnit.setBatchNo(batchNumber);
+        em.merge(stockUnit);
+        em.flush();
+    }
+
+    @Override
+    public void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
@@ -70,7 +78,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void createStockUnit2(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid) {
+    public void createStockUnit2(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
@@ -84,7 +92,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
     }
 
     @Override
-    public void createStockUnitMovement1(Stock stock, Long stockUnitId, Long batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin) {
+    public void createStockUnitMovement1(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin) {
         stockUnit = new StockUnit();
         stockUnit.setStock(stock);
         stockUnit.setBatchNo(batchNo);
