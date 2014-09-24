@@ -26,4 +26,5 @@ public interface ManageStaffAccountsBeanLocal {
     void addRoleToStaffByUsername(String staffName, String roleName);
     boolean checkIfStaffHasPrivilege(String staffName, Privilege privilege);
     List<Privilege> getPrivilegeListforStaff(String staffName);
+    List<Staff> displayStaffAccountsFromPlant(String username);
 }

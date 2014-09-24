@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Staff;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -23,5 +24,4 @@ public interface ManageUserAccountBeanLocal {
     void modifyNote(String username, String notes);
 
     void modifyPersonalParticulars(String username, String phoneNo, String emailAddress);
-    
 }

@@ -76,7 +76,7 @@ public class LoginManagedBean implements Serializable {
             staff = muab.getStaff(username);
             notificationList = mnb.displayNotificationForStaff(staff);
             notificationListSize = notificationList.size();
-            count = 0;
+            count = mnb.getUnreadForStaff(staff);
             localDateTimeList = new ArrayList();
             Iterator<Notification> iterator = notificationList.iterator();
             while (iterator.hasNext()) {
@@ -84,9 +84,6 @@ public class LoginManagedBean implements Serializable {
                 instant = notification.getTime().toInstant();
                 localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
                 localDateTimeList.add(localDateTime);
-                if (notification.isIsread() == false){
-                    count++;
-                }
             }
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
@@ -124,7 +121,7 @@ public class LoginManagedBean implements Serializable {
         staff = muab.getStaff(username);
         notificationList = mnb.displayNotificationForStaff(staff);
         if (notificationList.size() != notificationListSize){
-            count += notificationList.size() - notificationListSize;
+            count = mnb.getUnreadForStaff(staff);
             notificationListSize = notificationList.size();
             this.setNotificationList(notificationList);
             localDateTimeList = new ArrayList();
@@ -139,11 +136,7 @@ public class LoginManagedBean implements Serializable {
     }
     
     public void pullCount() {
-        
-    }
-    
-    public void resetCount() {
-        count = 0;
+        count = mnb.getUnreadForStaff(staff);
     }
     
     public void read() {
@@ -152,7 +145,7 @@ public class LoginManagedBean implements Serializable {
         nid = Long.valueOf(params.get("nid"));
         notification = mnb.getNotification(nid);
         if (notification.isIsread() == false){
-            count--;
+            count = mnb.getUnreadForStaff(staff);
             mnb.setNotificationToRead(notification);
         }
         
