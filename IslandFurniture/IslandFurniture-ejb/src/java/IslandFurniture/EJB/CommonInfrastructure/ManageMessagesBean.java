@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.MessageThread;
 import IslandFurniture.EJB.Entities.Staff;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -37,6 +38,7 @@ public class ManageMessagesBean implements ManageMessagesBeanLocal {
     private MessageThread messageThread;
     private Message message;
     private List<Staff> listStaff;
+    private HashSet<Staff> hashStaff;
     
     @EJB
     private ManageUserAccountBeanLocal staffbean;
@@ -52,10 +54,16 @@ public class ManageMessagesBean implements ManageMessagesBeanLocal {
         messageThread.setTitle(title);
         StringTokenizer stringTokenizer = new StringTokenizer(recipients,",");
         listStaff = new ArrayList();
+        hashStaff = new HashSet();
         while (stringTokenizer.hasMoreTokens()) {
-            staff = staffbean.getStaff(stringTokenizer.nextToken());
-            listStaff.add(staff);
+            staff = staffbean.getStaff(stringTokenizer.nextToken().trim());
+            hashStaff.add(staff);
         }
+        Iterator<Staff> iterator2 = hashStaff.iterator();
+        while (iterator2.hasNext()) {
+		staff = iterator2.next();
+                listStaff.add(staff);
+	}
         messageThread.setRecipient(listStaff);
         em.persist(messageThread);
         em.flush();
