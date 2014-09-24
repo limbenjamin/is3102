@@ -66,5 +66,9 @@ public interface ManageGoodsReceiptLocal {
     List<PurchaseOrder> viewPurchaseOrder(Plant plant);
 
     PurchaseOrder getPurchaseOrder(Long id);
-
+    
+    GoodsIssuedDocument getGoodsIssuedDocument(Long id);
+    
+    void updateIncomingShipmentStatus(Long id);
+    
 }

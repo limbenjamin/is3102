@@ -46,7 +46,7 @@
                                                 <tr>
                                                     <td><h:outputText value="#{grd.id}"></h:outputText></td>
                                                     <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" pt:type="date" class="form-control"></h:inputText></td>
-                                                    <td><h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}">
+                                                    <td><h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}">
                                                                 <f:selectItem itemLabel="Select Purchase Order" />
                                                                 <f:selectItems value="#{goodsReceiptDocumentManagedBean.purchaseOrderList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
                                                             </h:selectOneMenu></td>
