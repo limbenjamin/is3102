@@ -101,6 +101,7 @@ public class BOMManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
+        System.out.println("init:BOMManagedBean");
         this.furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fID");
         try {
             if(furnitureID == null) {
@@ -121,7 +122,6 @@ public class BOMManagedBean implements Serializable {
             System.out.println("Furniture's BOM can be edited");
         System.out.println("BOMDetailList has " + this.bomList.size() + " items");
         this.listSize = this.bomList.size();
-        System.out.println("init:BOMManagedBean");
     }
     
     public String addToBOM(ActionEvent event) {

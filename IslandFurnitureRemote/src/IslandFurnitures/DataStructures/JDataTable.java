@@ -58,8 +58,9 @@ public class JDataTable<T> implements Serializable {
             return Command;
         }
 
-        public void setCommand(String Command) {
+        public Cell setCommand(String Command) {
             this.Command = Command;
+            return this;
         }
 
         public String getColorClass() {

@@ -60,6 +60,13 @@ public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal
     }
 
     @Override
+    public List<StockUnit> viewStockUnitbyStock(Stock stock) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.stock.id=:stockId");
+        q.setParameter("stockId", stock.getId());
+        return q.getResultList();
+    }
+
+    @Override
     public List<StockUnit> viewStockUnitBin(StorageBin storageBin) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.available=TRUE AND s.location.id=:storageBinId)");
         q.setParameter("storageBinId", storageBin.getId());

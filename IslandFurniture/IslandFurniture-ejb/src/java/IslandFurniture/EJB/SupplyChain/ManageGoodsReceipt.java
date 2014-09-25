@@ -27,6 +27,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     EntityManager em;
 
     private GoodsReceiptDocument goodsReceiptDocument;
+    private GoodsIssuedDocument goodsIssuedDocument;
     private GoodsReceiptDocumentDetail goodsReceiptDocumentDetail;
     private Stock stock;
     private PurchaseOrder purchaseOrder;
@@ -35,6 +36,12 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     public GoodsReceiptDocument getGoodsReceiptDocument(Long id) {
         goodsReceiptDocument = (GoodsReceiptDocument) em.find(GoodsReceiptDocument.class, id);
         return goodsReceiptDocument;
+    }
+
+    @Override
+    public GoodsIssuedDocument getGoodsIssuedDocument(Long id) {
+        goodsIssuedDocument = (GoodsIssuedDocument) em.find(GoodsIssuedDocument.class, id);
+        return goodsIssuedDocument;
     }
 
     @Override
@@ -64,6 +71,14 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         em.persist(goodsReceiptDocument);
         em.flush();
         return goodsReceiptDocument;
+    }
+
+    @Override
+    public void updateIncomingShipmentStatus(Long id) {
+        goodsIssuedDocument = getGoodsIssuedDocument(id);
+        goodsIssuedDocument.setReceived(true);
+        em.merge(goodsReceiptDocument);
+        em.flush();
     }
 
     @Override

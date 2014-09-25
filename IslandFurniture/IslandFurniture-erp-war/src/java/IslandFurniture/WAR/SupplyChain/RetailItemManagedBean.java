@@ -54,7 +54,7 @@ public class RetailItemManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         retailItemList = stockManager.displayItemList();
-        System.out.println("Init");
+        System.out.println("init:RetailItemManagedBean");
     }
     public String editRetailItem(ActionEvent event) throws IOException {
         System.out.println("RetailItemManagedBean.editRetailItem()");

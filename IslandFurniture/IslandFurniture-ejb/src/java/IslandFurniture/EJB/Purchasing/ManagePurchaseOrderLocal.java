@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.Calendar;
 import java.util.List;
@@ -22,9 +23,9 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    PurchaseOrder createPurchaseOrder(Calendar orderDate, String status);
+    PurchaseOrder createPurchaseOrder(Calendar orderDate, PurchaseOrderStatus status);
     
-    PurchaseOrder createNewPurchaseOrder(String status, Supplier supplier, Long plantId, Calendar orderDate);
+    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Long plantId, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity);
 
@@ -32,9 +33,9 @@ public interface ManagePurchaseOrderLocal {
 
     void deletePurchaseOrderDetail(Long podId);
 
-    void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, String status);
+    void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, PurchaseOrderStatus status);
     
-    void updatePurchaseOrder(Long poId, String status, Calendar orderDate);    
+    void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate);    
 
     void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Long psId, Integer qty);
 

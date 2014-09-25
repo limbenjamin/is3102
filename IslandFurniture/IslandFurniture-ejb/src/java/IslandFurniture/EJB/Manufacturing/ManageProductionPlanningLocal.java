@@ -17,7 +17,9 @@ import javax.ejb.Local;
 @Local
 public interface ManageProductionPlanningLocal {
 
-    HashMap<Material, Long> getMaterialsNeeded(int WeekNo, int Year, int Month);
+    int getLeadTime(Material m);
+
+    HashMap<Material, Long> getMaterialsNeededForCommited(int WeekNo, int Year, int Month);
 
     void CreateProductionPlanFromForecast() throws Exception;
 
@@ -38,8 +40,13 @@ public interface ManageProductionPlanningLocal {
     void uncommitWPP(Integer wppID) throws Exception;
 
     void commitWPP(Integer wppID) throws Exception;
-    
+
     Supplier getSupplierSize(Material m);
 
     int getLotSize(Material m);
+
+    void orderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
+
+    void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
+
 }

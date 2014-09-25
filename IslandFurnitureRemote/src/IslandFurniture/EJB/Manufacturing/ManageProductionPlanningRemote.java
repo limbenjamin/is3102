@@ -30,11 +30,13 @@ public interface ManageProductionPlanningRemote {
     void createCapacityIFDoNotExist();
 
     void planWeekMPP(String MF_NAME, String furniture_model_name, int m, long year) throws Exception;
-    
-    void uncommitWPP(Integer wppID) throws Exception;
-    
-    void commitWPP(Integer wppID) throws Exception;
-    
 
+    void uncommitWPP(Integer wppID) throws Exception;
+
+    void commitWPP(Integer wppID) throws Exception;
+
+    void orderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
+
+    void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
 
 }
