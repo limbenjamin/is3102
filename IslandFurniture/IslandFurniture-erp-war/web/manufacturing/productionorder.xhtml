@@ -26,7 +26,7 @@
                             <div class="tab-content">
                                 <div class="tab-pane active" id="planned">
                                     
-                                <!-- Planned Tab -->
+                                <!-- Planned Tab --> 
                                 <section class="panel">                                     
                                 <h:form id="plannedForm" class="form-horizontal">
                                     <p:dataTable value="#{productionOrderManagedBean.plannedPOList}" var="plannedPO" id="plannedTable">
@@ -34,26 +34,27 @@
                                             <h:outputText id="batchNo" value="#{plannedPO.batchNo}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Date" sortBy="#{plannedPO.prodOrderDate}">
-                                            <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time}" class="form-control transparent-form"></h:inputText>
-                                        </p:column>
+                                            <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time.date}/#{plannedPO.prodOrderDate.time.month}/#{plannedPO.prodOrderDate.time.year + 1900}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>  
                                         <p:column headerText="Quantity">
                                             <h:inputText id="poQty" value="#{plannedPO.qty}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
                                         <p:column headerText="Edit">
-                                            <h:commandButton actionListener="#{productionOrderManagedBean.editPO}" class="btn btn-sm transparent-button" style="outline:0;">
+                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
                                                 <f:attribute name="toEdit" value="#{plannedPO}" />
+                                                <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.editPO}"/>
                                             </h:commandButton>
                                             <i class="fa fa-lg fa-save icon-button"></i>
                                         </p:column>
                                         <p:column headerText="Delete">
                                             <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
                                                 <f:param name="batchNo" value="#{plannedPO.batchNo}" />
-                                                <f:ajax render="plannedTable :startedForm:startedTable" listener="#{productionOrderManagedBean.deletePO}" />
+                                                <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.deletePO}" />
                                             </h:commandButton>
                                             <i class="fa fa-lg fa-trash-o icon-button"></i>
                                         </p:column>
                                         <p:column headerText="Commence">
-                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;" value="Confirm">
+                                            <h:commandButton class="btn btn-success btn-xs" value="Confirm">
                                                 <f:param name="batchNo" value="#{plannedPO.batchNo}" />
                                                 <f:ajax render="plannedTable :startedForm:startedTable" listener="#{productionOrderManagedBean.commencePO}" />
                                             </h:commandButton>
@@ -73,7 +74,7 @@
                                             <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Date" sortBy="#{po.prodOrderDate}">
-                                            <h:outputText p:type="date" value="#{po.prodOrderDate}"></h:outputText>
+                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Quantity">
                                             <h:outputText value="#{po.qty}"></h:outputText>
@@ -83,12 +84,12 @@
                                         </p:column>
                                         <p:column headerText="Edit">
                                             <h:commandButton actionListener="#{productionOrderManagedBean.editCompletedQty}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                <f:attribute name="toEdit" value="#{po}" />
+                                                <f:attribute name="toEdit" value="#{po}" /> 
                                             </h:commandButton>
-                                            <i class="fa fa-lg fa-save icon-button"></i>
+                                            <i class="fa fa-lg fa-save icon-button"></i> 
                                         </p:column>
                                         <p:column headerText="Complete"> 
-                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;" value="Confirm">
+                                            <h:commandButton class="btn btn-success btn-xs" style="outline:0;" value="Confirm">
                                                 <f:param name="batchNo" value="#{po.batchNo}" /> 
                                                 <f:ajax render="startedTable :completedForm:completedTable" listener="#{productionOrderManagedBean.completePO}" />
                                             </h:commandButton>
@@ -108,8 +109,8 @@
                                         <p:column headerText="Batch No." sortBy="#{po.batchNo}">
                                             <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
                                         </p:column>
-                                        <p:column headerText="Date" sortBy="#{po.prodOrderDate}">
-                                            <h:outputText p:type="date" value="#{po.prodOrderDate}"></h:outputText>
+                                        <p:column headerText="Date" sortBy="#{po.prodOrderDate.time}">
+                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Quantity">
                                             <h:outputText value="#{po.qty}"></h:outputText>

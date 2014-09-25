@@ -42,8 +42,11 @@ public class ProductionManager implements ProductionManagerLocal {
     public ProductionOrder editPO(Long batchNo, Calendar date, Integer qty) {
         ProductionOrder po;
         try {
-            System.out.println("ProductionManager.editPO()");
+            System.out.println("ProductionManager.editPO()"); 
+            System.out.println("Date is " + date.getTime().toString() + ". Quantity is " + qty);
             po = em.find(ProductionOrder.class, batchNo);
+            if(po == null)
+                System.out.println("PO is null");
             if(date != null)
                 po.setProdOrderDate(date);
             if(qty != null)
@@ -61,9 +64,15 @@ public class ProductionManager implements ProductionManagerLocal {
         try {
             System.out.println("ProductionManager.editCompletedQty()");
             po = em.find(ProductionOrder.class, batchNo);
-            if(completedQty != null)
-                po.setCompletedQty(completedQty);
-            em.persist(po);
+            if(completedQty != null) {
+                if(completedQty > po.getQty()) {
+                    System.out.println("Invalid. Completed Quantity cannot be greater than planned quantity");
+                    return null;
+                } else {
+                    po.setCompletedQty(completedQty);
+                    em.persist(po);
+                }
+            }
             return po;
         } catch(Exception ex) {
             System.err.println("Error");
