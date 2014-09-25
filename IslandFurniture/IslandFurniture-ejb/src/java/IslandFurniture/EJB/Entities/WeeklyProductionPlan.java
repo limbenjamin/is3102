@@ -24,7 +24,8 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "WeeklyProductionPlan.getForMF", query = "select wpp from WeeklyProductionPlan wpp where wpp.monthlyProductionPlan.manufacturingFacility=:MF and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12  ORDER BY wpp.monthlyProductionPlan.furnitureModel.name ASC,wpp.WeekNo ASC")
+    @NamedQuery(name = "WeeklyProductionPlan.getForMF", query = "select wpp from WeeklyProductionPlan wpp where wpp.monthlyProductionPlan.manufacturingFacility=:MF and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12  ORDER BY wpp.monthlyProductionPlan.furnitureModel.name ASC,wpp.WeekNo ASC"),
+    @NamedQuery(name = "WeeklyProductionPlan.getForMFatWK", query = "select wpp from WeeklyProductionPlan wpp where wpp.monthlyProductionPlan.manufacturingFacility=:MF and wpp.monthlyProductionPlan.month+wpp.monthlyProductionPlan.year*12=:m+:y*12 and wpp.WeekNo=:wk  ORDER BY wpp.monthlyProductionPlan.furnitureModel.name ASC,wpp.WeekNo ASC")
 })
 public class WeeklyProductionPlan implements Serializable {
 
@@ -41,10 +42,27 @@ public class WeeklyProductionPlan implements Serializable {
     private int WeekNo;
 
     private int QTY;
+    
+    private boolean locked;
 
     public int getQTY() {
         return QTY;
     }
+
+    public boolean isLocked() {
+
+        if (this.productionOrder!=null)
+            return true;
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    
+    
+    
 
     public void setQTY(int QTY) {
         this.QTY = QTY;
@@ -102,5 +120,7 @@ public class WeeklyProductionPlan implements Serializable {
     public void setWeekNo(int WeekNo) {
         this.WeekNo = WeekNo;
     }
+
+
 
 }

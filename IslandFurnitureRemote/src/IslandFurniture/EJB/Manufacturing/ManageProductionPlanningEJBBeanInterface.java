@@ -29,7 +29,7 @@ public interface ManageProductionPlanningEJBBeanInterface {
 
     Object getCapacityList(String MF);
     
-    Object getWeeklyPlans(String period,String MFNAME);
+    Object getWeeklyPlans(String period,String MFNAME) throws Exception;
     
     Object getWeeklyMRPTable(String period, String MFNAME) throws Exception;
 }
