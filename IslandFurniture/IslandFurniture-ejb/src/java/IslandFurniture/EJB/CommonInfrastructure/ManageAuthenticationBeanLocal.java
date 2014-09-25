@@ -25,4 +25,6 @@ public interface ManageAuthenticationBeanLocal {
     
     boolean resetPassword(String code, String password);
     
+    void resetPasswordByAdmin(Long id);
+    
 }

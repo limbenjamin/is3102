@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -68,6 +70,21 @@ public class LoginManagedBean implements Serializable {
     @EJB
     private ManageNotificationsBeanLocal mnb;
 
+    
+    @PreDestroy
+    public void timeout(){
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+    }
+    
+    @PostConstruct
+    public void init(){
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+        session.setMaxInactiveInterval(30);
+    }
+    
+    
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {

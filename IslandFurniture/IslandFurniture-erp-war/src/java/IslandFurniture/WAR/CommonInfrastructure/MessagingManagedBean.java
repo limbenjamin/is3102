@@ -53,6 +53,7 @@ public class MessagingManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         this.inbox = messageBean.displayAllThreads(username);
+        listStaff = msaBean.displayAllStaffAccounts();
     }
     
     public String addThread() {
