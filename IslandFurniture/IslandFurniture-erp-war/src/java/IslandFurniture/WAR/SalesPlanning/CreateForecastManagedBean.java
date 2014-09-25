@@ -122,26 +122,19 @@ public class CreateForecastManagedBean implements Serializable {
     }
 
     public void nPointForecast(AjaxBehaviorEvent event) {
-        boolean impacted = false;
-        boolean illegalArg = false;
-        statusMessage = "";
+        try {
+            boolean impacted = false;
+            statusMessage = "";
 
-        for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
-            try {
-                couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
-                impacted = true;
-            } catch (ForecastFailureException ex) {
-                if (ex.getMessage().equals("NoMonths")) {
+            for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
+                try {
+                    couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
+                    impacted = true;
+                } catch (ForecastFailureException ex) {
                     statusMessage += " " + ex.getMessage() + ",";
                 }
-            } catch (InvalidInputException ex) {
-                illegalArg = true;
-                statusMessage = ex.getMessage();
-                break;
             }
-        }
-
-        if (!illegalArg) {
+            
             if (!impacted) {
                 statusMessage = "Failed to forecast: There are no available months to forecast!";
             } else {
@@ -151,12 +144,12 @@ public class CreateForecastManagedBean implements Serializable {
                     statusMessage = "No historical data for:" + statusMessage.substring(0, statusMessage.length() - 1);
                 }
             }
+        } catch (InvalidInputException ex) {
+            statusMessage = ex.getMessage();
         }
     }
 
     public void saveForecast(AjaxBehaviorEvent event) {
-        System.out.println("Ajax call");
-
         try {
             List<Couple<Stock, List<MonthlyStockSupplyReq>>> coupleList = new ArrayList();
 
@@ -167,7 +160,7 @@ public class CreateForecastManagedBean implements Serializable {
             salesForecastBean.saveMonthlyStockSupplyReq(coupleList);
 
             statusMessage = "Forecast saved successfully!";
-        } catch (Exception ex) {
+        } catch (InvalidMssrException ex) {
             statusMessage = "Error saving forecast: " + ex.getMessage();
         }
     }
