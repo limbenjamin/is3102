@@ -52,24 +52,24 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         
         
         String[][] arr = new String [][] { 
-            { "Modify Particulars", "/common/modifyparticulars.xhtml", "fa-dummy", "dummy", "false"},
-            { "Dashboard", "/dash.xhtml", "fa-home", "Dashboard", "true"},
-            { "Messaging", "/common/messaging.xhtml", "fa-envelope", "Messaging", "true"},
-            { "Messaging", "/common/messaging2.xhtml", "fa-dummy", "dummy", "false"},
-            { "Broadcast", "/common/broadcast.xhtml", "fa-home", "Broadcast", "true"}, 
-            { "Change Password", "/changepassword.xhtml", "fa-dummy", "dummy", "false"},
-            { "Manage Plant", "/it/manageplant.xhtml", "fa-desktop", "Manage Plant", "true"},
-            { "Manage Staff", "/it/managestaff.xhtml", "fa-calendar", "Manage Staff", "true"},
-            { "Manage Staff", "/it/managestaff2.xhtml", "fa-dummy", "dummy", "false"},
-            { "Manage Roles", "/it/roleprivilege.xhtml", "fa-pencil", "Manage Roles", "true"},
-            { "Manage Roles", "/it/roleprivilege2.xhtml", "fa-dummy", "dummy", "false"},
-            { "MSSR", "/salesplanning/viewmssr.xhtml", "fa-home", "View MSSR", "true"},
-            { "Material", "/knowledge/material.xhtml", "fa-home", "Material", "true"},
-            { "Furniture", "/knowledge/furniture.xhtml", "fa-home", "Furniture", "true"},
-            { "Retail Item", "/knowledge/retailItem.xhtml", "fa-home", "Retail Item", "true"},
-            { "Create Forecast", "/salesplanning/createforecast.xhtml", "fa-home", "Create Forecast", "true"},
-            { "View Notifications", "/it/notification.xhtml", "fa-home", "View Notifications", "true"},
-            { "Review Forecast", "/salesplanning/reviewforecast.xhtml", "fa-home", "Review Forecast", "true"},
+            { "Modify Particulars", "/common/modifyparticulars.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Dashboard", "/dash.xhtml", "fa-home", "Dashboard", "true","1"},
+            { "Messaging", "/common/messaging.xhtml", "fa-envelope", "Messaging", "true","2"},
+            { "Messaging", "/common/messaging2.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Broadcast", "/common/broadcast.xhtml", "fa-home", "Broadcast", "true","3"}, 
+            { "Change Password", "/changepassword.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Manage Plant", "/it/manageplant.xhtml", "fa-desktop", "Manage Plant", "true","4"},
+            { "Manage Staff", "/it/managestaff.xhtml", "fa-calendar", "Manage Staff", "true","5"},
+            { "Manage Staff", "/it/managestaff2.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Manage Roles", "/it/roleprivilege.xhtml", "fa-pencil", "Manage Roles", "true","6"},
+            { "Manage Roles", "/it/roleprivilege2.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "MSSR", "/salesplanning/viewmssr.xhtml", "fa-home", "View MSSR", "true","7"},
+            { "Material", "/knowledge/material.xhtml", "fa-home", "Material", "true","8"},
+            { "Furniture", "/knowledge/furniture.xhtml", "fa-home", "Furniture", "true","9"},
+            { "Retail Item", "/knowledge/retailItem.xhtml", "fa-home", "Retail Item", "true","10"},
+            { "Create Forecast", "/salesplanning/createforecast.xhtml", "fa-home", "Create Forecast", "true","11"},
+            { "View Notifications", "/it/notification.xhtml", "fa-home", "View Notifications", "true","12"},
+            { "Review Forecast", "/salesplanning/reviewforecast.xhtml", "fa-home", "Review Forecast", "true","13"},
         };
         
         for (int i=0; i<privileges.length; i++){
@@ -78,7 +78,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             try {
                 for (int j=0; j<arr.length; j++){
                     if (arr[j][0].equals(privileges[i])){
-                        url = mrpl.createUrl(arr[j][1], arr[j][2], arr[j][3], Boolean.parseBoolean(arr[j][4]));
+                        url = mrpl.createUrl(arr[j][1], arr[j][2], arr[j][3], Boolean.parseBoolean(arr[j][4]), Integer.parseInt(arr[j][5]));
                         urlList.add(url);
                     }
                 }

@@ -79,12 +79,13 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
     }
     
     @Override
-    public Url createUrl(String link, String icon, String menuItemName, boolean visible){
+    public Url createUrl(String link, String icon, String menuItemName, boolean visible, Integer weight){
         url = new Url();
         url.setIcon(icon);
         url.setLink(link);
         url.setMenuItemName(menuItemName);
         url.setVisible(visible);
+        url.setWeight(weight);
         return url;
     }
 }
