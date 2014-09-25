@@ -16,7 +16,11 @@ import IslandFurniture.EJB.Manufacturing.ProductionManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -26,6 +30,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -97,6 +102,7 @@ public class ProductionOrderManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        System.out.println("init:ProductionOrderManagedBean");
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
         Plant plant = staff.getPlant();
@@ -121,10 +127,12 @@ public class ProductionOrderManagedBean implements Serializable {
         }
     }
     
-    public void editPO(ActionEvent event) throws IOException {
+    public void editPO(AjaxBehaviorEvent event) throws IOException, ParseException {
         System.out.println("ProductionOrderManagedBean.editPO()");
         po = (ProductionOrder) event.getComponent().getAttributes().get("toEdit");
-        productionManager.editPO(po.getBatchNo(), po.getProdOrderDate(), po.getQty());
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
+        System.out.println("Quantity is " + po.getQty() + ". Date is " + po.getProdOrderDate().getTime()); 
+        productionManager.editPO(po.getBatchNo(), po.getProdOrderDate(), 75); 
     }
     public void editCompletedQty(AjaxBehaviorEvent event) throws IOException {
         System.out.println("ProductionOrderManagedBean.editCompletedQty()");
