@@ -41,7 +41,16 @@ public class GoodsIssuedDocument implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar issuedDate;
     private Boolean confirm;
+    private Boolean received;
 
+    public Boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(Boolean received) {
+        this.received = received;
+    }
+        
     public Long getId() {
         return id;
     }
@@ -97,8 +106,6 @@ public class GoodsIssuedDocument implements Serializable {
     public void setConfirm(Boolean confirm) {
         this.confirm = confirm;
     }
-
-    
 
     @Override
     public int hashCode() {

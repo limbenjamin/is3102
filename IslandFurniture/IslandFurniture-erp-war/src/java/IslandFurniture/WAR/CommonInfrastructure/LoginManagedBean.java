@@ -75,7 +75,6 @@ public class LoginManagedBean implements Serializable {
     public void timeout(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        System.err.println("herehere session timeout  "+username);
     }
     
     @PostConstruct
@@ -83,7 +82,6 @@ public class LoginManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         session.setMaxInactiveInterval(30);
-        System.err.println("herehere session timeout  "+session.getMaxInactiveInterval());
     }
     
     

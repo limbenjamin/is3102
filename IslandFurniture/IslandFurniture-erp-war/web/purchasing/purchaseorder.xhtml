@@ -118,7 +118,7 @@
                               <div class="form-group">
                                 <label class="col-sm-3 control-label">Supplier: </label>
                                 <div class="col-sm-9">
-                                    <h:selectOneMenu id="supplierId" class="form-control">
+                                    <h:selectOneMenu id="supplierId" class="form-control needauto">
                                         <f:selectItem itemLabel="Select Supplier"/>
                                         <f:selectItems value="#{purchaseOrderManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                     </h:selectOneMenu>

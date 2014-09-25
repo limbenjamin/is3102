@@ -9,6 +9,7 @@ import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.StorageArea;
+import IslandFurniture.EJB.Entities.StorageAreaType;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.ArrayList;
@@ -27,13 +28,14 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private StorageArea addStorageArea(String name, Plant plant) {
+    private StorageArea addStorageArea(String name, Plant plant, StorageAreaType type) {
         StorageArea sa = QueryMethods.findStorageAreaByName(em, name, plant);
 
         if (sa == null) {
             sa = new StorageArea();
             sa.setName(name);
             sa.setPlant(plant);
+            sa.setType(type);
             em.persist(sa);
 
             return sa;
@@ -73,7 +75,7 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
             if (plant instanceof Store || plant instanceof ManufacturingFacility || plant instanceof CountryOffice) {
                 saList = new ArrayList();
 
-                sa = this.addStorageArea("Receiving Area", plant);
+                sa = this.addStorageArea("Receiving Area", plant, StorageAreaType.RECEIVING);
                 saList.add(sa);
 
                 sbList = new ArrayList();
@@ -84,7 +86,7 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                 }
                 sa.setStorageBins(sbList);
 
-                sa = this.addStorageArea("Shipping Area", plant);
+                sa = this.addStorageArea("Shipping Area", plant, StorageAreaType.SHIPPING);
                 saList.add(sa);
 
                 sbList = new ArrayList();
@@ -95,7 +97,7 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                 }
                 sa.setStorageBins(sbList);
 
-                sa = this.addStorageArea("Storage Area", plant);
+                sa = this.addStorageArea("Storage Area", plant, StorageAreaType.STORAGE);
                 saList.add(sa);
 
                 sbList = new ArrayList();
@@ -106,7 +108,7 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                 }
                 sa.setStorageBins(sbList);
                 
-                sa = this.addStorageArea("Production Area", plant);
+                sa = this.addStorageArea("Production Area", plant, StorageAreaType.PRODUCTION);
                 saList.add(sa);
 
                 sbList = new ArrayList();

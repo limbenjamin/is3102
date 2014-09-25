@@ -137,14 +137,24 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
 //        return (StockUnit) q.getSingleResult();
 //    }
     
-        @Override
-    public StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception {
+//        @Override
+//    public StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception {
+//        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.id=:storageBinId AND s.stock.id=:stockId AND s.batchNo=:batchNo AND s.available=TRUE");
+//        q.setParameter("storageBinId", storageBin.getId());
+//        q.setParameter("stockId", stock.getId());
+//        q.setParameter("batchNo", batchNo);
+//        return (StockUnit) q.getSingleResult();
+//    }
+    
+            @Override
+    public List<StockUnit> viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.id=:storageBinId AND s.stock.id=:stockId AND s.batchNo=:batchNo AND s.available=TRUE");
         q.setParameter("storageBinId", storageBin.getId());
         q.setParameter("stockId", stock.getId());
         q.setParameter("batchNo", batchNo);
-        return (StockUnit) q.getSingleResult();
+        return q.getResultList();
     }
+    
     
    
 

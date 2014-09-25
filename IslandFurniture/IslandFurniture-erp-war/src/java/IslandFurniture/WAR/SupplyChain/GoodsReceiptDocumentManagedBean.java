@@ -106,7 +106,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         }
 
         goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
-        storageAreaList = miml.viewStorageArea(plant);
+        storageAreaList = miml.viewStorageAreaReceiving(plant);
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         ifGoodsReceiptDocumentDetailListEmpty = goodsReceiptDocumentDetailList.isEmpty();
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);

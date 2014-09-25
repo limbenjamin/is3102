@@ -154,4 +154,10 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         return query.getResultList();
     }
     
+    @Override
+    public List<RetailItem> viewRetailItems(){
+        Query query = em.createQuery("SELECT r FROM RetailItem r");
+        return query.getResultList();
+    }
+    
 }
