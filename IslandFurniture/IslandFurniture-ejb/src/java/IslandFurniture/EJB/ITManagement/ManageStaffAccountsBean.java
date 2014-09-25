@@ -55,6 +55,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     private List<Privilege> privilegeList;
     private List<Privilege> rolePrivilegeList;
     private Privilege privilege;
+    private String password;
     
     @EJB
     private ManageUserAccountBeanLocal muab;

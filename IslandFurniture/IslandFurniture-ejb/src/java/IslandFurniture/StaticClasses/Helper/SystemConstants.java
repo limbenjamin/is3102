@@ -18,5 +18,8 @@ public class SystemConstants {
 
     // Number of Months from the start of current month where MSSR planning should be done
     public static final int FORECAST_HORIZON = 6;
+    
+    // Default weight multiplier given to sales figure of previous y-o-y month
+    public static final double FORECAST_DEFAULT_WEIGHT = 1.25;
 
 }

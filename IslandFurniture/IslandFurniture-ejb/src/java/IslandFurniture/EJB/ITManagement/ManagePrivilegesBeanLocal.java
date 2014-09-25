@@ -21,5 +21,5 @@ public interface ManagePrivilegesBeanLocal {
     void removePrivilege(Long id);
     List<Privilege> displayPrivilege();
     Privilege getPrivilegeFromName(String privilegeName);
-    Url createUrl(String link, String icon, String menuItemName, boolean visible);
+    Url createUrl(String link, String icon, String menuItemName, boolean visible, Integer weight);
 }

@@ -29,6 +29,7 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
     @Resource SessionContext ctx;
     private Staff staff;
     private LogEntry logEntry;
+    private String password;
     
     @EJB
     private ManageUserAccountBeanLocal staffbean;
@@ -113,6 +114,20 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         em.merge(staff);
         em.flush();
         return true;
+    }
+    
+    @Override
+    public void resetPasswordByAdmin(Long id){
+        staff = (Staff) em.find(Staff.class, id);
+        password = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        try {
+            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Resetted", "Your new password is: "+password);
+        } catch (Exception ex) {
+            Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        staff.setPassword(password);
+        em.merge(staff);
+        
     }
     
 }

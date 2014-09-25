@@ -6,9 +6,12 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.RetailItem;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,10 +21,12 @@ import javax.ejb.Local;
  */
 @Local
 public interface ManageProcurementPlanLocal {
-    void createMonthlyProcumentPlan();
+    void createMonthlyProcumentPlan(ManufacturingFacility mf);
     List<MonthlyProcurementPlan> viewMonthlyProcurementPlan();
-    void createPurchaseOrder();
+    void createPurchaseOrder(ManufacturingFacility mf, Month month, Integer year);
     List<PurchaseOrder> viewPurchaseOrder();
     List<PurchaseOrderDetail> viewPurchaseOrderDetail();
-    
+    List<RetailItem> viewRetailItems();
+    void lockMpp(ManufacturingFacility mf, Month month, Integer year);
+    boolean checkMppLocked(ManufacturingFacility mf, Month month, Integer year);
 }

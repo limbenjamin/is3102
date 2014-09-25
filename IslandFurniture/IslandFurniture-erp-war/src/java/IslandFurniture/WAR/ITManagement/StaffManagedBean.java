@@ -6,6 +6,8 @@
 
 package IslandFurniture.WAR.ITManagement;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
@@ -43,12 +45,16 @@ public class StaffManagedBean  implements Serializable  {
     private List<Country> countryList;
     private List<Plant> plantList;
     private Long id;
-    
+    private Staff staff;
     
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohBean;
+    @EJB
+    private ManageUserAccountBeanLocal muab;
+    @EJB
+    private ManageAuthenticationBeanLocal mabl;
     
     @PostConstruct
     public void init(){
@@ -66,8 +72,10 @@ public class StaffManagedBean  implements Serializable  {
         password = Long.toHexString(Double.doubleToLongBits(Math.random()));
         emailAddress = request.getParameter("staffForm:emailAddress");
         phoneNo = request.getParameter("staffForm:phoneNo");
-        countryName = request.getParameter("staffForm:countryName");
-        plantName = request.getParameter("staffForm:plantName");
+        HttpSession session = Util.getSession();
+        staff = muab.getStaff((String) session.getAttribute("username"));
+        countryName = staff.getPlant().getCountry().getName();
+        plantName = staff.getPlant().getName();
         msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
         return "managestaff";
     }
@@ -75,6 +83,12 @@ public class StaffManagedBean  implements Serializable  {
     public String deleteStaff(){
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         msabl.deleteStaffAccount(id);
+        return "managestaff";
+    }
+    
+    public String resetpassword(){
+        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+        mabl.resetPasswordByAdmin(id);
         return "managestaff";
     }
 
@@ -180,6 +194,22 @@ public class StaffManagedBean  implements Serializable  {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public ManageUserAccountBeanLocal getMuab() {
+        return muab;
+    }
+
+    public void setMuab(ManageUserAccountBeanLocal muab) {
+        this.muab = muab;
     }
     
     

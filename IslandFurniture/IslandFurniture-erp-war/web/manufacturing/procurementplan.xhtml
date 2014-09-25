@@ -11,37 +11,36 @@
                     <h4>View Monthly Procurement Plan</h4>
                     <hr></hr>       
                 </div>
-                <div class="col-md-10 col-sm-10">                                               
+                <div class="col-md-12 col-sm-12">                                               
                   <section class="panel">
-                    <h:form>
+                   <h:form>
                         <h:commandButton value="Generate Procurement Plan" class="btn" action="#{procurementPlanManagedBean.generateProcurementPlan}">
                         </h:commandButton>
-                        <h:commandButton value="Create Purchase Order" class="btn" action="#{procurementPlanManagedBean.createPurchaseOrder}">
-                        </h:commandButton>
                     </h:form>  
-                      <p:dataTable var="mpp" value="#{procurementPlanManagedBean.mppList}"
-                                    emptyMessage="No records found with given criteria">
+                      <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{procurementPlanManagedBean.dt.internalrows}" resizableColumns="true" tableStyle="width:auto" rowIndexVar="ri" rendered="#{procurementPlanManagedBean.dt.internalrows.size() gt 0}">
+                        <f:facet name="header">
+                            Procurement Planning Table
+                            <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="MPP_dt" trigger="toggler" />
+                        </f:facet>
+                        <p:columns  value="#{procurementPlanManagedBean.dt.columns}" var="datacolumn" columnIndexVar="dataCIndex" >
 
-                          <p:column sortBy="#{mpp.month}" headerText="Month" filterMatchMode="contains">
-                               <h:outputText value="#{mpp.month}" />
-                           </p:column>
+                            <f:facet name="header">
+                                    #{datacolumn}
 
-                          <p:column sortBy="#{mpp.year}" headerText="Year" filterMatchMode="contains">
-                               <h:outputText value="#{mpp.year}" />
-                           </p:column>
 
-                          <p:column sortBy="#{mpp.manufacturingFacility.name}" headerText="MF" filterMatchMode="contains">
-                               <h:outputText value="#{mpp.manufacturingFacility.name}" />
-                           </p:column>
 
-                          <p:column sortBy="#{mpp.retailItem.name}" headerText="Retail Item" filterMatchMode="contains">
-                               <h:outputText value="#{mpp.retailItem.name}" />
-                           </p:column>
-                          
-                          <p:column sortBy="#{mpp.qty}" headerText="Qty" filterMatchMode="contains">
-                               <h:outputText value="#{mpp.qty}" />
-                          </p:column> 
-                       </p:dataTable>
+
+                            </f:facet>
+
+
+                            <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}" style="text-align:center;width:96%"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                            <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('MPP_dt')}" actionListener="#{procurementPlanManagedBean.listenToCell}"></p:commandButton>
+
+                        </p:columns>
+
+                    </p:dataTable>
                   </section>
                 </div>
 
