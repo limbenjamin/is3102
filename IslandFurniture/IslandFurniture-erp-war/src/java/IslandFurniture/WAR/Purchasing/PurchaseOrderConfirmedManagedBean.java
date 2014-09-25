@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
@@ -51,7 +52,7 @@ public class PurchaseOrderConfirmedManagedBean {
     private Long plantId;
 
     private Calendar orderDate;
-    private String status;
+    private PurchaseOrderStatus status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> purchaseOrderList;
     private PurchaseOrderDetail purchaseOrderDetail;
@@ -186,11 +187,11 @@ public class PurchaseOrderConfirmedManagedBean {
         this.orderDate = orderDate;
     }
 
-    public String getStatus() {
+    public PurchaseOrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
     }
 

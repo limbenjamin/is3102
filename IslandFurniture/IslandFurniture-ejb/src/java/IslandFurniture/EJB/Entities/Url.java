@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
  * @author Benjamin
  */
 @Entity
-public class Url implements Serializable {
+public class Url implements Serializable, Comparable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,6 +29,7 @@ public class Url implements Serializable {
     private Privilege privilege;
     private String menuItemName;
     private boolean visible;
+    private Integer weight;
 
     public Long getId() {
         return id;
@@ -84,8 +85,14 @@ public class Url implements Serializable {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
-    
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
 
     @Override
     public boolean equals(Object object) {
@@ -104,5 +111,12 @@ public class Url implements Serializable {
     public String toString() {
         return "IslandFurniture.EJB.Entities.Url[ id=" + id + " ]";
     }
+
+    @Override
+    public int compareTo(Object t) {
+        Url o = (Url) t;
+        return (weight - o.weight);
+    }
+
     
 }

@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
@@ -51,7 +52,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private Long plantId;
 
     private Calendar orderDate;
-    private String status;
+    private PurchaseOrderStatus status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> purchaseOrderList;
     private PurchaseOrderDetail purchaseOrderDetail;
@@ -118,7 +119,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     // new update purchase order method
     public String updatePurchaseOrder() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        status = request.getParameter("updatePurchaseOrder:status");
+        String selectedStatus = request.getParameter("updatePurchaseOrder:status");
+        status = PurchaseOrderStatus.getPurchaseOrderStatus(Integer.parseInt(selectedStatus));
+        System.out.println("selected status is: " + selectedStatus);
         orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
@@ -127,7 +130,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         orderDate = cal;
         mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
         System.out.println("updated purchase order" + purchaseOrderId);
-        if (status.equals("confirmed")) {
+        if (selectedStatus.equals("1")) {
             return "purchaseorder";
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
@@ -239,11 +242,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.orderDate = orderDate;
     }
 
-    public String getStatus() {
+    public PurchaseOrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
     }
 

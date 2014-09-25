@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <h4>Plants</h4>
+                                <hr></hr>                                   
+                            </div>
+                            <div class="col-md-10">                                               
+                                <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                                  <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
+                                  <li><a href="#started" role="tab" data-toggle="tab">Started</a></li>
+                                  <li><a href="#completed" role="tab" data-toggle="tab">Completed</a></li>
+                                </ul>
+                                
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="planned">
+                                    
+                                <!-- Planned Tab --> 
+                                <section class="panel">                                     
+                                <h:form id="plannedForm" class="form-horizontal">
+                                    <p:dataTable value="#{productionOrderManagedBean.plannedPOList}" var="plannedPO" id="plannedTable">
+                                        <p:column headerText="Batch No." sortBy="#{plannedPO.batchNo}">
+                                            <h:outputText id="batchNo" value="#{plannedPO.batchNo}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Date" sortBy="#{plannedPO.prodOrderDate}">
+                                            <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time.date}/#{plannedPO.prodOrderDate.time.month}/#{plannedPO.prodOrderDate.time.year + 1900}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>  
+                                        <p:column headerText="Quantity">
+                                            <h:inputText id="poQty" value="#{plannedPO.qty}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        <p:column headerText="Edit">
+                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:attribute name="toEdit" value="#{plannedPO}" />
+                                                <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.editPO}"/>
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i>
+                                        </p:column>
+                                        <p:column headerText="Delete">
+                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:param name="batchNo" value="#{plannedPO.batchNo}" />
+                                                <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.deletePO}" />
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                        </p:column>
+                                        <p:column headerText="Commence">
+                                            <h:commandButton class="btn btn-success btn-xs" value="Confirm">
+                                                <f:param name="batchNo" value="#{plannedPO.batchNo}" />
+                                                <f:ajax render="plannedTable :startedForm:startedTable" listener="#{productionOrderManagedBean.commencePO}" />
+                                            </h:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="started">
+                                    
+                                <!-- Started Tab -->
+                                <section class="panel">
+                                <h:form id="startedForm" class="form-horizontal">
+                                    <p:dataTable value="#{productionOrderManagedBean.startedPOList}" var="po" id="startedTable">
+                                        <p:column headerText="Batch No." sortBy="#{po.batchNo}">
+                                            <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Date" sortBy="#{po.prodOrderDate}">
+                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Quantity">
+                                            <h:outputText value="#{po.qty}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Completed Qty">
+                                            <h:inputText id="poQty" value="#{po.completedQty}" class="form-control transparent-form"></h:inputText>
+                                        </p:column>
+                                        <p:column headerText="Edit">
+                                            <h:commandButton actionListener="#{productionOrderManagedBean.editCompletedQty}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                <f:attribute name="toEdit" value="#{po}" /> 
+                                            </h:commandButton>
+                                            <i class="fa fa-lg fa-save icon-button"></i> 
+                                        </p:column>
+                                        <p:column headerText="Complete"> 
+                                            <h:commandButton class="btn btn-success btn-xs" style="outline:0;" value="Confirm">
+                                                <f:param name="batchNo" value="#{po.batchNo}" /> 
+                                                <f:ajax render="startedTable :completedForm:completedTable" listener="#{productionOrderManagedBean.completePO}" />
+                                            </h:commandButton>
+                                        </p:column> 
+                                    
+                                    </p:dataTable>
+                                </h:form>
+                                </section>
+                                </div>
+                                
+                                <div class="tab-pane" id="completed">
+                                    
+                                <!-- Completed Tab -->
+                                <section class="panel">
+                                <h:form id="completedForm" class="form-horizontal">
+                                    <p:dataTable value="#{productionOrderManagedBean.completedPOList}" var="po" id="completedTable">
+                                        <p:column headerText="Batch No." sortBy="#{po.batchNo}">
+                                            <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Date" sortBy="#{po.prodOrderDate.time}">
+                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Quantity">
+                                            <h:outputText value="#{po.qty}"></h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                                </section>
+                                </div>
+                            </div>                                
+                                
+                                
+                            </div>   
+                            
+                        </div>                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

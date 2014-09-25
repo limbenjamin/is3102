@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -22,14 +24,21 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class ProductionOrder implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long batchNo;
+    private ProdOrderStatus status;
+    @Temporal(TemporalType.DATE)
+    private Calendar prodOrderDate;
+    private int qty;
+    private int completedQty;
+
+    @ManyToOne
+    private ManufacturingFacility mf;
     @ManyToOne
     private FurnitureModel furnitureModel;
-    @OneToMany
-    private List<StockUnit> stockUnits=new ArrayList<>();
 
     public Long getBatchNo() {
         return batchNo;
@@ -39,20 +48,52 @@ public class ProductionOrder implements Serializable {
         this.batchNo = batchNo;
     }
 
+    public ProdOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProdOrderStatus status) {
+        this.status = status;
+    }
+
+    public Calendar getProdOrderDate() {
+        return prodOrderDate;
+    }
+
+    public void setProdOrderDate(Calendar prodOrderDate) {
+        this.prodOrderDate = prodOrderDate;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public int getCompletedQty() {
+        return completedQty;
+    }
+
+    public void setCompletedQty(int completedQty) {
+        this.completedQty = completedQty;
+    }
+
+    public ManufacturingFacility getMf() {
+        return mf;
+    }
+
+    public void setMf(ManufacturingFacility mf) {
+        this.mf = mf;
+    }
+
     public FurnitureModel getFurnitureModel() {
         return furnitureModel;
     }
 
     public void setFurnitureModel(FurnitureModel furnitureModel) {
         this.furnitureModel = furnitureModel;
-    }
-
-    public List<StockUnit> getStockUnits() {
-        return stockUnits;
-    }
-
-    public void setStockUnits(List<StockUnit> stockUnits) {
-        this.stockUnits = stockUnits;
     }
 
     @Override
@@ -79,5 +120,5 @@ public class ProductionOrder implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.ProductionOrder[ id=" + batchNo + " ]";
     }
-    
+
 }

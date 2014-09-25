@@ -28,9 +28,9 @@
                                         <h:inputText id="orderDateString" value="#{purchaseOrderManaged2Bean.orderDateString}" p:type="date" class="form-control"></h:inputText>
                                     </td>
                                     <td>
-                                        <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status}">
-                                            <f:selectItem itemValue="planned" itemLabel="Planned" />
-                                            <f:selectItem itemValue="confirmed" itemLabel="Confirmed" />
+                                        <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status.value}">
+                                            <f:selectItem itemValue="0" itemLabel="Planned" />
+                                            <f:selectItem itemValue="1" itemLabel="Confirmed" />
                                         </h:selectOneMenu>
                                     </td>                                   
                                     <td>
@@ -64,7 +64,7 @@
                                                 #{pod.id}
                                             </td>                                            
                                             <td>
-                                                <h:selectOneMenu id="procuredStockId" class="form-control" value="#{pod.procuredStock.id}">
+                                                <h:selectOneMenu id="procuredStockId" class="form-control needauto" value="#{pod.procuredStock.id}">
                                                     <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                 </h:selectOneMenu>
                                             </td>

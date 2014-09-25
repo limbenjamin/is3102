@@ -21,9 +21,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -68,6 +71,21 @@ public class LoginManagedBean implements Serializable {
     @EJB
     private ManageNotificationsBeanLocal mnb;
 
+    
+    @PreDestroy
+    public void timeout(){
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+    }
+    
+    @PostConstruct
+    public void init(){
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+        session.setMaxInactiveInterval(30);
+    }
+    
+    
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {
@@ -97,11 +115,16 @@ public class LoginManagedBean implements Serializable {
                 while (iterator3.hasNext()) {
                     url = iterator3.next();
                     if (url.isVisible() == true && !existingUrlList.contains(url)){
-                        menu += "<li><a href="+ absoluteWebPath +url.getLink()+"><i class=\"fa "+url.getIcon()+"\"></i><span>"+url.getMenuItemName()+"</span></a></li>";
-                        existingUrlList.add(url);
+                       existingUrlList.add(url);
                     }
                 }
             }
+            Collections.sort(existingUrlList);
+            Iterator<Url> iterator3 = existingUrlList.iterator();
+            while (iterator3.hasNext()) {
+                url = iterator3.next();
+                menu += "<li><a href="+ absoluteWebPath +url.getLink()+"><i class=\"fa "+url.getIcon()+"\"></i><span>"+url.getMenuItemName()+"</span></a></li>";
+            }            
             return "dash";
         } else {
 

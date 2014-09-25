@@ -56,6 +56,8 @@ public interface ManageInventoryMovementLocal {
     
     void updateBatchNumber(Long id, String batchNumber);
     
-    StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
+//    StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
+    
+    List<StockUnit> viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
 
 }

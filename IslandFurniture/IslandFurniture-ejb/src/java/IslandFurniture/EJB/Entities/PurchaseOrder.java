@@ -42,7 +42,7 @@ public class PurchaseOrder implements Serializable {
     private GoodsReceiptDocument goodsReceiptDocument;
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar orderDate;
-    private String status;
+    private PurchaseOrderStatus status;
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
     
@@ -119,18 +119,20 @@ public class PurchaseOrder implements Serializable {
         return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder[ id=" + id + " ]";
     }
 
-    /**
-     * @return the status
-     */
-    public String getStatus() {
+    public PurchaseOrderStatus getStatus() {
         return status;
     }
 
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
+    public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
+    }
+
+    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
+        return monthlyProcurementPlan;
+    }
+
+    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
+        this.monthlyProcurementPlan = monthlyProcurementPlan;
     }
 
 }
