@@ -8,6 +8,7 @@ package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Staff;
@@ -20,12 +21,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
+import org.primefaces.component.commandbutton.CommandButton;
 
 
 
@@ -60,7 +64,6 @@ public class ProcurementPlanManagedBean {
         retailList = mppl.viewRetailItems();
         dt = new JDataTable<String>();
         dt.Title = "Procurement Plan";
-        
         dt.columns.add("");
         int c_year = Helper.getCurrentYear();
         int c_month = Helper.getCurrentMonth().value;
@@ -94,7 +97,7 @@ public class ProcurementPlanManagedBean {
                                 if (mpp.getYear() == i_year){
                                     if (mpp.getMonth().equals(Helper.translateMonth(i_month))){
                                         Row r = dt.getRow(j);
-                                        r.newCell(mpp.getQty().toString()).setIsEditable(Boolean.TRUE);
+                                        r.newCell(mpp.getQty().toString());
                                     }
                                 }
                             }
@@ -103,17 +106,52 @@ public class ProcurementPlanManagedBean {
             } catch (Exception ex) {
             }
         }
+        JDataTable.Row r = dt.newRow();
+        r.newCell("Create Purchase Order");
+        for (int i = 0; i <= 6; i++) {
+
+            try {
+                int i_month = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, true);
+                int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
+                ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
+                if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year)){
+                    r.newCell("");
+                }else{
+                    r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);
+                }
+            } catch (Exception ex) {
+            }
+        }
         
+    }
+    
+    public String listenToCell(ActionEvent actionEvent) {
+        try {
+            CommandButton button = (CommandButton) actionEvent.getComponent();
+            String ID = button.getAlt();
+            String command = button.getLabel();
+
+            switch (command) {
+                case "CREATE":
+                    StringTokenizer stringTokenizer = new StringTokenizer(ID,"-");
+                    Month month = Helper.translateMonth(Integer.parseInt(stringTokenizer.nextToken()));
+                    Integer year = Integer.parseInt(stringTokenizer.nextToken());
+                    ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
+                    mppl.createPurchaseOrder(mf,month,year);
+                    mppl.lockMpp(mf,month,year);
+                    break;
+            }
+            
+            System.out.println("listenToCell(): " + command + " ON " + ID);
+        } catch (Exception ex) {
+
+        }
+        return "procurementplan";
     }
     
     public String generateProcurementPlan(){
         staff = muabl.getStaff(username);
         mppl.createMonthlyProcumentPlan((ManufacturingFacility) staff.getPlant());
-        return "procurementplan";
-    }
-    
-    public String createPurchaseOrder(){
-        mppl.createPurchaseOrder();
         return "procurementplan";
     }
 
