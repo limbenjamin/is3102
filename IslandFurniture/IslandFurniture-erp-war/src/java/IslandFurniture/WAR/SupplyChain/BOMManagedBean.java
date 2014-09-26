@@ -21,6 +21,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -149,5 +150,14 @@ public class BOMManagedBean implements Serializable {
         stockManager.deleteBOMDetail(id);
         this.bomList = stockManager.displayBOM(furnitureID);
         System.out.println("After deletion, BOMDetailList has " + bomList.size() + " items");
+    }
+    public void addMaterial(AjaxBehaviorEvent event) {
+        System.out.println("BOMManagedBean.addMaterial()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = request.getParameter("addNewMaterialForm:materialName");
+        String weight = request.getParameter("addNewMaterialForm:materialWeight");
+        stockManager.addMaterial(name, Double.parseDouble(weight));
+        this.materialList = stockManager.displayMaterialList();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
     }
 }
