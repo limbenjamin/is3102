@@ -5,6 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
     <h:body>
@@ -67,7 +68,7 @@
                         </table>
                         </div>
                     </div>
-                        <!-- Modal -->
+                        <!-- Modal for New BOM-->
                         <div class="modal fade" id="newBOM" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -95,12 +96,49 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
+                                            <button type="button" class="btn btn-round" data-toggle="modal" data-dismiss="modal" data-target="#newMaterial">New Material?</button>
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
                                             <h:commandButton action="bom.xhtml" actionListener="#{bOMManagedBean.addToBOM}" value="Add to BOM" class="btn btn-success btn-round"> 
                                                 <f:attribute name="fID" value="#{bOMManagedBean.furnitureID}" />
                                             </h:commandButton>
                                         </div>
                                     </h:form>
+                                </div>
+                            </div>
+                        </div> 
+                        <!-- Modal for New Material -->
+                        <div class="modal fade" id="newMaterial" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Material to BOM</h4>
+                                    </div>
+                                    <h:form id="addNewMaterialForm" class="form-horizontal">
+                                        <h:inputHidden value="#{bOMManagedBean.furnitureID}" id="fID" /> 
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Material Name: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText id="materialName" class="form-control" required="true"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Material Weight: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText id="materialWeight" class="form-control" required="true"></h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <a data-toggle="modal" data-dismiss="modal" data-target="#newBOM"> 
+                                            <h:commandButton action="bom.xhtml" value="Add New Material" class="btn btn-success btn-round" > 
+                                                <f:ajax listener="#{bOMManagedBean.addMaterial}" render=":addToBOMForm" /> 
+                                            </h:commandButton> <!-- 2 things: 1)Open modal from commandButton Add new Material -->
+                                            </a>
+                                        </div> 
+                                    </h:form> 
                                 </div>
                             </div>
                         </div> 
