@@ -32,17 +32,18 @@
                                     <p:dataTable value="#{productionOrderManagedBean.plannedPOList}" var="plannedPO" id="plannedTable">
                                         <p:column headerText="Batch No." sortBy="#{plannedPO.batchNo}">
                                             <h:outputText id="batchNo" value="#{plannedPO.batchNo}"></h:outputText>
-                                        </p:column>
+                                        </p:column> 
                                         <p:column headerText="Date" sortBy="#{plannedPO.prodOrderDate}">
-                                            <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time.date}/#{plannedPO.prodOrderDate.time.month}/#{plannedPO.prodOrderDate.time.year + 1900}" class="form-control transparent-form"></h:inputText>
+                                            <h:inputText value="#{plannedPO.prodOrderDate.time}" class="form-control transparent-form">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:inputText>
                                         </p:column>  
                                         <p:column headerText="Quantity">
                                             <h:inputText id="poQty" value="#{plannedPO.qty}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
                                         <p:column headerText="Edit">
-                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                            <h:commandButton class="btn btn-sm transparent-button" actionListener="#{productionOrderManagedBean.editPO}" style="outline:0;">
                                                 <f:attribute name="toEdit" value="#{plannedPO}" />
-                                                <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.editPO}"/>
                                             </h:commandButton>
                                             <i class="fa fa-lg fa-save icon-button"></i>
                                         </p:column>
@@ -63,7 +64,7 @@
                                 </h:form>
                                 </section>
                                 </div>
-                                
+                                 
                                 <div class="tab-pane" id="started">
                                     
                                 <!-- Started Tab -->
@@ -72,19 +73,22 @@
                                     <p:dataTable value="#{productionOrderManagedBean.startedPOList}" var="po" id="startedTable">
                                         <p:column headerText="Batch No." sortBy="#{po.batchNo}">
                                             <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
-                                        </p:column>
+                                        </p:column> 
                                         <p:column headerText="Date" sortBy="#{po.prodOrderDate}">
-                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                            <h:outputText value="#{po.prodOrderDate.time}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
                                         </p:column>
                                         <p:column headerText="Quantity">
                                             <h:outputText value="#{po.qty}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Completed Qty">
-                                            <h:inputText id="poQty" value="#{po.completedQty}" class="form-control transparent-form"></h:inputText>
+                                            <h:inputText id="poCompletedQty" value="#{po.completedQty}" class="form-control transparent-form"></h:inputText>
                                         </p:column>
-                                        <p:column headerText="Edit">
-                                            <h:commandButton actionListener="#{productionOrderManagedBean.editCompletedQty}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                <f:attribute name="toEdit" value="#{po}" /> 
+                                        <p:column headerText="Edit"> 
+                                            <h:commandButton actionListener="#{productionOrderManagedBean.editCompletedQty}" class="btn btn-sm transparent-button" style="outline:0;"><!---->
+                                                <f:attribute name="toEdit" value="#{po}" />
+                                       <!--         <f:ajax render="startedTable" listener="{productionOrderManagedBean.editCompletedQty}" />          -->
                                             </h:commandButton>
                                             <i class="fa fa-lg fa-save icon-button"></i> 
                                         </p:column>
@@ -110,7 +114,9 @@
                                             <h:outputText id="batchNo" value="#{po.batchNo}"></h:outputText>
                                         </p:column>
                                         <p:column headerText="Date" sortBy="#{po.prodOrderDate.time}">
-                                            <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                            <h:outputText value="#{po.prodOrderDate.time}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                            </h:outputText> 
                                         </p:column>
                                         <p:column headerText="Quantity">
                                             <h:outputText value="#{po.qty}"></h:outputText>

@@ -127,18 +127,22 @@ public class ProductionOrderManagedBean implements Serializable {
         }
     }
     
-    public void editPO(AjaxBehaviorEvent event) throws IOException, ParseException {
+    public void editPO(ActionEvent event) throws IOException, ParseException {
         System.out.println("ProductionOrderManagedBean.editPO()");
         po = (ProductionOrder) event.getComponent().getAttributes().get("toEdit");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
         System.out.println("Quantity is " + po.getQty() + ". Date is " + po.getProdOrderDate().getTime()); 
-        productionManager.editPO(po.getBatchNo(), po.getProdOrderDate(), 75); 
-    }
-    public void editCompletedQty(AjaxBehaviorEvent event) throws IOException {
-        System.out.println("ProductionOrderManagedBean.editCompletedQty()");
+        productionManager.editPO(po.getBatchNo(), po.getProdOrderDate(), po.getQty()); 
+    } 
+    public void editCompletedQty(ActionEvent event) throws IOException { 
+        System.out.println("ProductionOrderManagedBean.editCompletedQty()"); 
         po = (ProductionOrder) event.getComponent().getAttributes().get("toEdit");
         productionManager.editCompletedQty(po.getBatchNo(), po.getCompletedQty());
-    }
+        for(int i=0; i<startedPOList.size(); i++) {
+            if(startedPOList.get(i).getBatchNo().equals(po.getBatchNo())) {
+                startedPOList.get(i).setCompletedQty(po.getCompletedQty());
+            }
+        }
+    } 
     public void deletePO(AjaxBehaviorEvent event) {
         System.out.println("ProductionOrderManagedBean.deletePO()");
         Long batchNo = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("batchNo"));

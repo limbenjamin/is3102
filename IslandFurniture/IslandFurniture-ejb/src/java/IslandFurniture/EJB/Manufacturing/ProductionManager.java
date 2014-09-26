@@ -45,8 +45,6 @@ public class ProductionManager implements ProductionManagerLocal {
             System.out.println("ProductionManager.editPO()"); 
             System.out.println("Date is " + date.getTime().toString() + ". Quantity is " + qty);
             po = em.find(ProductionOrder.class, batchNo);
-            if(po == null)
-                System.out.println("PO is null");
             if(date != null)
                 po.setProdOrderDate(date);
             if(qty != null)
@@ -63,6 +61,7 @@ public class ProductionManager implements ProductionManagerLocal {
         ProductionOrder po;
         try {
             System.out.println("ProductionManager.editCompletedQty()");
+            System.out.println("Editing batchNo: " + batchNo + ". Changing completedQty to " + completedQty); 
             po = em.find(ProductionOrder.class, batchNo);
             if(completedQty != null) {
                 if(completedQty > po.getQty()) {
