@@ -14,6 +14,7 @@ import IslandFurniture.WAR.CommonInfrastructure.Exceptions.*;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -58,6 +59,8 @@ public class PersonalParticularsManagedBean implements Serializable {
       phoneNo = request.getParameter("particularsForm:phoneNo");
       emailAddress = request.getParameter("particularsForm:emailAddress");
       staffBean.modifyPersonalParticulars(username, phoneNo, emailAddress);
+    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        new FacesMessage(FacesMessage.SEVERITY_INFO, "Particulars modified",""));
       return "modifyparticulars";
     }
     
@@ -67,7 +70,9 @@ public class PersonalParticularsManagedBean implements Serializable {
       newPassword = request.getParameter("passwordForm:newPassword");
       confirmNewPassword = request.getParameter("passwordForm:confirmNewPassword");
       if (!newPassword.equals(confirmNewPassword)){
-        throw new NewPasswordsNotTheSameException();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "New passwords not the same",""));
+        return "changepassword";
       }
       HttpSession session = Util.getSession();
       username = (String) session.getAttribute("username");
@@ -75,9 +80,13 @@ public class PersonalParticularsManagedBean implements Serializable {
       hashedPassword = staff.getPassword();
       hashedOldPassword = SHA1Hash(staff.getSalt()+ oldPassword);
       if (!hashedOldPassword.equals(hashedPassword)){
-          throw new WrongPasswordException();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Old password is wrong",""));
+        return "changepassword";
       }
       authBean.changePassword(username, newPassword);
+    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        new FacesMessage(FacesMessage.SEVERITY_INFO, "Passwords Changed",""));
       return "changepassword";
     }
 

@@ -76,7 +76,7 @@
                                             <label class="col-sm-3 control-label">User Contact: </label>
                                             <div class="col-sm-9">
                                                 <h:selectManyListbox class="form-control needauto" value="#{messagingManagedBean.selectedRecipients}">
-                                                    <f:selectItems value="#{staffManagedBean.staffList}" var="s" itemLabel="#{s.name}" itemValue="#{s.username}" />
+                                                    <f:selectItems value="#{messagingManagedBean.staffList}" var="s" itemLabel="#{s.name}" itemValue="#{s.username}" />
                                                 </h:selectManyListbox>                                              
                                             </div>
                                           </div>
@@ -98,12 +98,14 @@
                                   All Contacts
                                 </div>
                                 <div class="list-group contact-list">                          
-                                    <ui:repeat value="#{staffManagedBean.staffList}" var="staff">
+                                    <ui:repeat value="#{messagingManagedBean.staffList}" var="staff">
                                       <a href="#" class="list-group-item">
                                           <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
                                           <span class="user-info">
                                               <h6>#{staff.name}</h6>
-                                              <p>#{staff.plant.name}, #{staff.plant.country.name}</p>
+                                              <p>Email: #{staff.emailAddress}<br />
+                                              Phone: #{staff.phoneNo}<br />
+                                              Branch: #{staff.plant.name}, #{staff.plant.country.name}</p>
                                           </span>
                                       </a>
                                     </ui:repeat>                                                               

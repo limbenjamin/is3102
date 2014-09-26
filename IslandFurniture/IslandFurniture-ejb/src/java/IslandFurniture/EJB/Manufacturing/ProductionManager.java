@@ -85,6 +85,7 @@ public class ProductionManager implements ProductionManagerLocal {
         ProductionOrder po;
         try {
             System.out.println("ProductionManager.editCompletedQty()");
+            System.out.println("Editing batchNo: " + batchNo + ". Changing completedQty to " + completedQty); 
             po = em.find(ProductionOrder.class, batchNo);
             if (completedQty != null) {
                 if (completedQty > po.getQty()) {

@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -76,6 +77,8 @@ public class BroadcastManagedBean implements Serializable {
       expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expireDateString);
       announcementBean.addAnnouncement(username, title, content, activeDate, expireDate);
       announcementList = announcementBean.getMyAnnouncements(username);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
       return "broadcast";
     }
     
@@ -84,6 +87,8 @@ public class BroadcastManagedBean implements Serializable {
       announcement = (Announcement) event.getComponent().getAttributes().get("toEdit");
       announcementBean.editAnnouncement(announcement.getId(),announcement.getTitle(),announcement.getContent(),announcement.getActiveDate(),announcement.getExpireDate());
       announcementList = announcementBean.getMyAnnouncements(username);
+          FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement edited",""));
       return "broadcast";
     }
     
@@ -91,6 +96,8 @@ public class BroadcastManagedBean implements Serializable {
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       announcementBean.deleteAnnouncement(id);
       announcementList = announcementBean.getMyAnnouncements(username);
+          FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement deleted",""));
       return "broadcast";
     }
     
@@ -106,6 +113,8 @@ public class BroadcastManagedBean implements Serializable {
       eventTime = cal;
       eventBean.addEvent(name, description, eventTime, username);
       eventList = eventBean.getMyEvents(username);
+          FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Event added",""));
       return "broadcast";
     }
     
@@ -115,6 +124,8 @@ public class BroadcastManagedBean implements Serializable {
       event = (Event) Aevent.getComponent().getAttributes().get("toEdit");
       eventBean.editEvent(event.getName(), event.getDescription(), event.getEventTime(), event.getId());
       eventList = eventBean.getMyEvents(username);
+          FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Event edited",""));
       return "broadcast";
     }
     
@@ -122,6 +133,8 @@ public class BroadcastManagedBean implements Serializable {
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       eventBean.deleteEvent(id);
       eventList = eventBean.getMyEvents(username);
+          FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Event deleted",""));
       return "broadcast";
     }
 

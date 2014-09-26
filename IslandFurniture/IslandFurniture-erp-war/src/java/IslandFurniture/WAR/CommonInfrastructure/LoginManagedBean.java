@@ -127,13 +127,8 @@ public class LoginManagedBean implements Serializable {
             }            
             return "dash";
         } else {
-
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "Invalid Login!",
-                            "Please Try Again!"));
-
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username or password",""));
             // invalidate session, and redirect to other pages
             //message = "Invalid Login. Please Try Again!";
             return "login";

@@ -83,7 +83,7 @@ public class FurnitureManagedBean implements Serializable {
         System.out.println("FurnitureManagedBean.editFurnitureModel()");
         furniture = (FurnitureModel) event.getComponent().getAttributes().get("toEdit");
         stockManager.editFurnitureModel(furniture.getId(), furniture.getName(), furniture.getPrice());
-        return "retailItem";
+        return "furniture";
     }
     public String deleteFurnitureModel() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();

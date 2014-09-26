@@ -60,9 +60,6 @@ public class ResetPasswordManagedBean {
                 }
             }
         }
-        System.err.println(uri);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "",""));
     }
     
 

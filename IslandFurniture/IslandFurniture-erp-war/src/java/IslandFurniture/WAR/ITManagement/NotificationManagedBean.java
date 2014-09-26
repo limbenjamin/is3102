@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -59,6 +60,8 @@ public class NotificationManagedBean {
     public String deleteNotification(){
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mnb.deleteNotification(id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Notification deleted",""));
         return "notification";
     }
 
