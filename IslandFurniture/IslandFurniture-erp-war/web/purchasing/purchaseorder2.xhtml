@@ -16,6 +16,7 @@
                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{purchaseOrderManaged2Bean.plant.timeZoneID}"  /></h:outputText></strong>
                             | Status: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.status}</strong>
                         </h5>
+                        <h:messages globalOnly="true" />
                         <table class="table table-hover">
                             <tr>
                                 <th>Change Order Date</th>
@@ -64,9 +65,7 @@
                                                 #{pod.id}
                                             </td>                                            
                                             <td>
-                                                <h:selectOneMenu id="procuredStockId" class="form-control needauto" value="#{pod.procuredStock.id}">
-                                                    <f:selectItems value="#{purchaseOrderManaged2Bean.procuredStockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                                </h:selectOneMenu>
+                                                <h:outputText id="procuredStockId" value="#{pod.procuredStock.name}" />
                                             </td>
                                             <td>
                                                 <h:inputText id="quantity" value="#{pod.quantity}" class="form-control"></h:inputText>
@@ -111,9 +110,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Quantity: </label>
                                         <div class="col-sm-9">
-                                            <h:inputText id="quantity" class="form-control">
-                                                <f:convertNumber integerOnly="true" type="number" />
-                                            </h:inputText>
+                                            <h:inputText id="quantity" class="form-control" />
                                         </div>
                                     </div>                                                                                     
                                 </div>

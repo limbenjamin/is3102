@@ -14,6 +14,7 @@ import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.EJB.Exceptions.DuplicateEntryException;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.SalesPlanning.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -27,11 +28,11 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -103,17 +104,15 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
         quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
-        mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-
-        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
-        if (purchaseOrderId != null) {
-            purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+        try {
+            mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
+            purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+        } catch (DuplicateEntryException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
+        } finally {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+            return "purchaseorder2";
         }
-        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-
-        return "purchaseorder2";
     }
 
     // new update purchase order method
@@ -141,16 +140,21 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
-        mpol.updatePurchaseOrderDetail(pod, pod.getProcuredStock().getId(), pod.getQuantity());
+        
+        mpol.updatePurchaseOrderDetail(pod, pod.getQuantity());
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+
         return "purchaseorder2?faces-redirect=true";
     }
 
     public String deletePurchaseOrderDetail() {
         purchaseOrderDetailId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("PODid"));
+        
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
+        
         return "purchaseorder2";
     }
 
