@@ -5,6 +5,7 @@
  */
 package IslandFurniture.WAR.SalesPlanning;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
@@ -15,6 +16,7 @@ import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Exceptions.ForecastFailureException;
 import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Exceptions.InvalidMssrException;
+import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -38,6 +40,10 @@ import javax.servlet.http.HttpSession;
 @ManagedBean(name = "createForecastManagedBean")
 @ViewScoped
 public class CreateForecastManagedBean implements Serializable {
+    @EJB
+    private ManageRolesBeanLocal manageRolesBean;
+    @EJB
+    private ManageNotificationsBeanLocal manageNotificationsBean;
 
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
@@ -159,6 +165,8 @@ public class CreateForecastManagedBean implements Serializable {
 
             salesForecastBean.saveMonthlyStockSupplyReq(coupleList);
 
+            manageNotificationsBean.createNewNotificationForRoleFromPlant("Pending Requirements Forecast", "New requirements forecast awaiting your approval", "/salesplanning/reviewforecast.xhtml", "Review Forecast", manageRolesBean.getRoleFromName("Sales Planning (CO)"), co);
+            
             statusMessage = "Forecast saved successfully!";
         } catch (InvalidMssrException ex) {
             statusMessage = "Error saving forecast: " + ex.getMessage();
