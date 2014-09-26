@@ -4,7 +4,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
 
@@ -14,11 +14,11 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}">
-                        <h:form> 
-                            <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
-                                <i class="fa fa-fw fa-plus"></i>Move Stock
-                            </button>  
-                        </h:form>
+                            <h:form> 
+                                <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
+                                    <i class="fa fa-fw fa-plus"></i>Move Stock
+                                </button>  
+                            </h:form>
                         </h:panelGroup>
 
                         <section name="View Contents of Storage Location">
@@ -66,7 +66,7 @@
 
 
                         <section name="Edit Stock">
-                             
+
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Movement of Stock
                             </div>
@@ -138,7 +138,7 @@
                                                     <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}">
+                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}" pt:required="true">
                                                             <f:selectItem itemLabel="Select Stock Unit ID" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -150,7 +150,7 @@
 
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}">
+                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}" pt:required="true">
                                                             <p:ajax listener="#{inventoryTransferMovementLocationManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                                             <f:selectItem itemLabel="Select Storage Area" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
@@ -163,7 +163,7 @@
                                                     <label class="col-sm-3 control-label" >New Storage Bin: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}">
+                                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}" pt:required="true">
                                                             <f:selectItem itemLabel="Select Storage Bin" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -174,7 +174,7 @@
                                                     <label class="col-sm-3 control-label">Quantity: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-user"></i>
-                                                        <h:inputText class="form-control" value="#{inventoryTransferMovementLocationManagedBean.stockUnitQuantity}"></h:inputText>
+                                                        <h:inputText class="form-control" pt:type="number"  pt:required="true" value="#{inventoryTransferMovementLocationManagedBean.stockUnitQuantity}"></h:inputText>
                                                     </div>
                                                 </div>
                                             </div>

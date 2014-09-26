@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -131,11 +132,19 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = msul.getStorageBin(storageBinId);
 
-        msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
-        msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+        if (stockUnitQuantity > stockUnit.getQty()) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+        } else {
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
-        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+            msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+            msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+        }
     }
 
     public void deleteStockUnitTemp(ActionEvent event) throws IOException {
@@ -208,16 +217,14 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         this.ifStockUnitListEmpty = ifStockUnitListEmpty;
     }
 
-    
-    
     public String getBatchNumber() {
         return batchNumber;
     }
 
     public void setBatchNumber(String batchNumber) {
         this.batchNumber = batchNumber;
-    }    
-    
+    }
+
     public List<StockUnit> getStockUnitMovementAnotherList() {
         return stockUnitMovementAnotherList;
     }

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -39,7 +40,7 @@
                                                     <td>#{s.qty}</td>
                                                     <td>
                                                         <div class="col-sm-9 inner-addon right-addon">
-                                                            <h:inputText class="form-control" value="#{s.qty}"></h:inputText>
+                                                            <h:inputText class="form-control" value="#{s.qty}" pt:required="true" pt:type="number"></h:inputText>
                                                         </div></td>
                                                     <td><h:commandButton actionListener="#{inventoryMonitoringLocationManagedBean.editStockTakeQuantity}"  value="Update" class="btn btn-success btn-xs">
                                                             <f:attribute name="storageBinId" value="#{inventoryMonitoringLocationManagedBean.storageBin.id}" />

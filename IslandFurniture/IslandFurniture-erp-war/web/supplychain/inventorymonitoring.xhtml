@@ -1,10 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
     <h:body>
@@ -19,7 +19,7 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Stock Units</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="stockId" class="form-control" value="#{inventoryMonitoringManagedBean.stockId}">
+                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryMonitoringManagedBean.stockId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Stock" />
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                         </h:selectOneMenu>
@@ -40,7 +40,7 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Storage Area</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageArea" class="form-control" value="#{inventoryMonitoringManagedBean.storageAreaId}">
+                                        <h:selectOneMenu id="storageArea" class="form-control needauto" value="#{inventoryMonitoringManagedBean.storageAreaId}" pt:required="true">
                                             <p:ajax listener="#{inventoryMonitoringManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                             <f:selectItem itemLabel="Select Storage Area" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
@@ -50,7 +50,7 @@
 
                                     <label class="col-sm-4 control-label">Storage Bin</label>
                                     <div class="col-sm-8" for="storageBinMenu">
-                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Storage Bin" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
@@ -70,7 +70,7 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Stock Take by Stock ID</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="stockId" class="form-control" value="#{inventoryMonitoringManagedBean.stockId}">
+                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryMonitoringManagedBean.stockId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Stock" />
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                         </h:selectOneMenu>
@@ -86,7 +86,7 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Storage Area</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="storageArea" class="form-control" value="#{inventoryMonitoringManagedBean.storageAreaId}">
+                                        <h:selectOneMenu id="storageArea" class="form-control needauto" value="#{inventoryMonitoringManagedBean.storageAreaId}" pt:required="true">
                                             <p:ajax listener="#{inventoryMonitoringManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                             <f:selectItem itemLabel="Select Storage Area" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageAreaList}" var="storageArea" itemLabel="#{storageArea.name}" itemValue="#{storageArea.id}" />
@@ -96,7 +96,7 @@
 
                                     <label class="col-sm-4 control-label">Storage Bin</label>
                                     <div class="col-sm-8" for="storageBinMenu">
-                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryMonitoringManagedBean.storageBinId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Storage Bin" noSelectionOption="true"/>
                                             <f:selectItems value="#{inventoryMonitoringManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>

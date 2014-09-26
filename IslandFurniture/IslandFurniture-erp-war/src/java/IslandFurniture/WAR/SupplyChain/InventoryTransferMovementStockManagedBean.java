@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -93,10 +94,11 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     public boolean ifBatchNoEmpty(String batchNo) {
         if (batchNo.isEmpty()) {
             return true;
+        } else {
+            return false;
         }
-        else return false;
     }
-    
+
     public void updateBatchNumber(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNumber", event.getComponent().getAttributes().get("batchNumber"));
@@ -143,10 +145,16 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = msul.getStorageBin(storageBinId);
 
-        msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
-        msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
-
-        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
+        if (stockUnitQuantity > stockUnit.getQty()) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
+        } else {
+            msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+            msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
+        }
     }
 
     public void deleteStockUnitTemp(ActionEvent event) throws IOException {

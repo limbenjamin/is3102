@@ -117,7 +117,7 @@
                                 <h:form class="form-horizontal">
 
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
+                                        <h:selectOneMenu class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
                                             <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                             <f:selectItem itemLabel="Select Storage Location" />
                                             <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
