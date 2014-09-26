@@ -21,7 +21,7 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Transfer by Stock ID</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="stockId" class="form-control" value="#{inventoryTransferManagedBean.stockId}">
+                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferManagedBean.stockId}">
                                             <f:selectItem itemLabel="Select Stock" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                         </h:selectOneMenu>

@@ -17,41 +17,41 @@
                         </section>
 
                         <section name="Table of Contents of the Stock Items">
-                                                                        <div class="panel-heading dashboard-title-panel">
-                                    List of Storage Locations
-                                </div>
-                                <div class="list-group-item">
-                            <table class="table table-hover table-condensed">
-                                <tr>
-                                    <th>Stock Unit Number</th>     
-                                    <th>Storage Area</th>
-                                    <th>Storage Bin</th> 
-                                    <th>Batch Number</th>
-                                    <th>Current Quantity</th>
-                                    <th>Stock Take Quantity</th>
-                                </tr>
-                                <h:form class="form-horizontal">
-                                    <ui:repeat value="#{inventoryMonitoringStockManagedBean.stockUnitList}" var="s">
-                                        <tr>
-                                            <td>#{s.id}</td>
-                                            <td>#{s.location.storageArea.name}</td>
-                                            <td>#{s.location.name}</td>
-                                            <td>#{s.batchNo}</td>
-                                            <td>#{s.qty}</td>
-                                            <td>
-                                                <div class="col-sm-9 inner-addon right-addon">
-                                                    <h:inputText class="form-control" value="#{s.qty}"></h:inputText>
-                                                </div></td>
-                                            <td><h:commandButton actionListener="#{inventoryMonitoringStockManagedBean.editStockTakeQuantity}"  value="Update" class="btn btn-success btn-xs">
-                                                    <f:attribute name="stockId" value="#{inventoryMonitoringStockManagedBean.stock.id}" />
-                                                    <f:attribute name="stockUnitId" value="#{s.id}" />
-                                                    <f:attribute name="stockTakeQuantity" value="#{s.qty}" />
-                                                </h:commandButton></td>
-                                        </tr>
-                                    </ui:repeat>
-                                </h:form> 
-                            </table> 
-                                </div>
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Storage Locations
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Stock Unit Number</th>     
+                                        <th>Storage Area</th>
+                                        <th>Storage Bin</th> 
+                                        <th>Batch Number</th>
+                                        <th>Current Quantity</th>
+                                        <th>Stock Take Quantity</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{inventoryMonitoringStockManagedBean.stockUnitList}" var="s">
+                                            <tr>
+                                                <td>#{s.id}</td>
+                                                <td>#{s.location.storageArea.name}</td>
+                                                <td>#{s.location.name}</td>
+                                                <td>#{s.batchNo}</td>
+                                                <td>#{s.qty}</td>
+                                                <td>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <h:inputText class="form-control" value="#{s.qty}"></h:inputText>
+                                                    </div></td>
+                                                <td><h:commandButton actionListener="#{inventoryMonitoringStockManagedBean.editStockTakeQuantity}"  value="Update" class="btn btn-success btn-xs">
+                                                        <f:attribute name="stockId" value="#{inventoryMonitoringStockManagedBean.stock.id}" />
+                                                        <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                        <f:attribute name="stockTakeQuantity" value="#{s.qty}" />
+                                                    </h:commandButton></td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table> 
+                            </div>
                         </section>       
                     </div>
                 </div>

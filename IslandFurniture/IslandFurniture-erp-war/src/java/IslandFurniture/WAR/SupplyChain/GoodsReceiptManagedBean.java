@@ -88,12 +88,13 @@ public class GoodsReceiptManagedBean implements Serializable {
     public String updateIncomingShipmentStatus(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
-         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("shipmentStatus", event.getComponent().getAttributes().get("shipmentStatus"));
-         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
-        ifShipmentReceived = (boolean) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("shipmentStatus");
-        if (ifShipmentReceived) mgrl.updateIncomingShipmentStatus(goodsIssuedDocumentId);
+        
+        System.out.println("The goodsIssuedDocumentId is null, it is: " + goodsIssuedDocumentId);
+        
+        mgrl.updateIncomingShipmentStatus(goodsIssuedDocumentId);
         inboundShipmentList = mgrl.viewInboundShipment(plant);
-        return "goodsreceiptdocument?faces-redirect=true";
+        ifInboundShipmentListEmpty = inboundShipmentList.isEmpty();
+        return "goodsreceipt?faces-redirect=true";
     }
 
     public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {

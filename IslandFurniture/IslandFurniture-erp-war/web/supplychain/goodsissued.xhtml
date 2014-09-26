@@ -15,7 +15,8 @@
                             <h:commandButton action="#{goodsIssuedManagedBean.addGoodsIssuedDocument}" value="Create Goods Issued Document" class="btn btn-success pull-right btn-right-margin"></h:commandButton>
                         </h:form>    
                         <h4>Goods Issued</h4><hr></hr>
-
+              
+                        
                         <section name="viewGRD">
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Goods Issued
@@ -83,10 +84,10 @@
                                                         <h:outputText value="#{GRD.issuedDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
-                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" value="View" class="btn btn-primary btn-xs"> 
+                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GRDid" value="#{GRD.id}" />
                                                         </h:commandButton>
-                                                    </td>
+                                                    <i class="fa fa-lg fa-search-plus icon-button"></i></td>
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 

@@ -77,7 +77,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     public void updateIncomingShipmentStatus(Long id) {
         goodsIssuedDocument = getGoodsIssuedDocument(id);
         goodsIssuedDocument.setReceived(true);
-        em.merge(goodsReceiptDocument);
+        em.merge(goodsIssuedDocument);
         em.flush();
     }
 
@@ -155,7 +155,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public List<GoodsIssuedDocument> viewInboundShipment(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE and s.deliverTo.id=:plantId");
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE AND s.deliverTo.id=:plantId AND s.received=FALSE");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }

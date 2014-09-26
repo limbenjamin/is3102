@@ -31,8 +31,7 @@
                                         <th>Goods Issued ID</th>
                                         <th>Issued Date</th>
                                         <th>Posting Date</th>
-                                        
-                                        <td>Issued To</td>
+                                        <th>Issued To</th>
                                     </tr>
                                     <h:form id="editGRD" class="form-horizontal">
                                         <ui:repeat value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentList}" var="grd">
@@ -45,7 +44,7 @@
                                                     <td><h:outputText value="#{grd.postingDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
                                                         </h:outputText></td>
-                                                    
+
                                                     <td>#{grd.deliverTo.name}</td>
                                                 </tr>
 
@@ -55,7 +54,7 @@
                                 </table>
                             </div>
                         </section>
-                        
+
                         <br/>
 
                         <section name="GoodsIssuedDocumentDetail">

@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -40,8 +40,10 @@
                                                 <td>#{s.location.storageArea.name}</td>
                                                 <td>#{s.location.name}</td>
                                                 <td>#{s.qty}</td>
-                                                <td><h:inputText value="#{s.batchNo}" class="form-control"></h:inputText></td>
-                                                <td><h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.updateBatchNumber}"  value="Update" class="btn btn-success btn-xs"> 
+                                                <td><h:inputText value="#{s.batchNo}" class="form-control" rendered="#{inventoryTransferMovementStockManagedBean.ifBatchNoEmpty(s.batchNo)}"/>
+                                                    <h:outputText rendered="#{!inventoryTransferMovementStockManagedBean.ifBatchNoEmpty(s.batchNo)}" value="#{s.batchNo}"/>
+                                                </td>
+                                                <td><h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.updateBatchNumber}"  value="Update" class="btn btn-success btn-xs" rendered="#{inventoryTransferMovementStockManagedBean.ifBatchNoEmpty(s.batchNo)}"> 
                                                         <f:attribute name="stockId" value="#{s.stock.id}" />
                                                         <f:attribute name="stockUnitId" value="#{s.id}" />
                                                         <f:attribute name="batchNumber" value="#{s.batchNo}" />

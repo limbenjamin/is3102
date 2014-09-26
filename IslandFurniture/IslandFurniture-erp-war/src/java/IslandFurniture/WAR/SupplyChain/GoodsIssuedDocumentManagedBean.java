@@ -56,6 +56,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     private Calendar postingDate;
     private Calendar issuedDate;
+    private Calendar issuedDateCal;
 
     private Stock stock;
     private Integer quantity;
@@ -73,8 +74,10 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
     private Plant plant;
+    private Plant plantSendTo;
     private StorageBin storageBin;
     private StockUnit stockUnit;
+    private StockUnit stockUnitOld;
 
     @EJB
     public ManageGoodsIssuedLocal mgrl;
@@ -90,7 +93,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     @EJB
     public ManageInventoryMonitoringLocal miml;
-    
+
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
@@ -118,15 +121,15 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         if (goodsIssuedDocument.getIssuedDate() != null) {
             issuedDateString = df.format(goodsIssuedDocument.getIssuedDate().getTime());
         }
-        
+
         if (goodsIssuedDocument.getDeliverTo() != null) {
             plantId = goodsIssuedDocument.getDeliverTo().getId();
         }
-        
+
         plantList = mgrl.viewPlant();
         plantList.remove(plant);
         System.out.println("Init");
-        
+
     }
 
     public String krefresh() {
@@ -144,11 +147,23 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         plantId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("plantId");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         issuedDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-        issuedDateType = new SimpleDateFormat("yyyy-MM-dd").parse(issuedDateString);
-        Calendar issuedDateCal = Calendar.getInstance();
-        Date date = issuedDateType;
-        issuedDateCal.setTime(date);
-        mgrl.editGoodsIssuedDocument(grd.getId(), issuedDateCal, plantId);
+
+        if (plantId == null) {
+            plantSendTo = null;
+        } else {
+            plantSendTo = mgrl.getPlant(plantId);
+        }
+
+        if (issuedDateString.isEmpty()) {
+            issuedDateCal = null;
+        } else {
+            issuedDateType = new SimpleDateFormat("yyyy-MM-dd").parse(issuedDateString);
+            issuedDateCal = Calendar.getInstance();
+            Date date = issuedDateType;
+            issuedDateCal.setTime(date);
+        }
+
+        mgrl.editGoodsIssuedDocument(grd.getId(), issuedDateCal, plantSendTo);
         return "goodsissueddocument";
     }
 
@@ -196,10 +211,42 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
             mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
             mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
             msul.deleteStockUnit(g.getId());
+
+            // Start: To check if Quantity = 0
+            stockUnitOld = mgrl.getStockUnit(g.getCommitStockUnitId());
+            if (stockUnitOld.getQty() == 0) {
+                msul.deleteStockUnit(stockUnitOld.getId());
+            }
+            // End
+
         }
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
+    }
+
+    public StockUnit getStockUnitOld() {
+        return stockUnitOld;
+    }
+
+    public void setStockUnitOld(StockUnit stockUnitOld) {
+        this.stockUnitOld = stockUnitOld;
+    }
+        
+    public Plant getPlantSendTo() {
+        return plantSendTo;
+    }
+
+    public void setPlantSendTo(Plant plantSendTo) {
+        this.plantSendTo = plantSendTo;
+    }
+
+    public Calendar getIssuedDateCal() {
+        return issuedDateCal;
+    }
+
+    public void setIssuedDateCal(Calendar issuedDateCal) {
+        this.issuedDateCal = issuedDateCal;
     }
 
     public boolean isIfStockUnitMainListEmpty() {
@@ -209,7 +256,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public void setIfStockUnitMainListEmpty(boolean ifStockUnitMainListEmpty) {
         this.ifStockUnitMainListEmpty = ifStockUnitMainListEmpty;
     }
-        
+
     public Long getPlantId() {
         return plantId;
     }
@@ -474,6 +521,4 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.miml = miml;
     }
 
-    
-    
-  }
+}

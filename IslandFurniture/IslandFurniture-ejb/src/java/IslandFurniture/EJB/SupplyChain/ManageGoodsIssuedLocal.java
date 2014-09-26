@@ -65,7 +65,7 @@ public interface ManageGoodsIssuedLocal {
 
     List<StorageBin> viewStorageBin(Plant plant);
 
-    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Long plantId);
+    void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Plant plant);
 
     void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
     

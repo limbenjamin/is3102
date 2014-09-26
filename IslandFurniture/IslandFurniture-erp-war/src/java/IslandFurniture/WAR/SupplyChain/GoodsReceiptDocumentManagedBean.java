@@ -143,6 +143,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
+        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("purchaseOrderId", event.getComponent().getAttributes().get("purchaseOrderId"));
         purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("purchaseOrderId");
 
@@ -152,23 +153,20 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
             purchaseOrder = mgrl.getPurchaseOrder(purchaseOrderId);
         }
 
-        receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-
         if (receiptDateString.isEmpty()) {
             receiptDateCal = null;
         } else {
             receiptDateType = new SimpleDateFormat("yyyy-MM-dd").parse(receiptDateString);
-            Calendar receiptDateCal = Calendar.getInstance();
+            receiptDateCal = Calendar.getInstance();
             Date date = receiptDateType;
             receiptDateCal.setTime(date);
         }
-        
+
         deliveryNote = grd.getDeliveryNote();
-        
         if (deliveryNote.isEmpty()) {
             deliveryNote = null;
         }
-  
+
         mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, purchaseOrder, deliveryNote);
         return "goodsreceiptdocument";
     }
@@ -223,7 +221,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     public void setReceiptDateCal(Calendar receiptDateCal) {
         this.receiptDateCal = receiptDateCal;
     }
-    
+
     public String getDeliveryNote() {
         return deliveryNote;
     }
@@ -231,7 +229,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     public void setDeliveryNote(String deliveryNote) {
         this.deliveryNote = deliveryNote;
     }
-    
+
     public PurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
