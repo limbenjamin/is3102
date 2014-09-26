@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -111,6 +112,8 @@ public class DashManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         notes = request.getParameter("notesForm:notes");
         staffBean.modifyNote(username, notes);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Notes modified",""));
         return "dash";
     }
 
@@ -120,6 +123,8 @@ public class DashManagedBean implements Serializable {
         dateString = request.getParameter("todoForm:dueDate");
         date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
         todoBean.addTodoItem(username, description, date);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Todo added",""));
         return "dash";
     }
 
@@ -127,6 +132,8 @@ public class DashManagedBean implements Serializable {
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         todoBean.deleteTodoItem(id);
         todoList = staff.getTodoList();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Todo completed",""));
         return "dash";
     }
 

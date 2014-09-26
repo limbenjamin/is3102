@@ -19,7 +19,8 @@ import javax.persistence.PostPersist;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "findStorageBinByName", query = "SELECT s FROM StorageBin s WHERE s.name = :name AND s.storageArea = :sa")
+    @NamedQuery(name = "findStorageBinByName", query = "SELECT s FROM StorageBin s WHERE s.name = :name AND s.storageArea = :sa"),
+    @NamedQuery(name = "findStorageBinByAreaType", query = "SELECT s FROM StorageBin s WHERE s.storageArea.plant = :plant AND s.storageArea.type = :saType")
 })
 public class StorageBin implements Serializable {
 

@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Web Application Admin Dashboard</title>
@@ -39,11 +40,21 @@
             <!-- /top header -->
 
             <div class="container-fluid">
-                <div class="login-container">    
+                <div class="login-container">
                     <div class="container login-box">
+                        <c:if test="${flash.message.severity == 'ERROR 2'}">
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <strong><h:outputText value="#{flash.message.summary}" /></strong>
+                            </div>
+                        </c:if>
+                        <c:if test="${flash.message.severity == 'INFO 0'}">
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <strong><h:outputText value="#{flash.message.summary}" /></strong>
+                            </div>
+                        </c:if>
                         <h5 class="centered-title">Welcome Staff</h5>
                         <p class="text-center">Sign In To Your Account</p>
-                        <h:outputText value="#{flash.keep.message.summary}" />
+                        <h:messages errorClass="errorMessage" infoClass="infoMessage" layout="table" globalOnly="true" showDetail="false" showSummary="true"/>
                         <h:form id="loginForm" class="form-horizontal" pt:role="form">                   
                             <div class="form-group">
                                 <div class="col-sm-12">

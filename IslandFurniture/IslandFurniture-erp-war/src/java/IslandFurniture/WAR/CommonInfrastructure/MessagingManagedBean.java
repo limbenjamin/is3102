@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -38,7 +39,7 @@ public class MessagingManagedBean implements Serializable {
     private String title = null;
     private String recipients = "";
     private Staff staff;
-    private List<Staff> listStaff;
+    private List<Staff> staffList;
     private String[] selectedRecipients;
     
     @EJB
@@ -53,7 +54,7 @@ public class MessagingManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         this.inbox = messageBean.displayAllThreads(username);
-        listStaff = msaBean.displayAllStaffAccounts();
+        staffList = msaBean.displayAllStaffAccounts();
     }
     
     public String addThread() {
@@ -69,12 +70,16 @@ public class MessagingManagedBean implements Serializable {
       recipients += username;
       messageBean.createNewThread(title, recipients);
       recipients = "";
+    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Thread added",""));
       return "messaging";
     }
     
     public String unsubThread() {
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       messageBean.unsubscribeFromThread(username, id);
+    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+              new FacesMessage(FacesMessage.SEVERITY_INFO, "Unsubscribed from thread",""));
       return "messaging";
     }
 
@@ -150,12 +155,12 @@ public class MessagingManagedBean implements Serializable {
         this.id = id;
     }
 
-    public List<Staff> getListStaff() {
-        return listStaff;
+    public List<Staff> getStaffList() {
+        return staffList;
     }
 
-    public void setListStaff(List<Staff> listStaff) {
-        this.listStaff = listStaff;
+    public void setStaffList(List<Staff> staffList) {
+        this.staffList = staffList;
     }
 
     public ManageStaffAccountsBeanLocal getMsaBean() {

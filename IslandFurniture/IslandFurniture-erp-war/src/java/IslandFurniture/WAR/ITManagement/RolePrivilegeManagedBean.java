@@ -16,6 +16,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -64,12 +65,16 @@ public class RolePrivilegeManagedBean  implements Serializable  {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         roleName = request.getParameter("roleForm:roleName");
         mrbl.createRole(roleName);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role added",""));
         return "roleprivilege";
     }
     
     public String deleteRole(){
         roleId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mrbl.removeRole(roleId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role deleted",""));
         return "roleprivilege";
     }
 

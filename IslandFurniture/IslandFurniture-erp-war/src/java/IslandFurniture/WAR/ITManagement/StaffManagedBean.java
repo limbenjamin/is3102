@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -77,18 +78,24 @@ public class StaffManagedBean  implements Serializable  {
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
         msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
         return "managestaff";
     }
     
     public String deleteStaff(){
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         msabl.deleteStaffAccount(id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff deleted",""));
         return "managestaff";
     }
     
     public String resetpassword(){
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mabl.resetPasswordByAdmin(id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Password reseted",""));
         return "managestaff";
     }
 

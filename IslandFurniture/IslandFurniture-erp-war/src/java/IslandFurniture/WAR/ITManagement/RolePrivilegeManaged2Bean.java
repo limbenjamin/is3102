@@ -12,10 +12,12 @@ import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -37,6 +39,7 @@ public class RolePrivilegeManaged2Bean  implements Serializable  {
     private List<Privilege> globalPrivilegeList;
     private String privilegeName;
     private Role role;
+    private Privilege privilege;
     
     @EJB
     private ManageRolesBeanLocal mrbl;
@@ -59,13 +62,11 @@ public class RolePrivilegeManaged2Bean  implements Serializable  {
         privilegeList = mrbl.getPrivileges(id);
         role = mrbl.getRole(id);
         //should not be able to add privilege that already exists
-        //TODO: fix this, currently broken
-        /*for(Iterator<Privilege> i = globalPrivilegeList.iterator(); i.hasNext(); ) {
-            Privilege p = i.next();
-            if (privilegeList.contains(p)){
-                globalPrivilegeList.remove(p);
-            }
-        }*/
+        Iterator<Privilege> iterator = privilegeList.iterator();
+        while (iterator.hasNext()) {
+            Privilege p = iterator.next();
+            globalPrivilegeList.remove(p);
+        }
     }
     
     public String displayPrivileges() {
@@ -81,6 +82,10 @@ public class RolePrivilegeManaged2Bean  implements Serializable  {
         HttpSession session = Util.getSession();
         id = (Long)  session.getAttribute("roleid");
         mrbl.addPrivilegeToRole(id, privilegeName);
+        privilege = mpbl.getPrivilegeFromName(privilegeName);
+        globalPrivilegeList.remove(privilege);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Privilege Added",""));
         return "roleprivilege2";
     }
     
@@ -89,6 +94,8 @@ public class RolePrivilegeManaged2Bean  implements Serializable  {
         HttpSession session = Util.getSession();
         id = (Long)  session.getAttribute("roleid");
         mrbl.removePrivilegeFromRole(id, privilegeId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Privilege Removed",""));
         return "roleprivilege2";
     }
 
@@ -163,7 +170,14 @@ public class RolePrivilegeManaged2Bean  implements Serializable  {
     public void setRole(Role role) {
         this.role = role;
     }
-    
+
+    public Privilege getPrivilege() {
+        return privilege;
+    }
+
+    public void setPrivilege(Privilege privilege) {
+        this.privilege = privilege;
+    }
     
     
 }

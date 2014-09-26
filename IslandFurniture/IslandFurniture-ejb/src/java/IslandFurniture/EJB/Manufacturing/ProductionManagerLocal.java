@@ -3,11 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Manufacturing;
 
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.ProductionOrder;
+import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.EJB.Exceptions.InsufficientMaterialException;
+import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import java.util.Calendar;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -21,10 +25,11 @@ public interface ProductionManagerLocal {
 
     public ProductionOrder editPO(Long batchNo, Calendar date, Integer qty);
 
-    public ProductionOrder commencePO(Long batchNo);
+    public ProductionOrder commencePO(Long batchNo, Long binId) throws InvalidInputException, InsufficientMaterialException;
 
     public ProductionOrder editCompletedQty(Long batchNo, Integer completedQty);
 
-    public ProductionOrder completePO(Long batchNo);
-    
+    public ProductionOrder completePO(Long batchNo, Long binId) throws InvalidInputException;
+
+    public List<StorageBin> viewProductionBins(ManufacturingFacility mf);
 }
