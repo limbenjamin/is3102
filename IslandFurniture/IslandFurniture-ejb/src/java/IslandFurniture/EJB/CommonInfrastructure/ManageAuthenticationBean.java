@@ -121,7 +121,7 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         staff = (Staff) em.find(Staff.class, id);
         password = Long.toHexString(Double.doubleToLongBits(Math.random()));
         try {
-            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Resetted", "Your new password is: "+password);
+            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Reseted", "Your new password is: "+password);
         } catch (Exception ex) {
             Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
         }

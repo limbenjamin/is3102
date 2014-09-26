@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -85,7 +86,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
             default:
                 break;
         }
-        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Plant added",""));
         return "manageplant";
     }
     
@@ -98,6 +100,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         System.err.println("herehere "+countryOffice.getName());
         mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), countryOffice);
         storeList = mohBean.displayStore();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Store edited",""));
         return "manageplant";
     }
     
@@ -108,6 +112,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         countryOffice = mohBean.findCountryOfficeByName(temp);
         mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), countryOffice);
         mfList = mohBean.displayManufacturingFacility();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing Faciility Edited",""));
         return "manageplant";
     }
     
@@ -118,6 +124,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         country = mohBean.findCountryByName(temp);
         mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), country, countryOffice.getTimeZoneID());
         coList = mohBean.displayCountryOffice();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office edited",""));
         return "manageplant";
     }
     
@@ -129,6 +137,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         timezone = request.getParameter("coForm:timezone");
         mohBean.addCountryOffice(plantName, country, timezone);
         coList = mohBean.displayCountryOffice();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office added",""));
         return "manageplant";
     }
     
@@ -137,6 +147,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         store = (Store) event.getComponent().getAttributes().get("toEdit");
         mohBean.deleteStore(store.getId());
         storeList = mohBean.displayStore();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Store deleted",""));
         return "manageplant";
     }
     
@@ -145,6 +157,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
         mohBean.deleteManufacturingFacility(mf.getId());
         mfList = mohBean.displayManufacturingFacility();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing facility deleted",""));
         return "manageplant";
     }
     
@@ -153,6 +167,8 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
         mohBean.deleteCountryOffice(countryOffice.getId());
         coList = mohBean.displayCountryOffice();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office deleted",""));
         return "manageplant";
     }
     

@@ -8,11 +8,13 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Notification;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.Entities.Privilege;
 import IslandFurniture.EJB.Entities.Role;
 import IslandFurniture.EJB.Entities.Staff;
 import com.google.common.collect.Lists;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -38,6 +40,10 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     private Notification notification;
     private List<Notification> notificationList;
     private List<Staff> staffList;
+    private List<Role> roleList;
+    private List<Privilege> privilegeList;
+    private Role role;
+    private HashSet<Staff> staffHash;
     
     @Override
     public void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff){
@@ -55,27 +61,47 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     }
     
     @Override
-    public void createNewNotificationForRole(String title, String content, String link, String linkText, Role role){
-        staffList = role.getStaffs();
-        Iterator<Staff> iterator = staffList.iterator();
-            while (iterator.hasNext()) {
-                staff = iterator.next();
-                createNewNotificationForStaff(title, content, link, linkText, staff);
+    public void createNewNotificationForPrivilege(String title, String content, String link, String linkText, Privilege privilege){
+        roleList = privilege.getRoles();
+        staffHash = new HashSet();
+        Iterator<Role> iterator = roleList.iterator();
+        while (iterator.hasNext()) {
+            role = iterator.next();
+            staffList = role.getStaffs();
+            Iterator<Staff> iterator2 = staffList.iterator();
+            while (iterator2.hasNext()) {
+                staff = iterator2.next();
+                staffHash.add(staff);
             }
-        em.flush();
+        }
+        Iterator<Staff> iterator2 = staffHash.iterator();
+        while (iterator2.hasNext()) {
+            staff = iterator2.next();
+            createNewNotificationForStaff(title, content, link, linkText, staff);
+        }
     }
     
     @Override
-    public void createNewNotificationForRoleFromPlant(String title, String content, String link, String linkText, Role role, Plant plant){
-        staffList = role.getStaffs();
-        Iterator<Staff> iterator = staffList.iterator();
-            while (iterator.hasNext()) {
-                staff = iterator.next();
-                if (staff.getPlant().getId() == plant.getId()){
-                    createNewNotificationForStaff(title, content, link, linkText, staff);
-                }
+    public void createNewNotificationForPrivilegeFromPlant(String title, String content, String link, String linkText, Privilege privilege, Plant plant){
+        roleList = privilege.getRoles();
+        staffHash = new HashSet();
+        Iterator<Role> iterator = roleList.iterator();
+        while (iterator.hasNext()) {
+            role = iterator.next();
+            staffList = role.getStaffs();
+            Iterator<Staff> iterator2 = staffList.iterator();
+            while (iterator2.hasNext()) {
+                staff = iterator2.next();
+                staffHash.add(staff);
             }
-        em.flush();
+        }
+        Iterator<Staff> iterator2 = staffHash.iterator();
+        while (iterator2.hasNext()) {
+            staff = iterator2.next();
+            if (staff.getPlant().getId() == plant.getId()){
+                createNewNotificationForStaff(title, content, link, linkText, staff);
+            }
+        }
     }
     
     @Override

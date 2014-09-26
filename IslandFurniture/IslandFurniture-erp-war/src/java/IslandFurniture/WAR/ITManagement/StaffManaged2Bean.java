@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -74,6 +75,8 @@ public class StaffManaged2Bean  implements Serializable  {
         staffId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("staffId"));
         roleId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("roleId"));
         msabl.removeRoleFromStaff(staffId, roleId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role removed",""));
         return "managestaff2";
     }
     
@@ -83,6 +86,8 @@ public class StaffManaged2Bean  implements Serializable  {
         HttpSession session = Util.getSession();
         staffId = (Long) session.getAttribute("staffid");
         msabl.addRoleToStaff(staffId, roleName);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role added",""));
         return "managestaff2";
     }
 
