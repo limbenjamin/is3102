@@ -117,13 +117,13 @@
                                 <h:form class="form-horizontal">
 
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageAreaId}">
+                                        <h:selectOneMenu class="form-control" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
                                             <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                             <f:selectItem itemLabel="Select Storage Location" />
                                             <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                         </h:selectOneMenu>
 
-                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
@@ -155,7 +155,7 @@
                                                 <label class="col-sm-3 control-label">Stock: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
-                                                    <h:selectOneMenu id="stockId" class="form-control" value="#{goodsReceiptDocumentManagedBean.stockId}">
+                                                    <h:selectOneMenu id="stockId" class="form-control" value="#{goodsReceiptDocumentManagedBean.stockId}" pt:required="true">
                                                         <f:selectItem itemLabel="Select Stock"/>
                                                         <f:selectItems value="#{goodsReceiptDocumentManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                     </h:selectOneMenu>
@@ -165,7 +165,7 @@
                                                 <label class="col-sm-3 control-label">Quantity: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-user"></i>
-                                                    <h:inputText id="stockQuantity" class="form-control" value="#{goodsReceiptDocumentManagedBean.quantity}"></h:inputText>
+                                                    <h:inputText id="stockQuantity" pt:type="number"  pt:required="true" class="form-control" value="#{goodsReceiptDocumentManagedBean.quantity}"></h:inputText>
                                                 </div>
                                             </div>
                                         </div>

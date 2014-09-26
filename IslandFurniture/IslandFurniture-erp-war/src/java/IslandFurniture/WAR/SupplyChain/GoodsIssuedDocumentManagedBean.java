@@ -1,6 +1,7 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -53,6 +54,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
     private String username;
     private String deliverynote;
+    private String plantType;
 
     private Calendar postingDate;
     private Calendar issuedDate;
@@ -127,9 +129,21 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         }
 
         plantList = mgrl.viewPlant();
-        plantList.remove(plant);
-        System.out.println("Init");
 
+        for (Plant g : plantList) {
+
+            plantType = g.getClass().getSimpleName();
+            if (plantType.equals("ManufacturingFacility")) {
+                plantType = "MF";
+            } else if (plantType.equals("CountryOffice")) {
+                plantType = "CO";
+            } else if (plantType.equals("GlobalHQ")) {
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+            } 
+
+            g.setName(g.getName() + " " + plantType);
+
+        }
     }
 
     public String krefresh() {
@@ -225,6 +239,14 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
+    public String getPlantType() {
+        return plantType;
+    }
+
+    public void setPlantType(String plantType) {
+        this.plantType = plantType;
+    }
+
     public StockUnit getStockUnitOld() {
         return stockUnitOld;
     }
@@ -232,7 +254,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public void setStockUnitOld(StockUnit stockUnitOld) {
         this.stockUnitOld = stockUnitOld;
     }
-        
+
     public Plant getPlantSendTo() {
         return plantSendTo;
     }
