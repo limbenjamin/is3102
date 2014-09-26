@@ -38,5 +38,13 @@ public interface ManageProductionPlanningRemote {
     void orderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
 
     void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception;
+    
+    void commitallWPP(int weekNo, int monthNo, int yearNo) throws Exception;
+    
+    void uncommitallWPP(int weekNo, int monthNo, int yearNo) throws Exception;
+    
+    void createPOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception;
+    
+     void uncreatePOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception ;
 
 }

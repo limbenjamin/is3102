@@ -13,6 +13,7 @@ import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterfac
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.WAR.HELPER.helper;
 import IslandFurnitures.DataStructures.JDataTable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.event.TabChangeEvent;
 
@@ -102,8 +105,6 @@ public class ViewProductionPlanning implements Serializable {
         this.currentDrill = currentDrill;
     }
 
-    
-
     @PostConstruct
     public void init() {
         System.out.println("ViewProductionPlanning() Init!");
@@ -141,6 +142,10 @@ public class ViewProductionPlanning implements Serializable {
         //Create the Datatable
         pullPPTableFromBean();
         pullcapacityTableFromBean();
+        if (mrp != null) {
+            mrp.Internalrows.clear();
+            mrp.columns.clear();
+        }
         wpp = null;
 
     }
@@ -253,7 +258,7 @@ public class ViewProductionPlanning implements Serializable {
         return;
     }
 
-    public void drillDownMonth(String Month) {
+    public void drillDownMonth(String Month) throws Exception {
         currentDrill = Month;
         System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
         wpp = (JDataTable<String>) dpv.getWeeklyPlans(Month, this.MF);
@@ -270,7 +275,7 @@ public class ViewProductionPlanning implements Serializable {
         this.wpp = wpp;
     }
 
-    public void updateWPPTableToBean() {
+    public void updateWPPTableToBean() throws Exception {
         cleanMsg();
         try {
             ArrayList<Object> o = wpp.getStateChangedEntities();
@@ -305,19 +310,23 @@ public class ViewProductionPlanning implements Serializable {
         } else if (event.getTab().getTitle().equals("Capacity Management")) {
             pullcapacityTableFromBean();
         } else if (event.getTab().getTitle().equals("Weekly Production Planning")) {
-            drillDownMonth(this.currentDrill);
+            try {
+                drillDownMonth(this.currentDrill);
+            } catch (Exception ex) {
+            }
         } else if (event.getTab().getTitle().equals("Material Resource Planning")) {
             pullMRPTableFromBean(this.currentDrill);
 
         }
     }
 
-    public void listenToCell(ActionEvent actionEvent) {
+    public void listenToCell(ActionEvent actionEvent) throws IOException {
         cleanMsg();
         try {
             CommandButton button = (CommandButton) actionEvent.getComponent();
             String ID = button.getAlt();
             String command = button.getLabel();
+            System.out.println("listenToCell(): " + command + " ON " + ID);
 
             switch (command) {
                 case "COMMIT_WPP":
@@ -343,10 +352,38 @@ public class ViewProductionPlanning implements Serializable {
                     mpp.unOrderMaterials(weekNo, monthNo, yearNo);
                     drillDownMonth(this.currentDrill);
                     break;
+                case "Commit_All_Material":
+                    weekNo = Integer.valueOf(ID.split("_")[0]);
+                    monthNo = Integer.valueOf(ID.split("_")[1]);
+                    yearNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.commitallWPP(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
+                    break;
+                case "Uncommit_All_Material":
+                    weekNo = Integer.valueOf(ID.split("_")[0]);
+                    monthNo = Integer.valueOf(ID.split("_")[1]);
+                    yearNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.uncommitallWPP(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
+                    break;
+                case "ORDER_MATERIAL":
+                    yearNo = Integer.valueOf(ID.split("_")[0]);
+                    monthNo = Integer.valueOf(ID.split("_")[1]);
+                    weekNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.createPOForWeekMRP(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
+                    break;
+                case "UNORDER_MATERIAL":
+                    yearNo = Integer.valueOf(ID.split("_")[0]);
+                    monthNo = Integer.valueOf(ID.split("_")[1]);
+                    weekNo = Integer.valueOf(ID.split("_")[2]);
+                    mpp.uncreatePOForWeekMRP(weekNo, monthNo, yearNo);
+                    drillDownMonth(this.currentDrill);
+                    break;
 
             }
             success_msg += "Successfully Toggled Production Order";
-            System.out.println("listenToCell(): " + command + " ON " + ID);
+
         } catch (Exception ex) {
             success_msg = "";
             error_msg = ex.getMessage();

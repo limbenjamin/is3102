@@ -55,8 +55,7 @@ public class MonthlyProductionPlan implements Serializable {
     private Integer year;
 
     @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
-    
-    
+
     private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
 
     private Integer QTY;
@@ -112,6 +111,13 @@ public class MonthlyProductionPlan implements Serializable {
     }
 
     public Boolean isLocked() {
+
+        for (WeeklyProductionPlan wpp : this.weeklyProductionPlans) {
+            if (wpp.isLocked()) {
+                return true;
+            }
+        }
+
         return locked;
     }
 

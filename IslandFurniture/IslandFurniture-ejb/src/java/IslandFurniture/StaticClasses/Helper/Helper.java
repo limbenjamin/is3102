@@ -74,6 +74,39 @@ public class Helper {
 
     }
 
+    public static int addoneWeek(int month, int year, int week,int addorminus, int return_what) throws Exception {
+
+        int direction = addorminus / Math.abs(addorminus);
+
+        if ( week+direction> Helper.getNumOfWeeks(month, year) || week+direction<=0) {
+
+       int i_month = Helper.addMonth(Helper.translateMonth(month), year, direction, true);
+            year = Helper.addMonth(Helper.translateMonth(month), year, direction, false);
+            if (direction == 1) {
+                week = 1;
+            } else {
+                week = Helper.getNumOfWeeks(month, year);
+            }
+            month=i_month;
+
+        } else {
+
+            week = week + 1 * direction;
+        }
+
+        switch (return_what) {
+            case Calendar.WEEK_OF_MONTH:
+                return week;
+            case Calendar.MONTH:
+                return month;
+            case Calendar.YEAR:
+                return year;
+
+        }
+        throw new Exception("Add Week Fail !");
+
+    }
+
     public static int getCurrentYear() {
         return Calendar.getInstance().get(Calendar.YEAR);
     }
@@ -87,14 +120,15 @@ public class Helper {
 
     public static int getNumOfWeeks(int month, int year) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, 1);
+        cal.set(year, month, 1,0,0);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
-        return (cal.getActualMaximum(Calendar.WEEK_OF_MONTH));
+        Double answer=Math.ceil(cal.getActualMaximum(Calendar.DAY_OF_MONTH)/7.0);
+        return (answer.intValue());
     }
 
     public static int getNumOfDaysInWeek(int month, int year, int WeekNo) {
         Calendar cal = Calendar.getInstance();
-        int DaysinMonth=30;
+        int DaysinMonth = 30;
         try {
             DaysinMonth = getNumWorkDays(Helper.translateMonth(month), year);
         } catch (Exception ex) {

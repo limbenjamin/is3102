@@ -24,7 +24,7 @@ import javax.persistence.NamedQuery;
 @IdClass(ProductionCapacityPK.class)
 @NamedQueries({
     @NamedQuery(name = "ProductionCapacity.findPC", query = "SELECT PC from ProductionCapacity PC where PC.manufacturingFacility=:MFNAME and PC.furnitureModel=:FMNAME"),
-    @NamedQuery(name="ProductionCapacity.findPCbyMF",query = "SELECT PC from ProductionCapacity PC where PC.manufacturingFacility=:MFNAME")
+    @NamedQuery(name="ProductionCapacity.findPCbyMF",query = "SELECT PC from ProductionCapacity PC where PC.manufacturingFacility=:MFNAME order by PC.furnitureModel.name asc")
 })
 public class ProductionCapacity implements Serializable {
 

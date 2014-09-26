@@ -13,11 +13,13 @@
             <ui:define name="content">
                 <div class="row">
                     <div class="col-md-8">
+                        <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}">
                         <h:form> 
                             <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
                                 <i class="fa fa-fw fa-plus"></i>Move Stock
                             </button>  
                         </h:form>
+                        </h:panelGroup>
 
                         <section name="View Contents of Storage Location">
                             <h4>Inventory Movement in #{inventoryTransferMovementLocationManagedBean.storageBin.storageArea.name} - #{inventoryTransferMovementLocationManagedBean.storageBin.name}</h4><hr></hr>
@@ -27,32 +29,44 @@
                             <div class="panel-heading dashboard-title-panel">
                                 Contents of the Storage Location
                             </div>
-                            <div class="list-group-item">                           
-                                <table class="table table-hover table-condensed">
-                                    <tr>
-                                        <th>Stock</th>
-                                        <th>Stock Unit Number</th>
-                                        <th>Quantity</th>
-                                        <th>Batch Number</th>
-                                    </tr>
-                                    <h:form class="form-horizontal">
-                                        <ui:repeat value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s">
-                                            <tr>
-                                                <td>#{s.stock.name}</td>
-                                                <td>#{s.id}</td>
-                                                <td>#{s.qty}</td>
-                                                <td>#{s.batchNo}</td>
-                                            </tr>
-                                        </ui:repeat>
-                                    </h:form> 
-                                </table>
+                            <div class="list-group-item">  
+                                <h:outputText rendered="#{inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}" value="There are no stocks stored here"/>
+                                <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Stock</th>
+                                            <th>Stock Unit Number</th>
+                                            <th>Quantity</th>
+                                            <th>Batch Number</th>
+                                            <th>Update</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s">
+                                                <tr>
+                                                    <td>#{s.stock.name}</td>
+                                                    <td>#{s.id}</td>
+                                                    <td>#{s.qty}</td>
+                                                    <td><h:inputText value="#{s.batchNo}" class="form-control" rendered="#{inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}"/>
+                                                        <h:outputText rendered="#{!inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}" value="#{s.batchNo}"/>
+                                                    </td>
+                                                    <td><h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.updateBatchNumber}"  value="Update" class="btn btn-success btn-xs" rendered="#{inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}">  
+                                                            <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                            <f:attribute name="batchNumber" value="#{s.batchNo}" />
+                                                            <f:attribute name="storageBinId" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}" />
+                                                        </h:commandButton></td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
                             </div>
                         </section>  
-                        
+
                         <br></br>
-                        
-                        
+
+
                         <section name="Edit Stock">
+                             
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Movement of Stock
                             </div>
@@ -61,6 +75,8 @@
                                 <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitMovementListEmpty}">
                                     <table class="table table-hover table-condensed">
                                         <tr>
+                                            <th>Stock</th>
+                                            <th>Stock Unit Number</th>
                                             <th>Current Storage Area</th>
                                             <th>Current Storage Bin</th>
                                             <th>New Storage Area</th>
@@ -72,6 +88,8 @@
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{inventoryTransferMovementLocationManagedBean.stockUnitMovementList}" var="s">
                                                 <tr>
+                                                    <td>#{s.stock.name}</td>
+                                                    <th>#{s.commitStockUnitId}</th>
                                                     <td>#{s.location.storageArea.name}</td>
                                                     <td>#{s.location.name}</td>
                                                     <td>#{s.pendingLocation.storageArea.name}</td>
@@ -90,7 +108,7 @@
                                     </table>
                                 </h:panelGroup>
                             </div>
-                            
+
                             <br/>
                             <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitMovementListEmpty}">
                                 <h:form class="form-horizontal">
@@ -103,9 +121,9 @@
 
                         </section>
 
-                        
-                        
-                         <section name="Move Stock">
+
+
+                        <section name="Move Stock">
                             <!-- Modal -->
                             <div class="modal fade" id="newStockUnit" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -120,7 +138,7 @@
                                                     <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}">
+                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}">
                                                             <f:selectItem itemLabel="Select Stock Unit ID" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -132,7 +150,7 @@
 
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}">
+                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}">
                                                             <p:ajax listener="#{inventoryTransferMovementLocationManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                                             <f:selectItem itemLabel="Select Storage Area" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
@@ -145,7 +163,7 @@
                                                     <label class="col-sm-3 control-label" >New Storage Bin: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}">
+                                                        <h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}">
                                                             <f:selectItem itemLabel="Select Storage Bin" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -174,7 +192,7 @@
                                 </div>
                             </div>    
                         </section>
-                        
+
 
                     </div>
                 </div>

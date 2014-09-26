@@ -16,7 +16,7 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <h:form> 
                             <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
                                 <i class="fa fa-fw fa-plus"></i>Add Stock
@@ -25,10 +25,11 @@
                         <h4>Goods Issued Document</h4><hr></hr>
                     </div>
 
-                    <div class="col-md-8">                      
+                    <div class="col-md-10">                      
                         <section name="EditGRD">
                             <table class="table table-hover">
                                 <tr>
+
                                     <th>Goods Issued ID</th>
                                     <th>Issued Date</th>
                                     <th>Issue To</th>
@@ -70,6 +71,7 @@
                                     <table class="table table-hover table-condensed">
                                         <tr>
                                             <th>Stock</th>
+                                            <th>Stock Unit Number</th>
                                             <th>Storage Area</th>
                                             <th>Storage Bin</th>
                                             <th>Quantity</th>
@@ -80,6 +82,7 @@
                                             <ui:repeat value="#{goodsIssuedDocumentManagedBean.stockUnitMainList}" var="s">
                                                 <tr>
                                                     <td>#{s.stock.name}</td>
+                                                    <td>#{s.commitStockUnitId}</td>
                                                     <td>#{s.location.storageArea.name}</td>
                                                     <td>#{s.location.name}</td>
                                                     <td>#{s.qty}</td>
@@ -98,8 +101,8 @@
                             </div>
                         </section>
 
-<br/>
-                        
+                        <br/>
+
                         <section name="Post Goods Issued Document"> 
 
                             <h:form class="form-horizontal">
@@ -124,7 +127,7 @@
                                                 <label class="col-sm-3 control-label">Stock: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
-                                                    <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentManagedBean.stockId}">
+                                                    <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentManagedBean.stockId}">
                                                         <f:selectItem itemLabel="Select Stock" />
                                                         <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                                     </h:selectOneMenu>

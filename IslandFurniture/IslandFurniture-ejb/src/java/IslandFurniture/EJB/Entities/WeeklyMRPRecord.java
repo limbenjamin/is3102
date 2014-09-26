@@ -10,6 +10,8 @@ import IslandFurniture.EJB.Entities.WeeklyMRPRecordPK;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
@@ -22,9 +24,10 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@IdClass(WeeklyMRPRecordPK.class)
+//@IdClass(WeeklyMRPRecordPK.class)
 @NamedQueries({
-    @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFM", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.year*52+wmrp.month*4+wmrp.week=:m*4 +:w+:y*52 and wmrp.material=:ma"),
+    @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFMnospecmat", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.year=:y and wmrp.month+0=:m+0 and wmrp.week=:w order by wmrp.year*52+wmrp.month*4+wmrp.week asc"),
+    @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFM", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.year=:y and wmrp.month+0=:m+0 and wmrp.week=:w and wmrp.material=:ma"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPOrderedatMFM", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and WMRP.orderMonth=:m  and WMRP.orderYear=:y and WMRP.orderWeek=:w and wmrp.material=:ma"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFmonth", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.month=:m and wmrp.year=:y order by wmrp.material.name asc , WMRP.month*4+WMRP.year*52+wmrp.week asc"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPatMF", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.month=:m and wmrp.week=:w and wmrp.year=:y"),
@@ -33,32 +36,43 @@ import javax.persistence.OneToOne;
 public class WeeklyMRPRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
+
     @ManyToOne
     private Material material;
-    @Id
+
     private Integer week; //this is the requirement date
-    @Id
     private Month month; //requirement date
-    @Id
     private Integer year; //requirement date
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
 
-    private Integer orderWeek=1; //this is the order date
+    private Integer orderWeek = 1; //this is the order date
     private Month orderMonth; //requirement order date
-    private Integer orderYear=1; //requirement order date
-    private Integer orderAMT=0;
-    private Integer orderLot=0;
-    private Integer lotSize=1;
+    private Integer orderYear = 1; //requirement order date
+    private Integer orderAMT = 0;
+    private Integer orderLot = 0;
+    private Integer lotSize = 1;
+    private Integer plannedOrder  = 0;
 
     @OneToOne
     private WeeklyProductionPlan weeklyProductionPlan; // This is useless . remove it next time
+
     @OneToOne
     private PurchaseOrderDetail purchaseOrderDetail;
-    private Integer qtyReq=0;
+    private Integer qtyReq = 0;
 
     public ManufacturingFacility getManufacturingFacility() {
         return manufacturingFacility;
@@ -67,7 +81,6 @@ public class WeeklyMRPRecord implements Serializable {
     public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
         this.manufacturingFacility = manufacturingFacility;
     }
-    
 
     public Integer getOrderLot() {
         return orderLot;
@@ -203,6 +216,7 @@ public class WeeklyMRPRecord implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.week);
         hash = 97 * hash + Objects.hashCode(this.month);
         hash = 97 * hash + Objects.hashCode(this.year);
+        hash = 97 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
 
@@ -213,12 +227,21 @@ public class WeeklyMRPRecord implements Serializable {
             return false;
         }
         WeeklyMRPRecord other = (WeeklyMRPRecord) object;
-        return this.material.equals(other.material) && this.week.equals(other.week) && this.month.equals(other.month) && this.year.equals(other.year);
+        return this.material.equals(other.material) && this.week.equals(other.week) && this.month.equals(other.month) && this.year.equals(other.year) && this.manufacturingFacility.equals((other.manufacturingFacility));
     }
 
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyMRPRecord[ id=" + this.material.getId() + "," + week + "," + month + "," + year + " ]";
+    }
+    
+    
+    public Integer getPlannedOrder() {
+        return plannedOrder;
+    }
+
+    public void setPlannedOrder(Integer plannedOrder) {
+        this.plannedOrder = plannedOrder;
     }
 
 }

@@ -24,20 +24,22 @@
                             <div class="list-group-item">
                                 <table class="table table-hover table-condensed">
                                     <tr>
+                                        <th>Stock Unit Number</th>
                                         <th>Storage Area</th>
                                         <th>Storage Bin</th>
                                         <th>Quantity</th>
                                         <th>Batch Number</th>
-                                        <th>Stock Unit Number</th>
+                                        
                                     </tr>
                                     <h:form class="form-horizontal">
                                         <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s">
                                             <tr> 
+                                                <td>#{s.id}</td>
                                                 <td>#{s.location.storageArea.name}</td>
                                                 <td>#{s.location.name}</td>
                                                 <td>#{s.qty}</td>
                                                 <td>#{s.batchNo}</td>
-                                                <td>#{s.id}</td>
+                                                
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
@@ -58,6 +60,7 @@
 
                                     <table class="table table-hover table-condensed">
                                         <tr>
+                                            <th>Stock Unit Number</th>
                                             <th>Storage Area</th>
                                             <th>Storage Bin</th>
                                             <th>Quantity</th>
@@ -67,6 +70,7 @@
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList2}" var="s">
                                                 <tr>
+                                                    <td>#{s.commitStockUnitId}</td>
                                                     <td>#{s.location.storageArea.name}</td>
                                                     <td>#{s.location.name}</td>
                                                     <td>#{s.qty}</td>
@@ -115,7 +119,7 @@
                                                     <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu id="stockId" class="form-control" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}">
+                                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}">
                                                             <f:selectItem itemLabel="Select Stock Unit ID" />
                                                             <f:selectItems value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>

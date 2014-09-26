@@ -120,8 +120,7 @@
                                             <th>Posting Date</th>
                                             <th>Issued From</th>
                                             <th>Create Document</th>
-                                            <td>Received Status</td>
-                                            <td>Update</td>
+                                            <th>Item Received</th>
                                         </tr>
 
                                         <h:form class="form-horizontal">
@@ -142,10 +141,8 @@
                                                             <f:attribute name="GIDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-file-text-o icon-button"></i></td>
-                                                    <td><h:selectBooleanCheckbox value="#{GRD.isReceived()}"/></td>
                                                     <td><h:commandButton actionListener="#{goodsReceiptManagedBean.updateIncomingShipmentStatus}" class="btn btn-sm transparent-button" style="outline:0;">
                                                             <f:attribute name="GIDid" value="#{GRD.id}" />
-                                                            <f:attribute name="shipmentStatus" value="#{GRD.isReceived}" />   
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-save icon-button"></i></td>
 

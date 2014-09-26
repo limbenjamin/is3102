@@ -66,6 +66,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         goodsIssuedDocument.setPlant(plant);
         goodsIssuedDocument.setPostingDate(postingDate);
         goodsIssuedDocument.setConfirm(false);
+        goodsIssuedDocument.setReceived(false);
         em.persist(goodsIssuedDocument);
         em.flush();
         return goodsIssuedDocument;
@@ -95,9 +96,8 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
     }
 
     @Override
-    public void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Long plantId) {
+    public void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Plant plant) {
         goodsIssuedDocument = getGoodsIssuedDocument(goodsIssuedDocumentId);
-        plant = getPlant(plantId);
         goodsIssuedDocument.setIssuedDate(issuedDate);
         goodsIssuedDocument.setDeliverTo(plant);
         em.merge(goodsIssuedDocument);

@@ -90,6 +90,13 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
     }
 
+    public boolean ifBatchNoEmpty(String batchNo) {
+        if (batchNo.isEmpty()) {
+            return true;
+        }
+        else return false;
+    }
+    
     public void updateBatchNumber(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNumber", event.getComponent().getAttributes().get("batchNumber"));
@@ -154,23 +161,19 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
         for (StockUnit g : stockUnitMovementList) {
 
-            stockUnitMovementAnotherList = msul.viewStockUnitMovementCheck(g.getLocation(), g.getStock(), g.getBatchNo());
+            stockUnitMovementAnotherList = msul.viewStockUnitMovementCheck(g.getPendingLocation(), g.getStock(), g.getBatchNo());
 
             if (!stockUnitMovementAnotherList.isEmpty()) {
-                System.out.println("The list is not empty!!!!!");
+                System.out.println("The stockUnitMovementAnotherList is not empty");
                 anotherStockUnit = stockUnitMovementAnotherList.get(0);
+                System.out.println("There is a stockUnit: " + anotherStockUnit);
                 msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
+                System.out.println("The quantity is now updated from " + anotherStockUnit.getQty() + "to " + g.getQty());
                 msul.deleteStockUnit(g.getId());
             } else {
                 msul.confirmStockUnitMovement(g.getId());
             }
 
-//            try {
-//                anotherStockUnit = msul.viewStockUnitMovementCheck(g.getLocation(), g.getStock(), g.getBatchNo());
-//                msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
-//            } catch (Exception ex) {
-//               < old code here >
-//            }
             // Start: To check if Quantity = 0
             stockUnitOld = miml.getStockUnit(g.getCommitStockUnitId());
             if (stockUnitOld.getQty() == 0) {

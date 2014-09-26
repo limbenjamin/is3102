@@ -19,7 +19,6 @@ public class WeeklyMRPRecordPK implements Serializable {
     private Integer week;
     private Month month;
     private Integer year;
-    private Long manufacturingFacility;
     
     @Override
     public boolean equals(Object object) {
@@ -27,7 +26,7 @@ public class WeeklyMRPRecordPK implements Serializable {
             return false;
         }
         WeeklyMRPRecordPK other = (WeeklyMRPRecordPK) object;
-        return this.material.equals(other.material) && this.week.equals(other.week) && this.month.equals(other.month) && this.year.equals(other.year) && this.manufacturingFacility.equals((other.manufacturingFacility));
+        return this.material.equals(other.material) && this.week.equals(other.week) && this.month.equals(other.month) && this.year.equals(other.year);
     }
 
     @Override
@@ -37,7 +36,6 @@ public class WeeklyMRPRecordPK implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.week);
         hash = 97 * hash + Objects.hashCode(this.month);
         hash = 97 * hash + Objects.hashCode(this.year);
-        hash = 97 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
     

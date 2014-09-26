@@ -23,6 +23,7 @@ import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Exceptions.InvalidMssrException;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_DEFAULT_WEIGHT;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_HORIZON;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;
 import IslandFurniture.StaticClasses.Helper.TimeMethods;
@@ -154,30 +155,68 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     @Override
     public List<MonthlyStockSupplyReq> retrieveNaiveForecast(CountryOffice co, Stock stock) throws ForecastFailureException, InvalidMssrException {
         boolean impacted = false;
+        double growthRate = FORECAST_DEFAULT_WEIGHT;
+
+        // Calculate Growth Trend Weights
+        Calendar endMth = TimeMethods.getPlantCurrTime(co);
+        endMth.add(Calendar.MONTH, -1);
+
+        Calendar startMth = TimeMethods.getPlantCurrTime(co);
+        startMth.add(Calendar.MONTH, -12);
+        List<MonthlyStockSupplyReq> oneYrBackMssrList = this.retrieveMssrForCoStock(co, stock, Month.getMonth(startMth.get(Calendar.MONTH)), startMth.get(Calendar.YEAR), Month.getMonth(endMth.get(Calendar.MONTH)), endMth.get(Calendar.YEAR));
+
+        endMth.add(Calendar.YEAR, -1);
+        startMth.add(Calendar.YEAR, -1);
+        List<MonthlyStockSupplyReq> twoYrBackMssrList = this.retrieveMssrForCoStock(co, stock, Month.getMonth(startMth.get(Calendar.MONTH)), startMth.get(Calendar.YEAR), Month.getMonth(endMth.get(Calendar.MONTH)), endMth.get(Calendar.YEAR));
+
+        int oneYrSum = 0, twoYrSum = 0;
+
+        for (int i = 0; i < oneYrBackMssrList.size(); i++) {
+            if (oneYrBackMssrList.get(i).isEndMthUpdated() && twoYrBackMssrList.get(i).isEndMthUpdated()) {
+                oneYrSum += oneYrBackMssrList.get(i).getQtySold();
+                twoYrSum += twoYrBackMssrList.get(i).getQtySold();
+            }
+        }
+
+        if (twoYrSum > 0) {
+            growthRate = ((double) oneYrSum) / twoYrSum;
+        }
 
         List<MonthlyStockSupplyReq> unlockedMssrList;
         unlockedMssrList = this.retrieveUnlockedMssrForCoStock(co, stock);
 
         for (int i = 0; i < unlockedMssrList.size(); i++) {
             MonthlyStockSupplyReq mssr = unlockedMssrList.get(i);
-            MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -12);
-            MonthlyStockSupplyReq prevMssr;
-
-            if (i <= 0) {
-                prevMssr = QueryMethods.findNextMssr(em, mssr, -1);
-            } else {
-                prevMssr = unlockedMssrList.get(i - 1);
-            }
-
-            if (oldMssr == null || prevMssr == null) {
-                throw new InvalidMssrException("Note: Previous forecasted values do not exist for some Stock!");
-            }
-
             if (mssr.getStatus() != MssrStatus.APPROVED && mssr.getStatus() != MssrStatus.PENDING) {
+                MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -12);
+                MonthlyStockSupplyReq prevMssr;
+
+                if (oldMssr == null) {
+                    throw new InvalidMssrException("Note: Previous forecasted values do not exist for some Stock!");
+                }
+                
+                if (i <= 0) {
+                    prevMssr = QueryMethods.findNextMssr(em, mssr, -1);
+                } else {
+                    prevMssr = unlockedMssrList.get(i - 1);
+                }
+
                 em.detach(mssr);
-                mssr.setQtyForecasted(oldMssr.getQtyForecasted());
+
+                if (oldMssr.isEndMthUpdated()) {
+                    mssr.setQtyForecasted((int) (oldMssr.getQtySold() * growthRate));
+                } else {
+                    mssr.setQtyForecasted((int) (oldMssr.getQtyForecasted() * growthRate));
+                }
+
                 mssr.setPlannedInventory(oldMssr.getPlannedInventory());
-                mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory() - mssr.getVarianceOffset());
+
+                if (prevMssr == null) {
+                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset());
+                } else {
+                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory() - mssr.getVarianceOffset());
+                }
+
                 impacted = true;
             }
         }
@@ -193,7 +232,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
     public List<MonthlyStockSupplyReq> retrieveNPointForecast(CountryOffice co, Stock stock, int nPoint, int plannedInv)
             throws ForecastFailureException, InvalidInputException {
         if (nPoint <= 0 || plannedInv < 0) {
-            throw new IllegalArgumentException("Please enter a valid N-Point and Planned Inventory count.");
+            throw new InvalidInputException("Please enter a valid N-Point and Planned Inventory count.");
         }
         boolean impacted = false;
 
@@ -348,6 +387,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         Calendar start = TimeMethods.getCalFromMonthYear(startMonth, startYear);
         Calendar end = TimeMethods.getCalFromMonthYear(endMonth, endYear);
 
+        // Adds new instances of null status MSSR to fill any gaps
         while (start.compareTo(end) <= 0) {
             MonthlyStockSupplyReq mssr = new MonthlyStockSupplyReq();
             mssr.setYear(start.get(Calendar.YEAR));

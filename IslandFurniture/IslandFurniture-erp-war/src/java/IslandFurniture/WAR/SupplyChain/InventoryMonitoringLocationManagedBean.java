@@ -43,6 +43,7 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitBinList;
+    private boolean ifStockUnitBinListEmpty;
 
     private StorageBin storageBin;
     private Stock stock;
@@ -67,24 +68,33 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = miml.getStorageBin(storageBinId);
         stockUnitBinList = miml.viewStockUnitBin(storageBin);
-        
+        ifStockUnitBinListEmpty = stockUnitBinList.isEmpty();
+
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
         StockUnit su = (StockUnit) event.getComponent().getAttributes().get("su");
-        
+
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
-        
-        System.out.println("the stock take quantity is: "+ stockTakeQuantity);
-        
+
+        System.out.println("the stock take quantity is: " + stockTakeQuantity);
+
         miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
         stockUnitBinList = miml.viewStockUnitBin(storageBin);
         stockTakeQuantity = null;
         return "inventorymonitoring_stlocation";
+    }
+
+    public boolean isIfStockUnitBinListEmpty() {
+        return ifStockUnitBinListEmpty;
+    }
+
+    public void setIfStockUnitBinListEmpty(boolean ifStockUnitBinListEmpty) {
+        this.ifStockUnitBinListEmpty = ifStockUnitBinListEmpty;
     }
 
     public Long getPlantId() {
@@ -214,7 +224,5 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
     }
-
-    
 
 }

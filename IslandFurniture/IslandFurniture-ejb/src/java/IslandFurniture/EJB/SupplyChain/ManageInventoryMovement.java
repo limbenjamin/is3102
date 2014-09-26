@@ -155,9 +155,6 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         return q.getResultList();
     }
     
-    
-   
-
     @Override
     public void confirmStockUnitMovement(Long stockUnitId) {
         stockUnit = getStockUnit(stockUnitId);

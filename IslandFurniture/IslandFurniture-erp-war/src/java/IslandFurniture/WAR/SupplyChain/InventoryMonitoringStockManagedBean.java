@@ -42,6 +42,7 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
 
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
+    private boolean ifStockUnitListEmpty;
 
     private StorageBin storageBin;
     private StockUnit stockUnit;
@@ -66,7 +67,6 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
         stock = miml.getStock(stockId);
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
-        
     }
 
     public String editStockTakeQuantity(ActionEvent event) {
@@ -81,6 +81,22 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
         stockTakeQuantity = null;
         return "inventorymonitoring_ststock";
+    }
+
+    public boolean isIfStockUnitListEmpty() {
+        return ifStockUnitListEmpty;
+    }
+
+    public void setIfStockUnitListEmpty(boolean ifStockUnitListEmpty) {
+        this.ifStockUnitListEmpty = ifStockUnitListEmpty;
+    }
+
+    public Long getStockUnitId() {
+        return stockUnitId;
+    }
+
+    public void setStockUnitId(Long stockUnitId) {
+        this.stockUnitId = stockUnitId;
     }
 
     public Long getPlantId() {

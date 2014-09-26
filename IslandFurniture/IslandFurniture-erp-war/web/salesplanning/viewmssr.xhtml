@@ -23,7 +23,7 @@
                             </f:facet>
                             <h:outputText value="#{label.second}" />
                         </p:column>
-                        <p:columns value="#{mssrEntry.second}" var="mssr">
+                        <p:columns value="#{mssrEntry.second}" var="mssr" style="#{(mssr.status == 'PENDING')?'background-color:#B1CAF2':null}">
                             <f:facet name="header">
                                 <h:outputText value="#{mssr.month}" />
                                 <br />

@@ -35,7 +35,7 @@
                             <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested' or label.first == 'varianceOffset' or label.first == 'status')}" />
                             <h:outputText value="-" rendered="#{mssr.status == null}"/>
                         </p:columns>
-                        <p:columns value="#{mssrPairedEntry.second.second}" var="mssr">
+                        <p:columns value="#{mssrPairedEntry.second.second}" var="mssr" style="#{(mssr.status == 'PENDING')?'background-color:#B1CAF2':null}">
                             <f:facet name="header">
                                 <h:outputText value="#{mssr.month}" />
                                 <br />
