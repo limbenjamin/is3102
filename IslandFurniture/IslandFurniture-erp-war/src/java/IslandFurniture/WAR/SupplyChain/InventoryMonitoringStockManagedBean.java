@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -80,6 +81,8 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
         stockTakeQuantity = null;
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity has been updated for Stock Unit Number: " + stockUnitId, ""));
         return "inventorymonitoring_ststock";
     }
 

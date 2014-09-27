@@ -204,6 +204,8 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
                 // End
             }
         }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock movement has been completed successfully", ""));
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
