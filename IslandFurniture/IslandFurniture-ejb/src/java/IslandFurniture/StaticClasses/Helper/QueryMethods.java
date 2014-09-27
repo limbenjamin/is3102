@@ -145,6 +145,18 @@ public class QueryMethods {
         }
     }
 
+    public static List<ProcurementContractDetail> findPCDByStockAndMF(EntityManager em, ProcuredStock stock, ManufacturingFacility mf) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF", ProcurementContractDetail.class);
+        q.setParameter("stock", stock);
+        q.setParameter("mf", mf);
+ 
+        try {
+            return (List<ProcurementContractDetail>)q.getResultList();
+        } catch (NoResultException NRE) {
+            return null;
+        }
+    }
+
     public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
         cal.add(Calendar.MONTH, monthsOffset);

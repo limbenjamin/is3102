@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -105,7 +106,9 @@ public class GoodsIssuedManagedBean implements Serializable {
         mgrl.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument(plant);
         ifGoodsIssuedDocumentListEmpty = goodsIssuedDocumentList.isEmpty();
-        return "goodsreceiptdocument";
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully deleted", ""));
+        return "goodsissued";
     }
 
     public boolean isIfGoodsIssuedDocumentListEmpty() {

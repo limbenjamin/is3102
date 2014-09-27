@@ -1,11 +1,10 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
     <h:body>
@@ -16,12 +15,12 @@
                         <h4>Inventory Transfer</h4><hr></hr>
 
                         <section name="Perform Stock Taking">
-                            <h5>Inventory Transfer</h5>
+
                             <h:form class="form-horizontal">
                                 <div>
                                     <label class="col-sm-4 control-label">Transfer by Stock ID</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferManagedBean.stockId}">
+                                        <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferManagedBean.stockId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Stock" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                         </h:selectOneMenu>
@@ -37,13 +36,13 @@
                                 <div>
                                     <label class="col-sm-4 control-label">Transfer by Storage Location</label>
                                     <div class="col-sm-8">
-                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferManagedBean.storageAreaId}">
+                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferManagedBean.storageAreaId}" pt:required="true">
                                             <p:ajax listener="#{inventoryTransferManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                             <f:selectItem itemLabel="Select Storage Location" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                         </h:selectOneMenu>
 
-                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}">
+                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
@@ -89,12 +88,12 @@
                                                         <td><h:commandButton actionListener="#{inventoryTransferManagedBean.confirmStockUnit}" value="Confirm" class="btn btn-success btn-xs"> 
                                                                 <f:attribute name="stockUnitId" value="#{s.id}" />
                                                             </h:commandButton></td>
-                                                            <td>
-                                                                <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
-                                                                    <f:attribute name="stockId" value="#{s.stock.id}" />
-                                                                    <f:attribute name="stockUnit" value="#{s}" />
-                                                                </h:commandButton>
-                                                            </td>
+                                                        <td>
+                                                            <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                                <f:attribute name="stockId" value="#{s.stock.id}" />
+                                                                <f:attribute name="stockUnit" value="#{s}" />
+                                                            </h:commandButton>
+                                                        </td>
                                                     </tr>
                                                 </ui:repeat>
                                             </h:form> 

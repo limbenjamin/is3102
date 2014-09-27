@@ -102,7 +102,14 @@ public class StockSupplierManagedBean implements Serializable {
         String mfID = request.getParameter("addSSRequestForm:mfID");
         String sID = request.getParameter("addSSRequestForm:sID");
         System.out.println("CountryID is " + cID + ". MF ID is " + mfID + ". StockID is " + sID);
-        supplierManager.addStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
+        List<Stock> list = supplierManager.checkForValidPCD(Long.parseLong(sID), Long.parseLong(mfID));
+        if(list == null)  
+            supplierManager.addStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
+        else {
+            System.out.print("Missing the ProcurementContractDetail of the following");
+            for(int i=0; i<list.size(); i++) 
+                System.out.println("\t " + list.get(i).getName());
+        }
         return "stockSupplier";
-    }
+    } 
 }

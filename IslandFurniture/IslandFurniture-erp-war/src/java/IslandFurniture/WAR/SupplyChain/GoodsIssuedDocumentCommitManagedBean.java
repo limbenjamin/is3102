@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -45,12 +46,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long storageAreaid;
     private Long stockUnitId;
     private Long oldStockUnitId;
-    
+
     private boolean ifstockUnitByIdList2Empty;
 
     private String issuedDateString;
     private Date issuedDateType;
-    
+
     private String username;
     private String deliverynote;
 
@@ -121,12 +122,21 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
         stockUnit = mgrl.getStockUnit(stockUnitId);
 
-        msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), goodsIssuedDocument);
-        msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+        if (stockUnitQuantity > stockUnit.getQty()) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+        } else {
 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+            msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), goodsIssuedDocument);
+            msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
+        }
     }
 
     public void deleteGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {

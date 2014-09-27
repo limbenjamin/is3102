@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.FurnitureModel;
@@ -20,6 +21,7 @@ import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Entities.StockSuppliedPK;
 import IslandFurniture.EJB.Entities.Supplier;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findCountryByName;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findPCDByStockAndMF;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findPCDByStockMFAndSupplier;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findSupplierByName;
 import java.util.ArrayList;
@@ -291,12 +293,12 @@ public class SupplierManager implements SupplierManagerLocal {
             ss = em.find(StockSupplied.class, pk);
             if(ss != null) 
                 System.out.println("Request already exists");
-            else {            
+            else {     
                 ss = new StockSupplied();
                 stock = em.find(Stock.class, stockID);
                 mf = em.find(ManufacturingFacility.class, mfID);
                 co = em.find(CountryOffice.class, countryID);
-
+                
                 ss.setCountryOffice(co);
                 ss.setManufacturingFacility(mf);
                 ss.setStock(stock);
@@ -349,6 +351,59 @@ public class SupplierManager implements SupplierManagerLocal {
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return null;
+        }
+    }
+    public List<Stock> checkForValidPCD(Long stockID, Long mfID) {
+        Stock stock;
+        ManufacturingFacility mf;
+        List<Stock> pcdList = new ArrayList<Stock>();
+        FurnitureModel fm;
+        List<BOMDetail> bomList;
+        try {
+            stock = em.find(Stock.class, stockID);
+            mf = em.find(ManufacturingFacility.class, mfID);
+            System.out.println("Checking for existence of ProcurementContractDetail for " + stock.getName() + " in " + mf.getName());
+            if(stock instanceof RetailItem) {
+                if(checkForPCD((ProcuredStock)stock, mf)) {
+                    System.out.println(mf.getName() + " carries " + stock.getName());
+                    return null;
+                } else {
+                    System.out.println(mf.getName() + " doesn't carry Retail Item " + stock.getName());
+                    pcdList.add(stock);
+                    return pcdList;
+                }
+            } else if(stock instanceof FurnitureModel) {
+                fm = (FurnitureModel)stock;
+                bomList = fm.getBom().getBomDetails();
+                for(int i=0; i<bomList.size(); i++) {
+                    if(!checkForPCD((ProcuredStock)(bomList.get(i).getMaterial()), mf)) {
+                        System.out.println(mf.getName() + " doesn't carry Material " + bomList.get(i).getMaterial().getName());
+                        pcdList.add(bomList.get(i).getMaterial());
+                    }
+                }
+                if(pcdList.size() > 0)
+                    return pcdList;
+                else 
+                    return null;
+            } else 
+                return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;
+        }
+    }
+    public boolean checkForPCD(ProcuredStock stock, ManufacturingFacility mf) {
+        List<ProcurementContractDetail> pcdList;
+        try {
+            pcdList = findPCDByStockAndMF(em, stock, mf);
+            if(pcdList.size() < 1) {
+                return false;
+            } else
+                return true;
+            
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return false;
         }
     }
 }

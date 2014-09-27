@@ -1,7 +1,6 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -25,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -139,7 +139,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
                 plantType = "CO";
             } else if (plantType.equals("GlobalHQ")) {
                 plantType = ""; //no need cos global HQ global HQ looks ugly
-            } 
+            }
 
             g.setName(g.getName() + " " + plantType);
 
@@ -215,28 +215,49 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
 
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        postingDate = cal;
+        if (goodsIssuedDocument.getIssuedDate() == null && goodsIssuedDocument.getDeliverTo() == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The 'Issued Date' and 'Issued To' fields need to be updated before the Posting of Goods Issued Document. Posting was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
+        } else if (goodsIssuedDocument.getIssuedDate() == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The 'Issued Date' field needs to be updated before the Posting of Goods Issued Document. Posting was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
+        } else if (goodsIssuedDocument.getDeliverTo() == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The 'Issued To' field needs to be updated before the Posting of Goods Issued Document. Posting was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+        } else {
 
-        for (StockUnit g : stockUnitMainList) {
-            mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
-            mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
-            msul.deleteStockUnit(g.getId());
+            Calendar cal = Calendar.getInstance();
+            Date date = new Date();
+            cal.setTime(date);
+            postingDate = cal;
 
-            // Start: To check if Quantity = 0
-            stockUnitOld = mgrl.getStockUnit(g.getCommitStockUnitId());
-            if (stockUnitOld.getQty() == 0) {
-                msul.deleteStockUnit(stockUnitOld.getId());
+            for (StockUnit g : stockUnitMainList) {
+                mgrl.createGoodsIssuedDocumentDetail(goodsIssuedDocumentId, g.getStock().getId(), g.getQty());
+                mgrl.editGoodsIssuedDocument2(goodsIssuedDocumentId, postingDate);
+                msul.deleteStockUnit(g.getId());
+
+                // Start: To check if Quantity = 0
+                stockUnitOld = mgrl.getStockUnit(g.getCommitStockUnitId());
+                if (stockUnitOld.getQty() == 0) {
+                    msul.deleteStockUnit(stockUnitOld.getId());
+                }
+                // End
+
             }
-            // End
 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully created", ""));
+            
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
         }
-
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
     public String getPlantType() {

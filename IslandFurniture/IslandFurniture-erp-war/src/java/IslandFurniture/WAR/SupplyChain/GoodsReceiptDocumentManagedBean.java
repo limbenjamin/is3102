@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -193,25 +194,35 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("grddId", event.getComponent().getAttributes().get("grddId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocumentDetailId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("grddId");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
-        System.out.println("This is the storageBinId: " + storageBinId);
-        storageBin = msll.getStorageBin(storageBinId);
-        for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetailList) {
-            msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+
+        if (goodsReceiptDocument.getReceiptDate() == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The 'Receipt Date' field needs to be updated before the Posting of Goods Receipt Document. Posting was unsuccessful.", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocumentId);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
+        } else {
+            storageBin = msll.getStorageBin(storageBinId);
+            for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetailList) {
+                msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+            }
+
+            Calendar cal = Calendar.getInstance();
+            Date date = new Date();
+            cal.setTime(date);
+            postingDate = cal;
+
+            mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
+
+             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully created", ""));
+            
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+            goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
         }
-
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        postingDate = cal;
-
-        mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
-
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
-
     }
 
     public Calendar getReceiptDateCal() {

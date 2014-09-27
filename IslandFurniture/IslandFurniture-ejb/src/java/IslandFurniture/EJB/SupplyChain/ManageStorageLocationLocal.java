@@ -35,6 +35,9 @@ public interface ManageStorageLocationLocal {
     List<StorageArea> viewStorageArea(Plant plant);
 
     List<StorageBin> viewStorageBin(Plant plant);
-    
-    
+
+    List<StorageArea> viewStorageAreaSameName(Plant plant, String name);
+
+    List<StorageBin> viewStorageBinSameName(Plant plant, Long areaId, String binName);
+
 }

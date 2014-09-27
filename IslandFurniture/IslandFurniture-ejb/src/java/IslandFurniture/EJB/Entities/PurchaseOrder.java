@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Entities;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,18 +35,18 @@ public class PurchaseOrder implements Serializable {
     private Long id;
     @ManyToOne
     private Plant shipsTo;
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
     private List<PurchaseOrderDetail> purchaseOrderDetails;
     @ManyToOne
     private Supplier supplier;
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar orderDate;
     private PurchaseOrderStatus status;
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
-    
+
     public Long getId() {
         return id;
     }
@@ -93,7 +94,23 @@ public class PurchaseOrder implements Serializable {
     public void setOrderDate(Calendar orderDate) {
         this.orderDate = orderDate;
     }
-    
+
+    public PurchaseOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PurchaseOrderStatus status) {
+        this.status = status;
+    }
+
+    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
+        return monthlyProcurementPlan;
+    }
+
+    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
+        this.monthlyProcurementPlan = monthlyProcurementPlan;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -119,20 +136,14 @@ public class PurchaseOrder implements Serializable {
         return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder[ id=" + id + " ]";
     }
 
-    public PurchaseOrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PurchaseOrderStatus status) {
-        this.status = status;
-    }
-
-    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
-        return monthlyProcurementPlan;
-    }
-
-    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
-        this.monthlyProcurementPlan = monthlyProcurementPlan;
+    // Extra Methods
+    public boolean hasProcuredStock(ProcuredStock stock) {
+        for (PurchaseOrderDetail pod : purchaseOrderDetails) {
+            if (pod.getProcuredStock().equals(stock)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

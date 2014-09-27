@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
 
     <f:metadata>
         <f:viewParam name="grddId2" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
@@ -40,7 +41,7 @@
                                         <tr>
                                             <tr>
                                                 <td><h:outputText value="#{grd.id}"></h:outputText></td>
-                                                <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" p:type="date" class="form-control"></h:inputText></td>
+                                                <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" pt:type="date" class="form-control"></h:inputText></td>
                                                 <td> <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentManagedBean.plantId}">
                                                         <f:selectItem itemLabel="Select Plant" />
                                                         <f:selectItems value="#{goodsIssuedDocumentManagedBean.plantList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
@@ -127,7 +128,7 @@
                                                 <label class="col-sm-3 control-label">Stock: </label>
                                                 <div class="col-sm-9 inner-addon right-addon">
                                                     <i class="glyphicon glyphicon-bookmark"></i>
-                                                    <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentManagedBean.stockId}">
+                                                    <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentManagedBean.stockId}" pt:required="true">
                                                         <f:selectItem itemLabel="Select Stock" />
                                                         <f:selectItems value="#{goodsIssuedDocumentManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
                                                     </h:selectOneMenu>

@@ -56,5 +56,7 @@ public interface SupplierManagerLocal {
     public void editSupplier(Long id, String name, String countryName, String phoneNumber, String email);
 
     public Supplier addSupplier(String supplierName, String countryName, String phoneNo, String email);
+
+    public List<Stock> checkForValidPCD(Long stockID, Long mfID);
     
 }

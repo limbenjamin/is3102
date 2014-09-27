@@ -19,7 +19,7 @@ import IslandFurniture.StaticClasses.Helper.MapStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
-/**
+/**a
  * IMPORTANT! Data Loading client for all types of sample data. Some segments do
  * not check for duplicates (e.g. transactions), hence please do not run too
  * many times (might overload your database)!
