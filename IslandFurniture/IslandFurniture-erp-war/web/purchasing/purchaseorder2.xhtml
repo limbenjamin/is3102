@@ -8,7 +8,19 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">                      
+                    <div class="col-md-10">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                          <li><a href="purchaseorder.xhtml">Manage Purchase Orders</a></li>
+                          <li class="active"><strong>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</strong></li>
+                        </ol>                        
+                        <span class="pull-right">
+                            <a href="purchaseorder.xhtml">
+                            <button type="button" class="btn btn-default pull-right">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>
+                        </span>                        
                         <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.name}</strong></h5>
