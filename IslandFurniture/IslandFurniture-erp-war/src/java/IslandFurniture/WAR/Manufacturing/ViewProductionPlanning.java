@@ -259,7 +259,6 @@ public class ViewProductionPlanning implements Serializable {
             mpp.CreateProductionPlanFromForecast();
             mpp.setMF(MF);
             pullPPTableFromBean();
-            FacesContext.getCurrentInstance().getExternalContext().redirect(".");
         } catch (Exception ex) {
             success_msg = "";
             error_msg = "Unable to fufill capacity planning . Might not have solution to planning?";

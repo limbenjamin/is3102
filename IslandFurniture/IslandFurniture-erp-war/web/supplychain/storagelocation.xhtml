@@ -11,11 +11,17 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                          <li class="active"><strong>Storage Locations</strong></li>
+                        </ol>                       
+                    </div>                    
                     <div class="col-md-8">
-                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newBin">
+                        <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newBin">
                             <i class="fa fa-fw fa-plus"></i>New Storage Bin
                         </button>                         
-                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newArea">
+                        <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newArea">
                             <i class="fa fa-fw fa-plus"></i>New Storage Area
                         </button>                           
                         <h4>Storage Locations</h4><hr></hr>   
@@ -139,7 +145,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{storageLocationManagedBean.addStorageArea}" class="btn btn-success btn-round" value="Add"></h:commandButton>
+                                        <h:commandButton action="#{storageLocationManagedBean.addStorageArea}" class="btn btn-success btn-round" value="Add Storage Area"></h:commandButton>
                                     </div>
                                     </h:form> 
                                 </div>
@@ -174,7 +180,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{storageLocationManagedBean.addStorageBin}" value="Add" class="btn btn-success btn-round">
+                                        <h:commandButton action="#{storageLocationManagedBean.addStorageBin}" value="Add Storage Bin" class="btn btn-success btn-round">
                                             <f:param name="storageAreaId" value="#{StorageArea.id}" />
                                         </h:commandButton>
                                     </div>

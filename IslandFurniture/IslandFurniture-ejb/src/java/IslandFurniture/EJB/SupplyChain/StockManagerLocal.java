@@ -24,11 +24,11 @@ public interface StockManagerLocal {
 
     public boolean addMaterial(String name, Double weight);
 
-    public FurnitureModel addFurnitureModel(String name, Double price);
+    public String addFurnitureModel(String name, Double price);
 
     public List<FurnitureModel> displayFurnitureList();
 
-    public void deleteMaterial(Long materialID);
+    public String deleteMaterial(Long materialID);
 
     public List<RetailItem> displayItemList();
 
@@ -38,13 +38,13 @@ public interface StockManagerLocal {
 
     public boolean addRetailItem(String itemName, Double itemPrice);
 
-    public void deleteFurnitureModel(Long furnitureID);
+    public String deleteFurnitureModel(Long furnitureID);
 
-    public void editFurnitureModel(Long furnitureID, String furnitureName, Double price);
+    public String editFurnitureModel(Long furnitureID, String furnitureName, Double price);
 
     public FurnitureModel getFurniture(Long id);
 
-    public void addToBOM(Long furnitureID, Long materialID, Integer materialQuantity);
+    public String addToBOM(Long furnitureID, Long materialID, Integer materialQuantity);
 
     public List displayBOM(Long furnitureID);
 

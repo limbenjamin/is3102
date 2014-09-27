@@ -573,7 +573,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             int i_m = calendarPointer.get(Calendar.MONTH);
             int i_y = calendarPointer.get(Calendar.YEAR);
 
-            int currentpt = i_m*10 + i_w + i_y*1000;
+            int currentpt = i_m * 10 + i_w + i_y * 1000;
 
             //Fill up the gap before the first one or before the order...
             while (currentpt < targetpt) {
@@ -614,7 +614,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
                 i_w = temp_i_w;
                 i_m = temp_i_m;
                 i_y = temp_i_y;
-                currentpt = i_m*10 + i_w + i_y*1000;
+                currentpt = i_m * 10 + i_w + i_y * 1000;
             }
             //Recalculate the whole chain
             cascadeWMRP(first);
@@ -799,6 +799,11 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) l.getResultList()) {
             if (wmrp.getPurchaseOrderDetail() != null) {
+
+                if (wmrp.getPurchaseOrderDetail().getPurchaseOrder()
+                        != null) {
+                    throw new Exception("This Week MRP has been ordered and cant be uncreated !");
+                }
                 em.remove(wmrp.getPurchaseOrderDetail());
                 wmrp.setPurchaseOrderDetail(null);
                 System.out.println("uncreatePOForWeekMRP(): Created POD for" + wmrp);

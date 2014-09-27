@@ -26,17 +26,17 @@
                                 </div>
                                   <ui:repeat value="#{staffManaged2Bean.roleList}" var="role">
                                     <div class="list-group">                          
-                                      <a href="#" class="list-group-item">
+                                      <div class="list-group-item">
                                         <h:form>
                                             <div class="pull-right btn-group">
-                                                <h:commandButton value="Delete" class="btn btn-danger" action="#{staffManaged2Bean.removeRoleFromStaff}">
+                                                <h:commandButton value="Delete" class="btn btn-sm btn-danger" action="#{staffManaged2Bean.removeRoleFromStaff}">
                                                     <f:param name="staffId" value="#{staff.id}" />
                                                     <f:param name="roleId" value="#{role.id}" />
                                                 </h:commandButton>
                                             </div>
                                         </h:form>                                          
                                           <h5><strong><a href="#{application.contextPath}/it/roleprivilege2.xhtml?id=#{role.id}">#{role.name}</a></strong></h5>
-                                      </a>                                  
+                                      </div>                                  
                                     </div>
                                 </ui:repeat>
                               </section>
@@ -66,8 +66,8 @@
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{staffManaged2Bean.addRoleToStaff}" class="btn btn-success" value="Add Role"></h:commandButton>
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{staffManaged2Bean.addRoleToStaff}" class="btn btn-round btn-success" value="Add Role"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>

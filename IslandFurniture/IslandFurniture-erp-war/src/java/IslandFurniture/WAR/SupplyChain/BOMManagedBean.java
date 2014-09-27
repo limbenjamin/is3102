@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -131,8 +132,21 @@ public class BOMManagedBean implements Serializable {
         String furID = request.getParameter("addToBOMForm:fID");
         String mID = request.getParameter("addToBOMForm:materialID");
         String mQuantity = request.getParameter("addToBOMForm:materialQuantity");
+        if(mID.isEmpty() || mQuantity.isEmpty()) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Incomplete form", ""));    
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());  
+            return "furniture";   
+        }
         System.out.println("FurnitureID is " + furID + ". materialID is " + mID + ". materialQuantity is " + mQuantity);
-        stockManager.addToBOM(Long.parseLong(furID), Long.parseLong(mID), Integer.parseInt(mQuantity));
+        String msg = stockManager.addToBOM(Long.parseLong(furID), Long.parseLong(mID), Integer.parseInt(mQuantity));
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));   
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material successfully added into BOM", ""));        
+        } 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
     }

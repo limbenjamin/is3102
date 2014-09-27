@@ -10,12 +10,12 @@ import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.SupplyChain.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
-import java.awt.Color;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -70,8 +70,23 @@ public class FurnitureManagedBean implements Serializable {
         System.out.println("FurnitureManagedBean.addFurnitureModel()");
         String name = request.getParameter("addFurnitureForm:name");
         String price = request.getParameter("addFurnitureForm:price");
-        furniture = stockManager.addFurnitureModel(name, Double.parseDouble(price));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        if(name.isEmpty() || price.isEmpty()) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Invalid input", ""));      
+            return "furniture";
+        }
+        String output = stockManager.addFurnitureModel(name, Double.parseDouble(price));
+        System.out.println("Output is " + output); 
+        String id = output.split("#")[0];
+        String msg = output.split("#")[1];
+        if(msg.length() > 1) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));              
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture " + name + " successfully created. ", ""));             
+        }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", Long.parseLong(id));
         return "bom?faces-redirect=true";
     }
     public List<FurnitureModel> displayFurnitureList() {
@@ -82,14 +97,34 @@ public class FurnitureManagedBean implements Serializable {
     public String editFurnitureModel(ActionEvent event) throws IOException {
         System.out.println("FurnitureManagedBean.editFurnitureModel()");
         furniture = (FurnitureModel) event.getComponent().getAttributes().get("toEdit");
-        stockManager.editFurnitureModel(furniture.getId(), furniture.getName(), furniture.getPrice());
+        if(!(furniture.getPrice() instanceof Double)) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid input. Please insert a number", ""));
+            return "furniture";            
+        } 
+        String msg = stockManager.editFurnitureModel(furniture.getId(), furniture.getName(), furniture.getPrice());
+        if(msg == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture " + furniture.getName() + " has been updated", ""));            
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        }
         return "furniture";
     }
     public String deleteFurnitureModel() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("FurnitureManagedBean.deleteFurnitureModel()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fID"));
-        stockManager.deleteFurnitureModel(id);
+        String msg = stockManager.deleteFurnitureModel(id);
+        System.out.println("Message is " + msg);
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successful deletion of furniture", ""));
+        }
         return "furniture";
     }
     public String addFurnitureColour(ActionEvent event) throws IOException {

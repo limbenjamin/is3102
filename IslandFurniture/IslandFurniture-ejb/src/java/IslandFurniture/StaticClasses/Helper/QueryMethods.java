@@ -16,6 +16,7 @@ import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
+import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
@@ -440,13 +441,44 @@ public class QueryMethods {
     }
 
     public static boolean isMaterialWeekLocked(EntityManager em, ManufacturingFacility mf, Month requestedMonth, int requestedYear, int requestedWeek) {
+        
+        
         Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail !=null");
-
         q.setParameter("mf", mf);
         q.setParameter("w", requestedWeek);
         q.setParameter("m", requestedMonth);
         q.setParameter("y", requestedYear);
         return (q.getResultList().size() > 0);
+    }
+
+    public static boolean isMaterialWeekPermanentLocked(EntityManager em, ManufacturingFacility mf, Month requestedMonth, int requestedYear, int requestedWeek) {
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail.purchaseOrder != null");
+
+        q.setParameter("mf", mf);
+        q.setParameter("w", requestedWeek);
+        q.setParameter("m", requestedMonth);
+        q.setParameter("y", requestedYear);
+
+        for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
+
+            if (wmrp.getPurchaseOrderDetail() != null) {
+                if (wmrp.getPurchaseOrderDetail().getPurchaseOrder() != null) {
+                    return true;
+                }
+            }
+        }
+
+        return (false);
+    }
+
+    public static Supplier getSupplierByMfAndM(EntityManager em,ManufacturingFacility mf, Material mat) {
+
+        Query q = em.createNamedQuery("ProcurementContract.getSupplierForMFAndMaterial");
+        q.setParameter("mf", mf);
+        q.setParameter("ma", mat);
+        ProcurementContract pc =(ProcurementContract) q.getResultList().get(0);
+        return (pc.getSupplier());
+        
     }
 
 }
