@@ -11,14 +11,14 @@
             <ui:define name="content">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4>Messaging</h4>
                                 <ol class="breadcrumb">
                                   <li><a href="../dash.xhtml">Home</a></li>
                                   <li class="active"><strong>Messaging</strong></li>
-                                </ol>                                
-                                <hr></hr>       
-                            </div>                        
-                            <div class="col-md-9 col-sm-8">                                               
+                                </ol>  
+                                <h4>Messaging</h4>                                
+                                <hr></hr>                                
+                            </div>                                                   
+                            <div class="col-sm-8">                                               
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                     <span class="pull-right">
@@ -92,22 +92,22 @@
 
 
 
-                            <div class="col-md-3 col-sm-4">                      
+                            <div class="col-sm-4">                      
                               <section class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                   All Contacts
                                 </div>
                                 <div class="list-group contact-list">                          
                                     <ui:repeat value="#{messagingManagedBean.staffList}" var="staff">
-                                      <a href="#" class="list-group-item">
+                                      <div class="list-group-item">
                                           <img src="../assets/img/avatar.png" class="user-avatar-sm pull-left"></img>
                                           <span class="user-info">
                                               <h6>#{staff.name}</h6>
-                                              <p>Email: #{staff.emailAddress}<br />
-                                              Phone: #{staff.phoneNo}<br />
-                                              Branch: #{staff.plant.name}, #{staff.plant.country.name}</p>
+                                              <p><i class="fa fa-envelope-o"></i> #{staff.emailAddress}<br />
+                                                 <i class="fa fa-phone"></i> #{staff.phoneNo}<br />
+                                                 <i class="fa fa-map-marker"></i> #{staff.plant.name}, #{staff.plant.country.name}</p>
                                           </span>
-                                      </a>
+                                      </div>
                                     </ui:repeat>                                                               
                                 </div>
                               </section>

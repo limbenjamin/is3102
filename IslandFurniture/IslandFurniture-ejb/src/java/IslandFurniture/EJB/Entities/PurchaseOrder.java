@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -36,7 +37,7 @@ public class PurchaseOrder implements Serializable {
     @ManyToOne
     private Plant shipsTo;
     @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
-    private List<PurchaseOrderDetail> purchaseOrderDetails;
+    private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<PurchaseOrderDetail>();
     @ManyToOne
     private Supplier supplier;
     @OneToOne

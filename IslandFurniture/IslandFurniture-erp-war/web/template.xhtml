@@ -19,6 +19,46 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/dashboard.css"></link> 
         <link rel="stylesheet" href="#{application.contextPath}/assets/plugins/select2/select2.css"></link>
         <script src="#{application.contextPath}/assets/plugins/modernizr.js"></script>
+        <!-- James Production Planning -->
+            <style>
+            .summary{
+                background-color: yellowgreen;
+            }
+            .editable{
+            }
+
+            .normal_odd{
+                background-color: #cccccc;
+            }
+            .normal_even{
+                background-color: white;
+            }
+
+            .HEAVY_WORKLOAD
+            {
+                background-color: red;
+                filter: alpha(opacity=80);
+            }
+
+            .MEDIUM_WORKLOAD
+            {
+                background-color: yellow;
+                filter: alpha(opacity=80);
+            }
+
+            .LIGHT_WORKLOAD
+            {
+                background-color: green;
+                filter: alpha(opacity=80);
+            }
+
+            .ERROR
+            {
+                background-color: red;
+            }
+
+
+        </style>
     </h:head>
     <h:body>
         <div class="app">
@@ -61,7 +101,7 @@
                             <div class="badge badge-top">
                                 <h:form id="updateCount">
                                     <span>#{loginManagedBean.count}</span>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount}" update="updateCount" />
+                                    
                                 </h:form>
                             </div>
                         </a>
@@ -83,13 +123,12 @@
                                             </a>
                                         </li>
                                     </c:forEach>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                    
                                 </h:form>
                                 </ul>
                             </div>
                         </div>
                     </li>
-
 
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown">
@@ -101,10 +140,6 @@
                             </li>
                             <li>
                                 <h:link value="Change Password" outcome="changepassword"/>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">Notification Settings</a>
                             </li>
                         </ul>
                     </li>
@@ -165,7 +200,6 @@
                                 </div>
                             </c:if>
                             <ui:insert name="content" >Content</ui:insert>
-
                         </div>
                         <!-- /inner content wrapper -->
 

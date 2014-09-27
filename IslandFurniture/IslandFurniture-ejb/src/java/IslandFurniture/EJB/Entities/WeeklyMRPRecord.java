@@ -44,6 +44,7 @@ public class WeeklyMRPRecord implements Serializable {
     private Month month; //requirement date
     private Integer year; //requirement date
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -65,7 +66,7 @@ public class WeeklyMRPRecord implements Serializable {
     private Integer orderAMT = 0;
     private Integer orderLot = 0;
     private Integer lotSize = 1;
-    private Integer plannedOrder  = 0;
+    private Integer plannedOrder = 0;
 
     @OneToOne
     private WeeklyProductionPlan weeklyProductionPlan; // This is useless . remove it next time
@@ -206,6 +207,7 @@ public class WeeklyMRPRecord implements Serializable {
     }
 
     public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 
@@ -234,8 +236,7 @@ public class WeeklyMRPRecord implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyMRPRecord[ id=" + this.material.getId() + "," + week + "," + month + "," + year + " ]";
     }
-    
-    
+
     public Integer getPlannedOrder() {
         return plannedOrder;
     }
@@ -243,5 +244,6 @@ public class WeeklyMRPRecord implements Serializable {
     public void setPlannedOrder(Integer plannedOrder) {
         this.plannedOrder = plannedOrder;
     }
+
 
 }
