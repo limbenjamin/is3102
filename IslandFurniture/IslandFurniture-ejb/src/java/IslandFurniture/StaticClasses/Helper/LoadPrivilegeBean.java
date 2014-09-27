@@ -94,9 +94,9 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Purchase Order", "/purchasing/purchaseorder.xhtml", "fa-home", "Purchase Order", "true","20"},
             { "Purchase Order", "/purchasing/purchaseorder2.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Production Planner", "/productionplanning/index.xhtml", "fa-home", "Production Planner", "true","21"},
-            { "Supplier", "/supplychain/supplier.xhtml", "fa-home", "Supplier", "true","22"},
-            { "Supplier", "/supplychain/procurementContract.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Stock Supply", "/supplychain/stocksupplier.xhtml", "fa-home", "Stock Supply Request", "true","23"},
+            { "Supplier", "/salesplanning/supplier.xhtml", "fa-home", "Supplier", "true","22"},
+            { "Supplier", "/salesplanning/procurementContract.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Stock Supply", "/salesplanning/stockSupplier.xhtml", "fa-home", "Stock Supply Request", "true","23"},
         };
         
         for (int i=0; i<privileges.length; i++){

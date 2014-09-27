@@ -115,7 +115,6 @@ public class LoginManagedBean implements Serializable {
             Iterator<Url> iterator3 = existingUrlList.iterator();
             while (iterator3.hasNext()) {
                 url = iterator3.next();
-                System.err.print(url.getLink()+"   "+url.getIcon()+"    "+url.getMenuItemName());
                 menu += "<li><a href="+ absoluteWebPath +url.getLink()+"><i class=\"fa "+url.getIcon()+"\"></i><span>"+url.getMenuItemName()+"</span></a></li>";
             }            
             return "dash";
