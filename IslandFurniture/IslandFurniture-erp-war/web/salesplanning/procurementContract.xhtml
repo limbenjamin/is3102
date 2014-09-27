@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:body>
         <ui:composition template="../template.xhtml"> 
@@ -17,58 +18,39 @@
                         <h4>Procurement Contract</h4><hr></hr>   
                     </div>
                     <div class="col-md-10">
-                        
-                        <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active" id="areas">                        
-                        
-                            <section name="viewStorageArea" class="panel">  
-                                <div class="panel-heading dashboard-title-panel">
-                                    Procurement Contract Details
-                                </div>
-                                <div class="list-group-item">
-                                <table class="table table-hover">
-                                    <tr>
-                                        <th>Stock Supplied</th>
-                                        <th>Manufacturing Facility</th>
-                                        <th>Lot Size</th>
-                                        <th>Lead Time (Days)</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
-                                    </tr>
+                            <div class="tab-pane active">                        
+                                <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
-                                        <ui:repeat value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">
-                                            <tr>
-                                                <td>
-                                                    <h:outputText id="stockName" value="#{PCD.procuredStock.name}"></h:outputText>
-                                                </td>
-                                                <td>
-                                                    <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
-                                                </td>
-                                                <td>
-                                                    <h:inputText id="size" value="#{PCD.lotSize}" class="form-control"></h:inputText>
-                                                </td>
-                                                <td>
-                                                    <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control"></h:inputText>
-                                                </td>
-                                                <td>
-                                                    <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                        <f:attribute name="toEdit" value="#{PCD}" />
-                                                        <f:ajax execute="@form" render=":deletePCDForm:PCDList"/>
-                                                    </h:commandButton>
-                                                    <i class="fa fa-lg fa-save icon-button"></i>                                                
-                                                </td>
-                                                <td><h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:param name="pcdID" value="#{PCD.id}" />
-                                                    </h:commandButton>    
-                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>     
-                                                </td>
-                                            </tr>
-                                        </ui:repeat>
+                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList" tableStyle="width: auto">
+                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}">
+                                                <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}">
+                                                <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Lot Size">
+                                                <h:inputText id="size" value="#{PCD.lotSize}" class="form-control"></h:inputText>
+                                            </p:column>
+                                            <p:column headerText="Lead Time(Days)">
+                                                <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control"></h:inputText>
+                                            </p:column>
+                                            <p:column headerText="Edit" style="text-align: center">
+                                                <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{PCD}" />
+                                                    <f:ajax execute="@form" render=":deletePCDForm:PCDList"/>
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>                                  
+                                            </p:column>
+                                            <p:column headerText="Delete" style="text-align: center">
+                                                <h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="pcdID" value="#{PCD.id}" />
+                                                </h:commandButton>     
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
+                                            </p:column>
+                                        </p:dataTable>
                                     </h:form> 
-                                </table>
-                                </div>
-                            </section>
+                                </section>
                             </div>
                         </div>
                     </div>  

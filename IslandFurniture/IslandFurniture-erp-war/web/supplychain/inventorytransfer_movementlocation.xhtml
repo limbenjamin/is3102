@@ -150,7 +150,7 @@
 
                                                     <div class="col-sm-9 inner-addon right-addon">
                                                         <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}" pt:required="true">
+                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementLocationManagedBean.storageAreaId}" pt:required="true">
                                                             <p:ajax listener="#{inventoryTransferMovementLocationManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                                             <f:selectItem itemLabel="Select Storage Area" />
                                                             <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />

@@ -252,6 +252,9 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
             }
 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully created", ""));
+            
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
         }

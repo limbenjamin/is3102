@@ -12,6 +12,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
@@ -19,11 +20,15 @@ import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.StaticClasses.Helper.*;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -68,19 +73,19 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             mssr = iterator2.next();
             month= mssr.getMonth();
             Integer year = mssr.getYear();
-            mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),mssr.getStock().getId(),month,year));
-            if (mpp.isLocked().equals(Boolean.FALSE)){
-                mpp.setQty(0);
-                em.persist(mpp);
+            try{
+                mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),mssr.getStock().getId(),month,year));
+                if (mpp.isLocked().equals(Boolean.FALSE)){
+                    mpp.setQty(0);
+                    em.merge(mpp);
+                }
+            }catch(Exception e){
+                
             }
         }
         Iterator<MonthlyStockSupplyReq> iterator = mssrList.iterator();
         while(iterator.hasNext()){
             mssr = iterator.next();
-            //query = em.createQuery("Select ss.manufacturingFacility FROM StockSupplied ss WHERE ss.countryOffice.id=:co AND ss.stock.id=:stock");
-            //query.setParameter("co", mssr.getCountryOffice().getId());
-            //query.setParameter("stock", mssr.getStock().getId());
-            //mf = (ManufacturingFacility) query.getSingleResult();
             month= mssr.getMonth();
             Integer year = mssr.getYear();
             mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),mssr.getStock().getId(),month,year));
@@ -152,18 +157,19 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         Iterator<CountryOffice> iterator = coList.iterator();
         while(iterator.hasNext()){
             co = iterator.next();
-            Calendar cal = new GregorianCalendar(year, monthInt, 1);
-            int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            Calendar cal = new GregorianCalendar(year,month.value, 1);
             //day = date of first monday in month
             int day = cal.get(Calendar.DAY_OF_WEEK);
-            while (day != 1) {
+            /*while (day != 2) {
                 cal.add(Calendar.DATE, 1);
                 day = cal.get(Calendar.DAY_OF_WEEK);
-            }
-            for (int j=0;j<22;j+=7){ //Add purchase order for week 1 to week 3
+            }*/
+            int maxWeekNumber = Helper.getNumOfWeeks( month.value,year);
+            int maxDay = Helper.getNumWorkDays(month, year);
+            int daysInLastWeek = Helper.getNumOfDaysInWeek(month.value, year, maxWeekNumber);
+            for (int j=0;j< maxWeekNumber-1;j+=1){ //Add purchase order for week 1 to max week-1
                 purchaseOrder = new PurchaseOrder();
                 purchaseOrder.setShipsTo(co);
-                cal.add(Calendar.DATE, j);
                 purchaseOrder.setOrderDate(cal);
                 purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
                 //Adding purchase order detail
@@ -179,13 +185,42 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     procuredStock = (ProcuredStock) mssr.getStock();
                     retailItem = (RetailItem) procuredStock;
                     purchaseOrderDetail.setProcuredStock(procuredStock);
-                    int qty = mssr.getQtyRequested()/daysInMonth*7;
+                    int qty = mssr.getQtyRequested()/maxDay*7;
                     purchaseOrderDetail.setQuantity(qty);
                     purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                     em.persist(purchaseOrderDetail);
                 }
                 em.persist(purchaseOrder);
-            }   
+                em.flush();
+                cal.add(Calendar.DATE, 7);
+            }
+            //last week
+            purchaseOrder = new PurchaseOrder();
+            purchaseOrder.setShipsTo(co);
+            purchaseOrder.setOrderDate(cal);
+            purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
+            //Adding purchase order detail
+            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock.id IN (SELECT p.id FROM ProcuredStock p) AND m.year=:year AND m.month=:month AND m.countryOffice=:co");
+            query.setParameter("year", year);
+            query.setParameter("month", month);
+            query.setParameter("co", co);
+            mssrList = query.getResultList();
+            Iterator<MonthlyStockSupplyReq> iterator2 = mssrList.iterator();
+            while(iterator2.hasNext()){
+                mssr = iterator2.next();
+                purchaseOrderDetail = new PurchaseOrderDetail();
+                procuredStock = (ProcuredStock) mssr.getStock();
+                purchaseOrderDetail.setProcuredStock(procuredStock);
+                cal.add(Calendar.MONTH, 1);
+                month = Month.getMonth(cal.get(Calendar.MONTH));
+                int maxDay2 = Helper.getNumWorkDays(month, year);
+                int qty = mssr.getQtyRequested()/maxDay*daysInLastWeek;
+                purchaseOrderDetail.setQuantity(qty);
+                purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
+                em.persist(purchaseOrderDetail);
+            }
+            em.persist(purchaseOrder);
+            em.flush();
         }
     }
     
