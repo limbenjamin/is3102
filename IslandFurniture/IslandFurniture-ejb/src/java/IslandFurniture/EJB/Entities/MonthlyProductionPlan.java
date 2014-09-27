@@ -7,28 +7,19 @@ package IslandFurniture.EJB.Entities;
 
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
 import IslandFurniture.StaticClasses.Helper.Helper;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.Query;
 
 /**
  *
@@ -127,6 +118,7 @@ public class MonthlyProductionPlan implements Serializable {
             t.add(Calendar.DAY_OF_MONTH, -1);
 
             if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) {
+                System.out.println("Expired(): MPP="+this.month+"/"+this.year + " VS Server Time:" + t.get(Calendar.MONTH) + "/"+ t.get(Calendar.YEAR));
                 return (true);
             }
 
