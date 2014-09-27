@@ -42,8 +42,7 @@
                                             <tr>
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="materialName" value="#{material.name}" class="form-control transparent-form"></h:inputText>
+                                                    <h:outputText id="materialName" value="#{material.name}" class="transparent-form"></h:outputText>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -92,7 +91,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Material Weight: </label>
+                                <label class="col-sm-4 control-label">Material Weight(g): </label>
                                 <div class="col-sm-8">
                                     <h:inputText id="weight" class="form-control"></h:inputText>
                                 </div>

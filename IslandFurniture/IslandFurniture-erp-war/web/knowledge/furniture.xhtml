@@ -72,8 +72,7 @@
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{furnitureManagedBean.editFurnitureModel}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:attribute name="toEdit" value="#{f}" />
-                                                    <f:ajax execute="@form" render=":displayFurniture:furnitureList"/>
+                                                    <f:attribute name="toEdit" value="#{f}" /> 
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>                                                
                                             </td>
@@ -105,14 +104,14 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Furniture Name: </label>
-                                <div class="col-sm-8">
-                                    <h:inputText id="name" class="form-control" required="true"></h:inputText>
+                                <div class="col-sm-8"> 
+                                    <h:inputText id="name" class="form-control"></h:inputText>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Furniture Price: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="price" class="form-control" required="true"></h:inputText>
+                                    <h:inputText id="price" class="form-control"></h:inputText>
                                 </div>
                             </div>
                         </div>

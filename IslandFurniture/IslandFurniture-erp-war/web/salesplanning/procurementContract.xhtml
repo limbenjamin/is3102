@@ -22,7 +22,7 @@
                             <div class="tab-pane active">                        
                                 <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
-                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList" tableStyle="width: auto">
+                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">
                                             <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}">
                                                 <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
                                             </p:column>
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Lead Time: </label>
+                                <label class="col-sm-4 control-label">Lead Time(days): </label>
                                 <div class="col-sm-8">
                                     <h:inputText id="leadTime" class="form-control" required="true"></h:inputText>
                                 </div>
