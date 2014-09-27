@@ -92,12 +92,10 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
 
                 role = mrbl.getRoleFromName("IT (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Staff");
-                mrbl.addPrivilegeToRole(role.getId(), "Production Planner");
                 
                 role = mrbl.getRoleFromName("Purchasing (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
                 mrbl.addPrivilegeToRole(role.getId(), "Purchase Order");
-                mrbl.addPrivilegeToRole(role.getId(), "Production Planner");
                 
                 role = mrbl.getRoleFromName("Warehouse (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Goods Issued");
@@ -105,10 +103,10 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Monitoring");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Transfer");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
-                mrbl.addPrivilegeToRole(role.getId(), "Production Planner");
 
                 role = mrbl.getRoleFromName("Production Planning (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
+                mrbl.addPrivilegeToRole(role.getId(), "Manage Production Status");
                 mrbl.addPrivilegeToRole(role.getId(), "Production Planner");
                 
                 role = mrbl.getRoleFromName("Management (Mfg)");
@@ -116,7 +114,6 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
                 mrbl.addPrivilegeToRole(role.getId(), "Purchase Order");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
-                mrbl.addPrivilegeToRole(role.getId(), "Production Planner");
 
                 role = mrbl.getRoleFromName("IT (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Plant");
