@@ -75,10 +75,10 @@ public class ManageProductionPlanTimerBean {
             Integer t_month = Helper.addoneWeek(month, year, week, 1, Calendar.MONTH);
             Integer t_week = Helper.addoneWeek(week, year, week, 1, Calendar.WEEK_OF_MONTH);
             Integer t_year = Helper.addoneWeek(week, year, week, 1, Calendar.YEAR);
-            
-            this.month=t_month;
-            this.week=t_week;
-            this.year=t_year;
+
+            this.month = t_month;
+            this.week = t_week;
+            this.year = t_year;
             System.out.println("Event() : Now is " + week + "/" + month + "/" + year);
         }
 
@@ -108,7 +108,7 @@ public class ManageProductionPlanTimerBean {
 
         public Calendar getCalendar() throws Exception {
             Calendar cal = Calendar.getInstance();
-            cal.set(year, month, Math.max(week * 7, Helper.getNumWorkDays(Helper.translateMonth(month), year)));
+            cal.set(year, month, Math.min(week * 7, Helper.getNumWorkDays(Helper.translateMonth(month), year)));
             return cal;
 
         }
@@ -122,9 +122,9 @@ public class ManageProductionPlanTimerBean {
     }
 //by right supposed to be one min
 
-    @Schedule(second = "10", hour = "*", minute = "*",info = "Production Planning")
+    //@Schedule(second = "10", hour = "*", minute = "*", info = "Production Planning")
     public void automaticProductionPlanning() throws Exception {
-
+        
         //oh one month has passed
         cdate.addWeek();
 

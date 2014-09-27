@@ -5,15 +5,14 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 
-
-
     <ui:composition template="../template.xhtml"
                     xmlns="http://www.w3.org/1999/xhtml"
                     xmlns:ui="http://java.sun.com/jsf/facelets"
                     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-        <ui:define name="content">   
-            <p:outputPanel id="page">
-                <h:form id="form">
+        
+        <ui:define name="content" id="pppage">   
+
+                <h:form id="ppform">
                     <h:panelGroup layout="block" >
                         <span style='color:red'>
                             <h:outputLabel rendered="#{ProductionPlanning.dt.internalrows.size() le 1  and ProductionPlanning.MF.length() gt 0}" value="Error: No Stock Supply Requirement to plan anything ! &lt;br/&gt; " escape="false"/>
@@ -29,7 +28,7 @@
                     <h:panelGroup layout="block" >
                         <h3>Select Manufacturing Facility:</h3>
                         <h:selectOneMenu value="#{ProductionPlanning.MF}" id="select_mf">
-                            <f:ajax execute="@form" render=":form" listener="#{ProductionPlanning.mfListerner()}"></f:ajax>
+                            <f:ajax execute="@form" render=":ppform" listener="#{ProductionPlanning.mfListerner()}"></f:ajax>
                             <f:selectItem itemValue="#{null}" itemLabel="--Select Manufacturing Facility --" />
                             <f:selectItems value="#{ProductionPlanning.MF_LIST}"/>
 
@@ -39,8 +38,8 @@
                     </h:panelGroup>
                     <br/>
                     <br/>
-                    <p:tabView id="panel" activeIndex="#{ProductionPlanning.activePanelIndex}" dynamic="true">
-                        <p:ajax event="tabChange" listener="#{ProductionPlanning.onTabChange}" update=":form:panel"/>
+                    <p:tabView id="panel" activeIndex="#{ProductionPlanning.activePanelIndex}" dynamic="true" style="">
+                        <p:ajax event="tabChange" listener="#{ProductionPlanning.onTabChange}" update=":ppform:panel"/>
                         <p:tab title="Production Planning">
                             <b>Instruction</b>
                             <ol style="">
@@ -59,7 +58,7 @@
                             </ol>
 
 
-                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 0}">
+                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}"  rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 0}">
                                 <f:facet name="header">
                                     Production Planning Table
                                     <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
@@ -100,10 +99,10 @@
 
 
                                 <p:commandButton value="Manual Edit" id="me">
-                                    <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updatePPTableToBean()}" />
+                                    <f:ajax event="click"  render=":ppform" execute="@all" listener="#{ProductionPlanning.updatePPTableToBean()}" />
                                 </p:commandButton>
                                 <p:commandButton  value="Auto-Mode Plan" id="auto">
-                                    <f:ajax event="click" render=":form" execute="@all" listener="#{ProductionPlanning.automaticPlanning()}"/>
+                                    <f:ajax event="click" render=":ppform" execute="@all" listener="#{ProductionPlanning.automaticPlanning()}"/>
                                 </p:commandButton>
                             </h:panelGroup>
                         </p:tab>
@@ -114,7 +113,7 @@
                         <p:tab id="panel2" title="Weekly Production Planning" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
 
 
-                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="wpp_dt"  var="datarow"  value="#{ProductionPlanning.wpp.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
+                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="wpp_dt"  var="datarow"  value="#{ProductionPlanning.wpp.internalrows}" rowIndexVar="ri" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
                                 <f:facet name="header">
                                     Weekly Production Plan for <p:outputLabel value="#{ProductionPlanning.currentDrill}"/>
                                     <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
@@ -136,7 +135,7 @@
                             </p:dataTable>
                             <br/>
                             <p:commandButton value="Manual Update" id="updateWPP">
-                                <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
+                                <f:ajax event="click"  render=":ppform" execute="@all" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
                             </p:commandButton>
 
                         </p:tab>
@@ -144,7 +143,7 @@
                         <!-- Material Resource Planning -->
 
                         <p:tab title="Material Resource Planning" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
-                             <p:dataTable tableStyle="width:auto"  rowStyleClass="#{datarow.colorClass}" id="mrp_dt"  var="datarow"  value="#{ProductionPlanning.mrp.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
+                             <p:dataTable tableStyle="width:auto"  rowStyleClass="#{datarow.colorClass}" id="mrp_dt"  var="datarow"  value="#{ProductionPlanning.mrp.internalrows}"  rowIndexVar="ri" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
                         <f:facet name="header">
                             Material Resource Plan for <p:outputLabel value="#{ProductionPlanning.currentDrill}"/>
                             <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
@@ -172,7 +171,7 @@
                         <!-- Capacity Management -->
 
                         <p:tab title="Capacity Management">
-                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="capacity_dt"  var="datarow"  value="#{ProductionPlanning.capacity_dt.internalrows}" resizableColumns="true" rowIndexVar="ri" rendered="#{ProductionPlanning.capacity_dt.internalrows.size() gt 0}">
+                            <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="capacity_dt"  var="datarow"  value="#{ProductionPlanning.capacity_dt.internalrows}"  rowIndexVar="ri" rendered="#{ProductionPlanning.capacity_dt.internalrows.size() gt 0}">
                                 <f:facet name="header">
                                     Production Planning Table
                                     <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
@@ -194,7 +193,7 @@
                             </p:dataTable>
 
                             <p:commandButton value="Update Value" id="updateCapacity">
-                                <f:ajax event="click"  render=":form" execute="@all" listener="#{ProductionPlanning.updatePCTableToBean()}" />
+                                <f:ajax event="click"  render=":ppform" execute="@all" listener="#{ProductionPlanning.updatePCTableToBean()}" />
                             </p:commandButton>
                         </p:tab>
 
@@ -202,7 +201,6 @@
                 </h:form>
 
 
-            </p:outputPanel>
         </ui:define>
     </ui:composition>
 </html>
