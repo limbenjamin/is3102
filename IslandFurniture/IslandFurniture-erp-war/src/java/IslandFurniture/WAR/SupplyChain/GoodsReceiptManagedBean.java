@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -94,6 +95,9 @@ public class GoodsReceiptManagedBean implements Serializable {
         mgrl.updateIncomingShipmentStatus(goodsIssuedDocumentId);
         inboundShipmentList = mgrl.viewInboundShipment(plant);
         ifInboundShipmentListEmpty = inboundShipmentList.isEmpty();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The shipment status has been updated", ""));
+        
         return "goodsreceipt?faces-redirect=true";
     }
 
@@ -121,6 +125,8 @@ public class GoodsReceiptManagedBean implements Serializable {
         mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
         ifGoodsReceiptDocumentListEmpty = goodsReceiptDocumentList.isEmpty();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully deleted", ""));
         return "goodsreceiptdocument";
     }
 

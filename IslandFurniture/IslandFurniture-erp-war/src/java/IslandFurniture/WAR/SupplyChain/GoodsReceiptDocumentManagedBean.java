@@ -216,6 +216,9 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
             mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
 
+             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully created", ""));
+            
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
             goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
