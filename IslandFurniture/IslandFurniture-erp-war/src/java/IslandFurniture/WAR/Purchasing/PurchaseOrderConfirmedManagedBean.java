@@ -29,6 +29,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
@@ -81,9 +82,15 @@ public class PurchaseOrderConfirmedManagedBean {
         staff = staffBean.getStaff(username);
 
         this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("COid");
-        if (purchaseOrderId != null) {
-            purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
-        }
+        try {
+            if(purchaseOrderId == null) {
+                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                    ec.redirect("purchaseorder.xhtml"); 
+            }
+        } catch(IOException ex) {
+            
+        }        
+        purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         if (staff.getPlant() instanceof ManufacturingFacility) {
             mf = (ManufacturingFacility) staff.getPlant();
         }

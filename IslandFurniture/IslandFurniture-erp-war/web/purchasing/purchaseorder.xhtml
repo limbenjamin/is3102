@@ -15,7 +15,7 @@
                             <li class="active"><strong>Manage Purchase Orders</strong></li>
                         </ol>                        
                     </div>
-                    <div class="col-md-8">                        
+                    <div class="col-md-10">                        
                         <span class="pull-right">
                         <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newPurchaseOrder">
                             <i class="fa fa-fw fa-plus"></i>New Purchase Order
@@ -23,7 +23,7 @@
                         </span>
                         <h4>Manage Purchase Orders</h4><hr></hr>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         
                         <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                           <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
@@ -43,6 +43,7 @@
                                     <tr>
                                         <th>Order ID</th>
                                         <th>Status</th>
+                                        <th>Supplier</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
@@ -51,6 +52,7 @@
                                             <tr>
                                                 <td>#{PO.id}</td>
                                                 <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
                                                 <td>
                                                     <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
@@ -82,6 +84,7 @@
                                         <th>Order ID</th>
                                         <th>Order Date</th>
                                         <th>Status</th>
+                                        <th>Supplier</th>
                                         <th>View</th>
                                     </tr>
                                     <h:form id="viewPOconfirmed" class="form-horizontal">
@@ -94,6 +97,7 @@
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{CO.status}</td>
+                                                <td>#{CO.supplier.name}</td>
                                                 <td>
                                                     <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderConfirmedActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="COid" value="#{CO.id}" />
