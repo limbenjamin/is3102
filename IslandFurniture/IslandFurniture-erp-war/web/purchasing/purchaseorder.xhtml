@@ -9,11 +9,13 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
                             <li class="active"><strong>Manage Purchase Orders</strong></li>
                         </ol>                        
+                    </div>
+                    <div class="col-md-8">                        
                         <span class="pull-right">
                         <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newPurchaseOrder">
                             <i class="fa fa-fw fa-plus"></i>New Purchase Order
@@ -21,7 +23,7 @@
                         </span>
                         <h4>Manage Purchase Orders</h4><hr></hr>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         
                         <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                           <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
