@@ -14,6 +14,10 @@
     background-color:#d9534f;
 }
 
+.btn-extra-right {
+    margin-right: 15px;
+}
+
 .btn-right-margin {
     margin: 0px 5px;
 }
