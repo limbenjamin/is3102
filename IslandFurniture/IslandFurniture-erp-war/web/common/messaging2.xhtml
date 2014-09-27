@@ -10,20 +10,23 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="col-md-12">
-                            <h4>#{messagingManaged2Bean.messageThread.title}</h4>
-                                <ol class="breadcrumb">
-                                  <li><a href="../dash.xhtml">Home</a></li>
-                                  <li><a href="messaging.xhtml">Messaging</a></li>
-                                  <li class="active"><strong>#{messagingManaged2Bean.messageThread.title}</strong></li>
-                                </ol>
-                            <hr></hr>
-                        </div>
-                        <div class="col-md-12">                      
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                          <li><a href="../dash.xhtml">Home</a></li>
+                          <li><a href="messaging.xhtml">Messaging</a></li>
+                          <li class="active"><strong>#{messagingManaged2Bean.messageThread.title}</strong></li>
+                        </ol>
+                        <hr></hr>
+                    </div>                    
+                    <div class="col-md-8">                     
                           <section class="panel">
                             <div class="panel-heading dashboard-title-panel">
-                                <p>Messages in '#{messagingManaged2Bean.messageThread.title}'</p>
+                                <span class="pull-right">
+                                    <a href="messaging.xhtml" class="btn btn-panel-right">
+                                        <span class="fa fa-arrow-circle-o-left"></span> back
+                                    </a>
+                                </span>                                
+                                Messages in '#{messagingManaged2Bean.messageThread.title}'
                             </div>
                            
                                 <c:forEach items="${messagingManaged2Bean.messageList}" var="message">
@@ -65,7 +68,6 @@
                                   
                               </div>
                           </section>
-                        </div>
                     </div>
 
                 </div>
