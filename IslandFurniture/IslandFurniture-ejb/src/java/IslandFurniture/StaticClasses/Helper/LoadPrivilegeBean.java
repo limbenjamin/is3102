@@ -43,15 +43,15 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Change Password","Manage Plant","Manage Staff","Manage Roles","MSSR",
         "Material","Furniture","Retail Item","Create Forecast","View Notifications",
         "Review Forecast","Manage Production Status","Goods Issued","Goods Receipt",
-        "Inventory Monitoring","Inventory Monitoring2","Inventory Transfer","Storage Location","Purchase Order",
-        "Production Planner"};
+        "Inventory Report","Inventory Monitoring","Inventory Transfer","Storage Location","Purchase Order",
+        "Production Planner","Supplier","Stock Supply"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
         "Change account password","Manage Stores, Manufacturing Facilities and Country Offices","Create staff account and assign roles ","Manage Roles amd privileges for each role","View MSSR",
         "Add and edit materials","Add and edit furnitures","Add and edit retail item","Create sales forecast","View all notifications",
-        "Review sales forecast","Manage production status","Issue goods","Receive goods","Monitor inventory","Monitor inventory","Transfer inventory","Manage Storage Locations",
-        "Manage purchase orders","Do production planning"};
+        "Review sales forecast","Manage production status","Issue goods","Receive goods","View Inventory report","Monitor inventory","Transfer inventory","Manage Storage Locations",
+        "Manage purchase orders","Do production planning","View supplier","View stock supply"};
         
         
         String[][] arr = new String [][] { 
@@ -80,20 +80,23 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Goods Issued", "/supplychain/goodsissueddocumentcommit.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Goods Receipt", "/supplychain/goodsreceipt.xhtml", "fa-home", "Goods Receipt", "true","16"},
             { "Goods Receipt", "/supplychain/goodsreceiptdocuentposted.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Monitoring", "/supplychain/inventorymonitoring.xhtml", "fa-home", "Inventory Monitoring", "true","16"},
+            { "Inventory Report", "/supplychain/inventorymonitoring_reportmgmt.xhtml", "fa-home", "Inventory Report", "true","16"},
+            { "Inventory Monitoring", "/supplychain/inventorymonitoring.xhtml", "fa-home", "Inventory Monitoring", "true","17"},
             { "Inventory Monitoring", "/supplychain/inventorymonitoring_report.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Monitoring2", "/supplychain/inventorymonitoring_location.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Monitoring2", "/supplychain/inventorymonitoring_stock.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Monitoring2", "/supplychain/inventorymonitoring_ststock.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Monitoring2", "/supplychain/inventorymonitoring_stlocation.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Transfer", "/supplychain/inventorytransfer.xhtml", "fa-home", "Inventory Transfer", "true","17"},
+            { "Inventory Monitoring", "/supplychain/inventorymonitoring_location.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Inventory Monitoring", "/supplychain/inventorymonitoring_stock.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Inventory Monitoring", "/supplychain/inventorymonitoring_ststock.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Inventory Monitoring", "/supplychain/inventorymonitoring_stlocation.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Inventory Transfer", "/supplychain/inventorytransfer.xhtml", "fa-home", "Inventory Transfer", "true","18"},
             { "Inventory Transfer", "/supplychain/inventorytransfer_movementlocation.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Transfer", "/supplychain/inventorytransfer_movementstock.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Storage Location", "/supplychain/storagelocation.xhtml", "fa-home", "Storage Location", "true","18"},
-            { "Purchase Order", "/purchasing/purchaseorder.xhtml", "fa-home", "Purchase Order", "true","19"},
+            { "Storage Location", "/supplychain/storagelocation.xhtml", "fa-home", "Storage Location", "true","19"},
+            { "Purchase Order", "/purchasing/purchaseorder.xhtml", "fa-home", "Purchase Order", "true","20"},
             { "Purchase Order", "/purchasing/purchaseorder2.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Production Planner", "/productionplanning/index.xhtml", "fa-home", "Production Planner", "true","20"},
-            
+            { "Production Planner", "/productionplanning/index.xhtml", "fa-home", "Production Planner", "true","21"},
+            { "Supplier", "/supplychain/supplier.xhtml", "fa-home", "Supplier", "true","22"},
+            { "Supplier", "/supplychain/procurementContract.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Stock Supply", "/supplychain/stocksupplier.xhtml", "fa-home", "Stock Supply", "true","23"},
         };
         
         for (int i=0; i<privileges.length; i++){

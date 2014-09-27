@@ -16,6 +16,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -72,17 +73,8 @@ public class LoginManagedBean implements Serializable {
     private ManageNotificationsBeanLocal mnb;
 
     
-    @PreDestroy
-    public void timeout(){
-        HttpSession session = Util.getSession();
-        username = (String) session.getAttribute("username");
-    }
-    
-    @PostConstruct
-    public void init(){
-        HttpSession session = Util.getSession();
-        username = (String) session.getAttribute("username");
-        session.setMaxInactiveInterval(30);
+    public void timeout() throws IOException{
+        
     }
     
     

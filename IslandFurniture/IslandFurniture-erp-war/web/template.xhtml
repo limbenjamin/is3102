@@ -61,7 +61,7 @@
                             <div class="badge badge-top">
                                 <h:form id="updateCount">
                                     <span>#{loginManagedBean.count}</span>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount}" update="updateCount" />
+                                    
                                 </h:form>
                             </div>
                         </a>
@@ -83,13 +83,12 @@
                                             </a>
                                         </li>
                                     </c:forEach>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                    
                                 </h:form>
                                 </ul>
                             </div>
                         </div>
                     </li>
-
 
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown">
@@ -165,7 +164,6 @@
                                 </div>
                             </c:if>
                             <ui:insert name="content" >Content</ui:insert>
-
                         </div>
                         <!-- /inner content wrapper -->
 
