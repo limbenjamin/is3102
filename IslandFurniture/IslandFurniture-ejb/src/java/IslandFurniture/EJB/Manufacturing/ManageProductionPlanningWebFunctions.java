@@ -10,7 +10,9 @@ import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
+import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
+import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
@@ -46,7 +48,23 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         Query q = em.createNamedQuery("getAllMFs");
         HashMap<String, String> temp = new HashMap<String, String>();
+        Staff staff = null;
+        if (AUTH != "") {
+            Query j = em.createQuery("select s from Staff s where s.username=:u");
+            j.setParameter("u", AUTH);
+            staff = (Staff) j.getResultList().get(0);
+
+        }
+
         for (ManufacturingFacility MF : (List<ManufacturingFacility>) q.getResultList()) {
+            if (AUTH != "") {
+
+                if (!staff.getPlant().equals(MF)) {
+                    continue;
+                }
+
+            }
+
             temp.put(MF.getName(), MF.getCountry().getName() + "/" + MF.getName());
         }
 
@@ -131,11 +149,15 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             MPPPK = new MonthlyProductionPlanPK(Long.valueOf(temp[0]), Long.valueOf(temp[1]), Month.valueOf(temp[2]), Integer.valueOf(temp[3]));
         } catch (Exception ex) {
             return false;
+
         }
         MonthlyProductionPlan mpp = (MonthlyProductionPlan) em.find(MonthlyProductionPlan.class, MPPPK);
         mpp.setQTY(newValue);
+
         em.persist(mpp);
-        System.out.println("changeMP(): " + mppID + " TO " + newValue);
+
+        System.out.println(
+                "changeMP(): " + mppID + " TO " + newValue);
 
         return true;
     }
@@ -392,10 +414,13 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             jdt.columns.add(String.valueOf(i));
 
-            if (!QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
-                OrderNow.newCell("Schedule Week").setCommand("ORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
-            } else {
+            if (QueryMethods.isMaterialWeekPermanentLocked(em, mff, requestedMonth, requestedYear, i)) {
+                OrderNow.newCell("Material Already Scheduled. No reversal allowed !");
+            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
                 OrderNow.newCell("Unschedule Week").setCommand("UNORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
+            } else {
+                OrderNow.newCell("Schedule Week").setCommand("ORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
+
             }
 
         }
@@ -406,6 +431,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 cur_material = wMRP.getMaterial().getName();
                 SPACER = jdt.newRow();
                 SPACER.newCell(cur_material);
+                SPACER.newCell(QueryMethods.getSupplierByMfAndM(em, mff, wMRP.getMaterial()).getName());
                 SPACER.setColorClass("summary");
                 MPS = jdt.newRow();
                 MPS.newCell("MPS");
@@ -433,7 +459,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             } else if (wMRP.getPurchaseOrderDetail() != null) {
                 ScheduledReceipt.newCell(wMRP.getOrderAMT().toString());
                 PlannedReceipt.newCell("0");
-            } else{
+            } else {
                 ScheduledReceipt.newCell("0");
                 PlannedReceipt.newCell(wMRP.getOrderAMT().toString());
             }
@@ -478,6 +504,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         JDataTable.Row CommitWeek = null;
         JDataTable.Row ActionRow = null;
         HashMap<Integer, Boolean> alluncommited = new HashMap<>();
+        HashMap<Integer, Boolean> lockcolumn = new HashMap<>();
 
         String CFM = "";
 
@@ -491,6 +518,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         HashMap<Material, JDataTable.Row> materialRows = new HashMap<Material, JDataTable.Row>();
         //Iterate WPP
+        if (q.getResultList().size()==0) {throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");}
+        
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
             if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
                 CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);
@@ -503,31 +532,26 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             boolean hasCommittedMaterial = QueryMethods.isOrderedMaterial(em, mff, wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo());
 
-            if (wpp.getProductionOrder() == null) { //Need aditional check to see if started
+            //Individual Cells
+            if (wpp.isLocked()) {
+                d = ActionRow.newCell("Locked");
+                lockcolumn.put(wpp.getWeekNo(), true);
+            } else if (hasCommittedMaterial) {
+                d = ActionRow.newCell("Remove MRP First");
+            } else if (wpp.getProductionOrder() == null) {
+                alluncommited.put(ActionRow.rowdata.size(), true);
 
-                if (!hasCommittedMaterial) {
-                    alluncommited.put(ActionRow.rowdata.size(), true);
-
-                    d = ActionRow.newCell("Commit");
-                    d.setCommand("COMMIT_WPP");
-                    d.setIdentifier(wpp.getId().toString());
-                } else {
-                    d = ActionRow.newCell("MRP Generated. <br/>Remove MRP For Week First !");
-                }
-
+                d = ActionRow.newCell("Commit");
+                d.setCommand("COMMIT_WPP");
+                d.setIdentifier(wpp.getId().toString());
             } else {
-                if (!hasCommittedMaterial) {
-                    d = ActionRow.newCell("Uncommit");
-                    d.setCommand("UNCOMMIT_WPP");
-                    d.setIdentifier(wpp.getId().toString());
-                } else {
-                    d = ActionRow.newCell("MRP Generated. <br/>Remove MRP For Week First !");
-                }
-
+                d = ActionRow.newCell("Uncommit");
+                d.setCommand("UNCOMMIT_WPP");
+                d.setIdentifier(wpp.getId().toString());
             }
 
             Cell c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
-            if (wpp.getMonthlyProductionPlan().isLocked() == false && !hasCommittedMaterial && wpp.isLocked() == false) {
+            if (!wpp.getMonthlyProductionPlan().isLocked() && !hasCommittedMaterial && !wpp.isLocked()) {
                 c.setIsEditable(true);
             }
 
@@ -537,12 +561,12 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         SPACER.newCell("Materials Required For Commited WPP");
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
-            //Materials side
+            //Materials side---------------------
             HashMap<Material, Long> table = mpp.getMaterialsNeededForCommited(i, requestedYear, requestedMonth.value);
             for (Material m : (Set<Material>) table.keySet()) {
                 if (materialRows.get(m) == null) {
                     JDataTable.Row r = jdt.newRow();
-                    r.newCell(m.getName());
+                    r.newCell(m.getName() + "<br/>" + QueryMethods.getSupplierByMfAndM(em, mff, m).getName());
                     materialRows.put(m, r);
                 }
 
@@ -562,26 +586,26 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         commitMRP.newCell("Generate Weekly MRP");
         commitMRP.setColorClass("summary");
         CommitWeek.setColorClass("summary");
+
+        //all cells
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
             boolean hasCommittedMaterial = QueryMethods.isOrderedMaterial(em, mff, requestedMonth, requestedYear, i);
-
-            if (!hasCommittedMaterial) {
+            if (lockcolumn.get(i) != null) {
+                CommitWeek.newCell("Locked");
+                commitMRP.newCell("LOCKED");
+            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
+                commitMRP.newCell("Undo Material Schedule First !");
+                CommitWeek.newCell("Undo Material Schedule First !");
+            } else if (hasCommittedMaterial) {
+                commitMRP.newCell("Remove Weekly MRP Record").setCommand("UNCOMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
+                CommitWeek.newCell("Remove Weekly MRP Record First");
+            } else {
                 commitMRP.newCell("Confirm MRP Record for Week").setCommand("COMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
                 if (alluncommited.get(i) == null) {
                     CommitWeek.newCell("Uncommit All").setCommand("Uncommit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
                 } else {
                     CommitWeek.newCell("Commit All").setCommand("Commit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
-                }
-            } else {
-
-                if (!QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
-
-                    commitMRP.newCell("Remove Weekly MRP Record").setCommand("UNCOMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
-                    CommitWeek.newCell("Remove Weekly MRP First!");
-                } else {
-                    commitMRP.newCell("Material Order has already been Scheduled !");
-                    CommitWeek.newCell("Material Order has already been Scheduled !");
                 }
             }
 

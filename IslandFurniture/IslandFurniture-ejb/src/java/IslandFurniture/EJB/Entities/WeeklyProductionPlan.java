@@ -5,7 +5,13 @@
  */
 package IslandFurniture.EJB.Entities;
 
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
+import IslandFurniture.StaticClasses.Helper.Helper;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +48,7 @@ public class WeeklyProductionPlan implements Serializable {
     private int WeekNo;
 
     private int QTY;
-    
+
     private boolean locked;
 
     public int getQTY() {
@@ -51,18 +57,28 @@ public class WeeklyProductionPlan implements Serializable {
 
     public boolean isLocked() {
 
-        if (this.productionOrder!=null)
-            return true;
+        try {
+            if (this.productionOrder != null) {
+                return true;
+            }
+
+            Calendar t = Calendar.getInstance();
+            t.set(monthlyProductionPlan.getYear(), monthlyProductionPlan.getMonth().value, Math.min(this.WeekNo * 7, Helper.getNumWorkDays(this.monthlyProductionPlan.getMonth(), this.monthlyProductionPlan.getYear())));
+
+            if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) { //expired
+                return true;
+            }
+
+            return locked;
+        } catch (Exception ex) {
+        }
+
         return locked;
     }
 
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
-
-    
-    
-    
 
     public void setQTY(int QTY) {
         this.QTY = QTY;
@@ -120,7 +136,5 @@ public class WeeklyProductionPlan implements Serializable {
     public void setWeekNo(int WeekNo) {
         this.WeekNo = WeekNo;
     }
-
-
 
 }

@@ -1,0 +1,173 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package IslandFurniture.EJB.Manufacturing;
+
+import IslandFurniture.EJB.Entities.ManufacturingFacility;
+import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.EJB.Entities.ProductionOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
+import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
+import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
+import IslandFurniture.StaticClasses.Helper.Helper;
+import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.Schedule;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+/**
+ *
+ * @author James
+ */
+@Startup
+@Singleton
+public class ManageProductionPlanTimerBean {
+
+    @PersistenceContext(unitName = "IslandFurniture")
+    private EntityManager em;
+    public static currentdate cdate = new currentdate();
+
+    public currentdate getCdate() {
+        return cdate;
+    }
+
+    public void setCdate(currentdate cdate) {
+        this.cdate = cdate;
+    }
+
+    public static class currentdate {
+
+        private Integer month = 1;
+        private Integer week = 1;
+        private Integer year = 2014;
+
+        public currentdate() {
+            try {
+                Calendar c = Calendar.getInstance();
+                c.setFirstDayOfWeek(Calendar.MONDAY);
+                month = c.get(Calendar.MONTH);
+                Double weekz = Math.ceil(c.get(Calendar.DAY_OF_MONTH) / 7.0);
+                week = weekz.intValue();
+                year = c.get(Calendar.YEAR);
+
+                System.out.println("Manufacturing Facility Timer Started: Now is " + week + "/" + month + "/" + year);
+            } catch (Exception ex) {
+                Logger.getLogger(ManageProductionPlanTimerBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        public void addWeek() throws Exception {
+            Integer t_month = Helper.addoneWeek(month, year, week, 1, Calendar.MONTH);
+            Integer t_week = Helper.addoneWeek(week, year, week, 1, Calendar.WEEK_OF_MONTH);
+            Integer t_year = Helper.addoneWeek(week, year, week, 1, Calendar.YEAR);
+            
+            this.month=t_month;
+            this.week=t_week;
+            this.year=t_year;
+            System.out.println("Event() : Now is " + week + "/" + month + "/" + year);
+        }
+
+        public Integer getMonth() {
+            return month;
+        }
+
+        public void setMonth(Integer month) {
+            this.month = month;
+        }
+
+        public Integer getWeek() {
+            return week;
+        }
+
+        public void setWeek(Integer week) {
+            this.week = week;
+        }
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public void setYear(Integer year) {
+            this.year = year;
+        }
+
+        public Calendar getCalendar() throws Exception {
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, Math.max(week * 7, Helper.getNumWorkDays(Helper.translateMonth(month), year)));
+            return cal;
+
+        }
+
+    }
+
+    public ManageProductionPlanTimerBean() {
+
+        System.out.println("ManageProductionPlanTimerBean(): Production Planning Automation Started !");
+
+    }
+//by right supposed to be one min
+
+    @Schedule(second = "10", hour = "*", minute = "*",info = "Production Planning")
+    public void automaticProductionPlanning() throws Exception {
+
+        //oh one month has passed
+        cdate.addWeek();
+
+        // Supplier pivoting problem
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail!=null and (wmrp.year*1000+wmrp.month*10+wmrp.week)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
+        q.setParameter("m", cdate.getMonth());
+        q.setParameter("y", cdate.getYear());
+        q.setParameter("w", cdate.getWeek());
+
+        PurchaseOrder po = null;
+        Supplier csupplier = null;
+        Map<Supplier, List<WeeklyMRPRecord>> data = new HashMap<Supplier, List<WeeklyMRPRecord>>();
+
+        for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
+            if (data.get(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial())) == null) {
+                data.put(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial()), new ArrayList<WeeklyMRPRecord>());
+            }
+            data.get(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial())).add(wmrp);
+        }
+
+        ManufacturingFacility mf = null;
+
+        for (Supplier s : data.keySet()) {
+
+            for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) data.get(s)) {
+                if (!wmrp.getManufacturingFacility().equals(mf)) {
+                    po = new PurchaseOrder();
+                    po.setOrderDate(cdate.getCalendar());
+                    po.setStatus(PurchaseOrderStatus.PLANNED);
+                    po.setSupplier(null);
+                    po.setShipsTo(wmrp.getManufacturingFacility());
+                    em.persist(po);
+                }
+                po.getPurchaseOrderDetails().add(wmrp.getPurchaseOrderDetail());
+                wmrp.getPurchaseOrderDetail().setPurchaseOrder(po);
+                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial());
+            }
+
+        }
+
+    }
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
+}
