@@ -5,6 +5,7 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StorageArea;
@@ -72,6 +73,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
     private List<PurchaseOrder> purchaseOrderList;
+    private List<PurchaseOrderDetail> purchaseOrderDetailList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
@@ -102,6 +104,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         if (this.goodsReceiptDocumentId == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             this.goodsReceiptDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
+            
+            if (this.goodsReceiptDocumentId == null) {
+                HttpServletRequest request2 = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            this.goodsReceiptDocumentId = new Long(request2.getParameter("createPO:GRDid"));
+            }
+            
         } else {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
@@ -140,19 +148,28 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
     }
 
+    public void addGoodsReceiptDocumentDetailFromPO(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
+        purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
+        purchaseOrder = mgrl.getPurchaseOrder(purchaseOrderId);
+
+        for (PurchaseOrderDetail p : mgrl.viewPurchaseOrderDetail(purchaseOrder)) {
+            mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), p.getProcuredStock().getId(), p.getQuantity());
+        }
+        
+        mgrl.editGoodsReceiptDocumentPO(goodsReceiptDocumentId, purchaseOrder);
+
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
+        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);
+        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
+    }
+
     public String editGoodsReceiptDocument(ActionEvent event) throws ParseException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("purchaseOrderId", event.getComponent().getAttributes().get("purchaseOrderId"));
-        purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("purchaseOrderId");
 
-        if (purchaseOrderId == null) {
-            purchaseOrder = null;
-        } else {
-            purchaseOrder = mgrl.getPurchaseOrder(purchaseOrderId);
-        }
 
         if (receiptDateString.isEmpty()) {
             receiptDateCal = null;
@@ -168,7 +185,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
             deliveryNote = null;
         }
 
-        mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, purchaseOrder, deliveryNote);
+        mgrl.editGoodsReceiptDocument(grd.getId(), receiptDateCal, deliveryNote);
         return "goodsreceiptdocument";
     }
 
@@ -216,13 +233,21 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
             mgrl.createGoodsReceiptDocumentStockUnit(goodsReceiptDocumentId, postingDate);
 
-             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully created", ""));
-            
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully created", ""));
+
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
             goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
         }
+    }
+
+    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+        return purchaseOrderDetailList;
+    }
+
+    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+        this.purchaseOrderDetailList = purchaseOrderDetailList;
     }
 
     public Calendar getReceiptDateCal() {

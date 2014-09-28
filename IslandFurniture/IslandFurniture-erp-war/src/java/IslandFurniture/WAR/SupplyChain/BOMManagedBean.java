@@ -151,26 +151,57 @@ public class BOMManagedBean implements Serializable {
         return "bom";
     }
     
-    public void editBOM(ActionEvent event) throws IOException {
+    public String editBOM(ActionEvent event) throws IOException {
         System.out.println("BOMManagedBean.editBOM()");
         BOMdetail = (BOMDetail) event.getComponent().getAttributes().get("toEdit");
-        stockManager.editBOMDetail(BOMdetail.getId(), BOMdetail.getQuantity());
+        String msg = stockManager.editBOMDetail(BOMdetail.getId(), BOMdetail.getQuantity());       
+        if(msg != null) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been updated", ""));
+        }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
     }
-    public void deleteBOM() {
+    public String deleteBOM() {
         System.out.println("BOMManagedBean.deleteBOM()");
         String ID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bomID");
         System.out.println("ID is " + ID);
         Long id = new Long(ID);
-        stockManager.deleteBOMDetail(id);
-        this.bomList = stockManager.displayBOM(furnitureID);
+        String msg = stockManager.deleteBOMDetail(id);        
+        if(msg != null) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been successfully deleted", ""));
+        }
         System.out.println("After deletion, BOMDetailList has " + bomList.size() + " items");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
     }
     public void addMaterial(AjaxBehaviorEvent event) {
         System.out.println("BOMManagedBean.addMaterial()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String name = request.getParameter("addNewMaterialForm:materialName");
-        String weight = request.getParameter("addNewMaterialForm:materialWeight");
-        stockManager.addMaterial(name, Double.parseDouble(weight));
+        String name = null;
+        String weight = null;
+        name = request.getParameter("addNewMaterialForm:materialName");
+        weight = request.getParameter("addNewMaterialForm:materialWeight"); 
+        System.out.println("Name is " + name + ". Weight is " + weight);
+        if(name.isEmpty() || weight.isEmpty() || name == null || weight == null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incomplete form", "")); 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        }
+        if(stockManager.addMaterial(name, Double.parseDouble(weight))) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully created Material \"" + name + "\"", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Material \"" + name + "\" already exists in database", ""));
+        }
         this.materialList = stockManager.displayMaterialList();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
     }

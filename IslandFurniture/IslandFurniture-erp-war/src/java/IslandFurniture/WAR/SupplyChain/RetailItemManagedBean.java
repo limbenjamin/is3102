@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -59,13 +60,27 @@ public class RetailItemManagedBean implements Serializable {
     public String editRetailItem(ActionEvent event) throws IOException {
         System.out.println("RetailItemManagedBean.editRetailItem()");
         retailItem = (RetailItem) event.getComponent().getAttributes().get("toEdit");
-        stockManager.editRetailItem(retailItem.getId(), retailItem.getName(), retailItem.getPrice());
+        String msg = stockManager.editRetailItem(retailItem.getId(), retailItem.getName(), retailItem.getPrice());
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Retail Item \"" + retailItem.getName() + "\" has been successfully updated", ""));    
+        }
         return "retailItem";
     }
     public String deleteRetailItem() {
         System.out.println("RetailItemManagedBean.deleteRetailItem()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemID"));
-        stockManager.deleteRetailItem(id);
+        String msg = stockManager.deleteRetailItem(id);
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Retail Item has been successfully deleted", ""));    
+        }
         return "retailItem";
     }    
     public String addRetailItem() {
@@ -75,8 +90,14 @@ public class RetailItemManagedBean implements Serializable {
         String itemPrice = request.getParameter("addRetailItemForm:price");
         if(itemPrice.isEmpty())
             itemPrice = "0";
-        stockManager.addRetailItem(itemName, Double.parseDouble(itemPrice));
-        
+        String msg = stockManager.addRetailItem(itemName, Double.parseDouble(itemPrice));
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Retail Item has been successfully added", ""));    
+        }        
         return "retailItem";
     }
 }

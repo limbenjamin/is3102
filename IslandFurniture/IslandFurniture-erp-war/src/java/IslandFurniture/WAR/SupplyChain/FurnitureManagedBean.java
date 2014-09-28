@@ -123,7 +123,7 @@ public class FurnitureManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successful deletion of furniture", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture has been successfully deleted", ""));
         }
         return "furniture";
     }
