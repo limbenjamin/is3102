@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -85,15 +86,22 @@ public class StockSupplierManagedBean implements Serializable {
         mfList = supplierManager.getListOfMF();
         stockList = supplierManager.getListOfStock();
     }
-    public void deleteStockSupplyRequest(AjaxBehaviorEvent event) {
+    public String deleteStockSupplyRequest(ActionEvent event) {
         System.out.println("StockSupplierManagedBean.deleteStockSupplyRequest()");
         String sID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("sID");
         String mfID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mfID");
         String cID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cID");
         System.out.println("CountryID is " + cID + ". MF ID is " + mfID + ". StockID is " + sID);
-        supplierManager.deleteStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
+        String msg = supplierManager.deleteStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
         stockSuppliedList = supplierManager.getAllStockSupplied();
-   //     return "stockSupplier";
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock Supply Request has been successfully deleted", ""));    
+        }
+        return "stockSupplier";
     }
     public String addStockSupplyRequest(ActionEvent event) {
         System.out.println("StockSupplierManagedBean.addStockSupplyRequest()");
@@ -103,12 +111,27 @@ public class StockSupplierManagedBean implements Serializable {
         String sID = request.getParameter("addSSRequestForm:sID");
         System.out.println("CountryID is " + cID + ". MF ID is " + mfID + ". StockID is " + sID);
         List<Stock> list = supplierManager.checkForValidPCD(Long.parseLong(sID), Long.parseLong(mfID));
-        if(list == null)  
-            supplierManager.addStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
+        if(list == null) {
+            String msg = supplierManager.addStockSupplyRequest(Long.parseLong(sID), Long.parseLong(mfID), Long.parseLong(cID));
+            if(msg != null) {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+            } else {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock Supply Request has been successfully added", ""));    
+            }
+            return "stockSupplier";
+        }
         else {
-            System.out.print("Missing the ProcurementContractDetail of the following");
+            System.out.print("Missing ProcurementContractDetail of the following"); 
             for(int i=0; i<list.size(); i++) 
                 System.out.println("\t " + list.get(i).getName());
+            String errorOutput = "" + "Unable to add Stock Supply Request due to missing Procurement Contract Detail of the following items: ";
+            for(int i=1; i<=list.size(); i++) {  
+                errorOutput = errorOutput + i + ") " + list.get(i-1).getName() + " ";
+            }
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, errorOutput, "")); 
         }
         return "stockSupplier";
     } 

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -33,9 +34,9 @@
                                         <th>Country</th>
                                         <th>Contact No.</th>
                                         <th>Email</th> 
+                                        <th>Details</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
-                                        <th>Details</th>
                                     </tr>
                                     <h:form id="editSupplierForm" class="form-horizontal">
                                         <ui:repeat value="#{supplierManagedBean.supplierList}" var="supplier">
@@ -62,10 +63,15 @@
                                                 </td> 
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                        <h:inputText id="supplierEmail" value="#{supplier.email}" class="form-control transparent-form"></h:inputText>
+                                                        <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                        <h:inputText id="supplierEmail" value="#{supplier.email}" class="form-control transparent-form" pt:type="email"></h:inputText>
                                                     </div>
                                                 </td>
+                                                <td>
+                                                    <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
+                                                        <f:attribute name="sID" value="#{supplier.id}" />
+                                                    </h:commandButton>
+                                                </td> 
                                                 <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{supplier}" />
                                                     </h:commandButton>
@@ -75,12 +81,7 @@
                                                         <f:param name="supplierID" value="#{supplier.id}" />
                                                     </h:commandButton>
                                                      <i class="fa fa-lg fa-trash-o icon-button"></i>  
-                                                </td>
-                                                <td>
-                                                    <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
-                                                        <f:attribute name="sID" value="#{supplier.id}" />
-                                                    </h:commandButton>
-                                                </td>     
+                                                </td>    
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
@@ -104,13 +105,13 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Supplier Name: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="name" class="form-control"></h:inputText>
+                                    <h:inputText id="name" class="form-control" pt:required="required"></h:inputText>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Supplier Country: </label> 
                                 <div class="col-sm-8">
-                                    <h:selectOneMenu id="country" class="form-control needauto">          
+                                    <h:selectOneMenu id="country" class="form-control needauto" pt:required="required">          
                                         <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
                                         <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
                                     </h:selectOneMenu>
@@ -119,13 +120,13 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Contact Number: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="phoneNo" class="form-control"></h:inputText>
+                                    <h:inputText id="phoneNo" class="form-control" pt:required="required"></h:inputText>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Email: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="email" class="form-control"></h:inputText>
+                                    <h:inputText id="email" class="form-control" pt:required="required" pt:type="email"></h:inputText>
                                 </div>
                             </div>
                         </div>

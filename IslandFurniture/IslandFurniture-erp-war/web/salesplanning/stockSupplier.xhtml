@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -33,11 +34,10 @@
                                                 <h:outputText value="#{ss.stock.name}" class="transparent-form"></h:outputText>
                                             </p:column>  
                                             <p:column headerText="Delete" style="text-align: center;">
-                                                <h:commandButton class="btn btn-sm transparent-button" style="outline: 0;">
+                                                <h:commandButton class="btn btn-sm transparent-button" style="outline: 0;" actionListener="#{stockSupplierManagedBean.deleteStockSupplyRequest}">
                                                     <f:param name="cID" value="#{ss.countryOffice.id}" />
                                                     <f:param name="mfID" value="#{ss.manufacturingFacility.id}" />
                                                     <f:param name="sID" value="#{ss.stock.id}" /> 
-                                                    <f:ajax render="SSListTable" listener="#{stockSupplierManagedBean.deleteStockSupplyRequest}"/>
                                                 </h:commandButton> 
                                                 <i class="fa fa-lg fa-trash-o icon-button" ></i>
                                             </p:column>
@@ -45,7 +45,7 @@
                                     </h:form> 
                                 </section>
                             </div>
-                        </div>
+                        </div> 
                     </div>
                     <!-- Modal -->
                     <div class="modal fade" id="newSS" aria-hidden="true">
@@ -56,20 +56,20 @@
                                     <h4 class="modal-title" id="myModalLabel">Add New Stock Supply Request</h4>
                                 </div>
                                 <h:form id="addSSRequestForm" class="form-horizontal">
-                                    <div class="modal-body">
+                                    <div class="modal-body"> 
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Country Office </label>
-                                            <div class="col-sm-9">
-                                                <h:selectOneMenu id="cID" class="form-control needauto" value="Select">         
+                                            <div class="col-sm-9"> 
+                                                <h:selectOneMenu id="cID" class="form-control needauto" pt:required="required">         
                                                     <f:selectItem itemLabel="Select Country Office" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{stockSupplierManagedBean.countryList} (CO)" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
+                                                    <f:selectItems value="#{stockSupplierManagedBean.countryList}" var="c" itemLabel="#{c.name} (CO)" itemValue="#{c.id}" />
                                                 </h:selectOneMenu>
                                             </div>
-                                        </div>
+                                        </div>  
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Manufacturing Facility: </label>
                                             <div class="col-sm-9">
-                                                <h:selectOneMenu id="mfID" class="form-control needauto" value="#{stockSupplierManagedBean.mfID}">          
+                                                <h:selectOneMenu id="mfID" class="form-control needauto" pt:required="required">          
                                                     <f:selectItem itemLabel="Select Manufacturing Facility" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{stockSupplierManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
                                                 </h:selectOneMenu>
@@ -78,7 +78,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Stock: </label>
                                             <div class="col-sm-9">
-                                                <h:selectOneMenu id="sID" class="form-control needauto">          
+                                                <h:selectOneMenu id="sID" class="form-control needauto" pt:required="required">          
                                                     <f:selectItem itemLabel="Select Stock" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{stockSupplierManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                                 </h:selectOneMenu>
@@ -90,10 +90,10 @@
                                         <h:commandButton action="stockSupplier.xhtml" actionListener="#{stockSupplierManagedBean.addStockSupplyRequest}" value="Add Request" class="btn btn-success btn-round"> 
                                         </h:commandButton>
                                     </div>
-                                </h:form>
+                                </h:form> 
                             </div>
                         </div>
-                    </div> 
+                    </div>  
                 </div>
             </ui:define>
         </ui:composition>

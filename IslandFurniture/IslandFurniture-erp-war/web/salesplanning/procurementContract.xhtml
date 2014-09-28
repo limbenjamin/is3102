@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <h:body>
         <ui:composition template="../template.xhtml"> 
@@ -22,7 +23,7 @@
                             <div class="tab-pane active">                        
                                 <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
-                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">
+                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">  <!-- I didn't use tableStyle="width:auto" because an empty table looks very ugly -->
                                             <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}">
                                                 <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
                                             </p:column>
@@ -68,7 +69,8 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Stock Name: </label>
                             <div class="col-sm-8">
-                                <h:selectOneMenu id="stockID" class="form-control" value="Select Stock">
+                                <h:selectOneMenu id="stockID" class="form-control needauto" value="Select Stock" pt:required="required">
+                                    <f:selectItem itemLabel="Select Stock" noSelectionOption="true" />
                                     <f:selectItems value="#{procurementContractManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                 </h:selectOneMenu>
                             </div>
@@ -76,7 +78,8 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Manufacturing Facility: </label>
                             <div class="col-sm-8">
-                                <h:selectOneMenu id="mfID" class="form-control" value="Select Manufacturing Facility">
+                                <h:selectOneMenu id="mfID" class="form-control needauto" value="Select Manufacturing Facility" pt:required="required">
+                                    <f:selectItem itemLabel="Select Manufacturing Facility" noSelectionOption="true" /> 
                                     <f:selectItems value="#{procurementContractManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
                                 </h:selectOneMenu>
                             </div>
@@ -84,13 +87,13 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Lot Size: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="size" class="form-control" required="true"></h:inputText>
+                                    <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Lead Time(days): </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="leadTime" class="form-control" required="true"></h:inputText>
+                                    <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
                                 </div>
                             </div>
                     </div>
