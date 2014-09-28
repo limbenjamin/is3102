@@ -11,6 +11,7 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
@@ -31,7 +32,7 @@ public interface ManageGoodsReceiptLocal {
 
     void deleteGoodsReceiptDocumentDetail(Long goodsReceiptDocumentDetailId);
 
-    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, PurchaseOrder po, String deliveryNote);
+    void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, String deliveryNote);
 
     void editGoodsReceiptDocumentDetail(Long grddId, Long stockId, Integer qty);
 
@@ -70,5 +71,9 @@ public interface ManageGoodsReceiptLocal {
     GoodsIssuedDocument getGoodsIssuedDocument(Long id);
     
     void updateIncomingShipmentStatus(Long id);
+    
+    List<PurchaseOrderDetail> viewPurchaseOrderDetail (PurchaseOrder po);
+    
+    void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po);
     
 }

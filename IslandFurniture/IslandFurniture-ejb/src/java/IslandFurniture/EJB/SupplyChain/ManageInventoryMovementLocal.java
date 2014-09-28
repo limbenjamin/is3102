@@ -59,5 +59,7 @@ public interface ManageInventoryMovementLocal {
 //    StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
     
     List<StockUnit> viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
+    
+    List<StockUnit> viewStockUnitByStockId(Long id, Long storageBinId);
 
 }

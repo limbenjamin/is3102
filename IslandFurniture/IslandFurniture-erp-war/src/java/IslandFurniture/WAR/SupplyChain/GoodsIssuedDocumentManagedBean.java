@@ -55,6 +55,8 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private String username;
     private String deliverynote;
     private String plantType;
+    private String plantType2;
+    private String plantTypePosted;
 
     private Calendar postingDate;
     private Calendar issuedDate;
@@ -65,6 +67,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private boolean ifStockUnitMainListEmpty;
 
     private List<GoodsIssuedDocument> goodsIssuedDocumentList;
+    private List<GoodsIssuedDocument> goodsIssuedDocumentList2;
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetailList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMainList;
@@ -77,6 +80,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     private Staff staff;
     private Plant plant;
     private Plant plantSendTo;
+    private Plant plantSentTo2;
     private StorageBin storageBin;
     private StockUnit stockUnit;
     private StockUnit stockUnitOld;
@@ -117,6 +121,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         storageBinList = mgrl.viewStorageBin(plant);
         goodsIssuedDocumentDetailList = mgrl.viewGoodsIssuedDocumentDetail(goodsIssuedDocument);
         goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
+        goodsIssuedDocumentList2 = mgrl.viewGoodsIssuedDocumentIndividual(goodsIssuedDocument);
         stockUnitList = mgrl.viewStockUnit(plant);
         stockUnitMainList = mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument);
         ifStockUnitMainListEmpty = stockUnitMainList.isEmpty();
@@ -128,13 +133,29 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
             plantId = goodsIssuedDocument.getDeliverTo().getId();
         }
 
+        if (goodsIssuedDocument.isConfirm() == true) {
+            for (GoodsIssuedDocument d : goodsIssuedDocumentList2) {
+
+                plantType2 = d.getPlant().getClass().getSimpleName();
+                if (plantType2.equals("ManufacturingFacility")) {
+                    plantType2 = "MFG";
+                } else if (plantType2.equals("CountryOffice")) {
+                    plantType2 = "CO";
+                } else if (plantType2.equals("GlobalHQ")) {
+                    plantType2 = ""; //no need cos global HQ global HQ looks ugly
+                }
+
+                plantTypePosted = d.getDeliverTo().getName() + " (" + plantType2 + ")";
+            }
+        }
+
         plantList = mgrl.viewPlant();
 
         for (Plant g : plantList) {
 
             plantType = g.getClass().getSimpleName();
             if (plantType.equals("ManufacturingFacility")) {
-                plantType = "MF";
+                plantType = "MFG";
             } else if (plantType.equals("CountryOffice")) {
                 plantType = "CO";
             } else if (plantType.equals("GlobalHQ")) {
@@ -253,11 +274,43 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
             }
 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully created", ""));
-            
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully created", ""));
+
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
         }
+    }
+
+    public List<GoodsIssuedDocument> getGoodsIssuedDocumentList2() {
+        return goodsIssuedDocumentList2;
+    }
+
+    public void setGoodsIssuedDocumentList2(List<GoodsIssuedDocument> goodsIssuedDocumentList2) {
+        this.goodsIssuedDocumentList2 = goodsIssuedDocumentList2;
+    }
+
+    public String getPlantType2() {
+        return plantType2;
+    }
+
+    public void setPlantType2(String plantType2) {
+        this.plantType2 = plantType2;
+    }
+
+    public String getPlantTypePosted() {
+        return plantTypePosted;
+    }
+
+    public void setPlantTypePosted(String plantTypePosted) {
+        this.plantTypePosted = plantTypePosted;
+    }
+
+    public Plant getPlantSentTo2() {
+        return plantSentTo2;
+    }
+
+    public void setPlantSentTo2(Plant plantSentTo2) {
+        this.plantSentTo2 = plantSentTo2;
     }
 
     public String getPlantType() {

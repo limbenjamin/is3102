@@ -54,6 +54,9 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMovementList;
     private List<StockUnit> stockUnitMovementAnotherList;
+    private List<Stock> stockList;
+    private List<StockUnit> stockUnitList2;
+    
 
     private StorageBin storageBin;
     private Stock stock;
@@ -164,6 +167,12 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         }
     }
 
+    public void onStockChange() {
+        if (stockId != null) {
+            stockUnitList2 = msul.viewStockUnitByStockId(stockId, storageBinId);
+        }
+    }
+
     public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
 //        for (StockUnit g : stockUnitMovementList) {
 //            stockUnitMovementAnottherList = msul.viewStockUnitMovementCheck(storageBin, g.getStock(), g.getBatchNo());
@@ -209,6 +218,22 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
+    }
+
+    public List<StockUnit> getStockUnitList2() {
+        return stockUnitList2;
+    }
+
+    public void setStockUnitList2(List<StockUnit> stockUnitList2) {
+        this.stockUnitList2 = stockUnitList2;
+    }
+
+    public List<Stock> getStockList() {
+        return stockList;
+    }
+
+    public void setStockList(List<Stock> stockList) {
+        this.stockList = stockList;
     }
 
     public boolean isIfStockUnitListEmpty() {
