@@ -138,7 +138,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         cdate.addWeek();
 
         // Supplier pivoting problem
-        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail.purchaseOrder IS NULL and (wmrp.year*1000+wmrp.month*10+wmrp.week)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail.purchaseOrder IS NULL and (wmrp.orderYear1000+wmrp.orderMonth*10+wmrp.orderWeek)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
         q.setParameter("m", cdate.getMonth());
         q.setParameter("y", cdate.getYear());
         q.setParameter("w", cdate.getWeek());
@@ -149,7 +149,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
             
-            if (wmrp.getQtyReq()<=0) continue;
+            if (wmrp.getOrderAMT()<0) continue;
             
             if (data.get(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial())) == null) {
                 data.put(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial()), new ArrayList<WeeklyMRPRecord>());
