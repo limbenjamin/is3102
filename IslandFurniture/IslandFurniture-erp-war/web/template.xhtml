@@ -123,7 +123,7 @@
                             <div class="badge badge-top">
                                 <h:form id="updateCount">
                                     <span>#{loginManagedBean.count}</span>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount}" update="updateCount" />
+                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount()}" update="updateCount" />
                                 </h:form>
                             </div>
                         </a>
@@ -145,7 +145,7 @@
                                             </a>
                                         </li>
                                     </c:forEach>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification()}" update="newNotification" />
                                 </h:form>
                                 </ul>
                             </div>
@@ -222,16 +222,11 @@
                                 </div>
                             </c:if>
                             <ui:insert name="content" >Content</ui:insert>
+                        <h:form id="hiddenForm" style="display: none;"> 
+                            <h:commandButton id="hidden-logout" actionListener="#{dashManagedBean.logout}" /> 
+                        </h:form> 
                         </div>
                         <!-- /inner content wrapper -->
-                        <h:form>
-                            <p:growl id="messages" showDetail="true" sticky="true" />
-
-                            <p:idleMonitor timeout="5000">
-                                <p:ajax event="idle" listener="#{idleMonitorView.onIdle}" update="messages" />
-                                <p:ajax event="active" listener="#{idleMonitorView.onActive}" update="messages" />
-                            </p:idleMonitor>
-                        </h:form>
                     </div>
                     <!-- /content wrapper -->
                     <a class="exit-offscreen"></a>
@@ -239,10 +234,13 @@
                 <!-- /main content -->
             </section>
         </div>
+        
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
         <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="#{application.contextPath}/assets/plugins/jquery.slimscroll.min.js"></script>
+        
+        <script src="#{application.contextPath}/assets/js/idletimer.js"></script>
         <!-- template scripts -->
         <script src="#{application.contextPath}/assets/js/offscreen.js"></script>
         <script src="#{application.contextPath}/assets/js/navigation.js"></script>
@@ -252,9 +250,14 @@
         <!-- trying out select2.js -->
         <script src="#{application.contextPath}/assets/plugins/select2/select2.js"></script>
         <script>
-                                                    $(document).ready(function() {
-                                                        $(".needauto").select2();
-                                                    });
+            $(document).ready(function() {
+                $(".needauto").select2();
+            });
+            $( document ).idleTimer( 300000 );
+            $( document ).on( "idle.idleTimer", function(event, elem, obj){
+                document.getElementById("hiddenForm:hidden-logout").click(); 
+                alert("Logged out due to inactivity");
+            });
         </script>
     </h:body>
 </html>
