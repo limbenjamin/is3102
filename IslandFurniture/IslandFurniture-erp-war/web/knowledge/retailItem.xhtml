@@ -12,8 +12,14 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Retail Items</strong></li>
+                        </ol>                        
+                    </div>                    
                     <div class="col-md-10">
-                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newItem">
+                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newItem">
                             <i class="fa fa-fw fa-plus"></i>New Retail Item
                         </button>                         
                         <h4>Retail Items</h4><hr></hr>   
@@ -33,7 +39,7 @@
                                             <tr>
                                                 <th>Retail Item</th>
                                                 <th>Price ($SGD)</th>
-                                                <th>Edit</th>
+                                                <th>Update</th>
                                                 <th>Delete</th>
                                             </tr>
                                             <h:form id="editRetailItemForm" class="form-horizontal">
@@ -95,7 +101,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{retailItemManagedBean.addRetailItem}" class="btn btn-success btn-round" value="Add"></h:commandButton>
+                                        <h:commandButton action="#{retailItemManagedBean.addRetailItem}" class="btn btn-success btn-round" value="Add Retail Item"></h:commandButton>
                                     </div>
                                 </h:form> 
                             </div>

@@ -12,8 +12,14 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Stock Supply</strong></li>
+                        </ol>                        
+                    </div>                    
                     <div class="col-md-10">
-                        <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newSS">
+                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newSS">
                             <i class="fa fa-fw fa-plus"></i>New Stock Supply Request
                         </button>   
                         <h4>Stock Supply</h4><hr></hr>
