@@ -84,7 +84,7 @@ public class MaterialManagedBean implements Serializable {
         }
         if(stockManager.addMaterial(name, weight)) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material " + name + " created successfully", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully created Material \"" + name + "\"", ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Material \"" + name + "\" already exists in database", ""));
@@ -125,7 +125,7 @@ public class MaterialManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successful deletion of material", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material has been successfully deleted", ""));
         }
         return "material";
     } 

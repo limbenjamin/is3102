@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
     <!-- @Zee
          Ideally I was hoping this page to just display the material list with 
          dynamic searching (not done). Then the add material can be a modal box.
@@ -42,13 +43,13 @@
                                             <tr>
                                                 <td>
                                                     <div class="inner-addon left-addon">
-                                                    <h:outputText id="materialName" value="#{material.name}" class="transparent-form"></h:outputText>
+                                                    <h:outputText id="materialName" value="#{material.name}" class="transparent-form" pt:required="required"></h:outputText>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="materialWeight" value="#{material.materialWeight}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                    <h:inputText id="materialWeight" value="#{material.materialWeight}" class="form-control transparent-form" style="max-width:100px;" pt:required="required"></h:inputText>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -87,14 +88,14 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Material Name: </label>
                                 <div class="col-sm-8">
-                                    <h:inputText id="name" class="form-control"></h:inputText>
+                                    <h:inputText id="name" class="form-control" pt:required="required"></h:inputText>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Material Weight(g): </label>
+                                <label class="col-sm-4 control-label">Material Weight (g): </label> 
                                 <div class="col-sm-8">
-                                    <h:inputText id="weight" class="form-control"></h:inputText>
-                                </div>
+                                    <h:inputText id="weight" class="form-control" pt:required="required"></h:inputText>
+                                </div> 
                             </div>
                         </div>
                         <div class="modal-footer">

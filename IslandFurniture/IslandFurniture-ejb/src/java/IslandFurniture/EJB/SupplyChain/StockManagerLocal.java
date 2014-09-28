@@ -32,11 +32,11 @@ public interface StockManagerLocal {
 
     public List<RetailItem> displayItemList();
 
-    public void editRetailItem(Long itemID, String itemName, Double itemPrice);
+    public String editRetailItem(Long itemID, String itemName, Double itemPrice);
 
-    public boolean deleteRetailItem(Long itemID);
+    public String deleteRetailItem(Long itemID);
 
-    public boolean addRetailItem(String itemName, Double itemPrice);
+    public String addRetailItem(String itemName, Double itemPrice);
 
     public String deleteFurnitureModel(Long furnitureID);
 
@@ -48,9 +48,9 @@ public interface StockManagerLocal {
 
     public List displayBOM(Long furnitureID);
 
-    public void editBOMDetail(Long BOMDetailID, Integer quantity);
+    public String editBOMDetail(Long BOMDetailID, Integer quantity);
 
-    public void deleteBOMDetail(Long BOMDetailID);
+    public String deleteBOMDetail(Long BOMDetailID);
 
     public void addFurnitureColour(Long furnitureID, String colour);
     
