@@ -37,7 +37,7 @@ public class PurchaseOrder implements Serializable {
     @ManyToOne
     private Plant shipsTo;
     @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
-    private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<PurchaseOrderDetail>();
+    private List<PurchaseOrderDetail> purchaseOrderDetails;
     @ManyToOne
     private Supplier supplier;
     @OneToOne
@@ -47,6 +47,10 @@ public class PurchaseOrder implements Serializable {
     private PurchaseOrderStatus status;
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
+
+    public PurchaseOrder() {
+        this.purchaseOrderDetails = new ArrayList<PurchaseOrderDetail>();
+    }
 
     public Long getId() {
         return id;

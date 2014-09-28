@@ -19,6 +19,7 @@ import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import IslandFurnitures.DataStructures.JDataTable;
 import IslandFurnitures.DataStructures.JDataTable.Cell;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
+    
+    
 
     public HashMap<String, String>
             getAuthorizedMF(String AUTH) {
@@ -253,14 +256,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         JDataTable.Row max_CAP = null;
         JDataTable.Row cc_row = null;
         JDataTable.Row pc_row = null;
-        JDataTable.Row days_row = null;
         JDataTable.Row inventory_row = null;
-
-//Finally Summarize MF Capacity
-        days_row = dt.newRow();
-        days_row.newCell("");
-        days_row.newCell("Working Days");
-        days_row.setColorClass("summary");
+        JDataTable.Row Working_days = dt.newRow();
 
         JDataTable.Row fcc_Row = dt.NewRowDefered("percentage.2dp");
         fcc_Row.rowheader = "Remaining Capacity";
@@ -268,6 +265,9 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         fcc_Row.setColorClass("summary");
         fcc_Row.newCell("");
         fcc_Row.newCell("Remaining Capacity");
+        Working_days.newCell("");
+        Working_days.setColorClass("summary");
+        Working_days.newCell("Working Days");
 
         String colorclass = "normal_even";
 
@@ -324,9 +324,17 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             }
 
             if (!dt.columns.contains(pp.getMonth().toString() + "/" + pp.getYear())) {
-                days_row.newCell("" + Helper.getNumWorkDays(pp.getMonth(), pp.getYear()) + "");
                 dt.columns.add(pp.getMonth().toString() + "/" + pp.getYear());
-                fcc_Row.newCell(String.valueOf(QueryMethods.getCurrentFreeCapacity(em, pp.getManufacturingFacility(), pp.getMonth(), pp.getYear())));
+                Double MonthCapacity = QueryMethods.getCurrentFreeCapacity(em, pp.getManufacturingFacility(), pp.getMonth(), pp.getYear());
+                if (MonthCapacity < 0.5) {
+                    fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("LIGHT_WORKLOAD");
+                } else if (MonthCapacity < 0.75) {
+                    fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("MEDIUM_WORKLOAD");
+                } else {
+                    fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("HEAVY_WORKLOAD");
+                }
+
+                Working_days.newCell(String.valueOf(pp.getNumWorkDays()));
             }
 
             //Start off with Demand Requirement.
@@ -338,21 +346,23 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             Cell w = cc_row.newCell((String.valueOf(planned_capacity))); //Planned Capacity
             Cell pr = planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp);
             long inventory = 0;
-            if (!pp.isLocked()) {
+            if (!pp.isLocked() && !QueryMethods.isOrderedMaterial(em, MF,pp.getMonth(),pp.getYear())) {
                 inventory = (iinventory.get(Cur_FM) == null ? 0 : iinventory.get(Cur_FM)) + pp.getQTY() - QueryMethods.getTotalDemand(em, pp, MF);
             }
-            inventory_row.newCell(String.valueOf(inventory));
+            if (inventory >= 0) {
+                inventory_row.newCell(String.valueOf(inventory));
+            } else {
+                inventory_row.newCell(String.valueOf(inventory)).setColorClass("ERROR");
+
+            }
             iinventory.put(Cur_FM, inventory);
 
-            if (pp.isLocked()) {
+            if (pp.isLocked() || QueryMethods.isOrderedMaterial(em, MF,pp.getMonth(),pp.getYear())) {
                 pr.setIsEditable(false); //Editable Cell
 
             } else {
                 pr.setIsEditable(true); //Editable Cell
 
-            }
-            if (pp.getQTY() < demand) {
-                pr.setColorClass("ERROR");
             }
 
             if (planned_capacity < 0.5) {
@@ -432,7 +442,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 SPACER.newCell(QueryMethods.getSupplierByMfAndM(em, mff, wMRP.getMaterial()).getName());
                 SPACER.setColorClass("summary");
                 MPS = jdt.newRow();
-                MPS.newCell("MPS");
+                MPS.newCell("Gross Requirements");
                 ScheduledReceipt = jdt.newRow();
 
                 ScheduledReceipt.newCell("Scheduled Receipt(X" + wMRP.getLotSize().toString() + ")");
@@ -496,8 +506,10 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         q.setParameter("y", requestedYear);
         q.setParameter("MF", mff);
 
-        JDataTable.Row daysInWeek = jdt.newRow();
-        daysInWeek.newCell("Days In a Week");
+        JDataTable.Row StartDayOfWeek = jdt.newRow();
+        JDataTable.Row EndDayOfWeek = jdt.newRow();
+        StartDayOfWeek.newCell("Start Day");
+        EndDayOfWeek.newCell("End Day");
         JDataTable.Row PlannedWeekProduction = null;
         JDataTable.Row CommitWeek = null;
         JDataTable.Row ActionRow = null;
@@ -510,14 +522,20 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         int MaxWeek = Helper.getNumOfWeeks(requestedMonth.value, requestedYear);
         for (int i = 1; i <= MaxWeek; i++) {
             jdt.columns.add("Week " + i);
-            int DaysInMonth = Helper.getNumOfDaysInWeek(requestedMonth.value, requestedYear, i);
-            daysInWeek.newCell(String.valueOf(DaysInMonth));
+            Calendar start = Helper.getStartDateOfWeek(requestedMonth.value, requestedYear, i);
+
+            StartDayOfWeek.newCell(start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) + 1));
+            start.add(Calendar.DAY_OF_MONTH, 6);
+            EndDayOfWeek.newCell(start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) + 1));
+
         }
 
         HashMap<Material, JDataTable.Row> materialRows = new HashMap<Material, JDataTable.Row>();
         //Iterate WPP
-        if (q.getResultList().size()==0) {throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");}
-        
+        if (q.getResultList().size() == 0) {
+            throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");
+        }
+
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
             if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
                 CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);

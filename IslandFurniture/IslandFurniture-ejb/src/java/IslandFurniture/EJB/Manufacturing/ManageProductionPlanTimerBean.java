@@ -6,13 +6,10 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.EJB.Entities.ProductionOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
-import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.ArrayList;
@@ -20,9 +17,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Lock;
+import static javax.ejb.LockType.WRITE;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -36,11 +34,13 @@ import javax.persistence.Query;
  */
 @Startup
 @Singleton
-public class ManageProductionPlanTimerBean {
+@Lock(WRITE)
+public class ManageProductionPlanTimerBean implements ProductionPlanningSingletonRemote{
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
     public static currentdate cdate = new currentdate();
+    private Integer stepLeft = 0;
 
     public currentdate getCdate() {
         return cdate;
@@ -48,6 +48,12 @@ public class ManageProductionPlanTimerBean {
 
     public void setCdate(currentdate cdate) {
         this.cdate = cdate;
+    }
+
+    @Override
+    public void setAdvanceWeek(int week) {
+        this.stepLeft=week;
+        System.out.println("ManageProductionPlanTimerBean(): Stepping"+stepLeft);
     }
 
     public static class currentdate {
@@ -65,7 +71,7 @@ public class ManageProductionPlanTimerBean {
                 week = weekz.intValue();
                 year = c.get(Calendar.YEAR);
 
-                System.out.println("Manufacturing Facility Timer Started: Now is " + week + "/" + month + "/" + year);
+                System.out.println("Manufacturing Facility Timer Started: Now is " + week + "/" + (month+1) + "/" + year);
             } catch (Exception ex) {
                 Logger.getLogger(ManageProductionPlanTimerBean.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -73,13 +79,13 @@ public class ManageProductionPlanTimerBean {
 
         public void addWeek() throws Exception {
             Integer t_month = Helper.addoneWeek(month, year, week, 1, Calendar.MONTH);
-            Integer t_week = Helper.addoneWeek(week, year, week, 1, Calendar.WEEK_OF_MONTH);
-            Integer t_year = Helper.addoneWeek(week, year, week, 1, Calendar.YEAR);
+            Integer t_week = Helper.addoneWeek(month, year, week, 1, Calendar.WEEK_OF_MONTH);
+            Integer t_year = Helper.addoneWeek(month, year, week, 1, Calendar.YEAR);
 
             this.month = t_month;
             this.week = t_week;
             this.year = t_year;
-            System.out.println("Event() : Now is " + week + "/" + month + "/" + year);
+            System.out.println("Event() : Now is " + week + "/" + (month+1) + "/" + year);
         }
 
         public Integer getMonth() {
@@ -107,29 +113,32 @@ public class ManageProductionPlanTimerBean {
         }
 
         public Calendar getCalendar() throws Exception {
-            Calendar cal = Calendar.getInstance();
-            cal.set(year, month, Math.min(week * 7, Helper.getNumWorkDays(Helper.translateMonth(month), year)));
-            return cal;
-
+ 
+            return(Helper.getStartDateOfWeek(month, year, week));
+ 
         }
 
     }
 
     public ManageProductionPlanTimerBean() {
-
+        stepLeft=0;
         System.out.println("ManageProductionPlanTimerBean(): Production Planning Automation Started !");
 
     }
-//by right supposed to be one min
 
-    //@Schedule(second = "10", hour = "*", minute = "*", info = "Production Planning")
+    @Schedule(second = "*/2", hour = "*", minute = "*", info = "Production Planning")
     public void automaticProductionPlanning() throws Exception {
+
+        if (stepLeft<=0)
+            return;
+        
+        stepLeft--;
         
         //oh one month has passed
         cdate.addWeek();
 
         // Supplier pivoting problem
-        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail!=null and (wmrp.year*1000+wmrp.month*10+wmrp.week)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail.purchaseOrder IS NULL and (wmrp.year*1000+wmrp.month*10+wmrp.week)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
         q.setParameter("m", cdate.getMonth());
         q.setParameter("y", cdate.getYear());
         q.setParameter("w", cdate.getWeek());
@@ -139,29 +148,36 @@ public class ManageProductionPlanTimerBean {
         Map<Supplier, List<WeeklyMRPRecord>> data = new HashMap<Supplier, List<WeeklyMRPRecord>>();
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
+            
+            if (wmrp.getQtyReq()<=0) continue;
+            
             if (data.get(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial())) == null) {
                 data.put(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial()), new ArrayList<WeeklyMRPRecord>());
             }
             data.get(QueryMethods.getSupplierByMfAndM(em, wmrp.getManufacturingFacility(), wmrp.getMaterial())).add(wmrp);
         }
 
-        ManufacturingFacility mf = null;
+        ManufacturingFacility mf = new ManufacturingFacility();
+        mf.setName("NULL");
 
         for (Supplier s : data.keySet()) {
 
             for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) data.get(s)) {
-                if (!wmrp.getManufacturingFacility().equals(mf)) {
+                if (!wmrp.getManufacturingFacility().getName().equals(mf.getName())) {
                     po = new PurchaseOrder();
                     po.setOrderDate(cdate.getCalendar());
                     po.setStatus(PurchaseOrderStatus.PLANNED);
-                    po.setSupplier(null);
+                    po.setSupplier(s);
                     po.setShipsTo(wmrp.getManufacturingFacility());
                     em.persist(po);
+                    mf=wmrp.getManufacturingFacility();
                 }
                 po.getPurchaseOrderDetails().add(wmrp.getPurchaseOrderDetail());
                 wmrp.getPurchaseOrderDetail().setPurchaseOrder(po);
-                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial());
+                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + "Supplier="+s);
             }
+            
+            System.out.println("Now Supplier="+s);
 
         }
 

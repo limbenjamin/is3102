@@ -13,6 +13,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
+import IslandFurniture.EJB.Entities.ProdOrderStatus;
 import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.ProductionOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -24,6 +25,7 @@ import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
 import IslandFurniture.StaticClasses.Helper.Helper;
+import static IslandFurniture.StaticClasses.Helper.Helper.workingDaysInWeek;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -34,13 +36,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import sun.security.pkcs11.wrapper.Functions;
 
 /**
  *
@@ -130,11 +128,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     public void CreateProductionPlanFromForecast() throws Exception {
         int m = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, true);
         int y = Helper.addMonth(Helper.getCurrentMonth(), Helper.getCurrentYear(), 6, false);
-        try {
-
-            System.out.println("CreateProductionPlanFromForecast(): Planning Production Planning 6 months in advance until " + Helper.translateMonth(m).toString() + "/" + y);
-        } catch (Exception ex) {
-        }
+        System.out.println("CreateProductionPlanFromForecast(): Planning Production Planning 6 months in advance until " + Helper.translateMonth(m).toString() + "/" + y);
         CreateProductionPlanFromForecast(m, y);
     }
 //Factory Perspective
@@ -382,11 +376,30 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
 
             WeeklyProductionPlan wp = addWeeklyPlan(mpp);
             if (i == maxWeekNumber) {
-                wp.setQTY(mpp.getQTY() - rPerWeek * (maxWeekNumber - 1));
+                Double produce = 0.0;
+                Double Nextproduce = 0.0;
+                if (QueryMethods.getNextMonthlyProductionPlan(em, mpp) != null) {
+
+                    Nextproduce = ((QueryMethods.getNextMonthlyProductionPlan(em, mpp).getQTY() + 0.0) / QueryMethods.getNextMonthlyProductionPlan(em, mpp).getNumWorkDays()) * (workingDaysInWeek + 0.0);
+                }
+                Double normalProduce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+                Double w1=(Helper.getBoundaryWeekDays(mpp.getMonth(), mpp.getYear()) / 7.0);
+                Double w2=1-w1;
+                produce = normalProduce*w1+w2 *Nextproduce;
+                wp.setQTY(produce.intValue());
+                
+                
+                System.out.println("Boundary Case: Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
+                System.out.println("Current Month produce="+normalProduce+ " Next Month PRoduce= "+Nextproduce);
+                System.out.println("First weight = "+w1);
+                System.out.println("Second weight = "+w2);
+                
             } else {
-                wp.setQTY(rPerWeek);
+                Double produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+                wp.setQTY(produce.intValue());
+                System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
             }
-            System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
+
             mpp.getWeeklyProductionPlans().add(wp);
         }
 
@@ -400,6 +413,14 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
 
         ProductionOrder po = new ProductionOrder();
         po.setFurnitureModel(wpp.getMonthlyProductionPlan().getFurnitureModel());
+        po.setStatus(ProdOrderStatus.PLANNED);
+        po.setQty(wpp.getQTY());
+        //Fixes for Missing PO
+        Calendar ca = Calendar.getInstance();
+        ca.set(wpp.getMonthlyProductionPlan().getYear(), wpp.getMonthlyProductionPlan().getMonth().value, 1);
+        ca.set(Calendar.WEEK_OF_MONTH, wpp.getWeekNo());
+        po.setProdOrderDate(ca);
+        po.setMf(MF);
         wpp.setProductionOrder(po);
 
         persist(po);
@@ -421,7 +442,6 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
         if (po == null) {
             return;
         }
-
         em.remove(po);
         em.merge(wpp);
         System.out.println("uncommitWPP(): " + wppID);

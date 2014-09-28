@@ -12,19 +12,17 @@ import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
-import IslandFurniture.WAR.HELPER.helper;
 import IslandFurnitures.DataStructures.JDataTable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.event.TabChangeEvent;
@@ -44,7 +42,6 @@ public class ViewProductionPlanning implements Serializable {
     private String success_msg;
     private String currentDrill = "";
 
-    private List<SelectItem> MF_LIST;
     private String MF;
 
     private String error_msg = "";
@@ -112,18 +109,12 @@ public class ViewProductionPlanning implements Serializable {
         System.out.println("ViewProductionPlanning() Init!");
         HttpSession session = Util.getSession();
         String username = (String) session.getAttribute("username");
-        if (!debugmode) {
-            MF_LIST = helper.convertHMToDropdown(dpv.getAuthorizedMF(username));
-        } else {
-            MF_LIST = helper.convertHMToDropdown(dpv.getAuthorizedMF(username));
-
+        this.MF = dpv.getAuthorizedMF(username).keySet().iterator().next();
+        try {
+            mpp.setMF(this.MF);
+            tooglePage("", "PP_TABLE");
+        } catch (Exception ex) {
         }
-        success_msg = "";
-        error_msg = "";
-    }
-
-    public List<SelectItem> getMF_LIST() {
-        return MF_LIST;
     }
 
     public String getMF() {
@@ -136,57 +127,18 @@ public class ViewProductionPlanning implements Serializable {
 
     }
 
-    public void mfListerner() {
 
-        if (this.MF == "") {
-            return;
-        }
-
-        try {
-            mpp.setMF(this.MF);
-        } catch (Exception ex) {
-        }
-        success_msg = "Status: Switched TO" + MF;
-        System.out.println("ViewProductionPlanning() MF Changed to " + MF);
-        //Create the Datatable
-        pullPPTableFromBean();
-        pullcapacityTableFromBean();
-        if (mrp != null) {
-            mrp.Internalrows.clear();
-            mrp.columns.clear();
-        }
-        wpp = null;
-
-    }
-
-    public void updatePPTableToBean() {
-        cleanMsg();
-        try {
-            ArrayList<Object> o = dt.getStateChangedEntities();
-            if (o.size() == 0) {
-                return;
-            }
-            dpv.updateListOfEntities(o);
-            MonthlyProductionPlan mpp = (MonthlyProductionPlan) o.get(0);
-            success_msg += "Status: Update Planning Capacity Success new value=" + mpp.getQTY() + " FOR " + MF;
-        } catch (Exception ex) {
-            success_msg = "";
-            error_msg = ex.getMessage();
-        }
-        pullPPTableFromBean();
-    }
 
     public void pullPPTableFromBean() {
-        cleanMsg();
+
         try {
             if (!MF.isEmpty()) {
                 dt = (JDataTable<String>) dpv.getDemandPlanningTable(MF);
                 Integer i = 0;
-                success_msg += "Status: Successfully pulled planning table for " + MF;
+
                 System.out.println("updateTable(): Production Table Reconstructed for " + MF + " Rows Count:" + dt.getRowCount());
             }
         } catch (Exception ex) {
-            success_msg = "";
             error_msg = ex.getMessage();
         }
         return;
@@ -194,41 +146,38 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void pullcapacityTableFromBean() {
-        cleanMsg();
+
         try {
             if (!MF.isEmpty()) {
 
                 capacity_dt = (JDataTable<String>) dpv.getCapacityList(MF);
                 Integer i = 0;
-                success_msg += "Status: Successfully pulled capacity table for " + MF;
+
                 System.out.println("updateTable(): Capacity Reconstructed for " + MF + " Rows Count:" + capacity_dt.getRowCount());
             }
         } catch (Exception ex) {
-            success_msg = "";
             error_msg = ex.getMessage();
         }
         return;
     }
 
     public void pullMRPTableFromBean(String month) {
-        cleanMsg();
+
         try {
             if (!MF.isEmpty()) {
 
                 mrp = (JDataTable<String>) dpv.getWeeklyMRPTable(currentDrill, MF);
                 Integer i = 0;
-                success_msg += "Status: Successfully pulled MRP table for " + MF + " " + month;
                 System.out.println("updateTable(): MRP Reconstructed for " + MF + " " + month + " Rows Count:" + capacity_dt.getRowCount());
             }
         } catch (Exception ex) {
-            success_msg = "";
             error_msg = ex.getMessage();
         }
         return;
     }
 
     public void updatePCTableToBean() {
-        cleanMsg();
+
         try {
             ArrayList<Object> o = capacity_dt.getStateChangedEntities();
             if (o.size() == 0) {
@@ -236,9 +185,8 @@ public class ViewProductionPlanning implements Serializable {
             }
             dpv.updateListOfEntities(o);
             ProductionCapacity pc = (ProductionCapacity) o.get(0);
-            success_msg += "Status: Update Production Daily Capacity Success. new value=" + pc.getQty() + " FOR " + MF + ". Please re-do production planning !";
-        } catch (Exception ex) {
-            success_msg = "";
+                   } catch (Exception ex) {
+
             error_msg = ex.getMessage();
         }
 
@@ -246,27 +194,9 @@ public class ViewProductionPlanning implements Serializable {
 
     }
 
-    public void cleanMsg() {
-        success_msg = "";
-        error_msg = "";
-    }
 
-    public void automaticPlanning() {
-        cleanMsg();
 
-        try {
-            System.out.println("ViewProductionPlanning() User Triggered Production Planning Algorithm");
-            mpp.CreateProductionPlanFromForecast();
-            mpp.setMF(MF);
-            pullPPTableFromBean();
-        } catch (Exception ex) {
-            success_msg = "";
-            error_msg = "Unable to fufill capacity planning . Might not have solution to planning?";
-        }
-        return;
-    }
-
-    public void drillDownMonth(String Month) throws Exception {
+    public void getWeeklyProductionTable(String Month) throws Exception {
         try {
             currentDrill = Month;
             System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
@@ -274,7 +204,7 @@ public class ViewProductionPlanning implements Serializable {
             activePanelIndex = 1;
             pullMRPTableFromBean(this.currentDrill);
         } catch (Exception ex) {
-            success_msg = "";
+
             error_msg = ex.getMessage();
             throw (ex);
         }
@@ -289,7 +219,7 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void updateWPPTableToBean() throws Exception {
-        cleanMsg();
+
         try {
             ArrayList<Object> o = wpp.getStateChangedEntities();
             if (o.size() == 0) {
@@ -298,12 +228,11 @@ public class ViewProductionPlanning implements Serializable {
 
             dpv.updateListOfEntities(o);
             WeeklyProductionPlan wpp = (WeeklyProductionPlan) o.get(0);
-            success_msg += "<br/>Status: Update Planning Capacity Success new value=" + wpp.getQTY() + " FOR " + MF;
+
         } catch (Exception ex) {
-            success_msg = "";
             error_msg = ex.getMessage();
         }
-        drillDownMonth(currentDrill);
+        getWeeklyProductionTable(currentDrill);
         pullMRPTableFromBean(currentDrill);
 
     }
@@ -319,88 +248,146 @@ public class ViewProductionPlanning implements Serializable {
     public void onTabChange(TabChangeEvent event) {
 
         if (event.getTab().getTitle().equals("Production Planning")) {
-            pullPPTableFromBean();
+            tooglePage("", "PP_TABLE");
         } else if (event.getTab().getTitle().equals("Capacity Management")) {
-            pullcapacityTableFromBean();
+            tooglePage("", "Capacity_Table");
         } else if (event.getTab().getTitle().equals("Weekly Production Planning")) {
             try {
-                drillDownMonth(this.currentDrill);
+                tooglePage("", "WPP_TABLE");
             } catch (Exception ex) {
             }
         } else if (event.getTab().getTitle().equals("Material Resource Planning")) {
-            pullMRPTableFromBean(this.currentDrill);
-
+            tooglePage("", "MRP_TABLE");
         }
     }
 
-    public void listenToCell(ActionEvent actionEvent) throws IOException {
-        cleanMsg();
+    public void tooglePage(String ID, String command) {
         try {
-            CommandButton button = (CommandButton) actionEvent.getComponent();
-            String ID = button.getAlt();
-            String command = button.getLabel();
-            System.out.println("listenToCell(): " + command + " ON " + ID);
-
             switch (command) {
+                case "Auto_Plan":
+                    try {
+                        System.out.println("ViewProductionPlanning(): User Triggered Production Planning Algorithm");
+                        mpp.CreateProductionPlanFromForecast();
+                        mpp.setMF(MF);
+                        pullPPTableFromBean();
+                        success_msg = "AI Planning Successful !";
+                    } catch (Exception ex) {
+                        success_msg = "";
+                        error_msg = "Unable to fufill capacity planning . Might not have solution to planning?";
+                    }
+                    break;
+                case "Update_PP":
+                    try {
+                        ArrayList<Object> o = dt.getStateChangedEntities();
+                        if (o.size() == 0) {
+                            return;
+                        }
+                        dpv.updateListOfEntities(o);
+                        MonthlyProductionPlan mpp = (MonthlyProductionPlan) o.get(0);
+                        success_msg += "Status: Update Planning Capacity Success new value=" + mpp.getQTY() + " FOR " + MF;
+                    } catch (Exception ex) {
+                        success_msg = "";
+                        error_msg = ex.getMessage();
+                    }
+                    break;
+                case "Capacity_Table":
+                    pullcapacityTableFromBean();
+                    success_msg = "Capacity Table pulled";
+                    break;
+                case "WPP_TABLE_SPECIFY":
+                    getWeeklyProductionTable(ID);
+                    success_msg = "Successfully pulled weekly Production Planning";
+                    break;
+                case "WPP_TABLE":
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Successfully pulled weekly Production Planning";
+                    break;
+                case "PP_TABLE":
+                    pullPPTableFromBean();
+                    success_msg = "Successfully pulled Production Planning";
+                    break;
+                case "MRP_TABLE":
+                    pullMRPTableFromBean(this.currentDrill);
+                    success_msg = "Successfully pulled Material Planning !";
+                    break;
                 case "COMMIT_WPP":
                     mpp.commitWPP(Integer.valueOf(ID));
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Commited Weekly Production Plan !";
                     break;
                 case "UNCOMMIT_WPP":
                     mpp.uncommitWPP(Integer.valueOf(ID));
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Uncommited Weekly Production Plan !";
                     break;
                 case "COMMIT_WEEK_WPP":
                     int weekNo = Integer.valueOf(ID.split("_")[0]);
                     int monthNo = Month.valueOf(ID.split("_")[1]).value;
                     int yearNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.orderMaterials(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Commited all Weekly Production Plan !";
                     break;
-
                 case "UNCOMMIT_WEEK_WPP":
                     weekNo = Integer.valueOf(ID.split("_")[0]);
                     monthNo = Month.valueOf(ID.split("_")[1]).value;
                     yearNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.unOrderMaterials(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Uncommited all Weekly Production Plan !";
+
                     break;
                 case "Commit_All_Material":
                     weekNo = Integer.valueOf(ID.split("_")[0]);
                     monthNo = Integer.valueOf(ID.split("_")[1]);
                     yearNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.commitallWPP(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Commited all Materials For Week!";
                     break;
                 case "Uncommit_All_Material":
                     weekNo = Integer.valueOf(ID.split("_")[0]);
                     monthNo = Integer.valueOf(ID.split("_")[1]);
                     yearNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.uncommitallWPP(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Uncommited all Materials For Week!";
                     break;
                 case "ORDER_MATERIAL":
                     yearNo = Integer.valueOf(ID.split("_")[0]);
                     monthNo = Integer.valueOf(ID.split("_")[1]);
                     weekNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.createPOForWeekMRP(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Ordered Material For Week !";
                     break;
                 case "UNORDER_MATERIAL":
                     yearNo = Integer.valueOf(ID.split("_")[0]);
                     monthNo = Integer.valueOf(ID.split("_")[1]);
                     weekNo = Integer.valueOf(ID.split("_")[2]);
                     mpp.uncreatePOForWeekMRP(weekNo, monthNo, yearNo);
-                    drillDownMonth(this.currentDrill);
+
+                    getWeeklyProductionTable(this.currentDrill);
+                    success_msg = "Unordered Material For Week !";
                     break;
 
             }
-            success_msg += "Successfully Toggled Production Order";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", success_msg));
 
         } catch (Exception ex) {
             success_msg = "";
             error_msg = ex.getMessage();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", error_msg));
         }
+    }
+
+    public void listenToCell(ActionEvent actionEvent) throws IOException {
+        CommandButton button = (CommandButton) actionEvent.getComponent();
+        String ID = button.getAlt();
+        String command = button.getLabel();
+        System.out.println("listenToCell(): " + command + " ON " + ID);
+        tooglePage(ID, command);
+
     }
 
 }

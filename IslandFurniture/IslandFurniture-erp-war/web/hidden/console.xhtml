@@ -14,6 +14,14 @@
             </h:commandButton><br />
             <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
         </h:form>
+
+        <h:form>
+            Activate Timed Functions for Production Planning<br />
+            <h:commandButton value="Start Production Planning Simulation">
+                <f:ajax listener="#{consoleManagedBean.startMRPUpdates}" render="statusMessage" />
+            </h:commandButton><br />
+            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
+        </h:form>
     </h:body>
 </html>
 
