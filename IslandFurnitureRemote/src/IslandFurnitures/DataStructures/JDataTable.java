@@ -64,7 +64,7 @@ public class JDataTable<T> implements Serializable {
         }
 
         public String getColorClass() {
-            return colorClass;
+            return "JDataTable "+colorClass;
         }
 
         public void setColorClass(String colorClass) {

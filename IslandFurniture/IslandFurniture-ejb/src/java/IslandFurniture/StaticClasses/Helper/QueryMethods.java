@@ -150,9 +150,9 @@ public class QueryMethods {
         Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF", ProcurementContractDetail.class);
         q.setParameter("stock", stock);
         q.setParameter("mf", mf);
- 
+
         try {
-            return (List<ProcurementContractDetail>)q.getResultList();
+            return (List<ProcurementContractDetail>) q.getResultList();
         } catch (NoResultException NRE) {
             return null;
         }
@@ -440,9 +440,28 @@ public class QueryMethods {
 
     }
 
+    public static boolean isOrderedMaterial(EntityManager em, ManufacturingFacility mff, Month requestedMonth, int requestedYear) {
+
+        for (int i = 1; i <= Helper.getNumOfWeeks(requestedMonth.value, requestedYear); i++) {
+            Query qq = em.createNamedQuery("weeklyMRPRecord.findwMRPatMF");
+            qq.setParameter("mf", mff);
+            qq.setParameter("m", requestedMonth);
+            qq.setParameter("y", requestedYear);
+            qq.setParameter("w", i);
+
+            int qty = 0;
+            for (WeeklyMRPRecord wppz : (List<WeeklyMRPRecord>) qq.getResultList()) {
+                if (wppz.getQtyReq() > 0) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
     public static boolean isMaterialWeekLocked(EntityManager em, ManufacturingFacility mf, Month requestedMonth, int requestedYear, int requestedWeek) {
-        
-        
+
         Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail !=null");
         q.setParameter("mf", mf);
         q.setParameter("w", requestedWeek);
@@ -471,14 +490,14 @@ public class QueryMethods {
         return (false);
     }
 
-    public static Supplier getSupplierByMfAndM(EntityManager em,ManufacturingFacility mf, Material mat) {
+    public static Supplier getSupplierByMfAndM(EntityManager em, ManufacturingFacility mf, Material mat) {
 
         Query q = em.createNamedQuery("ProcurementContract.getSupplierForMFAndMaterial");
         q.setParameter("mf", mf);
         q.setParameter("ma", mat);
-        ProcurementContract pc =(ProcurementContract) q.getResultList().get(0);
+        ProcurementContract pc = (ProcurementContract) q.getResultList().get(0);
         return (pc.getSupplier());
-        
+
     }
 
 }

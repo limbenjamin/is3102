@@ -18,6 +18,8 @@ import javax.persistence.Query;
  */
 public class Helper {
 
+    public static final int workingDaysInWeek = 7;
+
 //Starts from Zero to 11
     public static Month translateMonth(int month) throws Exception {
 
@@ -74,31 +76,35 @@ public class Helper {
 
     }
 
-    public static int addoneWeek(int month, int year, int week,int addorminus, int return_what) throws Exception {
+    public static int addoneWeek(int month, int year, int week, int addorminus, int return_what) throws Exception {
 
         int direction = addorminus / Math.abs(addorminus);
 
-        if ( week+direction> Helper.getNumOfWeeks(month, year) || week+direction<=0) {
+        if (week + direction > Helper.getNumOfWeeks(month, year) || week + direction <= 0) {
 
-       int i_month = Helper.addMonth(Helper.translateMonth(month), year, direction, true);
+            int i_month = Helper.addMonth(Helper.translateMonth(month), year, direction, true);
             year = Helper.addMonth(Helper.translateMonth(month), year, direction, false);
             if (direction == 1) {
                 week = 1;
             } else {
                 week = Helper.getNumOfWeeks(month, year);
             }
-            month=i_month;
+            month = i_month;
 
         } else {
 
             week = week + 1 * direction;
         }
 
+        if (month > 11) {
+            year++;
+        }
+
         switch (return_what) {
             case Calendar.WEEK_OF_MONTH:
                 return week;
             case Calendar.MONTH:
-                return month;
+                return (month % 12);
             case Calendar.YEAR:
                 return year;
 
@@ -111,30 +117,46 @@ public class Helper {
         return Calendar.getInstance().get(Calendar.YEAR);
     }
 
+    public static int getBoundaryWeekDays(Month month, int Year) {
+        Calendar prev = getStartDateOfWeek(month.value, Year, getNumOfWeeks(month.value, Year));
+        Calendar end = Calendar.getInstance();
+        end.set(Year, month.value, 1);
+        end.add(Calendar.MONTH, 1);
+        end.add(Calendar.DAY_OF_MONTH, -1);
+
+        return (end.get(Calendar.DAY_OF_MONTH) - prev.get(Calendar.DAY_OF_MONTH)+1);
+
+    }
+
     public static int getNumWorkDays(Month month, int Year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Year, month.value, 1);
-
-        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return (cal.getActualMaximum(Calendar.DAY_OF_MONTH));
     }
 
     public static int getNumOfWeeks(int month, int year) {
+
+        Calendar cal = getStartDateOfWeek(month, year, 1);
+        Double week = Math.floor((cal.getActualMaximum(Calendar.DAY_OF_MONTH) - cal.get(Calendar.DAY_OF_MONTH)) / 7.0);
+
+        return (week.intValue() + 1); //Monday day of month
+
+    }
+
+    public static Calendar getStartDateOfWeek(int month, int year, int WeekNo) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, 1,0,0);
         cal.setFirstDayOfWeek(Calendar.MONDAY);
-        Double answer=Math.ceil(cal.getActualMaximum(Calendar.DAY_OF_MONTH)/7.0);
-        return (answer.intValue());
+        cal.set(year, month, 1);
+        int monthStartOn = cal.get(Calendar.DAY_OF_WEEK);
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        int delta = (-(monthStartOn - Calendar.MONDAY) + 7) % 7;
+        cal.add(Calendar.DAY_OF_MONTH, delta + (WeekNo - 1) * 7);
+        return (cal);
+
     }
 
     public static int getNumOfDaysInWeek(int month, int year, int WeekNo) {
-        Calendar cal = Calendar.getInstance();
-        int DaysinMonth = 30;
-        try {
-            DaysinMonth = getNumWorkDays(Helper.translateMonth(month), year);
-        } catch (Exception ex) {
-        }
-
-        return Math.min(DaysinMonth - (WeekNo - 1) * 7, 7);
+        return 7;
     }
 
     public static <Any> Any getFirstObjectFromQuery(String Query, EntityManager em) {

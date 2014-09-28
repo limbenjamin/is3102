@@ -20,41 +20,63 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/plugins/select2/select2.css"></link>
         <script src="#{application.contextPath}/assets/plugins/modernizr.js"></script>
         <!-- James Production Planning -->
-            <style>
+        <style type="text/css">
+
+            .ui-datatable-even,.ui-datatable-odd{
+                border-bottom: 1px solid #FFFFFF !important;
+            }
+            .ui-datatable-even >td{
+                border:0px;
+            }
+
+            .ui-datatable-odd >td{
+                border:0px;
+
+            }
+
+            td[role='gridcell']
+            {
+            border:0px;
+            }
+
+
             .summary{
-                background-color: yellowgreen;
+            background: none !important;
+            background-color: yellowgreen !important;
             }
             .editable{
             }
 
             .normal_odd{
-                background-color: #cccccc;
+            background: none !important;
+            background-color: #cccccc !important;
             }
             .normal_even{
-                background-color: white;
+            background: none !important;
+            background-color: white !important;
             }
 
             .HEAVY_WORKLOAD
             {
-                background-color: red;
-                filter: alpha(opacity=80);
+            background-color: red !important;
+            filter: alpha(opacity=80) !important;
             }
 
             .MEDIUM_WORKLOAD
             {
-                background-color: yellow;
-                filter: alpha(opacity=80);
+            background-color: yellow !important;
+            filter: alpha(opacity=80) !important;
             }
 
             .LIGHT_WORKLOAD
             {
-                background-color: green;
-                filter: alpha(opacity=80);
+            background-color: green !important;
+            filter: alpha(opacity=80) !important;
             }
 
             .ERROR
             {
-                background-color: red;
+            background-color: red !important;
             }
 
 
@@ -173,7 +195,7 @@
 
                         <p class="nav-title">MENU</p>
                         <ul class="nav sidenav">  
-                           <h:outputText value="#{loginManagedBean.menu}" escape="false" />
+                            <h:outputText value="#{loginManagedBean.menu}" escape="false" />
                         </ul>
                     </nav>
                 </aside>
@@ -230,7 +252,9 @@
         <!-- trying out select2.js -->
         <script src="#{application.contextPath}/assets/plugins/select2/select2.js"></script>
         <script>
-            $(document).ready(function() { $(".needauto").select2(); });
+                                                    $(document).ready(function() {
+                                                        $(".needauto").select2();
+                                                    });
         </script>
     </h:body>
 </html>
