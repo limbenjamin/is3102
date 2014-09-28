@@ -70,7 +70,7 @@ public class StaffManagedBean  implements Serializable  {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         username = request.getParameter("staffForm:username");
         name = request.getParameter("staffForm:name");
-        password = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         emailAddress = request.getParameter("staffForm:emailAddress");
         phoneNo = request.getParameter("staffForm:phoneNo");
         HttpSession session = Util.getSession();

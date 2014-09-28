@@ -70,7 +70,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setInvalidPasswordCount(0);
         staff.setActive(Boolean.TRUE);
         //generate salt
-        String salt = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        String salt = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         staff.setSalt(salt);
         staff.setPassword(password);
         staff.setName(name);
@@ -107,11 +107,59 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         }
         em.persist(staff);
         em.flush();
-        /*try {
-            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Account created", "Your new account has been created with password: "+password);
+        try {
+            SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Account created", "Your new account has been created with password: "+password);
         } catch (Exception ex) {
             Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
+    }
+    
+    //This method does not send emails for bulk created accounts
+    @Override
+    public void createStaffAccountinBulk(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
+        staff = new Staff();
+        staff.setUsername(username);
+        staff.setNotes("");
+        staff.setInvalidPasswordCount(0);
+        staff.setActive(Boolean.TRUE);
+        //generate salt
+        String salt = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
+        staff.setSalt(salt);
+        staff.setPassword(password);
+        staff.setName(name);
+        staff.setEmailAddress(emailAddress);
+        staff.setPhoneNo(phoneNo);
+        preference = new Preference();
+        notifications = new ArrayList<Notification>();
+        todolist = new ArrayList<Todo>();
+        announcements = new ArrayList<Announcement>();
+        events = new ArrayList<Event>();
+        staff.setPreference(preference);
+        staff.setNotifications(notifications);
+        staff.setTodoList(todolist);
+        staff.setAnnouncements(announcements);
+        staff.setEvents(events);
+        country = (Country) QueryMethods.findCountryByName(em, countryName);
+        if (country == null) {
+            try {
+                throw new InvalidCountryException();
+            } catch (InvalidCountryException ex) {
+                Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            plant = (Plant) QueryMethods.findPlantByName(em, country, plantName);
+            if (plant == null) {
+                try {
+                    throw new InvalidPlantException();
+                } catch (InvalidPlantException ex) {
+                    Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                staff.setPlant(plant);
+            }
+        }
+        em.persist(staff);
+        em.flush();
     }
     
     @Override
