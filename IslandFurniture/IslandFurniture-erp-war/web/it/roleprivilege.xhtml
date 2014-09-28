@@ -10,11 +10,17 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
+                            <div class="col-md-12">
+                                <ol class="breadcrumb">
+                                    <li><a href="../dash.xhtml">Home</a></li>
+                                    <li class="active"><strong>Manage Roles</strong></li>
+                                </ol>
+                            </div>                            
                             <div class="col-md-10">
-                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newRole">
+                                <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newRole">
                                     <i class="fa fa-fw fa-plus"></i>New Role
                                 </button>                                
-                                <h4>Manage Roles and Privileges</h4>
+                                <h4>Manage Roles</h4>
                                 <hr></hr>       
                             </div>
                             <div class="col-md-7">                                               
@@ -24,7 +30,7 @@
                                 </div>
                                   <ui:repeat value="#{rolePrivilegeManagedBean.roleList}" var="role">
                                     <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                      
+                                      <div href="#" class="list-group-item">                                      
                                         <h:form>
                                             <div class="pull-right btn-group">
                                                 <h:commandButton value="Edit Privilege(s)" class="btn btn-sm" action="#{rolePrivilegeManaged2Bean.displayPrivileges}">
@@ -36,7 +42,7 @@
                                             </div>
                                         </h:form>
                                         <h5><strong>#{role.name}</strong></h5>                                          
-                                      </a>                                  
+                                      </div>                                  
                                     </div>
                                 </ui:repeat>
                               </section>
@@ -46,14 +52,14 @@
                                 <div class="panel-heading dashboard-title-panel">
                                     Privilege List
                                 </div>
+                                <div class="list-group privilege-list">
                                   <ui:repeat value="#{rolePrivilegeManagedBean.privilegeList}" var="privilege">
-                                    <div class="list-group">                          
-                                      <a href="#" class="list-group-item">                                             
+                                    <div class="list-group-item">                                                                     
                                         <h5><strong>#{privilege.name}</strong></h5>
-                                        <h6>#{privilege.description}</h6>
-                                      </a>                                  
+                                        <h6>#{privilege.description}</h6>                                
                                     </div>
-                                </ui:repeat>
+                                  </ui:repeat>
+                                </div>
                               </section>
                             </div>
                             

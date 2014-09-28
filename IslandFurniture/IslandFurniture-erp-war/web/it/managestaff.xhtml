@@ -10,8 +10,14 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                         <div class="row">
+                            <div class="col-md-12">
+                                <ol class="breadcrumb">
+                                    <li><a href="../dash.xhtml">Home</a></li>
+                                    <li class="active"><strong>Manage Staff</strong></li>
+                                </ol>
+                            </div>                            
                             <div class="col-md-8">
-                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#newStaff">
+                                <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newStaff">
                                     <i class="fa fa-fw fa-plus"></i>New Staff
                                 </button>                                
                                 <h4>Manage Staff</h4>
@@ -28,7 +34,7 @@
                                           <h5><strong>#{staff.name}</strong></h5>
                                         <h:form>
                                             <div class="pull-right btn-group">
-                                                <h:commandButton value="Reset Password" class="btn btn-sm" action="#{staffManagedBean.resetpassword}">
+                                                <h:commandButton value="Reset Password" class="btn btn-sm" action="#{staffManagedBean.resetpassword}" style="border-right:1px solid #fff;">
                                                     <f:param name="id" value="#{staff.id}" />
                                                 </h:commandButton>
                                                 <h:commandButton value="Update Roles" class="btn btn-sm" action="#{staffManaged2Bean.displayRoles()}">

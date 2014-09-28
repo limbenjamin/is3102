@@ -12,13 +12,21 @@
             <ui:define name="content">
                         <div class="row">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newPlant">
-                                    <i class="fa fa-fw fa-plus"></i>New Plant
-                                </button>
-                                <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newCo">
-                                    <i class="fa fa-fw fa-plus"></i>New Country Office
-                                </button>
-                                <h4>Plants</h4>
+                                <ol class="breadcrumb">
+                                    <li><a href="../dash.xhtml">Home</a></li>
+                                    <li class="active"><strong>Manage Plants</strong></li>
+                                </ol>                        
+                            </div>                            
+                            <div class="col-md-12">
+                                <span class="pull-right">
+                                    <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newPlant">
+                                        <i class="fa fa-fw fa-plus"></i>New Plant
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newCo">
+                                        <i class="fa fa-fw fa-plus"></i>New Country Office
+                                    </button>                                
+                                </span>
+                                <h4>Manage Plants</h4>
                                 <hr></hr>       
                             </div>                        
                             <div class="col-md-12">                                               
@@ -206,8 +214,8 @@
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{organizationalHierarchyManagedBean.addPlant}" class="btn btn-success" value="Add Plant"></h:commandButton>
+                                        <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{organizationalHierarchyManagedBean.addPlant}" class="btn btn-round btn-success" value="Add Plant"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
@@ -250,8 +258,8 @@
                                           </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="#{organizationalHierarchyManagedBean.addCountryOffice}" class="btn btn-success" value="Add Country Office"></h:commandButton>
+                                        <button type="button" class="btn btn-round btn-default" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{organizationalHierarchyManagedBean.addCountryOffice}" class="btn btn-round btn-success" value="Add Country Office"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
