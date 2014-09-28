@@ -26,6 +26,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -92,12 +93,15 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
 
         this.goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
 
-        if (this.goodsIssuedDocumentId == null) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            this.goodsIssuedDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
-        } else {
-            goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        try {
+            if (goodsIssuedDocumentId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("goodsissued.xhtml");
+            }
+        } catch (IOException ex) {
+
         }
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
 
         System.out.println("GoodsIssuedDocumentId: " + goodsIssuedDocumentId);
         goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);

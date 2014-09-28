@@ -24,6 +24,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
@@ -56,7 +57,6 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
     private List<StockUnit> stockUnitMovementAnotherList;
     private List<Stock> stockList;
     private List<StockUnit> stockUnitList2;
-    
 
     private StorageBin storageBin;
     private Stock stock;
@@ -84,11 +84,22 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         System.out.println("Init");
         storageAreaList = miml.viewStorageArea(plant);
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
+
+        try {
+            if (storageBinId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("inventorytransfer.xhtml");
+            }
+        } catch (IOException ex) {
+
+        }
+
         storageBin = miml.getStorageBin(storageBinId);
         stockUnitList = msul.viewStockUnitByStorageBin(plant, storageBin);
         ifStockUnitListEmpty = stockUnitList.isEmpty();
         stockUnitMovementList = msul.viewStockUnitMovementbyStorageBin(storageBin);
         ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
+
     }
 
     public boolean ifBatchNoEmpty(String batchNo) {

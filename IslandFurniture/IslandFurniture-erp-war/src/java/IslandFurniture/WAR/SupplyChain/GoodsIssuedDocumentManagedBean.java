@@ -1,6 +1,7 @@
 package IslandFurniture.WAR.SupplyChain;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
 import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
@@ -27,6 +28,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -109,12 +111,15 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
         this.goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
 
-        if (this.goodsIssuedDocumentId == null) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            this.goodsIssuedDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
-        } else {
-            goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        try {
+            if (goodsIssuedDocumentId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("goodsissued.xhtml");
+            }
+        } catch (IOException ex) {
+
         }
+        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
 
         System.out.println("GoodsIssuedDocumentId: " + goodsIssuedDocumentId);
         goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
@@ -150,7 +155,12 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         }
 
         plantList = mgrl.viewPlant();
+        plantList.remove(plant);
 
+//        for (Plant p : plantList){
+//            if (p instanceof GlobalHQ) {
+//                System.out.println("It is an instance of GHQ");
+//        }
         for (Plant g : plantList) {
 
             plantType = g.getClass().getSimpleName();

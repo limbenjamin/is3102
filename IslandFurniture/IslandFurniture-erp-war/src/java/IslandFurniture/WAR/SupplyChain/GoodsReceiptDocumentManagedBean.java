@@ -29,6 +29,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -102,18 +103,16 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
         this.goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
 
-        if (this.goodsReceiptDocumentId == null) {
-            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            this.goodsReceiptDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
-
-            if (this.goodsReceiptDocumentId == null) {
-                HttpServletRequest request2 = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-                this.goodsReceiptDocumentId = new Long(request2.getParameter("createPO:GRDid"));
+        try {
+            if (goodsReceiptDocumentId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("goodsreceipt.xhtml");
             }
+        } catch (IOException ex) {
 
-        } else {
-            goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
+
+        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
 
         goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         storageAreaList = miml.viewStorageAreaReceiving(plant);
@@ -155,13 +154,14 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
                     mgrl.editGoodsReceiptDocumentDetailQty(g.getId(), g.getQuantity() + quantity);
                     FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
-                    
+
                     return "goodsreceiptdocument";
                 }
             }
         }
 
         mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocumentId, stock.getId(), quantity);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         return "goodsreceiptdocument";
     }
