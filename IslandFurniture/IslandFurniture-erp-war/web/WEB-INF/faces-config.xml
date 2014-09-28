@@ -183,6 +183,18 @@
         <navigation-case>
             <from-outcome>inventorymonitoring_reportmgmt</from-outcome>
             <to-view-id>/supplychain/inventorymonitoring_reportmgmt.xhtml</to-view-id>
-        </navigation-case>  
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>purchaseorder</from-outcome>
+            <to-view-id>/purchasing/purchaseorder.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>purchaseorder2</from-outcome>
+            <to-view-id>/purchasing/purchaseorder2.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>purchaseorderconfirmed</from-outcome>
+            <to-view-id>/purchasing/purchaseorderconfirmed.xhtml</to-view-id>
+        </navigation-case>                          
     </navigation-rule>
 </faces-config>

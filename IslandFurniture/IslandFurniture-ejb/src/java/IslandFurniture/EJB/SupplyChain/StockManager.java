@@ -40,9 +40,10 @@ public class StockManager implements StockManagerLocal {
             System.out.println("StockManager.addMaterial()");
             material = findMaterialByName(em, name);
             if(material != null) {
-                if(!material.isHidden())
+                if(!material.isHidden()) {
                     System.out.println("Material " + name + " already exists in database");
-                else 
+                    return false;
+                } else 
                     material.setHidden(false);
             } else {
                 material = new Material();
@@ -86,25 +87,30 @@ public class StockManager implements StockManagerLocal {
             return false;
         }
     }
-    public void deleteMaterial(Long materialID) {
+    public String deleteMaterial(Long materialID) {
         Material material;
         List<BOMDetail> bomList;
         try{
             System.out.println("StockManager.deleteMaterial()");
             material = em.find(Material.class, materialID);
             bomList = getBOMDetailByMaterial(em, material);
-            if(bomList.size() > 0)
+            if(bomList.size() > 0) {
                 System.err.println("Invalid deletion due to existing BOM");
+                return "Invalid deletion due to existing BOM";
+            }
             else
                 em.remove(material);
+            return null;
         } catch(Exception ex) {
             ex.printStackTrace();
+            return "Unexpected error occured during deletion";
         }
     }
-    public FurnitureModel addFurnitureModel(String name, Double price) {
+    public String addFurnitureModel(String name, Double price) {
         FurnitureModel fm;
         BOM bom;
         List<BOMDetail> bomList;
+        String msg = null;
         try {
             System.out.println("StockManager.addFurnitureModel()");
             fm = findFurnitureByName(em, name);
@@ -117,12 +123,15 @@ public class StockManager implements StockManagerLocal {
                 fm.setPrice(price);
                 fm.setBom(bom);
                 em.persist(fm);
-            } else 
+                msg = "" + fm.getId() + "#0"; 
+            } else {
                 System.out.println("FurnitureModel " + name + " already exists. Directing to its BOM");
-            return fm;
+                msg = "" + fm.getId() + "#FurnitureModel " + name + " already exists. Directed to BOM";
+            }
+            return msg;
         } catch(Exception ex) {
             ex.printStackTrace();
-            return null;
+            return "Unexpected error occured";
         }
     }
     public FurnitureModel getFurniture(Long id) {
@@ -148,7 +157,7 @@ public class StockManager implements StockManagerLocal {
         }
     }
     
-    public void editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
+    public String editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
         FurnitureModel fm;
         try {
             System.out.println("StockManager.editFurnitureModel()");
@@ -157,11 +166,13 @@ public class StockManager implements StockManagerLocal {
             fm.setName(furnitureName);
             fm.setPrice(price);
             em.persist(fm);
+            return null;
         } catch(NoResultException ex) {
             System.err.println("Can't find name");
+            return "Unexpected error occured";
         }
     }
-    public void deleteFurnitureModel(Long furnitureID) {
+    public String deleteFurnitureModel(Long furnitureID) {
         FurnitureModel fm;
         List<StockSupplied> stockList;
         List<BOMDetail> bomDetailList;
@@ -174,17 +185,20 @@ public class StockManager implements StockManagerLocal {
             bom = fm.getBom();
             bomDetailList = bom.getBomDetails();
             
-            System.out.println("Will go ahead to delete everything now");
-            if(stockList.size() >= 1)
+            if(stockList.size() >= 1) {
                 System.out.println("Invalid delete due to existence of Stock Supply Request");
+                return "Invalid delete due to existence of Stock Supply Request";
+            }
             else {
                 for(int i=0; i<bomDetailList.size(); i++) 
                     em.remove(bomDetailList.get(i));
                 em.remove(bom);
                 em.remove(fm);
             }
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpected error occured";
         }
     }
     public void addFurnitureColour(Long furnitureID, String colour) {
@@ -213,7 +227,7 @@ public class StockManager implements StockManagerLocal {
             System.err.println("Can't find name");
         }
     }
-    public void addToBOM(Long furnitureID, Long materialID, Integer materialQuantity) {
+    public String addToBOM(Long furnitureID, Long materialID, Integer materialQuantity) {
         Material material;
         FurnitureModel fm;
         BOM bom;
@@ -237,7 +251,8 @@ public class StockManager implements StockManagerLocal {
                 }
             }
             if(BOMdetail != null) {
-                System.out.println("BOMdetail already exists.");
+                System.out.println("BOMdetail already exists");
+                return "BOM Detail already exists ";
             } else {
                 BOMdetail = new BOMDetail();
                 BOMdetail.setMaterial(material);
@@ -247,9 +262,10 @@ public class StockManager implements StockManagerLocal {
                 System.out.println("Successfully added new BOMDetail");
             }
             em.flush();
-           
+            return null;
         } catch(NoResultException NRE) {
             System.err.println("Can't find name");
+            return "Unexpected error occured";
         }
     }
     public List displayBOM(Long furnitureID) {
@@ -265,18 +281,20 @@ public class StockManager implements StockManagerLocal {
             return null;
         }
     }
-    public void editBOMDetail(Long BOMDetailID, Integer quantity) {
+    public String editBOMDetail(Long BOMDetailID, Integer quantity) {
         BOMDetail BOMdetail;
         try {
             System.out.println("StockManager.editBOMDetail()");
             BOMdetail = em.find(BOMDetail.class, BOMDetailID);
             BOMdetail.setQuantity(quantity);
             em.persist(BOMdetail);
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpect error occured";
         }
     }
-    public void deleteBOMDetail(Long BOMDetailID) {
+    public String deleteBOMDetail(Long BOMDetailID) {
         BOMDetail BOMdetail;
         BOM bom;
         try {
@@ -286,8 +304,10 @@ public class StockManager implements StockManagerLocal {
             bom.getBomDetails().remove(BOMdetail);
             em.remove(BOMdetail);
             em.persist(bom);
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpect error occured";
         } 
     }
     public List<RetailItem> displayItemList() {
@@ -301,18 +321,20 @@ public class StockManager implements StockManagerLocal {
         }
         
     }
-    public void editRetailItem(Long itemID, String itemName, Double itemPrice) {
+    public String editRetailItem(Long itemID, String itemName, Double itemPrice) {
         RetailItem item;
         try {
             System.out.println("StockManager.editRetailItem()");
             item = em.find(RetailItem.class, itemID);
             item.setName(itemName);
             item.setPrice(itemPrice);
+            return null;
         } catch(Exception ex) {
             System.out.println("Something went wrong");
+            return "Unexpected error occured";
         }
     }
-    public boolean deleteRetailItem(Long itemID) {
+    public String deleteRetailItem(Long itemID) {
         RetailItem item;
         List<StockSupplied> stockList;
         try {
@@ -321,20 +343,20 @@ public class StockManager implements StockManagerLocal {
             stockList = getStockSuppliedByStock(em, item);
             if(item.getSoldBy().size() >= 1) {
                 System.err.println("Can't delete " + item.getName() + " because it is currently sold by a store");
-                return false;
+                return "Unable to delete \"" + item.getName() + "\" as it is currently sold by a store";
             } else if(stockList.size() >= 1) {
                 System.out.println("Invalid delete due to existence of Stock Supply Request");
-                return false;
+                return "Unable to delete \"" + item.getName() + "\" due to existence of Stock Supply Request";
             } else {
                 em.remove(item);
-                return true;
+                return null;
             }
         } catch(Exception ex) {
             System.err.println("Something went wrong");
-            return false;
+            return "Unexpected error occured";
         }
     }
-    public boolean addRetailItem(String itemName, Double itemPrice) {
+    public String addRetailItem(String itemName, Double itemPrice) {
         RetailItem item;
         try {
             System.out.println("StockManager.addRetailItem()");
@@ -344,14 +366,14 @@ public class StockManager implements StockManagerLocal {
                 item.setName(itemName);
                 item.setPrice(itemPrice);
                 em.persist(item);
-                return true;
+                return null;
             } else {
                 System.out.println("Item " + itemName + " already exist. Unable to add.");
-                return false;
+                return "Retail Item \"" + itemName + "\" already exist in the database";
             }
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
-            return false;
+            return "Unexpected error occured";
         }
     }
 }

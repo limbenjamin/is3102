@@ -40,7 +40,7 @@
                                             <div class="inner-addon left-addon">
                                                 <h:panelGroup rendered="#{!bOMManagedBean.uneditable}"> 
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>                                            
-                                                    <h:inputText id="storageBinName" value="#{bom.quantity}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
+                                                    <h:inputText value="#{bom.quantity}" class="form-control transparent-form" style="max-width:100px;"></h:inputText>
                                                 </h:panelGroup>
                                                 <h:panelGroup rendered="#{bOMManagedBean.uneditable}">                                         
                                                     <h:outputText value="#{bom.quantity}"  style="max-width:100px;"></h:outputText>
@@ -49,7 +49,8 @@
                                         </td>
                                         <td>
                                             <h:panelGroup rendered="#{!bOMManagedBean.uneditable}"> 
-                                                <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                <h:commandButton class="btn btn-sm transparent-button" actionListener="#{bOMManagedBean.editBOM}" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{bom}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>     
                                             </h:panelGroup>
@@ -80,18 +81,18 @@
                                         <h:inputHidden value="#{bOMManagedBean.furnitureID}" id="fID" />
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Material: </label>
+                                                <label class="col-sm-3 control-label">Material: </label> 
                                                 <div class="col-sm-9">
-                                                    <h:selectOneMenu id="materialID" class="form-control needauto" value="Select">
+                                                    <h:selectOneMenu id="materialID" class="form-control needauto" pa:required="required">
                                                         <f:selectItem itemLabel="Select Material" itemValue="" noSelectionOption="true" />
                                                         <f:selectItems value="#{bOMManagedBean.materialList}" var="m" itemLabel="#{m.name}" itemValue="#{m.id}" />
                                                     </h:selectOneMenu>
-                                                </div>
+                                                </div> 
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Quantity: </label>
                                                 <div class="col-sm-9">
-                                                    <h:inputText id="materialQuantity" class="form-control"></h:inputText>
+                                                    <h:inputText id="materialQuantity" class="form-control" pa:required="required"></h:inputText>
                                                 </div>
                                             </div>
                                         </div>
@@ -120,22 +121,22 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Material Name: </label>
                                                 <div class="col-sm-9">
-                                                    <h:inputText id="materialName" class="form-control" required="true"></h:inputText>
+                                                    <h:inputText id="materialName" class="form-control" pa:required="required"></h:inputText>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Material Weight: </label>
-                                                <div class="col-sm-9">
-                                                    <h:inputText id="materialWeight" class="form-control" required="true"></h:inputText>
+                                                <label class="col-sm-3 control-label">Weight (g): </label> 
+                                                <div class="col-sm-9"> 
+                                                    <h:inputText id="materialWeight" class="form-control" pa:required="required"></h:inputText>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
                                             <a data-toggle="modal" data-dismiss="modal" data-target="#newBOM"> 
-                                            <h:commandButton action="bom.xhtml" value="Add New Material" class="btn btn-success btn-round" > 
-                                                <f:ajax listener="#{bOMManagedBean.addMaterial}" render=":addToBOMForm" /> 
-                                            </h:commandButton> <!-- 2 things: 1)Open modal from commandButton Add new Material -->
+                                                <h:commandButton action="bom.xhtml" value="Add New Material" class="btn btn-success btn-round" > 
+                                                    <f:ajax listener="#{bOMManagedBean.addMaterial}" render=":addToBOMForm" /> 
+                                                </h:commandButton>
                                             </a>
                                         </div> 
                                     </h:form> 

@@ -74,7 +74,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "View Notifications", "/it/notification.xhtml", "fa-home", "View Notifications", "true","12"},
             { "Review Forecast", "/salesplanning/reviewforecast.xhtml", "fa-home", "Review Forecast", "true","13"},
             { "Manage Production Status", "/manufacturing/productionorder.xhtml", "fa-home", "Manage Production Status", "true","14"},
-            { "Goods Issued", "/supplychain/goodsissued.xhtml", "fa-home", "Manage Production Status", "true","15"},
+            { "Goods Issued", "/supplychain/goodsissued.xhtml", "fa-home", "Goods Issued", "true","15"},
             { "Goods Issued", "/supplychain/goodsissueddocument.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Goods Issued", "/supplychain/goodsissueddocumentposted.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Goods Issued", "/supplychain/goodsissueddocumentcommit.xhtml", "fa-dummy", "dummy", "false","0"},
@@ -94,9 +94,9 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Purchase Order", "/purchasing/purchaseorder.xhtml", "fa-home", "Purchase Order", "true","20"},
             { "Purchase Order", "/purchasing/purchaseorder2.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Production Planner", "/productionplanning/index.xhtml", "fa-home", "Production Planner", "true","21"},
-            { "Supplier", "/supplychain/supplier.xhtml", "fa-home", "Supplier", "true","22"},
-            { "Supplier", "/supplychain/procurementContract.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Stock Supply", "/supplychain/stocksupplier.xhtml", "fa-home", "Stock Supply", "true","23"},
+            { "Supplier", "/salesplanning/supplier.xhtml", "fa-home", "Supplier", "true","22"},
+            { "Supplier", "/salesplanning/procurementContract.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Stock Supply", "/salesplanning/stockSupplier.xhtml", "fa-home", "Stock Supply Request", "true","23"},
         };
         
         for (int i=0; i<privileges.length; i++){

@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://primefaces.org/ui"> 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -41,13 +42,13 @@
                                                         <td>
                                                             <div class="inner-addon left-addon">
                                                                 <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                                <h:inputText id="itemName" value="#{item.name}" class="form-control transparent-form"></h:inputText>
+                                                                <h:inputText id="itemName" value="#{item.name}" class="form-control transparent-form" pt:required="required"></h:inputText>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="inner-addon left-addon" style="max-width: 80px;"> 
                                                                 <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>  
-                                                                <h:inputText id="itemPrice" value="#{item.price}" class="form-control transparent-form"></h:inputText>
+                                                                <h:inputText id="itemPrice" value="#{item.price}" class="form-control transparent-form" pt:required="required"></h:inputText>
                                                             </div>
                                                         </td>
                                                         <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}" class="btn btn-sm transparent-button" style="outline:0;">
@@ -82,13 +83,13 @@
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Retail Item Name: </label>
                                             <div class="col-sm-8">
-                                                <h:inputText id="name" class="form-control"></h:inputText>
+                                                <h:inputText id="name" class="form-control" pt:required="required"></h:inputText>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-4 control-label">Retail Item Price: </label>
+                                            <label class="col-sm-4 control-label">Retail Item Price ($SGD): </label>
                                             <div class="col-sm-8">
-                                                <h:inputText id="price" class="form-control"></h:inputText>
+                                                <h:inputText id="price" class="form-control" pt:required="required"></h:inputText>
                                             </div>
                                         </div>
                                     </div>

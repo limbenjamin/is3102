@@ -61,8 +61,8 @@
                                             <label class="col-sm-3 control-label">Country Office </label>
                                             <div class="col-sm-9">
                                                 <h:selectOneMenu id="cID" class="form-control needauto" value="Select">         
-                                                    <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{stockSupplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
+                                                    <f:selectItem itemLabel="Select Country Office" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{stockSupplierManagedBean.countryList} (CO)" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
                                                 </h:selectOneMenu>
                                             </div>
                                         </div>

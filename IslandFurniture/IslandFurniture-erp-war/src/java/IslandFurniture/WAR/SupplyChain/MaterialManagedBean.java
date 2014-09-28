@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.List; 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -76,16 +77,37 @@ public class MaterialManagedBean implements Serializable {
         if(!temp.isEmpty()) {
             weight = Double.parseDouble(temp);
         }
-        else 
-            weight = 0.0;
-        stockManager.addMaterial(name, weight);
+        else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid weight input", ""));
+            return "material";
+        }
+        if(stockManager.addMaterial(name, weight)) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully created Material \"" + name + "\"", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Material \"" + name + "\" already exists in database", ""));
+        }
+            
         return "material";
     }
     public String editMaterial(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("MaterialManagedBean.editMaterial()");
         material = (Material) event.getComponent().getAttributes().get("toEdit");
-        stockManager.updateMaterial(material.getId(), material.getName(), material.getMaterialWeight());
+        if(!(material.getMaterialWeight() instanceof Double)) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid input. Please insert a number", ""));
+            return "material";            
+        }
+        if(stockManager.updateMaterial(material.getId(), material.getName(), material.getMaterialWeight())) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material " + material.getName() + " has been updated", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unexpected error occured", ""));            
+        }
         return "material";
     }
     public List<Material> displayMaterialList() {
@@ -97,7 +119,14 @@ public class MaterialManagedBean implements Serializable {
     public String deleteMaterial() {
         System.out.println("MaterialManagedBean.deleteMaterial()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("materialID"));
-        stockManager.deleteMaterial(id);
+        String msg = stockManager.deleteMaterial(id);
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material has been successfully deleted", ""));
+        }
         return "material";
     } 
 }
