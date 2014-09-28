@@ -156,11 +156,13 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
 
         plantList = mgrl.viewPlant();
         plantList.remove(plant);
+        for (Plant l : plantList) {
+            if (l.getClass().getSimpleName().equals("GlobalHQ")) {
+                plantList.remove(l);
+                break;
+            }
+        }
 
-//        for (Plant p : plantList){
-//            if (p instanceof GlobalHQ) {
-//                System.out.println("It is an instance of GHQ");
-//        }
         for (Plant g : plantList) {
 
             plantType = g.getClass().getSimpleName();
