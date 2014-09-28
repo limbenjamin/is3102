@@ -9,6 +9,7 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.Todo;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -47,7 +48,9 @@ public class ManageTodoBean implements ManageTodoBeanLocal {
         todo.setStaff(staff);
         todo.setDescription(description);
         todo.setStatus(Boolean.FALSE);
-        todo.setDueDate(dueDate);
+        Calendar duecal=Calendar.getInstance();
+        duecal.setTime(dueDate);
+        todo.setDueDate(duecal);
         todoList = staff.getTodoList();
         todoList.add(todo);
         em.merge(staff);

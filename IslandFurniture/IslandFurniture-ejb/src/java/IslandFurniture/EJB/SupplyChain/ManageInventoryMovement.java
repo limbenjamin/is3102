@@ -136,7 +136,6 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
 //        q.setParameter("batchNo", batchNo);
 //        return (StockUnit) q.getSingleResult();
 //    }
-    
 //        @Override
 //    public StockUnit viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception {
 //        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.id=:storageBinId AND s.stock.id=:stockId AND s.batchNo=:batchNo AND s.available=TRUE");
@@ -145,8 +144,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
 //        q.setParameter("batchNo", batchNo);
 //        return (StockUnit) q.getSingleResult();
 //    }
-    
-            @Override
+    @Override
     public List<StockUnit> viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.id=:storageBinId AND s.stock.id=:stockId AND s.batchNo=:batchNo AND s.available=TRUE");
         q.setParameter("storageBinId", storageBin.getId());
@@ -154,7 +152,7 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         q.setParameter("batchNo", batchNo);
         return q.getResultList();
     }
-    
+
     @Override
     public void confirmStockUnitMovement(Long stockUnitId) {
         stockUnit = getStockUnit(stockUnitId);
@@ -207,6 +205,15 @@ public class ManageInventoryMovement implements ManageInventoryMovementLocal {
         q.setParameter("plantId", plant.getId());
         q.setParameter("storageBinId", storageBin.getId());
         return q.getResultList();
+    }
+
+    @Override
+    public List<StockUnit> viewStockUnitByStockId(Long id, Long storageBinId) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.stock.id=:id AND s.location.id=:storageBinId");
+        q.setParameter("id", id);
+        q.setParameter("storageBinId", storageBinId);
+        return q.getResultList();
+
     }
 
 }

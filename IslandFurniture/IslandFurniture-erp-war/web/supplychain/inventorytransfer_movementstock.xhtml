@@ -69,8 +69,8 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-                                                        <i class="glyphicon glyphicon-bookmark"></i>
-                                                        <h:selectOneMenu class="form-control" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}" pt:required="true">
+                                                        
+                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}" pt:required="true">
                                                             <f:selectItem itemLabel="Select Stock Unit ID" />
                                                             <f:selectItems value="#{inventoryTransferMovementStockManagedBean.stockUnitList}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
                                                         </h:selectOneMenu>
@@ -81,7 +81,7 @@
                                                     <label class="col-sm-3 control-label">New Storage Area: </label>
 
                                                     <div class="col-sm-9 inner-addon right-addon">
-                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        
                                                         <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementStockManagedBean.storageAreaId}" pt:required="true">
                                                             <p:ajax listener="#{inventoryTransferMovementStockManagedBean.onStorageAreaChange}" update="storageBinMenu" />
                                                             <f:selectItem itemLabel="Select Storage Area" />
@@ -94,7 +94,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label" >New Storage Bin: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-                                                        <i class="glyphicon glyphicon-bookmark"></i>
+                                                        
                                                         <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferMovementStockManagedBean.storageBinId}" pt:required="true">
                                                             <f:selectItem itemLabel="Select Storage Bin" />
                                                             <f:selectItems value="#{inventoryTransferMovementStockManagedBean.storageBinList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
@@ -105,7 +105,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Quantity: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-                                                        <i class="glyphicon glyphicon-user"></i>
+                                                        
                                                         <h:inputText class="form-control" value="#{inventoryTransferMovementStockManagedBean.stockUnitQuantity}" pt:required="true" pt:type="number"></h:inputText>
                                                     </div>
                                                 </div>

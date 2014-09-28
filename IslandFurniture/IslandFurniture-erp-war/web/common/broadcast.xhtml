@@ -62,7 +62,10 @@
                                                 </span>
                                             </span>
 
-                                          <h5><small><span class="fa fa-clock-o"></span> #{announcement.activeDate}</small></h5>
+                                          <h5><small><span class="fa fa-clock-o"></span>&nbsp;
+                                                <h:outputText value="#{announcement.activeDate.time}">
+                                                    <f:convertDateTime dateStyle="full" type="date" />
+                                                </h:outputText></small></h5>
                                       </div>                                  
                                     </div>
                                     </ui:repeat>
@@ -159,7 +162,10 @@
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </span>
                                         </span>
-                                      <h5><small><span class="fa fa-clock-o"></span> #{event.eventTime.time}</small></h5>
+                                      <h5><small><span class="fa fa-clock-o"></span>&nbsp;
+                                            <h:outputText value="#{event.eventTime.time}">
+                                                <f:convertDateTime dateStyle="full" timeZone="#{dashManagedBean.timeZone}" type="both" />
+                                            </h:outputText></small></h5>
                                   </div>
                                 </div>
                                 </ui:repeat>

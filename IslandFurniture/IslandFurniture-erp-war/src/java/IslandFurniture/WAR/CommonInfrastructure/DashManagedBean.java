@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -57,6 +58,7 @@ public class DashManagedBean implements Serializable {
     private String dateString;
     private Long id;
     private String plantType;
+    private String timeZone;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -86,6 +88,7 @@ public class DashManagedBean implements Serializable {
             plantType = ""; //no need cos global HQ global HQ looks ugly
         }
         this.plantName = staff.getPlant().getName();
+        timeZone = staff.getPlant().getTimeZoneID();
         this.countryName = staff.getPlant().getCountry().getName();
         this.lastLogon = staff.getLastLogon();
         this.todoList = staff.getTodoList();
@@ -96,9 +99,10 @@ public class DashManagedBean implements Serializable {
         while (iterator.hasNext()) {
             event = iterator.next();
             instant = event.getEventTime().toInstant();
-            localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            localDateTime = LocalDateTime.ofInstant(instant, ZoneId.of(timeZone));
             localDateTimeList.add(localDateTime);
         }
+        
     }
 
     public void logout() throws IOException {
@@ -339,6 +343,14 @@ public class DashManagedBean implements Serializable {
 
     public void setPlantType(String plantType) {
         this.plantType = plantType;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
     
     

@@ -8,9 +8,12 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.EJB.Entities.Message;
 import IslandFurniture.EJB.Entities.MessageThread;
+import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.StaticClasses.Helper.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -110,7 +113,10 @@ public class ManageMessagesBean implements ManageMessagesBeanLocal {
         message.setStaff(staff);
         message.setThread(messageThread);
         message.setContent(content);
-        message.setMsgTime(Calendar.getInstance());
+        Calendar now=Calendar.getInstance();
+        now.setTime(new Date());
+        Plant plant = staffbean.getStaff(username).getPlant();
+        message.setMsgTime(now);
         em.persist(message);
         listStaff = messageThread.getRecipient();
         Iterator<Staff> iterator = listStaff.iterator();

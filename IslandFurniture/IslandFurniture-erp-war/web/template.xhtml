@@ -118,7 +118,7 @@
                                                 <div class="m-body">
                                                     <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
                                                     <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i>#{loginManagedBean.localDateTimeList.get(i).toString()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
                                                 </div>
                                             </a>
                                         </li>

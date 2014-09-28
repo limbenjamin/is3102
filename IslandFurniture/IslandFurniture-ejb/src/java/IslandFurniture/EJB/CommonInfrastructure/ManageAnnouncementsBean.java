@@ -9,6 +9,7 @@ package IslandFurniture.EJB.CommonInfrastructure;
 import IslandFurniture.EJB.Entities.Announcement;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -41,7 +42,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     private ManageUserAccountBeanLocal staffbean;
     
     @Override
-    public void addAnnouncement(String username, String title, String content, Date activeDate, Date expireDate){
+    public void addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate){
         staff = staffbean.getStaff(username);
         announcement = new Announcement();
         announcement.setTitle(title);
@@ -58,7 +59,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     }
     
     @Override
-    public void editAnnouncement(Long id, String title, String content, Date activeDate, Date expireDate){
+    public void editAnnouncement(Long id, String title, String content, Calendar activeDate, Calendar expireDate){
         announcement = em.find(Announcement.class, id);
         announcement.setTitle(title);
         announcement.setContent(content);

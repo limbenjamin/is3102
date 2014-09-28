@@ -14,7 +14,7 @@
                     <div class="col-md-8">
                         <h:form> 
                             <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
-                                <i class="fa fa-fw fa-plus"></i>Add Stock
+                                <i class="fa fa-fw fa-plus"></i>Select Stock Unit
                             </button>  
                         </h:form>    
                         <h4>Goods Issued Document: #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
@@ -111,7 +111,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">Select Stock</h4>
+                                            <h4 class="modal-title" id="myModalLabel">Select Stock Unit</h4>
                                         </div>
                                         <h:form id="createGRDD" class="form-horizontal">
                                             <h:inputHidden value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" id="GRDid" />
@@ -129,14 +129,14 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Quantity: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-                                                        <i class="glyphicon glyphicon-user"></i>
+                                                        
                                                         <h:inputText id="stockQuantity" class="form-control" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitQuantity}" pt:required="true" pt:type="number"></h:inputText>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addGoodsIssuedDocumentStockUnit}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addGoodsIssuedDocumentStockUnit}" value="Select Stock Unit" class="btn btn-success pull-right btn-right-margin"> 
                                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
                                                     <f:attribute name="stockUnitId" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}" />
                                                     <f:attribute name="stockUnitQuantity" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitQuantity}" />

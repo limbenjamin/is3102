@@ -20,7 +20,7 @@
                     <div class="col-md-10">
                         <h:form> 
                             <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
-                                <i class="fa fa-fw fa-plus"></i>Add Stock
+                                <i class="fa fa-fw fa-plus"></i>Select Stock
                             </button>  
                         </h:form>    
                         <h4>Goods Issued Document</h4><hr></hr>
@@ -137,7 +137,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.viewStockUnit}" value="Add Stock" class="btn btn-success pull-right btn-right-margin"> 
+                                            <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.viewStockUnit}" value="Select Stock" class="btn btn-success pull-right btn-right-margin"> 
                                                 <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                             </h:commandButton>
                                         </div>

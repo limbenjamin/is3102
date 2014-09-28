@@ -76,7 +76,11 @@
                             <h5><strong>#{announcement.title}</strong></h5>
                             <h5>#{announcement.content}</h5>
                             <br></br>
-                            <small>Announced on #{announcement.activeDate}</small>
+                            <small> 
+                                <h:outputText value="#{announcement.activeDate.time}">
+                                    <f:convertDateTime dateStyle="full" type="date" />
+                                </h:outputText>
+                            </small>
                         </a>
                     </ui:repeat>    
                     <div class="panel-footer">
@@ -107,7 +111,11 @@
                                 </h:commandButton>
                               </h:form>
                           </h5>
-                          <small>due on #{dashManagedBean.todoList.get(i).dueDate}</small>
+                          <small>Due on 
+                            <h:outputText value="#{dashManagedBean.todoList.get(i).dueDate.time}">
+                                <f:convertDateTime dateStyle="full" type="date" />
+                            </h:outputText>
+                          </small>
                         </a>
                     </c:forEach>       
                     <div class="panel-footer">
