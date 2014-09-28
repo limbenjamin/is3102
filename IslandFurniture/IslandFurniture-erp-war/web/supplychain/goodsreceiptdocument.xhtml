@@ -7,10 +7,7 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-    <f:metadata>
-        <f:viewParam name="grddId2" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-        <f:viewAction action="#{goodsReceiptDocumentManagedBean.init}" />
-    </f:metadata>
+
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -25,16 +22,23 @@
                         </ol>                        
                     </div>                     
                     <div class="col-md-10"> 
+
+
                         <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#fromPO">
+                                <i class="fa fa-fw fa-plus"></i> Populate from Purchase Order
+                            </button>
                             <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
                                 <i class="fa fa-fw fa-plus"></i> Add Stock
-                            </button>                            
+                            </button>   
                             <a href="goodsreceipt.xhtml">
-                            <button type="button" class="btn btn-sm btn-default pull-right">
-                                <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
-                            </button>
+                                <button type="button" class="btn btn-sm btn-default pull-right">
+                                    <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
+                                </button>
                             </a>                            
-                        </span>                              
+                        </span>   
+
+
                         <h4>Goods Receipt ##{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}</h4><hr></hr>
                     </div>
 
@@ -58,10 +62,7 @@
                                                 <tr>
                                                     <td><h:outputText value="#{grd.id}"></h:outputText></td>
                                                     <td><h:inputText id="date" value="#{goodsReceiptDocumentManagedBean.receiptDateString}" pt:type="date" class="form-control"></h:inputText></td>
-                                                    <td><h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}">
-                                                                <f:selectItem itemLabel="Select Purchase Order" />
-                                                                <f:selectItems value="#{goodsReceiptDocumentManagedBean.purchaseOrderList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
-                                                            </h:selectOneMenu></td>
+                                                    <td><h:outputText value="#{grd.receiveFrom.id}"></h:outputText></td>
                                                     <td><h:inputText value="#{grd.deliveryNote}" class="form-control"></h:inputText></td>
                                                     <td>
                                                         <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.editGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -133,26 +134,26 @@
                             <h:panelGroup layout="block" rendered="#{!goodsReceiptDocumentManagedBean.ifGoodsReceiptDocumentDetailListEmpty}">
                                 <h:form class="form-horizontal">
                                     <div class="form-group">
-                                    <label class="col-sm-3 control-label">Select Storage Location</label>
-                                    <div class="col-sm-9">
-                                        <h:selectOneMenu class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
-                                            <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
-                                            <f:selectItem itemLabel="Select Storage Area" />
-                                            <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                        </h:selectOneMenu>
+                                        <label class="col-sm-3 control-label">Select Storage Location</label>
+                                        <div class="col-sm-9">
+                                            <h:selectOneMenu class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
+                                                <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
+                                                <f:selectItem itemLabel="Select Storage Area" />
+                                                <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                            </h:selectOneMenu>
 
-                                        <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}" pt:required="true">
-                                            <f:selectItem itemLabel="Select Storage Bin" />
-                                            <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
-                                        </h:selectOneMenu>
-                                    </div>  
+                                            <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}" pt:required="true">
+                                                <f:selectItem itemLabel="Select Storage Bin" />
+                                                <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
+                                            </h:selectOneMenu>
+                                        </div>  
                                     </div>
                                     <div class="form-group">
-                                    <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right btn-extra-right"> 
-                                        <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                        <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-                                        <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
-                                    </h:commandButton>
+                                        <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentStockUnit}" value="Post Goods Receipt Document" class="btn btn-primary pull-right btn-extra-right"> 
+                                            <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                            <f:attribute name="grddId" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                            <f:attribute name="storageBinId" value="#{goodsReceiptDocumentManagedBean.storageBinId}" />
+                                        </h:commandButton>
                                     </div>
                                 </h:form>
                             </h:panelGroup>
@@ -189,7 +190,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="goodsreceiptdocument.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
+                                            <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
                                                 <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
                                             </h:commandButton>
                                         </div>
@@ -197,6 +198,44 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        
+                        
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="fromPO" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Stock to Goods Receipt Document</h4>
+                                    </div>
+                                    <h:form id="createPO" class="form-horizontal">
+                                        <h:inputHidden value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" id="GRDid" />
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Purchase Order: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}">
+                                                            <f:selectItem itemLabel="Select Purchase Order" />
+                                                            <f:selectItems value="#{goodsReceiptDocumentManagedBean.purchaseOrderList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
+                                                        </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                                <h:commandButton action="goodsreceiptdocument.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetailFromPO}" value="Populate from Purchase Order" class="btn btn-success pull-right btn-round"> 
+                                                <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
+                                                <f:attribute name="POid" value="#{goodsReceiptDocumentManagedBean.purchaseOrderId}" />
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
 
                     </div>
                 </div>

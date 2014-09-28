@@ -8,8 +8,11 @@ package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAnnouncementsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageEventsBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Announcement;
 import IslandFurniture.EJB.Entities.Event;
+import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.StaticClasses.Helper.TimeMethods;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -53,11 +56,15 @@ public class BroadcastManagedBean implements Serializable {
     private List<Event> eventList = null;
     private Announcement announcement;
     private Event event;
+    private String timeZone;
+    private Plant plant;
     
     @EJB
     private ManageAnnouncementsBeanLocal announcementBean;
     @EJB
     private ManageEventsBeanLocal eventBean;
+    @EJB
+    private ManageUserAccountBeanLocal muaib;
     
     @PostConstruct
     public void init(){
@@ -65,6 +72,8 @@ public class BroadcastManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         announcementList = announcementBean.getMyAnnouncements(username);
         eventList = eventBean.getMyEvents(username);
+        timeZone = muaib.getStaff(username).getPlant().getTimeZoneID();
+        plant = muaib.getStaff(username).getPlant();
     }
     
     public String addAnnouncement() throws ParseException {
@@ -75,7 +84,11 @@ public class BroadcastManagedBean implements Serializable {
       expireDateString = request.getParameter("announcementForm:expireDateString");
       activeDate = new SimpleDateFormat("yyyy-MM-dd").parse(activeDateString);
       expireDate = new SimpleDateFormat("yyyy-MM-dd").parse(expireDateString);
-      announcementBean.addAnnouncement(username, title, content, activeDate, expireDate);
+      Calendar activecal=Calendar.getInstance();
+      activecal.setTime(activeDate);
+      Calendar expirecal=Calendar.getInstance();
+      expirecal.setTime(expireDate);
+      announcementBean.addAnnouncement(username, title, content, activecal, expirecal);
       announcementList = announcementBean.getMyAnnouncements(username);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
@@ -110,6 +123,7 @@ public class BroadcastManagedBean implements Serializable {
       Date date = (Date)formatter.parse(eventTimeString); 
       Calendar cal=Calendar.getInstance();
       cal.setTime(date);
+      cal = TimeMethods.convertToUtcTime(plant, cal);
       eventTime = cal;
       eventBean.addEvent(name, description, eventTime, username);
       eventList = eventBean.getMyEvents(username);
@@ -288,6 +302,30 @@ public class BroadcastManagedBean implements Serializable {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public ManageUserAccountBeanLocal getMuaib() {
+        return muaib;
+    }
+
+    public void setMuaib(ManageUserAccountBeanLocal muaib) {
+        this.muaib = muaib;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
     }
 
  

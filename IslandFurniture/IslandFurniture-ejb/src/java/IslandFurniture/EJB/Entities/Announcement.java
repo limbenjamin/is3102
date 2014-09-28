@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.Entities;;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,10 +31,10 @@ public class Announcement implements Serializable {
     private String title;
     @Lob
     private String content;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date activeDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date expireDate;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Calendar activeDate;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Calendar expireDate;
     @ManyToOne
     private Staff creator;
     @ManyToOne
@@ -63,21 +64,23 @@ public class Announcement implements Serializable {
         this.content = content;
     }
 
-    public Date getActiveDate() {
+    public Calendar getActiveDate() {
         return activeDate;
     }
 
-    public void setActiveDate(Date activeDate) {
+    public void setActiveDate(Calendar activeDate) {
         this.activeDate = activeDate;
     }
 
-    public Date getExpireDate() {
+    public Calendar getExpireDate() {
         return expireDate;
     }
 
-    public void setExpireDate(Date expireDate) {
+    public void setExpireDate(Calendar expireDate) {
         this.expireDate = expireDate;
     }
+
+    
 
     public Staff getCreator() {
         return creator;

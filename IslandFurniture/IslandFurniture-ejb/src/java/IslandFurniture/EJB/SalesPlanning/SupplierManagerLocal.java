@@ -27,7 +27,7 @@ public interface SupplierManagerLocal {
     
     public Supplier getSupplier(Long supplierId);
 
-    public void deleteSupplier(Long id);
+    public String deleteSupplier(Long id);
 
     public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID);
 
@@ -35,27 +35,27 @@ public interface SupplierManagerLocal {
 
     public List<ManufacturingFacility> displayManufacturingFacility();
 
-    public void deleteProcurementContractDetail(Long id, Long supplierID);
+    public String deleteProcurementContractDetail(Long id, Long supplierID);
 
-    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime);
+    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime);
 
-    public void editProcurementContractDetail(Long id, Integer size, Integer leadTime);
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime);
 
     public List<StockSupplied> getAllStockSupplied();
 
-    public void deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID);
+    public String deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID);
 
     public List<CountryOffice> getListOfCountryOffice();
 
     public List<ManufacturingFacility> getListOfMF();
 
-    public void addStockSupplyRequest(Long stockID, Long mfID, Long countryID);
+    public String addStockSupplyRequest(Long stockID, Long mfID, Long countryID);
 
     public List<Stock> getListOfStock();
 
-    public void editSupplier(Long id, String name, String countryName, String phoneNumber, String email);
+    public boolean editSupplier(Long id, String name, String countryName, String phoneNumber, String email);
 
-    public Supplier addSupplier(String supplierName, String countryName, String phoneNo, String email);
+    public String addSupplier(String supplierName, String countryName, String phoneNo, String email);
 
     public List<Stock> checkForValidPCD(Long stockID, Long mfID);
     

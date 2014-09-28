@@ -13,6 +13,7 @@ import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -65,6 +66,12 @@ public class StaffManaged2Bean  implements Serializable  {
         globalRoleList = mrbl.displayRole();
         //should not be able to add role that already exists
         //TODO: add this
+        //should not be able to add privilege that already exists
+        Iterator<Role> iterator = roleList.iterator();
+        while (iterator.hasNext()) {
+            Role r = iterator.next();
+            globalRoleList.remove(r);
+        }
     }
     
     public String displayRoles(){
@@ -72,7 +79,12 @@ public class StaffManaged2Bean  implements Serializable  {
     }
     
     public String removeRoleFromStaff(){
-        staffId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("staffId"));
+        HttpSession session = Util.getSession();
+        try{
+            staffId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+        }catch (Exception e){
+            staffId = (Long) session.getAttribute("staffid");
+        }
         roleId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("roleId"));
         msabl.removeRoleFromStaff(staffId, roleId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -86,6 +98,8 @@ public class StaffManaged2Bean  implements Serializable  {
         HttpSession session = Util.getSession();
         staffId = (Long) session.getAttribute("staffid");
         msabl.addRoleToStaff(staffId, roleName);
+        role = mrbl.getRoleFromName(roleName);
+        globalRoleList.remove(role);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Role added",""));
         return "managestaff2";

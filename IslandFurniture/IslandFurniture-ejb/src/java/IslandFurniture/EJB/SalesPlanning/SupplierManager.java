@@ -57,7 +57,7 @@ public class SupplierManager implements SupplierManagerLocal {
         supplier = (Supplier) em.find(Supplier.class, supplierId);
         return supplier;
     }
-    public Supplier addSupplier(String supplierName, String countryName, String phoneNo, String email) {
+    public String addSupplier(String supplierName, String countryName, String phoneNo, String email) {
         Country country;
         Supplier supplier;
         ProcurementContract pc;
@@ -68,9 +68,9 @@ public class SupplierManager implements SupplierManagerLocal {
             supplier = findSupplierByName(em, supplierName);
             if(supplier != null) {
                 System.out.println("Supplier " + supplierName + " already exists");
-                return supplier;
+                return "" + supplier.getId() + "#Supplier \"" + supplierName + "\" already exists in database. Redirect to Procurement Contract";
             }
-            
+             
             supplier = new Supplier();
             pc = new ProcurementContract();
             pcdList = new ArrayList<ProcurementContractDetail>();
@@ -85,13 +85,13 @@ public class SupplierManager implements SupplierManagerLocal {
             supplier.setPhoneNumber(phoneNo);
             
             em.persist(supplier);
-            return supplier;
+            return "" + supplier.getId() + "#0";
         } catch(NoResultException NRE) {
             System.err.println("No records found");
             return null;
         }
     }
-    public void editSupplier(Long id, String name, String countryName, String phoneNumber, String email) {
+    public boolean editSupplier(Long id, String name, String countryName, String phoneNumber, String email) {
         Supplier supplier;
         Country country;
         try {
@@ -107,11 +107,13 @@ public class SupplierManager implements SupplierManagerLocal {
             if(email != null)
                 supplier.setEmail(email);
             em.persist(supplier);
+            return true;
         } catch(Exception ex) {
             System.out.println("Something went wrong");
+            return false;
         }
     }
-    public void deleteSupplier(Long id) {
+    public String deleteSupplier(Long id) {
         Supplier supplier = null;
         List<PurchaseOrder> poList;
         try {
@@ -123,9 +125,10 @@ public class SupplierManager implements SupplierManagerLocal {
                     break;
                 }
             }
-            
-            if(supplier != null) 
+            if(supplier != null) {
                 System.out.println("Existing purchase order linked to Supplier. Unable to delete");
+                return "Invalid deletion due to existing purchase order linked to Supplier \"" + supplier.getName() + "\"";
+            }
             else { 
                 supplier = em.find(Supplier.class, id);
                 for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
@@ -136,9 +139,11 @@ public class SupplierManager implements SupplierManagerLocal {
                 em.remove(supplier);
                 System.out.println("Removed supplier");
                 em.flush();
+                return null;
             }
         } catch(Exception ex) {
             System.err.println("Existing purchase order linked Supplier. Unable to delete");
+            return "Unexpected error occured";
         }
     }
     public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID) {
@@ -177,7 +182,7 @@ public class SupplierManager implements SupplierManagerLocal {
             return null;   
         }
     }
-    public void deleteProcurementContractDetail(Long id, Long supplierID) {
+    public String deleteProcurementContractDetail(Long id, Long supplierID) {
         ProcurementContractDetail pcd;
         Supplier supplier;
         try {
@@ -188,11 +193,13 @@ public class SupplierManager implements SupplierManagerLocal {
             supplier.getProcurementContract().getProcurementContractDetails().remove(pcd);
             em.remove(pcd);
             em.flush();
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong");
+            return "Unexpected error occured";
         }
     }
-    public void addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime) {
+    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime) {
         Supplier supplier;
         ManufacturingFacility mf;
         ProcuredStock stock;
@@ -208,8 +215,10 @@ public class SupplierManager implements SupplierManagerLocal {
             
             pcd = findPCDByStockMFAndSupplier(em, stock, mf, supplier); 
             
-            if(pcd != null) 
+            if(pcd != null) {
                 System.out.println("ProcurementContractDetail already exist");
+                return "Procurement Contract Detail already exist";
+            }
             else {            
                 pc = supplier.getProcurementContract();
                 if(pc == null) {
@@ -228,13 +237,15 @@ public class SupplierManager implements SupplierManagerLocal {
                 pcd.setLotSize(size);
 
                 pc.getProcurementContractDetails().add(pcd);
+                return null;
             }
         } catch(Exception ex) {
             ex.printStackTrace();
             System.err.println("Something went wrong here");
+            return "Unexpected error occured";
         }
     }
-    public void editProcurementContractDetail(Long id, Integer size, Integer leadTime) {
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime) {
         ProcurementContractDetail pcd;
         try {
             System.out.println("SupplierManager.editProcurementContractDetails()");
@@ -242,8 +253,10 @@ public class SupplierManager implements SupplierManagerLocal {
             pcd.setLeadTimeInDays(leadTime);
             pcd.setLotSize(size);
             em.persist(pcd);
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpected error occured";
         }
     }
     public List<StockSupplied> getAllStockSupplied() {
@@ -257,7 +270,7 @@ public class SupplierManager implements SupplierManagerLocal {
             return null;
         }
     }
-    public void deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
+    public String deleteStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
         StockSuppliedPK pk;
         StockSupplied ss;
         ManufacturingFacility mf;
@@ -277,11 +290,13 @@ public class SupplierManager implements SupplierManagerLocal {
             co.getSuppliedWithFrom().remove(ss);
             
             em.flush();
+            return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpected error occured";
         }
     }
-    public void addStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
+    public String addStockSupplyRequest(Long stockID, Long mfID, Long countryID) {
         Stock stock;
         ManufacturingFacility mf;
         CountryOffice co;
@@ -291,8 +306,10 @@ public class SupplierManager implements SupplierManagerLocal {
             System.out.println("SupplierManager.addStockSupplyRequest()");
             pk = new StockSuppliedPK(stockID, countryID, mfID);
             ss = em.find(StockSupplied.class, pk);
-            if(ss != null) 
+            if(ss != null) {
                 System.out.println("Request already exists");
+                return "Stock Supply Request already exists";
+            }
             else {     
                 ss = new StockSupplied();
                 stock = em.find(Stock.class, stockID);
@@ -308,9 +325,11 @@ public class SupplierManager implements SupplierManagerLocal {
 
                 em.persist(ss);
                 em.flush();
+                return null;
             }
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
+            return "Unexpected error occured";
         }
     }
     public List<CountryOffice> getListOfCountryOffice() {

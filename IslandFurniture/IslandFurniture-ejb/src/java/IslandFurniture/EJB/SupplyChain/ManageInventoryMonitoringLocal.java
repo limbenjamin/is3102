@@ -39,5 +39,7 @@ public interface ManageInventoryMonitoringLocal {
     List<StorageArea> viewStorageAreaReceiving(Plant plant);
     
     List<StockUnit> viewStockUnitbyStock(Stock stock);
+    
+    List<StockUnit> viewStockUnitAll(Plant plant);
 
 }

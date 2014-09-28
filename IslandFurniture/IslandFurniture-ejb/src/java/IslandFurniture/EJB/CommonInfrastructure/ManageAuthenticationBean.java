@@ -88,12 +88,12 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         }catch(NoResultException | NonUniqueResultException nre){
             return false;
         }
-        String forgottenPasswordCode = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        String forgottenPasswordCode = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         staff.setForgottenPasswordCode(forgottenPasswordCode);
         em.merge(staff);
         em.flush();
         try {
-            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Reset Request", "Click this link to reset your password: http://localhost:8080/IslandFurniture-erp-war/it/resetpassword.xhtml?code="+forgottenPasswordCode);
+            SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Password Reset Request", "Click this link to reset your password: http://localhost:8080/IslandFurniture-erp-war/it/resetpassword.xhtml?code="+forgottenPasswordCode);
         } catch (Exception ex) {
             Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,9 +119,9 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
     @Override
     public void resetPasswordByAdmin(Long id){
         staff = (Staff) em.find(Staff.class, id);
-        password = Long.toHexString(Double.doubleToLongBits(Math.random()));
+        password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         try {
-            SendEmailByPost.sendEmail("techsupport", "mail@limbenjamin.com", "Password Reseted", "Your new password is: "+password);
+            SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Password Reseted", "Your new password is: "+password);
         } catch (Exception ex) {
             Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
         }

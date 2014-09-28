@@ -14,6 +14,7 @@ import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.SupplyChain.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.SupplyChain.ManageInventoryMonitoringLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
@@ -66,8 +68,19 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         plant = staff.getPlant();
         System.out.println("Init");
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
+
+        try {
+            if (stockId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("inventorymonitoring.xhtml");
+            }
+        } catch (IOException ex) {
+
+        }
+
         stock = miml.getStock(stockId);
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
+
     }
 
     public String editStockTakeQuantity(ActionEvent event) {

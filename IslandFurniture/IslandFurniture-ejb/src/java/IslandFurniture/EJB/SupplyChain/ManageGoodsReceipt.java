@@ -6,6 +6,8 @@ import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
+import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StorageArea;
 import IslandFurniture.EJB.Entities.StorageBin;
@@ -31,6 +33,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     private GoodsReceiptDocumentDetail goodsReceiptDocumentDetail;
     private Stock stock;
     private PurchaseOrder purchaseOrder;
+    private PurchaseOrderDetail purchaseOrderDetail;
 
     @Override
     public GoodsReceiptDocument getGoodsReceiptDocument(Long id) {
@@ -119,13 +122,30 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, PurchaseOrder po, String deliveryNote) {
+    public void editGoodsReceiptDocument(Long goodsReceiptDocumentId, Calendar receiptDate, String deliveryNote) {
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocument.setReceiptDate(receiptDate);
-        goodsReceiptDocument.setReceiveFrom(po);
         goodsReceiptDocument.setDeliveryNote(deliveryNote);
         em.merge(goodsReceiptDocument);
         em.flush();
+    }
+
+    @Override
+    public void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po) {
+        goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
+        po.setGoodsReceiptDocument(goodsReceiptDocument);
+        em.merge(po);
+        em.flush();
+        goodsReceiptDocument.setReceiveFrom(po);
+        em.merge(goodsReceiptDocument);
+        em.flush();
+    }
+
+    @Override
+    public List<PurchaseOrderDetail> viewPurchaseOrderDetail(PurchaseOrder po) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrderDetail s WHERE s.purchaseOrder.id=:id");
+        q.setParameter("id", po.getId());
+        return q.getResultList();
     }
 
     @Override
@@ -140,8 +160,18 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
+    public void editGoodsReceiptDocumentDetailQty(Long grddId, Integer qty) {
+        goodsReceiptDocumentDetail = getGoodsReceiptDocumentDetail(grddId);
+        goodsReceiptDocumentDetail.setQuantity(qty);
+        em.merge(goodsReceiptDocumentDetail);
+        em.flush();
+        em.refresh(goodsReceiptDocumentDetail);
+    }
+
+    @Override
     public List<PurchaseOrder> viewPurchaseOrder(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.shipsTo.id=:plantId");
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.shipsTo.id=:plantId AND s.status=:status");
+        q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
@@ -194,7 +224,16 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId) {
+
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
+
+        if (goodsReceiptDocument.getReceiveFrom() != null) {
+            purchaseOrder = getPurchaseOrder(goodsReceiptDocument.getReceiveFrom().getId());
+            purchaseOrder.setGoodsReceiptDocument(null);
+            em.merge(purchaseOrder);
+            em.flush();
+        }
+
         em.remove(goodsReceiptDocument);
         em.flush();
     }

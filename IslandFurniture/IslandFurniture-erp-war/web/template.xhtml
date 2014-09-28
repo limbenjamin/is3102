@@ -132,21 +132,21 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
-                                    <h:form id="newNotification">                                      
-                                        <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
-                                            <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
-                                            <li class="list-group-item">
-                                                <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name: 'nid', value: '#{loginManagedBean.notificationList.get(i).id}'}]);">
-                                                    <div class="m-body">
-                                                        <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
-                                                        <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
-                                                        <span class="small"><i class="fa fa-clock-o"></i>#{loginManagedBean.localDateTimeList.get(i).toString()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </c:forEach>
-                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
-                                    </h:form>
+                                <h:form id="newNotification">                                      
+                                    <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
+                                        <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
+                                        <li class="list-group-item">
+                                            <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name :'nid' , value : '#{loginManagedBean.notificationList.get(i).id}'}]);">
+                                                <div class="m-body">
+                                                    <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
+                                                    <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification}" update="newNotification" />
+                                </h:form>
                                 </ul>
                             </div>
                         </div>
@@ -212,13 +212,13 @@
                             <c:if test="${flash.message.severity == 'ERROR 2'}">
                                 <div class="alert alert-danger alert-dismissible" role="alert">
                                     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <strong><h:outputText value="#{flash.message.summary}" /></strong>
+                                    <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
                                 </div>
                             </c:if>
                             <c:if test="${flash.message.severity == 'INFO 0'}">
                                 <div class="alert alert-success alert-dismissible" role="alert">
                                     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <strong><h:outputText value="#{flash.message.summary}" /></strong>
+                                    <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
                                 </div>
                             </c:if>
                             <ui:insert name="content" >Content</ui:insert>

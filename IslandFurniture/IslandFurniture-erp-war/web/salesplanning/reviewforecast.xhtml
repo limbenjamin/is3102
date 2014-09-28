@@ -5,15 +5,26 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
+        
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Review Forecasts</strong></li>
+            </ol>  
+        </div>        
         <h:form>
-            <h:commandButton value="Approve Pending Forecasts">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.approveForecast}" />
-            </h:commandButton>
-            <h:commandButton value="Reject Pending Forecasts">
-                <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.rejectForecast}" />
-            </h:commandButton>
-            <br /><br />
-
+        <div class="col-md-12">    
+            <span class="pull-right">
+                <h:commandButton value="Reject Pending Forecasts" class="btn btn-sm btn-default btn-extra-right">
+                    <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.rejectForecast}" />
+                </h:commandButton>                 
+                <h:commandButton value="Approve Pending Forecasts" class="btn btn-sm btn-success btn-extra-right">
+                    <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.approveForecast}" />
+                </h:commandButton>               
+            </span>            
+            <h4>Review Forecasts</h4><hr></hr>
+        </div>
+        <div class="col-md-12">
             <h:outputText id="statusMessage" value="#{reviewForecastManagedBean.statusMessage}"/>
             <p:accordionPanel id="mssrTable" value="#{reviewForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{reviewForecastManagedBean.panelActive}">
                 <p:tab title="#{mssrPairedEntry.first.name} (id:#{mssrPairedEntry.first.id})">
@@ -50,6 +61,7 @@
                     </p:dataTable>
                 </p:tab>
             </p:accordionPanel>
+            </div>
         </h:form>
     </ui:define>
 </ui:composition>

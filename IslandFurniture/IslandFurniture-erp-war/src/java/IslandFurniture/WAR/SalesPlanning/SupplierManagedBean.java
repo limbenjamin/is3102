@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -87,20 +88,44 @@ public class SupplierManagedBean implements Serializable {
         String supplierCountry = request.getParameter("addSupplierForm:country");
         String phoneNo = request.getParameter("addSupplierForm:phoneNo");
         String email = request.getParameter("addSupplierForm:email");
-        supplier = supplierManager.addSupplier(supplierName, supplierCountry, phoneNo, email);
+        String output = supplierManager.addSupplier(supplierName, supplierCountry, phoneNo, email);
+        System.out.println("Output is " + output); 
+        String id = output.split("#")[0];
+        String msg = output.split("#")[1];
+        supplier = supplierManager.getSupplier(Long.parseLong(id));
+        if(msg.length() > 1) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));              
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier " + supplier.getName() + " successfully created ", ""));             
+        }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementContract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()");
         supplier = (Supplier) event.getComponent().getAttributes().get("toEdit");
-        supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail());
+        if(supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail())) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier " + supplier.getName() + " has been updated", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unexpected error occured", ""));            
+        }
         return "supplier";
     }
     public String deleteSupplier() {
         System.out.println("SupplierManagedBean.deleteSupplier()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("supplierID"));
-        supplierManager.deleteSupplier(id);
+        String msg = supplierManager.deleteSupplier(id);
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier has been successfully deleted", ""));
+        }
         return "supplier";
     }
     public void pcActionListener(ActionEvent event) throws IOException{

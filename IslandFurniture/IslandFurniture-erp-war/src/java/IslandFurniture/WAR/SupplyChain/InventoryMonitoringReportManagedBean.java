@@ -41,6 +41,8 @@ public class InventoryMonitoringReportManagedBean implements Serializable {
 
     private List<Couple<Stock, List<StockUnit>>> invList;
     private List<Stock> stockList;
+    private List<StockUnit> stockUnitList;
+    private boolean ifStockUnitListEmpty;
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -63,33 +65,53 @@ public class InventoryMonitoringReportManagedBean implements Serializable {
             plantType = ""; //no need cos global HQ global HQ looks ugly
         }
         
-        invList = new ArrayList();
-        stockList = new ArrayList();
-
-        if (plant instanceof CountryOffice) {
-            CountryOffice co = (CountryOffice) plant;
-            for (StockSupplied ss : co.getSuppliedWithFrom()) {
-                stockList.add(ss.getStock());
-            }
-        }
-
-        if (plant instanceof ManufacturingFacility) {
-            ManufacturingFacility mf = (ManufacturingFacility) plant;
-            for (StockSupplied ss : mf.getSupplyingWhatTo()) {
-                stockList.add(ss.getStock());
-            }
-        }
+        stockUnitList = miml.viewStockUnitAll(plant);
+        ifStockUnitListEmpty = stockUnitList.isEmpty();
+//        invList = new ArrayList();
+//        stockList = new ArrayList();
+//
+//        if (plant instanceof CountryOffice) {
+//            CountryOffice co = (CountryOffice) plant;
+//            for (StockSupplied ss : co.getSuppliedWithFrom()) {
+//                stockList.add(ss.getStock());
+//            }
+//        }
+//
+//        if (plant instanceof ManufacturingFacility) {
+//            ManufacturingFacility mf = (ManufacturingFacility) plant;
+//            for (StockSupplied ss : mf.getSupplyingWhatTo()) {
+//                stockList.add(ss.getStock());
+//            }
+//        }
+//        
+//        if (plant instanceof Store) {
+//            Store store = (Store) plant;
+//            stockList = store.getSells();
+//        }
+//        
+//        for (Stock eachStock : stockList) {
+//            List<StockUnit> suList = miml.viewStockUnitbyStock(eachStock);
+//            invList.add(new Couple(eachStock,suList));
+//        }
         
-        if (plant instanceof Store) {
-            Store store = (Store) plant;
-            stockList = store.getSells();
-        }
         
-        for (Stock eachStock : stockList) {
-            List<StockUnit> suList = miml.viewStockUnitbyStock(eachStock);
-            invList.add(new Couple(eachStock,suList));
-        }
 
+    }
+
+    public boolean isIfStockUnitListEmpty() {
+        return ifStockUnitListEmpty;
+    }
+
+    public void setIfStockUnitListEmpty(boolean ifStockUnitListEmpty) {
+        this.ifStockUnitListEmpty = ifStockUnitListEmpty;
+    }
+
+    public List<StockUnit> getStockUnitList() {
+        return stockUnitList;
+    }
+
+    public void setStockUnitList(List<StockUnit> stockUnitList) {
+        this.stockUnitList = stockUnitList;
     }
 
     public List<Couple<Stock, List<StockUnit>>> getInvList() {
