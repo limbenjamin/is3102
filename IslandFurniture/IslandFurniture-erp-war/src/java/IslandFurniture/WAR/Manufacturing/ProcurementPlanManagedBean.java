@@ -17,12 +17,9 @@ import IslandFurniture.StaticClasses.Helper.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
 import IslandFurnitures.DataStructures.JDataTable.Row;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -87,24 +84,30 @@ public class ProcurementPlanManagedBean {
         }
         c_year = Helper.getCurrentYear();
         c_month = Helper.getCurrentMonth().value;
-        for (int i = 0; i <= 6; i++) {
-            try {
-                int i_month = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, true);
-                int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
-                for (MonthlyProcurementPlan mpp : (List<MonthlyProcurementPlan>) mppl.viewMonthlyProcurementPlan()) {
-                        for (int j = 0; j <= size; j++) {
-                            if (mpp.getRetailItem().getName().equals(dt.getRow(j).getCell(0).getValue())){
-                                if (mpp.getYear() == i_year){
-                                    if (mpp.getMonth().equals(Helper.translateMonth(i_month))){
-                                        Row r = dt.getRow(j);
-                                        r.newCell(mpp.getQty().toString());
-                                    }
-                                }
+        int set=0;
+        for (int j = 0; j <= size; j++) {
+                for (int i = 0; i <= 6; i++) {
+                    for (MonthlyProcurementPlan mpp : mppl.viewMonthlyProcurementPlan() ) {
+                        try {
+                            int i_month = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, true);
+                            int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
+                            if (mpp.getRetailItem().getName().equals(dt.getRow(j).getCell(0).getValue()) &&
+                                    mpp.getYear() == i_year && mpp.getMonth().equals(Helper.translateMonth(i_month))){
+                                Row r = dt.getRow(j);
+                                r.newCell(mpp.getQty().toString());
+                                set = 1;
                             }
+                            else{
+                            }
+                        }catch (Exception ex) {
                         }
                     }
-            } catch (Exception ex) {
-            }
+                    if (set == 0){
+                        Row r = dt.getRow(j);
+                        r.newCell("");
+                    }
+                    set=0;
+                }
         }
         JDataTable.Row r = dt.newRow();
         r.newCell("Create Purchase Order");
@@ -115,7 +118,7 @@ public class ProcurementPlanManagedBean {
                 int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
                 ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
                 if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year)){
-                    r.newCell("");
+                    r.newCell("Locked");
                 }else{
                     r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);
                 }
@@ -125,7 +128,7 @@ public class ProcurementPlanManagedBean {
         
     }
     
-    public String listenToCell(ActionEvent actionEvent) {
+    public void listenToCell(ActionEvent actionEvent) {
         try {
             CommandButton button = (CommandButton) actionEvent.getComponent();
             String ID = button.getAlt();
@@ -137,8 +140,8 @@ public class ProcurementPlanManagedBean {
                     Month month = Helper.translateMonth(Integer.parseInt(stringTokenizer.nextToken()));
                     Integer year = Integer.parseInt(stringTokenizer.nextToken());
                     ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
-                    mppl.createPurchaseOrder(mf,month,year);
                     mppl.lockMpp(mf,month,year);
+                    mppl.createPurchaseOrder(mf,month,year);
                     break;
             }
             
@@ -146,7 +149,6 @@ public class ProcurementPlanManagedBean {
         } catch (Exception ex) {
 
         }
-        return "procurementplan";
     }
     
     public String generateProcurementPlan(){

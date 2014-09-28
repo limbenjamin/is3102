@@ -17,7 +17,7 @@
                         <h:commandButton value="Generate Procurement Plan" class="btn" action="#{procurementPlanManagedBean.generateProcurementPlan}">
                         </h:commandButton>
                     </h:form>  
-                      <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{procurementPlanManagedBean.dt.internalrows}" resizableColumns="true" tableStyle="width:auto" rowIndexVar="ri" rendered="#{procurementPlanManagedBean.dt.internalrows.size() gt 0}">
+                      <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{procurementPlanManagedBean.dt.internalrows}" style="text-align:center;" resizableColumns="true" rowIndexVar="ri" rendered="#{procurementPlanManagedBean.dt.internalrows.size() gt 0}">
                         <f:facet name="header">
                             Procurement Planning Table
                             <p:commandButton id="toggler" type="button" value="Columns" icon="ui-icon-calculator" />
@@ -34,7 +34,7 @@
                             </f:facet>
 
 
-                            <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
+                            <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
                             <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}" style="text-align:center;width:96%"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
                             <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('MPP_dt')}" actionListener="#{procurementPlanManagedBean.listenToCell}"></p:commandButton>
 
