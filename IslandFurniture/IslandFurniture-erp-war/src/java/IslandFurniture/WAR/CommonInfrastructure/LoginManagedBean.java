@@ -26,14 +26,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
 import javax.servlet.http.HttpSession;
 
 @ManagedBean
@@ -75,7 +72,11 @@ public class LoginManagedBean implements Serializable {
 
     
     public void timeout() throws IOException{
-        
+        System.err.println("timeout here");
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
+                                        "No activity.", "What are you doing over there?"));
+        HttpSession session = Util.getSession();
+        session.invalidate();
     }
     
     
