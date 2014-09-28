@@ -60,6 +60,7 @@ public class LoginManagedBean implements Serializable {
     private List<Url> existingUrlList;
     private Url url;
     private String code;
+    private String timezone;
 
     @EJB
     private ManageAuthenticationBeanLocal authBean;
@@ -88,11 +89,13 @@ public class LoginManagedBean implements Serializable {
             notificationListSize = notificationList.size();
             count = mnb.getUnreadForStaff(staff);
             localDateTimeList = new ArrayList();
+            timezone = staff.getPlant().getTimeZoneID();
             Iterator<Notification> iterator = notificationList.iterator();
             while (iterator.hasNext()) {
                 notification = iterator.next();
                 instant = notification.getTime().toInstant();
-                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.of(timezone));
+                System.err.println(localDateTime);
                 localDateTimeList.add(localDateTime);
             }
             privilegeList = msab.getPrivilegeListforStaff(username);
@@ -139,7 +142,7 @@ public class LoginManagedBean implements Serializable {
             while (iterator.hasNext()) {
                 notification = iterator.next();
                 instant = notification.getTime().toInstant();
-                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                localDateTime = LocalDateTime.ofInstant(instant, ZoneId.of(timezone));
                 localDateTimeList.add(localDateTime);
             }
         }
@@ -364,6 +367,14 @@ public class LoginManagedBean implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
 
     

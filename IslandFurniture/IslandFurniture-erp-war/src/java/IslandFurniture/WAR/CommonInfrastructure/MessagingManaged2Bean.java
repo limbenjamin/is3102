@@ -43,6 +43,7 @@ public class MessagingManaged2Bean implements Serializable {
     private String content;
     private Integer messageListSize;
     private List<Staff> staffList;
+    private String timezone;
     
     @EJB
     private ManageMessagesBeanLocal messageBean;
@@ -55,6 +56,7 @@ public class MessagingManaged2Bean implements Serializable {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
+        timezone = staffBean.getStaff(username).getPlant().getTimeZoneID();
         try{
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
             session.setAttribute("threadid", id);
@@ -102,7 +104,6 @@ public class MessagingManaged2Bean implements Serializable {
         messageList = messageThread.getMessages();     
         if (messageList.size() != messageListSize){
             message = messageList.get(messageList.size()-1);
-            System.out.println(message.getContent());
             this.setMessage(message);
         }
     }
@@ -209,6 +210,30 @@ public class MessagingManaged2Bean implements Serializable {
 
     public void setMessageListSize(Integer messageListSize) {
         this.messageListSize = messageListSize;
+    }
+
+    public List<Staff> getStaffList() {
+        return staffList;
+    }
+
+    public void setStaffList(List<Staff> staffList) {
+        this.staffList = staffList;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public ManageNotificationsBeanLocal getNotificationBean() {
+        return notificationBean;
+    }
+
+    public void setNotificationBean(ManageNotificationsBeanLocal notificationBean) {
+        this.notificationBean = notificationBean;
     }
     
     
