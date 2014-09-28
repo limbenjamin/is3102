@@ -38,7 +38,7 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
         String[] roles = new String [] {
         "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)","General Staff",
-        "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (CO)","Cust. Service (CO)"/*,"Sales Planning (CO)"*/,"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
         "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
                                     };
 
@@ -63,10 +63,10 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
                 
-                role = mrbl.getRoleFromName("Sales Planning (CO)");
+                /*role = mrbl.getRoleFromName("Sales Planning (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "MSSR");
                 mrbl.addPrivilegeToRole(role.getId(), "Create Forecast");
-                mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
+                mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");*/
 
                 role = mrbl.getRoleFromName("Sales Manager (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Review Forecast");
