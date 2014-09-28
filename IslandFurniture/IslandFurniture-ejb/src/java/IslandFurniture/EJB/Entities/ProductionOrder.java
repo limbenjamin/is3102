@@ -36,6 +36,8 @@ public class ProductionOrder implements Serializable {
     private ManufacturingFacility mf;
     @ManyToOne
     private FurnitureModel furnitureModel;
+    
+    
 
     public Long getBatchNo() {
         return batchNo;

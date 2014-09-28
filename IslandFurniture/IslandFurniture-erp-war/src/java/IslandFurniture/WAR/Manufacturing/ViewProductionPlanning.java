@@ -372,12 +372,12 @@ public class ViewProductionPlanning implements Serializable {
                     break;
 
             }
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", success_msg));
+            //FacesContext.getCurrentInstance().addMessage("PP", new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", success_msg));
 
         } catch (Exception ex) {
             success_msg = "";
             error_msg = ex.getMessage();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", error_msg));
+            //FacesContext.getCurrentInstance().addMessage("PP", new FacesMessage(FacesMessage.SEVERITY_FATAL, "Error", error_msg));
         }
     }
 

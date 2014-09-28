@@ -41,8 +41,6 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    
-    
 
     public HashMap<String, String>
             getAuthorizedMF(String AUTH) {
@@ -346,7 +344,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             Cell w = cc_row.newCell((String.valueOf(planned_capacity))); //Planned Capacity
             Cell pr = planned_row.newBindedCell(pp.getQTY().toString(), "QTY").setBinded_entity(pp);
             long inventory = 0;
-            if (!pp.isLocked() && !QueryMethods.isOrderedMaterial(em, MF,pp.getMonth(),pp.getYear())) {
+            if (!pp.isLocked() && !QueryMethods.isOrderedMaterial(em, MF, pp.getMonth(), pp.getYear())) {
                 inventory = (iinventory.get(Cur_FM) == null ? 0 : iinventory.get(Cur_FM)) + pp.getQTY() - QueryMethods.getTotalDemand(em, pp, MF);
             }
             if (inventory >= 0) {
@@ -357,7 +355,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             }
             iinventory.put(Cur_FM, inventory);
 
-            if (pp.isLocked() || QueryMethods.isOrderedMaterial(em, MF,pp.getMonth(),pp.getYear())) {
+            if (pp.isLocked() || QueryMethods.isOrderedMaterial(em, MF, pp.getMonth(), pp.getYear())) {
                 pr.setIsEditable(false); //Editable Cell
 
             } else {
@@ -411,7 +409,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         JDataTable.Row OnHand = null;
         JDataTable.Row PlannedOrders = null;
         JDataTable.Row OrderNow = null;
-        OrderNow = jdt.NewRowDefered();
+        OrderNow = jdt.NewRowDefered().setColorClass("summary");
         OrderNow.newCell("");
 
         String cur_material = "";
@@ -432,25 +430,33 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             }
 
         }
-
+        String last_cell = "normal_odd";
         for (WeeklyMRPRecord wMRP : (List<WeeklyMRPRecord>) L.getResultList()) {
 
             if (!cur_material.equals(wMRP.getMaterial().getName())) {
                 cur_material = wMRP.getMaterial().getName();
-                SPACER = jdt.newRow();
+                
+                if (last_cell=="normal_odd")
+                {
+                    last_cell="normal_even";
+                }else{
+                    last_cell="normal_odd";
+                }
+                
+                SPACER = jdt.newRow().setColorClass(last_cell);
                 SPACER.newCell(cur_material);
                 SPACER.newCell(QueryMethods.getSupplierByMfAndM(em, mff, wMRP.getMaterial()).getName());
                 SPACER.setColorClass("summary");
-                MPS = jdt.newRow();
+                MPS = jdt.newRow().setColorClass(last_cell);
                 MPS.newCell("Gross Requirements");
-                ScheduledReceipt = jdt.newRow();
+                ScheduledReceipt = jdt.newRow().setColorClass(last_cell);
 
                 ScheduledReceipt.newCell("Scheduled Receipt(X" + wMRP.getLotSize().toString() + ")");
-                PlannedReceipt = jdt.newRow();
+                PlannedReceipt = jdt.newRow().setColorClass(last_cell);
                 PlannedReceipt.newCell("Planned Receipt(X" + wMRP.getLotSize().toString() + ")");
-                OnHand = jdt.newRow();
+                OnHand = jdt.newRow().setColorClass(last_cell);
                 OnHand.newCell("On Hand(Pieces)");
-                PlannedOrders = jdt.newRow();
+                PlannedOrders = jdt.newRow().setColorClass(last_cell);
                 PlannedOrders.newCell("Planned Orders(Lead Time=" + wMRP.getLeadTime() + " days)");
 
             }
@@ -523,6 +529,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         for (int i = 1; i <= MaxWeek; i++) {
             jdt.columns.add("Week " + i);
             Calendar start = Helper.getStartDateOfWeek(requestedMonth.value, requestedYear, i);
+            StartDayOfWeek.setColorClass("summary");
+            EndDayOfWeek.setColorClass("summary");
 
             StartDayOfWeek.newCell(start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) + 1));
             start.add(Calendar.DAY_OF_MONTH, 6);
@@ -535,13 +543,20 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         if (q.getResultList().size() == 0) {
             throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");
         }
-
+        String last_class = "normal_odd";
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
             if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
                 CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);
-                PlannedWeekProduction = jdt.newRow();
+                if (last_class == "normal_odd") {
+                    last_class = "normal_even";
+                } else {
+                    last_class = "normal_odd";
+                }
+
+                PlannedWeekProduction = jdt.newRow().setColorClass(last_class);
                 PlannedWeekProduction.newCell(CFM);
-                ActionRow = jdt.newRow();
+
+                ActionRow = jdt.newRow().setColorClass(last_class);;
                 ActionRow.newCell("Commit to Production Order");
             }
             Cell d = null;
@@ -573,15 +588,22 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         }
 
-        JDataTable.Row SPACER = jdt.newRow();
+        JDataTable.Row SPACER = jdt.newRow().setColorClass("summary");
         SPACER.newCell("Materials Required For Commited WPP");
+
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
             //Materials side---------------------
             HashMap<Material, Long> table = mpp.getMaterialsNeededForCommited(i, requestedYear, requestedMonth.value);
             for (Material m : (Set<Material>) table.keySet()) {
                 if (materialRows.get(m) == null) {
-                    JDataTable.Row r = jdt.newRow();
+                    if (last_class == "normal_odd") {
+                        last_class = "normal_even";
+                    } else {
+                        last_class = "normal_odd";
+                    }
+
+                    JDataTable.Row r = jdt.newRow().setColorClass(last_class);
                     r.newCell(m.getName() + "<br/>" + QueryMethods.getSupplierByMfAndM(em, mff, m).getName());
                     materialRows.put(m, r);
                 }

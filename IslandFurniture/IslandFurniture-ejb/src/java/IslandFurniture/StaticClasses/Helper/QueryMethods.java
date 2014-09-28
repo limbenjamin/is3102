@@ -462,7 +462,7 @@ public class QueryMethods {
 
     public static boolean isMaterialWeekLocked(EntityManager em, ManufacturingFacility mf, Month requestedMonth, int requestedYear, int requestedWeek) {
 
-        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail !=null");
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail IS NOT NULL");
         q.setParameter("mf", mf);
         q.setParameter("w", requestedWeek);
         q.setParameter("m", requestedMonth);
@@ -471,7 +471,7 @@ public class QueryMethods {
     }
 
     public static boolean isMaterialWeekPermanentLocked(EntityManager em, ManufacturingFacility mf, Month requestedMonth, int requestedYear, int requestedWeek) {
-        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail.purchaseOrder != null");
+        Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.week=:w and wmrp.month=:m and wmrp.year=:y and wmrp.manufacturingFacility=:mf and wmrp.purchaseOrderDetail.purchaseOrder IS NOT NULL");
 
         q.setParameter("mf", mf);
         q.setParameter("w", requestedWeek);

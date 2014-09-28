@@ -64,7 +64,7 @@ public class JDataTable<T> implements Serializable {
         }
 
         public String getColorClass() {
-            return "JDataTable "+colorClass;
+            return "JDataTable " + colorClass;
         }
 
         public void setColorClass(String colorClass) {
@@ -262,8 +262,10 @@ public class JDataTable<T> implements Serializable {
         public String rowgroup;
         private String ColorClass = "";
 
-        public void setColorClass(String ColorClass) {
+        public Row setColorClass(String ColorClass) {
             this.ColorClass = ColorClass;
+
+            return (this);
         }
 
         public String displaytype = "string";

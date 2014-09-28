@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -47,6 +48,12 @@ public class PurchaseOrder implements Serializable {
     private PurchaseOrderStatus status;
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
+    
+    
+    @JoinColumn(name = "MF_ID",referencedColumnName = "ID")
+    private ManufacturingFacility manufacturingFacility;
+
+ 
 
     public PurchaseOrder() {
         this.purchaseOrderDetails = new ArrayList<PurchaseOrderDetail>();
@@ -150,5 +157,15 @@ public class PurchaseOrder implements Serializable {
         }
         return false;
     }
+
+    public ManufacturingFacility getManufacturingFacility() {
+        return manufacturingFacility;
+    }
+
+    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
+        this.manufacturingFacility = manufacturingFacility;
+    }
+    
+
 
 }
