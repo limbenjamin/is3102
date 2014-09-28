@@ -3,6 +3,7 @@ package IslandFurniture.WAR.SupplyChain;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
 import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
+import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
@@ -104,12 +105,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         if (this.goodsReceiptDocumentId == null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             this.goodsReceiptDocumentId = new Long(request.getParameter("createGRDD:GRDid"));
-            
+
             if (this.goodsReceiptDocumentId == null) {
                 HttpServletRequest request2 = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            this.goodsReceiptDocumentId = new Long(request2.getParameter("createPO:GRDid"));
+                this.goodsReceiptDocumentId = new Long(request2.getParameter("createPO:GRDid"));
             }
-            
+
         } else {
             goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
         }
@@ -125,6 +126,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
             receiptDateString = df.format(goodsReceiptDocument.getReceiptDate().getTime());
         }
         System.out.println("Init");
+        goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
     }
 
     public void onStorageAreaChange(AjaxBehaviorEvent event) {
@@ -141,11 +143,27 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         return "";
     }
 
-    public void addGoodsReceiptDocumentDetail(ActionEvent event) {
+    public String addGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
         System.out.println(goodsReceiptDocumentId == null);
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocumentId, Long.parseLong(request.getParameter("createGRDD:stockId")), Integer.parseInt(request.getParameter("createGRDD:stockQuantity")));
+        stock = mgrl.getStock(Long.parseLong(request.getParameter("createGRDD:stockId")));
+        quantity = Integer.parseInt(request.getParameter("createGRDD:stockQuantity"));
+
+        if (!goodsReceiptDocumentDetailList.isEmpty()) {
+            for (GoodsReceiptDocumentDetail g : mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument)) {
+                if (g.getReceivedStock().equals(stock)) {
+
+                    mgrl.editGoodsReceiptDocumentDetailQty(g.getId(), g.getQuantity() + quantity);
+                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
+                    
+                    return "goodsreceiptdocument";
+                }
+            }
+        }
+
+        mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocumentId, stock.getId(), quantity);
         goodsReceiptDocumentDetailList = mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
+        return "goodsreceiptdocument";
     }
 
     public void addGoodsReceiptDocumentDetailFromPO(ActionEvent event) throws IOException {
@@ -156,7 +174,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         for (PurchaseOrderDetail p : mgrl.viewPurchaseOrderDetail(purchaseOrder)) {
             mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), p.getProcuredStock().getId(), p.getQuantity());
         }
-        
+
         mgrl.editGoodsReceiptDocumentPO(goodsReceiptDocumentId, purchaseOrder);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
@@ -169,7 +187,6 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         GoodsReceiptDocument grd = (GoodsReceiptDocument) event.getComponent().getAttributes().get("grd");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("date", event.getComponent().getAttributes().get("date"));
         receiptDateString = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("date");
-
 
         if (receiptDateString.isEmpty()) {
             receiptDateCal = null;
@@ -223,7 +240,11 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         } else {
             storageBin = msll.getStorageBin(storageBinId);
             for (GoodsReceiptDocumentDetail g : goodsReceiptDocumentDetailList) {
-                msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+                if (g.getReceivedStock() instanceof Material) {
+                    msul.createStockUnit(g.getReceivedStock(), "0", Long.parseLong(g.getQuantity().toString()), storageBin);
+                } else {
+                    msul.createStockUnit(g.getReceivedStock(), null, Long.parseLong(g.getQuantity().toString()), storageBin);
+                }
             }
 
             Calendar cal = Calendar.getInstance();

@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -119,12 +120,19 @@ public class ProcurementContractManagedBean implements Serializable {
         System.out.println(this.getSupplierID());
         return "procurementContract";
     }
-    public void deleteProcurementContractDetail() {
+    public String deleteProcurementContractDetail() {
         System.out.println("ProcurementContractManagedBean.deleteProcurementContractDetail()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pcdID"));
-        supplierManager.deleteProcurementContractDetail(id, this.supplierID);
-        this.detailList = supplierManager.displayProcurementContractDetails(this.supplierID.toString());
-        System.out.println("After deletion, pcdList has " + detailList.size() + " items");
+        String msg = supplierManager.deleteProcurementContractDetail(id, this.supplierID);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Procurement Contract Detail has been successfully deleted", ""));    
+        }    
+        return "procurementContract"; 
     }
     public String addProcurementContractDetail() {
         System.out.println("ProcurementContractManagedBean.addProcurementContractDetail()");
@@ -135,14 +143,30 @@ public class ProcurementContractManagedBean implements Serializable {
         String size = request.getParameter("addPCD:size");
         String leadTime = request.getParameter("addPCD:leadTime");
         System.out.println("supplierID is " + this.getSupplierID() + ".supplierId is " + supplierId + ". stockID is " + stockID + ". mfID is " + mfID);
-        supplierManager.addProcurementContractDetail(Long.parseLong(supplierId), Long.parseLong(mfID), Long.parseLong(stockID), Integer.parseInt(size), Integer.parseInt(leadTime));
+        String msg = supplierManager.addProcurementContractDetail(Long.parseLong(supplierId), Long.parseLong(mfID), Long.parseLong(stockID), Integer.parseInt(size), Integer.parseInt(leadTime));
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Procurement Contract Detail has been successfully added", ""));    
+        }    
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementContract";
     }
-    public void editProcurementContractDetail(ActionEvent event) throws IOException {
+    public String editProcurementContractDetail(ActionEvent event) throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()");
         pcd = (ProcurementContractDetail) event.getComponent().getAttributes().get("toEdit");
-        supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays());
+        String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays());       
+        if(msg != null) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been updated", ""));
+        }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
+        return "procurementContract";
     }
     
 }

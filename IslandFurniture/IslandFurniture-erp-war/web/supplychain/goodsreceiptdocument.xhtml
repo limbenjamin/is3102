@@ -7,10 +7,7 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-    <f:metadata>
-        <f:viewParam name="grddId2" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
-        <f:viewAction action="#{goodsReceiptDocumentManagedBean.init}" />
-    </f:metadata>
+
 
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -193,7 +190,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="goodsreceiptdocument.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
+                                            <h:commandButton actionListener="#{goodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetail}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
                                                 <f:attribute name="GRDid" value="#{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}" />
                                             </h:commandButton>
                                         </div>

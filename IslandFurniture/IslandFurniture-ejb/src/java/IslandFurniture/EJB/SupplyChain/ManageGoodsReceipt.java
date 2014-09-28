@@ -129,8 +129,8 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         em.merge(goodsReceiptDocument);
         em.flush();
     }
-    
-        @Override
+
+    @Override
     public void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po) {
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
         po.setGoodsReceiptDocument(goodsReceiptDocument);
@@ -157,6 +157,15 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
         goodsReceiptDocumentDetail.setQuantity(qty);
         em.merge(goodsReceiptDocumentDetail);
         em.flush();
+    }
+
+    @Override
+    public void editGoodsReceiptDocumentDetailQty(Long grddId, Integer qty) {
+        goodsReceiptDocumentDetail = getGoodsReceiptDocumentDetail(grddId);
+        goodsReceiptDocumentDetail.setQuantity(qty);
+        em.merge(goodsReceiptDocumentDetail);
+        em.flush();
+        em.refresh(goodsReceiptDocumentDetail);
     }
 
     @Override
@@ -215,7 +224,16 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
     @Override
     public void deleteGoodsReceiptDocument(Long goodsReceiptDocumentId) {
+
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
+
+        if (goodsReceiptDocument.getReceiveFrom() != null) {
+            purchaseOrder = getPurchaseOrder(goodsReceiptDocument.getReceiveFrom().getId());
+            purchaseOrder.setGoodsReceiptDocument(null);
+            em.merge(purchaseOrder);
+            em.flush();
+        }
+
         em.remove(goodsReceiptDocument);
         em.flush();
     }
