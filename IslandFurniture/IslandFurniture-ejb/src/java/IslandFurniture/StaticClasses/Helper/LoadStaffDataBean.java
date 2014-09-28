@@ -61,7 +61,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
             { "april", "pass", "April R. Wimbush", "AprilRWimbush@teleworm.us", "570-677-0429","Singapore","Alexandra"},
             { "santos", "pass", "Santos M. Dominquez", "SantosMDominquez@rhyta.com", "507-893-4405","Singapore","Singapore"},  
             { "evelyn", "pass", "Evelyn L. Gutierrez", "EvelynLGutierrez@rhyta.com", "573-383-0199","Singapore","Singapore"},  
-            { "margaret", "pass", "Margaret W. Martinez", "MargaretWMartinez@rhyta.com", "314-846-8027","Singapore","Singapore"},  
+            //{ "margaret", "pass", "Margaret W. Martinez", "MargaretWMartinez@rhyta.com", "314-846-8027","Singapore","Singapore"},  
             { "heike", "pass", "Heike M. Myers", "HeikeMMyers@teleworm.us", "269-782-1196","Singapore","Singapore"},  
             { "shannon", "pass", "Shannon E. Shaner", "ShannonEShaner@armyspys.com", "507-378-4352","Singapore","Singapore"},  
             { "ann", "pass", "Ann L. Parker", "AnnLParker@rhyta.com", "937-883-1550","Singapore","Singapore"},  
@@ -78,7 +78,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
         String[] roles = new String [] {
         "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)","General Staff",
-        "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (CO)","Cust. Service (CO)",/*"Sales Planning (CO)",*/"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
         "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Sales Manager (Mfg)"
                                     };
 

@@ -25,6 +25,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
@@ -83,6 +84,16 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         plant = staff.getPlant();
         System.out.println("Init");
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
+
+        try {
+            if (stockId == null) {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("inventorytransfer.xhtml");
+            }
+        } catch (IOException ex) {
+
+        }
+
         stock = miml.getStock(stockId);
         stockUnitList = mgrl.viewStockUnitById(plant, stock);
         stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
@@ -189,7 +200,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
                 // End
             }
         }
-FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock movement has been completed successfully", ""));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
