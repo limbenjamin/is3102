@@ -76,4 +76,6 @@ public interface ManageGoodsReceiptLocal {
     
     void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po);
     
+    void editGoodsReceiptDocumentDetailQty(Long grddId, Integer qty);
+    
 }
