@@ -5,57 +5,99 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
+        
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Create Forecast</strong></li>
+            </ol>  
+            <h4>Create Forecast</h4><hr></hr>
+        </div>    
+        <div class="col-md-12">
         <h:form id="form">
             <h:outputText id="statusMessage" value="#{createForecastManagedBean.statusMessage}"/>
-            <p:tabView id="controls">
-                <p:tab title="Forecast By Naive Method">
-                    <p:panelGrid columns="1">
-                        <h:outputText value="Calculates the growth trend by taking the ratio between the average sales figures of the last 2 years, then adjusting the previous month-on-month values with the calculated growth trend weightage." />
-                        <h:commandButton value="Perform Forecasting">
+
+                <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                  <li class="active"><a href="#nmethod" role="tab" data-toggle="tab">Forecast By Naive Method</a></li>
+                  <li><a href="#npoint" role="tab" data-toggle="tab">Forecast By N-Point Moving Average</a></li>
+                  <li><a href="#approval" role="tab" data-toggle="tab">Submit For Approval</a></li>
+                </ul>  
+            
+                <div class="tab-content">
+                
+                <div class="tab-pane active" id="nmethod">
+                    <section class="panel">
+                        <div class="panel-heading dashboard-title-panel">
+                            Description:
+                        </div>
+                        <div class="panel-body">
+                        <h5>Calculates the growth trend by taking the ratio between the average sales figures of the last 2 years, then adjusting the previous month-on-month values with the calculated growth trend weightage.</h5>
+                        <br/>
+                        <h:commandButton value="Perform Forecasting" class="btn btn-success">
                             <f:ajax render=":form:statusMessage :form:mssrTable" listener="#{createForecastManagedBean.naiveForecast}" />
                         </h:commandButton>
-                    </p:panelGrid>
-                </p:tab>
-                <p:tab title="Forecast By N-Point Moving Average">
-                    <p:panelGrid>
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="plannedInv" value="Planned Inventory: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="plannedInv" value="#{createForecastManagedBean.plannedInv}" />
-                            </p:column>
-                            <p:column rowspan="3">
-                                Attempts to take the average sales figures of the N months that precedes the month planned. If sales figures are not available for any of the months, attempts to take the forecasted figures. If the forecasted figures are also not available, skips the month.
-                            </p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="numPoints" value="Number of Points: " />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="numPoints" value="#{createForecastManagedBean.numPoints}" />
-                            </p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column colspan="2">
-                                <h:commandButton value="Perform Forecasting">
-                                    <f:ajax execute="plannedInv numPoints" render=":form:statusMessage :form:mssrTable" listener="#{createForecastManagedBean.nPointForecast}" />
-                                </h:commandButton>
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>
-                </p:tab>
-                <p:tab title="Submit For Approval">
-                    <p:panelGrid columns="1">
-                        <h:outputText value="Submits the current planned figures to the sales manager for approval. WARNING: Once submitted, figures may not be changed unless the sales manager rejects the forecast." />
-                        <h:commandButton value="Submit Forecast">
-                            <f:ajax execute="@form" render=":form:statusMessage :form:mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
-                        </h:commandButton>
-                    </p:panelGrid>
-                </p:tab>
-            </p:tabView>
+                        </div>
+                    </section>
+                </div>
+                
+                
+                <div class="tab-pane" id="npoint" >
+                    <section class="panel">
+                        <div class="panel-heading dashboard-title-panel">
+                            Input and Description:
+                        </div> 
+                        <div class="panel-body">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="plannedInv" value="Planned Inventory: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="plannedInv" value="#{createForecastManagedBean.plannedInv}"/>
+                                    </p:column>
+                                    <p:column rowspan="3" style="vertical-align:text-top;">
+                                        Attempts to take the average sales figures of the N months that precedes the month planned. If sales figures are not available for any of the months, attempts to take the forecasted figures. If the forecasted figures are also not available, skips the month.
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel for="numPoints" value="Number of Points: " />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="numPoints" value="#{createForecastManagedBean.numPoints}"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <h:commandButton value="Perform Forecasting" class="btn btn-success">
+                                            <f:ajax execute="plannedInv numPoints" render=":form:statusMessage :form:mssrTable" listener="#{createForecastManagedBean.nPointForecast}" />
+                                        </h:commandButton>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </div>
+                    </section>
+                </div>
+               
+                <div class="tab-pane" id="approval" >
+                    <section class="panel">
+                        <div class="panel-heading dashboard-title-panel">
+                            Description:
+                        </div>     
+                        <div class="panel-body">
+                            <h5>Submits the current planned figures to the sales manager for approval. WARNING: Once submitted, figures may not be changed unless the sales manager rejects the forecast.</h5>
+                            <br/>
+                            <h:commandButton value="Submit Forecast" class="btn btn-success">
+                                <f:ajax execute="@form" render=":form:statusMessage :form:mssrTable" listener="#{createForecastManagedBean.saveForecast}" />
+                            </h:commandButton>
+                        </div>
+                    </section>
+                </div>
+                
+            </div>              
+
             <br/>
+            <h4>Generated Forecasts</h4><hr></hr>
             <p:accordionPanel id="mssrTable" value="#{createForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{createForecastManagedBean.panelActive}">
                 <p:tab title="#{mssrPairedEntry.first.name} (id:#{mssrPairedEntry.first.id})">
                     <p:dataTable value="#{createForecastManagedBean.mssrLabels}" var="label">
@@ -92,5 +134,6 @@
                 </p:tab>
             </p:accordionPanel>
         </h:form>
+        </div>
     </ui:define>
 </ui:composition>
