@@ -61,6 +61,12 @@
         <navigation-case>
             <from-outcome>managestaff2</from-outcome>
             <to-view-id>/it/managestaff2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{staffManaged2Bean.staffId}</value>  
+                </view-param>  
+            </redirect> 
         </navigation-case>
         <navigation-case>
             <from-outcome>managestaff</from-outcome>

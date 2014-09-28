@@ -21,6 +21,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -113,7 +114,7 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), countryOffice);
         mfList = mohBean.displayManufacturingFacility();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing Faciility Edited",""));
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing Facility Edited",""));
         return "manageplant";
     }
     

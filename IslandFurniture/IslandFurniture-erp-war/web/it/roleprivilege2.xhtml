@@ -57,7 +57,8 @@
                                           <div class="form-group">
                                             <label class="col-sm-3 control-label">Privilege Name: </label>
                                             <div class="col-sm-9">
-                                                <h:selectOneMenu id="privilegeName" class="form-control">
+                                                <h:selectOneMenu id="privilegeName" class="form-control needauto">
+                                                    <f:selectItem itemDisabled="true" itemLabel=""></f:selectItem>
                                                     <c:forEach var="i" begin="0" end="#{rolePrivilegeManaged2Bean.globalPrivilegeList.size()-1}">
                                                         <f:selectItem itemLabel="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" itemValue="#{rolePrivilegeManaged2Bean.globalPrivilegeList.get(i).name}" />
                                                     </c:forEach>

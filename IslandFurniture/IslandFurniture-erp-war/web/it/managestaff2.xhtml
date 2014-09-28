@@ -57,7 +57,8 @@
                                             <label class="col-sm-3 control-label">Role Name: </label>
                                             <div class="col-sm-9 inner-addon right-addon">
                                               <i class="glyphicon glyphicon-bookmark"></i>
-                                                <h:selectOneMenu id="roleName" class="form-control">
+                                                <h:selectOneMenu id="roleName" class="form-control needauto">
+                                                    <f:selectItem itemDisabled="true" itemLabel=""></f:selectItem>
                                                     <c:forEach var="i" begin="0" end="#{staffManaged2Bean.globalRoleList.size()-1}">
                                                         <f:selectItem itemLabel="#{staffManaged2Bean.globalRoleList.get(i).name}" itemValue="#{staffManaged2Bean.globalRoleList.get(i).name}" />
                                                     </c:forEach>

@@ -20,8 +20,8 @@
         <Node id="supplychain/goodsreceipt.xhtml" x="400" y="750" zoom="true"/>
         <Node id="it/roleprivilege2.xhtml" x="400" y="900" zoom="true"/>
         <Node id="login.xhtml" x="1650" y="450" zoom="true"/>
-        <Node id="it/forgotpassword.xhtml" x="900" y="600" zoom="true"/>
         <Node id="it/notification.xhtml" x="650" y="900" zoom="true"/>
+        <Node id="it/forgotpassword.xhtml" x="900" y="600" zoom="true"/>
         <Node id="common/modifyparticulars.xhtml" x="400" y="1200" zoom="true"/>
         <Node id="knowledge/furniture.xhtml" x="900" y="450" zoom="true"/>
         <Node id="manufacturing/productionorder.xhtml" x="900" y="750" zoom="true"/>
@@ -41,8 +41,8 @@
         <Node id="supplychain/inventorymonitoring.xhtml" x="1400" y="750" zoom="true"/>
         <Node id="purchasing/purchaseorderconfirmed.xhtml" x="650" y="450" zoom="true"/>
         <Node id="supplychain/inventorymonitoring_stock.xhtml" x="1650" y="300" zoom="true"/>
-        <Node id="supplychain/inventorymonitoring_stlocation.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="salesplanning/reviewforecast.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="supplychain/inventorymonitoring_stlocation.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="template.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="supplychain/inventorymonitoring_location.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="dash.xhtml" x="1650" y="600" zoom="true"/>
