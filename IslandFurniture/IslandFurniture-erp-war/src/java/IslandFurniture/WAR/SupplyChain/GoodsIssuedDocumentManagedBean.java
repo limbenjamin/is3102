@@ -141,7 +141,8 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         if (goodsIssuedDocument.isConfirm() == true) {
             for (GoodsIssuedDocument d : goodsIssuedDocumentList2) {
 
-                plantType2 = d.getPlant().getClass().getSimpleName();
+                
+                plantType2 = d.getDeliverTo().getClass().getSimpleName()
                 if (plantType2.equals("ManufacturingFacility")) {
                     plantType2 = "MFG";
                 } else if (plantType2.equals("CountryOffice")) {
