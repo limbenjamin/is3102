@@ -15,11 +15,12 @@
                         <ol class="breadcrumb">
                           <li><a href="../dash.xhtml">Home</a></li>
                           <li><a href="messaging.xhtml">Messaging</a></li>
-                          <li class="active"><strong>#{messagingManaged2Bean.messageThread.title}</strong></li>
+                          <li class="active"><strong>Thread: #{messagingManaged2Bean.messageThread.title}</strong></li>
                         </ol>
-                        <hr></hr>
                     </div>                    
-                    <div class="col-md-8">                     
+                    <div class="col-md-8">  
+                        <h5>Thread: <strong>#{messagingManaged2Bean.messageThread.title}</strong></h5>
+                        <hr></hr>                        
                           <section class="panel">
                             <div class="panel-heading dashboard-title-panel">
                                 <span class="pull-right">
@@ -27,7 +28,10 @@
                                         <span class="fa fa-arrow-circle-o-left"></span> back
                                     </a>
                                 </span>                                
-                                Messages in '#{messagingManaged2Bean.messageThread.title}'
+                                recipients:                                     
+                                <ui:repeat value="#{messagingManaged2Bean.messageThread.recipient}" var="recipient">
+                                    #{recipient.username} | 
+                                </ui:repeat>
                             </div>
                            
                                 <c:forEach items="${messagingManaged2Bean.messageList}" var="message">
