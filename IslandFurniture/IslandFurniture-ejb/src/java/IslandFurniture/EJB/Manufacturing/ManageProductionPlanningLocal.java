@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.Supplier;
 import java.util.HashMap;
 import javax.ejb.Local;
@@ -25,7 +26,7 @@ public interface ManageProductionPlanningLocal {
 
     void setMF(String MF_NAME) throws Exception;
 
-    void createOrUpdateCapacity(String fmName, String mancFacNamem, int daily_max_capacity);
+    ProductionCapacity createOrUpdateCapacity(String fmName, String mancFacNamem, int daily_max_capacity);
 
     void CreateProductionPlanFromForecast(int m, int year) throws Exception;
 

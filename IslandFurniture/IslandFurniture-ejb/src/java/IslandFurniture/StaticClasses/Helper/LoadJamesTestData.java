@@ -66,7 +66,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
                 int Capacity = (int) (max * 5) + r.nextInt((int) (max * 3));
                 Capacity = Capacity / 30;
                 try {
-                    mpp.createOrUpdateCapacity(SS.getStock().getName(), MF.getName(), Capacity);
+                    mpp.createOrUpdateCapacityExternal(SS.getStock().getName(), MF.getName(), Capacity);
                 } catch (Exception ex) {
                     System.err.println("loadProductionCapacityData()" + ex.getMessage());
                 }
