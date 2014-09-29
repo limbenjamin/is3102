@@ -174,10 +174,19 @@ public class ViewProductionPlanning implements Serializable {
                 return;
             }
             dpv.updateListOfEntities(o);
-            ProductionCapacity pc = (ProductionCapacity) o.get(0);
         } catch (Exception ex) {
 
             error_msg = ex.getMessage();
+            throw (ex);
+        }
+
+        try {
+            mpp.CreateProductionPlanFromForecast();
+
+        } catch (Exception ex) {
+
+            error_msg = "New Capacity Data does not work. Reason: "+ex.getMessage();
+            throw (ex);
         }
 
         pullcapacityTableFromBean();
@@ -185,11 +194,11 @@ public class ViewProductionPlanning implements Serializable {
     }
 
     public void pullWeeklyProductionTable(String Month) throws Exception {
-            currentDrill = Month;
-            System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
-            wpp = (JDataTable<String>) dpv.getWeeklyPlans(Month, this.MF);
-            activePanelIndex = 1;
-            pullMRPTableFromBean(this.currentDrill);
+        currentDrill = Month;
+        System.out.println("DrillDownMonth(): Drilling Down to:" + Month);
+        wpp = (JDataTable<String>) dpv.getWeeklyPlans(Month, this.MF);
+        activePanelIndex = 1;
+        pullMRPTableFromBean(this.currentDrill);
 
     }
 
@@ -253,8 +262,8 @@ public class ViewProductionPlanning implements Serializable {
         } catch (Exception ex) {
             success_msg = "";
 
-            if (ex.getMessage()==null) {
-                error_msg="Error: Not Successful ! Business Logic Error ? Perhaps not enough capacity ?";
+            if (ex.getMessage() == null) {
+                error_msg = "Error: Not Successful ! Business Logic Error ? Perhaps not enough capacity ?";
             } else {
                 error_msg = "ERROR: " + ex.getMessage();
                 System.out.println("tooglePage(): Exception " + ex.getMessage());
