@@ -34,9 +34,10 @@
 
                            <p:column>
                                 <h:form>
-                                    <h:commandButton value="Delete" class="btn btn-danger" action="#{notificationManagedBean.deleteNotification}">
+                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;" action="#{notificationManagedBean.deleteNotification}">
                                         <f:param name="id" value="#{notification.id}" />
                                     </h:commandButton>
+                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
                                 </h:form>   
                            </p:column>
 
