@@ -10,9 +10,15 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Goods Issued</strong></li>
+                        </ol>                      
+                    </div>                    
                     <div class="col-md-8">
                         <h:form id="createGRD1"> 
-                            <h:commandButton action="#{goodsIssuedManagedBean.addGoodsIssuedDocument}" value="Create Goods Issued Document" class="btn btn-success pull-right btn-right-margin"></h:commandButton>
+                            <h:commandButton action="#{goodsIssuedManagedBean.addGoodsIssuedDocument}" value="Create Goods Issued Document" class="btn btn-sm btn-success pull-right btn-right-margin"></h:commandButton>
                         </h:form>    
                         <h4>Goods Issued</h4><hr></hr>
               

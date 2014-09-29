@@ -12,6 +12,13 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="inventorytransfer.xhtml">Inventory Transfer</a></li>
+                            <li class="active"><strong>Inventory Movement in #{inventoryTransferMovementLocationManagedBean.storageBin.storageArea.name} - #{inventoryTransferMovementLocationManagedBean.storageBin.name}</strong></li>
+                        </ol>                         
+                    </div>                    
                     <div class="col-md-8">
                         <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}">
                             <h:form> 
@@ -22,6 +29,13 @@
                         </h:panelGroup>
 
                         <section name="View Contents of Storage Location">
+                        <span class="pull-right">
+                            <a href="inventorytransfer.xhtml">
+                            <button type="button" class="btn btn-sm btn-default pull-right">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>
+                        </span>                            
                             <h4>Inventory Movement in #{inventoryTransferMovementLocationManagedBean.storageBin.storageArea.name} - #{inventoryTransferMovementLocationManagedBean.storageBin.name}</h4><hr></hr>
                         </section>
 
