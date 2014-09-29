@@ -12,8 +12,14 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-10">
-                        <h4>Plants</h4>
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Plants' Production Orders</strong></li>
+                        </ol>                      
+                    </div>
+                    <div class="col-md-12">
+                        <h4>Plants' Production Orders</h4>
                         <hr></hr>                                   
                     </div>
                     <h:outputText id="statusMessage" value="#{productionOrderManagedBean.statusMessage}" />
@@ -45,7 +51,7 @@
                                             <p:column headerText="Quantity">
                                                 <h:inputText id="poQty" value="#{plannedPO.qty}" class="form-control transparent-form"></h:inputText>
                                             </p:column>
-                                            <p:column headerText="Edit">
+                                            <p:column headerText="Update">
                                                 <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{plannedPO}" />
                                                     <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.editPO}"/>
@@ -99,7 +105,7 @@
                                             <p:column headerText="Completed Qty">
                                                 <h:inputText id="poQty" value="#{po.completedQty}" class="form-control transparent-form"></h:inputText>
                                             </p:column>
-                                            <p:column headerText="Edit">
+                                            <p:column headerText="Update">
                                                 <h:commandButton actionListener="#{productionOrderManagedBean.editCompletedQty}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{po}" /> 
                                                 </h:commandButton>
