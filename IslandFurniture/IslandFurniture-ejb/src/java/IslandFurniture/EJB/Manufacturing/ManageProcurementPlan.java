@@ -25,9 +25,11 @@ import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.StaticClasses.Helper.*;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -69,7 +71,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     
     @Override
     public void createMonthlyProcumentPlan(ManufacturingFacility mf){
-        Query query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf");
+        Query query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf AND s.stock.id IN (SELECT s.id FROM ProcuredStock s)");
         query.setParameter("mf", mf);
         ssList = query.getResultList();
         Iterator<StockSupplied> iterator = ssList.iterator();
@@ -171,7 +173,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     
     @Override
     public void createPurchaseOrder(ManufacturingFacility mf, Month month, Integer year){
-        Query query = em.createQuery("SELECT m FROM MonthlyProcurementPlan m WHERE m.locked=TRUE AND m.manufacturingFacility=:mf AND m.month=:month AND m.year=:year");
+        Query query = em.createQuery("SELECT m FROM MonthlyProcurementPlan m WHERE m.manufacturingFacility=:mf AND m.month=:month AND m.year=:year");
         query.setParameter("mf", mf);
         query.setParameter("month", month);
         query.setParameter("year", year);
@@ -196,22 +198,21 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         while(iterator2.hasNext()){
             Supplier s = iterator2.next();
             Calendar cal = new GregorianCalendar(year,month.value, 1);
-            System.err.println(cal.getTime());
+            cal.setTimeZone(TimeZone.getTimeZone("UTC"));
             //day = date of first monday in month
             int day = cal.get(Calendar.DAY_OF_WEEK);
-            while (day != 2) {
+            while (day != 3) {
                cal.add(Calendar.DATE, 1);
                 day = cal.get(Calendar.DAY_OF_WEEK);
             }
-            System.err.println(cal.getTime());
             int maxWeekNumber = Helper.getNumOfWeeks( month.value,year);
             int maxDay = Helper.getNumWorkDays(month, year);
-            int daysInLastWeek = Helper.getNumOfDaysInWeek(month.value, year, maxWeekNumber);
-            System.err.println(cal.getTime()+"     "+maxWeekNumber+"     "+maxDay+"     "+daysInLastWeek);
+            int daysInLastWeek = Helper.getBoundaryWeekDays(month, year);
             for (int j=0;j< maxWeekNumber-1;j+=1){ //Add purchase order for week 1 to max week-1
                 purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setManufacturingFacility(mf);
                 purchaseOrder.setShipsTo(mf);
-                purchaseOrder.setOrderDate(TimeMethods.convertToUtcTime(mf, cal));
+                purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
                 purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
                 purchaseOrder.setSupplier(s);
                 em.persist(purchaseOrder);
@@ -221,13 +222,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     if(pcd.getProcurementContract().getSupplier() == s){
                         ProcuredStock ps = pcd.getProcuredStock();
                         RetailItem ri = (RetailItem) ps;
-                        query = em.createQuery("SELECT m FROM MonthlyProcurementPlan m WHERE m.locked=TRUE AND m.manufacturingFacility=:mf "
-                        + "AND m.month=:month AND m.year=:year AND m.retailItem=:ri");
-                        query.setParameter("mf", mf);
-                        query.setParameter("month", month);
-                        query.setParameter("year", year);
-                        query.setParameter("ri", ri);
-                        mpp = (MonthlyProcurementPlan) query.getSingleResult();
+                        mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),ri.getId(),month,year));
                         mpp.getPurchaseOrderList().add(purchaseOrder);
                         purchaseOrder.setMonthlyProcurementPlan(mpp);
                         em.merge(mpp);
@@ -248,7 +243,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             purchaseOrder = new PurchaseOrder();
             purchaseOrder.setManufacturingFacility(mf);
             purchaseOrder.setShipsTo(mf);
-            purchaseOrder.setOrderDate(TimeMethods.convertToUtcTime(mf, cal));
+            purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
             purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
             purchaseOrder.setSupplier(s);
             em.persist(purchaseOrder);
@@ -258,19 +253,23 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 if(pcd.getProcurementContract().getSupplier() == s){
                     ProcuredStock ps = pcd.getProcuredStock();
                     RetailItem ri = (RetailItem) ps;
-                    query = em.createQuery("SELECT m FROM MonthlyProcurementPlan m WHERE m.locked=TRUE AND m.manufacturingFacility=:mf "
-                    + "AND m.month=:month AND m.year=:year AND m.retailItem=:ri");
-                    query.setParameter("mf", mf);
-                    query.setParameter("month", month);
-                    query.setParameter("year", year);
-                    query.setParameter("ri", ri);
-                    mpp = (MonthlyProcurementPlan) query.getSingleResult();
+                    mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),ri.getId(),month,year));
+                    Month newmonth = null;
+                    try{
+                        int i_month = Helper.addMonth(Helper.translateMonth(mpp.getMonth().value), mpp.getYear(), 1, true);
+                        newmonth = Helper.translateMonth(i_month);
+                    }catch(Exception e){
+                        System.err.print(e);
+                    }
+                    MonthlyProcurementPlan mpp2 = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),ri.getId(),newmonth,year));
+                    int maxDay2 = Helper.getNumWorkDays(mpp2.getMonth(), mpp2.getYear());
                     mpp.getPurchaseOrderList().add(purchaseOrder);
                     purchaseOrder.setMonthlyProcurementPlan(mpp);
                     em.merge(mpp);
-                    int qty = mpp.getQty()/maxDay*7;
+                    int qty = mpp.getQty()/maxDay*daysInLastWeek;
+                    int qty2 = mpp2.getQty()/maxDay2*(7-daysInLastWeek);
                     purchaseOrderDetail = new PurchaseOrderDetail();
-                    purchaseOrderDetail.setQuantity(qty);
+                    purchaseOrderDetail.setQuantity(qty+qty2);
                     purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                     purchaseOrderDetail.setProcuredStock(ps);
                     em.persist(purchaseOrderDetail);
