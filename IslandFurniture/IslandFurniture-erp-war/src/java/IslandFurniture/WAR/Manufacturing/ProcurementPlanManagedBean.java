@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
@@ -46,6 +48,7 @@ public class ProcurementPlanManagedBean {
     private List<RetailItem> retailList;
     private RetailItem retailItem;
     private int size;
+    private String error_msg = "";
     
     @EJB
     private ManageProcurementPlanLocal mppl;
@@ -128,6 +131,7 @@ public class ProcurementPlanManagedBean {
         
     }
     
+    @TransactionAttribute(REQUIRED)
     public void listenToCell(ActionEvent actionEvent) {
         try {
             CommandButton button = (CommandButton) actionEvent.getComponent();
@@ -140,8 +144,13 @@ public class ProcurementPlanManagedBean {
                     Month month = Helper.translateMonth(Integer.parseInt(stringTokenizer.nextToken()));
                     Integer year = Integer.parseInt(stringTokenizer.nextToken());
                     ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
+                    try{
+                        mppl.createPurchaseOrder(mf,month,year);
+                    }catch(Exception e){
+                        System.err.println("Unable to generate PO");
+                        error_msg = "Unable to generate PO";
+                    }
                     mppl.lockMpp(mf,month,year);
-                    mppl.createPurchaseOrder(mf,month,year);
                     break;
             }
             
@@ -227,6 +236,22 @@ public class ProcurementPlanManagedBean {
 
     public void setRetailItem(RetailItem retailItem) {
         this.retailItem = retailItem;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public String getError_msg() {
+        return error_msg;
+    }
+
+    public void setError_msg(String error_msg) {
+        this.error_msg = error_msg;
     }
     
     
