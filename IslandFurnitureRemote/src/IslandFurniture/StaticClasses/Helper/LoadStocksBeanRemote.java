@@ -15,6 +15,6 @@ import javax.ejb.Remote;
 @Remote
 public interface LoadStocksBeanRemote {
 
-    boolean loadSampleData();
+    boolean loadSampleData(int mode);
     
 }

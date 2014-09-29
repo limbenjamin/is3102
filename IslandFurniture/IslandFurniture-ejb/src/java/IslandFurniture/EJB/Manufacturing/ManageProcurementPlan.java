@@ -12,7 +12,6 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.EJB.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
@@ -26,13 +25,9 @@ import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.StaticClasses.Helper.*;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -251,6 +246,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             }
             //last week
             purchaseOrder = new PurchaseOrder();
+            purchaseOrder.setManufacturingFacility(mf);
             purchaseOrder.setShipsTo(mf);
             purchaseOrder.setOrderDate(TimeMethods.convertToUtcTime(mf, cal));
             purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Entities;
 
 import java.io.Serializable;
@@ -21,9 +20,10 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-@NamedQuery(name = "findBOMDetailByMaterial",query = "select bd from BOMDetail bd where bd.material=:m")
+    @NamedQuery(name = "findBOMDetailByMaterial", query = "select bd from BOMDetail bd where bd.material=:m")
 })
 public class BOMDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,6 +34,16 @@ public class BOMDetail implements Serializable {
     private Material material;
     private Integer quantity;
 
+    public BOMDetail() {
+
+    }
+
+    public BOMDetail(BOM bom, Material material, Integer quantity) {
+        this.bom = bom;
+        this.material = material;
+        this.quantity = quantity;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
@@ -42,9 +52,6 @@ public class BOMDetail implements Serializable {
         this.quantity = quantity;
     }
 
-    public BOMDetail() {
-        
-    }
     public Long getId() {
         return id;
     }
@@ -93,5 +100,5 @@ public class BOMDetail implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.BOMDetail[ id=" + id + " ]";
     }
-    
+
 }

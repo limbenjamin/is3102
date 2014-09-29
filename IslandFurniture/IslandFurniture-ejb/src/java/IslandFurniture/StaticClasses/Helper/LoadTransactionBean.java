@@ -105,9 +105,11 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     for (Stock stock : eachStore.getSells()) {
                         if (rand.nextBoolean()) {
                             if (stock instanceof FurnitureModel) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, rand.nextInt(50) + 1));
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, 10));
+//                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, rand.nextInt(50) + 1));
                             } else if (stock instanceof RetailItem) {
-                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
+                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, 10));
+//                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
                             }
                         }
                     }

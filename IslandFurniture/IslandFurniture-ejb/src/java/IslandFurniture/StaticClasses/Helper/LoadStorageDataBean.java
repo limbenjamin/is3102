@@ -107,18 +107,20 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                     sbList.add(sb);
                 }
                 sa.setStorageBins(sbList);
-                
-                sa = this.addStorageArea("Production Area", plant, StorageAreaType.PRODUCTION);
-                saList.add(sa);
 
-                sbList = new ArrayList();
-                // Add Storage Bin
-                for (int i = 0; i < 5; i++) {
-                    sb = this.addStorageBin("PB" + i, sa);
-                    sbList.add(sb);
+                if (plant instanceof ManufacturingFacility) {
+                    sa = this.addStorageArea("Production Area", plant, StorageAreaType.PRODUCTION);
+                    saList.add(sa);
+
+                    sbList = new ArrayList();
+                    // Add Storage Bin
+                    for (int i = 0; i < 5; i++) {
+                        sb = this.addStorageBin("PB" + i, sa);
+                        sbList.add(sb);
+                    }
+                    sa.setStorageBins(sbList);
                 }
-                sa.setStorageBins(sbList);
-                
+
                 plant.setStorageAreas(saList);
             }
         }

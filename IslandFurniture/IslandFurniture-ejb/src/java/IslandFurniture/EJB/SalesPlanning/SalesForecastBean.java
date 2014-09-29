@@ -138,12 +138,12 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 futureMssr.setVarianceOffset(mssr.getQtyForecasted() - mssr.getQtySold());
                 futureMssr.setVarianceUpdated(true);
 
-                // Update Quantity requested
-                MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, mssr, -1);
-                if (oldMssr != null) {
-                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset() - oldMssr.getPlannedInventory());
-                } else {
-                    mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory());
+                // Update Quantity requested for months of updated variance
+                MonthlyStockSupplyReq oldMssr = QueryMethods.findNextMssr(em, futureMssr, -1);
+                if (!futureMssr.getStatus().equals(MssrStatus.NONE) && oldMssr != null) {
+                    futureMssr.setQtyRequested(futureMssr.getQtyForecasted() + futureMssr.getPlannedInventory() - futureMssr.getVarianceOffset() - oldMssr.getPlannedInventory());
+                } else if (!futureMssr.getStatus().equals(MssrStatus.NONE) && oldMssr == null) {
+                    futureMssr.setQtyRequested(futureMssr.getQtyForecasted() + futureMssr.getPlannedInventory());
                 }
             }
 

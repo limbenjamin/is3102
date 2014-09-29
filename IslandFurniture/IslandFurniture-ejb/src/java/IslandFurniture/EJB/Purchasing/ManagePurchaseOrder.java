@@ -141,7 +141,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<PurchaseOrder> viewPurchaseOrders() {
-        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s");
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s");
         return q.getResultList();
     }
 
@@ -156,7 +156,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<ProcuredStock> viewProcuredStocks() {
-        Query q = em.createQuery("SELECT s " + "FROM ProcuredStock s");
+        Query q = em.createQuery("SELECT s FROM ProcuredStock s");
         return q.getResultList();
     }
 
@@ -173,13 +173,13 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<Plant> viewPlants() {
-        Query q = em.createQuery("SELECT s " + "FROM Plant s");
+        Query q = em.createQuery("SELECT s FROM Plant s");
         return q.getResultList();
     }
 
     @Override
     public List<Supplier> viewSuppliers() {
-        Query q = em.createQuery("SELECT s " + "FROM Supplier s");
+        Query q = em.createQuery("SELECT s FROM Supplier s");
         return q.getResultList();
     }
 
@@ -208,7 +208,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant) {
-        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status AND s.shipsTo=:plant");
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
         q.setParameter("status", PurchaseOrderStatus.PLANNED);
         q.setParameter("plant", staffPlant);
         return q.getResultList();
@@ -216,8 +216,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant) {
-        Query q = em.createQuery("SELECT s " + "FROM PurchaseOrder s WHERE s.status=:status AND s.shipsTo=:plant");
-        q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status!=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.PLANNED);
         q.setParameter("plant", staffPlant);
         return q.getResultList();
     }
