@@ -169,21 +169,21 @@ img{
 }
 
 .true-icon {
-    -webkit-border-radius:8px;
-    -moz-border-radius:8px;
-    border-radius:8px;
-    border:1px solid #2ecc71;
-    width:8px;
-    height:8px;
+    -webkit-border-radius:12px;
+    -moz-border-radius:12px;
+    border-radius:12px;
+    border:2px solid #2ecc71;
+    width:12px;
+    height:12px;
 }
 
 .false-icon {
-    -webkit-border-radius:8px;
-    -moz-border-radius:8px;
-    border-radius:8px;
-    border:1px solid #e67e22;
-    width:8px;
-    height:8px;
+    -webkit-border-radius:12px;
+    -moz-border-radius:12px;
+    border-radius:12px;
+    border:2px solid #e67e22;
+    width:12px;
+    height:12px;
 }
 
 /************************* dashboard login page ***********************************/
