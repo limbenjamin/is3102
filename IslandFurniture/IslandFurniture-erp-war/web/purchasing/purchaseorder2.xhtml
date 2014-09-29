@@ -91,9 +91,10 @@
                                                 <i class="fa fa-lg fa-save icon-button"></i>
                                             </td>
                                             <td>
-                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" value="Delete" class="btn btn-danger btn-sm"> 
+                                                <h:commandButton actionListener="#{purchaseOrderManaged2Bean.deletePurchaseOrderDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="PODid" value="#{pod.id}" />
                                                 </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
                                             </td>
                                         </tr>
                                     </ui:repeat>
