@@ -145,6 +145,10 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                 } else if (!futureMssr.getStatus().equals(MssrStatus.NONE) && oldMssr == null) {
                     futureMssr.setQtyRequested(futureMssr.getQtyForecasted() + futureMssr.getPlannedInventory());
                 }
+                
+                if(futureMssr.getQtyRequested() < 0){
+                    futureMssr.setQtyRequested(0);
+                }
             }
 
             // Move on to next month
@@ -215,6 +219,10 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                     mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset());
                 } else {
                     mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - prevMssr.getPlannedInventory() - mssr.getVarianceOffset());
+                }
+                
+                if(mssr.getQtyRequested() < 0){
+                    mssr.setQtyRequested(0);
                 }
 
                 impacted = true;

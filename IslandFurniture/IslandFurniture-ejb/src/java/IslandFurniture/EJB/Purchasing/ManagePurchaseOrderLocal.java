@@ -26,7 +26,7 @@ public interface ManagePurchaseOrderLocal {
 
     PurchaseOrder createPurchaseOrder(Calendar orderDate, PurchaseOrderStatus status);
 
-    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Long plantId, Calendar orderDate);
+    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Plant plant, Plant shipsTo, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
 

@@ -44,7 +44,6 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     private Long purchaseOrderId;
     private Long supplierId;
-    private Long plantId;
 
     private Calendar orderDate;
     private PurchaseOrderStatus status;
@@ -86,14 +85,13 @@ public class PurchaseOrderManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
         supplier = sml.getSupplier(supplierId);
-        plantId = staff.getPlant().getId();
         orderDateString = request.getParameter("createPurchaseOrder:orderDateString");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         orderDate = cal;
-        purchaseOrder = mpol.createNewPurchaseOrder(PurchaseOrderStatus.PLANNED, supplier, plantId, orderDate);
+        purchaseOrder = mpol.createNewPurchaseOrder(PurchaseOrderStatus.PLANNED, supplier, staff.getPlant(), staff.getPlant(), orderDate);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrder.getId());
         return "purchaseorder2?faces-redirect=true";
     }
@@ -149,14 +147,6 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Long getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(Long plantId) {
-        this.plantId = plantId;
     }
 
     public Long getSupplierId() {

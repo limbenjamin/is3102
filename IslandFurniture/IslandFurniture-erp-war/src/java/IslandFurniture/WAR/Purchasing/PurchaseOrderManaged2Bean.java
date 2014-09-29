@@ -117,8 +117,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         } catch (DuplicateEntryException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
         } finally {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock added successfully!", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
             return "purchaseorder2";
         }
@@ -139,8 +142,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
         System.out.println("updated purchase order" + purchaseOrderId);
         if (selectedStatus.equals("1")) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
             return "purchaseorder";
         } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
             return "purchaseorder2?faces-redirect=true";
         }
@@ -152,7 +159,8 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         
         mpol.updatePurchaseOrderDetail(pod, pod.getQuantity());
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
 
         return "purchaseorder2?faces-redirect=true";
     }
@@ -162,7 +170,8 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
         
         return "purchaseorder2";
     }
