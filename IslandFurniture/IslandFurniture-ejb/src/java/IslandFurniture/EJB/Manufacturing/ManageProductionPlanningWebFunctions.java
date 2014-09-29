@@ -235,17 +235,11 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         dt.columns.add("Furniture Model");
         dt.columns.add("Data");
         if (q.getResultList().size() == 0) {
-            try {
-                System.err.println("getDemandPlanningTable(): Warning! Not a single production plan ! Running automatic mode");
-                mpp.setMF(MF.getName());
-                mpp.CreateProductionPlanFromForecast();
-                q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF"); //Refresh
-                q.setParameter("mf", MF);
-
-            } catch (Exception ex) {
-                throw ex;
-            }
-
+            System.err.println("getDemandPlanningTable(): Warning! Not a single production plan ! Running automatic mode");
+            mpp.setMF(MF.getName());
+            mpp.CreateProductionPlanFromForecast();
+            q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF"); //Refresh
+            q.setParameter("mf", MF);
         }
 
         String Cur_FM = "";
@@ -324,9 +318,9 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             if (!dt.columns.contains(pp.getMonth().toString() + "/" + pp.getYear())) {
                 dt.columns.add(pp.getMonth().toString() + "/" + pp.getYear());
                 Double MonthCapacity = QueryMethods.getCurrentFreeCapacity(em, pp.getManufacturingFacility(), pp.getMonth(), pp.getYear());
-                if (MonthCapacity < 0.5) {
+                if (MonthCapacity > 0.75) {
                     fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("LIGHT_WORKLOAD");
-                } else if (MonthCapacity < 0.75) {
+                } else if (MonthCapacity > 0.5) {
                     fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("MEDIUM_WORKLOAD");
                 } else {
                     fcc_Row.newCell(String.valueOf(MonthCapacity)).setColorClass("HEAVY_WORKLOAD");
@@ -435,14 +429,13 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             if (!cur_material.equals(wMRP.getMaterial().getName())) {
                 cur_material = wMRP.getMaterial().getName();
-                
-                if (last_cell=="normal_odd")
-                {
-                    last_cell="normal_even";
-                }else{
-                    last_cell="normal_odd";
+
+                if (last_cell == "normal_odd") {
+                    last_cell = "normal_even";
+                } else {
+                    last_cell = "normal_odd";
                 }
-                
+
                 SPACER = jdt.newRow().setColorClass(last_cell);
                 SPACER.newCell(cur_material);
                 SPACER.newCell(QueryMethods.getSupplierByMfAndM(em, mff, wMRP.getMaterial()).getName());

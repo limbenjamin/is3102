@@ -19,9 +19,10 @@ public interface ManageProductionPlanningRemote {
 
     void setMF(String MF_NAME) throws Exception;
 
-    void createOrUpdateCapacity(String fmName, String mancFacNamem, int daily_max_capacity);
-
+    
     void CreateProductionPlanFromForecast(int m, int year) throws Exception;
+    
+    void createOrUpdateCapacityExternal(String fmName, String mancFacName, int daily_max_capacity);
 
     double getReqCapacity(int year, int m) throws Exception;
 

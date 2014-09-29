@@ -77,13 +77,15 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
 
     @Override
-    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Long plantId, Calendar orderDate) {
+    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Plant plant, Plant shipsTo, Calendar orderDate) {
         purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
         purchaseOrder.setSupplier(supplier);
-        plant = (Plant) em.find(Plant.class, plantId);
-        purchaseOrder.setShipsTo(plant);
+        purchaseOrder.setShipsTo(shipsTo);
+        if (plant instanceof ManufacturingFacility) {
+            purchaseOrder.setManufacturingFacility((ManufacturingFacility) plant);
+        }
         em.persist(purchaseOrder);
         em.flush();
         return purchaseOrder;
@@ -187,7 +189,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     public void deletePurchaseOrder(Long poId) {
         purchaseOrder = getPurchaseOrder(poId);
         em.remove(purchaseOrder);
-        
+
         em.flush();
     }
 
@@ -195,7 +197,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     public void deletePurchaseOrderDetail(Long podId) {
         purchaseOrderDetail = getPurchaseOrderDetail(podId);
         em.remove(purchaseOrderDetail);
-        
+
         em.flush();
     }
 

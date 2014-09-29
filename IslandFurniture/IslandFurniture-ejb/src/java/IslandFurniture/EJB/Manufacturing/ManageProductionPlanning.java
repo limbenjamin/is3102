@@ -97,7 +97,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     }
 
     @Override
-    public void createOrUpdateCapacity(String fmName, String mancFacName, int daily_max_capacity) {
+    public ProductionCapacity createOrUpdateCapacity(String fmName, String mancFacName, int daily_max_capacity) {
 
         FurnitureModel fm = Helper.getFirstObjectFromQuery("SELECT FM from FurnitureModel FM where FM.name='" + fmName + "'", em);
         ManufacturingFacility MF = Helper.getFirstObjectFromQuery("SELECT MF from ManufacturingFacility MF where MF.name='" + mancFacName + "'", em);
@@ -110,7 +110,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             pc.setQty(daily_max_capacity);
             em.persist(pc);
             System.err.println("Successfully Updated Production Capacity: for " + mancFacName + "/" + fmName);
-            return;
+            return(pc);
         }
 
         ProductionCapacity pc = new ProductionCapacity();
@@ -120,8 +120,15 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
         em.persist(pc);
 
         System.err.println("Successfully Created Production Capacity: for " + mancFacName + "/" + fmName);
-
+        return (pc);
     }
+    
+      @Override
+    public void createOrUpdateCapacityExternal(String fmName, String mancFacName, int daily_max_capacity) {
+            createOrUpdateCapacity(fmName, mancFacName, daily_max_capacity);
+            return;
+    }
+    
 
     @Override
     //Plan Production Planning 6 months in advance that are relevant to MF
@@ -245,7 +252,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             ProductionCapacity thismfc = MF.findProductionCapacity((FurnitureModel) mssr.getStock());
             if (thismfc == null) {
                 System.err.println("WARNING: CAPACITY DATA DOES NOT EXIST FOR :" + mssr.getStock() + " AUTOMATICALLY CREATING !");
-                createOrUpdateCapacity(mssr.getStock().getName(), this.MF.getName(), 0);
+                thismfc = createOrUpdateCapacity(mssr.getStock().getName(), this.MF.getName(), 0);
             }
 
             double maxCapacity = thismfc.getCapacity(mssr.getMonth(), mssr.getYear());

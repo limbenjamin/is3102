@@ -15,12 +15,11 @@
             <h:form id="ppform">
                 <h:panelGroup layout="block" >
                     <span style='color:red'>
-                        <h:outputLabel rendered="#{ProductionPlanning.dt.internalrows.size() le 1  and ProductionPlanning.MF.length() gt 0}" value="Error: No Stock Supply Requirement to plan anything ! &lt;br/&gt; " escape="false"/>
-                        <h:outputLabel rendered="#{ProductionPlanning.error_msg.length() gt 0}" value="#{ProductionPlanning.error_msg} &lt;br/&gt;" escape="false"/>
+                    <h:outputLabel rendered="#{ProductionPlanning.error_msg.length() gt 0}" value="#{ProductionPlanning.error_msg} &lt;br/&gt;" escape="false"/>
 
                     </span>
                     <span style='color:green'>
-                        <h:outputLabel rendered="#{ProductionPlanning.success_msg.length() gt 0}" value="#{ProductionPlanning.success_msg} &lt;br/&gt;" escape="false"/>
+                        <h:outputLabel rendered="#{ProductionPlanning.success_msg.length() gt 0 and ProductionPlanning.error_msg.length()==0}" value="#{ProductionPlanning.success_msg} &lt;br/&gt;" escape="false"/>
                     </span>
                 </h:panelGroup>
                 <p:messages id="pp_messages" for="PP" showDetail="true" closable="true" />
@@ -176,7 +175,7 @@
                         </p:dataTable>
 
                         <p:commandButton value="Update Value" id="updateCapacity">
-                            <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.updatePCTableToBean()}" />
+                            <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.tooglePage('','Update_PC')}" />
                         </p:commandButton>
                     </p:tab>
 
