@@ -123,12 +123,16 @@ public class StockSupplierManagedBean implements Serializable {
             return "stockSupplier";
         }
         else {
-            System.out.print("Missing ProcurementContractDetail of the following"); 
+            System.out.print("Missing ProcurementContractDetail of the following");
+            String errorOutput = "";
             for(int i=0; i<list.size(); i++) 
                 System.out.println("\t " + list.get(i).getName());
-            String errorOutput = "" + "Unable to add Stock Supply Request due to missing Procurement Contract Detail of the following items: ";
+            if(list.size() > 1)
+                errorOutput = "" + "Unable to add Stock Supply Request due to the missing Procurement Contract Details of the following items: ";
+            else 
+                errorOutput = "" + "Unable to add the Stock Supply Request due to the missing Procurement Contract Detail of the item: ";
             for(int i=1; i<=list.size(); i++) {  
-                errorOutput = errorOutput + i + ") " + list.get(i-1).getName() + " ";
+                errorOutput = errorOutput + "<br />" + i + ") " + list.get(i-1).getName() + " ";
             }
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, errorOutput, "")); 
