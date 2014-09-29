@@ -7,7 +7,6 @@ package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
-import IslandFurniture.EJB.Entities.ProductionCapacity;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
@@ -18,12 +17,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.jms.TransactionRolledBackException;
 import javax.servlet.http.HttpSession;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.event.TabChangeEvent;
@@ -170,10 +166,10 @@ public class ViewProductionPlanning implements Serializable {
 
         try {
             ArrayList<Object> o = capacity_dt.getStateChangedEntities();
-            if (o.size() == 0) {
-                return;
+            if (o.size() > 0) {
+                dpv.updateListOfEntities(o);
+
             }
-            dpv.updateListOfEntities(o);
         } catch (Exception ex) {
 
             error_msg = ex.getMessage();
@@ -181,12 +177,14 @@ public class ViewProductionPlanning implements Serializable {
         }
 
         try {
+            mpp.setMF(MF);
             mpp.CreateProductionPlanFromForecast();
+            pullPPTableFromBean();
 
         } catch (Exception ex) {
 
-            error_msg = "New Capacity Data does not work. Reason: "+ex.getMessage();
-            throw (ex);
+            error_msg = "New Capacity Data does not work. Reason: Capacity does not fufill planned requirement";
+            throw new Exception(error_msg);
         }
 
         pullcapacityTableFromBean();
