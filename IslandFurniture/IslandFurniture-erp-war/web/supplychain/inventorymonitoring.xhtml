@@ -15,9 +15,17 @@
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
                             <li class="active"><strong>Inventory Monitoring</strong></li>
-                        </ol> 
-                        <h4>Inventory Monitoring</h4><hr></hr><br/><br/>                        
-                    </div>                    
+                        </ol>                     
+                    </div>
+                    <div class="col-md-8">
+                        <span class="pull-right">
+                            <h:form>
+                                <h:commandButton action="inventorymonitoring_report" value="View Inventory Report" class="btn btn-sm btn-info">
+                                </h:commandButton>
+                            </h:form>
+                        </span>                        
+                        <h4>Inventory Monitoring</h4><hr></hr><br/>
+                    </div>
                     <div class="col-md-8">            
                         <section name="View All Location of Selected Stock">
                             <h5>View Storage Locations of Selected Stock</h5><hr></hr>
@@ -110,19 +118,6 @@
                                 </div>                                     
                                 <div class="form-group">
                                     <h:commandButton action="#{inventoryMonitoringManagedBean.viewStockTakebyLocation}" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
-                                    </h:commandButton>
-                                </div>
-                            </h:form> 
-
-                        </section>
-
-
-                        <section name="View Inventory Report">
-                            <h5>View Inventory Report</h5><hr></hr>
-                            <h:form class="form-horizontal">
-
-                                <div class="form-group">
-                                    <h:commandButton action="inventorymonitoring_report" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
                                     </h:commandButton>
                                 </div>
                             </h:form> 
