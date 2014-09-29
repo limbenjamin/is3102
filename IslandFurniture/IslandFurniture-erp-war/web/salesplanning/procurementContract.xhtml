@@ -39,32 +39,31 @@
                                 <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
                                         <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">  <!-- I didn't use tableStyle="width:auto" because an empty table looks very ugly -->
-                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}">
+                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}" style="width: 30%;">
                                                 <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
                                             </p:column>
-                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}">
+                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}" style="width: 30%;"> 
                                                 <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
-                                            </p:column>
-                                            <p:column headerText="Lot Size">
+                                            </p:column> 
+                                            <p:column headerText="Lot Size" style="width: 12%;">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                     <h:inputText id="size" value="#{PCD.lotSize}" class="form-control transparent-form"></h:inputText>
                                                 </div>
                                             </p:column>
-                                            <p:column headerText="Lead Time(Days)">
+                                            <p:column headerText="Lead Time(Days)" style="width: 12%;">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
                                                     <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
                                                 </div>
                                             </p:column>
-                                            <p:column headerText="Update" style="text-align: center">
+                                            <p:column headerText="Update" style="text-align: center; width: 8%;">
                                                 <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{PCD}" />
-                                                    <f:ajax execute="@form" render=":deletePCDForm:PCDList"/>
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>                                  
                                             </p:column>
-                                            <p:column headerText="Delete" style="text-align: center">
+                                            <p:column headerText="Delete" style="text-align: center; width: 8%;">
                                                 <h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="pcdID" value="#{PCD.id}" />
                                                 </h:commandButton>     

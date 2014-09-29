@@ -10,10 +10,13 @@ import IslandFurniture.EJB.Entities.BOM;
 import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.EJB.Entities.ProcuredStock;
+import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findMaterialByName;
+import static IslandFurniture.StaticClasses.Helper.QueryMethods.findPCDByStock;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.findRetailItemByName;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.getBOMDetailByMaterial;
 import static IslandFurniture.StaticClasses.Helper.QueryMethods.getStockSuppliedByStock;
@@ -90,15 +93,23 @@ public class StockManager implements StockManagerLocal {
     public String deleteMaterial(Long materialID) {
         Material material;
         List<BOMDetail> bomList;
+        List<ProcurementContractDetail> pcdList;
         try{
             System.out.println("StockManager.deleteMaterial()");
             material = em.find(Material.class, materialID);
             bomList = getBOMDetailByMaterial(em, material);
+            pcdList = findPCDByStock(em, (ProcuredStock)material);
             if(bomList.size() > 0) {
                 System.err.println("Invalid deletion due to existing BOM");
+                if(pcdList.size() > 0) { 
+                    System.err.println("Invalid deletion due to existing Procurement Contract Detail for " + material.getName());
+                    return "Invalid deletion due to existing BOM<br/>Invalid deletion due to existing Procurement Contract Detail";
+                }
                 return "Invalid deletion due to existing BOM";
-            }
-            else
+            } else if(pcdList.size() > 0) {
+                System.err.println("Invalid deletion due to existing Procurement Contract Detail for " + material.getName());
+                return "Invalid deletion due to existing Procurement Contract Detail for \"" + material.getName() + "\"";
+            } else
                 em.remove(material);
             return null;
         } catch(Exception ex) {

@@ -30,7 +30,10 @@ import javax.persistence.OneToOne;
             query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf AND a.procurementContract.supplier = :supplier"),
     @NamedQuery(
             name = "getProcurementContractDetailByStockAndMF",
-            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf")
+            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf"),
+    @NamedQuery(
+            name = "getProcurementContractDetailByStock",
+            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock")
 })
 public class ProcurementContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
