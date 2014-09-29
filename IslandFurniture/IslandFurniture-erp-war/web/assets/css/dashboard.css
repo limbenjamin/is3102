@@ -158,6 +158,34 @@ img{
     border: 1px solid #e3e6f3;
 }
 
+/************************* dashboard notifications ***********************************/
+
+.true {
+    background-color: #fff;
+}
+
+.false {
+    background-color: #eeeeff;
+}
+
+.true-icon {
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    border:1px solid #2ecc71;
+    width:8px;
+    height:8px;
+}
+
+.false-icon {
+    -webkit-border-radius:8px;
+    -moz-border-radius:8px;
+    border-radius:8px;
+    border:1px solid #e67e22;
+    width:8px;
+    height:8px;
+}
+
 /************************* dashboard login page ***********************************/
 
 .login-container {
