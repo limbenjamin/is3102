@@ -38,7 +38,9 @@
                                                 <h:outputText id="furnitureModel" value="#{plannedPO.furnitureModel.name}"></h:outputText>
                                             </p:column>
                                             <p:column headerText="Date" sortBy="#{plannedPO.prodOrderDate}">
-                                                <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time.date}/#{plannedPO.prodOrderDate.time.month}/#{plannedPO.prodOrderDate.time.year + 1900}" class="form-control transparent-form"></h:inputText>
+                                                <h:inputText id="poDate" p:type="date" value="#{plannedPO.prodOrderDate.time}" class="form-control transparent-form">
+                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                </h:inputText>
                                             </p:column>  
                                             <p:column headerText="Quantity">
                                                 <h:inputText id="poQty" value="#{plannedPO.qty}" class="form-control transparent-form"></h:inputText>
@@ -48,11 +50,11 @@
                                                     <f:attribute name="toEdit" value="#{plannedPO}" />
                                                     <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.editPO}"/>
                                                 </h:commandButton>
-                                                <i class="fa fa-lg fa-save icon-button"></i>
-                                            </p:column>
+                                                <i class="fa fa-lg fa-save icon-button"></i> 
+                                            </p:column>  
                                             <p:column headerText="Delete">
                                                 <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:param name="batchNo" value="#{plannedPO.batchNo}" />
+                                                    <f:param name="batchNo" value="#{plannedPO.batchNo}" /> 
                                                     <f:ajax render="plannedTable" listener="#{productionOrderManagedBean.deletePO}" />
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
@@ -87,7 +89,9 @@
                                                 <h:outputText id="furnitureModel" value="#{po.furnitureModel.name}"></h:outputText>
                                             </p:column>
                                             <p:column headerText="Date" sortBy="#{po.prodOrderDate}">
-                                                <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                                <h:outputText p:type="date" value="#{po.prodOrderDate.time}">
+                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="Quantity">
                                                 <h:outputText value="#{po.qty}"></h:outputText>
@@ -132,7 +136,9 @@
                                                 <h:outputText id="furnitureModel" value="#{po.furnitureModel.name}"></h:outputText>
                                             </p:column>
                                             <p:column headerText="Date" sortBy="#{po.prodOrderDate.time}">
-                                                <h:outputText p:type="date" value="#{po.prodOrderDate.time.date}/#{po.prodOrderDate.time.month}/#{po.prodOrderDate.time.year + 1900}"></h:outputText>
+                                                <h:outputText p:type="date" value="#{po.prodOrderDate.time}">
+                                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                                </h:outputText>
                                             </p:column>
                                             <p:column headerText="Quantity">
                                                 <h:outputText value="#{po.qty}"></h:outputText>
