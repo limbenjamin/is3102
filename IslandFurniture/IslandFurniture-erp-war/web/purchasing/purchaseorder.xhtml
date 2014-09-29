@@ -43,6 +43,7 @@
                                     <tr>
                                         <th>Order ID</th>
                                         <th>Status</th>
+                                        <td>Order Date</td>
                                         <th>Supplier</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -52,6 +53,11 @@
                                             <tr>
                                                 <td>#{PO.id}</td>
                                                 <td>#{PO.status}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
                                                 <td>#{PO.supplier.name}</td>
                                                 <td>
                                                     <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -93,7 +99,7 @@
                                                 <td>#{CO.id}</td>
                                                 <td>
                                                     <h:outputText value="#{CO.orderDate.time}" >
-                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{CO.shipsTo.timeZoneID}"  />
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{CO.manufacturingFacility.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{CO.status}</td>

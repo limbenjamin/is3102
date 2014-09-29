@@ -9,7 +9,6 @@ import IslandFurniture.EJB.Entities.BOMDetail;
 import IslandFurniture.EJB.Entities.Country;
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Material;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContract;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
@@ -71,7 +70,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
     public boolean loadSampleData() {
         try {
             // Initiate Random
-            Random rand = new Random();
+            Random rand = new Random(1);
 
             Country country = QueryMethods.findCountryByName(em, "Singapore");
             this.addSupplier("Global Supplies Inc.", country);
@@ -90,8 +89,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
             List<ProcurementContractDetail> pcdList;
 
             for (ManufacturingFacility mf : mfList) {
-                Set<Material> reqMaterials = new HashSet();
-                Set<RetailItem> reqRi = new HashSet();
+                Set<ProcuredStock> reqStock = new HashSet();
                 pcdList = new ArrayList();
 
                 for (StockSupplied ss : mf.getSupplyingWhatTo()) {
@@ -99,27 +97,19 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
                         fm = (FurnitureModel) ss.getStock();
 
                         for (BOMDetail bomd : fm.getBom().getBomDetails()) {
-                            reqMaterials.add(bomd.getMaterial());
+                            reqStock.add(bomd.getMaterial());
                         }
                     }
                     if (ss.getStock() instanceof RetailItem) {
-                        reqRi.add((RetailItem) ss.getStock());
+                        reqStock.add((RetailItem) ss.getStock());
                     }
                 }
 
-                for (Material eachMat : reqMaterials) {
+                for (ProcuredStock eachStock : reqStock) {
                     ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
-                    pcd = this.addProcurementContractDetail(pc, eachMat, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
+                    pcd = this.addProcurementContractDetail(pc, eachStock, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
                     pcdList.add(pcd);
 
-                    pc.getProcurementContractDetails().add(pcd);
-                }
-                
-                for(RetailItem eachRi:reqRi){
-                    ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
-                    pcd = this.addProcurementContractDetail(pc, eachRi, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
-                    pcdList.add(pcd);
-                    
                     pc.getProcurementContractDetails().add(pcd);
                 }
 
