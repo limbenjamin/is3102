@@ -174,8 +174,13 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         for (PurchaseOrderDetail p : mgrl.viewPurchaseOrderDetail(purchaseOrder)) {
             mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), p.getProcuredStock().getId(), p.getQuantity());
         }
-
-        mgrl.editGoodsReceiptDocumentPO(goodsReceiptDocumentId, purchaseOrder);
+        
+                Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        receiptDate = cal;
+        
+        mgrl.editGoodsReceiptDocumentPO(goodsReceiptDocumentId, purchaseOrder, receiptDate);
 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);

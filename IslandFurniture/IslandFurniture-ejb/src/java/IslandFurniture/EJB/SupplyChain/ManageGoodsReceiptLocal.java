@@ -74,7 +74,7 @@ public interface ManageGoodsReceiptLocal {
     
     List<PurchaseOrderDetail> viewPurchaseOrderDetail (PurchaseOrder po);
     
-    void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po);
+    void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po, Calendar date);
     
     void editGoodsReceiptDocumentDetailQty(Long grddId, Integer qty);
     

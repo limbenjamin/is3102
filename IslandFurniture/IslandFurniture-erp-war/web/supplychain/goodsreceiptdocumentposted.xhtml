@@ -31,7 +31,7 @@
                                 </button>
                             </a>                            
                         </span>                        
-                        <h4>Goods Receipt Document</h4><hr></hr>
+                        <h4>Goods Receipt ##{goodsReceiptDocumentManagedBean.goodsReceiptDocumentId}</h4><hr></hr>
                     </div>
                     <div class="col-md-8">                      
                         <section name="EditGRD">
@@ -59,7 +59,7 @@
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{grd.plant.timeZoneID}"  />
                                                         </h:outputText></td>
 
-                                                    <td></td>
+                                                    <td><h:outputText value="#{grd.receiveFrom.id}"></h:outputText></td>
                                                     <td><h:outputText value="#{grd.deliveryNote}"></h:outputText></td>
                                                 </tr>     
                                             </tr>

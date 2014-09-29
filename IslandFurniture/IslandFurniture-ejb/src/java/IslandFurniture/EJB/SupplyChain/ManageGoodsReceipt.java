@@ -98,6 +98,10 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     @Override
     public void createGoodsReceiptDocumentStockUnit(Long grdId, Calendar postingDate) {
         goodsReceiptDocument = getGoodsReceiptDocument(grdId);
+
+        if (goodsReceiptDocument.getReceiveFrom() != null) {
+            goodsReceiptDocument.getReceiveFrom().setStatus(PurchaseOrderStatus.DELIVERED);
+        }
         goodsReceiptDocument.setConfirm(true);
         goodsReceiptDocument.setPostingDate(postingDate);
         em.merge(goodsReceiptDocument);
@@ -131,12 +135,13 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     }
 
     @Override
-    public void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po) {
+    public void editGoodsReceiptDocumentPO(Long goodsReceiptDocumentId, PurchaseOrder po, Calendar date) {
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
         po.setGoodsReceiptDocument(goodsReceiptDocument);
         em.merge(po);
         em.flush();
         goodsReceiptDocument.setReceiveFrom(po);
+        goodsReceiptDocument.setReceiptDate(date);
         em.merge(goodsReceiptDocument);
         em.flush();
     }
