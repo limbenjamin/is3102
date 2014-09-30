@@ -166,8 +166,7 @@ public class StockManager implements StockManagerLocal {
             ex.printStackTrace();
             return null;
         }
-    }
-    
+    }   
     public String editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
         FurnitureModel fm;
         try {
@@ -195,10 +194,13 @@ public class StockManager implements StockManagerLocal {
             stockList = getStockSuppliedByStock(em, fm);
             bom = fm.getBom();
             bomDetailList = bom.getBomDetails();
-            
+            if(fm.getSoldBy().size() > 1) {
+                System.err.println("Invalid deletion as it is currently sold by a store");
+                return "Invalid deletion as it is currently sold by a store";
+            }
             if(stockList.size() >= 1) {
                 System.out.println("Invalid delete due to existence of Stock Supply Request");
-                return "Invalid delete due to existence of Stock Supply Request";
+                return "Invalid deletion due to existence of Stock Supply Request";
             }
             else {
                 for(int i=0; i<bomDetailList.size(); i++) 
@@ -348,12 +350,18 @@ public class StockManager implements StockManagerLocal {
     public String deleteRetailItem(Long itemID) {
         RetailItem item;
         List<StockSupplied> stockList;
+        List<ProcurementContractDetail> pcdList;
         try {
             System.out.println("StockManager.deleteRetailItem()");
             item = em.find(RetailItem.class, itemID);
-            stockList = getStockSuppliedByStock(em, item);
+            stockList = getStockSuppliedByStock(em, item); 
+            pcdList = findPCDByStock(em, (ProcuredStock)item);
             if(item.getSoldBy().size() >= 1) {
                 System.err.println("Can't delete " + item.getName() + " because it is currently sold by a store");
+                if(pcdList.size() > 0) { 
+                    System.err.println("Invalid deletion due to existing Procurement Contract Detail for " + item.getName());
+                    return "Invalid deletion as it is currently sold by a store<br/>Invalid deletion due to existing Procurement Contract Detail";
+                }
                 return "Unable to delete \"" + item.getName() + "\" as it is currently sold by a store";
             } else if(stockList.size() >= 1) {
                 System.out.println("Invalid delete due to existence of Stock Supply Request");
