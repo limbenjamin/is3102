@@ -206,9 +206,16 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 double totalproduction = 0;
                 int capacity = wpp.getMonthlyProductionPlan().getManufacturingFacility().findProductionCapacity(wpp.getMonthlyProductionPlan().getFurnitureModel()).getCapacity(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear());
                 int delta = 0;
-                for (WeeklyProductionPlan wppz : wpp.getMonthlyProductionPlan().getWeeklyProductionPlans()) {
+                int maxWeek = Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
 
-                    totalproduction += wppz.getQTY();
+                for (WeeklyProductionPlan wppz : wpp.getMonthlyProductionPlan().getWeeklyProductionPlans()) {
+                    if (wppz.getWeekNo() == maxWeek) {
+                        //Fix the boundary week overflow
+                        Double w1=(Helper.getBoundaryWeekDays(wppz.getMonthlyProductionPlan().getMonth(), wppz.getMonthlyProductionPlan().getYear()) / 7.0);
+                        totalproduction += wppz.getQTY()*w1;
+                    } else {
+                        totalproduction += wppz.getQTY();
+                    }
                 }
 
                 if (totalproduction > capacity) {

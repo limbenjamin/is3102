@@ -83,30 +83,31 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         staff = staffBean.getStaff(username);
 
         this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
-        try {
-            if(purchaseOrderId == null) {
-                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                    ec.redirect("purchaseorder.xhtml"); 
+
+        if (purchaseOrderId != null) {
+            purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+
+            if (staff.getPlant() instanceof ManufacturingFacility) {
+                mf = (ManufacturingFacility) staff.getPlant();
             }
-        } catch(IOException ex) {
-            
-        }        
+            System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
+            procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
+            purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
 
-        purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+            if (purchaseOrder.getOrderDate() != null) {
+                orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
+            }
 
-        if (staff.getPlant() instanceof ManufacturingFacility) {
-            mf = (ManufacturingFacility) staff.getPlant();
+            System.out.println("loaded some lists");
+            System.out.println("Init");
+        } else {
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("purchaseorder.xhtml");
+            } catch (IOException ex) {
+
+            }
         }
-        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-
-        if (purchaseOrder.getOrderDate() != null) {
-            orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
-        }
-
-        System.out.println("loaded some lists");
-        System.out.println("Init");
     }
 
     public String addStock() throws ParseException {
@@ -156,23 +157,23 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
-        
+
         mpol.updatePurchaseOrderDetail(pod, pod.getQuantity());
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
 
         return "purchaseorder2?faces-redirect=true";
     }
 
     public String deletePurchaseOrderDetail() {
         purchaseOrderDetailId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("PODid"));
-        
+
         mpol.deletePurchaseOrderDetail(purchaseOrderDetailId);
         purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
-        
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
+
         return "purchaseorder2";
     }
 

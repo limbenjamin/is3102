@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -114,6 +115,8 @@ public class PurchaseOrderManagedBean implements Serializable {
         purchaseOrderId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("POid"));
         mpol.deletePurchaseOrder(purchaseOrderId);
         plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));        
         return "purchaseOrder";
     }
 

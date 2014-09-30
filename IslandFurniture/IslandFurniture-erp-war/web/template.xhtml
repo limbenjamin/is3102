@@ -135,12 +135,13 @@
                                 <h:form id="newNotification">                                      
                                     <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
                                         <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
-                                        <li class="list-group-item">
+                                        <li class="list-group-item #{loginManagedBean.notificationList.get(i).isread}">
                                             <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name :'nid' , value : '#{loginManagedBean.notificationList.get(i).id}'}]);">
                                                 <div class="m-body">
-                                                    <small><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></small>
+                                                    <span class="pull-right #{loginManagedBean.notificationList.get(i).isread}-icon"></span>
+                                                    <small><strong><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></strong></small>
                                                     <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span><span class="pull-right">#{loginManagedBean.notificationList.get(i).isread}</span>
+                                                    <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span>
                                                 </div>
                                             </a>
                                         </li>
@@ -158,8 +159,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <h:link value="Modify Particulars" outcome="modifyparticulars"/>
+                                <h:link value="Employee Particulars" outcome="modifyparticulars"/>
                             </li>
+                            <li class="divider"></li>
                             <li>
                                 <h:link value="Change Password" outcome="changepassword"/>
                             </li>
