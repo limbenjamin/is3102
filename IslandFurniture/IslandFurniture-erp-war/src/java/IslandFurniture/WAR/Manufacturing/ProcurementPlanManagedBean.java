@@ -151,6 +151,7 @@ public class ProcurementPlanManagedBean {
                         error_msg = "Unable to generate PO";
                     }
                     mppl.lockMpp(mf,month,year);
+                    init();
                     break;
             }
             

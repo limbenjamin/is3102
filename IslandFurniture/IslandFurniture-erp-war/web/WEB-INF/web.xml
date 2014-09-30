@@ -33,4 +33,16 @@
         <local>IslandFurniture.EJB.SupplyChain.StockManagerLocal</local>
         <ejb-link>IslandFurniture-ejb.jar#StockManager</ejb-link>
     </ejb-local-ref>
+    <security-constraint>
+        <display-name>SSL Protection</display-name>
+        <web-resource-collection>
+            <web-resource-name>Default Secure Pages</web-resource-name>
+            <description>Default Secure Pages</description>
+            <url-pattern>*.xhtml</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <description/>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 </web-app>
