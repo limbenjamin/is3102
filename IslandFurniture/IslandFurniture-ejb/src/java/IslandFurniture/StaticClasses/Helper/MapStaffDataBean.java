@@ -79,6 +79,8 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             { "david", "pass", "David M. Gurney", "DavidMGurney@armyspy.com", "609-784-7619","Singapore","Global HQ"},
             { "julie", "pass", "Julie R. Riggs", "JulieRRiggs@teleworm.us", "828-737-5598","Singapore","Global HQ"},
             { "anna", "pass", "Anna A. Smith", "AnnaASmith@jourrapide.com", "352-584-2823","Singapore","Global HQ"},
+            { "rolland", "pass", "Roland K. Riggs", "RolandKRiggs@limbenjamin.com", "345-584-2173","Malaysia","Malaysia"},
+            { "jude", "pass", "Jude D. Anderson", "JudeDAnderson@limbenjamin.com", "385-584-3759","Malaysia","Malaysia"},
         };
         
         String[] roles = new String [] {
@@ -87,7 +89,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
             "IT (CO)","Sales Manager (Mfg)"/*,"Sales Planning (CO)"*/,"Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
-            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)"
+            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (Mfg)",
                                     };
         
         for (int i=0; i<arr.length; i++){
