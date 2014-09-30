@@ -134,7 +134,7 @@
                               <div class="form-group">
                                 <label class="col-sm-3 control-label">Supplier: </label>
                                 <div class="col-sm-9">
-                                    <h:selectOneMenu id="supplierId" class="form-control needauto">
+                                    <h:selectOneMenu id="supplierId" class="form-control needauto" p:required="true">
                                         <f:selectItem itemLabel="Select Supplier"/>
                                         <f:selectItems value="#{purchaseOrderManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                     </h:selectOneMenu>
@@ -143,7 +143,7 @@
                               <div class="form-group">
                                   <label class="col-sm-3 control-label">Order Date: </label>
                                 <div class="col-sm-9">
-                                  <h:inputText id="orderDateString" p:type="date" class="form-control"></h:inputText>
+                                  <h:inputText id="orderDateString" p:type="date" class="form-control" p:required="true"></h:inputText>
                                 </div>
                               </div>                                                                                     
                           </div>
