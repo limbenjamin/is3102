@@ -75,6 +75,7 @@ public class LoadStaffDataBean implements LoadStaffDataBeanRemote {
             { "anna", "pass", "Anna A. Smith", "AnnaASmith@limbenjamin.com", "352-584-2823","Singapore","Global HQ"},
             { "rolland", "pass", "Roland K. Riggs", "RolandKRiggs@limbenjamin.com", "345-584-2173","Malaysia","Malaysia"},
             { "jude", "pass", "Jude D. Anderson", "JudeDAnderson@limbenjamin.com", "385-584-3759","Malaysia","Malaysia"},
+            { "james", "pass", "James Q. Myers", "JamesQMyersn@limbenjamin.com", "385-364-3239","Malaysia","Malaysia"},
         };
         
         String[] roles = new String [] {
