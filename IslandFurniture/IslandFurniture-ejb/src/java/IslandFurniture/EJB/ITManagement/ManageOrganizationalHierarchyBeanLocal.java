@@ -62,5 +62,5 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     
     CountryOffice findCountryOfficeByName(String countryOfficeName);
     
-    
+    Plant findPlantByNameOnly(String plantName);
 }

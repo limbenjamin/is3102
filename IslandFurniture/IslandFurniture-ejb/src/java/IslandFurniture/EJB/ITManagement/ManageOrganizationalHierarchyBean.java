@@ -234,6 +234,17 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     }    
     
     @Override
+    public Plant findPlantByNameOnly(String plantName) {
+        Query q = em.createQuery("SELECT p FROM Plant p WHERE p.name=:name");
+        q.setParameter("name", plantName);
+        try {
+            return (Plant) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    @Override
     public Plant findPlantByName(Country country, String plantName) {
         Query q = em.createNamedQuery("findPlantByName");
         q.setParameter("country", country);
