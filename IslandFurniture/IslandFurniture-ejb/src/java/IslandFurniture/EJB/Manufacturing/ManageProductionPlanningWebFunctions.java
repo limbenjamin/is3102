@@ -208,15 +208,16 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 int delta = 0;
                 int maxWeek = Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
 
-                for (WeeklyProductionPlan wppz : wpp.getMonthlyProductionPlan().getWeeklyProductionPlans()) {
-                    if (wppz.getWeekNo() == maxWeek) {
-                        //Fix the boundary week overflow
-                        Double w1=(Helper.getBoundaryWeekDays(wppz.getMonthlyProductionPlan().getMonth(), wppz.getMonthlyProductionPlan().getYear()) / 7.0);
-                        totalproduction += wppz.getQTY()*w1;
-                    } else {
-                        totalproduction += wppz.getQTY();
-                    }
+                delta = ((WeeklyProductionPlan) em.find(WeeklyProductionPlan.class, wpp.getId())).getQTY();
+                delta = wpp.getQTY() - delta;
+                if (wpp.getWeekNo() == maxWeek) {
+                    Double w1 = (Helper.getBoundaryWeekDays(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear()) / 7.0);
+                    Double prorate=w1*delta;
+                    delta = prorate.intValue();
+                                       
                 }
+
+                totalproduction = wpp.getMonthlyProductionPlan().getQTY() + delta;
 
                 if (totalproduction > capacity) {
                     throw new Exception("Production Capacity for " + wpp.getWeekNo() + wpp.getMonthlyProductionPlan().getMonth() + "/" + wpp.getMonthlyProductionPlan().getYear() + " exceeded total month capacity of " + capacity);
@@ -224,6 +225,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 }
 
                 em.merge(o);
+
+                System.out.println("updateListOfEntities(): Also updated parents of WPP" + wpp.getId() + " New value=" + wpp.getMonthlyProductionPlan().getQTY() + "+" + delta);
                 wpp.getMonthlyProductionPlan().setQTY(Double.valueOf(totalproduction).intValue());
                 em.merge(wpp.getMonthlyProductionPlan());
 
@@ -582,7 +585,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             }
 
             Cell c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
-            if (!wpp.getMonthlyProductionPlan().isLocked() && !hasCommittedMaterial && !wpp.isLocked()) {
+            if (d.getValue().equals("Commit")) {
                 c.setIsEditable(true);
             }
 

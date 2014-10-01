@@ -14,4 +14,10 @@ import java.io.Serializable;
  */
 public class ProductionPlanNoCN extends Exception implements Serializable {
     
+
+    
+    @Override
+    public String getMessage(){
+        return "No Manufacturing Facility Set !";
+    }
 }

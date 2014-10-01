@@ -150,7 +150,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
 
-            if (wmrp.getOrderAMT() < 0) {
+            if (wmrp.getOrderAMT() <= 0) {
                 continue;
             }
 
@@ -178,7 +178,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
                 }
                 po.getPurchaseOrderDetails().add(wmrp.getPurchaseOrderDetail());
                 wmrp.getPurchaseOrderDetail().setPurchaseOrder(po);
-                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + "Supplier=" + s);
+                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + " ORDER="+wmrp.getOrderAMT()+ "Supplier=" + s);
             }
 
             System.out.println("Now Supplier=" + s);

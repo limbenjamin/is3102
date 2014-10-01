@@ -29,7 +29,7 @@ import javax.persistence.OneToOne;
     @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFMnospecmat", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.year=:y and wmrp.month+0=:m+0 and wmrp.week=:w order by wmrp.year*52+wmrp.month*4+wmrp.week asc"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFM", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.year=:y and wmrp.month+0=:m+0 and wmrp.week=:w and wmrp.material=:ma"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPOrderedatMFM", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and WMRP.orderMonth=:m  and WMRP.orderYear=:y and WMRP.orderWeek=:w and wmrp.material=:ma"),
-    @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFmonth", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.month=:m and wmrp.year=:y order by wmrp.material.name asc , WMRP.month*4+WMRP.year*52+wmrp.week asc"),
+    @NamedQuery(name = "weeklyMRPRecord.findwMRPatMFmonth", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.month=:m and wmrp.year=:y order by wmrp.material.name asc , WMRP.year*1000+ WMRP.month*10+wmrp.week asc"),
     @NamedQuery(name = "weeklyMRPRecord.findwMRPatMF", query = "select wmrp from WeeklyMRPRecord wmrp where wmrp.manufacturingFacility=:mf and wmrp.month=:m and wmrp.week=:w and wmrp.year=:y"),
     @NamedQuery(name = "weeklyMRPRecord.findInventoryforMAT", query = "select sum(wmrp.orderAMT-wmrp.qtyReq) from WeeklyMRPRecord wmrp where (wmrp.month+wmrp.year*12)<=:m+:y*12 and wmrp.material=:ma")
 })

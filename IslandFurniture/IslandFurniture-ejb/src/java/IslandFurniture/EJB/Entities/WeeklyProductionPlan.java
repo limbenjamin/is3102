@@ -60,8 +60,7 @@ public class WeeklyProductionPlan implements Serializable {
         try {
 
 
-            Calendar t = Calendar.getInstance();
-            t.set(monthlyProductionPlan.getYear(), monthlyProductionPlan.getMonth().value, Math.min(this.WeekNo * 7, Helper.getNumWorkDays(this.monthlyProductionPlan.getMonth(), this.monthlyProductionPlan.getYear())));
+            Calendar t = Helper.getStartDateOfWeek(this.getMonthlyProductionPlan().getMonth().value, this.getMonthlyProductionPlan().getYear(), this.getWeekNo());
 
             if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) { //expired
                 System.out.println("Expired(): WPP=" + this.monthlyProductionPlan.getMonth() + "/" + this.monthlyProductionPlan.getYear() + "/" + this.WeekNo + " VS Server Time:" + t.get(Calendar.MONTH) + "/" + t.get(Calendar.YEAR));

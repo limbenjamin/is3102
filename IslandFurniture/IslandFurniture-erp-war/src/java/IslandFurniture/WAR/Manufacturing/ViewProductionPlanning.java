@@ -182,8 +182,11 @@ public class ViewProductionPlanning implements Serializable {
             pullPPTableFromBean();
 
         } catch (Exception ex) {
-
+            if (ex.getMessage()!=null){
+            error_msg=ex.getMessage();
+            }else{
             error_msg = "New Capacity Data does not work. Reason: Capacity does not fufill planned requirement";
+            }
             throw new Exception(error_msg);
         }
 
