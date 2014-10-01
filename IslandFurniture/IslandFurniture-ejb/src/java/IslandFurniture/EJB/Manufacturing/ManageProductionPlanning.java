@@ -25,6 +25,7 @@ import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
 import IslandFurniture.StaticClasses.Helper.Helper;
+import static IslandFurniture.StaticClasses.Helper.Helper.getWeekNoFromDate;
 import static IslandFurniture.StaticClasses.Helper.Helper.workingDaysInWeek;
 import IslandFurniture.StaticClasses.Helper.QueryMethods;
 import java.util.Calendar;
@@ -715,7 +716,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             try {
                 current.setOrderYear(order_date.get(Calendar.YEAR));
                 current.setOrderMonth(Helper.translateMonth(order_date.get(Calendar.MONTH)));
-                current.setOrderWeek(order_date.get(Calendar.WEEK_OF_MONTH));
+                current.setOrderWeek(getWeekNoFromDate(order_date));
             } catch (Exception ex) {
             }
 

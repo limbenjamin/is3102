@@ -77,22 +77,22 @@ public class Helper {
     }
 
     public static Calendar addWeek(int month, int year, int week, int addDays) throws Exception {
-      
-        addDays/=7;
-        
+
+        addDays /= 7;
+
         Integer t_month = Helper.addoneWeek(month, year, week, addDays, Calendar.MONTH);
         Integer t_week = Helper.addoneWeek(month, year, week, addDays, Calendar.WEEK_OF_MONTH);
         Integer t_year = Helper.addoneWeek(month, year, week, addDays, Calendar.YEAR);
-        
+
         return Helper.getStartDateOfWeek(t_month, t_year, t_week);
-        
+
     }
 
     public static int addoneWeek(int month, int year, int week, int addWeeks, int return_what) throws Exception {
 
         int direction = addWeeks / Math.abs(addWeeks);
 
-        while (direction*addWeeks > 0) {
+        while (direction * addWeeks > 0) {
 
             if (week + direction > Helper.getNumOfWeeks(month, year) || week + direction <= 0) {
 
@@ -123,6 +123,7 @@ public class Helper {
         switch (return_what) {
             case Calendar.WEEK_OF_MONTH:
                 return week;
+
             case Calendar.MONTH:
                 return (month % 12);
             case Calendar.YEAR:
@@ -174,6 +175,18 @@ public class Helper {
         cal.add(Calendar.DAY_OF_MONTH, delta + (WeekNo - 1) * 7);
         return (cal);
 
+    }
+
+    public static int getWeekNoFromDate(Calendar cal) throws Exception {
+
+        for (int i = 1; i <= getNumOfWeeks(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)); i++) {
+            Calendar cdate = getStartDateOfWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), i);
+            if (cdate.after(cal)) {
+                return i;
+            }
+        }
+        
+        return(getNumOfWeeks(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
     }
 
     public static int getNumOfDaysInWeek(int month, int year, int WeekNo) {
