@@ -123,6 +123,25 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             }
         }
         
+        String[] allRolesSuperuser = new String [] {
+        "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
+        "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
+        "IT (CO)","Cust. Service (CO)",/*"Sales Planning (CO)",*/"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)", "IT (Store)", "General Staff"
+                                    };
+        for (int i=0; i<allRolesSuperuser.length; i++){
+            try {
+                msal.addRoleToStaffByUsername("root", allRolesSuperuser[i]);
+                msal.addRoleToStaffByUsername("root1", allRolesSuperuser[i]);
+                msal.addRoleToStaffByUsername("root2", allRolesSuperuser[i]);
+                msal.addRoleToStaffByUsername("root3", allRolesSuperuser[i]);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return false;
+            }
+        }
+        
+        
         //for first system release, preload robert with 2 empty threads
         
         try {

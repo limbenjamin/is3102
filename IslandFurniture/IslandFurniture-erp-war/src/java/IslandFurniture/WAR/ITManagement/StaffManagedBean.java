@@ -9,6 +9,7 @@ package IslandFurniture.WAR.ITManagement;
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Country;
+import IslandFurniture.EJB.Entities.GlobalHQ;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
@@ -47,6 +48,8 @@ public class StaffManagedBean  implements Serializable  {
     private List<Plant> plantList;
     private Long id;
     private Staff staff;
+    private Plant plant;
+    private boolean isGlobalHq = Boolean.FALSE;
     
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
@@ -61,7 +64,14 @@ public class StaffManagedBean  implements Serializable  {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        staffList = msabl.displayStaffAccountsFromPlant(username);
+        staff = muab.getStaff(username);
+        //Global HQ can manage staff in all plants
+        if (staff.getPlant() instanceof GlobalHQ){
+            staffList = msabl.displayAllStaffAccounts();
+            isGlobalHq = Boolean.TRUE;
+        }else{
+            staffList = msabl.displayStaffAccountsFromPlant(username);
+        }
         countryList = mohBean.getCountries();
         plantList = mohBean.displayPlant();
     }
@@ -77,6 +87,22 @@ public class StaffManagedBean  implements Serializable  {
         staff = muab.getStaff((String) session.getAttribute("username"));
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
+        msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
+        return "managestaff";
+    }
+    
+    public String createStaffWithPlant(){
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        username = request.getParameter("globalStaffForm:username");
+        name = request.getParameter("globalStaffForm:name");
+        password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
+        emailAddress = request.getParameter("globalStaffForm:emailAddress");
+        phoneNo = request.getParameter("globalStaffForm:phoneNo");
+        plantName = request.getParameter("globalStaffForm:plantName");
+        plant = mohBean.findPlantByNameOnly(plantName);
+        countryName = plant.getCountry().getName();
         msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
@@ -217,6 +243,30 @@ public class StaffManagedBean  implements Serializable  {
 
     public void setMuab(ManageUserAccountBeanLocal muab) {
         this.muab = muab;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
+    public ManageAuthenticationBeanLocal getMabl() {
+        return mabl;
+    }
+
+    public void setMabl(ManageAuthenticationBeanLocal mabl) {
+        this.mabl = mabl;
+    }
+
+    public boolean isIsGlobalHq() {
+        return isGlobalHq;
+    }
+
+    public void setIsGlobalHq(boolean isGlobalHq) {
+        this.isGlobalHq = isGlobalHq;
     }
     
     

@@ -17,9 +17,14 @@
                                 </ol>
                             </div>                            
                             <div class="col-md-8">
+                                <c:if test="${staffManagedBean.isGlobalHq.booleanValue()}">
+                                    <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStaffGlobal">
+                                        <i class="fa fa-fw fa-plus"></i>New Staff (Global)
+                                    </button>
+                                </c:if>
                                 <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newStaff">
                                     <i class="fa fa-fw fa-plus"></i>New Staff
-                                </button>                                
+                                </button>
                                 <h4>Manage Staff</h4>
                                 <hr></hr>
                             </div>                        
@@ -91,6 +96,59 @@
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
                                         <h:commandButton action="#{staffManagedBean.createStaff}" class="btn btn-success btn-round" value="Add Staff"></h:commandButton>
+                                      </div>
+                                  </h:form>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="newStaffGlobal" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Create A New Staff Account</h4>
+                                  </div>
+                                  <h:form id="globalStaffForm" class="form-horizontal">
+                                      <div class="modal-body">
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Username: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="username" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Name: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="name" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Email Address: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="emailAddress" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Phone: </label>
+                                            <div class="col-sm-9">
+                                              <h:inputText id="phoneNo" class="form-control"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Plant: </label>
+                                            <div class="col-sm-9">
+                                                <h:selectOneMenu id="plantName" class="form-control needauto">
+                                                    <f:selectItem itemDisabled="true" itemLabel=""></f:selectItem>
+                                                    <f:selectItems itemLabel="#{plant.name}" itemValue="#{plant.name}" value="#{staffManagedBean.plantList}" var="plant"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="#{staffManagedBean.createStaffWithPlant()}" class="btn btn-success btn-round" value="Add Staff"></h:commandButton>
                                       </div>
                                   </h:form>
                                 </div>
