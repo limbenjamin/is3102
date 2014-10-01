@@ -181,7 +181,7 @@ public class Helper {
 
         for (int i = 1; i <= getNumOfWeeks(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)); i++) {
             Calendar cdate = getStartDateOfWeek(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), i);
-            if (cdate.after(cal)) {
+            if (cdate.after(cal) || cdate.equals(cal)) {
                 return i;
             }
         }
