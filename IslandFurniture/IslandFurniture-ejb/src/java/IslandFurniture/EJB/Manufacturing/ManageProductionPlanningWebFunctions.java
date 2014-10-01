@@ -412,9 +412,9 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         JDataTable.Row PlannedReceipt = null;
         JDataTable.Row OnHand = null;
         JDataTable.Row PlannedOrders = null;
-        JDataTable.Row OrderNow = null;
-        OrderNow = jdt.NewRowDefered().setColorClass("summary");
-        OrderNow.newCell("");
+        //JDataTable.Row OrderNow = null;
+        //OrderNow = jdt.NewRowDefered().setColorClass("summary");
+        //OrderNow.newCell("");
 
         String cur_material = "";
 
@@ -424,14 +424,14 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             jdt.columns.add(String.valueOf(i));
 
-            if (QueryMethods.isMaterialWeekPermanentLocked(em, mff, requestedMonth, requestedYear, i)) {
-                OrderNow.newCell("Material Already Scheduled. No reversal allowed !");
-            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
-                OrderNow.newCell("Unschedule Week").setCommand("UNORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
-            } else {
-                OrderNow.newCell("Schedule Week").setCommand("ORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
-
-            }
+//            if (QueryMethods.isMaterialWeekPermanentLocked(em, mff, requestedMonth, requestedYear, i)) {
+//                OrderNow.newCell("Material Already Scheduled. No reversal allowed !");
+//            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
+//                OrderNow.newCell("Unschedule Week").setCommand("UNORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
+//            } else {
+//                OrderNow.newCell("Schedule Week").setCommand("ORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
+//
+//            }
 
         }
         String last_cell = "normal_odd";
@@ -473,7 +473,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             if (wMRP.getOrderAMT() == 0) {
                 ScheduledReceipt.newCell("0");
                 PlannedReceipt.newCell("0");
-            } else if (wMRP.getPurchaseOrderDetail() != null) {
+            } else if (wMRP.getPurchaseOrderDetail().getPurchaseOrder() != null) { //simple fix
                 ScheduledReceipt.newCell(wMRP.getOrderAMT().toString());
                 PlannedReceipt.newCell("0");
             } else {
@@ -487,7 +487,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         }
 
-        jdt.Internalrows.add(OrderNow);
+//        jdt.Internalrows.add(OrderNow);
 
         return (jdt);
     }
@@ -635,9 +635,9 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             if (lockcolumn.get(i) != null) {
                 CommitWeek.newCell("Locked");
                 commitMRP.newCell("LOCKED");
-            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
-                commitMRP.newCell("Undo Material Schedule First !");
-                CommitWeek.newCell("Undo Material Schedule First !");
+//            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
+//                commitMRP.newCell("Undo Material Schedule First !");
+//                CommitWeek.newCell("Undo Material Schedule First !");
             } else if (hasCommittedMaterial) {
                 commitMRP.newCell("Remove Weekly MRP Record").setCommand("UNCOMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
                 CommitWeek.newCell("Remove Weekly MRP Record First");

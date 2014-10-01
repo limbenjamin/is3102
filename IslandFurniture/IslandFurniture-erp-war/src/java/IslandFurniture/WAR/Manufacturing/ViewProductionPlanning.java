@@ -182,10 +182,10 @@ public class ViewProductionPlanning implements Serializable {
             pullPPTableFromBean();
 
         } catch (Exception ex) {
-            if (ex.getMessage()!=null){
-            error_msg=ex.getMessage();
-            }else{
-            error_msg = "New Capacity Data does not work. Reason: Capacity does not fufill planned requirement";
+            if (ex.getMessage() != null) {
+                error_msg = ex.getMessage();
+            } else {
+                error_msg = "New Capacity Data does not work. Reason: Capacity does not fufill planned requirement";
             }
             throw new Exception(error_msg);
         }
@@ -334,27 +334,10 @@ public class ViewProductionPlanning implements Serializable {
                 pullWeeklyProductionTable(this.currentDrill);
                 success_msg = "Uncommited Weekly Production Plan !";
                 break;
-            case "COMMIT_WEEK_WPP":
-                int weekNo = Integer.valueOf(ID.split("_")[0]);
-                int monthNo = Month.valueOf(ID.split("_")[1]).value;
-                int yearNo = Integer.valueOf(ID.split("_")[2]);
-                mpp.orderMaterials(weekNo, monthNo, yearNo);
-                pullWeeklyProductionTable(this.currentDrill);
-                success_msg = "Commited all Weekly Production Plan !";
-                break;
-            case "UNCOMMIT_WEEK_WPP":
-                weekNo = Integer.valueOf(ID.split("_")[0]);
-                monthNo = Month.valueOf(ID.split("_")[1]).value;
-                yearNo = Integer.valueOf(ID.split("_")[2]);
-                mpp.unOrderMaterials(weekNo, monthNo, yearNo);
-                pullWeeklyProductionTable(this.currentDrill);
-                success_msg = "Uncommited all Weekly Production Plan !";
-
-                break;
             case "Commit_All_Material":
-                weekNo = Integer.valueOf(ID.split("_")[0]);
-                monthNo = Integer.valueOf(ID.split("_")[1]);
-                yearNo = Integer.valueOf(ID.split("_")[2]);
+                int weekNo = Integer.valueOf(ID.split("_")[0]);
+                int monthNo = Integer.valueOf(ID.split("_")[1]);
+                int yearNo = Integer.valueOf(ID.split("_")[2]);
                 mpp.commitallWPP(weekNo, monthNo, yearNo);
                 pullWeeklyProductionTable(this.currentDrill);
                 success_msg = "Commited all Materials For Week!";
@@ -367,24 +350,43 @@ public class ViewProductionPlanning implements Serializable {
                 pullWeeklyProductionTable(this.currentDrill);
                 success_msg = "Uncommited all Materials For Week!";
                 break;
-            case "ORDER_MATERIAL":
-                yearNo = Integer.valueOf(ID.split("_")[0]);
-                monthNo = Integer.valueOf(ID.split("_")[1]);
-                weekNo = Integer.valueOf(ID.split("_")[2]);
+            case "COMMIT_WEEK_WPP":
+                weekNo = Integer.valueOf(ID.split("_")[0]);
+                monthNo = Month.valueOf(ID.split("_")[1]).value;
+                yearNo = Integer.valueOf(ID.split("_")[2]);
+                mpp.orderMaterials(weekNo, monthNo, yearNo);
                 mpp.createPOForWeekMRP(weekNo, monthNo, yearNo);
                 pullWeeklyProductionTable(this.currentDrill);
-                success_msg = "Ordered Material For Week !";
+                success_msg = "Commited all Weekly Production Plan !";
                 break;
-            case "UNORDER_MATERIAL":
-                yearNo = Integer.valueOf(ID.split("_")[0]);
-                monthNo = Integer.valueOf(ID.split("_")[1]);
-                weekNo = Integer.valueOf(ID.split("_")[2]);
+            case "UNCOMMIT_WEEK_WPP":
+                weekNo = Integer.valueOf(ID.split("_")[0]);
+                monthNo = Month.valueOf(ID.split("_")[1]).value;
+                yearNo = Integer.valueOf(ID.split("_")[2]);
                 mpp.uncreatePOForWeekMRP(weekNo, monthNo, yearNo);
-
+                mpp.unOrderMaterials(weekNo, monthNo, yearNo);
                 pullWeeklyProductionTable(this.currentDrill);
-                success_msg = "Unordered Material For Week !";
+                success_msg = "Uncommited all Weekly Production Plan !";
+
                 break;
 
+//            case "ORDER_MATERIAL":
+//                yearNo = Integer.valueOf(ID.split("_")[0]);
+//                monthNo = Integer.valueOf(ID.split("_")[1]);
+//                weekNo = Integer.valueOf(ID.split("_")[2]);
+//                mpp.createPOForWeekMRP(weekNo, monthNo, yearNo);
+//                pullWeeklyProductionTable(this.currentDrill);
+//                success_msg = "Ordered Material For Week !";
+//                break;
+//            case "UNORDER_MATERIAL":
+//                yearNo = Integer.valueOf(ID.split("_")[0]);
+//                monthNo = Integer.valueOf(ID.split("_")[1]);
+//                weekNo = Integer.valueOf(ID.split("_")[2]);
+//                mpp.uncreatePOForWeekMRP(weekNo, monthNo, yearNo);
+//
+//                pullWeeklyProductionTable(this.currentDrill);
+//                success_msg = "Unordered Material For Week !";
+//                break;
         }
         //FacesContext.getCurrentInstance().addMessage("PP", new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", success_msg));
 
