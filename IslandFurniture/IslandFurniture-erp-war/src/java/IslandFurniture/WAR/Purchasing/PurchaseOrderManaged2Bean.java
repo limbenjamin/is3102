@@ -117,12 +117,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         try {
             mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock added successfully!", ""));
         } catch (DuplicateEntryException ex) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
         } finally {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock added successfully!", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
             return "purchaseorder2";
         }
