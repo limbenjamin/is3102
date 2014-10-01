@@ -76,28 +76,48 @@ public class Helper {
 
     }
 
-    public static int addoneWeek(int month, int year, int week, int addorminus, int return_what) throws Exception {
+    public static Calendar addWeek(int month, int year, int week, int addDays) throws Exception {
+      
+        addDays/=7;
+        
+        Integer t_month = Helper.addoneWeek(month, year, week, addDays, Calendar.MONTH);
+        Integer t_week = Helper.addoneWeek(month, year, week, addDays, Calendar.WEEK_OF_MONTH);
+        Integer t_year = Helper.addoneWeek(month, year, week, addDays, Calendar.YEAR);
+        
+        return Helper.getStartDateOfWeek(t_month, t_year, t_week);
+        
+    }
 
-        int direction = addorminus / Math.abs(addorminus);
+    public static int addoneWeek(int month, int year, int week, int addWeeks, int return_what) throws Exception {
 
-        if (week + direction > Helper.getNumOfWeeks(month, year) || week + direction <= 0) {
+        int direction = addWeeks / Math.abs(addWeeks);
 
-            int i_month = Helper.addMonth(Helper.translateMonth(month), year, direction, true);
-            year = Helper.addMonth(Helper.translateMonth(month), year, direction, false);
-            if (direction == 1) {
-                week = 1;
+        while (direction*addWeeks > 0) {
+
+            if (week + direction > Helper.getNumOfWeeks(month, year) || week + direction <= 0) {
+
+                int i_month = Helper.addMonth(Helper.translateMonth(month), year, direction, true);
+                year = Helper.addMonth(Helper.translateMonth(month), year, direction, false);
+                month = i_month; //Bug fix
+                if (direction == 1) {
+                    week = 1;
+                } else {
+                    week = Helper.getNumOfWeeks(month, year);
+                }
+
             } else {
-                week = Helper.getNumOfWeeks(month, year);
+
+                week = week + 1 * direction;
             }
-            month = i_month;
 
-        } else {
+            if (month > 11) {
+                year++;
+            }
 
-            week = week + 1 * direction;
-        }
+            month = (month % 12);
 
-        if (month > 11) {
-            year++;
+            addWeeks -= direction;
+
         }
 
         switch (return_what) {
@@ -109,6 +129,7 @@ public class Helper {
                 return year;
 
         }
+
         throw new Exception("Add Week Fail !");
 
     }
@@ -124,7 +145,7 @@ public class Helper {
         end.add(Calendar.MONTH, 1);
         end.add(Calendar.DAY_OF_MONTH, -1);
 
-        return (end.get(Calendar.DAY_OF_MONTH) - prev.get(Calendar.DAY_OF_MONTH)+1);
+        return (end.get(Calendar.DAY_OF_MONTH) - prev.get(Calendar.DAY_OF_MONTH) + 1);
 
     }
 

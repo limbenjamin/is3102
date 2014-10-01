@@ -237,7 +237,7 @@ public class QueryMethods {
             }
 
         }
-        System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
+        //System.out.println("GetRelevantMSSR(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
         return RelevantMSSR;
     }
 
@@ -270,7 +270,7 @@ public class QueryMethods {
             }
 
         }
-        System.out.println("GetRelevantMSSRAtPT(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
+        //System.out.println("GetRelevantMSSRAtPT(): " + MF.getName() + " UNTIL " + m + "/" + year + " Returned:" + RelevantMSSR.size());
         return RelevantMSSR;
     }
 

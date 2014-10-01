@@ -44,6 +44,9 @@ import javax.persistence.Query;
  *
  * @author James This powerful Bean does production planning on a specific
  * manufacturing facility
+ * Note to James:
+ * Future today.  WPP to mpp translation . take care of boundary condition
+ * wpp boundary . take care of rounding off effect
  */
 @Stateful
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
@@ -110,7 +113,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             pc.setQty(daily_max_capacity);
             em.persist(pc);
             System.err.println("Successfully Updated Production Capacity: for " + mancFacName + "/" + fmName);
-            return(pc);
+            return (pc);
         }
 
         ProductionCapacity pc = new ProductionCapacity();
@@ -122,13 +125,12 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
         System.err.println("Successfully Created Production Capacity: for " + mancFacName + "/" + fmName);
         return (pc);
     }
-    
-      @Override
+
+    @Override
     public void createOrUpdateCapacityExternal(String fmName, String mancFacName, int daily_max_capacity) {
-            createOrUpdateCapacity(fmName, mancFacName, daily_max_capacity);
-            return;
+        createOrUpdateCapacity(fmName, mancFacName, daily_max_capacity);
+        return;
     }
-    
 
     @Override
     //Plan Production Planning 6 months in advance that are relevant to MF
@@ -144,7 +146,12 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     @Override
     public void CreateProductionPlanFromForecast(int m, int year) throws Exception {
 
-        CreateProductionPlanFromForecast(QueryMethods.GetRelevantMSSR(em, this.MF, m, year));
+        List<MonthlyStockSupplyReq> list = QueryMethods.GetRelevantMSSR(em, this.MF, m, year);
+        if (list.size() == 0) {
+            throw new Exception("CreateProductionPlanFromForecast(): Warning No MSSR !");
+        }
+
+        CreateProductionPlanFromForecast(list);
         System.out.println("CreateProductionPlanFromForecast(): Planning Production until Year:" + year + " and Month: " + Helper.translateMonth(m).toString());
 
     }
@@ -153,10 +160,6 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     public void CreateProductionPlanFromForecast(List<MonthlyStockSupplyReq> MSSRL) throws ProductionPlanExceedsException, ProductionPlanNoCN, Exception {
         if (MF == null) {
             throw new ProductionPlanNoCN();
-        }
-
-        if (MSSRL.size() == 0) {
-            throw new Exception("NO Monthly Stock Supply to plan anything ! Try creating some stock supply requirement !");
         }
 
         //Start from last date to earlist date
@@ -390,17 +393,16 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
                     Nextproduce = ((QueryMethods.getNextMonthlyProductionPlan(em, mpp).getQTY() + 0.0) / QueryMethods.getNextMonthlyProductionPlan(em, mpp).getNumWorkDays()) * (workingDaysInWeek + 0.0);
                 }
                 Double normalProduce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
-                Double w1=(Helper.getBoundaryWeekDays(mpp.getMonth(), mpp.getYear()) / 7.0);
-                Double w2=1-w1;
-                produce = normalProduce*w1+w2 *Nextproduce;
+                Double w1 = (Helper.getBoundaryWeekDays(mpp.getMonth(), mpp.getYear()) / 7.0);
+                Double w2 = 1 - w1;
+                produce = normalProduce * w1 + w2 * Nextproduce;
                 wp.setQTY(produce.intValue());
-                
-                
+
                 System.out.println("Boundary Case: Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
-                System.out.println("Current Month produce="+normalProduce+ " Next Month PRoduce= "+Nextproduce);
-                System.out.println("First weight = "+w1);
-                System.out.println("Second weight = "+w2);
-                
+                System.out.println("Current Month produce=" + normalProduce + " Next Month PRoduce= " + Nextproduce);
+                System.out.println("First weight = " + w1);
+                System.out.println("Second weight = " + w2);
+
             } else {
                 Double produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
                 wp.setQTY(produce.intValue());
@@ -591,8 +593,16 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             calendarPointer.set(Calendar.MONTH, order_date.get(Calendar.MONTH));
             calendarPointer.setFirstDayOfWeek(Calendar.MONDAY);
 
-            if (calendarPointer.after(cal_first)) {
+            Calendar begining_of_month = Calendar.getInstance();
+            begining_of_month.set(YearNo, monthNo, 1);
+
+            //today
+            if (cal_first.before(calendarPointer)) {
                 calendarPointer = cal_first;
+            }
+
+            if (begining_of_month.before(cal_first)) {
+                calendarPointer = begining_of_month;
             }
 
             int targetpt = wMRP.getYear() * 1000 + wMRP.getMonth().value * 10 + wMRP.getWeek();
@@ -661,7 +671,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
     }
 
     //this is a powerful function to cascade wMRP
-    private void cascadeWMRP(WeeklyMRPRecord wMRP) {
+    private void cascadeWMRP(WeeklyMRPRecord wMRP) throws Exception {
 
         Boolean begin = true;
         WeeklyMRPRecord current = null;
@@ -698,9 +708,9 @@ public class ManageProductionPlanning implements ManageProductionPlanningRemote,
             cal.set(Calendar.DAY_OF_WEEK, 1);
             cal.setFirstDayOfWeek(Calendar.MONDAY);
 
-            Calendar order_date = ((Calendar) cal.clone());
             Double orderday = Math.ceil(getLeadTime(current.getMaterial()) / 7.0) * 7.0;
-            order_date.add(Calendar.DATE, -orderday.intValue());
+            Calendar order_date = Helper.addWeek(current.getMonth().value, current.getYear(), current.getWeek(), -orderday.intValue());
+
 
             try {
                 current.setOrderYear(order_date.get(Calendar.YEAR));
