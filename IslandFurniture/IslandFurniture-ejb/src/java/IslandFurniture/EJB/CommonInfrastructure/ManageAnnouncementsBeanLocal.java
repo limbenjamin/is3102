@@ -19,7 +19,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageAnnouncementsBeanLocal {
 
-    void addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate);
+    Long addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate);
 
     void deleteAnnouncement(Long id);
 
@@ -29,4 +29,5 @@ public interface ManageAnnouncementsBeanLocal {
 
     List<Announcement> getMyAnnouncements(String username);
     
+    Announcement getAnnouncement(Long id);
 }

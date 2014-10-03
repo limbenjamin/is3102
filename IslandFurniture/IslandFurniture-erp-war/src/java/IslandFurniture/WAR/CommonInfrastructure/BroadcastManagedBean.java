@@ -12,6 +12,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Announcement;
 import IslandFurniture.EJB.Entities.Event;
 import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import IslandFurniture.StaticClasses.Helper.TimeMethods;
 import java.io.IOException;
 import java.io.Serializable;
@@ -65,6 +66,8 @@ public class BroadcastManagedBean implements Serializable {
     private ManageEventsBeanLocal eventBean;
     @EJB
     private ManageUserAccountBeanLocal muaib;
+    @EJB
+    private ManageSystemAuditLogBeanLocal msalb;
     
     @PostConstruct
     public void init(){
@@ -88,7 +91,8 @@ public class BroadcastManagedBean implements Serializable {
       activecal.setTime(activeDate);
       Calendar expirecal=Calendar.getInstance();
       expirecal.setTime(expireDate);
-      announcementBean.addAnnouncement(username, title, content, activecal, expirecal);
+      id = announcementBean.addAnnouncement(username, title, content, activecal, expirecal);
+      msalb.log("Announcement", id, "Create", "Title: "+title+" Content: "+content, username);
       announcementList = announcementBean.getMyAnnouncements(username);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
@@ -99,6 +103,7 @@ public class BroadcastManagedBean implements Serializable {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       announcement = (Announcement) event.getComponent().getAttributes().get("toEdit");
       announcementBean.editAnnouncement(announcement.getId(),announcement.getTitle(),announcement.getContent(),announcement.getActiveDate(),announcement.getExpireDate());
+      msalb.log("Announcement", announcement.getId(), "Modify", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
       announcementList = announcementBean.getMyAnnouncements(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement edited",""));
@@ -107,6 +112,8 @@ public class BroadcastManagedBean implements Serializable {
     
     public String deleteAnnouncement(){
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+      announcement = announcementBean.getAnnouncement(id);
+      msalb.log("Announcement", announcement.getId(), "Delete", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
       announcementBean.deleteAnnouncement(id);
       announcementList = announcementBean.getMyAnnouncements(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",

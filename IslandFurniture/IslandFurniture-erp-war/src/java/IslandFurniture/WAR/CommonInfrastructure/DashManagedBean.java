@@ -11,6 +11,7 @@ package IslandFurniture.WAR.CommonInfrastructure;
  */
 import IslandFurniture.EJB.CommonInfrastructure.*;
 import IslandFurniture.EJB.Entities.*;
+import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -70,6 +71,8 @@ public class DashManagedBean implements Serializable {
     private ManageAnnouncementsBeanLocal announcementBean;
     @EJB
     private ManageEventsBeanLocal eventBean;
+    @EJB
+    private ManageSystemAuditLogBeanLocal msalb;
 
     @PostConstruct
     public void init() {
@@ -107,9 +110,11 @@ public class DashManagedBean implements Serializable {
 
     public void logout() throws IOException {
         HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
         session.invalidate();
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(ec.getRequestContextPath());
+        msalb.log("Staff", staffBean.getStaff(username).getId(), "Access", "Logout Successfully", username);
     }
 
     public String modifyNotes() {

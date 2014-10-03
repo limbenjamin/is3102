@@ -16,6 +16,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
@@ -69,6 +70,8 @@ public class LoginManagedBean implements Serializable {
     private ManagePrivilegesBeanLocal mpb;
     @EJB
     private ManageNotificationsBeanLocal mnb;
+    @EJB
+    private ManageSystemAuditLogBeanLocal msalb;
 
     
     public void timeout() throws IOException{
@@ -83,6 +86,7 @@ public class LoginManagedBean implements Serializable {
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {
+            msalb.log("Staff", muab.getStaff(username).getId(), "Access", "Login Successfully", username);
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
             staff = muab.getStaff(username);

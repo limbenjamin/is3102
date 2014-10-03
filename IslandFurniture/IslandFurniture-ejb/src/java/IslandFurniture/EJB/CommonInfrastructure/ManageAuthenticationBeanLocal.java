@@ -18,8 +18,6 @@ public interface ManageAuthenticationBeanLocal {
     boolean authenticate(String username, String password);
 
     void changePassword(String username, String newPassword);
-
-    void log(String EntityName, Long EntityId, String UserAction, String ChangeMessage, Long StaffId);
     
     boolean forgetPassword(String username);
     

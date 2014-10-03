@@ -6,8 +6,14 @@
 
 package IslandFurniture.EJB.ITManagement;
 
-import javax.ejb.Stateless;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Entities.LogEntry;
+import java.util.Calendar;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -15,8 +21,25 @@ import javax.ejb.LocalBean;
  */
 @Stateless
 @LocalBean
-public class ManageSystemAuditLogBean {
+public class ManageSystemAuditLogBean implements ManageSystemAuditLogBeanLocal {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext
+    private EntityManager em;
+    
+    private LogEntry log;
+    
+    @EJB
+    private ManageUserAccountBeanLocal muab;
+
+    @Override
+    public void log(String entityName, long entityId, String userAction, String changeMessage, String username) {
+        log = new LogEntry();
+        log.setEntityName(entityName);
+        log.setEntityId(entityId);
+        log.setUserAction(userAction);
+        log.setChangeMessage(changeMessage);
+        log.setStaff(muab.getStaff(username));
+        log.setLogTime(Calendar.getInstance());
+        em.persist(log);
+    }
 }

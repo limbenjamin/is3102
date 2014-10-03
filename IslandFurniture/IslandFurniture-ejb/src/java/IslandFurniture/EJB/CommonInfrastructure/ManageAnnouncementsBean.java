@@ -42,7 +42,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     private ManageUserAccountBeanLocal staffbean;
     
     @Override
-    public void addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate){
+    public Long addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate){
         staff = staffbean.getStaff(username);
         announcement = new Announcement();
         announcement.setTitle(title);
@@ -56,6 +56,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
         announcementList.add(announcement);
         em.merge(staff);
         em.flush();
+        return announcement.getId();
     }
     
     @Override
@@ -95,6 +96,12 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     public List<Announcement> getMyAnnouncements(String username){
         staff = staffbean.getStaff(username);
         return staff.getAnnouncements();
+    }
+    
+    @Override
+    public Announcement getAnnouncement(Long id){
+        announcement = em.find(Announcement.class, id);
+        return announcement;
     }
 
 }
