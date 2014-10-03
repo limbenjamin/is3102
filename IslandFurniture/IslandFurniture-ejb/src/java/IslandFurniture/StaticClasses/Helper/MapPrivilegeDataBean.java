@@ -33,14 +33,6 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
     public boolean loadSampleData() {
         
         Role role;
-        
-        
-        String[] roles = new String [] {
-        "IT (Store)","Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
-        "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)","General Staff",
-        "IT (CO)","Cust. Service (CO)"/*,"Sales Planning (CO)"*/,"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
-                                    };
 
             try {
                 role = mrbl.getRoleFromName("General Staff");                

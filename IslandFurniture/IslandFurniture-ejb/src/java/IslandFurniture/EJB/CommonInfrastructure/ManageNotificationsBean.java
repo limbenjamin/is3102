@@ -100,7 +100,7 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         Iterator<Staff> iterator2 = staffHash.iterator();
         while (iterator2.hasNext()) {
             staff = iterator2.next();
-            if (staff.getPlant().getId() == plant.getId()){
+            if (staff.getPlant().equals(plant)){
                 createNewNotificationForStaff(title, content, link, linkText, staff);
             }
         }

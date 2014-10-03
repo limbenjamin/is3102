@@ -165,7 +165,7 @@ public class CreateForecastManagedBean implements Serializable {
             }
 
             salesForecastBean.saveMonthlyStockSupplyReq(coupleList);
-
+            
             manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Requirements Forecast", "New requirements forecast awaiting your approval", "/salesplanning/reviewforecast.xhtml", "Review Forecast", managePrivilegesBean.getPrivilegeFromName("Review Forecast"), co);
             
             statusMessage = "Forecast saved successfully!";
