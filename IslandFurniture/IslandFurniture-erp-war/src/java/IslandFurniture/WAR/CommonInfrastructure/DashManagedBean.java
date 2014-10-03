@@ -114,7 +114,7 @@ public class DashManagedBean implements Serializable {
         session.invalidate();
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(ec.getRequestContextPath());
-        msalb.log("Staff", staffBean.getStaff(username).getId(), "Access", "Logout Successfully", username);
+        msalb.log("Staff", staffBean.getStaff(username).getId(), "ACCESS", "Logout Successfully", username);
     }
 
     public String modifyNotes() {

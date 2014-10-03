@@ -72,21 +72,12 @@ public class LoginManagedBean implements Serializable {
     private ManageNotificationsBeanLocal mnb;
     @EJB
     private ManageSystemAuditLogBeanLocal msalb;
-
-    
-    public void timeout() throws IOException{
-        System.err.println("timeout here");
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, 
-                                        "No activity.", "What are you doing over there?"));
-        HttpSession session = Util.getSession();
-        session.invalidate();
-    }
     
     
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {
-            msalb.log("Staff", muab.getStaff(username).getId(), "Access", "Login Successfully", username);
+            msalb.log("Staff", muab.getStaff(username).getId(), "ACCESS", "Login Successfully", username);
             HttpSession session = Util.getSession();
             session.setAttribute("username", username);
             staff = muab.getStaff(username);

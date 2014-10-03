@@ -92,7 +92,7 @@ public class BroadcastManagedBean implements Serializable {
       Calendar expirecal=Calendar.getInstance();
       expirecal.setTime(expireDate);
       id = announcementBean.addAnnouncement(username, title, content, activecal, expirecal);
-      msalb.log("Announcement", id, "Create", "Title: "+title+" Content: "+content, username);
+      msalb.log("Announcement", id, "CREATE", "Title: "+title+" Content: "+content, username);
       announcementList = announcementBean.getMyAnnouncements(username);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
@@ -103,7 +103,7 @@ public class BroadcastManagedBean implements Serializable {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       announcement = (Announcement) event.getComponent().getAttributes().get("toEdit");
       announcementBean.editAnnouncement(announcement.getId(),announcement.getTitle(),announcement.getContent(),announcement.getActiveDate(),announcement.getExpireDate());
-      msalb.log("Announcement", announcement.getId(), "Modify", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
+      msalb.log("Announcement", announcement.getId(), "MODIFY", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
       announcementList = announcementBean.getMyAnnouncements(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement edited",""));
@@ -113,8 +113,8 @@ public class BroadcastManagedBean implements Serializable {
     public String deleteAnnouncement(){
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       announcement = announcementBean.getAnnouncement(id);
-      msalb.log("Announcement", announcement.getId(), "Delete", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
       announcementBean.deleteAnnouncement(id);
+      msalb.log("Announcement", announcement.getId(), "DELETE", "Title: "+announcement.getTitle()+" Content: "+announcement.getContent(), username);
       announcementList = announcementBean.getMyAnnouncements(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement deleted",""));
@@ -132,7 +132,8 @@ public class BroadcastManagedBean implements Serializable {
       cal.setTime(date);
       cal = TimeMethods.convertToUtcTime(plant, cal);
       eventTime = cal;
-      eventBean.addEvent(name, description, eventTime, username);
+      id = eventBean.addEvent(name, description, eventTime, username);
+      msalb.log("Event", id, "CREATE", "Name: "+name+" Description: "+description, username);
       eventList = eventBean.getMyEvents(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Event added",""));
@@ -144,6 +145,7 @@ public class BroadcastManagedBean implements Serializable {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       event = (Event) Aevent.getComponent().getAttributes().get("toEdit");
       eventBean.editEvent(event.getName(), event.getDescription(), event.getEventTime(), event.getId());
+      msalb.log("Event", event.getId(), "MODIFY", "Name: "+event.getName()+" Description: "+event.getDescription(), username);
       eventList = eventBean.getMyEvents(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Event edited",""));
@@ -152,7 +154,9 @@ public class BroadcastManagedBean implements Serializable {
     
     public String deleteEvent(){
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+      event = eventBean.getEvent(id);
       eventBean.deleteEvent(id);
+      msalb.log("Event", id, "DELETE", "Name: "+event.getName()+" Description: "+event.getDescription(), username);
       eventList = eventBean.getMyEvents(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Event deleted",""));

@@ -27,7 +27,7 @@ public class LogEntry implements Serializable {
     private Long id;
     private String entityName;
     private long entityId;
-    private String userAction;
+    private LogEntryAction logEntryAction;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar logTime;
     private String changeMessage;
@@ -58,12 +58,12 @@ public class LogEntry implements Serializable {
         this.entityId = entityId;
     }
 
-    public String getUserAction() {
-        return userAction;
+    public LogEntryAction getLogEntryAction() {
+        return logEntryAction;
     }
 
-    public void setUserAction(String userAction) {
-        this.userAction = userAction;
+    public void setLogEntryAction(LogEntryAction logEntryAction) {
+        this.logEntryAction = logEntryAction;
     }
 
     public Calendar getLogTime() {

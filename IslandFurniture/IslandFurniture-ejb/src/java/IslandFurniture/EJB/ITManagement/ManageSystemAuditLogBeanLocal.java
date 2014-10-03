@@ -6,6 +6,9 @@
 
 package IslandFurniture.EJB.ITManagement;
 
+import IslandFurniture.EJB.Entities.LogEntry;
+import IslandFurniture.EJB.Entities.Plant;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,5 +19,6 @@ import javax.ejb.Local;
 public interface ManageSystemAuditLogBeanLocal {
 
     void log(String entityName, long entityId, String userAction, String changeMessage, String username);
-    
+    List<LogEntry> getLog();
+    List<LogEntry> GetLogForPlant(Plant plant);
 }

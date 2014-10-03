@@ -40,7 +40,7 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     private ManageUserAccountBeanLocal staffbean;
     
     @Override
-    public void addEvent(String name, String description, Calendar eventTime, String username){
+    public Long addEvent(String name, String description, Calendar eventTime, String username){
         creator = staffbean.getStaff(username);
         event = new Event();
         event.setName(name);
@@ -53,7 +53,7 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
         eventList.add(event);
         em.merge(creator);
         em.flush();
-     
+        return event.getId();
     }
     
     @Override
@@ -92,5 +92,11 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     public List<Event> getMyEvents(String username){
         creator = staffbean.getStaff(username);
         return creator.getEvents();
+    }
+    
+    @Override
+    public Event getEvent(Long id){
+        event = em.find(Event.class, id);
+        return event;
     }
 }

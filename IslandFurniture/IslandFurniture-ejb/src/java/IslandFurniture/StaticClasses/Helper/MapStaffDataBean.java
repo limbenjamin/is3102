@@ -90,7 +90,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
             "IT (CO)","Sales Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
-            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (Mfg)","IT (CO)",
+            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (CO)","IT (CO)",
                                     };
         
         for (int i=0; i<arr.length; i++){
@@ -104,14 +104,14 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         }
         
         //add extra sales manager role to evelyn.
-        msal.addRoleToStaffByUsername("evelyn", "Sales Manager (Mfg)");
+        msal.addRoleToStaffByUsername("evelyn", "Sales Manager (CO)");
         
         //add all roles to rose (SUPER USER) except for IT (Store) and General Staff which has been added above.;
        String[] allRoles = new String [] {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)"
                                     };
         
         for (int i=0; i<allRoles.length; i++){
@@ -127,7 +127,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)", "IT (Store)", "General Staff"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)", "IT (Store)", "General Staff"
                                     };
         for (int i=0; i<allRolesSuperuser.length; i++){
             try {

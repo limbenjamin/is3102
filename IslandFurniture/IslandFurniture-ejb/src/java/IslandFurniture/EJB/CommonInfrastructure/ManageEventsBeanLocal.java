@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageEventsBeanLocal {
 
-    void addEvent(String name, String description, Calendar eventTime, String username);
+    Long addEvent(String name, String description, Calendar eventTime, String username);
 
     void deleteEvent(Long id);
 
@@ -27,5 +27,7 @@ public interface ManageEventsBeanLocal {
     List<Event> getEvents(String username);
 
     List<Event> getMyEvents(String username);
+    
+    Event getEvent(Long id);
     
 }
