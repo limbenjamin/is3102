@@ -67,7 +67,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             { "april", "pass", "April R. Wimbush", "AprilRWimbush@teleworm.us", "570-677-0429","Singapore","Alexandra"},
             { "santos", "pass", "Santos M. Dominquez", "SantosMDominquez@rhyta.com", "507-893-4405","Singapore","Singapore"},  
             { "evelyn", "pass", "Evelyn L. Gutierrez", "EvelynLGutierrez@rhyta.com", "573-383-0199","Malaysia","Malaysia"},  
-            //{ "margaret", "pass", "Margaret W. Martinez", "MargaretWMartinez@rhyta.com", "314-846-8027","China","China"},  
+            { "mindy", "pass", "Mindy W. Martinez", "MindyWMartinez@limbenjamin.com", "314-846-8027","Singapore","Singapore"},  
             { "heike", "pass", "Heike M. Myers", "HeikeMMyers@teleworm.us", "269-782-1196","Indonesia","Indonesia"},  
             { "shannon", "pass", "Shannon E. Shaner", "ShannonEShaner@armyspys.com", "507-378-4352","Cambodia","Cambodia"},  
             { "ann", "pass", "Ann L. Parker", "AnnLParker@rhyta.com", "937-883-1550","Thailand","Thailand"},  
@@ -88,7 +88,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "IT (Store)","Cust. Service (Store)","IT (Mfg)","IT (Store)","Warehouse (Store)","Purchasing (Mfg)",
             "Management (Store)","IT (Store)","Warehouse (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)",
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
-            "IT (CO)","Sales Manager (Mfg)"/*,"Sales Planning (CO)"*/,"Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
+            "IT (CO)","Sales Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
             "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (Mfg)","IT (CO)",
                                     };
@@ -104,13 +104,13 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         }
         
         //add extra sales manager role to evelyn.
-        //msal.addRoleToStaffByUsername("evelyn", "Sales Manager (Mfg)");
+        msal.addRoleToStaffByUsername("evelyn", "Sales Manager (Mfg)");
         
         //add all roles to rose (SUPER USER) except for IT (Store) and General Staff which has been added above.;
        String[] allRoles = new String [] {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
-        "IT (CO)","Cust. Service (CO)",/*"Sales Planning (CO)",*/"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
         "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)"
                                     };
         
@@ -126,7 +126,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         String[] allRolesSuperuser = new String [] {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
-        "IT (CO)","Cust. Service (CO)",/*"Sales Planning (CO)",*/"Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
+        "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
         "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (Mfg)", "IT (Store)", "General Staff"
                                     };
         for (int i=0; i<allRolesSuperuser.length; i++){
@@ -143,14 +143,14 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         
         
         //for first system release, preload robert with 2 empty threads
-        
+        /*
         try {
             msgbean.createNewThread("project A discussion group", "robert,jerry,david");
             msgbean.createNewThread("jerry (private msg)", "robert,jerry");
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 return false;
-            }
+            }*/
         
         return true;
     }

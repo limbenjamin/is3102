@@ -63,10 +63,10 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
                 
-                /*role = mrbl.getRoleFromName("Sales Planning (CO)");
+                role = mrbl.getRoleFromName("Sales Planning (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "MSSR");
                 mrbl.addPrivilegeToRole(role.getId(), "Create Forecast");
-                mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");*/
+                mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
 
                 role = mrbl.getRoleFromName("Sales Manager (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Review Forecast");

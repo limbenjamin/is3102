@@ -93,7 +93,7 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         em.merge(staff);
         em.flush();
         try {
-            SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Password Reset Request", "Click this link to reset your password: http://localhost:8080/IslandFurniture-erp-war/it/resetpassword.xhtml?code="+forgottenPasswordCode);
+            SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Password Reset Request", "Click this link to reset your password: https://localhost/erp/it/resetpassword.xhtml?code="+forgottenPasswordCode);
         } catch (Exception ex) {
             Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
         }
