@@ -17,7 +17,7 @@
     <module>
         <web>
             <web-uri>IslandFurniture-eservices-war.war</web-uri>
-            <context-root>ecommerce</context-root>
+            <context-root>cws</context-root>
         </web>
     </module>
 

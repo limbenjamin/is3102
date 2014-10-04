@@ -24,7 +24,7 @@ public class Feedback implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    private StoreMember member;
+    private Customer member;
 
     public Long getId() {
         return id;
@@ -34,11 +34,11 @@ public class Feedback implements Serializable {
         this.id = id;
     }
 
-    public StoreMember getMember() {
+    public Customer getMember() {
         return member;
     }
 
-    public void setMember(StoreMember member) {
+    public void setMember(Customer member) {
         this.member = member;
     }
 

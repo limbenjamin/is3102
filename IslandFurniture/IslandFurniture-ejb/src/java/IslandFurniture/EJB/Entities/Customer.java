@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
-public class StoreMember implements Serializable {
+public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -84,10 +84,10 @@ public class StoreMember implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StoreMember)) {
+        if (!(object instanceof Customer)) {
             return false;
         }
-        StoreMember other = (StoreMember) object;
+        Customer other = (Customer) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

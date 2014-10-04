@@ -7,8 +7,8 @@
         <Node id="welcomePrimefaces.xhtml" x="900" y="900" zoom="true"/>
         <Node id="supplychain/goodsissueddocumentposted.xhtml" x="650" y="600" zoom="true"/>
         <Node id="salesplanning/procurementContract.xhtml" x="400" y="1050" zoom="true"/>
-        <Node id="supplychain/inventorytransfer_movementlocation.xhtml" x="1900" y="450" zoom="true"/>
         <Node id="supplychain/inventorymonitoring_ststock.xhtml" x="1900" y="300" zoom="true"/>
+        <Node id="supplychain/inventorytransfer_movementlocation.xhtml" x="1900" y="450" zoom="true"/>
         <Node id="salesplanning/createforecast.xhtml" x="400" y="150" zoom="true"/>
         <Node id="it/roleprivilege.xhtml" x="650" y="1050" zoom="true"/>
         <Node id="supplychain/storagelocationdetail.xhtml" x="900" y="150" zoom="true"/>
@@ -22,27 +22,27 @@
         <Node id="login.xhtml" x="1650" y="450" zoom="true"/>
         <Node id="it/notification.xhtml" x="650" y="900" zoom="true"/>
         <Node id="it/forgotpassword.xhtml" x="900" y="600" zoom="true"/>
-        <Node id="common/modifyparticulars.xhtml" x="400" y="1200" zoom="true"/>
         <Node id="knowledge/furniture.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="common/modifyparticulars.xhtml" x="400" y="1200" zoom="true"/>
         <Node id="manufacturing/productionorder.xhtml" x="900" y="750" zoom="true"/>
         <Node id="supplychain/goodsreceiptdocument.xhtml" x="150" y="450" zoom="true"/>
-        <Node id="it/managestaff2.xhtml" x="150" y="1200" zoom="true"/>
         <Node id="salesplanning/viewmssr.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="supplychain/goodsissueddocument.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="it/managestaff2.xhtml" x="150" y="1200" zoom="true"/>
         <Node id="common/broadcast.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="supplychain/goodsissueddocument.xhtml" x="1400" y="300" zoom="true"/>
         <Node id="supplychain/goodsissued.xhtml" x="400" y="600" zoom="true"/>
         <Node id="knowledge/material.xhtml" x="1150" y="150" zoom="true"/>
         <Node id="salesplanning/supplier.xhtml" x="2400" y="150" zoom="true"/>
         <Node id="common/changepassword.xhtml" x="150" y="150" zoom="true"/>
         <Node id="purchasing/purchaseorder2.xhtml" x="2150" y="150" zoom="true"/>
         <Node id="common/messaging2.xhtml" x="400" y="450" zoom="true"/>
-        <Node id="supplychain/inventorytransfer.xhtml" x="650" y="1200" zoom="true"/>
         <Node id="knowledge/bom.xhtml" x="1150" y="600" zoom="true"/>
-        <Node id="purchasing/purchaseorderconfirmed.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="supplychain/inventorytransfer.xhtml" x="650" y="1200" zoom="true"/>
         <Node id="supplychain/inventorymonitoring.xhtml" x="1400" y="750" zoom="true"/>
+        <Node id="purchasing/purchaseorderconfirmed.xhtml" x="650" y="450" zoom="true"/>
         <Node id="supplychain/inventorymonitoring_stock.xhtml" x="1650" y="300" zoom="true"/>
-        <Node id="supplychain/inventorymonitoring_stlocation.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="salesplanning/reviewforecast.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="supplychain/inventorymonitoring_stlocation.xhtml" x="1400" y="150" zoom="true"/>
         <Node id="template.xhtml" x="1150" y="750" zoom="true"/>
         <Node id="supplychain/inventorymonitoring_location.xhtml" x="1150" y="450" zoom="true"/>
         <Node id="dash.xhtml" x="1650" y="600" zoom="true"/>

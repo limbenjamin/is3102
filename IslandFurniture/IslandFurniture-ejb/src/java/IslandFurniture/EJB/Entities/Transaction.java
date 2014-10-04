@@ -48,7 +48,7 @@ public abstract class Transaction implements Serializable {
     protected Calendar transTime;
 
     @ManyToOne
-    protected StoreMember member;
+    protected Customer member;
 
     public Long getId() {
         return id;
@@ -66,11 +66,11 @@ public abstract class Transaction implements Serializable {
         this.store = store;
     }
 
-    public StoreMember getMember() {
+    public Customer getMember() {
         return member;
     }
 
-    public void setMember(StoreMember member) {
+    public void setMember(Customer member) {
         this.member = member;
     }
 

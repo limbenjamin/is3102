@@ -28,7 +28,7 @@ public class MembershipTier implements Serializable {
     @ManyToMany
     private List<PromotionCampaign> promotionCampaigns;
     @OneToMany(mappedBy="membershipTier")
-    private List<StoreMember> members;
+    private List<Customer> members;
 
     public Long getId() {
         return id;
@@ -46,11 +46,11 @@ public class MembershipTier implements Serializable {
         this.promotionCampaigns = promotionCampaigns;
     }
 
-    public List<StoreMember> getMembers() {
+    public List<Customer> getMembers() {
         return members;
     }
 
-    public void setMembers(List<StoreMember> members) {
+    public void setMembers(List<Customer> members) {
         this.members = members;
     }
 

@@ -16,6 +16,7 @@ import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import IslandFurniture.StaticClasses.Helper.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -34,7 +35,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean(name = "reviewForecastManagedBean")
 @ViewScoped
-public class ReviewForecast {
+public class ReviewForecast implements Serializable {
 
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
