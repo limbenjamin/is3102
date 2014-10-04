@@ -5,7 +5,7 @@
  */
 package IslandFurniture.StaticClasses.Helper;
 
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.Plant;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -6,11 +6,12 @@
 
 package IslandFurniture.WAR.CommonInfrastructure;
 
+import IslandFurniture.WAR.Exceptions.NewPasswordsNotTheSameException;
+import IslandFurniture.WAR.Exceptions.WrongPasswordException;
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.Staff;
 import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
-import IslandFurniture.WAR.CommonInfrastructure.Exceptions.*;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

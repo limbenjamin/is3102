@@ -6,9 +6,9 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.EJB.Entities.MssrStatus;
+import IslandFurniture.EJB.Enums.MssrStatus;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import static IslandFurniture.StaticClasses.Helper.SystemConstants.FORECAST_LOCKOUT_MONTHS;

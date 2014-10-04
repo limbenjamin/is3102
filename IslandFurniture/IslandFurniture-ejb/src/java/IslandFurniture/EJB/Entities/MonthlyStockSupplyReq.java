@@ -5,7 +5,9 @@
  */
 package IslandFurniture.EJB.Entities;
 
-import IslandFurniture.StaticClasses.Helper.Couple;
+import IslandFurniture.EJB.Enums.MssrStatus;
+import IslandFurniture.EJB.Enums.Month;
+import IslandFurniture.EJB.DataStructures.Couple;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

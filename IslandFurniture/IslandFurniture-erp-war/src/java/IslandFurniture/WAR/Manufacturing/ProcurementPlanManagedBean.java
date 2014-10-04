@@ -8,7 +8,7 @@ package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Staff;

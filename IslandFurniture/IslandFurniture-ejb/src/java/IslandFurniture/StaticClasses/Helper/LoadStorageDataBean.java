@@ -9,7 +9,7 @@ import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageAreaType;
+import IslandFurniture.EJB.Enums.StorageAreaType;
 import IslandFurniture.EJB.Entities.StorageBin;
 import IslandFurniture.EJB.Entities.Store;
 import java.util.ArrayList;

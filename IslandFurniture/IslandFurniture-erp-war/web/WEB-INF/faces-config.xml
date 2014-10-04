@@ -24,7 +24,7 @@
             <redirect include-view-params="true">  
                 <view-param>  
                     <name>id</name>  
-                    <value>#{messagingManaged2Bean.id}</value>  
+                    <value>#{messagingManaged2Bean.id}</value>
                 </view-param>  
             </redirect> 
         </navigation-case>
@@ -92,91 +92,91 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>material</from-outcome>
-            <to-view-id>/knowledge/material.xhtml</to-view-id>
+            <to-view-id>/manufacturing/material.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>storagelocation</from-outcome>
-            <to-view-id>/supplychain/storagelocation.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/storagelocation.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>storagelocationdetail</from-outcome>
-            <to-view-id>/supplychain/storagelocationdetail.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/storagelocationdetail.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>goodsreceipt</from-outcome>
-            <to-view-id>/supplychain/goodsreceipt.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsreceipt.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>goodsissued</from-outcome>
-            <to-view-id>/supplychain/goodsissued.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsissued.xhtml</to-view-id>
         </navigation-case>  
         <navigation-case>
             <from-outcome>goodsreceiptdocument</from-outcome>
-            <to-view-id>/supplychain/goodsreceiptdocument.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsreceiptdocument.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>goodsissueddocument</from-outcome>
-            <to-view-id>/supplychain/goodsissueddocument.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsissueddocument.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>inventorytransfer</from-outcome>
-            <to-view-id>/supplychain/inventorytransfer.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorytransfer.xhtml</to-view-id>
         </navigation-case>       
         <navigation-case>
             <from-outcome>inventorymonitoring_location</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_location.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_location.xhtml</to-view-id>
         </navigation-case>    
         <navigation-case>
             <from-outcome>inventorymonitoring_stock</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_stock.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_stock.xhtml</to-view-id>
         </navigation-case> 
         <navigation-case>
-            <from-outcome>retailItem</from-outcome>
-            <to-view-id>/knowledge/retailItem.xhtml</to-view-id>
-        </navigation-case> 
-        <navigation-case>
-            <from-outcome>procurementContract</from-outcome>
-            <to-view-id>/salesplanning/procurementContract.xhtml</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>goodsreceiptdocumentposted</from-outcome>
-            <to-view-id>/supplychain/goodsreceiptdocumentposted.xhtml</to-view-id>
+            <from-outcome>retailitem</from-outcome>
+            <to-view-id>/manufacturing/retailitem.xhtml</to-view-id>
         </navigation-case> 
         <navigation-case>
             <from-outcome>bom</from-outcome>
             <to-view-id>/knowledge/bom.xhtml</to-view-id>
         </navigation-case> 
         <navigation-case>
+            <from-outcome>procurementcontract</from-outcome>
+            <to-view-id>/purchasing/procurementcontract.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>goodsreceiptdocumentposted</from-outcome>
+            <to-view-id>/inventorymgt/goodsreceiptdocumentposted.xhtml</to-view-id>
+        </navigation-case> 
+        <navigation-case>
             <from-outcome>goodsissueddocumentcommit</from-outcome>
-            <to-view-id>/supplychain/goodsissueddocumentcommit.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsissueddocumentcommit.xhtml</to-view-id>
         </navigation-case>  
         <navigation-case>
             <from-outcome>inventorymonitoring_stlocation</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_stlocation.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_stlocation.xhtml</to-view-id>
         </navigation-case>    
         <navigation-case>
             <from-outcome>inventorymonitoring_ststock</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_ststock.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_ststock.xhtml</to-view-id>
         </navigation-case> 
         <navigation-case>
             <from-outcome>inventorymonitoring_report</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_report.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_report.xhtml</to-view-id>
         </navigation-case>   
         <navigation-case>
             <from-outcome>goodsreceiptinbound</from-outcome>
-            <to-view-id>/supplychain/goodsreceiptinbound.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/goodsreceiptinbound.xhtml</to-view-id>
         </navigation-case>   
         <navigation-case>
             <from-outcome>inventorytransfer_movementlocation</from-outcome>
-            <to-view-id>/supplychain/inventorytransfer_movementlocation.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorytransfer_movementlocation.xhtml</to-view-id>
         </navigation-case> 
         <navigation-case>
             <from-outcome>inventorytransfer_movementstock</from-outcome>
-            <to-view-id>/supplychain/inventorytransfer_movementstock.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorytransfer_movementstock.xhtml</to-view-id>
         </navigation-case>  
         <navigation-case>
-            <from-outcome>stockSupplier</from-outcome>
-            <to-view-id>/salesplanning/stockSupplier.xhtml</to-view-id>
+            <from-outcome>stocksupplier</from-outcome>
+            <to-view-id>/manufacturing/stocksupplier.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>procurementplan</from-outcome>
@@ -188,7 +188,7 @@
         </navigation-case>  
         <navigation-case>
             <from-outcome>inventorymonitoring_reportmgmt</from-outcome>
-            <to-view-id>/supplychain/inventorymonitoring_reportmgmt.xhtml</to-view-id>
+            <to-view-id>/inventorymgt/inventorymonitoring_reportmgmt.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>purchaseorder</from-outcome>

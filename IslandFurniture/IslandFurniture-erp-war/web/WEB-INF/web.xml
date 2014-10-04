@@ -27,12 +27,6 @@
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/dash.xhtml</location>
     </error-page>
-    <ejb-local-ref>
-        <ejb-ref-name>StockManager</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <local>IslandFurniture.EJB.SupplyChain.StockManagerLocal</local>
-        <ejb-link>IslandFurniture-ejb.jar#StockManager</ejb-link>
-    </ejb-local-ref>
     <security-constraint>
         <display-name>SSL Protection</display-name>
         <web-resource-collection>

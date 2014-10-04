@@ -10,7 +10,7 @@ import IslandFurniture.EJB.Entities.Plant;
 import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
+import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Exceptions.DuplicateEntryException;
 import java.util.Calendar;

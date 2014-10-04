@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.Entities;
 
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
 import IslandFurniture.StaticClasses.Helper.Helper;
 import java.io.Serializable;

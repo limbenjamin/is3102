@@ -6,13 +6,13 @@
 package IslandFurniture.EJB.SalesPlanning;
 
 import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Exceptions.ForecastFailureException;
 import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Exceptions.InvalidMssrException;
-import IslandFurniture.StaticClasses.Helper.Couple;
+import IslandFurniture.EJB.DataStructures.Couple;
 import java.util.List;
 import javax.ejb.Local;
 

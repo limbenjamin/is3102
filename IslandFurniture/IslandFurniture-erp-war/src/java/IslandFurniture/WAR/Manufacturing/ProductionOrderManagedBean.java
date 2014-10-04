@@ -8,7 +8,7 @@ package IslandFurniture.WAR.Manufacturing;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.ProdOrderStatus;
+import IslandFurniture.EJB.Enums.ProdOrderStatus;
 import IslandFurniture.EJB.Entities.ProductionOrder;
 import IslandFurniture.EJB.Entities.Staff;
 import IslandFurniture.EJB.Entities.StorageBin;

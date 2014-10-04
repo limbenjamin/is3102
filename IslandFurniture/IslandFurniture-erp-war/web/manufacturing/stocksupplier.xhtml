@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Stock Supply</strong></li>
+                        </ol>                        
+                    </div>                    
+                    <div class="col-md-10">
+                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newSS">
+                            <i class="fa fa-fw fa-plus"></i>New Stock Supply Request
+                        </button>   
+                        <h4>Stock Supply</h4><hr></hr>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="tab-content">
+                            <div class="tab-pane active">                        
+                                <section class="panel">  
+                                    <h:form class="form-horizontal" id="SSForm">
+                                        <p:dataTable value="#{stockSupplierManagedBean.stockSuppliedList}" var="ss" id="SSListTable"> 
+                                            <p:column headerText="Country Office / Distribution Centre" sortBy="#{ss.countryOffice.name}">
+                                                <h:outputText value="#{ss.countryOffice.name}" class="transparent-form"></h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Manufacturing Facility" sortBy="#{ss.manufacturingFacility.name}">
+                                                <h:outputText value="#{ss.manufacturingFacility.name}" class="transparent-form"></h:outputText>
+                                            </p:column> 
+                                            <p:column headerText="Stock" sortBy="#{ss.stock.name}">
+                                                <h:outputText value="#{ss.stock.name}" class="transparent-form"></h:outputText>
+                                            </p:column>  
+                                            <p:column headerText="Delete" style="text-align: center; width: 10%">
+                                                <h:commandButton class="btn btn-sm transparent-button" style="outline: 0;" actionListener="#{stockSupplierManagedBean.deleteStockSupplyRequest}">
+                                                    <f:param name="cID" value="#{ss.countryOffice.id}" />
+                                                    <f:param name="mfID" value="#{ss.manufacturingFacility.id}" />
+                                                    <f:param name="sID" value="#{ss.stock.id}" /> 
+                                                </h:commandButton> 
+                                                <i class="fa fa-lg fa-trash-o icon-button" ></i>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form> 
+                                </section>
+                            </div>
+                        </div> 
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="newSS" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add New Stock Supply Request</h4>
+                                </div>
+                                <h:form id="addSSRequestForm" class="form-horizontal">
+                                    <div class="modal-body"> 
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Country Office </label>
+                                            <div class="col-sm-8"> 
+                                                <h:selectOneMenu id="cID" class="form-control needauto" pt:required="required">         
+                                                    <f:selectItem itemLabel="Select Country Office" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{stockSupplierManagedBean.countryList}" var="c" itemLabel="#{c.name} (CO)" itemValue="#{c.id}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Manufacturing Facility: </label>
+                                            <div class="col-sm-8"> 
+                                                <h:selectOneMenu id="mfID" class="form-control needauto" pt:required="required">          
+                                                    <f:selectItem itemLabel="Select Manufacturing Facility" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{stockSupplierManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Stock: </label>
+                                            <div class="col-sm-8">
+                                                <h:selectOneMenu id="sID" class="form-control needauto" pt:required="required">          
+                                                    <f:selectItem itemLabel="Select Stock" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{stockSupplierManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                        <h:commandButton action="stocksupplier.xhtml" actionListener="#{stockSupplierManagedBean.addStockSupplyRequest}" value="Add Request" class="btn btn-success btn-round"> 
+                                        </h:commandButton>
+                                    </div>
+                                </h:form> 
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

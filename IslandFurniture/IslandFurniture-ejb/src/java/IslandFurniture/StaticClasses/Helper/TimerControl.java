@@ -6,7 +6,7 @@
 package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
 import java.util.Calendar;
 import java.util.List;

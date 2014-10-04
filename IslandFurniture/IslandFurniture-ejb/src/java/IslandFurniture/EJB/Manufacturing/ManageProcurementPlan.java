@@ -8,7 +8,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.CountryOffice;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
 import IslandFurniture.EJB.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
@@ -16,7 +16,7 @@ import IslandFurniture.EJB.Entities.ProcuredStock;
 import IslandFurniture.EJB.Entities.ProcurementContractDetail;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
+import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.RetailItem;
 import IslandFurniture.EJB.Entities.Stock;
 import IslandFurniture.EJB.Entities.StockSupplied;

@@ -7,7 +7,7 @@ package IslandFurniture.StaticClasses.Helper;
 
 import IslandFurniture.EJB.Entities.FurnitureModel;
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.StockSupplied;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;

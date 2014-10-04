@@ -5,7 +5,7 @@
  */
 package IslandFurniture.StaticClasses.Helper;
 
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;

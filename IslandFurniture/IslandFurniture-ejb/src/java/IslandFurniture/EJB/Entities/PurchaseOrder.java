@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.Entities;
 
+import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;

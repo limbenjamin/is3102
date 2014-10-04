@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.Entities;
 
+import IslandFurniture.EJB.Enums.LogEntryAction;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Entity;

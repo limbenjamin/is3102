@@ -7,7 +7,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrderStatus;
+import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
 import IslandFurniture.EJB.Entities.Supplier;
 import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
 import IslandFurniture.StaticClasses.Helper.Helper;

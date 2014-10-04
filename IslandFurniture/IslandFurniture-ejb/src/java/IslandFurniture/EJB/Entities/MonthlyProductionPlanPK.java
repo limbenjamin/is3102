@@ -5,7 +5,7 @@
  */
 package IslandFurniture.EJB.Entities;
 
-import IslandFurniture.EJB.Entities.Month;
+import IslandFurniture.EJB.Enums.Month;
 import java.io.Serializable;
 import java.util.Objects;
 
