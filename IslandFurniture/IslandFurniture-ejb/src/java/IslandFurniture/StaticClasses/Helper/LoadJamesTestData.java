@@ -10,15 +10,11 @@ import IslandFurniture.EJB.Entities.ManufacturingFacility;
 import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.EJB.Entities.StockSupplied;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -34,7 +30,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
     private EntityManager em;
 
     @EJB
-    private ManageProductionPlanningRemote mpp;
+    private ManageProductionPlanningLocal mpp;
 
     public void persist(Object object) {
         em.persist(object);

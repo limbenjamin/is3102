@@ -51,7 +51,7 @@ import javax.persistence.Query;
  */
 @Stateful
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
-public class ManageProductionPlanning implements ManageProductionPlanningRemote, ManageProductionPlanningLocal {
+public class ManageProductionPlanning implements  ManageProductionPlanningLocal {
 
     public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
 

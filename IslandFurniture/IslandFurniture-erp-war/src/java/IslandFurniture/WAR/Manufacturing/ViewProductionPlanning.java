@@ -9,7 +9,7 @@ import IslandFurniture.EJB.Entities.Month;
 import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
 import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningRemote;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ViewProductionPlanning implements Serializable {
     private boolean debugmode = false;
 
     @EJB
-    private ManageProductionPlanningRemote mpp;
+    private ManageProductionPlanningLocal mpp;
 
     @EJB
     ManageProductionPlanningEJBBeanInterface dpv;

@@ -6,13 +6,14 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
+import javax.ejb.Local;
 import javax.ejb.Remote;
 
 /**
  *
  * @author James
  */
-@Remote
+@Local
 public interface ProductionPlanningSingletonRemote {
     public void setAdvanceWeek(int week);
 }
