@@ -22,8 +22,8 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
-import IslandFurniture.EJB.Exceptions.ProductionPlanExceedsException;
-import IslandFurniture.EJB.Exceptions.ProductionPlanNoCN;
+import IslandFurniture.Exceptions.ProductionPlanExceedsException;
+import IslandFurniture.Exceptions.ProductionPlanNoCN;
 import IslandFurniture.StaticClasses.Helper;
 import static IslandFurniture.StaticClasses.Helper.getWeekNoFromDate;
 import static IslandFurniture.StaticClasses.Helper.workingDaysInWeek;
@@ -147,7 +147,7 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
     @Override
     public void CreateProductionPlanFromForecast(int m, int year) throws Exception {
 
-        List<MonthlyStockSupplyReq> list = QueryMethods.GetRelevantMSSR(em, this.MF, m, year);
+        List<MonthlyStockSupplyReq> list = QueryMethods.getRelevantMSSR(em, this.MF, m, year);
         if (list.size() == 0) {
             throw new Exception("CreateProductionPlanFromForecast(): Warning No MSSR !");
         }
@@ -251,7 +251,7 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
         double reqCapacity = 0;
         double sum = 0;
 
-        for (Object o : QueryMethods.GetRelevantMSSR(em, this.MF, m, year)) {
+        for (Object o : QueryMethods.getRelevantMSSR(em, this.MF, m, year)) {
             MonthlyStockSupplyReq mssr = (MonthlyStockSupplyReq) o;
             ProductionCapacity thismfc = MF.findProductionCapacity((FurnitureModel) mssr.getStock());
             if (thismfc == null) {

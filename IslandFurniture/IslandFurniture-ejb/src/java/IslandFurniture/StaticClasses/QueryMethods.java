@@ -199,14 +199,14 @@ public class QueryMethods {
         return (List<StockSupplied>) q.getResultList();
     }
 
-    public static List<BOMDetail> getBOMDetailByMaterial(EntityManager em, Material m) {
+    public static List<BOMDetail> getBomDetailByMaterial(EntityManager em, Material m) {
         Query q = em.createNamedQuery("findBOMDetailByMaterial", BOMDetail.class);
         q.setParameter("m", m);
 
         return (List<BOMDetail>) q.getResultList();
     }
 
-    public static List<MonthlyStockSupplyReq> GetRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
+    public static List<MonthlyStockSupplyReq> getRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
 
         Query l = em.createNamedQuery("StockSupplied.FindByMf");
         l.setParameter("mf", MF);
@@ -241,7 +241,7 @@ public class QueryMethods {
         return RelevantMSSR;
     }
 
-    public static List<MonthlyStockSupplyReq> GetRelevantMSSRAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
+    public static List<MonthlyStockSupplyReq> getRelevantMssrAtPT(EntityManager em, int m, int year, ManufacturingFacility MF, Stock s) {
 
         Query l = em.createNamedQuery("StockSupplied.FindByMfAndS");
         l.setParameter("mf", MF);
@@ -277,7 +277,7 @@ public class QueryMethods {
     public static List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs(EntityManager em, MonthlyProductionPlan MPP, ManufacturingFacility MF) {
         try {
 
-            return (GetRelevantMSSRAtPT(em, MPP.getMonth().value, MPP.getYear(), MF, MPP.getFurnitureModel()));
+            return (getRelevantMssrAtPT(em, MPP.getMonth().value, MPP.getYear(), MF, MPP.getFurnitureModel()));
 
         } catch (Exception er) {
             return null;

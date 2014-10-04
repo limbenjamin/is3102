@@ -18,7 +18,7 @@ import static IslandFurniture.StaticClasses.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findMaterialByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStock;
 import static IslandFurniture.StaticClasses.QueryMethods.findRetailItemByName;
-import static IslandFurniture.StaticClasses.QueryMethods.getBOMDetailByMaterial;
+import static IslandFurniture.StaticClasses.QueryMethods.getBomDetailByMaterial;
 import static IslandFurniture.StaticClasses.QueryMethods.getStockSuppliedByStock;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class StockManager implements StockManagerLocal {
         try{
             System.out.println("StockManager.deleteMaterial()");
             material = em.find(Material.class, materialID);
-            bomList = getBOMDetailByMaterial(em, material);
+            bomList = getBomDetailByMaterial(em, material);
             pcdList = findPCDByStock(em, (ProcuredStock)material);
             if(bomList.size() > 0) {
                 System.err.println("Invalid deletion due to existing BOM");

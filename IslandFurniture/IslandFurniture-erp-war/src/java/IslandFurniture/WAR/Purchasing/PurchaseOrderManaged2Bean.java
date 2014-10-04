@@ -14,7 +14,7 @@ import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Supplier;
-import IslandFurniture.EJB.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

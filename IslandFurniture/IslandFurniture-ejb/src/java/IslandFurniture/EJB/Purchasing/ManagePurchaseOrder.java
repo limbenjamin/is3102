@@ -12,7 +12,7 @@ import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Supplier;
-import IslandFurniture.EJB.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.LocalBean;

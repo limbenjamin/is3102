@@ -5,22 +5,21 @@
  */
 package dataloader;
 
-import IslandFurniture.StaticClasses.LoadJamesTestDataRemote;
-import IslandFurniture.StaticClasses.LoadOrgEntitiesBeanRemote;
-import IslandFurniture.StaticClasses.LoadPrivilegeBeanRemote;
-import IslandFurniture.StaticClasses.LoadSalesForecastBeanRemote;
-import IslandFurniture.StaticClasses.LoadStaffDataBeanRemote;
-import IslandFurniture.StaticClasses.LoadStocksBeanRemote;
-import IslandFurniture.StaticClasses.LoadStorageDataBeanRemote;
-import IslandFurniture.StaticClasses.LoadSupplierBeanRemote;
-import IslandFurniture.StaticClasses.LoadTransactionBeanRemote;
-import IslandFurniture.StaticClasses.MapPrivilegeDataBeanRemote;
-import IslandFurniture.StaticClasses.MapStaffDataBeanRemote;
+import IslandFurniture.DataLoading.LoadJamesTestDataRemote;
+import IslandFurniture.DataLoading.LoadOrgEntitiesBeanRemote;
+import IslandFurniture.DataLoading.LoadPrivilegeBeanRemote;
+import IslandFurniture.DataLoading.LoadSalesForecastBeanRemote;
+import IslandFurniture.DataLoading.LoadStaffDataBeanRemote;
+import IslandFurniture.DataLoading.LoadStocksBeanRemote;
+import IslandFurniture.DataLoading.LoadStorageDataBeanRemote;
+import IslandFurniture.DataLoading.LoadSupplierBeanRemote;
+import IslandFurniture.DataLoading.LoadTransactionBeanRemote;
+import IslandFurniture.DataLoading.MapPrivilegeDataBeanRemote;
+import IslandFurniture.DataLoading.MapStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
 /**
- * a
  * IMPORTANT! Data Loading client for all types of sample data. Some segments do
  * not check for duplicates (e.g. transactions), hence please do not run too
  * many times (might overload your database)!
