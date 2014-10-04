@@ -5,9 +5,9 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.ProductionOrder;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.ProductionOrder;
+import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.Exceptions.InsufficientMaterialException;
 import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import java.util.Calendar;

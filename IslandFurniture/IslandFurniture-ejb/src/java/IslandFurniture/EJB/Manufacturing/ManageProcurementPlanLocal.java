@@ -6,12 +6,12 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Enums.Month;
-import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Entities.RetailItem;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Entities.MonthlyProcurementPlan;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.RetailItem;
 import java.util.List;
 import javax.ejb.Local;
 

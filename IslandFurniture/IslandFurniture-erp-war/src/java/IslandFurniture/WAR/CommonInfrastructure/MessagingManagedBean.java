@@ -8,9 +8,9 @@ package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.Message;
-import IslandFurniture.EJB.Entities.MessageThread;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Message;
+import IslandFurniture.Entities.MessageThread;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;

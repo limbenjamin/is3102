@@ -7,8 +7,8 @@
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.GlobalHQ;
-import IslandFurniture.EJB.Entities.LogEntry;
+import IslandFurniture.Entities.GlobalHQ;
+import IslandFurniture.Entities.LogEntry;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;

@@ -5,13 +5,13 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
-import IslandFurniture.EJB.Entities.Supplier;
-import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
-import IslandFurniture.StaticClasses.Helper.Helper;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.WeeklyMRPRecord;
+import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

@@ -6,7 +6,7 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.MessageThread;
+import IslandFurniture.Entities.MessageThread;
 import java.util.List;
 import javax.ejb.Local;
 

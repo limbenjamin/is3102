@@ -6,10 +6,10 @@
 
 package IslandFurniture.WAR.Purchasing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.ProcuredStock;
-import IslandFurniture.EJB.Entities.ProcurementContractDetail;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;

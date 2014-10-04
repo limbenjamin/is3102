@@ -6,11 +6,11 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Message;
-import IslandFurniture.EJB.Entities.MessageThread;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.StaticClasses.Helper.TimeMethods;
+import IslandFurniture.Entities.Message;
+import IslandFurniture.Entities.MessageThread;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

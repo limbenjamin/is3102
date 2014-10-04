@@ -6,8 +6,8 @@
 
 package IslandFurniture.WAR.ITManagement;
 
-import IslandFurniture.EJB.Entities.Privilege;
-import IslandFurniture.EJB.Entities.Role;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Role;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

@@ -6,12 +6,12 @@
 package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Enums.ProdOrderStatus;
-import IslandFurniture.EJB.Entities.ProductionOrder;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Enums.ProdOrderStatus;
+import IslandFurniture.Entities.ProductionOrder;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.Exceptions.InsufficientMaterialException;
 import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.Manufacturing.ProductionManagerLocal;

@@ -1,16 +1,16 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
-import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.GoodsReceiptDocument;
+import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
+import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StorageArea;
+import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsReceiptLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;

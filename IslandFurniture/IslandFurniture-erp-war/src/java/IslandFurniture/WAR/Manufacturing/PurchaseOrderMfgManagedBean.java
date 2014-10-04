@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.PurchaseOrder;
+import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;

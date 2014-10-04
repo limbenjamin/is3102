@@ -5,9 +5,9 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.StorageArea;
+import IslandFurniture.Entities.StorageBin;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;

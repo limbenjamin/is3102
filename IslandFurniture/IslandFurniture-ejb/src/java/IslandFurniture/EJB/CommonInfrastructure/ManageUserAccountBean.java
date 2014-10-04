@@ -6,7 +6,7 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Staff;
 import javax.annotation.Resource;
 import javax.ejb.Stateful;
 import javax.ejb.SessionContext;

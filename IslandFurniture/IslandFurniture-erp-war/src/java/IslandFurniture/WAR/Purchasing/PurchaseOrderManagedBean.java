@@ -6,12 +6,12 @@
 package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

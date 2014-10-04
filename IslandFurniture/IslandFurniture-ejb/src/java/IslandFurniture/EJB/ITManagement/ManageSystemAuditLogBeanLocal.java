@@ -6,8 +6,8 @@
 
 package IslandFurniture.EJB.ITManagement;
 
-import IslandFurniture.EJB.Entities.LogEntry;
-import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.Entities.LogEntry;
+import IslandFurniture.Entities.Plant;
 import java.util.List;
 import javax.ejb.Local;
 

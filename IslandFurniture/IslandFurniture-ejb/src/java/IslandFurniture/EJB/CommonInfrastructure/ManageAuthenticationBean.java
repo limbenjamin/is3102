@@ -6,10 +6,11 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.*;
-import static IslandFurniture.EJB.Entities.Staff.SHA1Hash;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.LogEntry;
+import static IslandFurniture.Entities.Staff.SHA1Hash;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
-import IslandFurniture.StaticClasses.Helper.SendEmailByPost;
+import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;

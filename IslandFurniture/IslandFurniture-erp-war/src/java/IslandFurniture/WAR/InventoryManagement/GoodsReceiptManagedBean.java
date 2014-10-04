@@ -6,12 +6,12 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.GoodsIssuedDocument;
+import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
+import IslandFurniture.Entities.GoodsReceiptDocument;
+import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsReceiptLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;

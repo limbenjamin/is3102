@@ -6,16 +6,16 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockSupplied;
-import IslandFurniture.EJB.Entities.StockUnit;
-import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockSupplied;
+import IslandFurniture.Entities.StockUnit;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
-import IslandFurniture.EJB.DataStructures.Couple;
+import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
 import java.util.ArrayList;

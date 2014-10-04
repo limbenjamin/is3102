@@ -7,8 +7,8 @@
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.Role;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Role;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

@@ -5,13 +5,13 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.BOMDetail;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Enums.ProdOrderStatus;
-import IslandFurniture.EJB.Entities.ProductionOrder;
-import IslandFurniture.EJB.Entities.StockUnit;
-import IslandFurniture.EJB.Enums.StorageAreaType;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Enums.ProdOrderStatus;
+import IslandFurniture.Entities.ProductionOrder;
+import IslandFurniture.Entities.StockUnit;
+import IslandFurniture.Enums.StorageAreaType;
+import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.Exceptions.InsufficientMaterialException;
 import IslandFurniture.EJB.Exceptions.InvalidInputException;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;

@@ -8,10 +8,10 @@ package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.Country;
-import IslandFurniture.EJB.Entities.GlobalHQ;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.GlobalHQ;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

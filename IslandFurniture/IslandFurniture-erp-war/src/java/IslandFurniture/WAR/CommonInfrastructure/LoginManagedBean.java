@@ -10,10 +10,13 @@ package IslandFurniture.WAR.CommonInfrastructure;
  * @author Benjamin
  */
 
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Url;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Notification;
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;

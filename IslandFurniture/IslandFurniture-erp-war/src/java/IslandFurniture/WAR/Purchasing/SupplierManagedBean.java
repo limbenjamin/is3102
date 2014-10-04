@@ -6,8 +6,8 @@
 
 package IslandFurniture.WAR.Purchasing;
 
-import IslandFurniture.EJB.Entities.Country;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

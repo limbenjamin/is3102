@@ -7,13 +7,13 @@
 package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Enums.Month;
-import IslandFurniture.EJB.Entities.MonthlyProcurementPlan;
-import IslandFurniture.EJB.Entities.RetailItem;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Entities.MonthlyProcurementPlan;
+import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
-import IslandFurniture.StaticClasses.Helper.Helper;
+import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
 import IslandFurnitures.DataStructures.JDataTable.Row;

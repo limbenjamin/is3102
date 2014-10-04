@@ -6,7 +6,7 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Todo;
+import IslandFurniture.Entities.Todo;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;

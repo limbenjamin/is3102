@@ -6,8 +6,8 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.FurnitureModel;
-import IslandFurniture.EJB.Entities.RetailItem;
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.RetailItem;
 import java.util.List;
 import javax.ejb.Local;
 

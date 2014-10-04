@@ -6,13 +6,13 @@
 
 package IslandFurniture.EJB.ITManagement;
 
-import IslandFurniture.EJB.Entities.Country;
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.GlobalHQ;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Store;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.GlobalHQ;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;

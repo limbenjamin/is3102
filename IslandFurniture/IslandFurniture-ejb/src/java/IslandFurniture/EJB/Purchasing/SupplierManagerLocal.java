@@ -6,13 +6,13 @@
 
 package IslandFurniture.EJB.Purchasing;
 
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.ProcuredStock;
-import IslandFurniture.EJB.Entities.ProcurementContractDetail;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockSupplied;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockSupplied;
+import IslandFurniture.Entities.Supplier;
 import java.util.List;
 import javax.ejb.Local;
 

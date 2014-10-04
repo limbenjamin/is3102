@@ -6,14 +6,14 @@
 package IslandFurniture.WAR.SalesPlanning;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
-import IslandFurniture.EJB.DataStructures.Couple;
+import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;

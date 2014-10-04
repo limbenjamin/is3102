@@ -6,10 +6,10 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockSupplied;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import java.io.Serializable;
 import java.util.List;

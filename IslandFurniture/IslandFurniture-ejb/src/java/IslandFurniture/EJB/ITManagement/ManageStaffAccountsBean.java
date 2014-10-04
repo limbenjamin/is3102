@@ -7,13 +7,24 @@
 package IslandFurniture.EJB.ITManagement;
 
 
+import IslandFurniture.Entities.Role;
+import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Notification;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Event;
+import IslandFurniture.Entities.MessageThread;
+import IslandFurniture.Entities.Announcement;
+import IslandFurniture.Entities.Preference;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.LogEntry;
+import IslandFurniture.Entities.Todo;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.Exceptions.InvalidCountryException;
 import IslandFurniture.EJB.Exceptions.InvalidPlantException;
 import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
-import IslandFurniture.StaticClasses.Helper.SendEmailByPost;
+import IslandFurniture.StaticClasses.QueryMethods;
+import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

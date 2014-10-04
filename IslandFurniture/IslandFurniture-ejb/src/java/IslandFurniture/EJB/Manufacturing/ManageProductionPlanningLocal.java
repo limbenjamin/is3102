@@ -5,9 +5,9 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.EJB.Entities.ProductionCapacity;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.ProductionCapacity;
+import IslandFurniture.Entities.Supplier;
 import java.util.HashMap;
 import javax.ejb.Local;
 

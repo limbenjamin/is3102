@@ -5,17 +5,17 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.EJB.Enums.Month;
-import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
-import IslandFurniture.EJB.Entities.MonthlyProductionPlanPK;
-import IslandFurniture.EJB.Entities.ProductionCapacity;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.WeeklyMRPRecord;
-import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
-import IslandFurniture.StaticClasses.Helper.Helper;
-import IslandFurniture.StaticClasses.Helper.QueryMethods;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Material;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Entities.MonthlyProductionPlan;
+import IslandFurniture.Entities.MonthlyProductionPlanPK;
+import IslandFurniture.Entities.ProductionCapacity;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.WeeklyMRPRecord;
+import IslandFurniture.Entities.WeeklyProductionPlan;
+import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.StaticClasses.QueryMethods;
 import IslandFurnitures.DataStructures.JDataTable;
 import IslandFurnitures.DataStructures.JDataTable.Cell;
 import java.util.ArrayList;

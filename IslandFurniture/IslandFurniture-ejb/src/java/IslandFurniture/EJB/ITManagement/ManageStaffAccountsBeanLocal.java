@@ -6,8 +6,8 @@
 
 package IslandFurniture.EJB.ITManagement;
 
-import IslandFurniture.EJB.Entities.Privilege;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Staff;
 import java.util.List;
 import javax.ejb.Local;
 

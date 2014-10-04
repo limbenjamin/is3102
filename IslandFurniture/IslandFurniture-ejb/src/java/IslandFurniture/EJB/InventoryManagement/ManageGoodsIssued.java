@@ -1,12 +1,12 @@
 package IslandFurniture.EJB.InventoryManagement;
 
-import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StockUnit;
-import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.GoodsIssuedDocument;
+import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockUnit;
+import IslandFurniture.Entities.StorageArea;
+import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;

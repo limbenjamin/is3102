@@ -5,16 +5,16 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
-import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocumentDetail;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocument;
-import IslandFurniture.EJB.Entities.GoodsReceiptDocumentDetail;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Entities.Stock;
-import IslandFurniture.EJB.Entities.StorageArea;
-import IslandFurniture.EJB.Entities.StorageBin;
+import IslandFurniture.Entities.GoodsIssuedDocument;
+import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
+import IslandFurniture.Entities.GoodsReceiptDocument;
+import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StorageArea;
+import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 

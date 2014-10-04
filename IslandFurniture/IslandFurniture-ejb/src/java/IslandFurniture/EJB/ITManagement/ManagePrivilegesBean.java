@@ -6,10 +6,10 @@
 
 package IslandFurniture.EJB.ITManagement;
 
-import IslandFurniture.EJB.Entities.Privilege;
-import IslandFurniture.EJB.Entities.Role;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Url;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Role;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Url;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;

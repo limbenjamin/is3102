@@ -6,10 +6,10 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.GoodsIssuedDocument;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.StockUnit;
+import IslandFurniture.Entities.GoodsIssuedDocument;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

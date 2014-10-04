@@ -7,8 +7,8 @@
 package IslandFurniture.EJB.CommonInfrastructure;
 
 
-import IslandFurniture.EJB.Entities.Staff;
-import IslandFurniture.EJB.Entities.Todo;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Todo;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;

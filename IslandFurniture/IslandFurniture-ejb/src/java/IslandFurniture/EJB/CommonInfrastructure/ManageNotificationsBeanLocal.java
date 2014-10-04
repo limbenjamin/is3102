@@ -6,11 +6,11 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Notification;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.Privilege;
-import IslandFurniture.EJB.Entities.Role;
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Notification;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Privilege;
+import IslandFurniture.Entities.Role;
+import IslandFurniture.Entities.Staff;
 import java.util.List;
 import javax.ejb.Local;
 

@@ -7,7 +7,7 @@ package IslandFurniture.WAR.Hidden;
 
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
 import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonRemote;
-import IslandFurniture.StaticClasses.Helper.InitialiseServerBeanLocal;
+import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;

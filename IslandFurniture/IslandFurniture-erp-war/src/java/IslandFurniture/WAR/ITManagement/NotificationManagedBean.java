@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
-import IslandFurniture.EJB.Entities.Notification;
+import IslandFurniture.Entities.Notification;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.time.Instant;
 import java.time.LocalDateTime;

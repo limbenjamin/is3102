@@ -6,7 +6,7 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Staff;
+import IslandFurniture.Entities.Staff;
 import java.util.List;
 import javax.ejb.Local;
 

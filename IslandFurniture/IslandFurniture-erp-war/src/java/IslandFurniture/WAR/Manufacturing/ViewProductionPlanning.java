@@ -5,9 +5,9 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Enums.Month;
-import IslandFurniture.EJB.Entities.MonthlyProductionPlan;
-import IslandFurniture.EJB.Entities.WeeklyProductionPlan;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Entities.MonthlyProductionPlan;
+import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;

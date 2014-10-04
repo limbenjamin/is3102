@@ -6,20 +6,20 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.EJB.Entities.BOM;
-import IslandFurniture.EJB.Entities.BOMDetail;
-import IslandFurniture.EJB.Entities.FurnitureModel;
-import IslandFurniture.EJB.Entities.Material;
-import IslandFurniture.EJB.Entities.ProcuredStock;
-import IslandFurniture.EJB.Entities.ProcurementContractDetail;
-import IslandFurniture.EJB.Entities.RetailItem;
-import IslandFurniture.EJB.Entities.StockSupplied;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.findFurnitureByName;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.findMaterialByName;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.findPCDByStock;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.findRetailItemByName;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.getBOMDetailByMaterial;
-import static IslandFurniture.StaticClasses.Helper.QueryMethods.getStockSuppliedByStock;
+import IslandFurniture.Entities.BOM;
+import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.StockSupplied;
+import static IslandFurniture.StaticClasses.QueryMethods.findFurnitureByName;
+import static IslandFurniture.StaticClasses.QueryMethods.findMaterialByName;
+import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStock;
+import static IslandFurniture.StaticClasses.QueryMethods.findRetailItemByName;
+import static IslandFurniture.StaticClasses.QueryMethods.getBOMDetailByMaterial;
+import static IslandFurniture.StaticClasses.QueryMethods.getStockSuppliedByStock;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;

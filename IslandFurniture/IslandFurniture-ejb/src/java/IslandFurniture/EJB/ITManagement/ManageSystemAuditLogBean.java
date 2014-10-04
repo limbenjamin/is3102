@@ -7,9 +7,9 @@
 package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Entities.LogEntry;
-import IslandFurniture.EJB.Enums.LogEntryAction;
-import IslandFurniture.EJB.Entities.Plant;
+import IslandFurniture.Entities.LogEntry;
+import IslandFurniture.Enums.LogEntryAction;
+import IslandFurniture.Entities.Plant;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;

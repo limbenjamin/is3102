@@ -6,7 +6,7 @@
 
 package IslandFurniture.EJB.CommonInfrastructure;
 
-import IslandFurniture.EJB.Entities.Announcement;
+import IslandFurniture.Entities.Announcement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;

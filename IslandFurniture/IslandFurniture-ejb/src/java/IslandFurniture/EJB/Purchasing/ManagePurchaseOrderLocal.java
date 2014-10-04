@@ -5,13 +5,13 @@
  */
 package IslandFurniture.EJB.Purchasing;
 
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Plant;
-import IslandFurniture.EJB.Entities.ProcuredStock;
-import IslandFurniture.EJB.Entities.PurchaseOrder;
-import IslandFurniture.EJB.Entities.PurchaseOrderDetail;
-import IslandFurniture.EJB.Enums.PurchaseOrderStatus;
-import IslandFurniture.EJB.Entities.Supplier;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.List;

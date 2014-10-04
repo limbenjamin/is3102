@@ -6,10 +6,10 @@
 
 package IslandFurniture.WAR.ITManagement;
 
-import IslandFurniture.EJB.Entities.Country;
-import IslandFurniture.EJB.Entities.CountryOffice;
-import IslandFurniture.EJB.Entities.ManufacturingFacility;
-import IslandFurniture.EJB.Entities.Store;
+import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ManufacturingFacility;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;

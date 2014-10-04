@@ -9,8 +9,11 @@ package IslandFurniture.WAR.CommonInfrastructure;
  *
  * @author Benjamin
  */
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Event;
+import IslandFurniture.Entities.Todo;
+import IslandFurniture.Entities.Announcement;
 import IslandFurniture.EJB.CommonInfrastructure.*;
-import IslandFurniture.EJB.Entities.*;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;

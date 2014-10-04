@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.Entities.Material;
+import IslandFurniture.Entities.Material;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
