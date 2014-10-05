@@ -22,7 +22,7 @@
                     <div class="col-md-8">
                         <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementLocationManagedBean.ifStockUnitListEmpty}">
                             <h:form> 
-                                <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
+                                <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
                                     <i class="fa fa-fw fa-plus"></i>Select Stock
                                 </button>  
                             </h:form>
@@ -208,7 +208,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.addStockUnitTemp}" value="Add Stock" class="btn btn-success pull-right btn-right-margin">
+                                                <h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.addStockUnitTemp}" value="Add Stock" class="btn btn-success btn-round">
                                                     <f:attribute name="stockId" value="#{inventoryTransferMovementLocationManagedBean.stock.id}" />
                                                     <f:attribute name="stockUnitId" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}" />
                                                     <f:attribute name="storageBinId" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}" />
