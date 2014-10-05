@@ -5,17 +5,17 @@
  */
 package chentongclient;
 
-import IslandFurniture.StaticClasses.Helper.LoadJamesTestDataRemote;
-import IslandFurniture.StaticClasses.Helper.LoadOrgEntitiesBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadPrivilegeBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadSalesForecastBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadStaffDataBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadStocksBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadStorageDataBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadSupplierBeanRemote;
-import IslandFurniture.StaticClasses.Helper.LoadTransactionBeanRemote;
-import IslandFurniture.StaticClasses.Helper.MapPrivilegeDataBeanRemote;
-import IslandFurniture.StaticClasses.Helper.MapStaffDataBeanRemote;
+import IslandFurniture.DataLoading.LoadJamesTestDataRemote;
+import IslandFurniture.DataLoading.LoadOrgEntitiesBeanRemote;
+import IslandFurniture.DataLoading.LoadPrivilegeBeanRemote;
+import IslandFurniture.DataLoading.LoadSalesForecastBeanRemote;
+import IslandFurniture.DataLoading.LoadStaffDataBeanRemote;
+import IslandFurniture.DataLoading.LoadStocksBeanRemote;
+import IslandFurniture.DataLoading.LoadStorageDataBeanRemote;
+import IslandFurniture.DataLoading.LoadSupplierBeanRemote;
+import IslandFurniture.DataLoading.LoadTransactionBeanRemote;
+import IslandFurniture.DataLoading.MapPrivilegeDataBeanRemote;
+import IslandFurniture.DataLoading.MapStaffDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
