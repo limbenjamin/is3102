@@ -8,6 +8,8 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Enums.FurnitureCategory;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -53,5 +55,9 @@ public interface StockManagerLocal {
     public String deleteBOMDetail(Long BOMDetailID);
 
     public void addFurnitureColour(Long furnitureID, String colour);
+
+    public String editFurnitureCategory(Long furnitureID, FurnitureCategory category);
+
+    public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category);
     
 }

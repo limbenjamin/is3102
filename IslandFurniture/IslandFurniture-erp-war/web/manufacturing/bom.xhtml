@@ -16,7 +16,7 @@
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
                             <li><a href="furniture.xhtml">Furniture</a></li>
-                            <li class="active"><strong>#{bOMManagedBean.furniture.name} B.O.M</strong></li>
+                            <li class="active"><strong>#{bOMManagedBean.furniture.name}</strong></li>
                         </ol>                        
                     </div>                    
                     <div class="col-md-10">
@@ -24,13 +24,42 @@
                             <a href="furniture.xhtml">
                             <button type="button" class="btn btn-sm btn-default">
                                 <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
-                            </button>
+                            </button> 
                             </a>                            
                             <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newBOM">
-                                <i class="fa fa-fw fa-plus"></i>New Material to BOM
+                                <i class="fa fa-fw fa-plus"></i>New Material to BOM 
                             </button>                            
                         </span>                          
-                        <h4><strong>#{bOMManagedBean.furniture.name}</strong> | Bill of Material</h4><hr></hr>
+                        <h4><strong>#{bOMManagedBean.furniture.name}</strong></h4><hr></hr>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="col-md-5">
+                            <h:form id="categoryForm" class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Furniture Category: </label>           
+                                    <div class="col-sm-7">
+                                        <h:selectOneMenu id="categoryField" class="form-control needauto">
+                                            <f:selectItem itemLabel="#{bOMManagedBean.furniture.category}" itemValue="" noSelectionOption="true" />
+                                            <f:selectItems value="#{bOMManagedBean.categoryList}" var="category" 
+                                                           itemLabel="#{category}" itemValue="#{category}" />
+                                            <f:ajax render="categoryField" listener="#{bOMManagedBean.editFurnitureCategory}" />
+                                        </h:selectOneMenu> 
+                                    </div>  
+                                </div>  
+                                <div class="form-group"> 
+                                    <label class="col-sm-5 control-label">Furniture Sub-category: </label>          
+                                    <div class="col-sm-7"> 
+                                        <h:selectOneMenu id="subcategoryField" class="form-control needauto"> 
+                                            <f:selectItem itemLabel="#{bOMManagedBean.furniture.subcategory}" itemValue="" noSelectionOption="true" />
+                                            <f:selectItems value="#{bOMManagedBean.subcategoryList}" var="subcategory" 
+                                                           itemLabel="#{subcategory}" itemValue="#{subcategory}" />
+                                            <f:ajax render="subcategoryField" listener="#{bOMManagedBean.editFurnitureSubcategory}" />
+                                        </h:selectOneMenu> 
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                        <hr></hr> 
                     </div>
                     <div class="col-md-10">
                         <div class="panel-heading dashboard-title-panel">
