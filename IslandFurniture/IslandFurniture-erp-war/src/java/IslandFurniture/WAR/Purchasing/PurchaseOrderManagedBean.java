@@ -52,7 +52,6 @@ public class PurchaseOrderManagedBean implements Serializable {
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
     private List<Supplier> supplierList;
-    private List<Plant> plantList;
     private Staff staff;
     private Supplier supplier;
     private ManufacturingFacility mf;
@@ -78,7 +77,6 @@ public class PurchaseOrderManagedBean implements Serializable {
         plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
         confirmedOrderList = mpol.viewConfirmedPurchaseOrders(staffPlant);
         supplierList = mpol.viewContractedSuppliers(mf);
-        plantList = mpol.viewPlants();
         System.out.println("Init");
     }
 
@@ -238,14 +236,6 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     public void setSupplierList(List<Supplier> supplierList) {
         this.supplierList = supplierList;
-    }
-
-    public List<Plant> getPlantList() {
-        return plantList;
-    }
-
-    public void setPlantList(List<Plant> plantList) {
-        this.plantList = plantList;
     }
 
     public SupplierManagerLocal getSml() {

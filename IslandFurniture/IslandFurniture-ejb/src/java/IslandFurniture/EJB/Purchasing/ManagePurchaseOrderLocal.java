@@ -24,8 +24,6 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    PurchaseOrder createPurchaseOrder(Calendar orderDate, PurchaseOrderStatus status);
-
     PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Plant plant, Plant shipsTo, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
@@ -33,8 +31,6 @@ public interface ManagePurchaseOrderLocal {
     void deletePurchaseOrder(Long poId);
 
     void deletePurchaseOrderDetail(Long podId);
-
-    void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, PurchaseOrderStatus status);
 
     void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate);
 
@@ -46,21 +42,11 @@ public interface ManagePurchaseOrderLocal {
 
     PurchaseOrderDetail getPurchaseOrderDetail(Long id);
 
-    Long getPlantOfOrder(Long orderId);
-
-    List<ProcuredStock> viewProcuredStocks();
-
-    List<Plant> viewPlants();
-
-    List<Supplier> viewSuppliers();
-
     List<Supplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
 
     List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf);
-
-    List<PurchaseOrder> viewPurchaseOrders();
 
     List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant);
 
