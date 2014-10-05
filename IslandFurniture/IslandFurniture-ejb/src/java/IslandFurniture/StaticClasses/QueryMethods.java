@@ -517,6 +517,7 @@ public class QueryMethods {
     }
 
     public static HashMap<Plant, Long> tracePOToPlant(EntityManager em, ProductionOrder PO) {
+//Cannot confirm no bug but test it out bah . GIT ISSUE #2
 
         HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
 
@@ -530,6 +531,7 @@ public class QueryMethods {
     }
 
     public static HashMap<Plant, Long> traceWPPToPlant(EntityManager em, WeeklyProductionPlan wpp) {
+//Cannot confirm no bug but test it out bah . GIT ISSUE #2
 
         HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
 
@@ -569,7 +571,7 @@ public class QueryMethods {
                 returnObj.put(mssr.getCountryOffice(), mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice()));
                 distr += mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice());
             } else {
-                Double weight = (mssr.getQtyRequested()+0.0) / month_demand;
+                Double weight = (mssr.getQtyRequested() + 0.0) / month_demand;
                 weight *= wpp.getQTY();
                 returnObj.put(mssr.getCountryOffice(), weight.longValue());
                 distr += weight;
