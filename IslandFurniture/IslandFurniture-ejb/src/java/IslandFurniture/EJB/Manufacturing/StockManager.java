@@ -22,6 +22,7 @@ import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStock;
 import static IslandFurniture.StaticClasses.QueryMethods.findRetailItemByName;
 import static IslandFurniture.StaticClasses.QueryMethods.getBomDetailByMaterial;
 import static IslandFurniture.StaticClasses.QueryMethods.getStockSuppliedByStock;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -419,6 +420,44 @@ public class StockManager implements StockManagerLocal {
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return "Unexpected error occured";
+        }
+    }
+    public Double priceConveter(Double originalPrice, Double exchangeRate) {
+        DecimalFormat df = new DecimalFormat("#.#");
+        Integer basePrice;
+        Double realPrice;
+        Double price;
+        
+        System.out.println("Original Price is $" + originalPrice + ". Exchange Rate is $" + exchangeRate + ". Converted Rate is $" + (originalPrice * exchangeRate));
+        realPrice = originalPrice * exchangeRate;
+        basePrice = realPrice.intValue();
+        if(realPrice <= 10) {
+                price = originalPrice * exchangeRate;
+                System.out.println("Selling price is $" + df.format(price));	
+                return price;
+        } else if(realPrice <= 50) {
+                System.out.println("Selling price is $" + basePrice);
+                return basePrice + 0.0;
+        } else if(realPrice <= 200) {
+                price = 0.0 + basePrice - (basePrice % 5);
+                System.out.println("Selling price is $" + price);
+                return price;
+        } else if(realPrice <= 1000) {
+                price = 0.0 + basePrice - (basePrice % 10);
+                System.out.println("Selling price is $" + price);
+                return price;
+        } else if(realPrice <= 5000) {
+                price = 0.0 + basePrice - (basePrice % 50);
+                System.out.println("Selling price is $" + price);
+                return price;
+        } else if(realPrice <= 10000) {
+                price = 0.0 + basePrice - (basePrice % 100);
+                System.out.println("Selling price is $" + price);
+                return price;
+        } else {
+                price = 0.0 + basePrice - (basePrice % 500);
+                System.out.println("Selling price is $" + price);
+                return price;
         }
     }
 }

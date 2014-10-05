@@ -7,7 +7,9 @@
 package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Enums.FurnitureCategory;
@@ -38,6 +40,8 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class BOMManagedBean implements Serializable {
     @EJB
+    private SupplierManagerLocal supplierManager;
+    @EJB
     private StockManagerLocal stockManager;
     
     private FurnitureModel furniture = null;
@@ -49,6 +53,8 @@ public class BOMManagedBean implements Serializable {
     private boolean uneditable;
     private List<FurnitureCategory> categoryList;
     private List<FurnitureSubcategory> subcategoryList;
+    private List<CountryOffice> countryList;
+    private List<Double> pricingList;
 
     public List<FurnitureSubcategory> getSubcategoryList() {
         return subcategoryList;
@@ -142,6 +148,7 @@ public class BOMManagedBean implements Serializable {
         this.uneditable = this.furniture.getBom().isUneditable();
         this.subcategoryList = new ArrayList<FurnitureSubcategory>(EnumSet.allOf(FurnitureSubcategory.class));
         this.categoryList = new ArrayList<FurnitureCategory>(EnumSet.allOf(FurnitureCategory.class));
+        this.countryList = supplierManager.getListOfCountryOffice();
         if(uneditable) 
             System.out.println("Furniture's BOM cannot be edited");
         else
@@ -244,5 +251,13 @@ public class BOMManagedBean implements Serializable {
         FurnitureSubcategory fc = FurnitureSubcategory.valueOf(category);
         stockManager.editFurnitureSubcategory(furnitureID, fc);
         this.furniture.setSubcategory(fc); 
+    }
+    public String editPriceList() {
+        System.out.println("BOMManagedBean.editPriceList()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Long fID = Long.parseLong(request.getParameter("pricingForm:fID"));
+        return "bom";
+        
+        
     }
 }
