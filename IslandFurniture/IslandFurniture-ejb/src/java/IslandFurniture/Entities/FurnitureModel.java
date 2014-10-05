@@ -5,6 +5,8 @@
  */
 package IslandFurniture.Entities;
 
+import IslandFurniture.Enums.FurnitureCategory;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -36,7 +38,35 @@ public class FurnitureModel extends Stock implements Serializable {
     @OneToMany(mappedBy = "furnitureModel", cascade={CascadeType.PERSIST})
     protected List<ProductionCapacity> productionCapacity;
     private Double price;
+    private FurnitureCategory category;
+    private FurnitureSubcategory subcategory;
     private List colour;
+
+    public FurnitureModel() {
+        this.category = FurnitureCategory.EMPTY;
+        this.subcategory = FurnitureSubcategory.EMPTY;
+    }
+    public FurnitureModel(String name) {
+        this.category = FurnitureCategory.EMPTY;
+        this.subcategory = FurnitureSubcategory.EMPTY;
+        this.name = name;
+    }
+
+    public FurnitureSubcategory getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(FurnitureSubcategory subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public FurnitureCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(FurnitureCategory category) {
+        this.category = category;
+    }
 
     public Double getPrice() {
         return price;
@@ -52,12 +82,6 @@ public class FurnitureModel extends Stock implements Serializable {
 
     public void setColour(List colour) {
         this.colour = colour;
-    }
-
-    public FurnitureModel() {
-    }
-    public FurnitureModel(String name) {
-        this.name = name;
     }
     public BOM getBom() {
         return bom;

@@ -14,6 +14,8 @@ import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcurementContractDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.StockSupplied;
+import IslandFurniture.Enums.FurnitureCategory;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import static IslandFurniture.StaticClasses.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findMaterialByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStock;
@@ -136,8 +138,8 @@ public class StockManager implements StockManagerLocal {
                 em.persist(fm);
                 msg = "" + fm.getId() + "#0"; 
             } else {
-                System.out.println("FurnitureModel " + name + " already exists. Directing to its BOM");
-                msg = "" + fm.getId() + "#FurnitureModel " + name + " already exists. Directed to BOM";
+                System.out.println("FurnitureModel " + name + " already exists. Directing to Furniture Details");
+                msg = "" + fm.getId() + "#FurnitureModel " + name + " already exists. Directed to Furniture Details";
             }
             return msg;
         } catch(Exception ex) {
@@ -208,6 +210,30 @@ public class StockManager implements StockManagerLocal {
                 em.remove(bom);
                 em.remove(fm);
             }
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured";
+        }
+    }
+    public String editFurnitureCategory(Long furnitureID, FurnitureCategory category) {
+        FurnitureModel fm;
+        try {
+            System.out.println("StockManager.editFurnitureCategory()");
+            fm = em.find(FurnitureModel.class, furnitureID);
+            fm.setCategory(category);
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured";
+        }
+    }
+    public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category) {
+        FurnitureModel fm;
+        try {
+            System.out.println("StockManager.editFurnitureSubcategory()");
+            fm = em.find(FurnitureModel.class, furnitureID);
+            fm.setSubcategory(category);
             return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
