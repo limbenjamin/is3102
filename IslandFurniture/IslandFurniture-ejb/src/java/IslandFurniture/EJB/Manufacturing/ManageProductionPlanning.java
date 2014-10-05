@@ -44,14 +44,13 @@ import javax.persistence.Query;
 /**
  *
  * @author James This powerful Bean does production planning on a specific
- * manufacturing facility
- * Note to James:
- * Future today.  WPP to mpp translation . take care of boundary condition
- * wpp boundary . take care of rounding off effect
+ * manufacturing facility Note to James: Future today. WPP to mpp translation .
+ * take care of boundary condition wpp boundary . take care of rounding off
+ * effect
  */
 @Stateful
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
-public class ManageProductionPlanning implements  ManageProductionPlanningLocal {
+public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
 
@@ -372,44 +371,51 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
     private void planWeekMPP(MonthlyProductionPlan mpp) throws Exception {
 
         int maxWeekNumber = Helper.getNumOfWeeks(mpp.getMonth().value, mpp.getYear());
-        int maxDay = Helper.getNumWorkDays(mpp.getMonth(), mpp.getYear());
-        int daysInLastWeek = Helper.getNumOfDaysInWeek(mpp.getMonth().value, mpp.getYear(), maxWeekNumber);
-
-        int rPerWeek = (int) Math.floor((mpp.getQTY().doubleValue() / maxDay) * (maxDay - daysInLastWeek) / (maxWeekNumber - 1));
 
         for (WeeklyProductionPlan wpp : mpp.getWeeklyProductionPlans()) {
             em.remove(wpp);
         }
+        Integer sum_produce = 0;
 
         mpp.getWeeklyProductionPlans().clear();
 
         for (int i = 1; i <= maxWeekNumber; i++) {
 
+//            WeeklyProductionPlan wp = addWeeklyPlan(mpp);
+//            if (i == maxWeekNumber) {
+//                Double produce = 0.0;
+//                Double Nextproduce = 0.0;
+//                if (QueryMethods.getNextMonthlyProductionPlan(em, mpp) != null) {
+//
+//                    Nextproduce = ((QueryMethods.getNextMonthlyProductionPlan(em, mpp).getQTY() + 0.0) / QueryMethods.getNextMonthlyProductionPlan(em, mpp).getNumWorkDays()) * (workingDaysInWeek + 0.0);
+//                }
+//                Double normalProduce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+//                Double w1 = (Helper.getBoundaryWeekDays(mpp.getMonth(), mpp.getYear()) / 7.0);
+//                Double w2 = 1 - w1;
+//                produce = normalProduce * w1 + w2 * Nextproduce;
+//                wp.setQTY(produce.intValue());
+//
+//                System.out.println("Boundary Case: Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
+//                System.out.println("Current Month produce=" + normalProduce + " Next Month PRoduce= " + Nextproduce);
+//                System.out.println("First weight = " + w1);
+//                System.out.println("Second weight = " + w2);
+//
+//            } else {
+//                Double produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+//                wp.setQTY(produce.intValue());
+//                System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
+//            }
             WeeklyProductionPlan wp = addWeeklyPlan(mpp);
-            if (i == maxWeekNumber) {
-                Double produce = 0.0;
-                Double Nextproduce = 0.0;
-                if (QueryMethods.getNextMonthlyProductionPlan(em, mpp) != null) {
-
-                    Nextproduce = ((QueryMethods.getNextMonthlyProductionPlan(em, mpp).getQTY() + 0.0) / QueryMethods.getNextMonthlyProductionPlan(em, mpp).getNumWorkDays()) * (workingDaysInWeek + 0.0);
-                }
-                Double normalProduce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
-                Double w1 = (Helper.getBoundaryWeekDays(mpp.getMonth(), mpp.getYear()) / 7.0);
-                Double w2 = 1 - w1;
-                produce = normalProduce * w1 + w2 * Nextproduce;
-                wp.setQTY(produce.intValue());
-
-                System.out.println("Boundary Case: Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
-                System.out.println("Current Month produce=" + normalProduce + " Next Month PRoduce= " + Nextproduce);
-                System.out.println("First weight = " + w1);
-                System.out.println("Second weight = " + w2);
-
-            } else {
-                Double produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
-                wp.setQTY(produce.intValue());
-                System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
+            Double produce=0.0;
+            if (i < maxWeekNumber){
+            produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+            }else{
+                produce=mpp.getQTY()-sum_produce.doubleValue();
             }
-
+            sum_produce += produce.intValue();
+            
+            wp.setQTY(produce.intValue());
+            System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
             mpp.getWeeklyProductionPlans().add(wp);
         }
 
@@ -494,6 +500,11 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
         HashMap<Material, Long> material_map = new HashMap<Material, Long>();
 
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
+
+            if (wpp.getQTY() <= 0) {
+                continue;
+            }
+
             Query l = em.createQuery("select bomd from BOMDetail bomd where bomd.bom=:bom order by bomd.material.name DESC");
             l.setParameter("bom", wpp.getMonthlyProductionPlan().getFurnitureModel().getBom());
             for (BOMDetail bomd : (List<BOMDetail>) l.getResultList()) {
@@ -606,7 +617,7 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
                 calendarPointer = begining_of_month;
             }
 
-            int targetpt = wMRP.getYear() * 1000 + wMRP.getMonth().value * 10 + wMRP.getWeek();
+            int targetpt = wMRP.getYear() * 1000 + wMRP.getMonth().value * 10 + Helper.getNumOfWeeks(wMRP.getMonth().value, wMRP.getYear()); //make sure the whole month wmrp is generated
             int i_w = calendarPointer.get(Calendar.WEEK_OF_MONTH);
             int i_m = calendarPointer.get(Calendar.MONTH);
             int i_y = calendarPointer.get(Calendar.YEAR);
@@ -614,7 +625,7 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
             int currentpt = i_m * 10 + i_w + i_y * 1000;
 
             //Fill up the gap before the first one or before the order...
-            while (currentpt < targetpt) {
+            while (currentpt <= targetpt) {
 
                 Query z = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFM");
                 z.setParameter("mf", wMRP.getManufacturingFacility());
@@ -712,7 +723,6 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
             Double orderday = Math.ceil(getLeadTime(current.getMaterial()) / 7.0) * 7.0;
             Calendar order_date = Helper.addWeek(current.getMonth().value, current.getYear(), current.getWeek(), -orderday.intValue());
 
-
             try {
                 current.setOrderYear(order_date.get(Calendar.YEAR));
                 current.setOrderMonth(Helper.translateMonth(order_date.get(Calendar.MONTH)));
@@ -727,6 +737,9 @@ public class ManageProductionPlanning implements  ManageProductionPlanningLocal 
             current.setOrderLot(orderLot.intValue());
             current.setOrderAMT(orderamt.intValue());
             current.setOnHand(prev.getOnHand() + current.getOrderAMT() - current.getQtyReq());
+            if (current.getPurchaseOrderDetail() != null) {
+                current.getPurchaseOrderDetail().setQuantity(orderamt.intValue());
+            }
 
             if (em.contains(current)) {
                 System.out.println(current);

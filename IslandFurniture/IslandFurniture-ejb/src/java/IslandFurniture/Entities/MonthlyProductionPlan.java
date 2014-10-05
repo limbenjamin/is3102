@@ -119,14 +119,14 @@ public class MonthlyProductionPlan implements Serializable {
             t.add(Calendar.DAY_OF_MONTH, -1);
 
             if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) {
-                System.out.println("Expired(): MPP="+this.month+"/"+this.year + " VS Server Time:" + t.get(Calendar.MONTH) + "/"+ t.get(Calendar.YEAR));
+                System.out.println("Expired(): MPP=" + this.month + "/" + this.year + " VS Server Time:" + t.get(Calendar.MONTH) + "/" + t.get(Calendar.YEAR));
                 return (true);
             }
 
         } catch (Exception ex) {
-          
+
         }
-          return locked;
+        return locked;
     }
 
     public void setLocked(Boolean locked) {
@@ -159,7 +159,7 @@ public class MonthlyProductionPlan implements Serializable {
     }
 
     public int getNumWorkDays() {
-
-        return Helper.getNumWorkDays(this.month, this.year);
+        Double wdays = (Helper.getNumOfWeeks(this.getMonth().value, this.getYear()) * 7.0);
+        return wdays.intValue();
     }
 }
