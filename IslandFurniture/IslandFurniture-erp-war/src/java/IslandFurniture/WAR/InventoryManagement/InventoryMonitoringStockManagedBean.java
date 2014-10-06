@@ -13,6 +13,7 @@ import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -54,11 +55,11 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageGoodsIssuedLocal mgrl;
-    @EJB
-    public ManageInventoryMonitoringLocal miml;
+    public ManageInventoryMonitoringLocal monitoringBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+    @EJB
+    private ManageInventoryTransferLocal transferBean;
 
     @PostConstruct
     public void init() {
@@ -66,33 +67,31 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        System.out.println("Init");
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
-
+        
         try {
             if (stockId == null) {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 ec.redirect("inventorymonitoring.xhtml");
             }
-        } catch (IOException ex) {
-
-        }
-
-        stock = miml.getStock(stockId);
-        stockUnitList = mgrl.viewStockUnitById(plant, stock);
+        } catch (IOException ex) {}
+        
+        stock = transferBean.getStock(stockId);
+        stockUnitList = transferBean.viewStockUnitsOfAStock(plant, stock);
 
     }
 
+//  Function: To edit the Quantity during Stock Take    
     public String editStockTakeQuantity(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
-        stock = miml.getStock(stockId);
+        stock = transferBean.getStock(stockId);
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
-        miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        stockUnitList = mgrl.viewStockUnitById(plant, stock);
+        monitoringBean.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
+        stockUnitList = transferBean.viewStockUnitsOfAStock(plant, stock);
         stockTakeQuantity = null;
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity has been updated for Stock Unit Number: " + stockUnitId, ""));
@@ -211,20 +210,12 @@ public class InventoryMonitoringStockManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public ManageGoodsIssuedLocal getMgrl() {
-        return mgrl;
-    }
-
-    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
-        this.mgrl = mgrl;
-    }
-
     public ManageInventoryMonitoringLocal getMiml() {
-        return miml;
+        return monitoringBean;
     }
 
     public void setMiml(ManageInventoryMonitoringLocal miml) {
-        this.miml = miml;
+        this.monitoringBean = miml;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {

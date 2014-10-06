@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.GoodsIssuedDocument;
@@ -10,8 +11,6 @@ import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
-import IslandFurniture.Entities.StorageArea;
-import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,56 +20,49 @@ import java.util.List;
  */
 public interface ManageGoodsIssuedLocal {
 
-    GoodsIssuedDocument createGoodsIssuedDocument(Plant plant, Calendar postingDate);
+    //  Function: To create Goods Issued Document
+    GoodsIssuedDocument createGoodsIssuedDocument(Plant plant);
 
+    // Function: To create Goods Issued Document Detail
     void createGoodsIssuedDocumentDetail(Long grdId, Long stockId, Long quantity);
 
-    void createGoodsIssuedDocumentStockUnit(Long grdId, Calendar postingDate);
-
+    //  Function: To delete Goods Issued Document
     void deleteGoodsIssuedDocument(Long goodsIssuedDocumentId);
 
+    //  Function: To delete Goods Issued Document Detail
     void deleteGoodsIssuedDocumentDetail(Long goodsIssuedDocumentDetailId);
 
-    GoodsIssuedDocument getGoodsIssuedDocument(Long id);
-
-    GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail(Long id);
-
-    Stock getStock(Long id);
-
-    StockUnit getStockUnit(Long id);
-    
-    Plant getPlant(Long id);
-
-    List<GoodsIssuedDocument> viewGoodsIssuedDocument(Plant plant);
-
-    List<GoodsIssuedDocumentDetail> viewGoodsIssuedDocumentDetail(GoodsIssuedDocument grd);
-
-    List<GoodsIssuedDocument> viewGoodsIssuedDocumentIndividual(GoodsIssuedDocument grd);
-
-    List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted(Plant plant);
-
-    List<Stock> viewStock();
-
-    List<StockUnit> viewStockUnit(Plant plant);
-
-    List<StockUnit> viewStockUnitById(Plant plant, Stock stock);
-
-    List<StockUnit> viewStockUnitById2(Plant plant, Stock stock, GoodsIssuedDocument gid);
-
-    List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid);
-
-    List<StockUnit> viewStockUnitByIdMain(Plant plant, GoodsIssuedDocument gid);
-
-    List<StorageArea> viewStorageArea(Plant plant);
-
-    List<StorageBin> viewStorageBin(Plant plant);
-
+    //  Function: To edit Goods Issued Document
     void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Plant plant);
 
-    void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate);
-    
-    List<Plant> viewPlant();
-    
-    
+    //  Function: To get GoodsIssuedDocument entity based on GoodIssuedDocumentId
+    GoodsIssuedDocument getGoodsIssuedDocument(Long id);
 
+    //  Function: To get GoodsIssuedDocumentDetail entity based on GoodIssuedDocumentDetailId
+    GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail(Long id);
+
+    //  Function: To post Goods Issued Document
+    void postGoodsIssuedDocument(Long grdId, Calendar postingDate);
+
+    //  Function: To display Goods Issued Document
+    List<GoodsIssuedDocument> viewGoodsIssuedDocument(Plant plant);
+
+    //  Function: To display Goods Issued Document Detail
+    List<GoodsIssuedDocumentDetail> viewGoodsIssuedDocumentDetail(GoodsIssuedDocument grd);
+
+    //  Function: To display details on the Goods Issued Document
+    List<GoodsIssuedDocument> viewGoodsIssuedDocumentIndividual(GoodsIssuedDocument grd);
+
+    //  Functiuon: To display Goods Issued Document Posted
+    List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted(Plant plant);
+
+    //  Function: To display Stock Units of the particular Stock and tagged to a particular Goods Issued Document
+    List<StockUnit> viewStockUnitByStockandGID(Stock stock, GoodsIssuedDocument gid);
+
+    //  Function: To display pending movement Stock Units of the particular Stock and tagged to a particular Goods Issued Document
+    List<StockUnit> viewStockUnitPendingMovementAtGIDForAParticularStock(Stock stock, GoodsIssuedDocument gid);
+
+    //  Function: To display list of Stock Units pending at the Goods Issued Document
+    List<StockUnit> viewStockUnitPendingMovementAtGoodsIssuedDocument(GoodsIssuedDocument gid);
+    
 }

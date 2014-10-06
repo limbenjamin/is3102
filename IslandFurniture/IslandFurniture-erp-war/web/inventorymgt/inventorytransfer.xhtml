@@ -21,7 +21,6 @@
                         <h4>Inventory Transfer</h4><hr></hr>
 
                         <section name="Perform Stock Taking">
-
                             <h:form class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Transfer by Stock ID</label>
@@ -33,7 +32,7 @@
                                     </div>                                     
                                 </div>
                                 <div class="form-group">
-                                    <h:commandButton action="#{inventoryTransferManagedBean.viewStockTakebyStock}" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
+                                    <h:commandButton action="#{inventoryTransferManagedBean.viewStockUnitbyStock}" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
                                     </h:commandButton>
                                 </div>
                             </h:form> 
@@ -47,28 +46,25 @@
                                             <f:selectItem itemLabel="Select Storage Location" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                         </h:selectOneMenu>
-
                                         <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{inventoryTransferManagedBean.storageBinId}" pt:required="true">
                                             <f:selectItem itemLabel="Select Storage Bin" />
                                             <f:selectItems value="#{inventoryTransferManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                         </h:selectOneMenu>
                                     </div>
                                 </div>  
-
                                 <div class="form-group">
-                                    <h:commandButton action="#{inventoryTransferManagedBean.viewStockTakebyLocation}" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
+                                    <h:commandButton action="#{inventoryTransferManagedBean.viewStockUnitbyLocation}" value="View" class="btn btn-success btn-round pull-right btn-extra-right">
                                     </h:commandButton>
                                 </div>
                             </h:form> 
-
 
                             <section name="Pending Stock Transfer Table">
                                 <div class="panel-heading dashboard-title-panel">
                                     Pending Movement of Stock
                                 </div>
                                 <div class="list-group-item">
-                                    <h:outputText rendered="#{inventoryTransferManagedBean.ifStockUnitMovemementAllListEmpty}" value="There are no pending movement of stock"/>
-                                    <h:panelGroup layout="block" rendered="#{!inventoryTransferManagedBean.ifStockUnitMovemementAllListEmpty}">
+                                    <h:outputText rendered="#{empty inventoryTransferManagedBean.stockUnitMovemementAllList}" value="There are no pending movement of stock"/>
+                                    <h:panelGroup layout="block" rendered="#{not empty inventoryTransferManagedBean.stockUnitMovemementAllList}">
                                         <table class="table table-hover table-condensed">
                                             <tr>
                                                 <th>Stock</th>
@@ -91,11 +87,11 @@
                                                         <td>#{s.pendingLocation.name}</td>
                                                         <td>#{s.qty}</td>
                                                         <td>#{s.batchNo}</td>
-                                                        <td><h:commandButton actionListener="#{inventoryTransferManagedBean.confirmStockUnit}" value="Confirm" class="btn btn-success btn-xs"> 
+                                                        <td><h:commandButton actionListener="#{inventoryTransferManagedBean.confirmStockUnitMovement}" value="Confirm" class="btn btn-success btn-xs"> 
                                                                 <f:attribute name="stockUnitId" value="#{s.id}" />
                                                             </h:commandButton></td>
                                                         <td>
-                                                            <h:commandButton actionListener="#{inventoryTransferManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                            <h:commandButton actionListener="#{inventoryTransferManagedBean.deletePendingMovementofStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
                                                                 <f:attribute name="stockId" value="#{s.stock.id}" />
                                                                 <f:attribute name="stockUnit" value="#{s}" />
                                                             </h:commandButton>
@@ -107,12 +103,6 @@
                                     </h:panelGroup>
                                 </div>
                             </section>
-
-
-
-
-
-
                         </section>
                     </div>
                 </div>

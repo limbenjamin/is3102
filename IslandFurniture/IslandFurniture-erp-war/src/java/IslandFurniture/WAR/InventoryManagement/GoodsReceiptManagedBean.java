@@ -40,11 +40,6 @@ public class GoodsReceiptManagedBean implements Serializable {
     private Long goodsReceiptDocumentId;
     private Long goodsIssuedDocumentId;
 
-    private boolean ifGoodsReceiptDocumentListEmpty;
-    private boolean ifgoodsReceiptDocumentPostedListEmpty;
-    private boolean ifInboundShipmentListEmpty;
-    private boolean ifShipmentReceived;
-
     private String username;
     private String deliverynote;
 
@@ -61,7 +56,7 @@ public class GoodsReceiptManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageGoodsReceiptLocal mgrl;
+    public ManageGoodsReceiptLocal receiptBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
 
@@ -71,65 +66,20 @@ public class GoodsReceiptManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
-        ifGoodsReceiptDocumentListEmpty = goodsReceiptDocumentList.isEmpty();
-        goodsReceiptDocumentPostedList = mgrl.viewGoodsReceiptDocumentPosted(plant);
-        ifgoodsReceiptDocumentPostedListEmpty = goodsReceiptDocumentPostedList.isEmpty();
-        inboundShipmentList = mgrl.viewInboundShipment(plant);
-        ifInboundShipmentListEmpty = inboundShipmentList.isEmpty();
-        System.out.println("Init");
+        goodsReceiptDocumentList = receiptBean.viewGoodsReceiptDocument(plant);
+        goodsReceiptDocumentPostedList = receiptBean.viewGoodsReceiptDocumentPosted(plant);
+        inboundShipmentList = receiptBean.viewInboundShipment(plant);
     }
 
-    public void addGoodsReceiptDocument() {
-        goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
+//  Function: To create new Goods Receipt Document
+    public String addGoodsReceiptDocument() {
+        goodsReceiptDocument = receiptBean.createGoodsReceiptDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
-    }
-
-    public String updateIncomingShipmentStatus(ActionEvent event) {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
-        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
-        
-        System.out.println("The goodsIssuedDocumentId is null, it is: " + goodsIssuedDocumentId);
-        
-        mgrl.updateIncomingShipmentStatus(goodsIssuedDocumentId);
-        inboundShipmentList = mgrl.viewInboundShipment(plant);
-        ifInboundShipmentListEmpty = inboundShipmentList.isEmpty();
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The shipment status has been updated", ""));
-        
-        return "goodsreceipt?faces-redirect=true";
-    }
-
-    public void goodsReceiptDocumentDetailActionListener(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
-    }
-
-    public void goodsReceiptDocumentDetailActionListener2(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
-    }
-
-    public String deleteGoodsReceiptDocument(ActionEvent event) {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
-        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        goodsReceiptDocument = mgrl.getGoodsReceiptDocument(goodsReceiptDocumentId);
-
-        for (GoodsReceiptDocumentDetail g : mgrl.viewGoodsReceiptDocumentDetail(goodsReceiptDocument)) {
-            mgrl.deleteGoodsReceiptDocumentDetail(g.getId());
-        }
-
-        mgrl.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
-        ifGoodsReceiptDocumentListEmpty = goodsReceiptDocumentList.isEmpty();
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully deleted", ""));
         return "goodsreceiptdocument";
     }
 
-    public void addGoodsReceiptDocumentfromInbound(ActionEvent event) throws IOException {
+//  Function: To create a new Goods Receipt Document from Goods Issued Document (@Inbound Shipments)    
+    public void addGoodsReceiptDocumentfromGoodsIssuedDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
 
@@ -138,63 +88,54 @@ public class GoodsReceiptManagedBean implements Serializable {
         cal.setTime(date);
         receiptDate = cal;
 
-        goodsReceiptDocument = mgrl.createGoodsReceiptDocumentfromInbound(plant, receiptDate);
-
-        for (GoodsIssuedDocumentDetail g : mgrl.viewInboundShipmentByDetail(goodsIssuedDocumentId)) {
-            mgrl.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), g.getStock().getId(), g.getQuantity().intValue());
+        goodsReceiptDocument = receiptBean.createGoodsReceiptDocumentfromGoodsIssuedDocument(plant, receiptDate);
+        for (GoodsIssuedDocumentDetail g : receiptBean.viewInboundShipmentByDetail(goodsIssuedDocumentId)) {
+            receiptBean.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), g.getStock().getId(), g.getQuantity().intValue());
         }
-
-        goodsReceiptDocumentList = mgrl.viewGoodsReceiptDocument(plant);
+        goodsReceiptDocumentList = receiptBean.viewGoodsReceiptDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
-    public boolean isIfShipmentReceived() {
-        return ifShipmentReceived;
+//  Function: To update Incoming Shipment Status as Delivered   
+    public String updateIncomingShipmentStatusToDelivered(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GIDid", event.getComponent().getAttributes().get("GIDid"));
+        goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GIDid");
+        receiptBean.updateIncomingShipmentStatusToDelivered(goodsIssuedDocumentId);
+        inboundShipmentList = receiptBean.viewInboundShipment(plant);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The shipment status has been updated", ""));
+        return "goodsreceipt";
     }
 
-    public void setIfShipmentReceived(boolean ifShipmentReceived) {
-        this.ifShipmentReceived = ifShipmentReceived;
-    }
-    
-    public Long getGoodsIssuedDocumentId() {
-        return goodsIssuedDocumentId;
-    }
-
-    public void setGoodsIssuedDocumentId(Long goodsIssuedDocumentId) {
-        this.goodsIssuedDocumentId = goodsIssuedDocumentId;
+//  Function: To view Goods Receipt Document    
+    public void viewGoodsReceiptDocument(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocument.xhtml");
     }
 
-    public boolean isIfGoodsReceiptDocumentListEmpty() {
-        return ifGoodsReceiptDocumentListEmpty;
+//  Function: To view Goods Receipt Document Posted   
+    public void viewGoodsReceiptDocumentPosted(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("goodsreceiptdocumentposted.xhtml");
     }
 
-    public void setIfGoodsReceiptDocumentListEmpty(boolean ifGoodsReceiptDocumentListEmpty) {
-        this.ifGoodsReceiptDocumentListEmpty = ifGoodsReceiptDocumentListEmpty;
-    }
+//  Function: To delete Goods Receipt Document
+    public String deleteGoodsReceiptDocument(ActionEvent event) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
+        goodsReceiptDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
 
-    public boolean isIfgoodsReceiptDocumentPostedListEmpty() {
-        return ifgoodsReceiptDocumentPostedListEmpty;
-    }
+        for (GoodsReceiptDocumentDetail g : receiptBean.viewGoodsReceiptDocumentDetail(receiptBean.getGoodsReceiptDocument(goodsReceiptDocumentId))) {
+            receiptBean.deleteGoodsReceiptDocumentDetail(g.getId());
+        }
+        receiptBean.deleteGoodsReceiptDocument(goodsReceiptDocumentId);
+        goodsReceiptDocumentList = receiptBean.viewGoodsReceiptDocument(plant);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully deleted", ""));
 
-    public void setIfgoodsReceiptDocumentPostedListEmpty(boolean ifgoodsReceiptDocumentPostedListEmpty) {
-        this.ifgoodsReceiptDocumentPostedListEmpty = ifgoodsReceiptDocumentPostedListEmpty;
-    }
-
-    public boolean isIfInboundShipmentListEmpty() {
-        return ifInboundShipmentListEmpty;
-    }
-
-    public void setIfInboundShipmentListEmpty(boolean ifInboundShipmentListEmpty) {
-        this.ifInboundShipmentListEmpty = ifInboundShipmentListEmpty;
-    }
-
-    public GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail() {
-        return goodsIssuedDocumentDetail;
-    }
-
-    public void setGoodsIssuedDocumentDetail(GoodsIssuedDocumentDetail goodsIssuedDocumentDetail) {
-        this.goodsIssuedDocumentDetail = goodsIssuedDocumentDetail;
+        return "goodsreceipt";
     }
 
     public Long getPlantId() {
@@ -211,6 +152,14 @@ public class GoodsReceiptManagedBean implements Serializable {
 
     public void setGoodsReceiptDocumentId(Long goodsReceiptDocumentId) {
         this.goodsReceiptDocumentId = goodsReceiptDocumentId;
+    }
+
+    public Long getGoodsIssuedDocumentId() {
+        return goodsIssuedDocumentId;
+    }
+
+    public void setGoodsIssuedDocumentId(Long goodsIssuedDocumentId) {
+        this.goodsIssuedDocumentId = goodsIssuedDocumentId;
     }
 
     public String getUsername() {
@@ -277,6 +226,14 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.goodsReceiptDocument = goodsReceiptDocument;
     }
 
+    public GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail() {
+        return goodsIssuedDocumentDetail;
+    }
+
+    public void setGoodsIssuedDocumentDetail(GoodsIssuedDocumentDetail goodsIssuedDocumentDetail) {
+        this.goodsIssuedDocumentDetail = goodsIssuedDocumentDetail;
+    }
+
     public Staff getStaff() {
         return staff;
     }
@@ -293,12 +250,12 @@ public class GoodsReceiptManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public ManageGoodsReceiptLocal getMgrl() {
-        return mgrl;
+    public ManageGoodsReceiptLocal getReceiptBean() {
+        return receiptBean;
     }
 
-    public void setMgrl(ManageGoodsReceiptLocal mgrl) {
-        this.mgrl = mgrl;
+    public void setReceiptBean(ManageGoodsReceiptLocal receiptBean) {
+        this.receiptBean = receiptBean;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {
@@ -310,3 +267,4 @@ public class GoodsReceiptManagedBean implements Serializable {
     }
 
 }
+

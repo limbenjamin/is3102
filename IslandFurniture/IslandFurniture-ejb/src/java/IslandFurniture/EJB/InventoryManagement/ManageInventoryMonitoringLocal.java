@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
-import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import java.util.List;
 
@@ -18,28 +18,19 @@ import java.util.List;
  */
 public interface ManageInventoryMonitoringLocal {
 
-    List<StockUnit> viewStockUnit(Plant plant);
-
-    List<StorageBin> viewStorageBin(Long id);
-
-    StorageBin getStorageBin(Long storageBinId);
-
-    Stock getStock(Long id);
-
+    //  Function: To edit Stock Unit Quantity during Stock Take
     void editStockUnitQuantity(Long stockUnitId, Long qty);
 
-    StockUnit getStockUnit(Long id);
+    //  Function: To display distinct Stock Units that with status 'Available' -- For selection at Dropdown Menu
+    List<StockUnit> viewStockUnit(Plant plant);
 
-    List<StockUnit> viewStockUnitBin(StorageBin storageBin);
-
-    List<StorageArea> viewStorageArea(Plant plant);
-    
-    List<StorageBin> viewStorageBinExcludeTheBin(Long id, Long currentId);
-    
-    List<StorageArea> viewStorageAreaReceiving(Plant plant);
-    
-    List<StockUnit> viewStockUnitbyStock(Stock stock);
-    
+    //  Function: To display all Stock Units, regardless of Status -- For Inventory Report
     List<StockUnit> viewStockUnitAll(Plant plant);
 
+    //  Function: To display Stock Units of a particular Stock
+    List<StockUnit> viewStockUnitbyStock(Stock stock);
+
+    //  Function: To display Stock Units stored in a particular Storage Bin
+    List<StockUnit> viewStockUnitsInStorageBin(StorageBin storageBin);
+    
 }

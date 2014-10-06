@@ -21,15 +21,14 @@
                             <h:commandButton action="#{goodsIssuedManagedBean.addGoodsIssuedDocument}" value="Create Goods Issued Document" class="btn btn-sm btn-success pull-right btn-right-margin"></h:commandButton>
                         </h:form>    
                         <h4>Goods Issued</h4><hr></hr>
-              
-                        
-                        <section name="viewGRD">
+
+                        <section name="Pending Goods Issued Document">
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Goods Issued
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsIssuedManagedBean.ifGoodsIssuedDocumentListEmpty}" value="There are no pending goods issued"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsIssuedManagedBean.ifGoodsIssuedDocumentListEmpty}">
+                                <h:outputText rendered="#{empty goodsIssuedManagedBean.goodsIssuedDocumentList}" value="There are no pending goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsIssuedManagedBean.goodsIssuedDocumentList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Goods Issued ID</th>
@@ -45,7 +44,7 @@
                                                         <h:outputText value="#{GRD.issuedDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
-                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.viewGoodsIssuedDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GRDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
@@ -63,13 +62,13 @@
 
                         <br/>
 
-                        <section name="postedGRD">
+                        <section name="Posted Goods Issued Document">
                             <div class="panel-heading dashboard-title-panel">
                                 Posted Goods Issued
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsIssuedManagedBean.ifGoodsIssuedDocumentPostedListEmpty}" value="There are no posted goods issued"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsIssuedManagedBean.ifGoodsIssuedDocumentPostedListEmpty}">
+                                <h:outputText rendered="#{empty goodsIssuedManagedBean.goodsIssuedDocumentPostedList}" value="There are no posted goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsIssuedManagedBean.goodsIssuedDocumentPostedList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Goods Issued ID</th>
@@ -90,10 +89,10 @@
                                                         <h:outputText value="#{GRD.issuedDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
-                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.goodsIssuedDocumentDetailActionListener2}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <td> <h:commandButton actionListener="#{goodsIssuedManagedBean.viewGoodsIssuedDocumentPosted}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GRDid" value="#{GRD.id}" />
                                                         </h:commandButton>
-                                                    <i class="fa fa-lg fa-file-o icon-button"></i></td>
+                                                        <i class="fa fa-lg fa-file-o icon-button"></i></td>
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 

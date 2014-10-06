@@ -8,6 +8,7 @@ package IslandFurniture.EJB.InventoryManagement;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
+import static IslandFurniture.Enums.StorageAreaType.RECEIVING;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -26,20 +27,22 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
     private StorageArea storageArea;
     private StorageBin storageBin;
-    private Plant plant;
 
+//  Function: To get StorageArea entity based on StorageAreaId
     @Override
     public StorageArea getStorageArea(Long storageAreaId) {
         storageArea = (StorageArea) em.find(StorageArea.class, storageAreaId);
         return storageArea;
     }
 
+//  Function: To get StorageBin entity based on StorageBinId
     @Override
     public StorageBin getStorageBin(Long storageBinId) {
         storageBin = (StorageBin) em.find(StorageBin.class, storageBinId);
         return storageBin;
     }
 
+//  Function: To add Storage Area
     @Override
     public void createStorageArea(Plant plant, String name) {
         storageArea = new StorageArea();
@@ -49,6 +52,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.flush();
     }
 
+//  Function: To add Storage Bin
     @Override
     public void createStorageBin(StorageArea storageArea, String name) {
         storageBin = new StorageBin();
@@ -58,6 +62,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.flush();
     }
 
+//  Function: To edit Storage Area
     @Override
     public void editStorageArea(Long storageAreaId, String name) {
         storageArea = getStorageArea(storageAreaId);
@@ -66,6 +71,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.flush();
     }
 
+//  Function: To edit Storage Bin
     @Override
     public void editStorageBin(Long storageAreaId, Long storageBinId, String name) {
         storageArea = getStorageArea(storageAreaId);
@@ -76,35 +82,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.flush();
     }
 
-    @Override
-    public List<StorageArea> viewStorageArea(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StorageArea> viewStorageAreaSameName(Plant plant, String name) {
-        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId AND s.name=:name");
-        q.setParameter("plantId", plant.getId());
-        q.setParameter("name", name);
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StorageBin> viewStorageBinSameName(Plant plant, Long areaId, String binName) {
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.id=:areaId AND s.name=:binName");
-        q.setParameter("plantId", plant.getId());
-        q.setParameter("areaId", areaId);
-        q.setParameter("binName", binName);
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StorageBin> viewStorageBin(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
-        return q.getResultList();
-    }
-
+//  Function: To delete Storage Area
     @Override
     public void deleteStorageArea(Long storageAreaId) {
         storageArea = getStorageArea(storageAreaId);
@@ -112,11 +90,62 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         em.flush();
     }
 
+//  Function: To delete Storage Bin
     @Override
     public void deleteStorageBin(Long storageBinId) {
         storageBin = getStorageBin(storageBinId);
         em.remove(storageBin);
         em.flush();
+    }
+
+//  Function: To view Storage Areas in the Plant
+    @Override
+    public List<StorageArea> viewStorageArea(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
+        return q.getResultList();
+    }
+
+//  Function: To view Storage Bins in the Plant
+    @Override
+    public List<StorageBin> viewStorageBin(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
+        return q.getResultList();
+    }
+
+//  Function: To view Storage Bins in Receiving Area only    
+    @Override
+    public List<StorageArea> viewStorageBinsAtReceivingOnly(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId AND s.type=:type");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("type", RECEIVING);
+        return q.getResultList();
+    }
+    
+//  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
+    @Override
+    public List<StorageBin> viewStorageBinsOfAStorageArea(Long id) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.id=:id");
+        q.setParameter("id", id);
+        return q.getResultList();
+    }
+
+//  Function: To check if there is any Storage Area with same name - to not allow duplicates    
+    @Override
+    public boolean checkIfNoStorageAreaWithSameName(Plant plant, String name) {
+        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId AND s.name=:name");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("name", name);
+        return q.getResultList().isEmpty();
+    }
+
+//  Function: To check if there is any Storage Bin with same name - to not allow duplicates   
+    @Override
+    public boolean checkIfNoStorageBinWithSameName(Plant plant, Long areaId, String binName) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.id=:areaId AND s.name=:binName");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("areaId", areaId);
+        q.setParameter("binName", binName);
+        return q.getResultList().isEmpty();
     }
 
 }

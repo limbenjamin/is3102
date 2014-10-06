@@ -13,6 +13,7 @@ import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,7 +47,6 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitBinList;
-    private boolean ifStockUnitBinListEmpty;
 
     private StorageBin storageBin;
     private Stock stock;
@@ -54,11 +54,11 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageGoodsIssuedLocal mgrl;
-    @EJB
-    public ManageInventoryMonitoringLocal miml;
+    public ManageInventoryMonitoringLocal monitoringBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
+    @EJB
+    public ManageStorageLocationLocal storageBean;
 
     @PostConstruct
     public void init() {
@@ -66,50 +66,33 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        stockUnitList = miml.viewStockUnit(plant);
-        System.out.println("Init");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
-
         try {
             if (storageBinId == null) {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 ec.redirect("inventorymonitoring.xhtml");
             }
-        } catch (IOException ex) {
+        } catch (IOException ex) {}
 
-        }
-
-        storageBin = miml.getStorageBin(storageBinId);
-        stockUnitBinList = miml.viewStockUnitBin(storageBin);
-        ifStockUnitBinListEmpty = stockUnitBinList.isEmpty();
-
+        stockUnitList = monitoringBean.viewStockUnit(plant);
+        storageBin = storageBean.getStorageBin(storageBinId);
+        stockUnitBinList = monitoringBean.viewStockUnitsInStorageBin(storageBin);
     }
 
+//  Function: To edit the Quantity during Stock Take
     public String editStockTakeQuantity(ActionEvent event) {
         StockUnit su = (StockUnit) event.getComponent().getAttributes().get("su");
-
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
-
-        System.out.println("the stock take quantity is: " + stockTakeQuantity);
-
-        miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        stockUnitBinList = miml.viewStockUnitBin(storageBin);
+        monitoringBean.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
+        stockUnitBinList = monitoringBean.viewStockUnitsInStorageBin(storageBin);
         stockTakeQuantity = null;
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity has been updated for Stock Unit Number: " + stockUnitId, ""));
         return "inventorymonitoring_stlocation";
-    }
-
-    public boolean isIfStockUnitBinListEmpty() {
-        return ifStockUnitBinListEmpty;
-    }
-
-    public void setIfStockUnitBinListEmpty(boolean ifStockUnitBinListEmpty) {
-        this.ifStockUnitBinListEmpty = ifStockUnitBinListEmpty;
     }
 
     public Long getPlantId() {
@@ -215,21 +198,13 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
     public void setPlant(Plant plant) {
         this.plant = plant;
     }
-
-    public ManageGoodsIssuedLocal getMgrl() {
-        return mgrl;
+    
+    public ManageInventoryMonitoringLocal getMonitoringBean() {
+        return monitoringBean;
     }
 
-    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
-        this.mgrl = mgrl;
-    }
-
-    public ManageInventoryMonitoringLocal getMiml() {
-        return miml;
-    }
-
-    public void setMiml(ManageInventoryMonitoringLocal miml) {
-        this.miml = miml;
+    public void setMonitoringBean(ManageInventoryMonitoringLocal monitoringBean) {
+        this.monitoringBean = monitoringBean;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {
@@ -238,6 +213,14 @@ public class InventoryMonitoringLocationManagedBean implements Serializable {
 
     public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
         this.staffBean = staffBean;
+    }
+
+    public ManageStorageLocationLocal getStorageBean() {
+        return storageBean;
+    }
+
+    public void setStorageBean(ManageStorageLocationLocal storageBean) {
+        this.storageBean = storageBean;
     }
 
 }

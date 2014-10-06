@@ -13,8 +13,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,7 +28,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -48,8 +46,6 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long stockUnitId;
     private Long oldStockUnitId;
 
-    private boolean ifstockUnitByIdList2Empty;
-
     private String issuedDateString;
     private Date issuedDateType;
 
@@ -62,7 +58,7 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Long stockUnitQuantity;
 
     private List<StockUnit> stockUnitByIdList;
-    private List<StockUnit> stockUnitByIdList2;
+    private List<StockUnit> stockUnitListPendingMovementAtGIDForAParticularStock;
     private List<StockUnit> stockUnitByIdAndGRDList;
 
     private GoodsIssuedDocument goodsIssuedDocument;
@@ -73,14 +69,9 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageGoodsIssuedLocal mgrl;
-
+    public ManageGoodsIssuedLocal issuedBean;
     @EJB
-    public ManageInventoryMovementLocal msul;
-
-    @EJB
-    public ManageStorageLocationLocal msll;
-
+    public ManageInventoryTransferLocal transferBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
 
@@ -90,7 +81,6 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-
         this.goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
 
         try {
@@ -99,81 +89,58 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
                 ec.redirect("goodsissued.xhtml");
             }
         } catch (IOException ex) {
-
         }
-        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
-
-        System.out.println("GoodsIssuedDocumentId: " + goodsIssuedDocumentId);
-        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        goodsIssuedDocument = issuedBean.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        goodsIssuedDocument = issuedBean.getGoodsIssuedDocument(goodsIssuedDocumentId);
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
-        stock = mgrl.getStock(stockId);
+        stock = transferBean.getStock(stockId);
+        stockUnitByIdList = transferBean.viewStockUnitsOfAStock(plant, stock);
+        stockUnitListPendingMovementAtGIDForAParticularStock = issuedBean.viewStockUnitPendingMovementAtGIDForAParticularStock(stock, goodsIssuedDocument);
+        stockUnitByIdAndGRDList = issuedBean.viewStockUnitByStockandGID(stock, goodsIssuedDocument);
 
-        stockUnitByIdList = mgrl.viewStockUnitById(plant, stock);
-        stockUnitByIdList2 = mgrl.viewStockUnitById2(plant, stock, goodsIssuedDocument);
-        ifstockUnitByIdList2Empty = stockUnitByIdList2.isEmpty();
-        stockUnitByIdAndGRDList = mgrl.viewStockUnitByIdAndGrdId(stock, goodsIssuedDocument);
-
-        System.out.println("Init");
     }
 
-    public void addGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+//  Function: To create Stock Unit pending movement at Goods Issued Document    
+    public void addStockUnitPendingAtGoodsIssuedDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
-        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
-        stockUnit = mgrl.getStockUnit(stockUnitId);
+        goodsIssuedDocument = issuedBean.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        stockUnit = transferBean.getStockUnit(stockUnitId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
 
         if (stockUnitQuantity > stockUnit.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
         } else {
-
-            msul.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), goodsIssuedDocument);
-            msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
-
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
+            transferBean.createStockUnit2(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), goodsIssuedDocument);
+            transferBean.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
             FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
         }
     }
 
-    public void deleteGoodsIssuedDocumentStockUnit(ActionEvent event) throws IOException {
+//  Function: To delete Stock Unit pending at the Goods Issued Document    
+    public void deleteStockUnitPendingAtGoodsIssuedDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
-        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
-        msul.deleteStockUnit(stockUnit.getId());
+        transferBean.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), transferBean.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        transferBean.deleteStockUnit(stockUnit.getId());
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockUnit.getStock().getId());
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentcommit.xhtml");
     }
 
+// Function: To continue at Goods Issued Document    
     public void continueWithGoodsIssueDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
-    }
-
-    public Long getOldStockUnitId() {
-        return oldStockUnitId;
-    }
-
-    public void setOldStockUnitId(Long oldStockUnitId) {
-        this.oldStockUnitId = oldStockUnitId;
-    }
-
-    public boolean isIfstockUnitByIdList2Empty() {
-        return ifstockUnitByIdList2Empty;
-    }
-
-    public void setIfstockUnitByIdList2Empty(boolean ifstockUnitByIdList2Empty) {
-        this.ifstockUnitByIdList2Empty = ifstockUnitByIdList2Empty;
     }
 
     public Long getPlantId() {
@@ -222,6 +189,14 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
 
     public void setStockUnitId(Long stockUnitId) {
         this.stockUnitId = stockUnitId;
+    }
+
+    public Long getOldStockUnitId() {
+        return oldStockUnitId;
+    }
+
+    public void setOldStockUnitId(Long oldStockUnitId) {
+        this.oldStockUnitId = oldStockUnitId;
     }
 
     public String getIssuedDateString() {
@@ -288,12 +263,12 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.stockUnitByIdList = stockUnitByIdList;
     }
 
-    public List<StockUnit> getStockUnitByIdList2() {
-        return stockUnitByIdList2;
+    public List<StockUnit> getStockUnitListPendingMovementAtGIDForAParticularStock() {
+        return stockUnitListPendingMovementAtGIDForAParticularStock;
     }
 
-    public void setStockUnitByIdList2(List<StockUnit> stockUnitByIdList2) {
-        this.stockUnitByIdList2 = stockUnitByIdList2;
+    public void setStockUnitListPendingMovementAtGIDForAParticularStock(List<StockUnit> stockUnitListPendingMovementAtGIDForAParticularStock) {
+        this.stockUnitListPendingMovementAtGIDForAParticularStock = stockUnitListPendingMovementAtGIDForAParticularStock;
     }
 
     public List<StockUnit> getStockUnitByIdAndGRDList() {
@@ -352,28 +327,20 @@ public class GoodsIssuedDocumentCommitManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public ManageGoodsIssuedLocal getMgrl() {
-        return mgrl;
+    public ManageGoodsIssuedLocal getIssuedBean() {
+        return issuedBean;
     }
 
-    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
-        this.mgrl = mgrl;
+    public void setIssuedBean(ManageGoodsIssuedLocal issuedBean) {
+        this.issuedBean = issuedBean;
     }
 
-    public ManageInventoryMovementLocal getMsul() {
-        return msul;
+    public ManageInventoryTransferLocal getTransferBean() {
+        return transferBean;
     }
 
-    public void setMsul(ManageInventoryMovementLocal msul) {
-        this.msul = msul;
-    }
-
-    public ManageStorageLocationLocal getMsll() {
-        return msll;
-    }
-
-    public void setMsll(ManageStorageLocationLocal msll) {
-        this.msll = msll;
+    public void setTransferBean(ManageInventoryTransferLocal transferBean) {
+        this.transferBean = transferBean;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {

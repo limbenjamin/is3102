@@ -14,7 +14,7 @@ import IslandFurniture.Enums.StorageAreaType;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Exceptions.InsufficientMaterialException;
 import IslandFurniture.Exceptions.InvalidInputException;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +33,7 @@ import javax.persistence.Query;
 @Stateful
 public class ProductionManager implements ProductionManagerLocal {
     @EJB
-    private ManageInventoryMovementLocal manageInventoryMovement;
+    private ManageInventoryTransferLocal manageInventoryTransfer;
 
     @PersistenceContext
     EntityManager em;
@@ -151,7 +151,7 @@ public class ProductionManager implements ProductionManagerLocal {
         po = em.find(ProductionOrder.class, batchNo);
         sb = em.find(StorageBin.class, binId);
         if(po != null && sb != null){
-            manageInventoryMovement.createStockUnit(po.getFurnitureModel(), po.getBatchNo().toString(), (long) po.getQty(), sb);
+            manageInventoryTransfer.createStockUnit(po.getFurnitureModel(), po.getBatchNo().toString(), (long) po.getQty(), sb);
             po.setStatus(ProdOrderStatus.COMPLETED);
             
             return po;

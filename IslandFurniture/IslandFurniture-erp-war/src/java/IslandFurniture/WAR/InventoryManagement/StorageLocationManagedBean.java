@@ -5,7 +5,6 @@
  */
 package IslandFurniture.WAR.InventoryManagement;
 
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBean;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
@@ -51,7 +50,7 @@ public class StorageLocationManagedBean implements Serializable {
     private Plant plant;
 
     @EJB
-    public ManageStorageLocationLocal msll;
+    public ManageStorageLocationLocal storageBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
 
@@ -61,65 +60,89 @@ public class StorageLocationManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = msll.viewStorageBin(plant);
-        storageAreaList = msll.viewStorageArea(plant);
-        System.out.println("Init");
+        storageBinList = storageBean.viewStorageBin(plant);
+        storageAreaList = storageBean.viewStorageArea(plant);
     }
 
+//  Function: To create new Storage Area
     public String addStorageArea() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         storageAreaName = request.getParameter("createStorageArea:storageAreaName");
-        
-        if (msll.viewStorageAreaSameName(plant, storageAreaName).isEmpty()) {
-            msll.createStorageArea(plant, storageAreaName);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been created", ""));
+
+        if (storageBean.checkIfNoStorageAreaWithSameName(plant, storageAreaName)) {
+            storageBean.createStorageArea(plant, storageAreaName);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been created", ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-            new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Storage Area with that name. Creation of Storage Area was unsuccessful.",""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Storage Area with that name. Creation of Storage Area was unsuccessful.", ""));
         }
 
         return "storagelocation";
     }
 
+//  Function: To create new Storage Bin
     public String addStorageBin() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         storageAreaId = Long.parseLong(request.getParameter("createStorageBin:storageAreaId"));
-        storageArea = msll.getStorageArea(storageAreaId);
+        storageArea = storageBean.getStorageArea(storageAreaId);
         storageBinName = request.getParameter("createStorageBin:storageBinName");
-        
-        if (msll.viewStorageBinSameName(plant, storageAreaId, storageBinName).isEmpty()) {
-            msll.createStorageBin(storageArea, storageBinName);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been created", ""));
+
+        if (storageBean.checkIfNoStorageBinWithSameName(plant, storageAreaId, storageBinName)) {
+            storageBean.createStorageBin(storageArea, storageBinName);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been created", ""));
         } else {
-             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-            new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Storage Bin with that name. Creation of Storage Bin was unsuccessful.",""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Storage Bin with that name. Creation of Storage Bin was unsuccessful.", ""));
         }
-        
+
+        return "storagelocation";
+    }
+
+//  Function: To edit the Storage Area Name
+    public String editStorageArea(ActionEvent event) throws IOException {
+        StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
+        storageBean.editStorageArea(sa.getId(), sa.getName());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been edited", ""));
         
         return "storagelocation";
     }
 
+//  Function: To edit the Storage Bin Name and/or Storage Area attached to it  
+    public String editStorageBin(ActionEvent event) throws IOException {
+        StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
+        storageBean.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
+        storageBinList = storageBean.viewStorageBin(plant);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been edited", ""));
+        
+        return "storagelocation";
+    }
+
+//  Function: To delete the Storage Area
     public String deleteStorageArea() throws IOException {
         storageAreaId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageAreaId"));
-        storageArea = msll.getStorageArea(storageAreaId);
+        storageArea = storageBean.getStorageArea(storageAreaId);
         if (storageArea.getStorageBins().isEmpty()) {
-            msll.deleteStorageArea(storageAreaId);
+            storageBean.deleteStorageArea(storageAreaId);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been deleted", ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "There are Storage Bins associated with this Storage Area. Delete of Storage Area was unsuccessful.", ""));
         }
+        
         return "storagelocation";
     }
 
+//  Function: To delete the Storage Bin
     public String deleteStorageBin() throws IOException {
         storageBinId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("storageBinId"));
-        storageBin = msll.getStorageBin(storageBinId);
+        storageBin = storageBean.getStorageBin(storageBinId);
         if (storageBin.getStockUnits().isEmpty()) {
-            msll.deleteStorageBin(storageBinId);
+            storageBean.deleteStorageBin(storageBinId);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been deleted", ""));
         } else {
@@ -127,23 +150,6 @@ public class StorageLocationManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "There are Stock Units stored in the Storage Bin. Delete of Storage Bin was unsuccessful.", ""));
         }
 
-        return "storagelocation";
-    }
-
-    public String editStorageArea(ActionEvent event) throws IOException {
-        StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
-        msll.editStorageArea(sa.getId(), sa.getName());
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been edited", ""));
-        return "storagelocation";
-    }
-
-    public String editStorageBin(ActionEvent event) throws IOException {
-        StorageBin sb = (StorageBin) event.getComponent().getAttributes().get("sbid");
-        msll.editStorageBin(sb.getStorageArea().getId(), sb.getId(), sb.getName());
-        storageBinList = msll.viewStorageBin(plant);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been edited", ""));
         return "storagelocation";
     }
 
@@ -244,11 +250,11 @@ public class StorageLocationManagedBean implements Serializable {
     }
 
     public ManageStorageLocationLocal getMsll() {
-        return msll;
+        return storageBean;
     }
 
     public void setMsll(ManageStorageLocationLocal msll) {
-        this.msll = msll;
+        this.storageBean = msll;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {

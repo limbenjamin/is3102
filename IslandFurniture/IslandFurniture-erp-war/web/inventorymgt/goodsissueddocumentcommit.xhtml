@@ -56,8 +56,8 @@
                                 Pending Goods Issued Stock
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsIssuedDocumentCommitManagedBean.ifstockUnitByIdList2Empty}" value="There are no pending goods issued stock"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsIssuedDocumentCommitManagedBean.ifstockUnitByIdList2Empty}">
+                                <h:outputText rendered="#{empty goodsIssuedDocumentCommitManagedBean.stockUnitListPendingMovementAtGIDForAParticularStock}" value="There are no pending goods issued stock"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsIssuedDocumentCommitManagedBean.stockUnitListPendingMovementAtGIDForAParticularStock}">
 
                                     <table class="table table-hover table-condensed">
                                         <tr>
@@ -69,7 +69,7 @@
                                             <th>Delete</th>
                                         </tr>
                                         <h:form class="form-horizontal">
-                                            <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitByIdList2}" var="s">
+                                            <ui:repeat value="#{goodsIssuedDocumentCommitManagedBean.stockUnitListPendingMovementAtGIDForAParticularStock}" var="s">
                                                 <tr>
                                                     <td>#{s.commitStockUnitId}</td>
                                                     <td>#{s.location.storageArea.name}</td>
@@ -77,7 +77,7 @@
                                                     <td>#{s.qty}</td>
                                                     <td>#{s.batchNo}</td>
                                                     <td>
-                                                        <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                        <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.deleteStockUnitPendingAtGoodsIssuedDocument}" value="Delete" class="btn btn-danger btn-xs"> 
                                                             <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
                                                             <f:attribute name="stockUnit" value="#{s}" />
                                                         </h:commandButton>
@@ -136,7 +136,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addGoodsIssuedDocumentStockUnit}" value="Select Stock Unit" class="btn btn-success pull-right btn-right-margin"> 
+                                                <h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addStockUnitPendingAtGoodsIssuedDocument}" value="Select Stock Unit" class="btn btn-success pull-right btn-right-margin"> 
                                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
                                                     <f:attribute name="stockUnitId" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitId}" />
                                                     <f:attribute name="stockUnitQuantity" value="#{goodsIssuedDocumentCommitManagedBean.stockUnitQuantity}" />

@@ -6,13 +6,58 @@
 
 package IslandFurniture.EJB.InventoryManagement;
 
-import javax.ejb.Local;
+import IslandFurniture.Entities.GoodsIssuedDocument;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockUnit;
+import IslandFurniture.Entities.StorageBin;
+import java.util.List;
 
 /**
  *
  * @author KamilulAshraf
  */
-@Local
 public interface ManageInventoryTransferLocal {
+    void confirmStockUnitMovement(Long stockUnitId);
+
+    void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin);
+
+    void createStockUnit2(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid);
+
+    void createStockUnitMovement1(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin);
+
+    void deleteStockUnit(Long stockUnitId);
+
+    void editStockUnitLocationDefault(Long stockUnitId, Long storageBinId);
+
+    void editStockUnitQuantity(Long stockUnitId, Long qty);
+
+    Stock getStock(Long stockId);
+
+    StockUnit getStockUnit(Long stockUnitId);
+
+    void updateBatchNumber(Long id, String batchNumber);
+
+    List<Stock> viewStock();
+
+    List<StockUnit> viewStockUnit(Plant plant);
+
+    List<StockUnit> viewStockUnitByStockId(Long id, Long storageBinId);
+
+    List<StockUnit> viewStockUnitByStorageBin(Plant plant, StorageBin storageBin);
+
+    List<StockUnit> viewStockUnitDistinctName(Plant plant);
+
+    List<StockUnit> viewStockUnitMovement(Plant plant, Stock stock);
+
+    List<StockUnit> viewStockUnitMovementAll(Plant plant);
+
+    List<StockUnit> viewStockUnitMovementCheck(StorageBin storageBin, Stock stock, String batchNo) throws Exception;
+
+    List<StockUnit> viewStockUnitMovementbyStorageBin(StorageBin storageBin);
+
+    List<StockUnit> viewStockUnitsOfAStock(Plant plant, Stock stock);
+
+    List<StorageBin> viewStorageBin(Plant plant);
     
 }

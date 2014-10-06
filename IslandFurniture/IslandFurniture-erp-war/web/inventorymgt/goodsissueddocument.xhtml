@@ -7,16 +7,10 @@
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
-    <f:metadata>
-        <f:viewParam name="grddId2" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
-        <f:viewAction action="#{goodsIssuedDocumentManagedBean.init}" />
-    </f:metadata>
-
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <h:outputLabel value="#{goodsIssuedDocumentManagedBean.krefresh()}"/>
                     <div class="col-md-12">
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
@@ -27,19 +21,19 @@
                     <div class="col-md-10">
                         <span class="pull-right">
                             <a href="goodsissued.xhtml">
-                            <button type="button" class="btn btn-sm btn-default btn-right-margin">
-                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
-                            </button>
+                                <button type="button" class="btn btn-sm btn-default btn-right-margin">
+                                    <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                                </button>
                             </a>                             
-                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newGRDD">
-                                    <i class="fa fa-fw fa-plus"></i>Select Stock
-                                </button>      
+                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newGRDD">
+                                <i class="fa fa-fw fa-plus"></i>Select Stock
+                            </button>      
                         </span>
                         <h4>Goods Issued Document ##{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}</h4><hr></hr>
                     </div>
 
                     <div class="col-md-10">                      
-                        <section name="EditGRD">
+                        <section name="Goods Issued Document">
                             <table class="table table-hover">
                                 <tr>
                                     <th>Goods Issued ID</th>
@@ -75,15 +69,15 @@
                             </table>
                         </section>
 
+                        <br/>
 
-
-                        <section name="Display Stock Unit">
+                        <section name="Goods Issued Document Detail">
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Goods Issued Stock
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsIssuedDocumentManagedBean.ifStockUnitMainListEmpty}" value="There are no pending goods issued stock"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsIssuedDocumentManagedBean.ifStockUnitMainListEmpty}">
+                                <h:outputText rendered="#{empty goodsIssuedDocumentManagedBean.stockUnitMainList}" value="There are no pending goods issued stock"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsIssuedDocumentManagedBean.stockUnitMainList}">
                                     <table class="table table-hover table-condensed">
                                         <tr>
                                             <th>Stock</th>
@@ -104,7 +98,7 @@
                                                     <td>#{s.qty}</td>
                                                     <td>#{s.batchNo}</td>
                                                     <td>
-                                                        <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteGoodsIssuedDocumentStockUnit}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                        <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.deleteStockUnitPendingAtGoodsIssuedDocument}" value="Delete" class="btn btn-danger btn-xs"> 
                                                             <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                                             <f:attribute name="stockUnit" value="#{s}" />
                                                         </h:commandButton>
@@ -120,9 +114,8 @@
                         <br/>
 
                         <section name="Post Goods Issued Document"> 
-
                             <h:form class="form-horizontal">
-                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.addGoodsIssuedDocumentStockUnit}" value="Post Goods Issued Document" class="btn btn-primary pull-right" rendered="#{!goodsIssuedDocumentManagedBean.ifStockUnitMainListEmpty}"> 
+                                <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.postGoodsIssuedDocument}" value="Post Goods Issued Document" class="btn btn-primary pull-right" rendered="#{not empty goodsIssuedDocumentManagedBean.stockUnitMainList}"> 
                                     <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                 </h:commandButton>
                             </h:form>
@@ -152,7 +145,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.viewStockUnit}" value="Select Stock" class="btn btn-success btn-round"> 
+                                            <h:commandButton actionListener="#{goodsIssuedDocumentManagedBean.viewStockUnitAvailability()}" value="Select Stock" class="btn btn-success btn-round"> 
                                                 <f:attribute name="GRDid" value="#{goodsIssuedDocumentManagedBean.goodsIssuedDocumentId}" />
                                             </h:commandButton>
                                         </div>
@@ -160,7 +153,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </ui:define>

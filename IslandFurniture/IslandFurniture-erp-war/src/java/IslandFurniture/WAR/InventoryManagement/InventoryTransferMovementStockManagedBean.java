@@ -12,9 +12,8 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
-import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,13 +40,10 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private Long plantId;
     private Long storageBinId;
     private Long stockId;
-    private Long stockTakeQuantity;
     private Long stockUnitId;
     private Long stockUnitQuantity;
     private Long storageAreaId;
     private String batchNumber;
-
-    private boolean ifStockUnitMovementListEmpty;
 
     private String username;
 
@@ -55,12 +51,9 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
     private List<StockUnit> stockUnitMovementList;
-    private List<StockUnit> stockUnitMovementAnotherList;
 
     private StorageBin storageBin;
     private StockUnit stockUnit;
-    private StockUnit stockUnitOld;
-    private StockUnit anotherStockUnit;
     private Stock stock;
     private Staff staff;
     private Plant plant;
@@ -68,13 +61,11 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     private Calendar commitDate;
 
     @EJB
-    public ManageGoodsIssuedLocal mgrl;
-    @EJB
-    public ManageInventoryMonitoringLocal miml;
-    @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public ManageInventoryMovementLocal msul;
+    public ManageInventoryTransferLocal transferBean;
+    @EJB
+    public ManageStorageLocationLocal storageBean;
 
     @PostConstruct
     public void init() {
@@ -82,7 +73,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        System.out.println("Init");
         stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
 
         try {
@@ -91,17 +81,15 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
                 ec.redirect("inventorytransfer.xhtml");
             }
         } catch (IOException ex) {
-
         }
 
-        stock = miml.getStock(stockId);
-        stockUnitList = mgrl.viewStockUnitById(plant, stock);
-        stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
-        storageAreaList = miml.viewStorageArea(plant);
-        stockTakeQuantity = null;
-        ifStockUnitMovementListEmpty = stockUnitMovementList.isEmpty();
+        stock = transferBean.getStock(stockId);
+        stockUnitList = transferBean.viewStockUnitsOfAStock(plant, stock);
+        stockUnitMovementList = transferBean.viewStockUnitMovement(plant, stock);
+        storageAreaList = storageBean.viewStorageArea(plant);
     }
 
+//  Function: Boolean for rendering the Batch Number Field - To not allow editing after Batch Number has been set    
     public boolean ifBatchNoEmpty(String batchNo) {
         if (batchNo.isEmpty()) {
             return true;
@@ -110,51 +98,35 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         }
     }
 
+//  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
+    public void onStorageAreaChange() {
+        if (storageAreaId != null) {
+            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
+        }
+    }
+
+//  Function: To update the Batch Number of a Stock Unit    
     public void updateBatchNumber(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNumber", event.getComponent().getAttributes().get("batchNumber"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
-        batchNumber = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNumber");
-        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
-
-        msul.updateBatchNumber(stockUnitId, batchNumber);
-
-        stockUnitMovementList = msul.viewStockUnitMovement(plant, stock);
+        transferBean.updateBatchNumber((Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId"), (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNumber"));
+        stockUnitMovementList = transferBean.viewStockUnitMovement(plant, stock);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
-
     }
 
-    public void onStorageAreaChange() {
-        if (storageAreaId != null) {
-            storageBinList = miml.viewStorageBin(storageAreaId);
-        }
-    }
-
-    public String editStockTakeQuantity(ActionEvent event) {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockTakeQuantity", event.getComponent().getAttributes().get("stockTakeQuantity"));
-        stockId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockId");
-        stock = miml.getStock(stockId);
-        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
-        stockTakeQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockTakeQuantity");
-        miml.editStockUnitQuantity(stockUnitId, stockTakeQuantity);
-        stockTakeQuantity = null;
-        stockUnitList = mgrl.viewStockUnitById(plant, stock);
-        return "inventorymonitoring_ststock";
-    }
-
-    public void addStockUnitTemp(ActionEvent event) throws IOException {
+//  Function: To create Stock Units that are of Pending Movement    
+    public void addStockUnitPendingMovement(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
 
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
-        stockUnit = mgrl.getStockUnit(stockUnitId);
+        stockUnit = transferBean.getStockUnit(stockUnitId);
         stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
-        storageBin = msul.getStorageBin(storageBinId);
+        storageBin = storageBean.getStorageBin(storageBinId);
 
         if (stockUnitQuantity > stockUnit.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -162,41 +134,42 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
         } else {
-            msul.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
-            msul.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
+            transferBean.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+            transferBean.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
         }
     }
 
-    public void deleteStockUnitTemp(ActionEvent event) throws IOException {
+//  Function: To delete the movement of a Stock Unit; usually the movement is currently pending    
+    public void deleteStockUnitMovement(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
         stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
-        msul.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), msul.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
-        msul.deleteStockUnit(stockUnit.getId());
+        transferBean.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), transferBean.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
+        transferBean.deleteStockUnit(stockUnit.getId());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
     }
 
-    public void confirmStockUnit(ActionEvent event) throws IOException, Exception {
+//  Function: To confirm the movement of a Stock Unit    
+    public void confirmStockUnitMovement(ActionEvent event) throws IOException, Exception {
         for (StockUnit g : stockUnitMovementList) {
-
-            stockUnitMovementAnotherList = msul.viewStockUnitMovementCheck(g.getPendingLocation(), g.getStock(), g.getBatchNo());
+            List<StockUnit> stockUnitMovementAnotherList = transferBean.viewStockUnitMovementCheck(g.getPendingLocation(), g.getStock(), g.getBatchNo());
 
             if (!stockUnitMovementAnotherList.isEmpty()) {
                 System.out.println("The stockUnitMovementAnotherList is not empty");
-                anotherStockUnit = stockUnitMovementAnotherList.get(0);
+                StockUnit anotherStockUnit = stockUnitMovementAnotherList.get(0);
                 System.out.println("There is a stockUnit: " + anotherStockUnit);
-                msul.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
+                transferBean.editStockUnitQuantity(anotherStockUnit.getId(), anotherStockUnit.getQty() + g.getQty());
                 System.out.println("The quantity is now updated from " + anotherStockUnit.getQty() + "to " + g.getQty());
-                msul.deleteStockUnit(g.getId());
+                transferBean.deleteStockUnit(g.getId());
             } else {
-                msul.confirmStockUnitMovement(g.getId());
+                transferBean.confirmStockUnitMovement(g.getId());
             }
 
             // Start: To check if Quantity = 0
-            stockUnitOld = miml.getStockUnit(g.getCommitStockUnitId());
+            StockUnit stockUnitOld = transferBean.getStockUnit(g.getCommitStockUnitId());
             if (stockUnitOld.getQty() == 0) {
-                msul.deleteStockUnit(stockUnitOld.getId());
+                transferBean.deleteStockUnit(stockUnitOld.getId());
                 // End
             }
         }
@@ -204,38 +177,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock movement has been completed successfully", ""));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", event.getComponent().getAttributes().get("stockId"));
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
-    }
-
-    public List<StockUnit> getStockUnitMovementAnotherList() {
-        return stockUnitMovementAnotherList;
-    }
-
-    public void setStockUnitMovementAnotherList(List<StockUnit> stockUnitMovementAnotherList) {
-        this.stockUnitMovementAnotherList = stockUnitMovementAnotherList;
-    }
-
-    public StockUnit getAnotherStockUnit() {
-        return anotherStockUnit;
-    }
-
-    public void setAnotherStockUnit(StockUnit anotherStockUnit) {
-        this.anotherStockUnit = anotherStockUnit;
-    }
-
-    public StockUnit getStockUnitOld() {
-        return stockUnitOld;
-    }
-
-    public void setStockUnitOld(StockUnit stockUnitOld) {
-        this.stockUnitOld = stockUnitOld;
-    }
-
-    public String getBatchNumber() {
-        return batchNumber;
-    }
-
-    public void setBatchNumber(String batchNumber) {
-        this.batchNumber = batchNumber;
     }
 
     public Long getPlantId() {
@@ -262,14 +203,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         this.stockId = stockId;
     }
 
-    public Long getStockTakeQuantity() {
-        return stockTakeQuantity;
-    }
-
-    public void setStockTakeQuantity(Long stockTakeQuantity) {
-        this.stockTakeQuantity = stockTakeQuantity;
-    }
-
     public Long getStockUnitId() {
         return stockUnitId;
     }
@@ -294,12 +227,12 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         this.storageAreaId = storageAreaId;
     }
 
-    public boolean isIfStockUnitMovementListEmpty() {
-        return ifStockUnitMovementListEmpty;
+    public String getBatchNumber() {
+        return batchNumber;
     }
 
-    public void setIfStockUnitMovementListEmpty(boolean ifStockUnitMovementListEmpty) {
-        this.ifStockUnitMovementListEmpty = ifStockUnitMovementListEmpty;
+    public void setBatchNumber(String batchNumber) {
+        this.batchNumber = batchNumber;
     }
 
     public String getUsername() {
@@ -390,22 +323,6 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         this.commitDate = commitDate;
     }
 
-    public ManageGoodsIssuedLocal getMgrl() {
-        return mgrl;
-    }
-
-    public void setMgrl(ManageGoodsIssuedLocal mgrl) {
-        this.mgrl = mgrl;
-    }
-
-    public ManageInventoryMonitoringLocal getMiml() {
-        return miml;
-    }
-
-    public void setMiml(ManageInventoryMonitoringLocal miml) {
-        this.miml = miml;
-    }
-
     public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
     }
@@ -414,12 +331,19 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public ManageInventoryMovementLocal getMsul() {
-        return msul;
+    public ManageInventoryTransferLocal getTransferBean() {
+        return transferBean;
     }
 
-    public void setMsul(ManageInventoryMovementLocal msul) {
-        this.msul = msul;
+    public void setTransferBean(ManageInventoryTransferLocal transferBean) {
+        this.transferBean = transferBean;
     }
 
+    public ManageStorageLocationLocal getStorageBean() {
+        return storageBean;
+    }
+
+    public void setStorageBean(ManageStorageLocationLocal storageBean) {
+        this.storageBean = storageBean;
+    }
 }

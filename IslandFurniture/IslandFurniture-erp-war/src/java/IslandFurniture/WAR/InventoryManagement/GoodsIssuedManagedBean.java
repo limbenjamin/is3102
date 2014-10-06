@@ -11,7 +11,7 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryMovementLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,31 +34,25 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class GoodsIssuedManagedBean implements Serializable {
 
-    private Long plantId;
     private Long goodsIssuedDocumentId;
 
     private String username;
-    private String deliverynote;
 
     private Calendar postingDate;
 
     private List<GoodsIssuedDocument> goodsIssuedDocumentList;
     private List<GoodsIssuedDocument> goodsIssuedDocumentPostedList;
-    private List<StockUnit> stockUnitMainList;
-
-    private boolean ifGoodsIssuedDocumentListEmpty;
-    private boolean ifGoodsIssuedDocumentPostedListEmpty;
 
     private GoodsIssuedDocument goodsIssuedDocument;
     private Staff staff;
     private Plant plant;
 
     @EJB
-    public ManageGoodsIssuedLocal mgrl;
+    public ManageGoodsIssuedLocal issuedBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public ManageInventoryMovementLocal msul;
+    public ManageInventoryTransferLocal transferBean;
 
     @PostConstruct
     public void init() {
@@ -66,73 +60,51 @@ public class GoodsIssuedManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument(plant);
-        goodsIssuedDocumentPostedList = mgrl.viewGoodsIssuedDocumentPosted(plant);
-        ifGoodsIssuedDocumentListEmpty = goodsIssuedDocumentList.isEmpty();
-        ifGoodsIssuedDocumentPostedListEmpty = goodsIssuedDocumentPostedList.isEmpty();
+
+//      Load both GID and GID Posted Lists
+        goodsIssuedDocumentList = issuedBean.viewGoodsIssuedDocument(plant);
+        goodsIssuedDocumentPostedList = issuedBean.viewGoodsIssuedDocumentPosted(plant);
 
         System.out.println("Init");
     }
 
+//  Function: To create Goods Issued Document    
     public String addGoodsIssuedDocument() {
-        goodsIssuedDocument = mgrl.createGoodsIssuedDocument(plant, null);
+        goodsIssuedDocument = issuedBean.createGoodsIssuedDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocument.getId());
-        return "goodsissueddocument?faces-redirect=true";
-
+        return "goodsissueddocument";
     }
-
-    public void goodsIssuedDocumentDetailActionListener(ActionEvent event) throws IOException {
+    
+//  Function: To view Goods Issued Document
+    public void viewGoodsIssuedDocument(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocument.xhtml");
     }
 
-    public void goodsIssuedDocumentDetailActionListener2(ActionEvent event) throws IOException {
+//  Function: To view Goods Issued Document Posted    
+    public void viewGoodsIssuedDocumentPosted(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("goodsissueddocumentposted.xhtml");
     }
 
+//  Function: To delete Goods Issued Document    
     public String deleteGoodsIssuedDocument(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", event.getComponent().getAttributes().get("GRDid"));
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
-        goodsIssuedDocument = mgrl.getGoodsIssuedDocument(goodsIssuedDocumentId);
+        goodsIssuedDocument = issuedBean.getGoodsIssuedDocument(goodsIssuedDocumentId);
 
-        for (StockUnit g : mgrl.viewStockUnitByIdMain(plant, goodsIssuedDocument)) {
-            msul.editStockUnitQuantity(g.getCommitStockUnitId(), msul.getStockUnit(g.getCommitStockUnitId()).getQty() + g.getQty());
-            msul.deleteStockUnit(g.getId());
+        for (StockUnit g : issuedBean.viewStockUnitPendingMovementAtGoodsIssuedDocument(goodsIssuedDocument)) {
+            transferBean.editStockUnitQuantity(g.getCommitStockUnitId(), transferBean.getStockUnit(g.getCommitStockUnitId()).getQty() + g.getQty());
+            transferBean.deleteStockUnit(g.getId());
         }
 
-        mgrl.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
-        goodsIssuedDocumentList = mgrl.viewGoodsIssuedDocument(plant);
-        ifGoodsIssuedDocumentListEmpty = goodsIssuedDocumentList.isEmpty();
+        issuedBean.deleteGoodsIssuedDocument(goodsIssuedDocumentId);
+        goodsIssuedDocumentList = issuedBean.viewGoodsIssuedDocument(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully deleted", ""));
         return "goodsissued";
-    }
-
-    public boolean isIfGoodsIssuedDocumentListEmpty() {
-        return ifGoodsIssuedDocumentListEmpty;
-    }
-
-    public void setIfGoodsIssuedDocumentListEmpty(boolean ifGoodsIssuedDocumentListEmpty) {
-        this.ifGoodsIssuedDocumentListEmpty = ifGoodsIssuedDocumentListEmpty;
-    }
-
-    public boolean isIfGoodsIssuedDocumentPostedListEmpty() {
-        return ifGoodsIssuedDocumentPostedListEmpty;
-    }
-
-    public void setIfGoodsIssuedDocumentPostedListEmpty(boolean ifGoodsIssuedDocumentPostedListEmpty) {
-        this.ifGoodsIssuedDocumentPostedListEmpty = ifGoodsIssuedDocumentPostedListEmpty;
-    }
-
-    public Long getPlantId() {
-        return plantId;
-    }
-
-    public void setPlantId(Long plantId) {
-        this.plantId = plantId;
     }
 
     public Long getGoodsIssuedDocumentId() {
@@ -149,14 +121,6 @@ public class GoodsIssuedManagedBean implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getDeliverynote() {
-        return deliverynote;
-    }
-
-    public void setDeliverynote(String deliverynote) {
-        this.deliverynote = deliverynote;
     }
 
     public Calendar getPostingDate() {
@@ -181,14 +145,6 @@ public class GoodsIssuedManagedBean implements Serializable {
 
     public void setGoodsIssuedDocumentPostedList(List<GoodsIssuedDocument> goodsIssuedDocumentPostedList) {
         this.goodsIssuedDocumentPostedList = goodsIssuedDocumentPostedList;
-    }
-
-    public List<StockUnit> getStockUnitMainList() {
-        return stockUnitMainList;
-    }
-
-    public void setStockUnitMainList(List<StockUnit> stockUnitMainList) {
-        this.stockUnitMainList = stockUnitMainList;
     }
 
     public GoodsIssuedDocument getGoodsIssuedDocument() {
@@ -216,11 +172,11 @@ public class GoodsIssuedManagedBean implements Serializable {
     }
 
     public ManageGoodsIssuedLocal getMgrl() {
-        return mgrl;
+        return issuedBean;
     }
 
     public void setMgrl(ManageGoodsIssuedLocal mgrl) {
-        this.mgrl = mgrl;
+        this.issuedBean = mgrl;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {
@@ -231,12 +187,12 @@ public class GoodsIssuedManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public ManageInventoryMovementLocal getMsul() {
-        return msul;
+    public ManageInventoryTransferLocal getMsul() {
+        return transferBean;
     }
 
-    public void setMsul(ManageInventoryMovementLocal msul) {
-        this.msul = msul;
+    public void setMsul(ManageInventoryTransferLocal msul) {
+        this.transferBean = msul;
     }
 
 }

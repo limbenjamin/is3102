@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.Entities.Country;
@@ -11,6 +10,7 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.List;
@@ -31,13 +31,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
 
     @PersistenceContext
     private EntityManager em;
-    
+
     private GlobalHQ globalhq;
     private Store store;
     private ManufacturingFacility mf;
     private CountryOffice co;
     private Country country;
-    
 
     @Override
     public GlobalHQ addGlobalHQ(String name, Country country, String tz) {
@@ -57,7 +56,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public Store addStore(String storeName, String tz, CountryOffice co) {
         store = (Store) this.findPlantByName(country, storeName);
@@ -77,7 +76,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public void editStore(Long storeId, String name, String tz, CountryOffice co) {
         store = (Store) em.find(Store.class, storeId);
@@ -91,12 +90,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid Store ID");
         }
     }
-    
+
     @Override
     public void deleteStore(Long storeId) {
         store = (Store) em.find(Store.class, storeId);
         country = store.getCountry();
-        
+
         if (store != null) {
             em.remove(store);
             country.getPlants().remove(store);
@@ -106,7 +105,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid Store ID");
         }
     }
-    
+
     @Override
     public List<Store> displayStore() {
         Query q = em.createNamedQuery("getAllStores");
@@ -132,7 +131,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public void editManufacturingFacility(Long mfId, String name, String tz, CountryOffice co) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
@@ -146,12 +145,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid ManufacturingFacility ID");
         }
     }
-    
+
     @Override
     public void deleteManufacturingFacility(Long mfId) {
         mf = (ManufacturingFacility) em.find(ManufacturingFacility.class, mfId);
         country = mf.getCountry();
-        
+
         if (mf != null) {
             em.remove(mf);
             country.getPlants().remove(mf);
@@ -161,17 +160,24 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid ManufacturingFacility ID");
         }
     }
-    
+
     @Override
     public List<ManufacturingFacility> displayManufacturingFacility() {
         Query q = em.createNamedQuery("getAllMFs");
         return q.getResultList();
     }
-    
+
     @Override
     public List<Plant> displayPlant() {
         Query q = em.createQuery("SELECT p " + "FROM Plant p");
         return q.getResultList();
+    }
+
+    //  Function: To return a Plant based on PlantId
+    @Override
+    public Plant getPlantById(Long plantId) {
+        Plant plant = (Plant) em.find(Plant.class, plantId);
+        return plant;
     }
 
     @Override
@@ -192,7 +198,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public void editCountryOffice(Long coId, String name, Country country, String tz) {
         co = (CountryOffice) em.find(CountryOffice.class, coId);
@@ -205,12 +211,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid CountryOffice ID");
         }
     }
-    
+
     @Override
     public void deleteCountryOffice(Long coId) {
         co = (CountryOffice) em.find(CountryOffice.class, coId);
         country = co.getCountry();
-        
+
         if (co != null) {
             em.remove(co);
             country.getPlants().remove(co);
@@ -220,13 +226,13 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid CountryOffice ID");
         }
     }
-    
+
     @Override
     public List<CountryOffice> displayCountryOffice() {
         Query q = em.createQuery("SELECT c " + "FROM CountryOffice c");
         return q.getResultList();
-    }    
-    
+    }
+
     @Override
     public Plant findPlantByNameOnly(String plantName) {
         Query q = em.createQuery("SELECT p FROM Plant p WHERE p.name=:name");
@@ -237,7 +243,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public Plant findPlantByName(Country country, String plantName) {
         Query q = em.createNamedQuery("findPlantByName");
@@ -262,19 +268,19 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
-    public List<Country> getCountries(){
+    public List<Country> getCountries() {
         Query q = em.createNamedQuery("getAllCountry");
         return q.getResultList();
     }
-    
+
     @Override
-    public List<CountryOffice> getCountryOffices(){
+    public List<CountryOffice> getCountryOffices() {
         Query q = em.createNamedQuery("getAllCountryOffice");
         return q.getResultList();
     }
-    
+
     @Override
     public CountryOffice findCountryOfficeByName(String countryOfficeName) {
         Query q = em.createNamedQuery("findCountryOfficeByName");
@@ -286,7 +292,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             return null;
         }
     }
-    
+
     @Override
     public Country addCountry(String countryName) {
         Country country = QueryMethods.findCountryByName(em, countryName);
@@ -304,5 +310,5 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
         }
 
     }
-    
+
 }

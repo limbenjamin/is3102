@@ -20,7 +20,7 @@
                     </div>                    
                     <div class="col-md-8">
                         <span class="pull-right">
-                            <a href="purchaseorder.xhtml">
+                            <a href="inventorytransfer.xhtml">
                             <button type="button" class="btn btn-sm btn-default btn-right-margin">
                                 <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
                             </button>
@@ -124,7 +124,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.addStockUnitTemp}" value="Add Stock" class="btn btn-round btn-success">
+                                                <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.addStockUnitPendingMovement}" value="Add Stock" class="btn btn-round btn-success">
                                                     <f:attribute name="stockId" value="#{inventoryTransferMovementStockManagedBean.stockId}" />
                                                     <f:attribute name="stockUnitId" value="#{inventoryTransferMovementStockManagedBean.stockUnitId}" />
                                                     <f:attribute name="storageBinId" value="#{inventoryTransferMovementStockManagedBean.storageBinId}" />
@@ -137,17 +137,15 @@
                             </div>    
                         </section>
 
-
                         <br/>
-
 
                         <section name="Edit Stock">
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Movement of Stock
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{inventoryTransferMovementStockManagedBean.ifStockUnitMovementListEmpty}" value="There are no pending movement of stock"/>
-                                <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementStockManagedBean.ifStockUnitMovementListEmpty}">
+                                <h:outputText rendered="#{empty inventoryTransferMovementStockManagedBean.stockUnitMovementList}" value="There are no pending movement of stock"/>
+                                <h:panelGroup layout="block" rendered="#{not empty inventoryTransferMovementStockManagedBean.stockUnitMovementList}">
                                     <table class="table table-hover table-condensed">
                                         <tr>
                                             <th>Current Storage Area</th>
@@ -168,7 +166,7 @@
                                                     <td>#{s.qty}</td>
                                                     <td>#{s.batchNo}</td>
                                                     <td>
-                                                        <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.deleteStockUnitTemp}" value="Delete" class="btn btn-danger btn-xs"> 
+                                                        <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.deleteStockUnitMovement}" value="Delete" class="btn btn-danger btn-xs"> 
                                                             <f:attribute name="stockId" value="#{s.stock.id}" />
                                                             <f:attribute name="stockUnit" value="#{s}" />
                                                         </h:commandButton>
@@ -181,18 +179,15 @@
                             </div>
 
                             <br/>
-                            <h:panelGroup layout="block" rendered="#{!inventoryTransferMovementStockManagedBean.ifStockUnitMovementListEmpty}">
+                            <h:panelGroup layout="block" rendered="#{not empty inventoryTransferMovementStockManagedBean.stockUnitMovementList}">
                                 <h:form class="form-horizontal">
-                                    <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.confirmStockUnit}" value="Confirm Stock Movement" class="btn btn-primary pull-right"> 
+                                    <h:commandButton actionListener="#{inventoryTransferMovementStockManagedBean.confirmStockUnitMovement}" value="Confirm Stock Movement" class="btn btn-primary pull-right"> 
                                         <f:attribute name="stockId" value="#{inventoryTransferMovementStockManagedBean.stock.id}" />
                                     </h:commandButton>
                                 </h:form>
                             </h:panelGroup>
-
                         </section>
-
-
-
+                        
                     </div>
                 </div>
             </ui:define>

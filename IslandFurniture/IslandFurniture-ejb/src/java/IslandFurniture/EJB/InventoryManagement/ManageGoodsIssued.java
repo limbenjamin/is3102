@@ -5,8 +5,6 @@ import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
-import IslandFurniture.Entities.StorageArea;
-import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -30,41 +28,26 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
     private StockUnit stockUnit;
     private Plant plant;
 
+//  Function: To get GoodsIssuedDocument entity based on GoodIssuedDocumentId   
     @Override
     public GoodsIssuedDocument getGoodsIssuedDocument(Long id) {
         goodsIssuedDocument = (GoodsIssuedDocument) em.find(GoodsIssuedDocument.class, id);
         return goodsIssuedDocument;
     }
 
+//  Function: To get GoodsIssuedDocumentDetail entity based on GoodIssuedDocumentDetailId       
     @Override
     public GoodsIssuedDocumentDetail getGoodsIssuedDocumentDetail(Long id) {
         goodsIssuedDocumentDetail = (GoodsIssuedDocumentDetail) em.find(GoodsIssuedDocumentDetail.class, id);
         return goodsIssuedDocumentDetail;
     }
 
+//  Function: To create Goods Issued Document    
     @Override
-    public Stock getStock(Long id) {
-        stock = (Stock) em.find(Stock.class, id);
-        return stock;
-    }
-
-    @Override
-    public Plant getPlant(Long id) {
-        plant = (Plant) em.find(Plant.class, id);
-        return plant;
-    }
-
-    @Override
-    public StockUnit getStockUnit(Long id) {
-        stockUnit = (StockUnit) em.find(StockUnit.class, id);
-        return stockUnit;
-    }
-
-    @Override
-    public GoodsIssuedDocument createGoodsIssuedDocument(Plant plant, Calendar postingDate) {
+    public GoodsIssuedDocument createGoodsIssuedDocument(Plant plant) {
         goodsIssuedDocument = new GoodsIssuedDocument();
         goodsIssuedDocument.setPlant(plant);
-        goodsIssuedDocument.setPostingDate(postingDate);
+        goodsIssuedDocument.setPostingDate(null);
         goodsIssuedDocument.setConfirm(false);
         goodsIssuedDocument.setReceived(false);
         em.persist(goodsIssuedDocument);
@@ -72,20 +55,12 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         return goodsIssuedDocument;
     }
 
-    @Override
-    public void createGoodsIssuedDocumentStockUnit(Long grdId, Calendar postingDate) {
-        goodsIssuedDocument = getGoodsIssuedDocument(grdId);
-        goodsIssuedDocument.setConfirm(true);
-        goodsIssuedDocument.setPostingDate(postingDate);
-        em.merge(goodsIssuedDocument);
-        em.flush();
-    }
-
+// Function: To create Goods Issued Document Detail    
     @Override
     public void createGoodsIssuedDocumentDetail(Long grdId, Long stockId, Long quantity) {
         goodsIssuedDocumentDetail = new GoodsIssuedDocumentDetail();
         goodsIssuedDocument = getGoodsIssuedDocument(grdId);
-        stock = getStock(stockId);
+        stock = (Stock) em.find(Stock.class, stockId);
         goodsIssuedDocumentDetail.setGoodsIssuedDocument(goodsIssuedDocument);
         goodsIssuedDocumentDetail.setStock(stock);
         goodsIssuedDocumentDetail.setQuantity(quantity);
@@ -95,6 +70,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         em.flush();
     }
 
+//  Function: To edit Goods Issued Document
     @Override
     public void editGoodsIssuedDocument(Long goodsIssuedDocumentId, Calendar issuedDate, Plant plant) {
         goodsIssuedDocument = getGoodsIssuedDocument(goodsIssuedDocumentId);
@@ -104,15 +80,17 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         em.flush();
     }
 
+//  Function: To post Goods Issued Document    
     @Override
-    public void editGoodsIssuedDocument2(Long goodsIssuedDocumentId, Calendar postingDate) {
-        goodsIssuedDocument = getGoodsIssuedDocument(goodsIssuedDocumentId);
-        goodsIssuedDocument.setPostingDate(postingDate);
+    public void postGoodsIssuedDocument(Long grdId, Calendar postingDate) {
+        goodsIssuedDocument = getGoodsIssuedDocument(grdId);
         goodsIssuedDocument.setConfirm(true);
+        goodsIssuedDocument.setPostingDate(postingDate);
         em.merge(goodsIssuedDocument);
         em.flush();
     }
 
+//  Function: To display Goods Issued Document    
     @Override
     public List<GoodsIssuedDocument> viewGoodsIssuedDocument(Plant plant) {
         Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=FALSE AND s.plant.id=:plantId");
@@ -120,6 +98,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         return q.getResultList();
     }
 
+//  Functiuon: To display Goods Issued Document Posted    
     @Override
     public List<GoodsIssuedDocument> viewGoodsIssuedDocumentPosted(Plant plant) {
         Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.confirm=TRUE AND s.plant.id=:plantId");
@@ -127,30 +106,22 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         return q.getResultList();
     }
 
-    @Override
-    public List<GoodsIssuedDocument> viewGoodsIssuedDocumentIndividual(GoodsIssuedDocument grd) {
-        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.id=" + grd.getId());
-        return q.getResultList();
-    }
-
+//  Function: To display Goods Issued Document Detail    
     @Override
     public List<GoodsIssuedDocumentDetail> viewGoodsIssuedDocumentDetail(GoodsIssuedDocument grd) {
         Query q = em.createQuery("SELECT s FROM GoodsIssuedDocumentDetail s WHERE s.goodsIssuedDocument.id=" + grd.getId());
         return q.getResultList();
     }
 
+//  Function: To display list of Stock Units pending at the Goods Issued Document
     @Override
-    public List<Stock> viewStock() {
-        Query q = em.createQuery("SELECT s " + "FROM Stock s");
+    public List<StockUnit> viewStockUnitPendingMovementAtGoodsIssuedDocument(GoodsIssuedDocument gid) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");
+        q.setParameter("gidId", gid.getId());
         return q.getResultList();
     }
 
-    @Override
-    public List<Plant> viewPlant() {
-        Query q = em.createQuery("SELECT s FROM Plant s");
-        return q.getResultList();
-    }
-
+//  Function: To delete Goods Issued Document    
     @Override
     public void deleteGoodsIssuedDocument(Long goodsIssuedDocumentId) {
         goodsIssuedDocument = getGoodsIssuedDocument(goodsIssuedDocumentId);
@@ -158,6 +129,7 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         em.flush();
     }
 
+//  Function: To delete Goods Issued Document Detail    
     @Override
     public void deleteGoodsIssuedDocumentDetail(Long goodsIssuedDocumentDetailId) {
         goodsIssuedDocumentDetail = getGoodsIssuedDocumentDetail(goodsIssuedDocumentDetailId);
@@ -165,56 +137,28 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         em.flush();
     }
 
+//  Function: To display details on the Goods Issued Document
     @Override
-    public List<StorageArea> viewStorageArea(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=" + plant.getId());
+    public List<GoodsIssuedDocument> viewGoodsIssuedDocumentIndividual(GoodsIssuedDocument grd) {
+        Query q = em.createQuery("SELECT s FROM GoodsIssuedDocument s WHERE s.id=" + grd.getId());
         return q.getResultList();
     }
 
+//  Function: To display Stock Units of the particular Stock and tagged to a particular Goods Issued Document    
     @Override
-    public List<StorageBin> viewStorageBin(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StockUnit> viewStockUnitById(Plant plant, Stock stock) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE)");
-        q.setParameter("plantId", plant.getId());
-        q.setParameter("stockId", stock.getId());
-        return q.getResultList();
-    }
-    
-    @Override
-    public List<StockUnit> viewStockUnitById2(Plant plant, Stock stock, GoodsIssuedDocument gid) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");
-        q.setParameter("plantId", plant.getId());
-        q.setParameter("stockId", stock.getId());
-        q.setParameter("gidId", gid.getId());
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StockUnit> viewStockUnitByIdMain(Plant plant, GoodsIssuedDocument gid) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");
-        q.setParameter("plantId", plant.getId());
-        q.setParameter("gidId", gid.getId());
-        return q.getResultList();
-    }
-
-    @Override
-    public List<StockUnit> viewStockUnitByIdAndGrdId(Stock stock, GoodsIssuedDocument gid) {
+    public List<StockUnit> viewStockUnitByStockandGID(Stock stock, GoodsIssuedDocument gid) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.stock.id=:stockId AND s.goodsIssuedDocument.id=:gidId");
         q.setParameter("stockId", stock.getId());
         q.setParameter("gidId", gid.getId());
         return q.getResultList();
     }
 
+//  Function: To display pending movement Stock Units of the particular Stock and tagged to a particular Goods Issued Document      
     @Override
-    public List<StockUnit> viewStockUnit(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId GROUP BY s.stock.name");
-        q.setParameter("plantId", plant.getId());
+    public List<StockUnit> viewStockUnitPendingMovementAtGIDForAParticularStock(Stock stock, GoodsIssuedDocument gid) {
+        Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument.id=:gidId");
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("gidId", gid.getId());
         return q.getResultList();
     }
-
 }

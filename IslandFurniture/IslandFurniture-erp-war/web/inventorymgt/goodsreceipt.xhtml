@@ -15,22 +15,22 @@
                             <li><a href="../dash.xhtml">Home</a></li>
                             <li class="active"><strong>Goods Receipt</strong></li>
                         </ol>                        
-                    </div>                    
+                    </div>
+
                     <div class="col-md-8">
                         <h:form id="createGRD1"> 
                             <h:commandButton action="goodsreceiptdocument.xhmtl" actionListener="#{goodsReceiptManagedBean.addGoodsReceiptDocument}" value="Create Goods Receipt Document" class="btn btn-sm btn-success pull-right">
                             </h:commandButton>
                         </h:form> 
-
                         <h4>Goods Receipt</h4><hr></hr>
-                        <section name="viewGRD">
 
+                        <section name="Goods Receipt Document List">
                             <div class="panel-heading dashboard-title-panel">
                                 Pending Goods Receipt
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsReceiptManagedBean.ifGoodsReceiptDocumentListEmpty}" value="There are no pending goods receipt"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsReceiptManagedBean.ifGoodsReceiptDocumentListEmpty}">
+                                <h:outputText rendered="#{empty goodsReceiptManagedBean.goodsReceiptDocumentList}" value="There are no pending goods receipt"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsReceiptManagedBean.goodsReceiptDocumentList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Goods Receipt ID</th>
@@ -49,7 +49,7 @@
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
                                                     <td>#{GRD.receiveFrom.id}</td>
-                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.viewGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GRDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
@@ -67,15 +67,13 @@
 
                         <br></br>
 
-                        <section name="postedGRD">
-
-
+                        <section name="Goods Receipt Document Posted List">
                             <div class="panel-heading dashboard-title-panel">
                                 Posted Goods Receipt
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsReceiptManagedBean.ifgoodsReceiptDocumentPostedListEmpty}" value="There are no posted goods receipt"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsReceiptManagedBean.ifgoodsReceiptDocumentPostedListEmpty}">
+                                <h:outputText rendered="#{empty goodsReceiptManagedBean.goodsReceiptDocumentPostedList}" value="There are no posted goods receipt"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsReceiptManagedBean.goodsReceiptDocumentPostedList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Goods Receipt ID</th>
@@ -99,7 +97,7 @@
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
                                                     <td>#{GRD.receiveFrom.id}</td>
-                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.goodsReceiptDocumentDetailActionListener2}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.viewGoodsReceiptDocumentPosted}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GRDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-file-o icon-button"></i></td> 
@@ -113,13 +111,13 @@
 
                         <br></br>
 
-                        <section name ="Inbound Shipments">
+                        <section name ="Inbound Shipments List">
                             <div class="panel-heading dashboard-title-panel">
                                 Incoming Shipment Schedule
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{goodsReceiptManagedBean.ifInboundShipmentListEmpty}" value="There are no incoming shipment schedule"/>
-                                <h:panelGroup layout="block" rendered="#{!goodsReceiptManagedBean.ifInboundShipmentListEmpty}">
+                                <h:outputText rendered="#{empty goodsReceiptManagedBean.inboundShipmentList}" value="There are no incoming shipment schedule"/>
+                                <h:panelGroup layout="block" rendered="#{not empty goodsReceiptManagedBean.inboundShipmentList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Goods Issued ID</th>
@@ -144,15 +142,14 @@
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
                                                         </h:outputText></td>
                                                     <td>#{GRD.deliverTo.name}</td>
-                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.addGoodsReceiptDocumentfromInbound}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <td> <h:commandButton actionListener="#{goodsReceiptManagedBean.addGoodsReceiptDocumentfromGoodsIssuedDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="GIDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-file-text-o icon-button"></i></td>
-                                                    <td><h:commandButton actionListener="#{goodsReceiptManagedBean.updateIncomingShipmentStatus}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <td><h:commandButton actionListener="#{goodsReceiptManagedBean.updateIncomingShipmentStatusToDelivered}" class="btn btn-sm transparent-button" style="outline:0;">
                                                             <f:attribute name="GIDid" value="#{GRD.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-save icon-button"></i></td>
-
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 
@@ -160,9 +157,6 @@
                                 </h:panelGroup>
                             </div>
                         </section>
-
-
-
                     </div>
                 </div>
             </ui:define>

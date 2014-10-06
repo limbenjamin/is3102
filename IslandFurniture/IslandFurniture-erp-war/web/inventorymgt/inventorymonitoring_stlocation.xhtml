@@ -32,8 +32,8 @@
                                 Contents of the Storage Location
                             </div>
                             <div class="list-group-item">
-                                <h:outputText rendered="#{inventoryMonitoringLocationManagedBean.ifStockUnitBinListEmpty}" value="There are no stocks stored here"/>
-                                <h:panelGroup layout="block" rendered="#{!inventoryMonitoringLocationManagedBean.ifStockUnitBinListEmpty}">
+                                <h:outputText rendered="#{empty inventoryMonitoringLocationManagedBean.stockUnitBinList}" value="There are no stocks stored here"/>
+                                <h:panelGroup layout="block" rendered="#{not empty inventoryMonitoringLocationManagedBean.stockUnitBinList}">
                                     <table class="table table-hover table-condensed">
                                         <tr>
                                             <th>Stock</th>
