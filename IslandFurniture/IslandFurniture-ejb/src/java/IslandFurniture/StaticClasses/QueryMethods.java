@@ -9,6 +9,7 @@ import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARD
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.ManufacturingFacility;
@@ -134,6 +135,40 @@ public class QueryMethods {
 
         try {
             return (Ingredient) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Dish findDishByName(EntityManager em, String dishName) {
+        Query q = em.createNamedQuery("findDishByName");
+        q.setParameter("name", dishName);
+
+        try {
+            return (Dish) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static List<Dish> getDishListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getDishListByCountryOffice");
+        q.setParameter("countryOffice", countryOffice);
+
+        try {
+            return (List<Dish>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Dish getDishByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
+        Query q = em.createNamedQuery("getDishByCountryOfficeAndName");
+        q.setParameter("countryOffice", countryOffice);
+        q.setParameter("name", name);
+
+        try {
+            return (Dish) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }

@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -20,11 +22,22 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findDishByName",
+            query = "SELECT a FROM Dish a WHERE a.name = :name"),
+    @NamedQuery(name = "getDishListByCountryOffice",
+            query = "SELECT a FROM Dish a WHERE a.countryOffice = :countryOffice"),
+    @NamedQuery(name = "getDishByCountryOfficeAndName",
+            query = "SELECT a FROM Dish a WHERE a.countryOffice = :countryOffice AND a.name = :name")
+})
 public class Dish implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+    private CountryOffice countryOffice;
     
     @ManyToMany(mappedBy = "dishes")
     private List<MenuItem> menuItem;
@@ -32,12 +45,32 @@ public class Dish implements Serializable {
     @OneToMany
     private List<Ingredient> ingredients;
 
+    public Dish() {
+        
+    }
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCo(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public List<MenuItem> getMenuItem() {

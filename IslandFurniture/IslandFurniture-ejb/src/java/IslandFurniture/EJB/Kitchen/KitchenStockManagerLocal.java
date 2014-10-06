@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.Kitchen;
 
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.Ingredient;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,6 +25,14 @@ public interface KitchenStockManagerLocal {
 
     public String editIngredient(Long ingredientID, String ingredientName);
 
-    public String deleteIngredient(Long ingredientID);
+    public String deleteIngredient(Long ingredientID, CountryOffice co);
+
+    public List<Dish> getDishList(CountryOffice co);
+
+    public String addDish(String dishName, CountryOffice co);
+
+    public String editDish(Long dishID, String dishName);
+
+    public String deleteDish(Long dishID, CountryOffice co);
     
 }
