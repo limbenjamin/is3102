@@ -18,8 +18,11 @@
                 <div class="col-md-12 col-sm-12">                                               
                   <section class="panel">
                       <h:form>
-                        <p:dataTable var="log" value="#{auditLogBean.logList}" style="text-align: center"
-                                     emptyMessage="No records found with given criteria" filteredValue="#{auditLogBean.filteredLogList}">
+                          <h:commandButton value="PDF" actionListener="#{auditLogManagedBean.PDF}"/>
+                      </h:form>
+                      <h:form>
+                        <p:dataTable var="log" value="#{auditLogManagedBean.logList}" style="text-align: center"
+                                     emptyMessage="No records found with given criteria" filteredValue="#{auditLogManagedBean.filteredLogList}">
 
                             <p:column filterBy="#{log.entityName}" headerText="Entity" filterMatchMode="contains">
                                  <h:outputText value="#{log.entityName}" />
