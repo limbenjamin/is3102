@@ -17,35 +17,38 @@
                 </div>
                 <div class="col-md-12 col-sm-12">                                               
                   <section class="panel">
-                      <p:dataTable var="log" value="#{auditLogBean.logList}" style="text-align: center"
-                                    emptyMessage="No records found with given criteria">
+                      <h:form>
+                        <p:dataTable var="log" value="#{auditLogBean.logList}" style="text-align: center"
+                                     emptyMessage="No records found with given criteria" filteredValue="#{auditLogBean.filteredLogList}">
 
-                          <p:column filterBy="#{log.entityName}" headerText="Entity" filterMatchMode="contains">
-                               <h:outputText value="#{log.entityName}" />
-                           </p:column>
+                            <p:column filterBy="#{log.entityName}" headerText="Entity" filterMatchMode="contains">
+                                 <h:outputText value="#{log.entityName}" />
+                             </p:column>
 
-                          <p:column headerText="Id" filterMatchMode="contains">
-                               <h:outputText value="#{log.entityId}" />
-                           </p:column>
+                            <p:column filterBy="#{log.entityId}" headerText="Id" filterMatchMode="contains">
+                                 <h:outputText value="#{log.entityId}" />
+                             </p:column>
 
-                          <p:column headerText="Change Message" filterMatchMode="contains">
-                               <h:outputText value="#{log.changeMessage}" />
-                           </p:column>
+                            <p:column filterBy="#{log.changeMessage}" headerText="Change Message" filterMatchMode="contains">
+                                 <h:outputText value="#{log.changeMessage}" />
+                             </p:column>
 
-                          <p:column headerText="Action" filterMatchMode="contains">
-                               <h:outputText value="#{log.logEntryAction}" />
-                           </p:column>
-                          
-                          <p:column headerText="Time" filterMatchMode="contains">
-                               <h:outputText value="#{log.logTime.time}" />
-                           </p:column>
-                          
-                          <p:column headerText="Staff" filterMatchMode="contains">
-                               <h:outputText value="#{log.staff.name}" />
-                           </p:column>                         
+                            <p:column filterBy="#{log.logEntryAction}" headerText="Action" filterMatchMode="contains">
+                                 <h:outputText value="#{log.logEntryAction}" />
+                             </p:column>
 
-                       </p:dataTable>
-                      
+                            <p:column filterBy="#{log.logTime.time}" headerText="Time" filterMatchMode="contains">
+                                 <h:outputText value="#{log.logTime.time}" >
+                                     <f:convertDateTime dateStyle="full" timeZone="#{auditLogBean.timezone}" type="both" />
+                                 </h:outputText>
+                             </p:column>
+
+                            <p:column filterBy="#{log.staff.name}" headerText="Staff" filterMatchMode="contains">
+                                 <h:outputText value="#{log.staff.name}" />
+                             </p:column>                         
+
+                         </p:dataTable>
+                       </h:form>
                   </section>
                 </div>
 

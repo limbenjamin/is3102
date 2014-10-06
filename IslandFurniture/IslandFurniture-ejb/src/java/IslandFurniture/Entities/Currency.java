@@ -108,7 +108,7 @@ public class Currency implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Currency[ id=" + getId() + " ]";
+        return "Currency[ id=" + getId() + " ]";
     }
 
 }

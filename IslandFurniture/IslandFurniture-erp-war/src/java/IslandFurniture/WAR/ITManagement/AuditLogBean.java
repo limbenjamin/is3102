@@ -7,10 +7,12 @@
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.LogEntry;
-import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,6 +32,8 @@ public class AuditLogBean {
 
     String username;
     List<LogEntry> logList;
+    private List<LogEntry> filteredLogList;
+    private String timezone;
     
     @EJB
     private ManageSystemAuditLogBeanLocal msalb;
@@ -41,11 +45,13 @@ public class AuditLogBean {
     public void init(){
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
+        timezone = muabl.getStaff(username).getPlant().getTimeZoneID();
         if (muabl.getStaff(username).getPlant() instanceof GlobalHQ){
             logList = msalb.getLog();
         }else{
             logList = msalb.GetLogForPlant(muabl.getStaff(username).getPlant());
         }
+        Collections.reverse(logList);
     }
 
     public String getUsername() {
@@ -78,6 +84,22 @@ public class AuditLogBean {
 
     public void setMuabl(ManageUserAccountBeanLocal muabl) {
         this.muabl = muabl;
+    }
+
+    public List<LogEntry> getFilteredLogList() {
+        return filteredLogList;
+    }
+
+    public void setFilteredLogList(List<LogEntry> filteredLogList) {
+        this.filteredLogList = filteredLogList;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
     
     

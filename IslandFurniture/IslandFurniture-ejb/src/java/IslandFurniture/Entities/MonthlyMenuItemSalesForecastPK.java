@@ -17,7 +17,7 @@ import java.util.Objects;
 public class MonthlyMenuItemSalesForecastPK implements Serializable {
     private Month month;
     private Integer year;
-    private Long store;
+    private Long countryOffice;
     private Long menuItem;
     
     @Override
@@ -26,21 +26,21 @@ public class MonthlyMenuItemSalesForecastPK implements Serializable {
             return false;
         }
         MonthlyMenuItemSalesForecastPK other = (MonthlyMenuItemSalesForecastPK) object;
-        return this.month.equals(other.month) && this.year.equals(other.year) && this.store.equals(other.store) && this.menuItem.equals(other.menuItem);
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.countryOffice.equals(other.countryOffice) && this.menuItem.equals(other.menuItem);
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.month);
-        hash = 37 * hash + Objects.hashCode(this.year);
-        hash = 37 * hash + Objects.hashCode(this.store);
-        hash = 37 * hash + Objects.hashCode(this.menuItem);
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.month);
+        hash = 13 * hash + Objects.hashCode(this.year);
+        hash = 13 * hash + Objects.hashCode(this.countryOffice);
+        hash = 13 * hash + Objects.hashCode(this.menuItem);
         return hash;
     }
     
     @Override
     public String toString() {
-        return this.month + "," + this.year + "," + this.store + "," + this.menuItem;
+        return this.month + "," + this.year + "," + this.countryOffice + "," + this.menuItem;
     }
 }

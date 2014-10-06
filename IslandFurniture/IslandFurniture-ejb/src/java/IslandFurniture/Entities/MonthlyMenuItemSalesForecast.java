@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
@@ -22,6 +21,7 @@ import javax.persistence.ManyToOne;
 @Entity
 @IdClass(MonthlyMenuItemSalesForecastPK.class)
 public class MonthlyMenuItemSalesForecast implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     private Month month;
@@ -29,7 +29,7 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     private Integer year;
     @Id
     @ManyToOne
-    private Store store;
+    private CountryOffice countryOffice;
     @Id
     @ManyToOne
     private MenuItem menuItem;
@@ -50,12 +50,12 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
         this.year = year;
     }
 
-    public Store getStore() {
-        return store;
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
     }
 
-    public void setStore(Store store) {
-        this.store = store;
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public MenuItem getMenuItem() {
@@ -68,11 +68,11 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.month);
-        hash = 37 * hash + Objects.hashCode(this.year);
-        hash = 37 * hash + Objects.hashCode(this.store);
-        hash = 37 * hash + Objects.hashCode(this.menuItem);
+        int hash = 3;
+        hash = 13 * hash + Objects.hashCode(this.month);
+        hash = 13 * hash + Objects.hashCode(this.year);
+        hash = 13 * hash + Objects.hashCode(this.countryOffice);
+        hash = 13 * hash + Objects.hashCode(this.menuItem);
         return hash;
     }
 
@@ -83,12 +83,12 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
             return false;
         }
         MonthlyMenuItemSalesForecast other = (MonthlyMenuItemSalesForecast) object;
-        return this.month.equals(other.month) && this.year.equals(other.year) && this.store.equals(other.store) && this.menuItem.equals(other.menuItem);
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.countryOffice.equals(other.countryOffice) && this.menuItem.equals(other.menuItem);
     }
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.store.getId() + this.menuItem.getId() + " ]";
+        return "MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.countryOffice + this.menuItem + " ]";
     }
-    
+
 }
