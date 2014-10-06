@@ -30,7 +30,7 @@ public class Customer implements Serializable {
     @ManyToOne
     private Country country;
     @OneToMany
-    private List<Cart> carts;
+    private List<ShoppingList> shoppingLists;
     @OneToMany(mappedBy="member")
     private List<Feedback> feedbacks;
     
@@ -58,12 +58,12 @@ public class Customer implements Serializable {
         this.country = country;
     }
 
-    public List<Cart> getCarts() {
-        return carts;
+    public List<ShoppingList> getShoppingLists() {
+        return shoppingLists;
     }
 
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
+    public void setShoppingLists(List<ShoppingList> shoppingLists) {
+        this.shoppingLists = shoppingLists;
     }
 
     public List<Feedback> getFeedbacks() {
@@ -96,7 +96,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.INFRA.Member[ id=" + id + " ]";
+        return "Customer[ id=" + id + " ]";
     }
     
 }

@@ -118,7 +118,7 @@ public class Country implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Country[ id=" + id + " ]";
+        return "Country[ id=" + id + " ]";
     }
 
     // Entity Callbacks

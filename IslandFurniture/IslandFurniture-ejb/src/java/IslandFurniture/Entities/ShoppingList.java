@@ -20,13 +20,13 @@ import javax.persistence.OneToMany;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class Cart implements Serializable {
+public class ShoppingList implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany(mappedBy="cart")
-    private List<CartItem> cartItems;
+    @OneToMany(mappedBy="shoppingList")
+    private List<ShoppingListDetail> shoppingListDetails;
     @ManyToOne
     private Store store;
 
@@ -38,12 +38,12 @@ public class Cart implements Serializable {
         this.id = id;
     }
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
+    public List<ShoppingListDetail> getShoppingListDetails() {
+        return shoppingListDetails;
     }
 
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
+    public void setShoppingListDetails(List<ShoppingListDetail> shoppingListDetails) {
+        this.shoppingListDetails = shoppingListDetails;
     }
 
     public Store getStore() {
@@ -64,10 +64,10 @@ public class Cart implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Cart)) {
+        if (!(object instanceof ShoppingList)) {
             return false;
         }
-        Cart other = (Cart) object;
+        ShoppingList other = (ShoppingList) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -76,7 +76,7 @@ public class Cart implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.Cart[ id=" + id + " ]";
+        return "ShoppingList[ id=" + id + " ]";
     }
     
 }

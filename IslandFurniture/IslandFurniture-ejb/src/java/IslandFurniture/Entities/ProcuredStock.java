@@ -32,8 +32,6 @@ public abstract class ProcuredStock extends Stock implements Serializable {
     protected List<Supplier> suppliers;
     @OneToMany(mappedBy="procuredStock")
     protected List<ProcurementContractDetail> procurementContractDetails;
-    @OneToMany(mappedBy="procuredStock")
-    protected List<LeadTime> leadTimes;
 
     public List<Supplier> getSuppliers() {
         return suppliers;
@@ -49,14 +47,6 @@ public abstract class ProcuredStock extends Stock implements Serializable {
 
     public void setProcurementContractDetails(List<ProcurementContractDetail> procurementContractDetails) {
         this.procurementContractDetails = procurementContractDetails;
-    }
-
-    public List<LeadTime> getLeadTimes() {
-        return leadTimes;
-    }
-
-    public void setLeadTimes(List<LeadTime> leadTimes) {
-        this.leadTimes = leadTimes;
     }
 
     @Override
