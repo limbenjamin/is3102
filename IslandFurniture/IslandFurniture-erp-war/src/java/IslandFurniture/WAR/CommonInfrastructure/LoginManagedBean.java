@@ -20,7 +20,6 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -100,7 +99,7 @@ public class LoginManagedBean implements Serializable {
             privilegeList = msab.getPrivilegeListforStaff(username);
             String absoluteWebPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             menu = new String();
-            existingUrlList = new ArrayList<Url>();
+            existingUrlList = new ArrayList<>();
             Iterator<Privilege> iterator2 = privilegeList.iterator();
             while (iterator2.hasNext()) {
                 privilege = iterator2.next();

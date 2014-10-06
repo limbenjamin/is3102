@@ -51,8 +51,6 @@ public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
     public void modifyNote(String username, String notes){
         staff = getStaff(username);
         staff.setNotes(notes);
-        em.merge(staff);
-        em.flush();
     }
 
     @Override
@@ -60,7 +58,5 @@ public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
         staff = getStaff(username);
         staff.setPhoneNo(phoneNo);
         staff.setEmailAddress(emailAddress);
-        em.merge(staff);
-        em.flush();
     }
 }

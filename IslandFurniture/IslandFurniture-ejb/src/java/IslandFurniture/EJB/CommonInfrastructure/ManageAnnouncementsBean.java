@@ -55,7 +55,6 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
         announcementList = staff.getAnnouncements();
         announcementList.add(announcement);
         em.merge(staff);
-        em.flush();
         return announcement.getId();
     }
     
@@ -67,8 +66,6 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
         announcement.setActiveDate(activeDate);
         announcement.setExpireDate(expireDate);
         announcement.setCreator(staff);
-        em.merge(announcement);
-        em.flush();
     }
     
     @Override
@@ -78,7 +75,6 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
         announcementList.remove(announcement);
         em.merge(announcement.getCreator());
         em.remove(announcement);
-        em.flush();
     }
     
     @Override

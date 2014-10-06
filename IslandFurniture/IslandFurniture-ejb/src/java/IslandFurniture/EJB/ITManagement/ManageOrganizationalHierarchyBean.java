@@ -87,8 +87,6 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             store.setCountry(co.getCountry());
             store.setCountryOffice(co);
             store.setTimeZoneID(tz);
-            em.persist(store);
-            em.flush();
         } else {
             System.out.println("Invalid Store ID");
         }
@@ -144,8 +142,6 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             mf.setCountry(co.getCountry());
             mf.setCountryOffice(co);
             mf.setTimeZoneID(tz);
-            em.persist(mf);
-            em.flush();
         } else {
             System.out.println("Invalid ManufacturingFacility ID");
         }
@@ -205,8 +201,6 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             co.setName(name);
             co.setCountry(country);
             co.setTimeZoneID(tz);
-            em.persist(co);
-            em.flush();
         } else {
             System.out.println("Invalid CountryOffice ID");
         }

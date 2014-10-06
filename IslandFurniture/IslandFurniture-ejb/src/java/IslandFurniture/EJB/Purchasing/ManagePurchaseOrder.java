@@ -59,23 +59,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         procuredStock = (ProcuredStock) em.find(ProcuredStock.class, id);
         return procuredStock;
     }
-
-    @Override
-    public Long getPlantOfOrder(Long orderId) {
-        Query query = em.createQuery("SELECT p.shipsTo FROM PurchaseOrder p where p.id=" + orderId);
-        return Long.valueOf(query.getFirstResult());
-    }
-
-    @Override
-    public PurchaseOrder createPurchaseOrder(Calendar orderDate, PurchaseOrderStatus status) {
-        purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setOrderDate(orderDate);
-        purchaseOrder.setStatus(status);
-        em.persist(purchaseOrder);
-        em.flush();
-        return purchaseOrder;
-    }
-
+    
     @Override
     public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Plant plant, Plant shipsTo, Calendar orderDate) {
         purchaseOrder = new PurchaseOrder();
@@ -112,19 +96,6 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
 
     @Override
-    public void editPurchaseOrder(Long poId, Long plantId, Calendar orderDate, PurchaseOrderStatus status) {
-        System.out.println("MEOW: edit purchase order");
-        purchaseOrder = getPurchaseOrder(poId);
-        plant = (Plant) em.find(Plant.class, plantId);
-        purchaseOrder.setShipsTo(plant);
-        purchaseOrder.setStatus(status);
-        purchaseOrder.setOrderDate(orderDate);
-        em.persist(purchaseOrder);
-        System.out.println("MEOW: purchase order persisted");
-        em.flush();
-    }
-
-    @Override
     public void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) {
         purchaseOrder = getPurchaseOrder(poId);
         purchaseOrder.setOrderDate(orderDate);
@@ -142,24 +113,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
 
     @Override
-    public List<PurchaseOrder> viewPurchaseOrders() {
-        Query q = em.createQuery("SELECT s FROM PurchaseOrder s");
-        return q.getResultList();
-    }
-
-    @Override
     public List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId) {
         purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
         em.refresh(purchaseOrder);
 
         List<PurchaseOrderDetail> stockOrders = purchaseOrder.getPurchaseOrderDetails();
         return stockOrders;
-    }
-
-    @Override
-    public List<ProcuredStock> viewProcuredStocks() {
-        Query q = em.createQuery("SELECT s FROM ProcuredStock s");
-        return q.getResultList();
     }
 
     @Override
@@ -171,18 +130,6 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         q.setParameter("supplier", supplier);
         q.setParameter("mf", mf);
         return (List<ProcuredStock>) q.getResultList();
-    }
-
-    @Override
-    public List<Plant> viewPlants() {
-        Query q = em.createQuery("SELECT s FROM Plant s");
-        return q.getResultList();
-    }
-
-    @Override
-    public List<Supplier> viewSuppliers() {
-        Query q = em.createQuery("SELECT s FROM Supplier s");
-        return q.getResultList();
     }
 
     @Override

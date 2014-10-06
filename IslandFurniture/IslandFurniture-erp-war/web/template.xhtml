@@ -120,12 +120,14 @@
                     <li class="notifications dropdown">
                         <a href="#" data-toggle="dropdown">
                             <i class="fa fa-bell"></i>
-                            <div class="badge badge-top">
-                                <h:form id="updateCount">
-                                    <span>#{loginManagedBean.count}</span>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullCount()}" update="updateCount" />
-                                </h:form>
-                            </div>
+                            <h:form id="updateCount" style="display: inline-block;">
+                                <c:if test="${loginManagedBean.count != 0}">
+                                    <div class="badge badge-top">
+                                        <span>#{loginManagedBean.count}</span> 
+                                    </div>
+                                </c:if>
+                                <p:poll interval="3" listener="#{loginManagedBean.pullCount()}" update="updateCount" />
+                            </h:form>
                         </a>
                         <div class="dropdown-menu">
                             <div class="panel panel-default no-m">

@@ -26,6 +26,8 @@ import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Supplier;
 import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
+import IslandFurniture.Entities.ProductionOrder;
+import IslandFurniture.Entities.PurchaseOrder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,6 +35,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import IslandFurniture.Entities.WeeklyMRPRecord;
+import IslandFurniture.Entities.WeeklyProductionPlan;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * This java class contains static methods to implement all the various named
@@ -508,6 +513,82 @@ public class QueryMethods {
         q.setParameter("ma", mat);
         ProcurementContract pc = (ProcurementContract) q.getResultList().get(0);
         return (pc.getSupplier());
+
+    }
+
+    public static HashMap<Plant, Long> tracePOToPlant(EntityManager em, ProductionOrder PO) {
+//Cannot confirm no bug but test it out bah . GIT ISSUE #2
+
+        HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
+
+        Query q = em.createQuery("SELECt wpp from WeeklyProductionPlan wpp where wpp.productionOrder=:PO");
+        q.setParameter("PO", PO);
+
+        WeeklyProductionPlan wpp = (WeeklyProductionPlan) q.getResultList().get(0);
+
+        return traceWPPToPlant(em, wpp);
+
+    }
+
+    public static HashMap<Plant, Long> traceWPPToPlant(EntityManager em, WeeklyProductionPlan wpp) {
+//Cannot confirm no bug but test it out bah . GIT ISSUE #2
+
+        HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
+
+        long month_demand = wpp.getMonthlyProductionPlan().getQTY();
+
+        List<MonthlyStockSupplyReq> MSSR_List = getRelevantMSSR(em, wpp.getMonthlyProductionPlan().getManufacturingFacility(), wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
+
+        HashMap<Plant, Long> roundingAdjustment = new HashMap<Plant, Long>();
+        if (Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear()) == wpp.getWeekNo()) {
+            for (int i = 1; i < wpp.getWeekNo(); i++) {
+                for (int j = 0; j < wpp.getMonthlyProductionPlan().getWeeklyProductionPlans().size(); j++) {
+                    if (wpp.getMonthlyProductionPlan().getWeeklyProductionPlans().get(j).getWeekNo() == i) {
+                        //action here
+                        HashMap<Plant, Long> temp = traceWPPToPlant(em, wpp.getMonthlyProductionPlan().getWeeklyProductionPlans().get(j));
+
+                        for (Plant p : temp.keySet()) {
+                            if (roundingAdjustment.get(p) == null) {
+                                roundingAdjustment.put(p, 0L);
+                            }
+                            roundingAdjustment.put(p, roundingAdjustment.get(p) + temp.get(p));
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
+        int distr = 0;
+
+        ArrayList<MonthlyStockSupplyReq> mssr_l2 = MSSR_List.stream().filter(mssr -> mssr.getStock().equals(wpp.getMonthlyProductionPlan().getFurnitureModel())).collect(Collectors.toCollection(ArrayList::new));
+
+        for (MonthlyStockSupplyReq mssr : mssr_l2) {
+
+            if (roundingAdjustment.get(mssr.getCountryOffice()) != null) {
+                returnObj.put(mssr.getCountryOffice(), mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice()));
+                distr += mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice());
+            } else {
+                Double weight = (mssr.getQtyRequested() + 0.0) / month_demand;
+                weight *= wpp.getQTY();
+                returnObj.put(mssr.getCountryOffice(), weight.longValue());
+                distr += weight;
+            }
+        }
+        if (Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear()) != wpp.getWeekNo()) {
+            if (wpp.getQTY() - distr > 0) {
+                for (MonthlyStockSupplyReq mssr : MSSR_List) {
+                    if (mssr.getQtyRequested() > wpp.getQTY() - distr) {
+                        returnObj.put(mssr.getCountryOffice(), returnObj.get(mssr.getCountryOffice()) + wpp.getQTY() - distr);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return returnObj;
 
     }
 

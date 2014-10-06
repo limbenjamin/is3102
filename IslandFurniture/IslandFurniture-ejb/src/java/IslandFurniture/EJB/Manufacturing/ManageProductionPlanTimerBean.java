@@ -61,31 +61,22 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         private Integer month = 1;
         private Integer week = 1;
         private Integer year = 2014;
+        private Integer weekAdded = 0;
 
         public currentdate() {
             try {
-                Calendar c = Calendar.getInstance();
-                c.setFirstDayOfWeek(Calendar.MONDAY);
-                month = c.get(Calendar.MONTH);
-                Double weekz = Math.ceil(c.get(Calendar.DAY_OF_MONTH) / 7.0);
-                week = weekz.intValue();
-                year = c.get(Calendar.YEAR);
-
-                System.out.println("Manufacturing Facility Timer Started: Now is " + week + "/" + (month + 1) + "/" + year);
+                System.out.println("Production Planning Timer Started!");
             } catch (Exception ex) {
                 Logger.getLogger(ManageProductionPlanTimerBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         public void addWeek() throws Exception {
-            Integer t_month = Helper.addoneWeek(month, year, week, 1, Calendar.MONTH);
-            Integer t_week = Helper.addoneWeek(month, year, week, 1, Calendar.WEEK_OF_MONTH);
-            Integer t_year = Helper.addoneWeek(month, year, week, 1, Calendar.YEAR);
 
-            this.month = t_month;
-            this.week = t_week;
-            this.year = t_year;
-            System.out.println("Event() : Now is " + week + "/" + (month + 1) + "/" + year);
+            weekAdded++;
+
+            getCalendar();
+
         }
 
         public Integer getMonth() {
@@ -113,6 +104,22 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         }
 
         public Calendar getCalendar() throws Exception {
+            //code optimization
+            Calendar c = Calendar.getInstance();
+            c.setFirstDayOfWeek(Calendar.MONDAY);
+
+            month = c.get(Calendar.MONTH);
+            week = Helper.getWeekNoFromDate(c);
+            year = c.get(Calendar.YEAR);
+
+            Integer t_month = Helper.addoneWeek(month, year, week, weekAdded, Calendar.MONTH);
+            Integer t_week = Helper.addoneWeek(month, year, week, weekAdded, Calendar.WEEK_OF_MONTH);
+            Integer t_year = Helper.addoneWeek(month, year, week, weekAdded, Calendar.YEAR);
+
+            this.month = t_month;
+            this.week = t_week;
+            this.year = t_year;
+            System.out.println("Event() : Now is " + week + "/" + (month + 1) + "/" + year);
 
             return (Helper.getStartDateOfWeek(month, year, week));
 
@@ -178,7 +185,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
                 }
                 po.getPurchaseOrderDetails().add(wmrp.getPurchaseOrderDetail());
                 wmrp.getPurchaseOrderDetail().setPurchaseOrder(po);
-                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + " ORDER="+wmrp.getOrderAMT()+ "Supplier=" + s);
+                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + " ORDER=" + wmrp.getOrderAMT() + "Supplier=" + s);
             }
 
             System.out.println("Now Supplier=" + s);

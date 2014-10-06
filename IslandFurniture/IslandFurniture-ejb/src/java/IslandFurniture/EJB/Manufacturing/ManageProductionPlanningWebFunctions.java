@@ -10,6 +10,8 @@ import IslandFurniture.Entities.Material;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyProductionPlanPK;
+import IslandFurniture.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.WeeklyMRPRecord;
@@ -207,15 +209,20 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 int capacity = wpp.getMonthlyProductionPlan().getManufacturingFacility().findProductionCapacity(wpp.getMonthlyProductionPlan().getFurnitureModel()).getCapacity(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear());
                 int delta = 0;
                 int maxWeek = Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
-
+                int overflow = 0;
                 delta = ((WeeklyProductionPlan) em.find(WeeklyProductionPlan.class, wpp.getId())).getQTY();
                 delta = wpp.getQTY() - delta;
-                if (wpp.getWeekNo() == maxWeek) {
-                    Double w1 = (Helper.getBoundaryWeekDays(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear()) / 7.0);
-                    Double prorate=w1*delta;
-                    delta = prorate.intValue();
-                                       
-                }
+//                if (wpp.getWeekNo() == maxWeek) {
+//                    Double w1 = (Helper.getBoundaryWeekDays(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear()) / 7.0);
+//
+//                    Double prorate = w1 * delta;
+//                    overflow = delta - prorate.intValue();
+//                    delta = prorate.intValue();
+//                    MonthlyProductionPlan mpp_next = QueryMethods.getNextMonthlyProductionPlan(em, wpp.getMonthlyProductionPlan());
+//                    if (mpp_next != null) {
+//                        mpp_next.setQTY(mpp_next.getQTY() + overflow);
+//                    }
+//                }
 
                 totalproduction = wpp.getMonthlyProductionPlan().getQTY() + delta;
 
@@ -432,7 +439,6 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 //                OrderNow.newCell("Schedule Week").setCommand("ORDER_MATERIAL").setIdentifier(requestedYear + "_" + requestedMonth.value + "_" + i);
 //
 //            }
-
         }
         String last_cell = "normal_odd";
         for (WeeklyMRPRecord wMRP : (List<WeeklyMRPRecord>) L.getResultList()) {
@@ -488,7 +494,6 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         }
 
 //        jdt.Internalrows.add(OrderNow);
-
         return (jdt);
     }
 
@@ -514,11 +519,15 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         q.setParameter("m", requestedMonth.value);
         q.setParameter("y", requestedYear);
         q.setParameter("MF", mff);
+        if (q.getResultList().size() == 0) {
+            throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");
+        }
 
         JDataTable.Row StartDayOfWeek = jdt.newRow();
         JDataTable.Row EndDayOfWeek = jdt.newRow();
         StartDayOfWeek.newCell("Start Day");
         EndDayOfWeek.newCell("End Day");
+
         JDataTable.Row PlannedWeekProduction = null;
         JDataTable.Row CommitWeek = null;
         JDataTable.Row ActionRow = null;
@@ -543,21 +552,31 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         HashMap<Material, JDataTable.Row> materialRows = new HashMap<Material, JDataTable.Row>();
         //Iterate WPP
-        if (q.getResultList().size() == 0) {
-            throw new Exception("getWeeklyPlans(): No Weekly Production Plan !");
-        }
+        HashMap<Plant, JDataTable.Row> mf_rows = null;
+        HashMap<Plant, Long> mssrLists = null;
+
         String last_class = "normal_odd";
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
-            if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff))) {
-                CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + "<br/>Required:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff);
+            if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName())) {
+                CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName(); 
                 if (last_class == "normal_odd") {
                     last_class = "normal_even";
                 } else {
                     last_class = "normal_odd";
                 }
 
+                //Show breakdown to Country Offices
+                mssrLists = QueryMethods.traceWPPToPlant(em, wpp);
+                mf_rows = new HashMap<>();
+                for (Plant p : mssrLists.keySet()) {
+                    JDataTable.Row r = jdt.newRow();
+                    r.newCell(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + " <br/> To: " + p.getName());
+                    r.setColorClass(last_class);
+                    mf_rows.put(p, r);
+                }
+
                 PlannedWeekProduction = jdt.newRow().setColorClass(last_class);
-                PlannedWeekProduction.newCell(CFM);
+                PlannedWeekProduction.newCell(CFM+ " <br/> Total Week Requirement:"+QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff));
 
                 ActionRow = jdt.newRow().setColorClass(last_class);;
                 ActionRow.newCell("Commit to Production Order");
@@ -566,28 +585,47 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             boolean hasCommittedMaterial = QueryMethods.isOrderedMaterial(em, mff, wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo());
 
+            Cell c = null;
             //Individual Cells
             if (wpp.isLocked()) {
                 d = ActionRow.newCell("Locked");
                 lockcolumn.put(wpp.getWeekNo(), true);
+                c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
+                if (wpp.getProductionOrder() == null) {
+                    c = PlannedWeekProduction.newCell("0");
+                } else {
+                    c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
+                }
             } else if (hasCommittedMaterial) {
                 d = ActionRow.newCell("Remove MRP First");
+                if (wpp.getProductionOrder() == null) {
+                    c = PlannedWeekProduction.newCell("0");
+                } else {
+                    c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
+                }
             } else if (wpp.getProductionOrder() == null) {
                 alluncommited.put(ActionRow.rowdata.size(), true);
-
                 d = ActionRow.newCell("Commit");
                 d.setCommand("COMMIT_WPP");
                 d.setIdentifier(wpp.getId().toString());
+                c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
+                c.setIsEditable(true);
             } else {
                 d = ActionRow.newCell("Uncommit");
                 d.setCommand("UNCOMMIT_WPP");
                 d.setIdentifier(wpp.getId().toString());
+                c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
             }
 
-            Cell c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
-            if (d.getValue().equals("Commit")) {
-                c.setIsEditable(true);
-            }
+
+
+
+                //Populate distribution Table
+                HashMap<Plant, Long> dist = QueryMethods.traceWPPToPlant(em, wpp);
+                for (Plant p : dist.keySet()) {
+                    mf_rows.get(p).newCell(dist.get(p).toString());
+                }
+
 
         }
 

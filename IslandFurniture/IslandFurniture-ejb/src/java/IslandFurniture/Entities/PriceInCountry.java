@@ -25,6 +25,15 @@ public class PriceInCountry implements Serializable {
     private Long id;
     @OneToOne
     private Country country;
+    private Double price;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;

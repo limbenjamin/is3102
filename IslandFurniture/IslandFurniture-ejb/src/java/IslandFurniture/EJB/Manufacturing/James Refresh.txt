@@ -1,0 +1,6 @@
+SET SQL_SAFE_UPDATES=0;
+DELETE FROM islandfurniture.weeklyproductionplan where 1=1;
+DELETE FROM monthlyproductionplan;
+DELETE FROM weeklymrprecord;
+DELETE FROM purchaseorderdetail;
+DELETE FROM purchaseorder;

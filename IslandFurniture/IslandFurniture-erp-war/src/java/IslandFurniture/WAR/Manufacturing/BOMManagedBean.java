@@ -6,13 +6,19 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
-import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
+import IslandFurniture.Enums.FurnitureCategory;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -34,6 +40,8 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class BOMManagedBean implements Serializable {
     @EJB
+    private SupplierManagerLocal supplierManager;
+    @EJB
     private StockManagerLocal stockManager;
     
     private FurnitureModel furniture = null;
@@ -43,6 +51,26 @@ public class BOMManagedBean implements Serializable {
     private List<Material> materialList;
     private Integer listSize = null;
     private boolean uneditable;
+    private List<FurnitureCategory> categoryList;
+    private List<FurnitureSubcategory> subcategoryList;
+    private List<CountryOffice> countryList;
+    private List<Double> pricingList;
+
+    public List<FurnitureSubcategory> getSubcategoryList() {
+        return subcategoryList;
+    }
+
+    public void setSubcategoryList(List<FurnitureSubcategory> subcategoryList) {
+        this.subcategoryList = subcategoryList;
+    }
+
+    public List<FurnitureCategory> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<FurnitureCategory> categoryList) {
+        this.categoryList = categoryList;
+    }
 
     public boolean isUneditable() {
         return uneditable;
@@ -118,6 +146,9 @@ public class BOMManagedBean implements Serializable {
         this.materialList = stockManager.displayMaterialList();
         this.bomList = stockManager.displayBOM(furnitureID);
         this.uneditable = this.furniture.getBom().isUneditable();
+        this.subcategoryList = new ArrayList<FurnitureSubcategory>(EnumSet.allOf(FurnitureSubcategory.class));
+        this.categoryList = new ArrayList<FurnitureCategory>(EnumSet.allOf(FurnitureCategory.class));
+        this.countryList = supplierManager.getListOfCountryOffice();
         if(uneditable) 
             System.out.println("Furniture's BOM cannot be edited");
         else
@@ -204,5 +235,29 @@ public class BOMManagedBean implements Serializable {
         }
         this.materialList = stockManager.displayMaterialList();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+    }
+    public void editFurnitureCategory(AjaxBehaviorEvent event) {
+        System.out.println("BOMManagedBean.editFurnitureCategory()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String category = request.getParameter("categoryForm:categoryField");
+        FurnitureCategory fc = FurnitureCategory.valueOf(category);
+        stockManager.editFurnitureCategory(furnitureID, fc);
+        this.furniture.setCategory(fc); 
+    }
+    public void editFurnitureSubcategory(AjaxBehaviorEvent event) {
+        System.out.println("BOMManagedBean.editFurnitureSubcategory()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String category = request.getParameter("categoryForm:subcategoryField");
+        FurnitureSubcategory fc = FurnitureSubcategory.valueOf(category);
+        stockManager.editFurnitureSubcategory(furnitureID, fc);
+        this.furniture.setSubcategory(fc); 
+    }
+    public String editPriceList() {
+        System.out.println("BOMManagedBean.editPriceList()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Long fID = Long.parseLong(request.getParameter("pricingForm:fID"));
+        return "bom";
+        
+        
     }
 }

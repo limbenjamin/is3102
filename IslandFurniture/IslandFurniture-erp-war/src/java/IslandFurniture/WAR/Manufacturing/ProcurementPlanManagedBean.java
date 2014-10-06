@@ -6,13 +6,15 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
+import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
+import IslandFurniture.Enums.Month;
 import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
@@ -54,7 +56,10 @@ public class ProcurementPlanManagedBean {
     private ManageProcurementPlanLocal mppl;
     @EJB
     private ManageUserAccountBeanLocal  muabl;
-    
+    @EJB
+    private ManageNotificationsBeanLocal mnbl;
+    @EJB
+    private ManagePrivilegesBeanLocal mpbl;
     
     @PostConstruct
     public void init(){
@@ -146,10 +151,12 @@ public class ProcurementPlanManagedBean {
                     ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
                     try{
                         mppl.createPurchaseOrder(mf,month,year);
+                        
                     }catch(Exception e){
                         System.err.println("Unable to generate PO");
                         error_msg = "Unable to generate PO";
                     }
+                    mnbl.createNewNotificationForPrivilegeFromPlant("New Purchase Order", "A new purchase order has been posted for approval", "/purchasing/purchaseorder.xhtml", "Approve PO", mpbl.getPrivilegeFromName("Purchase Order"), mf);
                     mppl.lockMpp(mf,month,year);
                     init();
                     break;
