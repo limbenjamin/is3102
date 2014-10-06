@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
@@ -15,8 +16,8 @@
         <Node id="it/notification.xhtml" x="650" y="900" zoom="true"/>
         <Node id="common/modifyparticulars.xhtml" x="400" y="1200" zoom="true"/>
         <Node id="manufacturing/productionorder.xhtml" x="900" y="750" zoom="true"/>
-        <Node id="it/managestaff2.xhtml" x="150" y="1200" zoom="true"/>
         <Node id="salesplanning/viewmssr.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="it/managestaff2.xhtml" x="150" y="1200" zoom="true"/>
         <Node id="common/broadcast.xhtml" x="150" y="600" zoom="true"/>
         <Node id="common/changepassword.xhtml" x="150" y="150" zoom="true"/>
         <Node id="purchasing/purchaseorder2.xhtml" x="2150" y="150" zoom="true"/>
