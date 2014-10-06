@@ -9,7 +9,7 @@ package IslandFurniture.WAR.Kitchen;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Kitchen.KitchenStockManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -33,25 +33,25 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class IngredientManagedBean implements Serializable  {
+public class DishManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     private KitchenStockManagerLocal ksm;
     
-    private List<Ingredient> ingredientList;
+    private List<Dish> dishList;
     private String username;
     private Staff staff;
     private Plant plant;
     private CountryOffice co;
-    private Ingredient ingredient;
+    private Dish dish;
 
-    public List<Ingredient> getIngredientList() {
-        return ingredientList;
+    public List<Dish> getDishList() {
+        return dishList;
     }
 
-    public void setIngredientList(List<Ingredient> ingredientList) {
-        this.ingredientList = ingredientList;
+    public void setDishList(List<Dish> dishList) {
+        this.dishList = dishList;
     }
 
     public String getUsername() {
@@ -86,17 +86,17 @@ public class IngredientManagedBean implements Serializable  {
         this.co = co;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
     
     @PostConstruct
     public void init() {
-        System.out.println("init:IngredientManagedBean");
+        System.out.println("init:DishManagedBean");
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
@@ -104,7 +104,7 @@ public class IngredientManagedBean implements Serializable  {
 
         if (plant instanceof CountryOffice) {
             this.co = (CountryOffice) plant;
-            this.ingredientList = ksm.getIngredientList(co);
+            this.dishList = ksm.getDishList(co);
         } else {
             try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -114,49 +114,45 @@ public class IngredientManagedBean implements Serializable  {
             }
         }
     }
-    
-    public String addIngredient() {
+    public String addDish() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("IngredientManagedBean.addIngredient()");
-        String name = request.getParameter("addIngredientForm:name");
-        String msg = ksm.addIngredient(name, co);
+        System.out.println("DishManagedBean.addDish()");
+        String name = request.getParameter("addDishForm:name");
+        String msg = ksm.addDish(name, co);
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully added Ingredient \"" + name + "\"", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully added Dish Item \"" + name + "\"", ""));
         }
-        return "ingredient";
+        return "dish";
     }
-    public String editIngredient(ActionEvent event) throws IOException {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("IngredientManagedBean.editIngredient()");
-        ingredient = (Ingredient) event.getComponent().getAttributes().get("toEdit");
-        String msg = ksm.editIngredient(ingredient.getId(), ingredient.getName());
+    public String editDish(ActionEvent event) throws IOException {
+        System.out.println("DishManagedBean.editDish()");
+        dish = (Dish) event.getComponent().getAttributes().get("toEdit");
+        String msg = ksm.editDish(dish.getId(), dish.getName());
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Ingredient \"" + ingredient.getName() + "\" has been updated", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Dish Item \"" + dish.getName() + "\" has been updated", ""));
         }
-        return "ingredient";
+        return "dish";
     }
-    public String deleteIngredient(ActionEvent event) {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println("IngredientManagedBean.deleteIngredient()");
-        ingredient = (Ingredient) event.getComponent().getAttributes().get("toDelete");
-        String msg = ksm.deleteIngredient(ingredient.getId(), co);
+    public String deleteDish(ActionEvent event) {
+        System.out.println("DishManagedBean.deleteDish()");
+        dish = (Dish) event.getComponent().getAttributes().get("toDelete");
+        String msg = ksm.deleteDish(dish.getId(), co);
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Ingredient has been successfully deleted", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Dish Item has been successfully deleted", ""));
         }
-        this.ingredientList = ksm.getIngredientList(co);
-        return "ingredient";
+        this.dishList = ksm.getDishList(co);
+        return "dish";
     }
-     
 }
