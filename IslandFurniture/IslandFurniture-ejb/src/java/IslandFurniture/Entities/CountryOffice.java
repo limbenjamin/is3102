@@ -21,34 +21,28 @@ import javax.persistence.PostPersist;
 @Entity
 @NamedQueries({
     @NamedQuery(
-        name = "findCountryOfficeByName",
-        query = "SELECT a FROM CountryOffice a WHERE a.name = :name"),
+            name = "findCountryOfficeByName",
+            query = "SELECT a FROM CountryOffice a WHERE a.name = :name"),
     @NamedQuery(
             name = "getAllCountryOffices",
             query = "SELECT a FROM CountryOffice a")
 })
 public class CountryOffice extends Plant implements Serializable {
-
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy = "countryOffice")
-    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
-
     @OneToMany(mappedBy = "countryOffice")
     private List<Store> stores;
 
     @OneToMany(mappedBy = "countryOffice")
     private List<ManufacturingFacility> manufacturingFacilities;
+    
+    @OneToMany(mappedBy = "countryOffice")
+    private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
+    
+    @OneToMany(mappedBy = "countryOffice")
+    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
     private List<StockSupplied> suppliedWithFrom = new ArrayList();
-
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-        return monthlyStockSupplyReqs;
-    }
-
-    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
-    }
 
     public List<Store> getStores() {
         return stores;
@@ -64,6 +58,22 @@ public class CountryOffice extends Plant implements Serializable {
 
     public void setManufacturingFacilities(List<ManufacturingFacility> manufacturingFacilities) {
         this.manufacturingFacilities = manufacturingFacilities;
+    }
+
+    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
+        return monthlyStockSupplyReqs;
+    }
+
+    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
+        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
+    }
+
+    public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
+        return monthlyMenuItemSalesForecasts;
+    }
+
+    public void setMonthlyMenuItemSalesForecasts(List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts) {
+        this.monthlyMenuItemSalesForecasts = monthlyMenuItemSalesForecasts;
     }
 
     public List<StockSupplied> getSuppliedWithFrom() {

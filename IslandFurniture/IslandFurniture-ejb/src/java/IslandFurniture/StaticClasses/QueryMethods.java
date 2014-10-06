@@ -5,12 +5,14 @@
  */
 package IslandFurniture.StaticClasses;
 
+import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.Country;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
-import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
@@ -18,6 +20,8 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcurementContract;
 import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProductionOrder;
+import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -25,19 +29,17 @@ import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Supplier;
-import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARDLOCK;
-import IslandFurniture.Entities.ProductionOrder;
-import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.WeeklyMRPRecord;
+import IslandFurniture.Entities.WeeklyProductionPlan;
+import IslandFurniture.Enums.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import IslandFurniture.Entities.WeeklyMRPRecord;
-import IslandFurniture.Entities.WeeklyProductionPlan;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 /**
  * This java class contains static methods to implement all the various named
@@ -98,6 +100,40 @@ public class QueryMethods {
 
         try {
             return (Material) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Ingredient findIngredientByName(EntityManager em, String ingredientName) {
+        Query q = em.createNamedQuery("findIngredientByName");
+        q.setParameter("name", ingredientName);
+
+        try {
+            return (Ingredient) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static List<Ingredient> getIngredientListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getIngredientListByCountryOffice");
+        q.setParameter("countryOffice", countryOffice);
+
+        try {
+            return (List<Ingredient>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Ingredient getIngredientByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
+        Query q = em.createNamedQuery("getIngredientByCountryOfficeAndName");
+        q.setParameter("countryOffice", countryOffice);
+        q.setParameter("name", name);
+
+        try {
+            return (Ingredient) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }

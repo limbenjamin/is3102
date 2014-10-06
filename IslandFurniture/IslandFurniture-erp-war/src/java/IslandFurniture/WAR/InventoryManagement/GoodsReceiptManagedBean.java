@@ -80,10 +80,9 @@ public class GoodsReceiptManagedBean implements Serializable {
         System.out.println("Init");
     }
 
-    public String addGoodsReceiptDocument() {
+    public void addGoodsReceiptDocument() {
         goodsReceiptDocument = mgrl.createGoodsReceiptDocument(plant, null);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
-        return "goodsreceiptdocument?faces-redirect=true";
     }
 
     public String updateIncomingShipmentStatus(ActionEvent event) {
