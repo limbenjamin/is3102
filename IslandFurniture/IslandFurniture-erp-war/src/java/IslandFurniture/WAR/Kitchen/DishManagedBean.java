@@ -117,16 +117,19 @@ public class DishManagedBean implements Serializable {
     public String addDish() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("DishManagedBean.addDish()");
-        String name = request.getParameter("addDishForm:name");
-        String msg = ksm.addDish(name, co);
-        if(msg != null) {
+        String name = request.getParameter("addDishForm:name"); 
+        String output = ksm.addDish(name, co);
+        String id = output.split("#")[0];
+        String msg = output.split("#")[1];
+        if(msg.length() > 1) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));              
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully added Dish Item \"" + name + "\"", ""));
-        }
-        return "dish";
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Dish Item \"" + name + "\" successfully created ", ""));             
+        } 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dishID", Long.parseLong(id));
+        return "recipe?faces-redirect=true";
     }
     public String editDish(ActionEvent event) throws IOException {
         System.out.println("DishManagedBean.editDish()");
@@ -154,5 +157,10 @@ public class DishManagedBean implements Serializable {
         }
         this.dishList = ksm.getDishList(co);
         return "dish";
+    }
+    public void recipeActionListener(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dishID", event.getComponent().getAttributes().get("dishID"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("recipe.xhtml");
+        
     }
 }

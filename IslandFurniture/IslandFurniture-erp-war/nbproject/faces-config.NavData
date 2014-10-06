@@ -1,36 +1,6 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
-    <Scope Scope="Project">
-        <Node id="manufacturing/procurementplan.xhtml" x="150" y="1350" zoom="true"/>
-        <Node id="salesplanning/createforecast.xhtml" x="400" y="150" zoom="true"/>
-        <Node id="it/roleprivilege.xhtml" x="650" y="1050" zoom="true"/>
-        <Node id="common/messaging.xhtml" x="1150" y="300" zoom="true"/>
-        <Node id="it/manageplant.xhtml" x="400" y="300" zoom="true"/>
-        <Node id="it/resetpassword.xhtml" x="150" y="750" zoom="true"/>
-        <Node id="purchasing/purchaseorder.xhtml" x="1150" y="900" zoom="true"/>
-        <Node id="it/roleprivilege2.xhtml" x="400" y="900" zoom="true"/>
-        <Node id="login.xhtml" x="1650" y="450" zoom="true"/>
-        <Node id="it/forgotpassword.xhtml" x="900" y="600" zoom="true"/>
-        <Node id="it/notification.xhtml" x="650" y="900" zoom="true"/>
-        <Node id="common/modifyparticulars.xhtml" x="400" y="1200" zoom="true"/>
-        <Node id="manufacturing/productionorder.xhtml" x="900" y="750" zoom="true"/>
-        <Node id="salesplanning/viewmssr.xhtml" x="900" y="300" zoom="true"/>
-        <Node id="it/managestaff2.xhtml" x="150" y="1200" zoom="true"/>
-        <Node id="common/broadcast.xhtml" x="150" y="600" zoom="true"/>
-        <Node id="common/changepassword.xhtml" x="150" y="150" zoom="true"/>
-        <Node id="purchasing/purchaseorder2.xhtml" x="2150" y="150" zoom="true"/>
-        <Node id="common/messaging2.xhtml" x="400" y="450" zoom="true"/>
-        <Node id="knowledge/bom.xhtml" x="1150" y="600" zoom="true"/>
-        <Node id="purchasing/purchaseorderconfirmed.xhtml" x="650" y="450" zoom="true"/>
-        <Node id="salesplanning/reviewforecast.xhtml" x="150" y="1050" zoom="true"/>
-        <Node id="template.xhtml" x="1150" y="750" zoom="true"/>
-        <Node id="dash.xhtml" x="1650" y="600" zoom="true"/>
-        <Node id="hidden/console.xhtml" x="650" y="300" zoom="true"/>
-        <Node id="manufacturing/purchaseorderdetail.xhtml" x="900" y="1050" zoom="true"/>
-        <Node id="it/managestaff.xhtml" x="1650" y="150" zoom="true"/>
-        <Node id="manufacturing/purchaseorder.xhtml" x="1400" y="600" zoom="true"/>
-    </Scope>
+    <Scope Scope="Project"/>
     <Scope Scope="All Faces Configurations"/>
 </Scene>

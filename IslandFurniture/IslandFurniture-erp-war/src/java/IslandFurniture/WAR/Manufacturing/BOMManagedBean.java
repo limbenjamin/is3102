@@ -167,7 +167,8 @@ public class BOMManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Incomplete form", ""));    
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());  
-            return "furniture";   
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
         }
         System.out.println("FurnitureID is " + furID + ". materialID is " + mID + ". materialQuantity is " + mQuantity);
         String msg = stockManager.addToBOM(Long.parseLong(furID), Long.parseLong(mID), Integer.parseInt(mQuantity));
