@@ -33,6 +33,8 @@ public class Customer implements Serializable {
     private List<ShoppingList> shoppingLists;
     @OneToMany(mappedBy="member")
     private List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "customer")
+    private List<Redemption> redemptions;
     
     public Long getId() {
         return id;
@@ -72,6 +74,14 @@ public class Customer implements Serializable {
 
     public void setFeedbacks(List<Feedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public List<Redemption> getRedemptions() {
+        return redemptions;
+    }
+
+    public void setRedemptions(List<Redemption> redemptions) {
+        this.redemptions = redemptions;
     }
 
     @Override
