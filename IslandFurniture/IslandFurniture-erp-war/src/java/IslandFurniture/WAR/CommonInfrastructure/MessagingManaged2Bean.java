@@ -61,14 +61,11 @@ public class MessagingManaged2Bean implements Serializable {
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
             session.setAttribute("threadid", id);
         }catch (Exception e){
-
-        }
-        if (!session.getAttribute("threadid").equals(null)){
             id = (Long) session.getAttribute("threadid");
-            messageThread = messageBean.getMessageThread(id);
-            messageList = messageThread.getMessages();
-            messageListSize = messageList.size();
         }
+        messageThread = messageBean.getMessageThread(id);
+        messageList = messageThread.getMessages();
+        messageListSize = messageList.size();
     }
     
     public String displayMessages() {

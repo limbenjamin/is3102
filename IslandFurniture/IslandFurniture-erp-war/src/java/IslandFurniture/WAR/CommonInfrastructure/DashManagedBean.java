@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -86,12 +85,16 @@ public class DashManagedBean implements Serializable {
         this.name = staff.getName();
         plantType = (String) staff.getPlant().getClass().getSimpleName();
         //For spacing purpose when displaying in front end
-        if (plantType.equals("ManufacturingFacility")){
-            plantType = "Manufacturing Facility";
-        }else if (plantType.equals("CountryOffice")){
-            plantType = "Country Office";
-        }else if (plantType.equals("GlobalHQ")){
-            plantType = ""; //no need cos global HQ global HQ looks ugly
+        switch (plantType) {
+            case "ManufacturingFacility":
+                plantType = "Manufacturing Facility";
+                break;
+            case "CountryOffice":
+                plantType = "Country Office";
+                break;
+            case "GlobalHQ":
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+                break;
         }
         this.plantName = staff.getPlant().getName();
         timeZone = staff.getPlant().getTimeZoneID();

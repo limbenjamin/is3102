@@ -13,7 +13,6 @@ import IslandFurniture.Entities.MessageThread;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
