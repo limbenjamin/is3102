@@ -131,7 +131,6 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     public void setNotificationToRead(Notification notification){
         notification.setIsread(true);
         em.merge(notification);
-        em.flush();
     }
     
     @Override
@@ -141,7 +140,6 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         staff.getNotifications().remove(notification);
         em.merge(staff);
         em.remove(notification);
-        em.flush();
     }
     
     @Override

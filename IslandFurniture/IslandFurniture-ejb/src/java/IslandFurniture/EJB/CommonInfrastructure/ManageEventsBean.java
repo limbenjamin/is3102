@@ -52,7 +52,6 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
         eventList = creator.getEvents();
         eventList.add(event);
         em.merge(creator);
-        em.flush();
         return event.getId();
     }
     
@@ -63,8 +62,6 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
         event.setDescription(description);
         event.setEventTime(eventTime);
         event.setCreator(creator);
-        em.merge(event);
-        em.flush();
      
     }
     
@@ -75,7 +72,6 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
         eventList.remove(event);
         em.merge(event.getCreator());
         em.remove(event);
-        em.flush();
      
     }
     

@@ -63,8 +63,6 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
     public void changePassword(String username, String newPassword){
         staff = staffbean.getStaff(username);
         staff.setPassword(newPassword);
-        em.merge(staff);
-        em.flush();
     }
     
     @Override
@@ -78,8 +76,6 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         }
         String forgottenPasswordCode = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         staff.setForgottenPasswordCode(forgottenPasswordCode);
-        em.merge(staff);
-        em.flush();
         try {
             SendEmailByPost.sendEmail("techsupport", staff.getEmailAddress(), "Password Reset Request", "Click this link to reset your password: https://localhost/erp/it/resetpassword.xhtml?code="+forgottenPasswordCode);
         } catch (Exception ex) {
@@ -99,8 +95,6 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
         }
         staff.setPassword(password);
         staff.setForgottenPasswordCode(null);
-        em.merge(staff);
-        em.flush();
         return true;
     }
     
@@ -114,7 +108,6 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
             Logger.getLogger(ManageAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         staff.setPassword(password);
-        em.merge(staff);
         
     }
     
