@@ -205,6 +205,14 @@
         <navigation-case>
             <from-outcome>ingredient</from-outcome>
             <to-view-id>/kitchen/ingredient.xhtml</to-view-id>
-        </navigation-case>                          
+        </navigation-case>   
+        <navigation-case>
+            <from-outcome>recipe</from-outcome>
+            <to-view-id>/kitchen/recipe.xhtml</to-view-id>
+        </navigation-case>  
+        <navigation-case>
+            <from-outcome>dish</from-outcome>
+            <to-view-id>/kitchen/dish.xhtml</to-view-id>
+        </navigation-case>                           
     </navigation-rule>
 </faces-config>

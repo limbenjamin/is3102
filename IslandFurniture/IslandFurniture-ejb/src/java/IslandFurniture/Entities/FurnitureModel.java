@@ -36,7 +36,7 @@ public class FurnitureModel extends Stock implements Serializable {
     @OneToOne(cascade={CascadeType.PERSIST})
     private BOM bom;
     @OneToMany(mappedBy = "furnitureModel", cascade={CascadeType.PERSIST})
-    protected List<ProductionCapacity> productionCapacity;
+    private List<ProductionCapacity> productionCapacity;
     private Double price;
     private FurnitureCategory category;
     private FurnitureSubcategory subcategory;

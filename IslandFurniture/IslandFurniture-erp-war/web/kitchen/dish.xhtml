@@ -30,9 +30,14 @@
                                 <section class="panel"> 
                                     <h:form class="form-horizontal" id="dishForm">
                                         <p:dataTable value="#{dishManagedBean.dishList}" var="dish" id="dishTable">
-                                            <p:column headerText="Ingredient" sortBy="#{dish.name}">
+                                            <p:column headerText="Dish Item" sortBy="#{dish.name}">
                                                 <h:inputText value="#{dish.name}" id="ingredientName" class="form-control transparent-form"></h:inputText>
                                             </p:column> 
+                                            <p:column headerText="Details" style="text-align: center">
+                                                <h:commandButton actionListener="#{dishManagedBean.recipeActionListener}" value="View" class="btn btn-success btn-xs">
+                                                    <f:attribute name="dishID" value="#{dish.id}" />
+                                                </h:commandButton>
+                                            </p:column>
                                             <p:column headerText="Update" style="text-align: center;">
                                                 <h:commandButton actionListener="#{dishManagedBean.editDish}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{dish}" />
@@ -71,7 +76,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                            <h:commandButton action="#{dishManagedBean.addDish}" class="btn btn-success btn-round" value="Add Material"></h:commandButton>
+                            <h:commandButton action="#{dishManagedBean.addDish}" class="btn btn-success btn-round" value="Add Dish Item"></h:commandButton>
                         </div>
                         </h:form> 
                     </div>

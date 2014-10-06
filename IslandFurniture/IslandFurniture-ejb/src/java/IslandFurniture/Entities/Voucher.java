@@ -7,26 +7,37 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Calendar;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class RestaurantTransaction extends Transaction implements Serializable {
+public class Voucher extends RedeemableItem implements Serializable {
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy = "restaurantTransaction")
-    private List<RestaurantTransactionDetail> restaurantTransactionDetails;
 
-    public List<RestaurantTransactionDetail> getRestaurantTransactionDetails() {
-        return restaurantTransactionDetails;
+    private Integer cashValue;
+    @Temporal(TemporalType.DATE)
+    private Calendar expiryDate;
+
+    public Integer getCashValue() {
+        return cashValue;
     }
 
-    public void setRestaurantTransactionDetails(List<RestaurantTransactionDetail> restaurantTransactionDetails) {
-        this.restaurantTransactionDetails = restaurantTransactionDetails;
+    public void setCashValue(Integer cashValue) {
+        this.cashValue = cashValue;
+    }
+
+    public Calendar getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Calendar expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     @Override
@@ -39,10 +50,10 @@ public class RestaurantTransaction extends Transaction implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantTransaction)) {
+        if (!(object instanceof Voucher)) {
             return false;
         }
-        RestaurantTransaction other = (RestaurantTransaction) object;
+        Voucher other = (Voucher) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -51,7 +62,7 @@ public class RestaurantTransaction extends Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "RetailItemTransaction[ id=" + id + " ]";
+        return "Voucher[ id=" + id + " ]";
     }
     
 }

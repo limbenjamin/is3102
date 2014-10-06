@@ -28,6 +28,7 @@ public class PurchaseOrderDetail implements Serializable {
     @ManyToOne
     private ProcuredStock procuredStock;
     private Integer quantity;
+    private double unitPrice;
 
     public Long getId() {
         return id;
@@ -83,6 +84,20 @@ public class PurchaseOrderDetail implements Serializable {
     @Override
     public String toString() {
         return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrderDetail[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the unitPrice
+     */
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    /**
+     * @param unitPrice the unitPrice to set
+     */
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
     
 }

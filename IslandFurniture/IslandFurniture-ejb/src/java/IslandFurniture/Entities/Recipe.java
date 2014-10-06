@@ -3,37 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
- * @author James
+ * @author a0101774
  */
 @Entity
-public class RestaurantTransactionDetail implements Serializable {
-
+public class Recipe implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
-    private RestaurantTransaction restaurantTransaction;
-    @ManyToOne
-    private MenuItem menuItem;
+    @OneToMany(mappedBy="recipe", cascade={CascadeType.PERSIST})
+    private List<RecipeDetail> recipeDetails;
+    private boolean uneditable = false;
 
+    public Recipe() {
+        
+    }
+    
     public Long getId() {
         return id;
     }
@@ -42,20 +41,20 @@ public class RestaurantTransactionDetail implements Serializable {
         this.id = id;
     }
 
-    public RestaurantTransaction getRestaurantTransaction() {
-        return restaurantTransaction;
+    public List<RecipeDetail> getRecipeDetails() {
+        return recipeDetails;
     }
 
-    public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
-        this.restaurantTransaction = restaurantTransaction;
+    public void setRecipeDetails(List<RecipeDetail> recipeDetails) {
+        this.recipeDetails = recipeDetails;
     }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
+    public boolean isUneditable() {
+        return uneditable;
     }
 
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
+    public void setUneditable(boolean uneditable) {
+        this.uneditable = uneditable;
     }
 
     @Override
@@ -68,10 +67,10 @@ public class RestaurantTransactionDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantTransactionDetail)) {
+        if (!(object instanceof Recipe)) {
             return false;
         }
-        RestaurantTransactionDetail other = (RestaurantTransactionDetail) object;
+        Recipe other = (Recipe) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -80,7 +79,7 @@ public class RestaurantTransactionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "RestaurantTransactionDetail[ id=" + id + " ]";
+        return "IslandFurniture.Entities.Recipe[ id=" + id + " ]";
     }
-
+    
 }

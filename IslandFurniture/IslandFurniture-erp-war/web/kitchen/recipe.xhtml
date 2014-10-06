@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="dish.xhtml">Dish Item</a></li>
+                            <li class="active"><strong>#{recipeManagedBean.dish.name}</strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10">
+                        <span class="pull-right">
+                            <a href="furniture.xhtml">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button> 
+                            </a>                            
+                            <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newRecipe">
+                                <i class="fa fa-fw fa-plus"></i>Add to Recipe 
+                            </button>                            
+                        </span> 
+                        <h4><strong>#{recipeManagedBean.dish.name}</strong></h4><hr></hr>
+                    </div>
+                    <div class="col-md-10"> 
+                        <div class="tab-content"> 
+                            <div class="tab-pane active">                        
+                                <section class="panel">  
+                                    <h:form id="recipeForm" class="form-horizontal">
+                                        <p:dataTable value="#{recipeManagedBean.dish.recipe.recipeDetails}" var="recipe" id="dishTable">
+                                            <p:column headerText="Ingredient" sortBy="#{recipe.ingredient.name}">
+                                                <h:outputText value="#{recipe.ingredient.name}" id="ingredientName" class="form-control transparent-form"></h:outputText>
+                                            </p:column> 
+                                            <p:column headerText="Quantity">
+                                                <h:inputText value="#{recipe.quantity}" id="ingredientQuantity" pt:type="number" class="form-control transparent-form"></h:inputText>
+                                            </p:column>
+                                            <p:column headerText="Update">
+                                                <h:commandButton actionListener="#{recipeManagedBean.editRecipeDetail}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{recipe}" /> 
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>   
+                                            </p:column>
+                                            <p:column headerText="Delete">
+                                                <h:commandButton action="#{recipeManagedBean.deleteRecipeDetail()}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="recipeDetailID" value="#{recipe.id}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i> 
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </section>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <!-- Modal for New Ingredient in Recipe -->
+                <div class="modal fade" id="newRecipe" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add New Ingredient to Recipe</h4>
+                      </div>
+                        <h:form id="addToRecipeForm" class="form-horizontal">
+                            <h:inputHidden value="#{recipeManagedBean.dish.id}" id="dishID" />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Ingredient Name: </label>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu id="ingredientID" class="form-control needauto" pt:required="required">
+                                        <f:selectItem itemLabel="Select Ingredient" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{recipeManagedBean.ingredientList}" var="i" itemLabel="#{i.name}" itemValue="#{i.id}" />
+                                    </h:selectOneMenu>
+                                </div>
+                            </div>  
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Quantity: </label>
+                                <div class="col-sm-9">
+                                    <h:inputText id="ingredientQuantity" class="form-control" pt:required="required"></h:inputText>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-round" data-toggle="modal" data-dismiss="modal" data-target="#newIngredient">New Ingredient?</button>
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="recipe.xhtml" actionListener="#{recipeManagedBean.addToRecipe}" class="btn btn-success btn-round" value="Add Ingredient">
+                                <f:attribute name="dishID" value="#{recipeManagedBean.dishID}" />
+                            </h:commandButton>
+                        </div>
+                        </h:form>  
+                    </div>
+                  </div>
+                </div> 
+                <!-- Modal for New Ingredient -->
+                <div class="modal fade" id="newIngredient" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Add New Ingredient</h4>
+                            </div>
+                            <h:form id="addNewIngredientForm" class="form-horizontal">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Material Name: </label>
+                                        <div class="col-sm-9">
+                                            <h:inputText id="ingredientName" class="form-control" pt:required="required"></h:inputText>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <a data-toggle="modal" data-dismiss="modal" data-target="#newRecipe"> 
+                                        <h:commandButton action="recipe.xhtml" value="Add New Ingredient" class="btn btn-success btn-round" > 
+                                            <f:ajax listener="#{recipeManagedBean.addIngredient}" render=":addToRecipeForm" /> 
+                                        </h:commandButton>
+                                    </a>
+                                </div> 
+                            </h:form> 
+                        </div>
+                    </div>
+                </div> 
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

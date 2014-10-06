@@ -34,5 +34,13 @@ public interface KitchenStockManagerLocal {
     public String editDish(Long dishID, String dishName);
 
     public String deleteDish(Long dishID, CountryOffice co);
+
+    public Dish getDish(Long dishID);
+
+    public String addToRecipe(Long dishID, Long ingredientID, Double ingredientQuantity);
+
+    public String editRecipeDetail(Long recipeDetailID, Double quantity);
+
+    public String deleteRecipeDetail(Long recipeDetailID);
     
 }

@@ -46,6 +46,8 @@ public class PurchaseOrder implements Serializable {
     private GoodsReceiptDocument goodsReceiptDocument;
     @Temporal(TemporalType.DATE)
     private Calendar orderDate;
+    private double price;
+    private Currency currency;
     private PurchaseOrderStatus status;
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
@@ -165,6 +167,34 @@ public class PurchaseOrder implements Serializable {
 
     public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
         this.manufacturingFacility = manufacturingFacility;
+    }
+
+    /**
+     * @return the price
+     */
+    public double getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    /**
+     * @return the currency
+     */
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    /**
+     * @param currency the currency to set
+     */
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
     
 
