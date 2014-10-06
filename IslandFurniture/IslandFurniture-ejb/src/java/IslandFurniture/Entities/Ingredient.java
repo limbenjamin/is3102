@@ -13,19 +13,35 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findIngredientByName",
+            query = "SELECT a FROM Ingredient a WHERE a.name = :name"),
+    @NamedQuery(name = "getIngredientListByCountryOffice",
+            query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice"),
+    @NamedQuery(name = "getIngredientByCountryOfficeAndName",
+            query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice AND a.name = :name")
+})
 public class Ingredient implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+    private CountryOffice countryOffice;
     @ManyToMany(mappedBy="ingredients")
-    private List<Supplier> suppliers;    
+    private List<Supplier> suppliers; 
+    
+    public Ingredient() {
+    }
     
     public Long getId() {
         return id;
@@ -35,6 +51,22 @@ public class Ingredient implements Serializable {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
+    
     public List<Supplier> getSuppliers() {
         return suppliers;
     }
