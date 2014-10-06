@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -10,29 +11,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class RestaurantTransactionDetail implements Serializable {
-
+public class Redemption implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
-    private RestaurantTransaction restaurantTransaction;
-    @ManyToOne
-    private MenuItem menuItem;
+    private Customer customer;
+    
+    @OneToOne
+    private RedeemableItem redeemableItem;
 
     public Long getId() {
         return id;
@@ -42,20 +39,20 @@ public class RestaurantTransactionDetail implements Serializable {
         this.id = id;
     }
 
-    public RestaurantTransaction getRestaurantTransaction() {
-        return restaurantTransaction;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
-        this.restaurantTransaction = restaurantTransaction;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
+    public RedeemableItem getRedeemableItem() {
+        return redeemableItem;
     }
 
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
+    public void setRedeemableItem(RedeemableItem redeemableItem) {
+        this.redeemableItem = redeemableItem;
     }
 
     @Override
@@ -68,10 +65,10 @@ public class RestaurantTransactionDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantTransactionDetail)) {
+        if (!(object instanceof Redemption)) {
             return false;
         }
-        RestaurantTransactionDetail other = (RestaurantTransactionDetail) object;
+        Redemption other = (Redemption) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -80,7 +77,7 @@ public class RestaurantTransactionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "RestaurantTransactionDetail[ id=" + id + " ]";
+        return "Redemption[ id=" + id + " ]";
     }
-
+    
 }

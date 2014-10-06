@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -26,6 +27,9 @@ public class PromotionCampaign implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @ManyToOne
+    private CountryOffice countryOffice;
+    
     @ManyToMany(mappedBy = "promotionCampaigns")
     private List<MembershipTier> membershipTiers;
     
@@ -38,6 +42,14 @@ public class PromotionCampaign implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public List<MembershipTier> getMembershipTiers() {
@@ -78,7 +90,7 @@ public class PromotionCampaign implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.PromotionCampaign[ id=" + id + " ]";
+        return "PromotionCampaign[ id=" + id + " ]";
     }
     
 }

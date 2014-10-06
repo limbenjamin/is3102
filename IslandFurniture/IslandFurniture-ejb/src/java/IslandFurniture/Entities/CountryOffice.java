@@ -30,19 +30,19 @@ import javax.persistence.PostPersist;
 public class CountryOffice extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "countryOffice")
-    private List<Store> stores;
+    private List<Store> stores = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
-    private List<ManufacturingFacility> manufacturingFacilities;
+    private List<ManufacturingFacility> manufacturingFacilities = new ArrayList();
     
     @OneToMany(mappedBy = "countryOffice")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
-    
-    @OneToMany(mappedBy = "countryOffice")
-    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
     private List<StockSupplied> suppliedWithFrom = new ArrayList();
+    
+    @OneToMany(mappedBy = "countryOffice")
+    private List<PromotionCampaign> promotionCampaigns = new ArrayList();
 
     public List<Store> getStores() {
         return stores;
@@ -68,20 +68,20 @@ public class CountryOffice extends Plant implements Serializable {
         this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
 
-    public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
-        return monthlyMenuItemSalesForecasts;
-    }
-
-    public void setMonthlyMenuItemSalesForecasts(List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts) {
-        this.monthlyMenuItemSalesForecasts = monthlyMenuItemSalesForecasts;
-    }
-
     public List<StockSupplied> getSuppliedWithFrom() {
         return suppliedWithFrom;
     }
 
     public void setSuppliedWithFrom(List<StockSupplied> suppliedWithFrom) {
         this.suppliedWithFrom = suppliedWithFrom;
+    }
+
+    public List<PromotionCampaign> getPromotionCampaigns() {
+        return promotionCampaigns;
+    }
+
+    public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
+        this.promotionCampaigns = promotionCampaigns;
     }
 
     @Override

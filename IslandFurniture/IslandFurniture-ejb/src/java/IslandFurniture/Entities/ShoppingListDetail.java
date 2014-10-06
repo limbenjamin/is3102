@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -19,14 +18,15 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class CartItem implements Serializable {
+public class ShoppingListDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer qty;
     @ManyToOne
-    private Cart cart;
+    private ShoppingList shoppingList;
     @OneToOne
     private FurnitureModel furnitureModel;
 
@@ -46,12 +46,12 @@ public class CartItem implements Serializable {
         this.qty = qty;
     }
 
-    public Cart getCart() {
-        return cart;
+    public ShoppingList getShoppingList() {
+        return shoppingList;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setShoppingList(ShoppingList shoppingList) {
+        this.shoppingList = shoppingList;
     }
 
     public FurnitureModel getFurnitureModel() {
@@ -61,7 +61,6 @@ public class CartItem implements Serializable {
     public void setFurnitureModel(FurnitureModel furnitureModel) {
         this.furnitureModel = furnitureModel;
     }
-
 
     @Override
     public int hashCode() {
@@ -73,10 +72,10 @@ public class CartItem implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CartItem)) {
+        if (!(object instanceof ShoppingListDetail)) {
             return false;
         }
-        CartItem other = (CartItem) object;
+        ShoppingListDetail other = (ShoppingListDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -85,7 +84,7 @@ public class CartItem implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.CartItem[ id=" + id + " ]";
+        return "ShoppingListDetail[ id=" + id + " ]";
     }
-    
+
 }

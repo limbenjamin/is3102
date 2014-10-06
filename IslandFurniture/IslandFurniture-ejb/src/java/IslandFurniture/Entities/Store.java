@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
 /**
@@ -30,7 +31,10 @@ public class Store extends Plant implements Serializable {
     private static final long serialVersionUID = 1L;
     @ManyToOne
     private CountryOffice countryOffice;
-    
+
+    @OneToMany(mappedBy = "store")
+    private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
+
     @ManyToMany
     private List<Stock> sells = new ArrayList();
 
@@ -40,6 +44,14 @@ public class Store extends Plant implements Serializable {
 
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
+    }
+
+    public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
+        return monthlyMenuItemSalesForecasts;
+    }
+
+    public void setMonthlyMenuItemSalesForecasts(List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts) {
+        this.monthlyMenuItemSalesForecasts = monthlyMenuItemSalesForecasts;
     }
 
     public List<Stock> getSells() {

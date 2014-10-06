@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -10,29 +11,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class RestaurantTransactionDetail implements Serializable {
-
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class RedeemableItem implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
-    private RestaurantTransaction restaurantTransaction;
-    @ManyToOne
-    private MenuItem menuItem;
+    protected Long id;
 
     public Long getId() {
         return id;
@@ -40,22 +32,6 @@ public class RestaurantTransactionDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public RestaurantTransaction getRestaurantTransaction() {
-        return restaurantTransaction;
-    }
-
-    public void setRestaurantTransaction(RestaurantTransaction restaurantTransaction) {
-        this.restaurantTransaction = restaurantTransaction;
-    }
-
-    public MenuItem getMenuItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
     }
 
     @Override
@@ -68,10 +44,10 @@ public class RestaurantTransactionDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantTransactionDetail)) {
+        if (!(object instanceof RedeemableItem)) {
             return false;
         }
-        RestaurantTransactionDetail other = (RestaurantTransactionDetail) object;
+        RedeemableItem other = (RedeemableItem) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -80,7 +56,7 @@ public class RestaurantTransactionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "RestaurantTransactionDetail[ id=" + id + " ]";
+        return "RedeemableItem[ id=" + id + " ]";
     }
-
+    
 }

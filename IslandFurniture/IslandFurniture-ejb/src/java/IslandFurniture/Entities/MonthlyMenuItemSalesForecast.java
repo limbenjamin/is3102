@@ -29,7 +29,7 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     private Integer year;
     @Id
     @ManyToOne
-    private CountryOffice countryOffice;
+    private Store store;
     @Id
     @ManyToOne
     private MenuItem menuItem;
@@ -50,12 +50,12 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
         this.year = year;
     }
 
-    public CountryOffice getCountryOffice() {
-        return countryOffice;
+    public Store getStore() {
+        return store;
     }
 
-    public void setCountryOffice(CountryOffice countryOffice) {
-        this.countryOffice = countryOffice;
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public MenuItem getMenuItem() {
@@ -68,11 +68,11 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 13 * hash + Objects.hashCode(this.month);
-        hash = 13 * hash + Objects.hashCode(this.year);
-        hash = 13 * hash + Objects.hashCode(this.countryOffice);
-        hash = 13 * hash + Objects.hashCode(this.menuItem);
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.month);
+        hash = 97 * hash + Objects.hashCode(this.year);
+        hash = 97 * hash + Objects.hashCode(this.store);
+        hash = 97 * hash + Objects.hashCode(this.menuItem);
         return hash;
     }
 
@@ -83,12 +83,12 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
             return false;
         }
         MonthlyMenuItemSalesForecast other = (MonthlyMenuItemSalesForecast) object;
-        return this.month.equals(other.month) && this.year.equals(other.year) && this.countryOffice.equals(other.countryOffice) && this.menuItem.equals(other.menuItem);
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.store.equals(other.store) && this.menuItem.equals(other.menuItem);
     }
 
     @Override
     public String toString() {
-        return "MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.countryOffice + this.menuItem + " ]";
+        return "MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.store + this.menuItem + " ]";
     }
 
 }

@@ -30,9 +30,11 @@ public class Customer implements Serializable {
     @ManyToOne
     private Country country;
     @OneToMany
-    private List<Cart> carts;
+    private List<ShoppingList> shoppingLists;
     @OneToMany(mappedBy="member")
     private List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "customer")
+    private List<Redemption> redemptions;
     
     public Long getId() {
         return id;
@@ -58,12 +60,12 @@ public class Customer implements Serializable {
         this.country = country;
     }
 
-    public List<Cart> getCarts() {
-        return carts;
+    public List<ShoppingList> getShoppingLists() {
+        return shoppingLists;
     }
 
-    public void setCarts(List<Cart> carts) {
-        this.carts = carts;
+    public void setShoppingLists(List<ShoppingList> shoppingLists) {
+        this.shoppingLists = shoppingLists;
     }
 
     public List<Feedback> getFeedbacks() {
@@ -72,6 +74,14 @@ public class Customer implements Serializable {
 
     public void setFeedbacks(List<Feedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public List<Redemption> getRedemptions() {
+        return redemptions;
+    }
+
+    public void setRedemptions(List<Redemption> redemptions) {
+        this.redemptions = redemptions;
     }
 
     @Override
@@ -96,7 +106,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.INFRA.Member[ id=" + id + " ]";
+        return "Customer[ id=" + id + " ]";
     }
     
 }
