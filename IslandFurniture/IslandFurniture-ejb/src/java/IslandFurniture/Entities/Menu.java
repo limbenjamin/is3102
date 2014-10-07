@@ -45,6 +45,10 @@ public class Menu implements Serializable {
     @OneToOne(cascade={CascadeType.PERSIST})
     private MenuDetail menuDetail;
 
+    public Menu() {
+        
+    }
+    
     public Long getId() {
         return id;
     }

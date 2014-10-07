@@ -194,7 +194,6 @@ public class RecipeManagedBean implements Serializable {
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dishID", dish.getId());
         return "recipe";
-        
     }
     
 }

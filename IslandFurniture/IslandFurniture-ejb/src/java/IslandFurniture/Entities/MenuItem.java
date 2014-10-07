@@ -31,6 +31,10 @@ public class MenuItem implements Serializable {
     private Dish dish;
     private Integer quantity;
 
+    public MenuItem() {
+        
+    }
+    
     public Long getId() {
         return id;
     }

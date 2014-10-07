@@ -96,9 +96,7 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         store = (Store) event.getComponent().getAttributes().get("toEdit");
         String temp = store.getCountryOffice().getName();
-        System.err.println("herehere "+temp);
         countryOffice = mohBean.findCountryOfficeByName(temp);
-        System.err.println("herehere "+countryOffice.getName());
         mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), countryOffice);
         storeList = mohBean.displayStore();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
