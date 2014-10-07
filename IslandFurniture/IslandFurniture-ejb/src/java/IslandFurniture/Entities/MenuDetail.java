@@ -28,6 +28,10 @@ public class MenuDetail implements Serializable {
     @OneToMany(mappedBy="menuDetail", cascade={CascadeType.PERSIST})
     private List<MenuItem> menuItem;
 
+    public MenuDetail() {
+        
+    }
+    
     public Long getId() {
         return id;
     }

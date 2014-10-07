@@ -175,7 +175,7 @@ public class QueryMethods {
     }
 
     public static Menu findMenuByName(EntityManager em, String name) {
-        Query q = em.createNamedQuery("findDishByName");
+        Query q = em.createNamedQuery("findMenuByName");
         q.setParameter("name", name);
 
         try {
@@ -186,7 +186,7 @@ public class QueryMethods {
     }
 
     public static List<Menu> getMenuListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
-        Query q = em.createNamedQuery("getDishListByCountryOffice");
+        Query q = em.createNamedQuery("getMenuListByCountryOffice");
         q.setParameter("countryOffice", countryOffice);
 
         try {
@@ -197,7 +197,7 @@ public class QueryMethods {
     }
 
     public static Menu getMenuByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
-        Query q = em.createNamedQuery("getDishByCountryOfficeAndName");
+        Query q = em.createNamedQuery("getMenuByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
         q.setParameter("name", name);
 

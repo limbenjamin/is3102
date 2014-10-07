@@ -213,6 +213,14 @@
         <navigation-case>
             <from-outcome>dish</from-outcome>
             <to-view-id>/kitchen/dish.xhtml</to-view-id>
-        </navigation-case>                           
+        </navigation-case>    
+        <navigation-case>
+            <from-outcome>menu</from-outcome>
+            <to-view-id>/kitchen/menu.xhtml</to-view-id>
+        </navigation-case> 
+        <navigation-case>
+            <from-outcome>menuitem</from-outcome>
+            <to-view-id>/kitchen/menuitem.xhtml</to-view-id>
+        </navigation-case>                        
     </navigation-rule>
 </faces-config>
