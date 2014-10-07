@@ -8,28 +8,25 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
- * @author James
+ * @author a0101774
  */
 @Entity
-public class MenuItem implements Serializable {
+public class MenuDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    private MenuDetail menuDetail;
-    @ManyToOne
-    private Dish dish;
-    private Integer quantity;
+    @OneToMany(mappedBy="menuDetail", cascade={CascadeType.PERSIST})
+    private List<MenuItem> menuItem;
 
     public Long getId() {
         return id;
@@ -39,28 +36,12 @@ public class MenuItem implements Serializable {
         this.id = id;
     }
 
-    public MenuDetail getMenuDetail() {
-        return menuDetail;
+    public List<MenuItem> getMenuItem() {
+        return menuItem;
     }
 
-    public void setMenuDetail(MenuDetail menuDetail) {
-        this.menuDetail = menuDetail;
-    }
-
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setMenuItem(List<MenuItem> menuItem) {
+        this.menuItem = menuItem;
     }
 
     @Override
@@ -73,10 +54,10 @@ public class MenuItem implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MenuItem)) {
+        if (!(object instanceof MenuDetail)) {
             return false;
         }
-        MenuItem other = (MenuItem) object;
+        MenuDetail other = (MenuDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -85,7 +66,7 @@ public class MenuItem implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.MenuItem[ id=" + id + " ]";
+        return "IslandFurniture.Entities.MenuDetail[ id=" + id + " ]";
     }
     
 }
