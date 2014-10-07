@@ -79,7 +79,7 @@ public class BroadcastManagedBean implements Serializable {
         plant = muaib.getStaff(username).getPlant();
     }
     
-    public String addAnnouncement() throws ParseException {
+    public void addAnnouncement() throws ParseException {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       title = request.getParameter("announcementForm:title");
       content = request.getParameter("announcementForm:content");
@@ -96,7 +96,6 @@ public class BroadcastManagedBean implements Serializable {
       announcementList = announcementBean.getMyAnnouncements(username);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
-      return "broadcast";
     }
     
     public String editAnnouncement(ActionEvent event) throws IOException, ParseException {
@@ -110,7 +109,7 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
-    public String deleteAnnouncement(){
+    public void deleteAnnouncement(){
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       announcement = announcementBean.getAnnouncement(id);
       announcementBean.deleteAnnouncement(id);
@@ -118,10 +117,9 @@ public class BroadcastManagedBean implements Serializable {
       announcementList = announcementBean.getMyAnnouncements(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement deleted",""));
-      return "broadcast";
     }
     
-    public String addEvent() throws ParseException{
+    public void addEvent() throws ParseException{
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       name = request.getParameter("eventForm:name");
       description = request.getParameter("eventForm:description");
@@ -137,7 +135,6 @@ public class BroadcastManagedBean implements Serializable {
       eventList = eventBean.getMyEvents(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Event added",""));
-      return "broadcast";
     }
     
     //Aevent used for action event since event already used 
@@ -152,7 +149,7 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
-    public String deleteEvent(){
+    public void deleteEvent(){
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       event = eventBean.getEvent(id);
       eventBean.deleteEvent(id);
@@ -160,7 +157,6 @@ public class BroadcastManagedBean implements Serializable {
       eventList = eventBean.getMyEvents(username);
           FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
               new FacesMessage(FacesMessage.SEVERITY_INFO, "Event deleted",""));
-      return "broadcast";
     }
 
     public String getUsername() {

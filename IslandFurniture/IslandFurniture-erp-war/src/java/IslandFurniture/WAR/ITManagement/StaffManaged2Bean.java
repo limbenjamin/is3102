@@ -64,8 +64,6 @@ public class StaffManaged2Bean  implements Serializable  {
         roleList = staff.getRoles();
         globalRoleList = mrbl.displayRole();
         //should not be able to add role that already exists
-        //TODO: add this
-        //should not be able to add privilege that already exists
         Iterator<Role> iterator = roleList.iterator();
         while (iterator.hasNext()) {
             Role r = iterator.next();
