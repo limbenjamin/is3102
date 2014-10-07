@@ -6,7 +6,6 @@
 
 package IslandFurniture.Entities;
 
-import IslandFurniture.Enums.RecipePair;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -14,11 +13,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -43,9 +40,6 @@ public class Dish implements Serializable {
     private String name;
     @ManyToOne
     private CountryOffice countryOffice;
-    
-    @ManyToMany(mappedBy = "dishes")
-    private List<MenuItem> menuItem;
     
     @OneToOne(cascade={CascadeType.PERSIST})
     private Recipe recipe;
@@ -76,14 +70,6 @@ public class Dish implements Serializable {
 
     public void setCo(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
-    }
-
-    public List<MenuItem> getMenuItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(List<MenuItem> menuItem) {
-        this.menuItem = menuItem;
     }
 
     public Recipe getRecipe() {

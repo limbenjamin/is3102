@@ -14,6 +14,7 @@ import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.Menu;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
@@ -22,7 +23,6 @@ import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcurementContract;
 import IslandFurniture.Entities.ProcurementContractDetail;
 import IslandFurniture.Entities.ProductionOrder;
-import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -169,6 +169,40 @@ public class QueryMethods {
 
         try {
             return (Dish) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Menu findMenuByName(EntityManager em, String name) {
+        Query q = em.createNamedQuery("findDishByName");
+        q.setParameter("name", name);
+
+        try {
+            return (Menu) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static List<Menu> getMenuListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getDishListByCountryOffice");
+        q.setParameter("countryOffice", countryOffice);
+
+        try {
+            return (List<Menu>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static Menu getMenuByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
+        Query q = em.createNamedQuery("getDishByCountryOfficeAndName");
+        q.setParameter("countryOffice", countryOffice);
+        q.setParameter("name", name);
+
+        try {
+            return (Menu) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }

@@ -8,11 +8,15 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 
 
 /**
@@ -20,13 +24,26 @@ import javax.persistence.ManyToMany;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findMenuByName",
+            query = "SELECT a FROM Menu a WHERE a.name = :name"),
+    @NamedQuery(name = "getMenuListByCountryOffice",
+            query = "SELECT a FROM Menu a WHERE a.countryOffice = :countryOffice"),
+    @NamedQuery(name = "getMenuByCountryOfficeAndName",
+            query = "SELECT a FROM Menu a WHERE a.countryOffice = :countryOffice AND a.name = :name")
+})
 public class Menu implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToMany
-    private List<MenuItem> menuItem;
+    private String name;
+    private Double price;
+    @ManyToOne
+    private CountryOffice countryOffice;
+    @OneToOne(cascade={CascadeType.PERSIST})
+    private MenuDetail menuDetail;
 
     public Long getId() {
         return id;
@@ -36,14 +53,38 @@ public class Menu implements Serializable {
         this.id = id;
     }
 
-    public List<MenuItem> getMenuItem() {
-        return menuItem;
+    public String getName() {
+        return name;
     }
 
-    public void setMenuItem(List<MenuItem> menuItem) {
-        this.menuItem = menuItem;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
+
+    public MenuDetail getMenuDetail() {
+        return menuDetail;
+    }
+
+    public void setMenuDetail(MenuDetail menuDetail) {
+        this.menuDetail = menuDetail;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
