@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Island Furniture</title>
     <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-	<link href="assets/css/eservice.css" rel="stylesheet">
-	<link href="assets/css/responsive.css" rel="stylesheet">
-	<link href="assets/css/prism.css" rel="stylesheet">
-	<link href="assets/css/threesixty.css" rel="stylesheet">	
-</head><!--/head-->
+    <link href="assets/css/eservice.css" rel="stylesheet">
+    <link href="assets/css/responsive.css" rel="stylesheet">
+    <link href="assets/css/prism.css" rel="stylesheet">
+    <link href="assets/css/threesixty.css" rel="stylesheet">
+</head>
 
 <body>
 	<header id="header">		
@@ -71,6 +70,7 @@
 			</div>
 		</div>
 	</header>
+
 	
 	<section>
 		<div class="container">
@@ -360,29 +360,28 @@
     <script src="assets/plugins/prism.js"></script>
     <script src="assets/plugins/threesixty.js"></script>
     <script type="text/javascript">
-    window.onload = init;
+        window.onload = init;
 
-    var product;
-    function init(){
+        var product;
+        function init(){
 
-      product1 = $('.product1').ThreeSixty({
-        totalFrames: 36,
-        endFrame: 36,
-        currentFrame: 1,
+          product1 = $('.product1').ThreeSixty({
+            totalFrames: 36,
+            endFrame: 36,
+            currentFrame: 1,
 
-        imgList: '.threesixty_images',
-        progress: '.spinner',
-        imagePath:'assets/images/rotate/redchair/',
-        filePrefix: '',
-        ext: '.png',
-        height: 320,
-        width: 1000,
-        navigation: true,
-        responsive: true,
-      });
+            imgList: '.threesixty_images',
+            progress: '.spinner',
+            imagePath:'assets/images/rotate/redchair/',
+            filePrefix: '',
+            ext: '.png',
+            height: 320,
+            width: 1000,
+            navigation: true,
+            responsive: true,
+          });
 
-    }
-
-  </script>    
+        }
+  </script>  
 </body>
 </html>
