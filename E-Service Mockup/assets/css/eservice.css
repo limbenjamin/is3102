@@ -2,6 +2,50 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300,400italic,500,700,100);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,800,300,600,700);
 
+/************************* some useful classes ***********************************/
+
+.btn-round {
+    border-radius: 100px;
+}
+
+.centered-title {
+    display: block;
+    float: none;
+    color: #f2f4f8;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    height: auto;
+    line-height: 50px;
+    padding: 0 15px;
+
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+    padding: 10px;
+}
+
+hr{
+    display:block;
+    margin:1em 0;
+    padding:0;height:1px;
+    border:0;
+    border-top:1px solid #e3e6f3;
+}
+
+.scroll-list {
+    max-height: 350px;
+    overflow-y: scroll;
+}
+
+.completed_item {
+text-decoration: line-through;
+}
 body {
   font-family: 'Roboto', sans-serif;
   background:;
@@ -42,6 +86,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .navbar-toggle {
   background-color: transparent;
+}
+
+.progress-label {
+   float: left;
+   margin-right: 1em;  
+}
+
+.progress-bar {
+  background-color: #2c3e50;
 }
 
 
@@ -363,7 +416,7 @@ ul.sub-menu {
 
 .item h1 {
   color: #B4B1AB;
-  font-family: 'Roboto', sans-serif;
+  font-family: abel;
   font-size: 48px;
   margin-top: 115px;
 }
@@ -425,7 +478,7 @@ ul.sub-menu {
   padding-top: 15px;
 }
 
-.left-sidebar h2, .brands_products h2 {
+.left-sidebar h2, .brands_products h2, .recommended_items h2{
   color: #2c3e50;
   font-family: 'Roboto', sans-serif;
   font-size: 18px;
@@ -437,7 +490,7 @@ ul.sub-menu {
   z-index:3;
 }
 
-.left-sidebar h2:after, h2.title:after{
+.left-sidebar h2:after, h2.title:after, .recommended_items h2:after{
 	content: " ";
 	position: absolute;
 	border: 1px solid #F0F0E9;
@@ -448,7 +501,7 @@ ul.sub-menu {
 	z-index: -2;
 }
 
-.left-sidebar h2:before{
+.left-sidebar h2:before, .recommended_items h2:before{
 	content: " ";
 	position: absolute;
 	background: #fff;
@@ -714,19 +767,189 @@ h2.title {
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
-  background-color: #2c3e50;
-  border:0px;
-  color: #FFFFFF;
+  border: 1px solid #ddd;
+  color: #000;
   cursor: default;
   margin-right:0;
   margin-left:0;
 }
 
-.nav-tabs  li  a {
+.nav-tabs li a {
   border: 1px solid rgba(0, 0, 0, 0);
   border-radius: 4px 4px 0 0;
   line-height: 1.42857;
   margin-right:0;
+  color: #696763;
+}
+
+/**************************** PRODUCT DETAILS **************************************/
+
+.product-details{
+  overflow:hidden;
+}
+
+
+#similar-product {
+  margin-top: 40px;
+}
+
+.product-details {
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.view-product {
+  position: relative;
+}
+
+.view-product img {
+  border: 1px solid #F7F7F0;
+  height: 380px;
+  width: 100%;
+}
+
+.view-product h3 {
+  background: #FE980F;
+  bottom: 0;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 0;
+  padding: 8px 20px;
+  position: absolute;
+  right: 0;
+}
+
+#similar-product .carousel-inner .item{
+  padding-left:0px;
+}
+
+#similar-product .carousel-inner .item img {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.item-control {
+  position: absolute;
+  top: 35%;
+}
+.item-control i {
+  background: #FE980F;
+  color: #FFFFFF;
+  font-size: 20px;
+  padding: 5px 10px;
+}
+
+.item-control i:hover{
+  background:#ccccc6;
+}
+
+.product-information {
+  overflow: hidden;
+  padding-bottom: 10px;
+  padding-left: 60px;
+  padding-top: 10px;
+  position: relative;
+}
+
+.product-information h2 {
+  color: #363432;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  margin-top: 0;
+}
+
+.product-information p {
+  color: #696763;
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 5px;
+}
+
+.product-information span {
+  display: inline-block;
+  margin-bottom: 8px;
+  margin-top: 18px;
+}
+
+.product-information span span {
+  color: #FE980F;
+  float: left;
+  font-family: 'Roboto', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  margin-right: 20px;
+  margin-top: 0px;
+}
+.product-information span input {
+  border: 1px solid #DEDEDC;
+  color: #696763;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  height: 33px;
+  outline: medium none;
+  text-align: center;
+  width: 50px;
+}
+
+.product-information span label {
+  color: #696763;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+.cart {
+  background-color: #2ecc71;
+  border: 0 none;
+  border-radius: 50px;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.tab-content .col-xs-12{
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;    
+}
+
+.feedback-form {
+  margin-top: 20px;
+}
+
+.recommended_items {
+  overflow: hidden;
+}
+
+#recommended-item-carousel .carousel-inner .item {
+  padding-left: 0;
+  padding: 20px;
+}
+
+.recommended-item-control {
+  position: absolute;
+  top: 41%;
+}
+
+.recommended-item-control i {
+  background: none repeat scroll 0 0 #2c3e50;
+  color: #FFFFFF;
+  font-size: 20px;
+  padding: 4px 10px;
+}
+
+.recommended-item-control i:hover {
+  background: #ccccc6;
+}
+
+.recommended_items  h2 {
 }
 
 /**************************** MEDIA QUERIES ****************************************/
