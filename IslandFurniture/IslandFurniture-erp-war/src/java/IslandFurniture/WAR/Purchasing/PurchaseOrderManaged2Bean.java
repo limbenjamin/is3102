@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -36,7 +37,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
+import IslandFurniture.StaticClasses.SendEmailByPost;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Zee
@@ -93,7 +96,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
             procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
-
+            supplier = purchaseOrder.getSupplier();
             if (purchaseOrder.getOrderDate() != null) {
                 orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
             }
@@ -143,6 +146,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
         System.out.println("updated purchase order" + purchaseOrderId);
         if (selectedStatus.equals("1")) {
+            sendEmail(supplier);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
             return "purchaseorder";
@@ -175,6 +179,26 @@ public class PurchaseOrderManaged2Bean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Delete Successful!", ""));
 
         return "purchaseorder2";
+    }
+    
+    public void sendEmail(Supplier recipient) {
+        String title = "[Confirmed Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
+                       + mf.getName();
+        String orderContent = mf.getName() + " Manufacturing Facility would like to order the following: " + "\r\n ";
+        
+        Iterator<PurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
+	while (iterator.hasNext()) {
+                PurchaseOrderDetail current = iterator.next();
+		orderContent = orderContent + current.getProcuredStock().getName();
+                orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
+	}        
+        try {
+            // send notification to supplier: using zi xuan's email address as a placeholder currently
+            SendEmailByPost.sendEmail("manufacturing", "aura.chrome@gmail.com", 
+            title, orderContent);
+        } catch (Exception ex) {
+            Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }
 
     public ManufacturingFacility getMf() {
