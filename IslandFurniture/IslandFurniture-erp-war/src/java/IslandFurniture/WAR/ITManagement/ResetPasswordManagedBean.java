@@ -79,7 +79,7 @@ public class ResetPasswordManagedBean {
     }
     
     
-    public String resetpassword() {
+    public void resetpassword() throws IOException {
 
         if (password.equals(confirmPassword)){
             boolean result = authBean.resetPassword(code,password);
@@ -88,27 +88,19 @@ public class ResetPasswordManagedBean {
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
 	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Password Reset successful",""));
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                try {
-                    ec.redirect("../login.xhtml");
-                } catch (IOException ex) {
-                    Logger.getLogger(ResetPasswordManagedBean.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                ec.redirect("../login.xhtml");
             }else{
                 FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
 	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, unable to reset password",""));
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("resetpassword.xhtml?code="+code);
             }
-            return "login";
         }else{
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
 	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, passwords not the same",""));
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-            try {
-                ec.redirect("resetpassword.xhtml?code="+code);
-            } catch (IOException ex) {
-                Logger.getLogger(ResetPasswordManagedBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            ec.redirect("resetpassword.xhtml?code="+code);
         }
-        return "login";
     }
 
     public String getCode() {
