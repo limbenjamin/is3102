@@ -48,14 +48,6 @@ public class MenuItem implements Serializable {
     private List<MenuItemDetail> menuItemDetails;
     private MenuType menuType;
     private boolean alaCarte;
-    
-    // To Remove
-    @ManyToOne
-    private MenuDetail menuDetail;
-    @ManyToOne
-    private Dish dish;
-    private Integer quantity;
-    // End here
 
     public MenuItem() {
         
@@ -116,31 +108,7 @@ public class MenuItem implements Serializable {
     public void setAlaCarte(boolean alaCarte) {
         this.alaCarte = alaCarte;
     }
-
-    public MenuDetail getMenuDetail() {
-        return menuDetail;
-    }
-
-    public void setMenuDetail(MenuDetail menuDetail) {
-        this.menuDetail = menuDetail;
-    }
-
-    public Dish getDish() {
-        return dish;
-    }
-
-    public void setDish(Dish dish) {
-        this.dish = dish;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

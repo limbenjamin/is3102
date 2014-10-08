@@ -9,26 +9,22 @@ package IslandFurniture.EJB.Kitchen;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.Ingredient;
-import IslandFurniture.Entities.Menu;
-import IslandFurniture.Entities.MenuDetail;
-import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.Recipe;
 import IslandFurniture.Entities.RecipeDetail;
 import static IslandFurniture.StaticClasses.QueryMethods.getDishByCountryOfficeAndName;
 import static IslandFurniture.StaticClasses.QueryMethods.getDishListByCountryOffice;
 import static IslandFurniture.StaticClasses.QueryMethods.getIngredientByCountryOfficeAndName;
 import static IslandFurniture.StaticClasses.QueryMethods.getIngredientListByCountryOffice;
-import static IslandFurniture.StaticClasses.QueryMethods.getMenuItemByCountryOfficeAndName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
+/** 
  *
  * @author a0101774
- */
+ */ 
 @Stateful
 public class KitchenStockManager implements KitchenStockManagerLocal {
 
@@ -228,142 +224,6 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
             recipe.getRecipeDetails().remove(recipeDetail);
             em.remove(recipeDetail);
             em.persist(recipe);
-            return null;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            return "Unexpected error occured";
-        }        
-    }
-    public Menu getMenu(Long menuID) {
-        Menu menu;
-        try {
-            menu = em.find(Menu.class, menuID);
-            return menu;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here");
-            return null;  
-        }
-    }
-    public List<Menu> getMenuList(CountryOffice co) {
-        List<Menu> menuList;
-        try {
-            menuList = null;
-            return menuList;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here");
-            return null;
-        }
-    }
-    public String editMenu(Long menuID, String menuName) {
-        Menu menu;
-        try {
-            System.out.println("KitchenStockManager.editMenu()");
-            menu = em.find(Menu.class, menuID);
-            menu.setName(menuName);
-            return null;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            return "Unexpected error occured";
-        }
-    } 
-    public String deleteMenu(Long menuID, CountryOffice co) {
-        Menu menu;
-        try {
-            System.out.println("KitchenStockManager.deleteMenu()");
-            menu = em.find(Menu.class, menuID);
-            em.remove(menu);
-            return null;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            return "Unexpected error occured";
-        }
-    }
-    public String addMenu(String menuName, Double price, CountryOffice co) {
-        Menu menu;
-        String msg = null;
-        MenuDetail menuDetail;
-        List<MenuItem> menuItems;
-        try {
-            System.out.println("KitchenStockManager.addMenu()");
-            menu = null;
-            if(menu != null) {
-                System.out.println("Menu \"" + menuName + "\" already exists. Directing to Menu Details");
-                msg = "" + menu.getId() + "#Ingredient " + menuName + " already exists. Directing to Menu Details";     
-            } else {
-                menu = new Menu();
-                menu.setName(menuName);
-                menu.setPrice(price);
-                menuDetail = new MenuDetail();
-                menuItems = new ArrayList<MenuItem>();
-                
-                menuDetail.setMenuItem(menuItems);
-                menu.setMenuDetail(menuDetail);
-                menu.setCountryOffice(co);
-                em.persist(menu);
-                msg = "" + menu.getId() + "#0";
-            } 
-            return msg;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            return "Unexpected error occured";
-        }
-    }
-    
-    
-    public String addToMenu(Long menuID, Long dishID, Integer dishQuantity) {
-        Menu menu;
-        Dish dish;
-        MenuDetail menuDetail;
-        MenuItem menuItem;
-        String msg = null;
-        try {
-            System.out.println("KitchenStockManager.addToMenu()");
-            menu = em.find(Menu.class, menuID);
-            dish = em.find(Dish.class, dishID); 
-            menuDetail = menu.getMenuDetail();
-            for(int i=0; i<menuDetail.getMenuItem().size(); i++) {
-                if(menuDetail.getMenuItem().get(i).getDish().equals(dish)) {
-                    System.out.println("Dish Item already exists");
-                    return "Dish Item already exists ";
-                }
-            }
-            menuItem = new MenuItem();
-            menuItem.setDish(dish);
-            menuItem.setQuantity(dishQuantity);
-            menuItem.setMenuDetail(menuDetail);
-            menuDetail.getMenuItem().add(menuItem);
-            System.out.println("Successfully added new Menu Item Detail");
-            em.flush();
-            return msg;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            ex.printStackTrace();
-            return "Unexpected error occured"; 
-        }
-    }
-    public String editMenuDetail(Long menuItemID, Integer quantity) {
-        MenuItem menuItem;
-        try {
-            System.out.println("KitchenStockManager.editMenuDetail()");
-            menuItem = em.find(MenuItem.class, menuItemID);
-            menuItem.setQuantity(quantity);
-            em.persist(menuItem);
-            return null;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here"); 
-            return "Unexpected error occured";
-        }
-    }
-    public String deleteMenuDetail(Long menuItemID) {
-        MenuItem menuItem;
-        MenuDetail menuDetail;
-        try {
-            System.out.println("KitchenStockManager.deleteRecipeDetail()");
-            menuItem = em.find(MenuItem.class, menuItemID);
-            menuDetail = menuItem.getMenuDetail();
-            menuDetail.getMenuItem().remove(menuItem);
-            em.remove(menuItem);
-            em.persist(menuDetail);
             return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here"); 

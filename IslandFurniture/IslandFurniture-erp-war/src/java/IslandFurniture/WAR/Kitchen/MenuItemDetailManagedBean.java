@@ -190,7 +190,7 @@ public class MenuItemDetailManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item Detail has been successfully deleted", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item Detail has been successfully updated", ""));
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuItemID", menuItemID);
         return "menuitemdetail";        
