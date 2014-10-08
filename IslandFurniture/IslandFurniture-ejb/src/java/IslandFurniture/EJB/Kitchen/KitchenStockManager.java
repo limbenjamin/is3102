@@ -18,8 +18,7 @@ import static IslandFurniture.StaticClasses.QueryMethods.getDishByCountryOfficeA
 import static IslandFurniture.StaticClasses.QueryMethods.getDishListByCountryOffice;
 import static IslandFurniture.StaticClasses.QueryMethods.getIngredientByCountryOfficeAndName;
 import static IslandFurniture.StaticClasses.QueryMethods.getIngredientListByCountryOffice;
-import static IslandFurniture.StaticClasses.QueryMethods.getMenuByCountryOfficeAndName;
-import static IslandFurniture.StaticClasses.QueryMethods.getMenuListByCountryOffice;
+import static IslandFurniture.StaticClasses.QueryMethods.getMenuItemByCountryOfficeAndName;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -35,7 +34,7 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
 
     @PersistenceContext
     EntityManager em;
-    
+     
     public List<Ingredient> getIngredientList(CountryOffice co) {
         List<Ingredient> ingredientList;
         try {
@@ -248,7 +247,7 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
     public List<Menu> getMenuList(CountryOffice co) {
         List<Menu> menuList;
         try {
-            menuList = getMenuListByCountryOffice(em, co);
+            menuList = null;
             return menuList;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
@@ -286,7 +285,7 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
         List<MenuItem> menuItems;
         try {
             System.out.println("KitchenStockManager.addMenu()");
-            menu = getMenuByCountryOfficeAndName(em, co, menuName);
+            menu = null;
             if(menu != null) {
                 System.out.println("Menu \"" + menuName + "\" already exists. Directing to Menu Details");
                 msg = "" + menu.getId() + "#Ingredient " + menuName + " already exists. Directing to Menu Details";     

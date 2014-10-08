@@ -15,88 +15,98 @@
                     <div class="col-md-12">
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
-                            <li><a href="menu.xhtml">Restaurant Menu</a></li>
-                            <li class="active"><strong>#{menuItemManagedBean.menu.name}</strong></li>
+                            <li class="active"><strong>Menu Item</strong></li>
                         </ol>                        
                     </div>                     
                     <div class="col-md-10">
-                        <span class="pull-right">
-                            <a href="menu.xhtml">
-                            <button type="button" class="btn btn-sm btn-default">
-                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
-                            </button> 
-                            </a>                            
-                            <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newMenuItem">
-                                <i class="fa fa-fw fa-plus"></i>Add Menu Item Detail
-                            </button>                            
-                        </span> 
-                        <h4><strong>#{menuItemManagedBean.menu.name}</strong></h4><hr></hr>
+                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newMenuItem">
+                            <i class="fa fa-fw fa-plus"></i>New Menu Item
+                        </button>
+                        <h4>Menu Item</h4><hr></hr>
                     </div>
-                    <div class="col-md-10"> 
-                        <div class="tab-content"> 
-                            <div class="tab-pane active">                        
-                                <section class="panel">  
-                                    <h:form id="recipeForm" class="form-horizontal">
-                                        <p:dataTable value="#{menuItemManagedBean.menu.menuDetail.menuItem}" var="menuItem" id="menuItemTable">
-                                            <p:column headerText="Dish Name" sortBy="#{menuItem.dish.name}">
-                                                <h:outputText value="#{menuItem.dish.name}" class="form-control transparent-form"></h:outputText>
+                    <div class="col-md-10">
+                        <div class="tab-content">
+                            <div class="tab-pane active">      
+                                <section class="panel"> 
+                                    <h:form class="form-horizontal" id="menuItemForm">
+                                        <p:dataTable value="#{menuItemManagedBean.menuItemList}" id="menuItemTable" var="menuItem">
+                                            <p:column headerText="Menu Item" sortBy="#{menuItem.name}">
+                                                <h:inputText value="#{menuItem.name}" id="menuItemName" class="form-control"></h:inputText>
+                                            </p:column>
+                                            <p:column headerText="Price" style="width: 8%;" >
+                                                <h:inputText value="#{menuItem.price}" class="form-control"></h:inputText>
+                                            </p:column>
+                                            <p:column headerText="Menu Type" sortBy="#{menuItem.menuType}">
+                                                <h:outputText value="#{menuItem.menuType}" ></h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Details" style="text-align: center; width: 8%;">
+                                                <h:commandButton actionListener="#{menuItemManagedBean.menuItemDetailActionListener}" value="View" class="btn btn-success btn-xs">
+                                                    <f:attribute name="menuItemID" value="#{menuItem.id}" />
+                                                </h:commandButton>
                                             </p:column> 
-                                            <p:column headerText="Quantity">
-                                                <h:inputText value="#{menuItem.quantity}" id="menuItemQuantity" pt:type="number" class="form-control transparent-form"></h:inputText>
+                                            <p:column headerText="Update" style="text-align: center; width: 8%;">
+                                                <h:commandButton actionListener="#{menuItemManagedBean.editMenuItem}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{menuItem}" />
+                                                </h:commandButton> 
+                                                <i class="fa fa-lg fa-save icon-button"></i>
                                             </p:column>
-                                            <p:column headerText="Update">
-                                                <h:commandButton actionListener="#{menuItemManagedBean.editMenuDetail}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:attribute name="toEdit" value="#{menuItem}" /> 
+                                            <p:column headerText="Delete" style="text-align: center; width: 8%;">
+                                                <h:commandButton actionListener="#{menuItemManagedBean.deleteMenuItem}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toDelete" value="#{menuItem}" />
                                                 </h:commandButton>
-                                                <i class="fa fa-lg fa-save icon-button"></i>   
-                                            </p:column>
-                                            <p:column headerText="Delete">
-                                                <h:commandButton action="#{menuItemManagedBean.deleteMenuDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                    <f:param name="menuItemID" value="#{menuItem.id}" />
-                                                </h:commandButton>
-                                                <i class="fa fa-lg fa-trash-o icon-button"></i> 
-                                            </p:column>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                            </p:column> 
                                         </p:dataTable>
                                     </h:form>
                                 </section>
                             </div>
-                        </div> 
+                        </div>
                     </div>
-                </div>
-                <!--    Modal for new Menu Item Detail  -->
+                </div> 
+                <!--    Modal for New Menu Item  -->
                 <div class="modal fade" id="newMenuItem" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add New Dish</h4>
+                        <h4 class="modal-title" id="myModalLabel">Add New Menu Item</h4>
                       </div>
-                        <h:form id="addToMenuDetailForm" class="form-horizontal">
-                            <h:inputHidden value="#{menuItemManagedBean.menuID}" id="menuID" />
+                        <h:form id="addMenuItemForm" class="form-horizontal">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Dish Name: </label>
+                                <label class="col-sm-3 control-label">Menu Item: </label>
                                 <div class="col-sm-9">
-                                    <h:selectOneMenu id="dishID" class="form-control needauto" pt:required="required">
-                                        <f:selectItem itemLabel="Select Dish" itemValue="" noSelectionOption="true" />
-                                        <f:selectItems value="#{menuItemManagedBean.dishList}" var="dish" itemLabel="#{dish.name}" itemValue="#{dish.id}" />
-                                    </h:selectOneMenu>
+                                    <h:inputText id="name" class="form-control" pt:required="required"></h:inputText>
                                 </div>
-                            </div>   
+                            </div>  
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Quantity: </label>
+                                <label class="col-sm-3 control-label">Price: </label>
                                 <div class="col-sm-9">
-                                    <h:inputText id="dishQuantity" class="form-control" pt:required="required"></h:inputText>
+                                    <h:inputText id="price" class="form-control" pt:required="required"></h:inputText>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Menu Item Type: </label>
+                                <div class="col-sm-9"> 
+                                    <h:selectOneMenu id="menuType" class="form-control needauto" pt:required="required" >
+                                        <f:selectItem itemLabel="Select Menu Type" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{menuItemManagedBean.menuTypeList}" var="menuType" 
+                                                       itemLabel="#{menuType}" itemValue="#{menuType}" />
+                                    </h:selectOneMenu> 
+                                </div>
+                            </div>    
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Ala Carte Item ?: </label>
+                                <div class="col-sm-9">
+                                    <h:selectBooleanCheckbox value="#{menuItemManagedBean.checkbox}" id="alaCarte" class="form-control" />
                                 </div>
                             </div> 
-                        </div> 
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                            <h:commandButton action="menuitem.xhtml" actionListener="#{menuItemManagedBean.addToMenuDetail}" class="btn btn-success btn-round" value="Add Dish">
-                                <f:attribute name="menuID" value="#{menuItemManagedBean.menuID}" />
-                            </h:commandButton>
+                            <h:commandButton action="#{menuItemManagedBean.addMenuItem}" class="btn btn-success btn-round" value="Add Menu Item"></h:commandButton>
                         </div>
-                        </h:form>  
+                        </h:form> 
                     </div>
                   </div>
                 </div> 
