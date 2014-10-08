@@ -4,7 +4,6 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="IslandFurniture.Enums.LogEntryAction"/>
-	<import value="IslandFurniture.Entities.*"/>
 	<field name="id" class="java.lang.Long"/>
 	<field name="entityName" class="java.lang.String"/>
 	<field name="entityId" class="java.lang.Long"/>
@@ -59,6 +58,10 @@
 				<reportElement x="444" y="1" width="100" height="20" uuid="9d010252-9513-4eb9-b88f-8d728a7da46e"/>
 				<text><![CDATA[logTime]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="544" y="0" width="100" height="20" uuid="91107f7a-20ec-4e00-a237-bde63006b57b"/>
+				<text><![CDATA[logEntryAction]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -86,6 +89,10 @@
 			<textField>
 				<reportElement x="444" y="0" width="100" height="20" uuid="14e7f8ac-24aa-4977-8a5b-5da797afa712"/>
 				<textFieldExpression><![CDATA[$F{logTime}.getTime()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="544" y="0" width="100" height="20" uuid="d3f216ac-a9dd-4365-9bb2-535e6a5fcb4f"/>
+				<textFieldExpression><![CDATA[$F{logEntryAction}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
