@@ -8,14 +8,18 @@ package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -48,6 +52,9 @@ public class StaffManagedBean  implements Serializable  {
     private Staff staff;
     private Plant plant;
     private boolean isGlobalHq = Boolean.FALSE;
+    private String[] selectedRoles;
+    private List<Role> roleList;
+    private Role role;
     
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
@@ -57,6 +64,8 @@ public class StaffManagedBean  implements Serializable  {
     private ManageUserAccountBeanLocal muab;
     @EJB
     private ManageAuthenticationBeanLocal mabl;
+    @EJB
+    private ManageRolesBeanLocal mrbl;
     
     @PostConstruct
     public void init(){
@@ -72,6 +81,7 @@ public class StaffManagedBean  implements Serializable  {
         }
         countryList = mohBean.getCountries();
         plantList = mohBean.displayPlant();
+        roleList = mrbl.displayRole();
     }
     
     public String createStaff(){
@@ -85,7 +95,11 @@ public class StaffManagedBean  implements Serializable  {
         staff = muab.getStaff((String) session.getAttribute("username"));
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
-        msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        id = msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        for (String selected : selectedRoles) {
+            System.out.println("Selected item: " + selected); 
+            msabl.addRoleToStaffByUsername(username,selected);
+        }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
         return "managestaff";
@@ -102,6 +116,10 @@ public class StaffManagedBean  implements Serializable  {
         plant = mohBean.findPlantByNameOnly(plantName);
         countryName = plant.getCountry().getName();
         msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        for (String selected : selectedRoles) {
+            System.out.println("Selected item: " + selected); 
+            msabl.addRoleToStaffByUsername(username,selected);
+        }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
         return "managestaff";
@@ -265,6 +283,38 @@ public class StaffManagedBean  implements Serializable  {
 
     public void setIsGlobalHq(boolean isGlobalHq) {
         this.isGlobalHq = isGlobalHq;
+    }
+
+    public String[] getSelectedRoles() {
+        return selectedRoles;
+    }
+
+    public void setSelectedRoles(String[] selectedRoles) {
+        this.selectedRoles = selectedRoles;
+    }
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
+    public ManageRolesBeanLocal getMrbl() {
+        return mrbl;
+    }
+
+    public void setMrbl(ManageRolesBeanLocal mrbl) {
+        this.mrbl = mrbl;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
     
     

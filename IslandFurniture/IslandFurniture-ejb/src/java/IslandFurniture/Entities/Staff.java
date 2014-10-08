@@ -37,6 +37,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -44,6 +46,7 @@ import org.apache.commons.codec.binary.Base64;
  * @author Benjamin
  */
 @Entity
+@XmlRootElement
 public class Staff implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -151,6 +154,7 @@ public class Staff implements Serializable {
         this.lastLogon = lastLogon;
     }
 
+    @XmlTransient
     public List<Todo> getTodoList() {
         return todoList;
     }
@@ -159,6 +163,7 @@ public class Staff implements Serializable {
         this.todoList = todoList;
     }
 
+    @XmlTransient
     public List<MessageThread> getInbox() {
         return inbox;
     }
@@ -175,6 +180,7 @@ public class Staff implements Serializable {
         this.plant = plant;
     }
 
+    @XmlTransient
     public List<Role> getRoles() {
         return roles;
     }
@@ -191,6 +197,7 @@ public class Staff implements Serializable {
         this.preference = preference;
     }
 
+    @XmlTransient
     public List<Notification> getNotifications() {
         return notifications;
     }
@@ -199,6 +206,7 @@ public class Staff implements Serializable {
         this.notifications = notifications;
     }
 
+    @XmlTransient
     public List<Announcement> getAnnouncements() {
         return announcements;
     }
@@ -207,6 +215,7 @@ public class Staff implements Serializable {
         this.announcements = announcements;
     }
 
+    @XmlTransient
     public List<Event> getEvents() {
         return events;
     }
