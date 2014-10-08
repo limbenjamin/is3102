@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageStaffAccountsBeanLocal {
 
-    void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName);
+    Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName);
     List<Staff> displayAllStaffAccounts();
     void deleteStaffAccount(Long id);
     void removeRoleFromStaff(Long staffId, Long roleId);
