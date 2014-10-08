@@ -42,6 +42,8 @@ public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
     
     @Override
     public boolean authenticate(String username, String password){
+        System.err.println(username);
+        System.err.println(password);
         Query query = em.createQuery("FROM Staff s where s.username=:username");
         query.setParameter("username", username);
         try{

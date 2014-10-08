@@ -17,6 +17,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,6 +33,7 @@ import javax.persistence.PostPersist;
             name = "getAllCountry",
             query = "SELECT a FROM Country a")
 })
+@XmlRootElement
 public class Country implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,6 +75,7 @@ public class Country implements Serializable {
         this.name = name;
     }
 
+    @XmlTransient
     public List<Plant> getPlants() {
         return plants;
     }
@@ -80,6 +84,7 @@ public class Country implements Serializable {
         this.plants = plants;
     }
 
+    @XmlTransient
     public List<Currency> getCurrencies() {
         return currencies;
     }
