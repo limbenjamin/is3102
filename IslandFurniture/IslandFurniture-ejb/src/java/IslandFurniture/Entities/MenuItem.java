@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -33,8 +32,9 @@ public class MenuItem implements Serializable {
     @ManyToOne
     private CountryOffice countryOffice;
     @OneToMany(mappedBy="menuItem", cascade={CascadeType.PERSIST})
-    private MenuItemDetail menuItemDetail;
+    private List<MenuItemDetail> menuItemDetails;
     private MenuType menuType;
+    private boolean alaCarte;
     
     // To Remove
     @ManyToOne
@@ -54,6 +54,54 @@ public class MenuItem implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
+    }
+
+    public List<MenuItemDetail> getMenuItemDetails() {
+        return menuItemDetails;
+    }
+
+    public void setMenuItemDetails(List<MenuItemDetail> menuItemDetails) {
+        this.menuItemDetails = menuItemDetails;
+    }
+
+    public MenuType getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(MenuType menuType) {
+        this.menuType = menuType;
+    }
+
+    public boolean isAlaCarte() {
+        return alaCarte;
+    }
+
+    public void setAlaCarte(boolean alaCarte) {
+        this.alaCarte = alaCarte;
     }
 
     public MenuDetail getMenuDetail() {
