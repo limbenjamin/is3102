@@ -1,4 +1,4 @@
-C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-gen\com\islandfurniture\app\R.java \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-gen\com\phonegap\helloworld\R.java \
  : C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\res\drawable\icon.png \
 C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\res\drawable-hdpi\icon.png \
 C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\res\drawable-land-hdpi\screen.png \
