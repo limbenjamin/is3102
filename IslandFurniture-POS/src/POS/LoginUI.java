@@ -1,9 +1,21 @@
 package POS;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-
 
 public class LoginUI extends javax.swing.JFrame 
 {
@@ -26,7 +38,7 @@ public class LoginUI extends javax.swing.JFrame
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextFieldEmail = new javax.swing.JTextField();
+        jUsernameFieldUsername = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPasswordFieldPassword = new javax.swing.JPasswordField();
@@ -44,15 +56,15 @@ public class LoginUI extends javax.swing.JFrame
         jLabel1.setForeground(new java.awt.Color(0, 0, 255));
         jLabel1.setText("Unified Point of Sale Login");
 
-        jTextFieldEmail.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextFieldEmail.addActionListener(new java.awt.event.ActionListener() {
+        jUsernameFieldUsername.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jUsernameFieldUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldEmailActionPerformed(evt);
+                jUsernameFieldUsernameActionPerformed(evt);
             }
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Email:");
+        jLabel2.setText("Username:");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Password:");
@@ -105,7 +117,7 @@ public class LoginUI extends javax.swing.JFrame
                         .addGap(41, 41, 41)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonExit, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                            .addComponent(jTextFieldEmail)
+                            .addComponent(jUsernameFieldUsername)
                             .addComponent(jPasswordFieldPassword)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButtonLogin)
@@ -120,7 +132,7 @@ public class LoginUI extends javax.swing.JFrame
                 .addComponent(jLabel1)
                 .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jUsernameFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -135,7 +147,7 @@ public class LoginUI extends javax.swing.JFrame
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jTextFieldEmail.getAccessibleContext().setAccessibleName("");
+        jUsernameFieldUsername.getAccessibleContext().setAccessibleName("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -157,21 +169,66 @@ public class LoginUI extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldEmailActionPerformed
+    private void jUsernameFieldUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsernameFieldUsernameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldEmailActionPerformed
+    }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
 
     private void jPasswordFieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldPasswordActionPerformed
 
     private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
-        jTextFieldEmail.setText("");
+        jUsernameFieldUsername.setText("");
         jPasswordFieldPassword.setText("");
     }//GEN-LAST:event_jButtonClearActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
 
+        try {    
+            String url = "http://127.0.0.1/ws/rest/auth";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            //add request header
+            con.setRequestMethod("POST");
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            
+            Map<String, String> data = new HashMap<String, String>();
+            data.put("username", jUsernameFieldUsername.getText());
+            data.put("password", jPasswordFieldPassword.getText());
+            Set keys = data.keySet();
+            Iterator keyIter = keys.iterator();
+            String content = "";
+            for(int i=0; keyIter.hasNext(); i++) {
+                Object key = keyIter.next();
+                if(i!=0) {
+                    content += "&";
+                }
+                content += key + "=" + URLEncoder.encode(data.get(key), "UTF-8");
+            }
+            wr.writeBytes(content);
+            wr.flush();
+            wr.close();
+            BufferedReader in = new BufferedReader(
+            new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+            }
+            in.close();
+
+            //print result
+            System.out.println(response.toString());
+        } catch (ProtocolException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
@@ -223,7 +280,8 @@ public class LoginUI extends javax.swing.JFrame
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordFieldPassword;
-    private javax.swing.JTextField jTextFieldEmail;
+    private javax.swing.JTextField jUsernameFieldUsername;
     // End of variables declaration//GEN-END:variables
 
+    
 }
