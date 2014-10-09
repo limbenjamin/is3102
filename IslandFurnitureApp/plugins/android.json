@@ -33,7 +33,7 @@
     },
     "installed_plugins": {
         "com.chariotsolutions.nfc.plugin": {
-            "PACKAGE_NAME": "com.islandfurniture.app"
+            "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
     "dependent_plugins": {}
