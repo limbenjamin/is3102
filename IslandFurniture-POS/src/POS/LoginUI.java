@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class LoginUI extends javax.swing.JFrame 
 {
@@ -183,6 +184,14 @@ public class LoginUI extends javax.swing.JFrame
         try {
             String result = Connector.postForm(params,values);
             System.err.println(result);
+            if (result.equals("Error")){
+                JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                SelectStoreUI store = new SelectStoreUI(this, result);
+                store.setVisible(true);
+                store.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                this.setVisible(false);
+            }
         } catch (Exception ex) {
             Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
         }
