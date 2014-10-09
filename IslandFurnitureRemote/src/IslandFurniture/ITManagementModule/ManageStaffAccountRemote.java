@@ -17,6 +17,6 @@ import javax.ejb.Remote;
 @Remote
 public interface ManageStaffAccountRemote {
 
-    void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String country, String storeName);
+    Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String country, String storeName);
     void addRoleToStaffByUsername(String staffName, String roleName);
 }

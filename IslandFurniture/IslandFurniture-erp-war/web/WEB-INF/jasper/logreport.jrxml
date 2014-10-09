@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="logreport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4a8245e0-9bfb-408b-bc22-9c82b0651bc0">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="IslandFurniture.Enums.LogEntryAction"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="entityName" class="java.lang.String"/>
+	<field name="entityId" class="java.lang.Long"/>
+	<field name="logTime" class="java.util.Calendar"/>
+	<field name="logEntryAction" class="IslandFurniture.Enums.LogEntryAction"/>
+	<field name="changeMessage" class="java.lang.String"/>
+	<field name="staff.name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="89" y="20" width="280" height="48" uuid="1f36de3d-5ab2-41a6-9bfe-ee9fecfeb1c9"/>
+				<textElement>
+					<font size="36"/>
+				</textElement>
+				<text><![CDATA[Island Furniture]]></text>
+			</staticText>
+			<image>
+				<reportElement x="27" y="20" width="62" height="48" uuid="79ffc0f2-46c4-4171-81b3-c5f571e53b50"/>
+				<imageExpression><![CDATA["C:\\Users\\Benjamin\\Dropbox\\IS3102\\0. References Resources\\staff_workspace_view\\HTML version\\assets\\img\\logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="1" width="27" height="20" uuid="a634e035-042c-4e82-8e50-ff5d2d82ae5c"/>
+				<text><![CDATA[id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="1" width="100" height="20" uuid="7bdb540b-07d3-4f47-a1db-acd0f8919cfd"/>
+				<text><![CDATA[entityName]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="0" width="100" height="20" uuid="0f6318cb-1add-4090-acea-fd9c79f9df9b"/>
+				<text><![CDATA[entityId]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="1" width="100" height="20" uuid="66e79501-bf55-4a0e-93c4-0cc6a5a8f2fb"/>
+				<text><![CDATA[changeMessage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="1" width="100" height="20" uuid="2a0c3aca-0374-4657-b46d-c453fc559df7"/>
+				<text><![CDATA[Staff]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="1" width="100" height="20" uuid="9d010252-9513-4eb9-b88f-8d728a7da46e"/>
+				<text><![CDATA[logTime]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="544" y="0" width="100" height="20" uuid="91107f7a-20ec-4e00-a237-bde63006b57b"/>
+				<text><![CDATA[logEntryAction]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="0" width="27" height="20" uuid="bdb68e0a-d174-4521-b6bc-f2f187f9588e"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="43" y="0" width="100" height="20" uuid="f4b909c7-56a8-466d-97f1-765590771485"/>
+				<textFieldExpression><![CDATA[$F{entityName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="143" y="0" width="100" height="20" uuid="35cced27-562b-446f-a320-9825d7541e41"/>
+				<textFieldExpression><![CDATA[$F{entityId}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="243" y="0" width="100" height="20" uuid="c068310b-c374-4847-a7a5-5998227c8487"/>
+				<textFieldExpression><![CDATA[$F{changeMessage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="0" width="100" height="20" uuid="11c07179-af38-468e-bd41-d060756643d3"/>
+				<textFieldExpression><![CDATA[$F{staff.name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="0" width="100" height="20" uuid="14e7f8ac-24aa-4977-8a5b-5da797afa712"/>
+				<textFieldExpression><![CDATA[$F{logTime}.getTime()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="544" y="0" width="100" height="20" uuid="d3f216ac-a9dd-4365-9bb2-535e6a5fcb4f"/>
+				<textFieldExpression><![CDATA[$F{logEntryAction}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="762" y="0" width="40" height="20" uuid="a07328bc-7131-4101-adaf-5226d095bee4"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="682" y="0" width="80" height="20" uuid="3c0b018c-c2ab-42d8-be17-dac8b568487d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

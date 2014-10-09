@@ -14,7 +14,7 @@ import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
-import IslandFurniture.Entities.Menu;
+import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
@@ -32,6 +32,7 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
+import IslandFurniture.Enums.MenuType;
 import IslandFurniture.Enums.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -174,35 +175,47 @@ public class QueryMethods {
         }
     }
 
-    public static Menu findMenuByName(EntityManager em, String name) {
-        Query q = em.createNamedQuery("findMenuByName");
+    public static MenuItem findMenuItemByName(EntityManager em, String name) {
+        Query q = em.createNamedQuery("findMenuItemByName");
         q.setParameter("name", name);
 
         try {
-            return (Menu) q.getSingleResult();
+            return (MenuItem) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }
     }
 
-    public static List<Menu> getMenuListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
-        Query q = em.createNamedQuery("getMenuListByCountryOffice");
+    public static List<MenuItem> getMenuItemListByCountryOffice(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getMenuItemListByCountryOffice");
         q.setParameter("countryOffice", countryOffice);
 
         try {
-            return (List<Menu>) q.getResultList();
+            return (List<MenuItem>) q.getResultList();
         } catch (NoResultException nrex) {
             return null;
         }
     }
 
-    public static Menu getMenuByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
-        Query q = em.createNamedQuery("getMenuByCountryOfficeAndName");
+    public static MenuItem getMenuItemByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
+        Query q = em.createNamedQuery("getMenuItemByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
         q.setParameter("name", name);
 
         try {
-            return (Menu) q.getSingleResult();
+            return (MenuItem) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static List<MenuItem> getMenuItemListByCountryOfficeAndMenuType(EntityManager em, CountryOffice countryOffice, MenuType menuType) {
+        Query q = em.createNamedQuery("getMenuItemListByCountryOfficeAndMenuType");
+        q.setParameter("countryOffice", countryOffice);
+        q.setParameter("menuType", menuType);
+
+        try {
+            return (List<MenuItem>) q.getResultList();
         } catch (NoResultException nrex) {
             return null;
         }

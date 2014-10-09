@@ -20,6 +20,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,6 +40,7 @@ import javax.persistence.UniqueConstraint;
             name = "getAllPlants",
             query = "SELECT a FROM Plant a")
 })
+@XmlRootElement
 public abstract class Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -92,6 +95,7 @@ public abstract class Plant implements Serializable {
         this.country = country;
     }
 
+    @XmlTransient
     public List<Staff> getEmployees() {
         return employees;
     }
@@ -100,6 +104,7 @@ public abstract class Plant implements Serializable {
         this.employees = employees;
     }
 
+    @XmlTransient
     public List<PlantStockInventory> getPlantStockInventories() {
         return plantStockInventories;
     }
@@ -108,6 +113,7 @@ public abstract class Plant implements Serializable {
         this.plantStockInventories = plantStockInventories;
     }
 
+    @XmlTransient
     public List<StorageArea> getStorageAreas() {
         return storageAreas;
     }
@@ -116,6 +122,7 @@ public abstract class Plant implements Serializable {
         this.storageAreas = storageAreas;
     }
 
+    @XmlTransient
     public List<Announcement> getAnnouncementList() {
         return announcementList;
     }
@@ -124,6 +131,7 @@ public abstract class Plant implements Serializable {
         this.announcementList = announcementList;
     }
 
+    @XmlTransient
     public List<Event> getEventList() {
         return eventList;
     }

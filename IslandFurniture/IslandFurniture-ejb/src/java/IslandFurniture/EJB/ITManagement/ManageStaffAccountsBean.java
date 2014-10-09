@@ -74,7 +74,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
 
 
     @Override
-    public void createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
+    public Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
         staff = new Staff();
         staff.setUsername(username);
         staff.setNotes("");
@@ -123,6 +123,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         } catch (Exception ex) {
             Logger.getLogger(ManageStaffAccountsBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return staff.getId();
     }
     
     //This method does not send emails for bulk created accounts

@@ -8,15 +8,17 @@ package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Kitchen.KitchenStockManagerLocal;
+import IslandFurniture.EJB.Kitchen.MenuManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.Dish;
-import IslandFurniture.Entities.Menu;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Enums.MenuType;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -26,7 +28,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -38,6 +39,8 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class MenuItemManagedBean implements Serializable {
     @EJB
+    private MenuManagerLocal menuManager;
+    @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     private KitchenStockManagerLocal ksm;
@@ -46,10 +49,11 @@ public class MenuItemManagedBean implements Serializable {
     private Staff staff;
     private Plant plant;
     private CountryOffice co;
-    private Long menuID;
-    private Menu menu;
-    private List<Dish> dishList;
+    private List<MenuItem> menuItemList;
+    private MenuType menuType;
     private MenuItem menuItem;
+    private boolean checkbox;
+    private List<MenuType> menuTypeList;
 
     public String getUsername() {
         return username;
@@ -83,28 +87,20 @@ public class MenuItemManagedBean implements Serializable {
         this.co = co;
     }
 
-    public Long getMenuID() {
-        return menuID;
+    public List<MenuItem> getMenuItemList() {
+        return menuItemList;
     }
 
-    public void setMenuID(Long menuID) {
-        this.menuID = menuID;
+    public void setMenuItemList(List<MenuItem> menuItemList) {
+        this.menuItemList = menuItemList;
     }
 
-    public Menu getMenu() {
-        return menu;
+    public MenuType getMenuType() {
+        return menuType;
     }
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
-    }
-
-    public List<Dish> getDishList() {
-        return dishList;
-    }
-
-    public void setDishList(List<Dish> dishList) {
-        this.dishList = dishList;
+    public void setMenuType(MenuType menuType) {
+        this.menuType = menuType;
     }
 
     public MenuItem getMenuItem() {
@@ -114,76 +110,94 @@ public class MenuItemManagedBean implements Serializable {
     public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
     }
-    
+
+    public boolean isCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(boolean checkbox) {
+        this.checkbox = checkbox;
+    }
+
+    public List<MenuType> getMenuTypeList() {
+        return menuTypeList;
+    }
+
+    public void setMenuTypeList(List<MenuType> menuTypeList) {
+        this.menuTypeList = menuTypeList;
+    }
+     
     @PostConstruct
     public void init() {
         System.out.println("init:MenuItemManagedBean");
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        staff = staffBean.getStaff(username); 
+        staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        
-        try {
-            if(plant instanceof CountryOffice) {
-                this.menuID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("menuID");
-                if(menuID != null) {
-                    this.co = (CountryOffice) plant;
-                    this.menu = ksm.getMenu(menuID);
-                    this.dishList = ksm.getDishList(co);
-                } else {
-                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                    ec.redirect("menu.xhtml"); 
-                }
-            } else {
+
+        if (plant instanceof CountryOffice) { 
+            this.co = (CountryOffice) plant;
+            this.menuItemList = menuManager.getMenuItemList(co);
+            this.checkbox = false;
+            this.menuTypeList = new ArrayList<MenuType>(EnumSet.allOf(MenuType.class));
+        } else {
+            try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 ec.redirect(ec.getRequestContextPath());
+            } catch (IOException ex) {
+
             }
-        } catch(IOException ex) {
-            
-        }  
-    } 
-    public void addToMenuDetail(ActionEvent event) {
-        System.out.println("MenuItemManagedBean.addToMenuDetail()");
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String menuID = request.getParameter("addToMenuDetailForm:menuID");
-        String dishID = request.getParameter("addToMenuDetailForm:dishID");
-        String dishQuantity = request.getParameter("addToMenuDetailForm:dishQuantity");
-        String msg = ksm.addToMenu(Long.parseLong(menuID), Long.parseLong(dishID), Integer.parseInt(dishQuantity));
-        if(msg != null) {
+        }
+    }
+    public String addMenuItem() {
+        System.out.println("MenuItemManagedBean.addMenuItem()");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = request.getParameter("addMenuItemForm:name");
+        String price = request.getParameter("addMenuItemForm:price"); 
+        String menuType = request.getParameter("addMenuItemForm:menuType");
+        String output = menuManager.addMenuItem(name, Double.parseDouble(price), co, checkbox, MenuType.valueOf(menuType));
+        
+        String id = output.split("#")[0];
+        String msg = output.split("#")[1];
+        if(msg.length() > 1) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));   
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));              
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Dish successfully added to Menu Item Detail", ""));        
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item \"" + name + "\" successfully created ", ""));             
         } 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuID", menu.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuItemID", Long.parseLong(id));
+        return "menuitemdetail?faces-redirect=true";
     }
-    public String editMenuDetail(ActionEvent event) throws IOException {
-        System.out.println("MenuItemManagedBean.editMenuDetail()");
+    public String editMenuItem(ActionEvent event) throws IOException {
+        System.out.println("MenuItemManagedBean.editMenuItem()");
         menuItem = (MenuItem) event.getComponent().getAttributes().get("toEdit");
-        String msg = ksm.editMenuDetail(menuItem.getId(), menuItem.getQuantity());
+        String msg = menuManager.editMenuItem(menuItem.getId(), menuItem.getName(), menuItem.getPrice());
         if(msg != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));   
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item Detail has been updated", ""));        
-        } 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuID", menu.getId());
-        return "menuitem";
-    }
-    public String deleteMenuDetail() {
-        System.out.println("MenuItemManagedBean.deleteMenuDetail()");
-        String ID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("menuItemID");
-        String msg = ksm.deleteMenuDetail(Long.parseLong(ID));       
-        if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item Detail has been successfully deleted", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item \"" + menuItem.getName() + "\" has been updated", ""));
         }
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuID", menu.getId());
+        return "menuitem";        
+    }
+    public String deleteMenuItem(ActionEvent event) {
+        System.out.println("MenuItemManagedBean.deleteMenuItem()");
+        menuItem = (MenuItem) event.getComponent().getAttributes().get("toDelete");
+        String msg = menuManager.deleteMenuItem(menuItem.getId(), co);
+        if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Menu Item has been successfully deleted", ""));
+        }
+        this.menuItemList = menuManager.getMenuItemList(co);
         return "menuitem";
+    }
+    public void menuItemDetailActionListener(ActionEvent event) throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuItemID", event.getComponent().getAttributes().get("menuItemID"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("menuitemdetail.xhtml");
     }
 }

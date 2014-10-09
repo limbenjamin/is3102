@@ -92,6 +92,14 @@
                                               <h:inputText id="phoneNo" class="form-control"></h:inputText>
                                             </div>
                                           </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Roles: </label>
+                                            <div class="col-sm-9">
+                                                <h:selectManyListbox class="form-control needauto" value="#{staffManagedBean.selectedRoles}">
+                                                    <f:selectItems value="#{staffManagedBean.roleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.name}" />
+                                                </h:selectManyListbox>                                              
+                                            </div>
+                                          </div>
                                       </div>
                                       <div class="modal-footer">
                                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
@@ -143,6 +151,14 @@
                                                     <f:selectItem itemDisabled="true" itemLabel=""></f:selectItem>
                                                     <f:selectItems itemLabel="#{plant.name}" itemValue="#{plant.name}" value="#{staffManagedBean.plantList}" var="plant"/>
                                                 </h:selectOneMenu>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-3 control-label">Roles: </label>
+                                            <div class="col-sm-9">
+                                                <h:selectManyListbox class="form-control needauto" value="#{staffManagedBean.selectedRoles}">
+                                                    <f:selectItems value="#{staffManagedBean.roleList}" var="r" itemLabel="#{r.name}" itemValue="#{r.name}" />
+                                                </h:selectManyListbox>                                              
                                             </div>
                                           </div>
                                       </div>

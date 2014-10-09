@@ -6,30 +6,48 @@
 
 package IslandFurniture.Entities;
 
+import IslandFurniture.Enums.MenuType;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findMenuItemByName",
+            query = "SELECT a FROM MenuItem a WHERE a.name = :name"),
+    @NamedQuery(name = "getMenuItemListByCountryOffice",
+            query = "SELECT a FROM MenuItem a WHERE a.countryOffice = :countryOffice"),
+    @NamedQuery(name = "getMenuItemByCountryOfficeAndName",
+            query = "SELECT a FROM MenuItem a WHERE a.countryOffice = :countryOffice AND a.name = :name"),
+    @NamedQuery(name = "getMenuItemListByCountryOfficeAndMenuType",
+            query = "SELECT a FROM MenuItem a WHERE a.countryOffice = :countryOffice AND a.menuType = :menuType")
+})
 public class MenuItem implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String name;
+    private Double price;
     @ManyToOne
-    private MenuDetail menuDetail;
-    @ManyToOne
-    private Dish dish;
-    private Integer quantity;
+    private CountryOffice countryOffice;
+    @OneToMany(mappedBy="menuItem", cascade={CascadeType.PERSIST})
+    private List<MenuItemDetail> menuItemDetails;
+    private MenuType menuType;
+    private boolean alaCarte;
 
     public MenuItem() {
         
@@ -43,30 +61,54 @@ public class MenuItem implements Serializable {
         this.id = id;
     }
 
-    public MenuDetail getMenuDetail() {
-        return menuDetail;
+    public String getName() {
+        return name;
     }
 
-    public void setMenuDetail(MenuDetail menuDetail) {
-        this.menuDetail = menuDetail;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Dish getDish() {
-        return dish;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
+    public List<MenuItemDetail> getMenuItemDetails() {
+        return menuItemDetails;
+    }
+
+    public void setMenuItemDetails(List<MenuItemDetail> menuItemDetails) {
+        this.menuItemDetails = menuItemDetails;
+    }
+
+    public MenuType getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(MenuType menuType) {
+        this.menuType = menuType;
+    }
+
+    public boolean isAlaCarte() {
+        return alaCarte;
+    }
+
+    public void setAlaCarte(boolean alaCarte) {
+        this.alaCarte = alaCarte;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
