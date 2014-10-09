@@ -36,31 +36,30 @@ public class PurchaseOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
-    private Plant shipsTo;
-    @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
-    private List<PurchaseOrderDetail> purchaseOrderDetails;
-    @ManyToOne
-    private Supplier supplier;
-    @OneToOne
-    private GoodsReceiptDocument goodsReceiptDocument;
     @Temporal(TemporalType.DATE)
     private Calendar orderDate;
     private double price;
     private Currency currency;
     private PurchaseOrderStatus status;
+    
     @ManyToOne
     private MonthlyProcurementPlan monthlyProcurementPlan;
     
+    @ManyToOne
+    private Plant shipsTo;
     
+    @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
+    private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList();
+    
+    @ManyToOne
+    private Supplier supplier;
+    
+    @OneToOne
+    private GoodsReceiptDocument goodsReceiptDocument;
+    
+    @OneToOne
     @JoinColumn(name = "MF_ID",referencedColumnName = "ID")
     private ManufacturingFacility manufacturingFacility;
-
- 
-
-    public PurchaseOrder() {
-        this.purchaseOrderDetails = new ArrayList<PurchaseOrderDetail>();
-    }
 
     public Long getId() {
         return id;
@@ -68,6 +67,46 @@ public class PurchaseOrder implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Calendar getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Calendar orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public PurchaseOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PurchaseOrderStatus status) {
+        this.status = status;
+    }
+
+    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
+        return monthlyProcurementPlan;
+    }
+
+    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
+        this.monthlyProcurementPlan = monthlyProcurementPlan;
     }
 
     public Plant getShipsTo() {
@@ -102,28 +141,12 @@ public class PurchaseOrder implements Serializable {
         this.goodsReceiptDocument = goodsReceiptDocument;
     }
 
-    public Calendar getOrderDate() {
-        return orderDate;
+    public ManufacturingFacility getManufacturingFacility() {
+        return manufacturingFacility;
     }
 
-    public void setOrderDate(Calendar orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public PurchaseOrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PurchaseOrderStatus status) {
-        this.status = status;
-    }
-
-    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
-        return monthlyProcurementPlan;
-    }
-
-    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
-        this.monthlyProcurementPlan = monthlyProcurementPlan;
+    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
+        this.manufacturingFacility = manufacturingFacility;
     }
 
     @Override
@@ -148,7 +171,7 @@ public class PurchaseOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrder[ id=" + id + " ]";
+        return "PurchaseOrder[ id=" + id + " ]";
     }
 
     // Extra Methods
@@ -160,43 +183,4 @@ public class PurchaseOrder implements Serializable {
         }
         return false;
     }
-
-    public ManufacturingFacility getManufacturingFacility() {
-        return manufacturingFacility;
-    }
-
-    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
-        this.manufacturingFacility = manufacturingFacility;
-    }
-
-    /**
-     * @return the price
-     */
-    public double getPrice() {
-        return price;
-    }
-
-    /**
-     * @param price the price to set
-     */
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    /**
-     * @return the currency
-     */
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    /**
-     * @param currency the currency to set
-     */
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-    
-
-
 }

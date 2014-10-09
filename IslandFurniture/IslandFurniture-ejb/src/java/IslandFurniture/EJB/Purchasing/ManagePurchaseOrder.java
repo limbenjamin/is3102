@@ -13,10 +13,10 @@ import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.Calendar;
 import java.util.List;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -25,8 +25,7 @@ import javax.persistence.Query;
  *
  * @author Zee
  */
-@Stateful
-@LocalBean
+@Stateless
 public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     // Add business logic below. (Right-click in editor and choose
@@ -34,54 +33,31 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @PersistenceContext
     EntityManager em;
 
-    private PurchaseOrder purchaseOrder;
-    private PurchaseOrderDetail purchaseOrderDetail;
-    private ProcuredStock procuredStock;
-    private Plant plant;
-    private Supplier supplier;
-
-    private Long plantId;
-
     @Override
     public PurchaseOrder getPurchaseOrder(Long id) {
-        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, id);
-        return purchaseOrder;
-    }
-
-    @Override
-    public PurchaseOrderDetail getPurchaseOrderDetail(Long id) {
-        purchaseOrderDetail = (PurchaseOrderDetail) em.find(PurchaseOrderDetail.class, id);
-        return purchaseOrderDetail;
-    }
-
-    @Override
-    public ProcuredStock getProcuredStock(Long id) {
-        procuredStock = (ProcuredStock) em.find(ProcuredStock.class, id);
-        return procuredStock;
+        return (PurchaseOrder) em.find(PurchaseOrder.class, id);
     }
     
     @Override
-    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, Plant plant, Plant shipsTo, Calendar orderDate) {
-        purchaseOrder = new PurchaseOrder();
-        purchaseOrder.setOrderDate(orderDate);
+    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) {
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setOrderDate(TimeMethods.convertToUtcTime(mf, orderDate));
         purchaseOrder.setStatus(status);
         purchaseOrder.setSupplier(supplier);
         purchaseOrder.setShipsTo(shipsTo);
-        if (plant instanceof ManufacturingFacility) {
-            purchaseOrder.setManufacturingFacility((ManufacturingFacility) plant);
-        }
+        purchaseOrder.setManufacturingFacility(mf);
+        
         em.persist(purchaseOrder);
-        em.flush();
         return purchaseOrder;
     }
 
     @Override
     public void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException {
-        purchaseOrder = getPurchaseOrder(poId);
-        procuredStock = getProcuredStock(stockId);
+        PurchaseOrder purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, poId);
+        ProcuredStock procuredStock = (ProcuredStock) em.find(ProcuredStock.class, stockId);
 
         if (!purchaseOrder.hasProcuredStock(procuredStock)) {
-            purchaseOrderDetail = new PurchaseOrderDetail();
+            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
             purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
             purchaseOrderDetail.setProcuredStock(procuredStock);
             purchaseOrderDetail.setQuantity(quantity);
@@ -97,24 +73,20 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) {
-        purchaseOrder = getPurchaseOrder(poId);
+        PurchaseOrder purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, poId);
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
         em.persist(purchaseOrder);
-        em.flush();
     }
 
     @Override
-    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod, Integer qty) {
-        Long podId = pod.getId();
-        purchaseOrderDetail = em.find(PurchaseOrderDetail.class, podId);
-        purchaseOrderDetail.setQuantity(qty);
-        em.flush();
+    public void updatePurchaseOrderDetail(PurchaseOrderDetail pod) {
+        em.merge(pod);
     }
 
     @Override
     public List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId) {
-        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
+        PurchaseOrder purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
         em.refresh(purchaseOrder);
 
         List<PurchaseOrderDetail> stockOrders = purchaseOrder.getPurchaseOrderDetails();
@@ -123,8 +95,8 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf) {
-        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
-        supplier = purchaseOrder.getSupplier();
+        PurchaseOrder purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
+        Supplier supplier = purchaseOrder.getSupplier();
 
         Query q = em.createNamedQuery("getStockList");
         q.setParameter("supplier", supplier);
@@ -134,18 +106,12 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public void deletePurchaseOrder(Long poId) {
-        purchaseOrder = getPurchaseOrder(poId);
-        em.remove(purchaseOrder);
-
-        em.flush();
+        em.remove((PurchaseOrder) em.find(PurchaseOrder.class, poId));
     }
 
     @Override
     public void deletePurchaseOrderDetail(Long podId) {
-        purchaseOrderDetail = getPurchaseOrderDetail(podId);
-        em.remove(purchaseOrderDetail);
-
-        em.flush();
+        em.remove((PurchaseOrderDetail) em.find(PurchaseOrderDetail.class, podId));
     }
 
     @Override
