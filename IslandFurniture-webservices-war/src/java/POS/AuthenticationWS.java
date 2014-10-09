@@ -8,6 +8,8 @@ package POS;
 
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.Entities.Staff;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -19,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.JAXB;
 
 @Stateless //For some reason, need to make this stateless else cannot inject
 @Path("auth")
@@ -28,19 +31,23 @@ public class AuthenticationWS {
     
     @EJB
     ManageAuthenticationBeanLocal mabl;
+    @EJB
+    ManageUserAccountBeanLocal muabl;
     
     public AuthenticationWS(){
     
     }
     
     @POST
-    public String login(@FormParam("username") String username,
+    public Staff login(@FormParam("username") String username,
                                 @FormParam("password") String password) {
         System.err.println(username);
         System.err.println(password);
-        Boolean bool = mabl.authenticate(username, password);
-        System.err.println(String.valueOf(bool));
-        return String.valueOf(bool);
+        if(mabl.authenticate(username, password)){
+            Staff staff = muabl.getStaff(username);
+            return staff;
+        }
+        return null;
     }
     
     @GET

@@ -46,7 +46,6 @@ import org.apache.commons.codec.binary.Base64;
  * @author Benjamin
  */
 @Entity
-@XmlRootElement
 public class Staff implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -82,6 +81,7 @@ public class Staff implements Serializable {
     private List<Announcement> announcements;
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
     private List<Event> events;
+    private String cardId;
     
     
     public Long getId() {
@@ -257,6 +257,15 @@ public class Staff implements Serializable {
     public void setInvalidPasswordCount(Integer invalidPasswordCount) {
         this.invalidPasswordCount = invalidPasswordCount;
     }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
+    
     
     
     @Override
