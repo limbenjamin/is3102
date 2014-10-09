@@ -6,7 +6,6 @@
 
 package POS;
 
-
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Staff;
@@ -14,7 +13,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,11 +21,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXB;
 
+/**
+ *
+ * @author Benjamin
+ */
 @Stateless //For some reason, need to make this stateless else cannot inject
-@Path("auth")
-public class AuthenticationWS {
+@Path("authnfc")
+public class AuthenticationNFCWS {
+    
     @Context
     private UriInfo context;
     
@@ -36,22 +38,17 @@ public class AuthenticationWS {
     @EJB
     ManageUserAccountBeanLocal muabl;
     
-    public AuthenticationWS(){
+    public AuthenticationNFCWS(){
     
     }
     
     @POST
-    public String loginUsername(@FormParam("username") String username,
-                                @FormParam("password") String password) {
-        System.err.println(username);
-        System.err.println(password);
-        if(mabl.authenticate(username, password)){
-            Staff staff = muabl.getStaff(username);
-            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
-                    .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
-            return object.toString();
-        }
-        return "Error";
+    public String loginNFC(@FormParam("cardId") String cardId) {
+        System.err.println(cardId);
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+                .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
+        return object.toString();
     }
     
     @GET
@@ -59,6 +56,4 @@ public class AuthenticationWS {
     public String getHtml() {
         return "hi";
     }
-    
-    
 }

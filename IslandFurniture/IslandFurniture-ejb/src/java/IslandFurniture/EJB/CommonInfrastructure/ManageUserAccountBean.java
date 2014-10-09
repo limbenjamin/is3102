@@ -42,6 +42,14 @@ public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
     }
     
     @Override
+    public Staff getStaffFromCardId(String cardId){
+        Query query = em.createQuery("FROM Staff s where s.cardId=:cardId");
+        query.setParameter("cardId", cardId);
+        staff = (Staff) query.getSingleResult();
+        return staff;
+    }
+    
+    @Override
     public Staff getStaffFromId(Long staffId){
         staff = (Staff) em.find(Staff.class, staffId);
         return staff;

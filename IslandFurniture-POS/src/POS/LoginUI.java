@@ -1,21 +1,78 @@
 package POS;
 
 import Helper.Connector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.smartcardio.Card;
+import javax.smartcardio.CardChannel;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import org.json.simple.parser.ParseException;
 
-public class LoginUI extends javax.swing.JFrame 
-{
+public class LoginUI extends javax.swing.JFrame {
+
+    private CardTerminal acr122uCardTerminal = null;
 
     
-    
-    public LoginUI() 
-    {
+    public LoginUI() {
         initComponents();
+        try {
+
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+
+                if (acr122uCardTerminal != null) {
+                    ActionListener actionListenerCheckCardPresent = new ActionListener() {
+                        public void actionPerformed(ActionEvent event) {
+                            try {
+                                if (acr122uCardTerminal.isCardPresent()){
+                                    String cardId = getID();
+                                    List params = new ArrayList();
+                                    List values = new ArrayList();
+                                    params.add("cardId");
+                                    values.add(cardId.substring(0, 8));
+                                    System.err.println(cardId.substring(0, 8));
+                                    String result = Connector.postForm(params, values, "authnfc");
+                                    if (result.equals("Error")) {
+                                        JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
+                                    } else {
+                                        System.err.println(result);
+                                        SelectScreen(result);
+                                    }
+                                }
+                            } catch (CardException ex) {
+                                Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    };
+                    Timer timerCheckCardPresent = new Timer(1000, actionListenerCheckCardPresent);
+                    timerCheckCardPresent.setRepeats(true);
+                    timerCheckCardPresent.start();
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
     }
 
     /**
@@ -182,15 +239,12 @@ public class LoginUI extends javax.swing.JFrame
         params.add("password");
         values.add(jPasswordFieldPassword.getText());
         try {
-            String result = Connector.postForm(params,values);
+            String result = Connector.postForm(params, values, "auth");
             System.err.println(result);
-            if (result.equals("Error")){
+            if (result.equals("Error")) {
                 JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
-                SelectStoreUI store = new SelectStoreUI(this, result);
-                store.setVisible(true);
-                store.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                this.setVisible(false);
+            } else {
+                SelectScreen(result);
             }
         } catch (Exception ex) {
             Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -249,5 +303,55 @@ public class LoginUI extends javax.swing.JFrame
     private javax.swing.JTextField jUsernameFieldUsername;
     // End of variables declaration//GEN-END:variables
 
+    private void SelectScreen(String result) throws IOException, ParseException{
+        SelectStoreUI store = new SelectStoreUI(this, result);
+        store.setVisible(true);
+        store.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setVisible(false);
+    }
+    
+    public String getID(){
+        byte[] byteArrayReadUID = { (byte)0xFF, (byte)0xCA, (byte)0x00, (byte)0x00, (byte)0x00 };
+        try 
+        {
+            acr122uCardTerminal.waitForCardPresent(0);
+            Card card = acr122uCardTerminal.connect("T=1");
+            CardChannel cardChannel = card.getBasicChannel();
+            return send(byteArrayReadUID, cardChannel);                        
+        }
+        catch (Exception ex) 
+        {
+            return "";
+        }
+        
+    }
+    
+    public String send(byte[] command, CardChannel cardChannel) 
+    {
+        String response = "";
+
+        byte[] byteArrayResponse = new byte[258];
+        ByteBuffer bufferedCommand = ByteBuffer.wrap(command);
+        ByteBuffer bufferedResponse = ByteBuffer.wrap(byteArrayResponse);
+
+        // output = The length of the received response APDU
+        int output = 0;
+
+        try 
+        {
+            output = cardChannel.transmit(bufferedCommand, bufferedResponse);
+        } 
+        catch (CardException ex) 
+        {
+            ex.printStackTrace();
+        }
+
+        for (int i = 0; i < output; i++) 
+        {
+            response += String.format("%02X", byteArrayResponse[i]);
+        }
+
+        return response;
+    }
     
 }
