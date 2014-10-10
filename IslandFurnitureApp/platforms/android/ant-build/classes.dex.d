@@ -1,0 +1,22 @@
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes.dex : \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$1.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$2.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$3.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$4.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$5.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$6.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$7.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$8.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin$9.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\NfcPlugin.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\chariotsolutions\nfc\plugin\Util.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\BuildConfig.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\IslandFurniture.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\R$attr.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\R$drawable.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\R$string.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\R$xml.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\com\islandfurniture\app\R.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\org\apache\cordova\api\Dummy.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\classes\org\apache\cordova\splashscreen\SplashScreen.class \
+C:\Users\User\Documents\NetBeansProjects\is3102\IslandFurnitureApp\platforms\android\ant-build\dexedLibs\classes-817f503e178aa0a0adc68ccac36410ef.jar \
