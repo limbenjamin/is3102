@@ -32,24 +32,14 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToMany
-    private List<Ingredient> ingredients;
     @OneToMany(mappedBy = "supplier")
     private List<PurchaseOrder> purchaseOrders;
-    @OneToMany(mappedBy = "supplier")
-    private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
+
     @ManyToMany(mappedBy = "suppliers")
     private List<ProcuredStock> procuredStocks;
+
     @OneToOne(mappedBy = "supplier", cascade = {CascadeType.PERSIST})
-    private ProcurementContract procurementContract;
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
+    private ProcuredStockContract procuredStockContract;
 
     public List<PurchaseOrder> getPurchaseOrders() {
         return purchaseOrders;
@@ -57,14 +47,6 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
 
     public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
         this.purchaseOrders = purchaseOrders;
-    }
-
-    public List<RestaurantPurchaseOrder> getRestaurantPurchaseOrders() {
-        return restaurantPurchaseOrders;
-    }
-
-    public void setRestaurantPurchaseOrders(List<RestaurantPurchaseOrder> restaurantPurchaseOrders) {
-        this.restaurantPurchaseOrders = restaurantPurchaseOrders;
     }
 
     public List<ProcuredStock> getProcuredStocks() {
@@ -75,12 +57,12 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
         this.procuredStocks = procuredStocks;
     }
 
-    public ProcurementContract getProcurementContract() {
-        return procurementContract;
+    public ProcuredStockContract getProcuredStockContract() {
+        return procuredStockContract;
     }
 
-    public void setProcurementContract(ProcurementContract procurementContract) {
-        this.procurementContract = procurementContract;
+    public void setProcuredStockContract(ProcuredStockContract procuredStockContract) {
+        this.procuredStockContract = procuredStockContract;
     }
 
     @Override

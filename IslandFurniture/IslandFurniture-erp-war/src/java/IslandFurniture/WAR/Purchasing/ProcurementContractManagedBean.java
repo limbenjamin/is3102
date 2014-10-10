@@ -8,7 +8,7 @@ package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -37,16 +37,16 @@ public class ProcurementContractManagedBean implements Serializable {
     private SupplierManagerLocal supplierManager;
     private List<ProcuredStockSupplier> supplierList;
     private ProcuredStockSupplier supplier;
-    private List<ProcurementContractDetail> detailList = null;
+    private List<ProcuredStockContractDetail> detailList = null;
     private List<ProcuredStock> stockList;
     private List<ManufacturingFacility> mfList;
     private Long supplierID;
-    private ProcurementContractDetail pcd;
+    private ProcuredStockContractDetail pcd;
 
-    public ProcurementContractDetail getPcd() {
+    public ProcuredStockContractDetail getPcd() {
         return pcd;
     }
-    public void setPcd(ProcurementContractDetail pcd) {
+    public void setPcd(ProcuredStockContractDetail pcd) {
         this.pcd = pcd;
     }
     public Long getSupplierID() {
@@ -67,10 +67,10 @@ public class ProcurementContractManagedBean implements Serializable {
     public void setMfList(List<ManufacturingFacility> mfList) {
         this.mfList = mfList;
     }
-    public List<ProcurementContractDetail> getDetailList() {
+    public List<ProcuredStockContractDetail> getDetailList() {
         return detailList;
     }
-    public void setDetailList(List<ProcurementContractDetail> detailList) {
+    public void setDetailList(List<ProcuredStockContractDetail> detailList) {
         this.detailList = detailList;
     }
     public List<ProcuredStockSupplier> getSupplierList() {
@@ -107,7 +107,7 @@ public class ProcurementContractManagedBean implements Serializable {
         stockList = supplierManager.displayProcuredStock();
         mfList = supplierManager.displayManufacturingFacility();
         
-        detailList = supplier.getProcurementContract().getProcurementContractDetails();
+        detailList = supplier.getProcuredStockContract().getProcuredStockContractDetails();
         System.out.println("Supplier " + supplier.getName() + " has " + detailList.size() + " items");
     }
     
@@ -156,7 +156,7 @@ public class ProcurementContractManagedBean implements Serializable {
     }
     public String editProcurementContractDetail(ActionEvent event) throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()");
-        pcd = (ProcurementContractDetail) event.getComponent().getAttributes().get("toEdit");
+        pcd = (ProcuredStockContractDetail) event.getComponent().getAttributes().get("toEdit");
         String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays());  
         if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",

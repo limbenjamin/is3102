@@ -12,7 +12,7 @@ import IslandFurniture.Entities.Material;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Enums.ProdOrderStatus;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.ProductionOrder;
@@ -465,8 +465,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     @Override
     public int getLotSize(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getLotSize();
             }
@@ -478,8 +478,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     @Override
     public ProcuredStockSupplier getSupplierSize(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getProcurementContract().getSupplier();
             }
@@ -773,8 +773,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     @Override
     public int getLeadTime(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getLeadTimeInDays();
             }

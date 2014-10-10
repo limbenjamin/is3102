@@ -3,16 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -32,6 +29,7 @@ import javax.persistence.NamedQuery;
             query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice AND a.name = :name")
 })
 public class Ingredient implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,12 +37,10 @@ public class Ingredient implements Serializable {
     private String name;
     @ManyToOne
     private CountryOffice countryOffice;
-    @ManyToMany(mappedBy="ingredients")
-    private List<ProcuredStockSupplier> suppliers; 
-    
+
     public Ingredient() {
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -67,14 +63,6 @@ public class Ingredient implements Serializable {
 
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
-    }
-    
-    public List<ProcuredStockSupplier> getSuppliers() {
-        return suppliers;
-    }
-
-    public void setSuppliers(List<ProcuredStockSupplier> suppliers) {
-        this.suppliers = suppliers;
     }
 
     @Override
@@ -101,5 +89,5 @@ public class Ingredient implements Serializable {
     public String toString() {
         return "Ingredient[ id=" + id + " ]";
     }
-    
+
 }

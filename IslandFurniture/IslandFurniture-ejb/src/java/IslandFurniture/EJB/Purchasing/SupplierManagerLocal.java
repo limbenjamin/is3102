@@ -9,7 +9,7 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.ProcuredStockSupplier;
@@ -29,7 +29,7 @@ public interface SupplierManagerLocal {
 
     public String deleteSupplier(Long id);
 
-    public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID);
+    public List<ProcuredStockContractDetail> displayProcurementContractDetails(String supplierID);
 
     public List<ProcuredStock> displayProcuredStock();
 

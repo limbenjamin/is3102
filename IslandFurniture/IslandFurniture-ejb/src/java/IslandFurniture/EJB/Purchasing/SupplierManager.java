@@ -12,8 +12,8 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContract;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContract;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
@@ -60,8 +60,8 @@ public class SupplierManager implements SupplierManagerLocal {
     public String addSupplier(String supplierName, String countryName, String phoneNo, String email) {
         Country country;
         ProcuredStockSupplier supplier;
-        ProcurementContract pc;
-        List<ProcurementContractDetail> pcdList;
+        ProcuredStockContract pc;
+        List<ProcuredStockContractDetail> pcdList;
         try {
             System.out.println("SupplierManager.addSupplier()");
             country = findCountryByName(em, countryName);
@@ -72,15 +72,15 @@ public class SupplierManager implements SupplierManagerLocal {
             }
              
             supplier = new ProcuredStockSupplier();
-            pc = new ProcurementContract();
-            pcdList = new ArrayList<ProcurementContractDetail>();
+            pc = new ProcuredStockContract();
+            pcdList = new ArrayList<ProcuredStockContractDetail>();
             
             pc.setSupplier(supplier);
-            pc.setProcurementContractDetails(pcdList);
+            pc.setProcuredStockContractDetails(pcdList);
             
             supplier.setName(supplierName);
             supplier.setCountry(country);
-            supplier.setProcurementContract(pc);
+            supplier.setProcuredStockContract(pc);
             supplier.setEmail(email);
             supplier.setPhoneNumber(phoneNo);
             
@@ -131,10 +131,10 @@ public class SupplierManager implements SupplierManagerLocal {
             }
             else { 
                 supplier = em.find(ProcuredStockSupplier.class, id);
-                for(int i=0; i<supplier.getProcurementContract().getProcurementContractDetails().size(); i++) 
-                    em.remove(supplier.getProcurementContract().getProcurementContractDetails().get(i));
+                for(int i=0; i<supplier.getProcuredStockContract().getProcuredStockContractDetails().size(); i++) 
+                    em.remove(supplier.getProcuredStockContract().getProcuredStockContractDetails().get(i));
                 System.out.println("Removed PCD"); 
-                em.remove(supplier.getProcurementContract());
+                em.remove(supplier.getProcuredStockContract());
                 System.out.println("Removed PC");
                 em.remove(supplier);
                 System.out.println("Removed supplier");
@@ -146,14 +146,14 @@ public class SupplierManager implements SupplierManagerLocal {
             return "Unexpected error occured";
         }
     }
-    public List<ProcurementContractDetail> displayProcurementContractDetails(String supplierID) {
+    public List<ProcuredStockContractDetail> displayProcurementContractDetails(String supplierID) {
         ProcuredStockSupplier supplier;
-        List<ProcurementContractDetail> detailList;
+        List<ProcuredStockContractDetail> detailList;
         try {
             System.out.println("SupplierManager.displayProcurementContractDetails()");
             supplier = em.find(ProcuredStockSupplier.class, Long.parseLong(supplierID));
             System.out.println(supplier.getName());
-            detailList = supplier.getProcurementContract().getProcurementContractDetails();
+            detailList = supplier.getProcuredStockContract().getProcuredStockContractDetails();
             return detailList;
         } catch(Exception ex) {
             System.err.println("Something went wrong");
@@ -183,14 +183,14 @@ public class SupplierManager implements SupplierManagerLocal {
         }
     }
     public String deleteProcurementContractDetail(Long id, Long supplierID) {
-        ProcurementContractDetail pcd;
+        ProcuredStockContractDetail pcd;
         ProcuredStockSupplier supplier;
         try {
             System.out.println("SupplierManager.deleteProcurementContractDetails()");
-            pcd = em.find(ProcurementContractDetail.class, id);
+            pcd = em.find(ProcuredStockContractDetail.class, id);
             supplier = em.find(ProcuredStockSupplier.class, supplierID);
             System.out.println("Don't forget to check for constraints here. Gonna just delete for now");
-            supplier.getProcurementContract().getProcurementContractDetails().remove(pcd);
+            supplier.getProcuredStockContract().getProcuredStockContractDetails().remove(pcd);
             em.remove(pcd);
             em.flush();
             return null;
@@ -203,9 +203,9 @@ public class SupplierManager implements SupplierManagerLocal {
         ProcuredStockSupplier supplier;
         ManufacturingFacility mf;
         ProcuredStock stock;
-        ProcurementContract pc;
-        List<ProcurementContractDetail> pcdList;
-        ProcurementContractDetail pcd;
+        ProcuredStockContract pc;
+        List<ProcuredStockContractDetail> pcdList;
+        ProcuredStockContractDetail pcd;
         try {
             System.out.println("SupplierManager.addProcurementContractDetails()");            
             mf = em.find(ManufacturingFacility.class, mfID);
@@ -216,27 +216,27 @@ public class SupplierManager implements SupplierManagerLocal {
             pcd = findPCDByStockMFAndSupplier(em, stock, mf, supplier); 
             
             if(pcd != null) {
-                System.out.println("ProcurementContractDetail already exist");
-                return "Procurement Contract Detail already exist";
+                System.out.println("ProcuredStockContractDetail already exist");
+                return "Procured Stock Contract Detail already exist";
             }
             else {            
-                pc = supplier.getProcurementContract();
+                pc = supplier.getProcuredStockContract();
                 if(pc == null) {
-                    pc = new ProcurementContract();
-                    pcdList = new ArrayList<ProcurementContractDetail>();
-                    pc.setProcurementContractDetails(pcdList);
+                    pc = new ProcuredStockContract();
+                    pcdList = new ArrayList();
+                    pc.setProcuredStockContractDetails(pcdList);
                     pc.setSupplier(supplier);
-                    supplier.setProcurementContract(pc);
+                    supplier.setProcuredStockContract(pc);
                 }
 
-                pcd = new ProcurementContractDetail();
+                pcd = new ProcuredStockContractDetail();
                 pcd.setProcuredStock(stock);
                 pcd.setSupplierFor(mf);
                 pcd.setProcurementContract(pc);
                 pcd.setLeadTimeInDays(leadTime);
                 pcd.setLotSize(size);
 
-                pc.getProcurementContractDetails().add(pcd);
+                pc.getProcuredStockContractDetails().add(pcd);
                 return null;
             }
         } catch(Exception ex) {
@@ -246,10 +246,10 @@ public class SupplierManager implements SupplierManagerLocal {
         }
     }
     public String editProcurementContractDetail(Long id, Integer size, Integer leadTime) {
-        ProcurementContractDetail pcd;
+        ProcuredStockContractDetail pcd;
         try {
             System.out.println("SupplierManager.editProcurementContractDetails()");
-            pcd = em.find(ProcurementContractDetail.class, id);
+            pcd = em.find(ProcuredStockContractDetail.class, id);
             pcd.setLeadTimeInDays(leadTime);
             pcd.setLotSize(size);
             em.persist(pcd);
@@ -381,7 +381,7 @@ public class SupplierManager implements SupplierManagerLocal {
         try {
             stock = em.find(Stock.class, stockID);
             mf = em.find(ManufacturingFacility.class, mfID);
-            System.out.println("Checking for existence of ProcurementContractDetail for " + stock.getName() + " in " + mf.getName());
+            System.out.println("Checking for existence of ProcuredStockContractDetail for " + stock.getName() + " in " + mf.getName());
             if(stock instanceof RetailItem) {
                 if(checkForPCD((ProcuredStock)stock, mf)) {
                     System.out.println(mf.getName() + " carries " + stock.getName());
@@ -412,7 +412,7 @@ public class SupplierManager implements SupplierManagerLocal {
         }
     }
     public boolean checkForPCD(ProcuredStock stock, ManufacturingFacility mf) {
-        List<ProcurementContractDetail> pcdList;
+        List<ProcuredStockContractDetail> pcdList;
         try {
             pcdList = findPCDByStockAndMF(em, stock, mf);
             if(pcdList.size() < 1) {
