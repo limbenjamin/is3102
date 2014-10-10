@@ -95,19 +95,19 @@
                                         <th>View</th>
                                     </tr>
                                     <h:form id="viewPOconfirmed" class="form-horizontal">
-                                        <ui:repeat value="#{purchaseOrderManagedBean.confirmedOrderList}" var="CO">
+                                        <ui:repeat value="#{purchaseOrderManagedBean.confirmedOrderList}" var="PO">
                                             <tr>
-                                                <td>#{CO.id}</td>
+                                                <td>#{PO.id}</td>
                                                 <td>
-                                                    <h:outputText value="#{CO.orderDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{CO.manufacturingFacility.timeZoneID}"  />
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
-                                                <td>#{CO.status}</td>
-                                                <td>#{CO.supplier.name}</td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
                                                 <td>
-                                                    <h:commandButton action="purchaseorderconfirmed.xhtml" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:attribute name="COid" value="#{CO.id}" />
+                                                    <h:commandButton action="purchaseorderconfirmed.xhtml" actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
                                                     <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
                                                 </td>
@@ -125,7 +125,35 @@
                                 </div>
                                 
                                 <div class="list-group-item">
-
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Supplier</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form id="viewPOdelivered" class="form-horizontal">
+                                        <ui:repeat value="#{purchaseOrderManagedBean.deliveredOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="purchaseorderconfirmed.xhtml" actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
                                 </div>
                             </section>
                         </div>   
@@ -136,7 +164,35 @@
                                 </div>
                                 
                                 <div class="list-group-item">
-
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Supplier</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form id="viewPOpaid" class="form-horizontal">
+                                        <ui:repeat value="#{purchaseOrderManagedBean.paidOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="purchaseorderconfirmed.xhtml" actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
                                 </div>
                             </section>
                         </div>                            

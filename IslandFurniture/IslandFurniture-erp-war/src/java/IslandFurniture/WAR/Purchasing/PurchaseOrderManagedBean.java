@@ -112,6 +112,7 @@ public class PurchaseOrderManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));
     }
+    
 
     public Supplier getSupplier() {
         return supplier;
