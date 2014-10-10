@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <!--login-->
+                    <div class="col-sm-5">
+                        <div class="login-form">
+                            <h3>Login to your account</h3>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Email: </label>
+                                    <div class="col-xs-9">
+                                        <input type="email" class="form-control" placeholder="email address"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Password: </label>
+                                    <div class="col-xs-9">
+                                        <input type="password" class="form-control" placeholder="password"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-success btn-round pull-right">Login</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--sign up-->
+                    <div class="col-sm-5 col-sm-offset-2">
+                        <div class="login-form">
+                            <h3>New User?</h3>
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Name: </label>
+                                    <div class="col-xs-9">
+                                        <input type="text" class="form-control" placeholder="Your Name"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Email: </label>
+                                    <div class="col-xs-9">
+                                        <input type="email" class="form-control" placeholder="email address"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Password: </label>
+                                    <div class="col-xs-9">
+                                        <input type="password" class="form-control" placeholder="password"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-3 control-label">Confirm Password: </label>
+                                    <div class="col-xs-9">
+                                        <input type="password" class="form-control" placeholder="password"></input>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-success btn-round pull-right">Sign up!</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ui:define>
+</ui:composition>
