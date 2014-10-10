@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -15,8 +17,30 @@ import javax.persistence.Entity;
  */
 @Entity
 public class IngredientSupplier extends Supplier implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
+    @OneToOne(mappedBy = "ingredSupplier")
+    private IngredientContract ingredContract;
+
+    @OneToMany(mappedBy = "ingredSupplier")
+    private List<IngredientPurchaseOrder> ingredPurchaseOrders;
+
+    public IngredientContract getIngredContract() {
+        return ingredContract;
+    }
+
+    public void setIngredContract(IngredientContract ingredContract) {
+        this.ingredContract = ingredContract;
+    }
+
+    public List<IngredientPurchaseOrder> getIngredPurchaseOrders() {
+        return ingredPurchaseOrders;
+    }
+
+    public void setIngredPurchaseOrders(List<IngredientPurchaseOrder> ingredPurchaseOrders) {
+        this.ingredPurchaseOrders = ingredPurchaseOrders;
+    }
 
     @Override
     public int hashCode() {
@@ -42,5 +66,5 @@ public class IngredientSupplier extends Supplier implements Serializable {
     public String toString() {
         return "IngredientSupplier[ id=" + id + " ]";
     }
-    
+
 }

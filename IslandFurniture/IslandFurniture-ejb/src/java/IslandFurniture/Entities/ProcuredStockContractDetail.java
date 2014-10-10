@@ -49,6 +49,10 @@ public class ProcuredStockContractDetail implements Serializable {
     @OneToOne
     private ManufacturingFacility supplierFor;
 
+    public ProcuredStockContractDetail() {
+        
+    }
+    
     public Integer getLeadTimeInDays() {
         return leadTimeInDays;
     }
@@ -65,9 +69,6 @@ public class ProcuredStockContractDetail implements Serializable {
         this.lotSize = lotSize;
     }
 
-    public ProcuredStockContractDetail() {
-        
-    }
     
     public Long getId() {
         return id;

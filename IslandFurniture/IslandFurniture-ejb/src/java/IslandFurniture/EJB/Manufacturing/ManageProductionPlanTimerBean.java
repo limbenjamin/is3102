@@ -6,7 +6,7 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
@@ -151,7 +151,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         q.setParameter("y", cdate.getYear());
         q.setParameter("w", cdate.getWeek());
 
-        PurchaseOrder po = null;
+        ProcuredStockPurchaseOrder po = null;
         ProcuredStockSupplier csupplier = null;
         Map<ProcuredStockSupplier, List<WeeklyMRPRecord>> data = new HashMap<ProcuredStockSupplier, List<WeeklyMRPRecord>>();
 
@@ -174,7 +174,7 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
             mf.setName("NULL");
             for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) data.get(s)) {
                 if (!wmrp.getManufacturingFacility().getName().equals(mf.getName())) {
-                    po = new PurchaseOrder();
+                    po = new ProcuredStockPurchaseOrder();
                     po.setOrderDate(cdate.getCalendar());
                     po.setStatus(PurchaseOrderStatus.PLANNED);
                     po.setSupplier(s);

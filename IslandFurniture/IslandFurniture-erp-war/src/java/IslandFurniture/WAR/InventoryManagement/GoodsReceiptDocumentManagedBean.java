@@ -5,8 +5,8 @@ import IslandFurniture.Entities.GoodsReceiptDocument;
 import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorageArea;
@@ -70,14 +70,14 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private List<Stock> stockList;
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
-    private List<PurchaseOrder> purchaseOrderList;
-    private List<PurchaseOrderDetail> purchaseOrderDetailList;
+    private List<ProcuredStockPurchaseOrder> purchaseOrderList;
+    private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
 
     private GoodsReceiptDocument goodsReceiptDocument;
     private Staff staff;
     private Plant plant;
     private StorageBin storageBin;
-    private PurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrder purchaseOrder;
 
     @EJB
     public ManageGoodsReceiptLocal receiptBean;
@@ -157,7 +157,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
         purchaseOrder = receiptBean.getPurchaseOrder(purchaseOrderId);
 
-        for (PurchaseOrderDetail p : receiptBean.viewPurchaseOrderDetail(purchaseOrder)) {
+        for (ProcuredStockPurchaseOrderDetail p : receiptBean.viewPurchaseOrderDetail(purchaseOrder)) {
             receiptBean.createGoodsReceiptDocumentDetail(goodsReceiptDocument.getId(), p.getProcuredStock().getId(), p.getQuantity());
         }
 
@@ -434,19 +434,19 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.storageAreaList = storageAreaList;
     }
 
-    public List<PurchaseOrder> getPurchaseOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
     }
 
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+    public void setPurchaseOrderList(List<ProcuredStockPurchaseOrder> purchaseOrderList) {
         this.purchaseOrderList = purchaseOrderList;
     }
 
-    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+    public List<ProcuredStockPurchaseOrderDetail> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
-    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+    public void setPurchaseOrderDetailList(List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
     }
 
@@ -482,11 +482,11 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.storageBin = storageBin;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 

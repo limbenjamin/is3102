@@ -11,8 +11,8 @@ import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.GoodsReceiptDocument;
 import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.Stock;
 import java.util.Calendar;
 import java.util.List;
@@ -60,13 +60,13 @@ public interface ManageGoodsReceiptLocal {
     GoodsReceiptDocumentDetail getGoodsReceiptDocumentDetail(Long id);
 
     //  Function: To get the Purchase Order entity from Id
-    PurchaseOrder getPurchaseOrder(Long id);
+    ProcuredStockPurchaseOrder getPurchaseOrder(Long id);
 
     //  Function: To get the Stock entity from Id
     Stock getStock(Long id);
 
     //  @Need to check -- Function: To set the Goods Receipt Document to the Purchase Order
-    void setGoodsReceiptDocumentToThePurchaseOrder(Long goodsReceiptDocumentId, PurchaseOrder po, Calendar date);
+    void setGoodsReceiptDocumentToThePurchaseOrder(Long goodsReceiptDocumentId, ProcuredStockPurchaseOrder po, Calendar date);
 
     //  Function: To edit Goods Issued Document's Shipment Status to Delivered
     void updateIncomingShipmentStatusToDelivered(Long id);
@@ -90,9 +90,9 @@ public interface ManageGoodsReceiptLocal {
     List<GoodsIssuedDocumentDetail> viewInboundShipmentByDetail(Long id);
 
     //  Function: To list of Purchase Orders of the Plant with status Confirmed, to be used when populating from POs at Goods Receipt Document
-    List<PurchaseOrder> viewPurchaseOrder(Plant plant);
+    List<ProcuredStockPurchaseOrder> viewPurchaseOrder(Plant plant);
 
     //  Function: To return list the Purchase Order Details of a Purchase Order which will be used to create Goods Receipt Document Details
-    List<PurchaseOrderDetail> viewPurchaseOrderDetail(PurchaseOrder po);
+    List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetail(ProcuredStockPurchaseOrder po);
     
 }

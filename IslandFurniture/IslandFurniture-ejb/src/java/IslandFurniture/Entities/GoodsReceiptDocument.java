@@ -39,7 +39,7 @@ public class GoodsReceiptDocument implements Serializable {
     @ManyToOne
     private Plant plant;
     @OneToOne(mappedBy = "goodsReceiptDocument")
-    private PurchaseOrder receiveFrom;
+    private ProcuredStockPurchaseOrder receiveFrom;
     @OneToMany(mappedBy = "goodsReceiptDocument")
     private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetails;
     private Boolean confirm;
@@ -84,11 +84,11 @@ public class GoodsReceiptDocument implements Serializable {
         this.plant = plant;
     }
 
-    public PurchaseOrder getReceiveFrom() {
+    public ProcuredStockPurchaseOrder getReceiveFrom() {
         return receiveFrom;
     }
 
-    public void setReceiveFrom(PurchaseOrder receiveFrom) {
+    public void setReceiveFrom(ProcuredStockPurchaseOrder receiveFrom) {
         this.receiveFrom = receiveFrom;
     }
 

@@ -8,8 +8,8 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
@@ -24,7 +24,7 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
+    ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
 
@@ -34,21 +34,21 @@ public interface ManagePurchaseOrderLocal {
 
     void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate);
 
-    void updatePurchaseOrderDetail(PurchaseOrderDetail pod);
+    void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod);
 
-    PurchaseOrder getPurchaseOrder(Long id);
+    ProcuredStockPurchaseOrder getPurchaseOrder(Long id);
 
     List<ProcuredStockSupplier> viewContractedSuppliers(ManufacturingFacility mf);
 
-    List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
+    List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
 
     List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf);
 
-    List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant);
+    List<ProcuredStockPurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant);
 
-    List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant);
+    List<ProcuredStockPurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant);
     
-    List<PurchaseOrder> viewDeliveredPurchaseOrders(Plant staffPlant);
+    List<ProcuredStockPurchaseOrder> viewDeliveredPurchaseOrders(Plant staffPlant);
     
-    List<PurchaseOrder> viewPaidPurchaseOrders(Plant staffPlant);
+    List<ProcuredStockPurchaseOrder> viewPaidPurchaseOrders(Plant staffPlant);
 }
