@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author Zee
  */
 public enum PurchaseOrderStatus implements Serializable{
-    PLANNED(0), CONFIRMED(1), DELIVERED(2);
+    PLANNED(0), CONFIRMED(1), DELIVERED(2), PAID(3);
     
     public int value;
     
