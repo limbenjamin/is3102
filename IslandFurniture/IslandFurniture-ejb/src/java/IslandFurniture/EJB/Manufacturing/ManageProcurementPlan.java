@@ -255,6 +255,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                             ExternalTransferOrder eto = new ExternalTransferOrder();
                             eto.setRequestingPlant(co);
                             eto.setFulfillingPlant(mf);
+                            eto.setTransferDate(TimeMethods.convertToPlantTime(mf, cal));
                             ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
                             etod.setQty(qty);
                             etod.setStock(mssr.getStock());
