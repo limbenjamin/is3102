@@ -15,14 +15,14 @@ import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Enums.ProdOrderStatus;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.ProductionOrder;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Enums.TransferOrderStatus;
@@ -442,6 +442,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         po.setProdOrderDate(ca);
         po.setMf(MF);
         wpp.setProductionOrder(po);
+         persist(po);
 
         HashMap<Plant, Long> orders = QueryMethods.traceWPPToPlant(em, wpp);
 
@@ -468,8 +469,6 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
             persist(etod);
         }
 
-        persist(po);
-        em.merge(wpp);
         System.out.println("commitWPP(): " + wppID);
 
     }
@@ -519,8 +518,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     @Override
     public int getLotSize(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getLotSize();
             }
@@ -531,9 +530,9 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
     }
 
     @Override
-    public Supplier getSupplierSize(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+    public ProcuredStockSupplier getSupplierSize(Material m) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getProcurementContract().getSupplier();
             }
@@ -827,8 +826,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
     @Override
     public int getLeadTime(Material m) {
-        List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
-        for (ProcurementContractDetail pc : pcs) {
+        List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
+        for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
                 return pc.getLeadTimeInDays();
             }

@@ -21,7 +21,7 @@ import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBean;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.LocalBean;
+import javax.ejb.Remote;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
@@ -36,98 +36,97 @@ import javax.persistence.Query;
  */
 @Startup
 @Singleton
-@LocalBean
 public class InitialiseServerBean implements InitialiseServerBeanLocal {
-
-    @EJB
-    ManageOrganizationalHierarchyBean mohb;
-
-    @EJB
-    private static LoadStorageDataBeanRemote loadStorageDataBean;
-
-    @EJB
-    private static LoadSupplierBeanRemote loadSupplierBean;
-
-    @EJB
-    private static LoadStocksBeanRemote loadStocksBean;
-    @EJB
-    private static LoadSalesForecastBeanRemote loadSalesForecastBean;
-
-    @EJB
-    private static LoadTransactionBeanRemote loadTransactionBean;
-
-    @EJB
-    private static LoadOrgEntitiesBeanRemote loadOrgEntitiesBean;
-
-    @EJB
-    private static LoadStaffDataBeanRemote loadStaffDataBean;
-
-    @EJB
-    private static MapStaffDataBeanRemote mapStaffDataBean;
-
-    @EJB
-    private static LoadJamesTestDataRemote loadJamesTestData;
-
-    @EJB
-    private static LoadPrivilegeBeanRemote loadPrivilegeBean;
-
-    @EJB
-    private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
+//
+//    @EJB
+//    private static LoadStorageDataBeanRemote loadStorageDataBean;
+//
+//    @EJB
+//    private static LoadSupplierBeanRemote loadSupplierBean;
+//
+//    @EJB
+//    private static LoadStocksBeanRemote loadStocksBean;
+//    @EJB
+//    private static LoadSalesForecastBeanRemote loadSalesForecastBean;
+//
+//    @EJB
+//    private static LoadTransactionBeanRemote loadTransactionBean;
+//
+//    @EJB
+//    private static LoadOrgEntitiesBeanRemote loadOrgEntitiesBean;
+//
+//    @EJB
+//    private static LoadStaffDataBeanRemote loadStaffDataBean;
+//
+//    @EJB
+//    private static MapStaffDataBeanRemote mapStaffDataBean;
+//
+//    @EJB
+//    private static LoadJamesTestDataRemote loadJamesTestData;
+//
+//    @EJB
+//    private static LoadPrivilegeBeanRemote loadPrivilegeBean;
+//
+//    @EJB
+//    private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
 
     Country country;
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
     private boolean updateMssrStarted;
 
+//    public void loaddata() {
+//        System.out.println("initialiseServer(): Server Started");
+//        Query q = em.createQuery("SELECT c from Country");
+//        if (q.getResultList().size() == 0) {
+//            System.out.println("initialiseServer(): DataLoading Started");
+//            try {
+//                loadOrgEntitiesBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadStocksBean.loadSampleData(0);
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadSupplierBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadStorageDataBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadTransactionBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadStaffDataBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                mapStaffDataBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadPrivilegeBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                mapPrivilegeDataBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//            try {
+//                loadSalesForecastBean.loadSampleData();
+//            } catch (Exception ex) {
+//            }
+//
+//        }
+//    }
+
     @PostConstruct
     public void initialiseServer() {
-        System.out.println("initialiseServer(): Server Started");
-        Query q = em.createQuery("SELECT c from Country");
-        if (q.getResultList().size() == 0) {
-            System.out.println("initialiseServer(): DataLoading Started");
-            try {
-                loadOrgEntitiesBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadStocksBean.loadSampleData(0);
-            } catch (Exception ex) {
-            }
-            try {
-                loadSupplierBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadStorageDataBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadTransactionBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadStaffDataBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                mapStaffDataBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadPrivilegeBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                mapPrivilegeDataBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-            try {
-                loadSalesForecastBean.loadSampleData();
-            } catch (Exception ex) {
-            }
-
-        }
-
+//        loaddata();
         this.updateMssrStarted = false;
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
