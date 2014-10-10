@@ -9,11 +9,11 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
@@ -59,12 +59,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     private Calendar orderDate;
     private PurchaseOrderStatus status;
-    private PurchaseOrder purchaseOrder;
-    private List<PurchaseOrder> purchaseOrderList;
-    private PurchaseOrderDetail purchaseOrderDetail;
-    private List<PurchaseOrderDetail> purchaseOrderDetailList;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private List<ProcuredStockPurchaseOrder> purchaseOrderList;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
+    private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
     private List<Plant> plantList;
@@ -142,7 +142,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     
 
     public String editStock(ActionEvent event) throws IOException {
-        PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
+        ProcuredStockPurchaseOrderDetail pod = (ProcuredStockPurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
 
         mpol.updatePurchaseOrderDetail(pod);
@@ -164,14 +164,14 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         return "purchaseorder2";
     }
 
-    public void sendEmail(Supplier recipient) {
+    public void sendEmail(ProcuredStockSupplier recipient) {
         String title = "[Confirmed Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
                 + mf.getName();
         String orderContent = mf.getName() + " Manufacturing Facility would like to order the following: " + "\r\n ";
 
-        Iterator<PurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
+        Iterator<ProcuredStockPurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
         while (iterator.hasNext()) {
-            PurchaseOrderDetail current = iterator.next();
+            ProcuredStockPurchaseOrderDetail current = iterator.next();
             orderContent = orderContent + current.getProcuredStock().getName();
             orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
         }
@@ -272,19 +272,19 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.status = status;
     }
 
-    public List<PurchaseOrder> getPurchaseOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
     }
 
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+    public void setPurchaseOrderList(List<ProcuredStockPurchaseOrder> purchaseOrderList) {
         this.purchaseOrderList = purchaseOrderList;
     }
 
-    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+    public List<ProcuredStockPurchaseOrderDetail> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
-    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+    public void setPurchaseOrderDetailList(List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
     }
 
@@ -304,11 +304,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.plantList = plantList;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 
@@ -328,11 +328,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.plant = plant;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 
@@ -344,11 +344,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.mpol = mpol;
     }
 
-    public PurchaseOrderDetail getPurchaseOrderDetail() {
+    public ProcuredStockPurchaseOrderDetail getPurchaseOrderDetail() {
         return purchaseOrderDetail;
     }
 
-    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+    public void setPurchaseOrderDetail(ProcuredStockPurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 

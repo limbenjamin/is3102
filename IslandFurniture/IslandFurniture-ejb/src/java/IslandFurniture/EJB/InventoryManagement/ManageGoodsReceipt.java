@@ -5,12 +5,10 @@ import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.GoodsReceiptDocument;
 import IslandFurniture.Entities.GoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Stock;
-import IslandFurniture.Entities.StorageArea;
-import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -32,7 +30,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     private GoodsIssuedDocument goodsIssuedDocument;
     private GoodsReceiptDocumentDetail goodsReceiptDocumentDetail;
     private Stock stock;
-    private PurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrder purchaseOrder;
 
 //  Function: To get the Goods Recipt Document entity from Id
     @Override
@@ -57,8 +55,8 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
 //  Function: To get the Purchase Order entity from Id
     @Override
-    public PurchaseOrder getPurchaseOrder(Long id) {
-        purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, id);
+    public ProcuredStockPurchaseOrder getPurchaseOrder(Long id) {
+        purchaseOrder = (ProcuredStockPurchaseOrder) em.find(ProcuredStockPurchaseOrder.class, id);
         return purchaseOrder;
     }
 
@@ -168,8 +166,8 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     
 //  Function: To list of Purchase Orders of the Plant with status Confirmed, to be used when populating from POs at Goods Receipt Document 
     @Override
-    public List<PurchaseOrder> viewPurchaseOrder(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.shipsTo.id=:plantId AND s.status=:status");
+    public List<ProcuredStockPurchaseOrder> viewPurchaseOrder(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ProcuredStockPurchaseOrder s WHERE s.shipsTo.id=:plantId AND s.status=:status");
         q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
@@ -177,8 +175,8 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
 //  Function: To return list the Purchase Order Details of a Purchase Order which will be used to create Goods Receipt Document Details    
     @Override
-    public List<PurchaseOrderDetail> viewPurchaseOrderDetail(PurchaseOrder po) {
-        Query q = em.createQuery("SELECT s FROM PurchaseOrderDetail s WHERE s.purchaseOrder.id=:id");
+    public List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetail(ProcuredStockPurchaseOrder po) {
+        Query q = em.createQuery("SELECT s FROM ProcuredStockPurchaseOrderDetail s WHERE s.purchaseOrder.id=:id");
         q.setParameter("id", po.getId());
         return q.getResultList();
     }
@@ -256,7 +254,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     
 //  @Need to check --  Function: To set the Goods Receipt Document to the Purchase Order    
     @Override
-    public void setGoodsReceiptDocumentToThePurchaseOrder(Long goodsReceiptDocumentId, PurchaseOrder po, Calendar date) {
+    public void setGoodsReceiptDocumentToThePurchaseOrder(Long goodsReceiptDocumentId, ProcuredStockPurchaseOrder po, Calendar date) {
         goodsReceiptDocument = getGoodsReceiptDocument(goodsReceiptDocumentId);
         po.setGoodsReceiptDocument(goodsReceiptDocument);
         em.merge(po);

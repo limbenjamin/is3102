@@ -9,8 +9,8 @@ package IslandFurniture.WAR.Purchasing;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Supplier;
@@ -59,9 +59,9 @@ public class PurchaseOrderDeliveredManagedBean {
 
     private Calendar orderDate;
     private PurchaseOrderStatus status;
-    private PurchaseOrder purchaseOrder;
-    private PurchaseOrderDetail purchaseOrderDetail;
-    private List<PurchaseOrderDetail> purchaseOrderDetailList;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
+    private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
     private Supplier supplier;
     private Plant plant;
@@ -126,9 +126,9 @@ public class PurchaseOrderDeliveredManagedBean {
                 + mf.getName();
         String orderContent = mf.getName() + " Manufacturing Facility has billed the required payment for the following: " + "\r\n ";
 
-        Iterator<PurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
+        Iterator<ProcuredStockPurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
         while (iterator.hasNext()) {
-            PurchaseOrderDetail current = iterator.next();
+            ProcuredStockPurchaseOrderDetail current = iterator.next();
             orderContent = orderContent + current.getProcuredStock().getName();
             orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
         }
@@ -237,19 +237,19 @@ public class PurchaseOrderDeliveredManagedBean {
         this.status = status;
     }
 
-    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+    public List<ProcuredStockPurchaseOrderDetail> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
-    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+    public void setPurchaseOrderDetailList(List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 
@@ -285,11 +285,11 @@ public class PurchaseOrderDeliveredManagedBean {
         this.mpol = mpol;
     }
 
-    public PurchaseOrderDetail getPurchaseOrderDetail() {
+    public ProcuredStockPurchaseOrderDetail getPurchaseOrderDetail() {
         return purchaseOrderDetail;
     }
 
-    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+    public void setPurchaseOrderDetail(ProcuredStockPurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 

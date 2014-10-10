@@ -6,27 +6,28 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.StaticClasses.TimeMethods;
-import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContractDetail;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
-import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -67,8 +68,8 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohb;
-    private PurchaseOrder purchaseOrder;
-    private PurchaseOrderDetail purchaseOrderDetail;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
     
     @Override
     public void createMonthlyProcumentPlan(ManufacturingFacility mf){
@@ -179,25 +180,25 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         query.setParameter("month", month);
         query.setParameter("year", year);
         mppList = query.getResultList();
-        List<Supplier> uniqueSupplier = new ArrayList(); 
-        List<ProcurementContractDetail> pcdList = new ArrayList();
+        List<ProcuredStockSupplier> uniqueSupplier = new ArrayList(); 
+        List<ProcuredStockContractDetail> pcdList = new ArrayList();
         Iterator<MonthlyProcurementPlan> iterator = mppList.iterator();
         while(iterator.hasNext()){
             mpp = iterator.next();
-            query = em.createQuery("SELECT s FROM ProcurementContractDetail s WHERE s.supplierFor=:mf AND s.procuredStock=:stock");
+            query = em.createQuery("SELECT s FROM ProcuredStockContractDetail s WHERE s.supplierFor=:mf AND s.procuredStock=:stock");
             query.setParameter("mf", mpp.getManufacturingFacility());
             ProcuredStock ps = mpp.getRetailItem();
             Stock s = (Stock) ps;
             query.setParameter("stock", s);
-            ProcurementContractDetail pcd = (ProcurementContractDetail) query.getSingleResult();
+            ProcuredStockContractDetail pcd = (ProcuredStockContractDetail) query.getSingleResult();
             pcdList.add(pcd);
             if (!uniqueSupplier.contains(pcd.getProcurementContract().getSupplier())){
                 uniqueSupplier.add(pcd.getProcurementContract().getSupplier());
             }
         }
-        Iterator<Supplier> iterator2 = uniqueSupplier.iterator();
+        Iterator<ProcuredStockSupplier> iterator2 = uniqueSupplier.iterator();
         while(iterator2.hasNext()){
-            Supplier s = iterator2.next();
+            ProcuredStockSupplier s = iterator2.next();
             Calendar cal = new GregorianCalendar(year,month.value, 1);
             cal.setTimeZone(TimeZone.getTimeZone("UTC"));
             //day = date of first monday in month
@@ -210,16 +211,16 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             int maxDay = Helper.getNumWorkDays(month, year);
             int daysInLastWeek = Helper.getBoundaryWeekDays(month, year);
             for (int j=0;j< maxWeekNumber-1;j+=1){ //Add purchase order for week 1 to max week-1
-                purchaseOrder = new PurchaseOrder();
+                purchaseOrder = new ProcuredStockPurchaseOrder();
                 purchaseOrder.setManufacturingFacility(mf);
                 purchaseOrder.setShipsTo(mf);
                 purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
                 purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
                 purchaseOrder.setSupplier(s);
                 em.persist(purchaseOrder);
-                Iterator<ProcurementContractDetail> iterator3 = pcdList.iterator();
+                Iterator<ProcuredStockContractDetail> iterator3 = pcdList.iterator();
                 while(iterator3.hasNext()){
-                    ProcurementContractDetail pcd = iterator3.next();
+                    ProcuredStockContractDetail pcd = iterator3.next();
                     if(pcd.getProcurementContract().getSupplier() == s){
                         ProcuredStock ps = pcd.getProcuredStock();
                         RetailItem ri = (RetailItem) ps;
@@ -228,29 +229,57 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         purchaseOrder.setMonthlyProcurementPlan(mpp);
                         em.merge(mpp);
                         int qty = mpp.getQty()/maxDay*7;
-                        purchaseOrderDetail = new PurchaseOrderDetail();
+                        purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
                         purchaseOrderDetail.setQuantity(qty);
                         purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                         purchaseOrderDetail.setProcuredStock(ps);
                         em.persist(purchaseOrderDetail);
                         purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
                         em.merge(purchaseOrder);
+                        query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf AND s.stock.id=:stockid");
+                        query.setParameter("mf", mf);
+                        query.setParameter("stockid", ri.getId());
+                        ssList = query.getResultList();
+                        Iterator<StockSupplied> iterator4 = ssList.iterator();
+                        coList = new ArrayList();
+                        while(iterator4.hasNext()){
+                            ss = iterator4.next();
+                            co = ss.getCountryOffice();
+                            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock=:stock AND m.countryOffice=:co AND m.year=:year AND m.month=:month");
+                            query.setParameter("stock", ss.getStock());
+                            query.setParameter("co", co);
+                            query.setParameter("month", month);
+                            query.setParameter("year", year);
+                            mssr = (MonthlyStockSupplyReq) query.getSingleResult();
+                            qty = mssr.getQtyRequested()/maxDay*7;
+                            ExternalTransferOrder eto = new ExternalTransferOrder();
+                            eto.setRequestingPlant(co);
+                            eto.setFulfillingPlant(mf);
+                            eto.setTransferDate(TimeMethods.convertToPlantTime(mf, cal));
+                            ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
+                            etod.setQty(qty);
+                            etod.setStock(mssr.getStock());
+                            eto.getExtTransOrderDetails().add(etod);
+                            etod.setExtTransOrder(eto);
+                            em.persist(eto);
+                            em.persist(etod);
+                        } 
                     }
                 }
                 em.flush();
                 cal.add(Calendar.DATE, 7);
             }
             //last week
-            purchaseOrder = new PurchaseOrder();
+            purchaseOrder = new ProcuredStockPurchaseOrder();
             purchaseOrder.setManufacturingFacility(mf);
             purchaseOrder.setShipsTo(mf);
             purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
             purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
             purchaseOrder.setSupplier(s);
             em.persist(purchaseOrder);
-            Iterator<ProcurementContractDetail> iterator3 = pcdList.iterator();
+            Iterator<ProcuredStockContractDetail> iterator3 = pcdList.iterator();
             while(iterator3.hasNext()){
-                ProcurementContractDetail pcd = iterator3.next();
+                ProcuredStockContractDetail pcd = iterator3.next();
                 if(pcd.getProcurementContract().getSupplier() == s){
                     ProcuredStock ps = pcd.getProcuredStock();
                     RetailItem ri = (RetailItem) ps;
@@ -269,7 +298,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     em.merge(mpp);
                     int qty = mpp.getQty()/maxDay*daysInLastWeek;
                     int qty2 = mpp2.getQty()/maxDay2*(7-daysInLastWeek);
-                    purchaseOrderDetail = new PurchaseOrderDetail();
+                    purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
                     purchaseOrderDetail.setQuantity(qty+qty2);
                     purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                     purchaseOrderDetail.setProcuredStock(ps);
@@ -290,13 +319,13 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     }
     
     @Override
-    public List<PurchaseOrder> viewPurchaseOrder(){
+    public List<ProcuredStockPurchaseOrder> viewPurchaseOrder(){
         Query query = em.createQuery("SELECT p FROM PuchaseOrder p");
         return query.getResultList();
     }
     
     @Override
-    public List<PurchaseOrderDetail> viewPurchaseOrderDetail(){
+    public List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetail(){
         Query query = em.createQuery("SELECT p FROM PuchaseOrderDetail p");
         return query.getResultList();
     }

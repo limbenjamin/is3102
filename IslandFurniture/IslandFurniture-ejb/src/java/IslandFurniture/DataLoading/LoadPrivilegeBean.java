@@ -44,7 +44,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Material","Furniture","Retail Item","Create Forecast","View Notifications",
         "Review Forecast","Manage Production Status","Goods Issued","Goods Receipt",
         "Inventory Report","Inventory Monitoring","Inventory Transfer","Storage Location","Purchase Order",
-        "Production Planner","Supplier","Stock Supply","Procurement Plan","View Audit Log"};
+        "Production Planner","Procured Stock Supplier","Stock Supply","Procurement Plan","View Audit Log"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
@@ -87,15 +87,15 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_stock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_ststock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_stlocation.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Transfer", "/inventorymgt/inventorytransfer.xhtml", "fa-exchange", "Inventory Transfer", "true","18"},
+            { "Inventory Transfer", "/inventorymgt/inventorytransfer.xhtml", "fa-exchange", "Internal Inventory Transfer", "true","18"},
             { "Inventory Transfer", "/inventorymgt/inventorytransfer_movementlocation.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Transfer", "/inventorymgt/inventorytransfer_movementstock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Storage Location", "/inventorymgt/storagelocation.xhtml", "fa-trello", "Storage Location", "true","19"},
             { "Purchase Order", "/purchasing/purchaseorder.xhtml", "fa-shopping-cart", "Purchase Order", "true","20"},
             { "Purchase Order", "/purchasing/purchaseorder2.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Production Planner", "/manufacturing/productionplanning.xhtml", "fa-calendar-o", "Production Planner", "true","21"},
-            { "Supplier", "/purchasing/supplier.xhtml", "fa-user", "Supplier", "true","22"},
-            { "Supplier", "/purchasing/procurementcontract.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Procured Stock Supplier", "/purchasing/supplier.xhtml", "fa-user", "Procured Stock Supplier", "true","22"},
+            { "Procured Stock Supplier", "/purchasing/procurementcontract.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Stock Supply", "/manufacturing/stocksupplier.xhtml", "fa-cubes", "Stock Supply Request", "true","23"},
             { "Procurement Plan", "/manufacturing/procurementplan.xhtml", "fa-cube", "Procurement Plan", "true","24"},
             { "View Audit Log", "/it/viewauditlog.xhtml", "fa-cube", "View Audit Log", "true","25"},

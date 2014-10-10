@@ -11,7 +11,7 @@ import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Enums.FurnitureCategory;
@@ -96,7 +96,7 @@ public class StockManager implements StockManagerLocal {
     public String deleteMaterial(Long materialID) {
         Material material;
         List<BOMDetail> bomList;
-        List<ProcurementContractDetail> pcdList;
+        List<ProcuredStockContractDetail> pcdList;
         try{
             System.out.println("StockManager.deleteMaterial()");
             material = em.find(Material.class, materialID);
@@ -377,7 +377,7 @@ public class StockManager implements StockManagerLocal {
     public String deleteRetailItem(Long itemID) {
         RetailItem item;
         List<StockSupplied> stockList;
-        List<ProcurementContractDetail> pcdList;
+        List<ProcuredStockContractDetail> pcdList;
         try {
             System.out.println("StockManager.deleteRetailItem()");
             item = em.find(RetailItem.class, itemID);

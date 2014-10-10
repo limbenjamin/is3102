@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -10,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 /**
@@ -19,19 +18,19 @@ import javax.persistence.ManyToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Supplier implements Serializable {
-
+public class IngredientContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
-    protected String name;
-    protected String phoneNumber;
-    protected String email;
-
+    private Long id;
+    private Integer leadTimeInDays;
+    private Integer lotSize;
+    
     @ManyToOne
-    protected Country country;
+    private IngredientContract ingredContract;
+    
+    @ManyToOne
+    private Ingredient ingredient;
 
     public Long getId() {
         return id;
@@ -41,36 +40,36 @@ public abstract class Supplier implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getLeadTimeInDays() {
+        return leadTimeInDays;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLeadTimeInDays(Integer leadTimeInDays) {
+        this.leadTimeInDays = leadTimeInDays;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public Integer getLotSize() {
+        return lotSize;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setLotSize(Integer lotSize) {
+        this.lotSize = lotSize;
     }
 
-    public String getEmail() {
-        return email;
+    public IngredientContract getIngredContract() {
+        return ingredContract;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIngredContract(IngredientContract ingredContract) {
+        this.ingredContract = ingredContract;
     }
 
-    public Country getCountry() {
-        return country;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -83,10 +82,10 @@ public abstract class Supplier implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Supplier)) {
+        if (!(object instanceof IngredientContractDetail)) {
             return false;
         }
-        Supplier other = (Supplier) object;
+        IngredientContractDetail other = (IngredientContractDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +94,7 @@ public abstract class Supplier implements Serializable {
 
     @Override
     public String toString() {
-        return "Supplier[ id=" + id + " ]";
+        return "IngredientContractDetail[ id=" + id + " ]";
     }
-
+    
 }

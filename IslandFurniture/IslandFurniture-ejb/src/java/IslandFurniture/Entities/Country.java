@@ -12,13 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -33,7 +30,6 @@ import javax.xml.bind.annotation.XmlTransient;
             name = "getAllCountry",
             query = "SELECT a FROM Country a")
 })
-@XmlRootElement
 public class Country implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -48,8 +44,7 @@ public class Country implements Serializable {
     @OneToMany(mappedBy = "country")
     private List<Plant> plants;
 
-    @ManyToMany(mappedBy = "countries")
-    private List<Currency> currencies;
+    private Currency currency;
 
     public Long getId() {
         return id;
@@ -75,7 +70,6 @@ public class Country implements Serializable {
         this.name = name;
     }
 
-    @XmlTransient
     public List<Plant> getPlants() {
         return plants;
     }
@@ -83,22 +77,20 @@ public class Country implements Serializable {
     public void setPlants(List<Plant> plants) {
         this.plants = plants;
     }
-
-    @XmlTransient
-    public List<Currency> getCurrencies() {
-        return currencies;
-    }
-
-    public void setCurrency(List<Currency> currencies) {
-        this.currencies = currencies;
-    }
-
     public String getPhoneCode() {
         return phoneCode;
     }
 
     public void setPhoneCode(String phoneCode) {
         this.phoneCode = phoneCode;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     @Override

@@ -60,7 +60,7 @@ public class WeeklyMRPRecord implements Serializable {
     private ManufacturingFacility manufacturingFacility;
 
     @OneToOne
-    private PurchaseOrderDetail purchaseOrderDetail;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
 
     public Long getId() {
         return id;
@@ -190,11 +190,11 @@ public class WeeklyMRPRecord implements Serializable {
         this.manufacturingFacility = manufacturingFacility;
     }
 
-    public PurchaseOrderDetail getPurchaseOrderDetail() {
+    public ProcuredStockPurchaseOrderDetail getPurchaseOrderDetail() {
         return purchaseOrderDetail;
     }
 
-    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+    public void setPurchaseOrderDetail(ProcuredStockPurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 

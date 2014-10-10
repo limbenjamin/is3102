@@ -18,17 +18,17 @@ import javax.persistence.ManyToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class PurchaseOrderDetail implements Serializable {
+public class ProcuredStockPurchaseOrderDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    private PurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrder purchaseOrder;
     @ManyToOne
     private ProcuredStock procuredStock;
     private Integer quantity;
-    private double unitPrice;
+    private Double unitPrice;
 
     public Long getId() {
         return id;
@@ -38,11 +38,11 @@ public class PurchaseOrderDetail implements Serializable {
         this.id = id;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 
@@ -61,6 +61,15 @@ public class PurchaseOrderDetail implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public Double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -71,10 +80,10 @@ public class PurchaseOrderDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PurchaseOrderDetail)) {
+        if (!(object instanceof ProcuredStockPurchaseOrderDetail)) {
             return false;
         }
-        PurchaseOrderDetail other = (PurchaseOrderDetail) object;
+        ProcuredStockPurchaseOrderDetail other = (ProcuredStockPurchaseOrderDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -83,21 +92,6 @@ public class PurchaseOrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.PurchaseOrderDetail[ id=" + id + " ]";
+        return "ProcuredStockPurchaseOrderDetail[ id=" + id + " ]";
     }
-
-    /**
-     * @return the unitPrice
-     */
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
-    /**
-     * @param unitPrice the unitPrice to set
-     */
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-    
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -18,15 +17,18 @@ import javax.persistence.ManyToOne;
  * @author James
  */
 @Entity
-public class RestaurantPurchaseOrderDetail implements Serializable {
+public class IngredientPurchaseOrderDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+    private Integer quantity;
+    private Double subtotalPrice;
+
     @ManyToOne
-    private RestaurantPurchaseOrder purchaseOrder;
-    
+    private IngredientPurchaseOrder ingredPurchaseOrder;
+
     @ManyToOne
     private Ingredient ingredient;
 
@@ -38,12 +40,28 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
         this.id = id;
     }
 
-    public RestaurantPurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setPurchaseOrder(RestaurantPurchaseOrder purchaseOrder) {
-        this.purchaseOrder = purchaseOrder;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getSubtotalPrice() {
+        return subtotalPrice;
+    }
+
+    public void setSubtotalPrice(Double subtotalPrice) {
+        this.subtotalPrice = subtotalPrice;
+    }
+
+    public IngredientPurchaseOrder getIngredPurchaseOrder() {
+        return ingredPurchaseOrder;
+    }
+
+    public void setIngredPurchaseOrder(IngredientPurchaseOrder ingredPurchaseOrder) {
+        this.ingredPurchaseOrder = ingredPurchaseOrder;
     }
 
     public Ingredient getIngredient() {
@@ -64,10 +82,10 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantPurchaseOrderDetail)) {
+        if (!(object instanceof IngredientPurchaseOrderDetail)) {
             return false;
         }
-        RestaurantPurchaseOrderDetail other = (RestaurantPurchaseOrderDetail) object;
+        IngredientPurchaseOrderDetail other = (IngredientPurchaseOrderDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -76,7 +94,7 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.PurchaseOrderDetail[ id=" + id + " ]";
+        return "IngredientPurchaseOrderDetail[ id=" + id + " ]";
     }
-    
+
 }

@@ -24,18 +24,18 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "getStockList",
-            query = "SELECT a.procuredStock FROM ProcurementContractDetail a WHERE a.procurementContract.supplier = :supplier AND a.supplierFor = :mf"),
+            query = "SELECT a.procuredStock FROM ProcuredStockContractDetail a WHERE a.procuredStockContract.supplier = :supplier AND a.supplierFor = :mf"),
     @NamedQuery(
             name = "getProcurementContractDetailByStockMFAndSupplier",
-            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf AND a.procurementContract.supplier = :supplier"),
+            query = "SELECT a FROM ProcuredStockContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf AND a.procuredStockContract.supplier = :supplier"),
     @NamedQuery(
             name = "getProcurementContractDetailByStockAndMF",
-            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf"),
+            query = "SELECT a FROM ProcuredStockContractDetail a WHERE a.procuredStock = :stock AND a.supplierFor = :mf"),
     @NamedQuery(
             name = "getProcurementContractDetailByStock",
-            query = "SELECT a FROM ProcurementContractDetail a WHERE a.procuredStock = :stock")
+            query = "SELECT a FROM ProcuredStockContractDetail a WHERE a.procuredStock = :stock")
 })
-public class ProcurementContractDetail implements Serializable {
+public class ProcuredStockContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,12 +43,16 @@ public class ProcurementContractDetail implements Serializable {
     private Integer leadTimeInDays;
     private Integer lotSize;
     @ManyToOne
-    private ProcurementContract procurementContract;
+    private ProcuredStockContract procuredStockContract;
     @ManyToOne
     private ProcuredStock procuredStock;
     @OneToOne
     private ManufacturingFacility supplierFor;
 
+    public ProcuredStockContractDetail() {
+        
+    }
+    
     public Integer getLeadTimeInDays() {
         return leadTimeInDays;
     }
@@ -65,9 +69,6 @@ public class ProcurementContractDetail implements Serializable {
         this.lotSize = lotSize;
     }
 
-    public ProcurementContractDetail() {
-        
-    }
     
     public Long getId() {
         return id;
@@ -77,12 +78,12 @@ public class ProcurementContractDetail implements Serializable {
         this.id = id;
     }
 
-    public ProcurementContract getProcurementContract() {
-        return procurementContract;
+    public ProcuredStockContract getProcurementContract() {
+        return procuredStockContract;
     }
 
-    public void setProcurementContract(ProcurementContract procurementContract) {
-        this.procurementContract = procurementContract;
+    public void setProcurementContract(ProcuredStockContract procuredStockContract) {
+        this.procuredStockContract = procuredStockContract;
     }
 
     public ProcuredStock getProcuredStock() {
@@ -111,10 +112,10 @@ public class ProcurementContractDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProcurementContractDetail)) {
+        if (!(object instanceof ProcuredStockContractDetail)) {
             return false;
         }
-        ProcurementContractDetail other = (ProcurementContractDetail) object;
+        ProcuredStockContractDetail other = (ProcuredStockContractDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -123,7 +124,7 @@ public class ProcurementContractDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.ProcurementContractDetail[ id=" + id + " ]";
+        return "ProcuredStockContractDetail[ id=" + id + " ]";
     }
     
 }

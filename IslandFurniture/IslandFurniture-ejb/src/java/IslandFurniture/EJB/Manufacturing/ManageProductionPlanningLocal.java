@@ -7,7 +7,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.ProductionCapacity;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import java.util.HashMap;
 import javax.ejb.Local;
 
@@ -42,7 +42,7 @@ public interface ManageProductionPlanningLocal {
 
     void commitWPP(Integer wppID) throws Exception;
 
-    Supplier getSupplierSize(Material m);
+    ProcuredStockSupplier getSupplierSize(Material m);
 
     int getLotSize(Material m);
 

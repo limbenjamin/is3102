@@ -29,24 +29,24 @@ import javax.persistence.OneToMany;
 public abstract class ProcuredStock extends Stock implements Serializable {
     protected static final long serialVersionUID = 1L;
     @ManyToMany
-    protected List<Supplier> suppliers;
+    protected List<ProcuredStockSupplier> suppliers;
     @OneToMany(mappedBy="procuredStock")
-    protected List<ProcurementContractDetail> procurementContractDetails;
+    protected List<ProcuredStockContractDetail> procuredStockContractDetails;
 
-    public List<Supplier> getSuppliers() {
+    public List<ProcuredStockSupplier> getSuppliers() {
         return suppliers;
     }
 
-    public void setSuppliers(List<Supplier> suppliers) {
+    public void setSuppliers(List<ProcuredStockSupplier> suppliers) {
         this.suppliers = suppliers;
     }
 
-    public List<ProcurementContractDetail> getProcurementContractDetails() {
-        return procurementContractDetails;
+    public List<ProcuredStockContractDetail> getProcurementContractDetails() {
+        return procuredStockContractDetails;
     }
 
-    public void setProcurementContractDetails(List<ProcurementContractDetail> procurementContractDetails) {
-        this.procurementContractDetails = procurementContractDetails;
+    public void setProcurementContractDetails(List<ProcuredStockContractDetail> procuredStockContractDetails) {
+        this.procuredStockContractDetails = procuredStockContractDetails;
     }
 
     @Override

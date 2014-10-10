@@ -35,7 +35,7 @@ public class MonthlyProcurementPlan implements Serializable {
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;    
     @OneToMany(mappedBy="monthlyProcurementPlan")
-    private List<PurchaseOrder> purchaseOrderList;
+    private List<ProcuredStockPurchaseOrder> purchaseOrderList;
     private Integer qty;
     private Boolean locked;
 
@@ -80,11 +80,11 @@ public class MonthlyProcurementPlan implements Serializable {
         this.locked = locked;
     }
 
-    public List<PurchaseOrder> getPurchaseOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
     }
 
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+    public void setPurchaseOrderList(List<ProcuredStockPurchaseOrder> purchaseOrderList) {
         this.purchaseOrderList = purchaseOrderList;
     }
 

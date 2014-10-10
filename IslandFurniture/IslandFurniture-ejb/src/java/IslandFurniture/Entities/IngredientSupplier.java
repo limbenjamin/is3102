@@ -3,44 +3,43 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class ExternalTransferOrder extends TransferOrder implements Serializable {
+public class IngredientSupplier extends Supplier implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
-    @ManyToOne
-    private Plant fulfillingPlant;
-    
-    @OneToMany(mappedBy = "extTransOrder")
-    private List<ExternalTransferOrderDetail> extTransOrderDetails;
 
+    @OneToOne(mappedBy = "ingredSupplier")
+    private IngredientContract ingredContract;
 
-    public Plant getFulfillingPlant() {
-        return fulfillingPlant;
+    @OneToMany(mappedBy = "ingredSupplier")
+    private List<IngredientPurchaseOrder> ingredPurchaseOrders;
+
+    public IngredientContract getIngredContract() {
+        return ingredContract;
     }
 
-    public void setFulfillingPlant(Plant fulfillingPlant) {
-        this.fulfillingPlant = fulfillingPlant;
+    public void setIngredContract(IngredientContract ingredContract) {
+        this.ingredContract = ingredContract;
     }
 
-    public List<ExternalTransferOrderDetail> getExtTransOrderDetails() {
-        return extTransOrderDetails;
+    public List<IngredientPurchaseOrder> getIngredPurchaseOrders() {
+        return ingredPurchaseOrders;
     }
 
-    public void setExtTransOrderDetails(List<ExternalTransferOrderDetail> extTransOrderDetails) {
-        this.extTransOrderDetails = extTransOrderDetails;
+    public void setIngredPurchaseOrders(List<IngredientPurchaseOrder> ingredPurchaseOrders) {
+        this.ingredPurchaseOrders = ingredPurchaseOrders;
     }
 
     @Override
@@ -53,10 +52,10 @@ public class ExternalTransferOrder extends TransferOrder implements Serializable
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ExternalTransferOrder)) {
+        if (!(object instanceof IngredientSupplier)) {
             return false;
         }
-        ExternalTransferOrder other = (ExternalTransferOrder) object;
+        IngredientSupplier other = (IngredientSupplier) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -65,7 +64,7 @@ public class ExternalTransferOrder extends TransferOrder implements Serializable
 
     @Override
     public String toString() {
-        return "ExternalTransferOrder[ id=" + id + " ]";
+        return "IngredientSupplier[ id=" + id + " ]";
     }
-    
+
 }

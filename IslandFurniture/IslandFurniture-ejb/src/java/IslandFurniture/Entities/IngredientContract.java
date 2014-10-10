@@ -7,34 +7,32 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class RestaurantGoodReceiptDocument implements Serializable {
+public class IngredientContract implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne
-    private Supplier supplier;
+    @OneToOne
+    private IngredientSupplier ingredSupplier;
     
-    @OneToMany(mappedBy="restaurantGoodReceiptDocument")
-    private List<RestaurantGoodsReceiptDocumentDetail> restaurantGoodsReceiptDocumentDetails;
-    
-    @ManyToOne
-    private Ingredient ingredient;
-    
+    @OneToMany(mappedBy="ingredContract", cascade={CascadeType.PERSIST})
+    private List<IngredientContractDetail> ingredContractDetails = new ArrayList();
 
     public Long getId() {
         return id;
@@ -44,28 +42,20 @@ public class RestaurantGoodReceiptDocument implements Serializable {
         this.id = id;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public IngredientSupplier getIngredSupplier() {
+        return ingredSupplier;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setIngredSupplier(IngredientSupplier ingredSupplier) {
+        this.ingredSupplier = ingredSupplier;
     }
 
-    public List<RestaurantGoodsReceiptDocumentDetail> getRestaurantGoodsReceiptDocumentDetails() {
-        return restaurantGoodsReceiptDocumentDetails;
+    public List<IngredientContractDetail> getIngredContractDetails() {
+        return ingredContractDetails;
     }
 
-    public void setRestaurantGoodsReceiptDocumentDetails(List<RestaurantGoodsReceiptDocumentDetail> restaurantGoodsReceiptDocumentDetails) {
-        this.restaurantGoodsReceiptDocumentDetails = restaurantGoodsReceiptDocumentDetails;
-    }
-
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
-
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void setIngredContractDetails(List<IngredientContractDetail> ingredContractDetails) {
+        this.ingredContractDetails = ingredContractDetails;
     }
 
     @Override
@@ -78,10 +68,10 @@ public class RestaurantGoodReceiptDocument implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantGoodReceiptDocument)) {
+        if (!(object instanceof IngredientContract)) {
             return false;
         }
-        RestaurantGoodReceiptDocument other = (RestaurantGoodReceiptDocument) object;
+        IngredientContract other = (IngredientContract) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -90,7 +80,7 @@ public class RestaurantGoodReceiptDocument implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.RestaurantGoodReceiptDocument[ id=" + id + " ]";
+        return "IngredientContract[ id=" + id + " ]";
     }
     
 }

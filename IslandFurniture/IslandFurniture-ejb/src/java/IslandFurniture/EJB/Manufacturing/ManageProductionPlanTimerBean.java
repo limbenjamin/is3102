@@ -6,9 +6,9 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Enums.PurchaseOrderStatus;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.StaticClasses.QueryMethods;
@@ -145,15 +145,15 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         //oh one month has passed
         cdate.addWeek();
 
-        // Supplier pivoting problem
+        // ProcuredStockSupplier pivoting problem
         Query q = em.createQuery("select wmrp from WeeklyMRPRecord wmrp where wmrp.purchaseOrderDetail.purchaseOrder IS NULL and (wmrp.orderYear*1000+wmrp.orderMonth*10+wmrp.orderWeek)<=(:y*1000+:m*10+:w) order by wmrp.manufacturingFacility.name desc");
         q.setParameter("m", cdate.getMonth());
         q.setParameter("y", cdate.getYear());
         q.setParameter("w", cdate.getWeek());
 
-        PurchaseOrder po = null;
-        Supplier csupplier = null;
-        Map<Supplier, List<WeeklyMRPRecord>> data = new HashMap<Supplier, List<WeeklyMRPRecord>>();
+        ProcuredStockPurchaseOrder po = null;
+        ProcuredStockSupplier csupplier = null;
+        Map<ProcuredStockSupplier, List<WeeklyMRPRecord>> data = new HashMap<ProcuredStockSupplier, List<WeeklyMRPRecord>>();
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) q.getResultList()) {
 
@@ -169,12 +169,12 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
 
         ManufacturingFacility mf = new ManufacturingFacility();
 
-        for (Supplier s : data.keySet()) {
+        for (ProcuredStockSupplier s : data.keySet()) {
             mf = new ManufacturingFacility();
             mf.setName("NULL");
             for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) data.get(s)) {
                 if (!wmrp.getManufacturingFacility().getName().equals(mf.getName())) {
-                    po = new PurchaseOrder();
+                    po = new ProcuredStockPurchaseOrder();
                     po.setOrderDate(cdate.getCalendar());
                     po.setStatus(PurchaseOrderStatus.PLANNED);
                     po.setSupplier(s);
@@ -185,10 +185,10 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
                 }
                 po.getPurchaseOrderDetails().add(wmrp.getPurchaseOrderDetail());
                 wmrp.getPurchaseOrderDetail().setPurchaseOrder(po);
-                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + " ORDER=" + wmrp.getOrderAMT() + "Supplier=" + s);
+                System.out.println("automaticOrderMaterials(): PO(" + po + ") Ordering for " + po.getShipsTo() + " Material=" + wmrp.getMaterial() + " ORDER=" + wmrp.getOrderAMT() + " ProcuredStockSupplier=" + s);
             }
 
-            System.out.println("Now Supplier=" + s);
+            System.out.println("Now Procured Stock Supplier=" + s);
 
         }
 

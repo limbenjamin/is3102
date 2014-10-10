@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.TransferOrderStatus;
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -23,12 +25,16 @@ import javax.persistence.ManyToOne;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TransferOrder implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     protected TransferOrderStatus status;
-    
+    @Temporal(TemporalType.DATE)
+    protected Calendar transferDate;
+    protected String remark;
+
     @ManyToOne
     protected Plant requestingPlant;
 
@@ -56,6 +62,22 @@ public abstract class TransferOrder implements Serializable {
         this.status = status;
     }
 
+    public Calendar getTransferDate() {
+        return transferDate;
+    }
+
+    public void setTransferDate(Calendar transferDate) {
+        this.transferDate = transferDate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -80,5 +102,5 @@ public abstract class TransferOrder implements Serializable {
     public String toString() {
         return "TransferOrder[ id=" + id + " ]";
     }
-    
+
 }

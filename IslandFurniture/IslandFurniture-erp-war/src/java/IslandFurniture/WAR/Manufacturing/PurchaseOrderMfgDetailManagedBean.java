@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.EJB.Manufacturing.ManageProcurementPlanLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.util.List;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class PurchaseOrderMfgDetailManagedBean {
 
-    private List<PurchaseOrderDetail> poDetailList;
+    private List<ProcuredStockPurchaseOrderDetail> poDetailList;
     private String username;
     
     @EJB
@@ -37,11 +37,11 @@ public class PurchaseOrderMfgDetailManagedBean {
         poDetailList = mppl.viewPurchaseOrderDetail();
     }
 
-    public List<PurchaseOrderDetail> getPoDetailList() {
+    public List<ProcuredStockPurchaseOrderDetail> getPoDetailList() {
         return poDetailList;
     }
 
-    public void setPoDetailList(List<PurchaseOrderDetail> poDetailList) {
+    public void setPoDetailList(List<ProcuredStockPurchaseOrderDetail> poDetailList) {
         this.poDetailList = poDetailList;
     }
 
