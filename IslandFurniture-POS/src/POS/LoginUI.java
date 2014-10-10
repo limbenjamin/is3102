@@ -38,7 +38,6 @@ public class LoginUI extends javax.swing.JFrame {
                         break;
                     }
                 }
-
                 if (acr122uCardTerminal != null) {
                     ActionListener actionListenerCheckCardPresent = new ActionListener() {
                         public void actionPerformed(ActionEvent event) {
