@@ -7,7 +7,6 @@ package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
@@ -28,6 +27,7 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -46,16 +46,14 @@ public class PurchaseOrderManagedBean implements Serializable {
     private Long purchaseOrderId;
     private Long supplierId;
 
-    private Calendar orderDate;
-    private PurchaseOrderStatus status;
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
     private List<Supplier> supplierList;
+    
     private Staff staff;
     private Supplier supplier;
     private ManufacturingFacility mf;
-    private Plant staffPlant;
     private String orderDateString = null;
 
     @EJB
@@ -70,52 +68,45 @@ public class PurchaseOrderManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
-        staffPlant = staff.getPlant();
-        if (staffPlant instanceof ManufacturingFacility) {
-            mf = (ManufacturingFacility) staffPlant;
+
+        if (staff.getPlant() instanceof ManufacturingFacility) {
+            mf = (ManufacturingFacility) staff.getPlant();
+            plannedOrderList = mpol.viewPlannedPurchaseOrders(mf);
+            confirmedOrderList = mpol.viewConfirmedPurchaseOrders(mf);
+            supplierList = mpol.viewContractedSuppliers(mf);
+            System.out.println("Init");
+        } else {
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect(ec.getRequestContextPath());
+            } catch (IOException ex) {
+
+            }
         }
-        plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
-        confirmedOrderList = mpol.viewConfirmedPurchaseOrders(staffPlant);
-        supplierList = mpol.viewContractedSuppliers(mf);
-        System.out.println("Init");
     }
 
-    public String addPurchaseOrder() throws ParseException {
+    public void addPurchaseOrder() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
         supplier = sml.getSupplier(supplierId);
         orderDateString = request.getParameter("createPurchaseOrder:orderDateString");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = (Date) formatter.parse(orderDateString);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        orderDate = cal;
-        purchaseOrder = mpol.createNewPurchaseOrder(PurchaseOrderStatus.PLANNED, supplier, staff.getPlant(), staff.getPlant(), orderDate);
+        Calendar orderDate = Calendar.getInstance();
+        orderDate.setTime(date);
+        purchaseOrder = mpol.createNewPurchaseOrder(PurchaseOrderStatus.PLANNED, supplier, mf, mf, orderDate);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrder.getId());
-        return "purchaseorder2?faces-redirect=true";
     }
 
-    public void purchaseOrderDetailActionListener(ActionEvent event) throws IOException {
+    public void purchaseOrderDetailActionListener(ActionEvent event) {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
-        purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
-        System.out.println("this is the purchase order id at MAIN Mgd Bean" + purchaseOrderId);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("purchaseorder2.xhtml");
     }
-    
-    public void purchaseOrderConfirmedActionListener(ActionEvent event) throws IOException {
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("COid", event.getComponent().getAttributes().get("COid"));
-        purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("COid");
-        FacesContext.getCurrentInstance().getExternalContext().redirect("purchaseorderconfirmed.xhtml");
-    }    
 
-    public String deletePurchaseOrder() {
-        System.out.println("deleting some order");
-        purchaseOrderId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("POid"));
-        mpol.deletePurchaseOrder(purchaseOrderId);
-        plannedOrderList = mpol.viewPlannedPurchaseOrders(staffPlant);
+    public void deletePurchaseOrder(ActionEvent event) {
+        mpol.deletePurchaseOrder(new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("POid")));
+        plannedOrderList = mpol.viewPlannedPurchaseOrders(mf);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));        
-        return "purchaseOrder";
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));
     }
 
     public Supplier getSupplier() {
@@ -164,22 +155,6 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     public void setPurchaseOrderId(Long purchaseOrderId) {
         this.purchaseOrderId = purchaseOrderId;
-    }
-
-    public Calendar getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Calendar orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public PurchaseOrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PurchaseOrderStatus status) {
-        this.status = status;
     }
 
     public List<PurchaseOrder> getPlannedOrderList() {

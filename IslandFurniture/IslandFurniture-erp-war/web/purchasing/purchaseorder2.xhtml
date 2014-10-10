@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                    <h:commandButton actionListener="#{purchaseOrderManaged2Bean.addStock}" value="Add Stock" class="btn btn-success btn-round"> 
+                                    <h:commandButton action="purchaseorder2.xhtml" actionListener="#{purchaseOrderManaged2Bean.addStock}" value="Add Stock" class="btn btn-success btn-round"> 
                                         <f:attribute name="POid" value="#{purchaseOrderManaged2Bean.purchaseOrderId}" />
                                     </h:commandButton>
                                 </div>
