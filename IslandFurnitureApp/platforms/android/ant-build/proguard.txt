@@ -1,4 +1,0 @@
-# view AndroidManifest.xml #generated:12
-# view AndroidManifest.xml #generated:6
--keep class com.islandfurniture.app.IslandFurniture { <init>(...); }
-

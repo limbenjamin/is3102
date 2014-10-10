@@ -6,14 +6,12 @@
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
-import IslandFurniture.Entities.WeeklyMRPRecordPK;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -36,29 +34,16 @@ import javax.persistence.OneToOne;
 public class WeeklyMRPRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @ManyToOne
-    private Material material;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private Integer week; //this is the requirement date
     private Month month; //requirement date
     private Integer year; //requirement date
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @ManyToOne
-    private ManufacturingFacility manufacturingFacility;
+    private Material material;
 
     private Integer orderWeek = 1; //this is the order date
     private Month orderMonth; //requirement order date
@@ -67,107 +52,22 @@ public class WeeklyMRPRecord implements Serializable {
     private Integer orderLot = 0;
     private Integer lotSize = 1;
     private Integer plannedOrder = 0;
+    private Integer leadTime;
+    private Integer onHand;
+    private Integer qtyReq = 0;
 
-    @OneToOne
-    private WeeklyProductionPlan weeklyProductionPlan; // This is useless . remove it next time
+    @ManyToOne
+    private ManufacturingFacility manufacturingFacility;
 
     @OneToOne
     private PurchaseOrderDetail purchaseOrderDetail;
-    private Integer qtyReq = 0;
 
-    public ManufacturingFacility getManufacturingFacility() {
-        return manufacturingFacility;
+    public Long getId() {
+        return id;
     }
 
-    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
-        this.manufacturingFacility = manufacturingFacility;
-    }
-
-    public Integer getOrderLot() {
-        return orderLot;
-    }
-
-    public void setOrderLot(Integer orderLot) {
-        this.orderLot = orderLot;
-    }
-    private int leadTime;
-
-    private int onHand;
-
-    public int getOnHand() {
-        return onHand;
-    }
-
-    public void setOnHand(int onHand) {
-        this.onHand = onHand;
-    }
-
-    public Integer getOrderAMT() {
-        return orderAMT;
-    }
-
-    public void setOrderAMT(Integer orderAMT) {
-        this.orderAMT = orderAMT;
-    }
-
-    public int getLeadTime() {
-        return leadTime;
-    }
-
-    public void setLeadTime(int leadTime) {
-        this.leadTime = leadTime;
-    }
-
-    public Integer getOrderWeek() {
-        return orderWeek;
-    }
-
-    public void setOrderWeek(Integer orderWeek) {
-        this.orderWeek = orderWeek;
-    }
-
-    public Month getOrderMonth() {
-        return orderMonth;
-    }
-
-    public void setOrderMonth(Month orderMonth) {
-        this.orderMonth = orderMonth;
-    }
-
-    public Integer getOrderYear() {
-        return orderYear;
-    }
-
-    public void setOrderYear(Integer orderYear) {
-        this.orderYear = orderYear;
-    }
-
-    public void orderMaterial() {
-
-    }
-
-    public Integer getQtyReq() {
-        return qtyReq;
-    }
-
-    public void setQtyReq(Integer qtyReq) {
-        this.qtyReq = qtyReq;
-    }
-
-    public Integer getLotSize() {
-        return lotSize;
-    }
-
-    public void setLotSize(Integer lotSize) {
-        this.lotSize = lotSize;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getWeek() {
@@ -194,12 +94,100 @@ public class WeeklyMRPRecord implements Serializable {
         this.year = year;
     }
 
-    public WeeklyProductionPlan getWeeklyProductionPlan() {
-        return weeklyProductionPlan;
+    public Material getMaterial() {
+        return material;
     }
 
-    public void setWeeklyProductionPlan(WeeklyProductionPlan weeklyProductionPlan) {
-        this.weeklyProductionPlan = weeklyProductionPlan;
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Integer getOrderWeek() {
+        return orderWeek;
+    }
+
+    public void setOrderWeek(Integer orderWeek) {
+        this.orderWeek = orderWeek;
+    }
+
+    public Month getOrderMonth() {
+        return orderMonth;
+    }
+
+    public void setOrderMonth(Month orderMonth) {
+        this.orderMonth = orderMonth;
+    }
+
+    public Integer getOrderYear() {
+        return orderYear;
+    }
+
+    public void setOrderYear(Integer orderYear) {
+        this.orderYear = orderYear;
+    }
+
+    public Integer getOrderAMT() {
+        return orderAMT;
+    }
+
+    public void setOrderAMT(Integer orderAMT) {
+        this.orderAMT = orderAMT;
+    }
+
+    public Integer getOrderLot() {
+        return orderLot;
+    }
+
+    public void setOrderLot(Integer orderLot) {
+        this.orderLot = orderLot;
+    }
+
+    public Integer getLotSize() {
+        return lotSize;
+    }
+
+    public void setLotSize(Integer lotSize) {
+        this.lotSize = lotSize;
+    }
+
+    public Integer getPlannedOrder() {
+        return plannedOrder;
+    }
+
+    public void setPlannedOrder(Integer plannedOrder) {
+        this.plannedOrder = plannedOrder;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public Integer getOnHand() {
+        return onHand;
+    }
+
+    public void setOnHand(Integer onHand) {
+        this.onHand = onHand;
+    }
+
+    public Integer getQtyReq() {
+        return qtyReq;
+    }
+
+    public void setQtyReq(Integer qtyReq) {
+        this.qtyReq = qtyReq;
+    }
+
+    public ManufacturingFacility getManufacturingFacility() {
+        return manufacturingFacility;
+    }
+
+    public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
+        this.manufacturingFacility = manufacturingFacility;
     }
 
     public PurchaseOrderDetail getPurchaseOrderDetail() {
@@ -207,7 +195,6 @@ public class WeeklyMRPRecord implements Serializable {
     }
 
     public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
-
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 
@@ -234,16 +221,6 @@ public class WeeklyMRPRecord implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyMRPRecord[ id=" + this.material.getId() + "," + week + "," + month + "," + year + " ]";
+        return "WeeklyMRPRecord[ id=" + this.material.getId() + "," + week + "," + month + "," + year + " ]";
     }
-
-    public Integer getPlannedOrder() {
-        return plannedOrder;
-    }
-
-    public void setPlannedOrder(Integer plannedOrder) {
-        this.plannedOrder = plannedOrder;
-    }
-
-
 }

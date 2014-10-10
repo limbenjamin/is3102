@@ -103,7 +103,7 @@ public class LoginUI extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 255));
-        jLabel1.setText("Unified Point of Sale Login");
+        jLabel1.setText("Point of Sale Login");
 
         jUsernameFieldUsername.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jUsernameFieldUsername.addActionListener(new java.awt.event.ActionListener() {
@@ -172,7 +172,7 @@ public class LoginUI extends javax.swing.JFrame {
                                 .addComponent(jButtonLogin)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                                 .addComponent(jButtonClear)))))
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addContainerGap(332, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

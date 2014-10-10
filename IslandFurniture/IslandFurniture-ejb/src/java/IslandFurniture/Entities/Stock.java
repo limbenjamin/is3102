@@ -48,6 +48,8 @@ public abstract class Stock implements Serializable {
     protected List<PriceInCountry> priceInCountry = new ArrayList();
     @ManyToMany(mappedBy = "sells")
     protected List<Store> soldBy = new ArrayList();
+    @OneToMany(mappedBy = "stock")
+    protected List<NFC> nfcList;
 
     public Long getId() {
         return id;
