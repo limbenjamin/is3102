@@ -6,24 +6,26 @@
 
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurniture.StaticClasses.TimeMethods;
-import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
-import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.ProcuredStockSupplier;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.Enums.Month;
+import IslandFurniture.Enums.PurchaseOrderStatus;
+import IslandFurniture.StaticClasses.Helper;
+import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -234,6 +236,33 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         em.persist(purchaseOrderDetail);
                         purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
                         em.merge(purchaseOrder);
+                        query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf AND s.stock.id=:stockid");
+                        query.setParameter("mf", mf);
+                        query.setParameter("stockid", ri.getId());
+                        ssList = query.getResultList();
+                        Iterator<StockSupplied> iterator4 = ssList.iterator();
+                        coList = new ArrayList();
+                        while(iterator4.hasNext()){
+                            ss = iterator4.next();
+                            co = ss.getCountryOffice();
+                            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock=:stock AND m.countryOffice=:co AND m.year=:year AND m.month=:month");
+                            query.setParameter("stock", ss.getStock());
+                            query.setParameter("co", co);
+                            query.setParameter("month", month);
+                            query.setParameter("year", year);
+                            mssr = (MonthlyStockSupplyReq) query.getSingleResult();
+                            qty = mssr.getQtyRequested()/maxDay*7;
+                            ExternalTransferOrder eto = new ExternalTransferOrder();
+                            eto.setRequestingPlant(co);
+                            eto.setFulfillingPlant(mf);
+                            ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
+                            etod.setQty(qty);
+                            etod.setStock(mssr.getStock());
+                            eto.getExtTransOrderDetails().add(etod);
+                            etod.setExtTransOrder(eto);
+                            em.persist(eto);
+                            em.persist(etod);
+                        } 
                     }
                 }
                 em.flush();
