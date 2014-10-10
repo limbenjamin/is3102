@@ -24,7 +24,6 @@ public class NFC implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique=true, columnDefinition="default 00000000000000")
     private String nfcId; 
     @ManyToOne
     private Stock stock;
