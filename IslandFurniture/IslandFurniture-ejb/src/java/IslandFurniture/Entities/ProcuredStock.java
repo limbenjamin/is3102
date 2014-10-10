@@ -29,15 +29,15 @@ import javax.persistence.OneToMany;
 public abstract class ProcuredStock extends Stock implements Serializable {
     protected static final long serialVersionUID = 1L;
     @ManyToMany
-    protected List<Supplier> suppliers;
+    protected List<ProcuredStockSupplier> suppliers;
     @OneToMany(mappedBy="procuredStock")
     protected List<ProcurementContractDetail> procurementContractDetails;
 
-    public List<Supplier> getSuppliers() {
+    public List<ProcuredStockSupplier> getSuppliers() {
         return suppliers;
     }
 
-    public void setSuppliers(List<Supplier> suppliers) {
+    public void setSuppliers(List<ProcuredStockSupplier> suppliers) {
         this.suppliers = suppliers;
     }
 

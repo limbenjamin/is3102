@@ -46,7 +46,7 @@ public class ProcurementContract implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     @OneToMany(mappedBy="procurementContract", cascade={CascadeType.PERSIST})
     private List<ProcurementContractDetail> procurementContractDetails = new ArrayList();
     
@@ -62,11 +62,11 @@ public class ProcurementContract implements Serializable {
         this.id = id;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 

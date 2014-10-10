@@ -22,7 +22,7 @@ import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -179,7 +179,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         query.setParameter("month", month);
         query.setParameter("year", year);
         mppList = query.getResultList();
-        List<Supplier> uniqueSupplier = new ArrayList(); 
+        List<ProcuredStockSupplier> uniqueSupplier = new ArrayList(); 
         List<ProcurementContractDetail> pcdList = new ArrayList();
         Iterator<MonthlyProcurementPlan> iterator = mppList.iterator();
         while(iterator.hasNext()){
@@ -195,9 +195,9 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 uniqueSupplier.add(pcd.getProcurementContract().getSupplier());
             }
         }
-        Iterator<Supplier> iterator2 = uniqueSupplier.iterator();
+        Iterator<ProcuredStockSupplier> iterator2 = uniqueSupplier.iterator();
         while(iterator2.hasNext()){
-            Supplier s = iterator2.next();
+            ProcuredStockSupplier s = iterator2.next();
             Calendar cal = new GregorianCalendar(year,month.value, 1);
             cal.setTimeZone(TimeZone.getTimeZone("UTC"));
             //day = date of first monday in month

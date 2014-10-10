@@ -40,7 +40,7 @@ public class Ingredient implements Serializable {
     @ManyToOne
     private CountryOffice countryOffice;
     @ManyToMany(mappedBy="ingredients")
-    private List<Supplier> suppliers; 
+    private List<ProcuredStockSupplier> suppliers; 
     
     public Ingredient() {
     }
@@ -69,11 +69,11 @@ public class Ingredient implements Serializable {
         this.countryOffice = countryOffice;
     }
     
-    public List<Supplier> getSuppliers() {
+    public List<ProcuredStockSupplier> getSuppliers() {
         return suppliers;
     }
 
-    public void setSuppliers(List<Supplier> suppliers) {
+    public void setSuppliers(List<ProcuredStockSupplier> suppliers) {
         this.suppliers = suppliers;
     }
 
@@ -99,7 +99,7 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Ingredient[ id=" + id + " ]";
+        return "Ingredient[ id=" + id + " ]";
     }
     
 }

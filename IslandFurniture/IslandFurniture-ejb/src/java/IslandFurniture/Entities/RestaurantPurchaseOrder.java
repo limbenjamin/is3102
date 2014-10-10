@@ -30,7 +30,7 @@ public class RestaurantPurchaseOrder implements Serializable {
     private List<RestaurantPurchaseOrderDetail> purchaseOrderDetails;
     
     @ManyToOne
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     
     @ManyToOne
     private Store store;
@@ -51,11 +51,11 @@ public class RestaurantPurchaseOrder implements Serializable {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 

@@ -9,7 +9,7 @@ package IslandFurniture.WAR.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcurementContractDetail;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -35,8 +35,8 @@ import javax.servlet.http.HttpSession;
 public class ProcurementContractManagedBean implements Serializable {
     @EJB
     private SupplierManagerLocal supplierManager;
-    private List<Supplier> supplierList;
-    private Supplier supplier;
+    private List<ProcuredStockSupplier> supplierList;
+    private ProcuredStockSupplier supplier;
     private List<ProcurementContractDetail> detailList = null;
     private List<ProcuredStock> stockList;
     private List<ManufacturingFacility> mfList;
@@ -73,16 +73,16 @@ public class ProcurementContractManagedBean implements Serializable {
     public void setDetailList(List<ProcurementContractDetail> detailList) {
         this.detailList = detailList;
     }
-    public List<Supplier> getSupplierList() {
+    public List<ProcuredStockSupplier> getSupplierList() {
         return supplierList;
     }
-    public void setSupplierList(List<Supplier> supplierList) {
+    public void setSupplierList(List<ProcuredStockSupplier> supplierList) {
         this.supplierList = supplierList;
     }
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
     

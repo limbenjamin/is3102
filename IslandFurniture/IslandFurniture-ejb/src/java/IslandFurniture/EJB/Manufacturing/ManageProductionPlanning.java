@@ -19,7 +19,7 @@ import IslandFurniture.Entities.ProductionOrder;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Exceptions.ProductionPlanExceedsException;
@@ -477,7 +477,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
     }
 
     @Override
-    public Supplier getSupplierSize(Material m) {
+    public ProcuredStockSupplier getSupplierSize(Material m) {
         List<ProcurementContractDetail> pcs = MF.getSuppliedBy();
         for (ProcurementContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {

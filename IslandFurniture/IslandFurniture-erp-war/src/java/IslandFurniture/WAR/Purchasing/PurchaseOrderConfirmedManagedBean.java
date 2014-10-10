@@ -13,7 +13,7 @@ import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -59,7 +59,7 @@ public class PurchaseOrderConfirmedManagedBean {
     private PurchaseOrderDetail purchaseOrderDetail;
     private List<PurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
     private List<Plant> plantList;
@@ -258,11 +258,11 @@ public class PurchaseOrderConfirmedManagedBean {
         this.plant = plant;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 
