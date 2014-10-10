@@ -35,7 +35,6 @@ public class CurrencyManagedBean implements Serializable {
     private String currencyParser;
     private CountryOffice co;
     private List<String> currencyList;
-    private List<Country> countryList;
 
     public String getCurrencyParser() {
         return currencyParser;
@@ -52,20 +51,11 @@ public class CurrencyManagedBean implements Serializable {
     public void setCo(CountryOffice co) {
         this.co = co;
     }
-    public List<Country> getCountryList() {
-        return countryList;
-    }
-
-    public void setCountryList(List<Country> countryList) {
-        this.countryList = countryList;
-    }
-    
      
     @PostConstruct
     public void init() { 
         System.out.println("init:CurrencyManagedBean");
         currencyList = currencyManager.getAllCurrency();
-        countryList = mohBean.getCountries();
         
     }
     public void addCurrency() {
