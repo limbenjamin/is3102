@@ -11,6 +11,7 @@ import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
+import java.util.ArrayList;
 import java.util.Locale;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -142,7 +143,7 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
 
             // Add Countries and Plants
             country = this.addCountry("Singapore");
-
+            country.setCurrencyCode("SGD");
             this.addGlobalHQ("Global HQ", country, "Asia/Singapore");
             co = this.addCountryOffice("Singapore", country, "Asia/Singapore");
             this.addStore("Alexandra", country, "Asia/Singapore", co);
@@ -150,37 +151,45 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
             this.addManufacturingFacility("Tuas", country, "Asia/Singapore", co);
 
             country = this.addCountry("Malaysia");
+            country.setCurrencyCode("MYR");
             co = this.addCountryOffice("Malaysia", country, "Asia/Kuala_Lumpur");
             this.addStore("Johor Bahru - Kulai", country, "Asia/Kuala_Lumpur", co);
 
             country = this.addCountry("China");
+            country.setCurrencyCode("CNY");
             co = this.addCountryOffice("China", country, "Asia/Shanghai");
             this.addStore("Yunnan - Yuanjiang", country, "Asia/Shanghai", co);
             this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country, "Asia/Shanghai", co);
 
             country = this.addCountry("Indonesia");
+            country.setCurrencyCode("IDR");
             co = this.addCountryOffice("Indonesia", country, "Asia/Jakarta");
             this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co);
             this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co);
 
             country = this.addCountry("Cambodia");
+            country.setCurrencyCode("KHR");
             co = this.addCountryOffice("Cambodia", country, "Asia/Phnom_Penh");
             this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co);
 
             country = this.addCountry("Thailand");
+            country.setCurrencyCode("THB");
             co = this.addCountryOffice("Thailand", country, "Asia/Bangkok");
             this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co);
             this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co);
 
             country = this.addCountry("Vietnam");
+            country.setCurrencyCode("VND");
             co = this.addCountryOffice("Vietnam", country, "Asia/Ho_Chi_Minh");
             this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co);
 
             country = this.addCountry("Laos");
+            country.setCurrencyCode("LAK");
             co = this.addCountryOffice("Laos", country, "Asia/Vientiane");
             this.addStore("Vientiane", country, "Asia/Vientiane", co);
 
             country = this.addCountry("Canada");
+            country.setCurrencyCode("CAD");
             co = this.addCountryOffice("Canada", country, "Canada/Pacific");
             this.addStore("Toronto", country, "Canada/Eastern", co);
 

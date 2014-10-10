@@ -48,8 +48,7 @@ public class Country implements Serializable {
     @OneToMany(mappedBy = "country")
     private List<Plant> plants;
 
-    @ManyToMany(mappedBy = "countries")
-    private List<Currency> currencies;
+    private Currency currency;
 
     public Long getId() {
         return id;
@@ -83,22 +82,20 @@ public class Country implements Serializable {
     public void setPlants(List<Plant> plants) {
         this.plants = plants;
     }
-
-    @XmlTransient
-    public List<Currency> getCurrencies() {
-        return currencies;
-    }
-
-    public void setCurrency(List<Currency> currencies) {
-        this.currencies = currencies;
-    }
-
     public String getPhoneCode() {
         return phoneCode;
     }
 
     public void setPhoneCode(String phoneCode) {
         this.phoneCode = phoneCode;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     @Override
