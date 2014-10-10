@@ -29,6 +29,8 @@ public enum PurchaseOrderStatus implements Serializable{
                 return CONFIRMED;
             case 2:
                 return DELIVERED;     
+            case 3:
+                return PAID;              
             default:
                 return null;
         }

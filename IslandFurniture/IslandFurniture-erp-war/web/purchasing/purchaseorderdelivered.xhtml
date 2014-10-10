@@ -26,10 +26,15 @@
                         <h4>Purchase Order ##{purchaseOrderDeliveredManagedBean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderDeliveredManagedBean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderDeliveredManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
-                        <h5>Scheduled Order Date: <strong><h:outputText value="#{purchaseOrderDeliveredManagedBean.purchaseOrder.orderDate.time}" >
+                        <h5>Order Date: <strong><h:outputText value="#{purchaseOrderDeliveredManagedBean.purchaseOrder.orderDate.time}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{purchaseOrderDeliveredManagedBean.plant.timeZoneID}"  /></h:outputText></strong>
                             | Status: <strong>#{purchaseOrderDeliveredManagedBean.purchaseOrder.status}</strong>
                         </h5>
+                        <br/>
+                        <h:form id="confirmPurchaseOrder" class="form-horizontal">
+                            <h:commandButton action="#{purchaseOrderDeliveredManagedBean.payPurchaseOrder}" class="btn btn-success" value="Pay Purchase Order"> 
+                            </h:commandButton>  
+                        </h:form>
                         <br></br>
                      
                         <h4>Items Ordered:</h4>

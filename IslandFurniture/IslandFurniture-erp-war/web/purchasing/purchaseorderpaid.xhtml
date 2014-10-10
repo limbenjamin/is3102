@@ -26,7 +26,7 @@
                         <h4>Purchase Order ##{purchaseOrderPaidManagedBean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderPaidManagedBean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderPaidManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
-                        <h5>Scheduled Order Date: <strong><h:outputText value="#{purchaseOrderPaidManagedBean.purchaseOrder.orderDate.time}" >
+                        <h5>Order Date: <strong><h:outputText value="#{purchaseOrderPaidManagedBean.purchaseOrder.orderDate.time}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{purchaseOrderPaidManagedBean.plant.timeZoneID}"  /></h:outputText></strong>
                             | Status: <strong>#{purchaseOrderPaidManagedBean.purchaseOrder.status}</strong>
                         </h5>

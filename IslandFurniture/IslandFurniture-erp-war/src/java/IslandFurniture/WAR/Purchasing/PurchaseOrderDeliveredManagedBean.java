@@ -9,7 +9,6 @@ package IslandFurniture.WAR.Purchasing;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
@@ -17,6 +16,7 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.StaticClasses.SendEmailByPost;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,9 +25,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -56,15 +60,12 @@ public class PurchaseOrderDeliveredManagedBean {
     private Calendar orderDate;
     private PurchaseOrderStatus status;
     private PurchaseOrder purchaseOrder;
-    private List<PurchaseOrder> purchaseOrderList;
     private PurchaseOrderDetail purchaseOrderDetail;
     private List<PurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
     private Supplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
-    private List<Plant> plantList;
-    private List<ProcuredStock> procuredStockList;
     private String orderDateString;
     private int quantity;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -93,7 +94,6 @@ public class PurchaseOrderDeliveredManagedBean {
                     mf = (ManufacturingFacility) staff.getPlant();
                 }
                 System.out.println("@Init PurchaseOrderDeliveredManagedBean:  this is the docomentid " + purchaseOrderId);
-                procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
                 purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
 
                 if (purchaseOrder.getOrderDate() != null) {
@@ -108,6 +108,38 @@ public class PurchaseOrderDeliveredManagedBean {
         }        
 
     }
+    
+     // pay purchase order
+    public String payPurchaseOrder() throws ParseException {
+        status = PurchaseOrderStatus.getPurchaseOrderStatus(3);
+        
+        mpol.updatePurchaseOrder(purchaseOrderId, status, Calendar.getInstance());
+        sendEmail(supplier);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Paid!", ""));
+        return "purchaseorder";
+
+    }
+    
+    public void sendEmail(Supplier recipient) {
+        String title = "[Incoming Payment for Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
+                + mf.getName();
+        String orderContent = mf.getName() + " Manufacturing Facility has billed the required payment for the following: " + "\r\n ";
+
+        Iterator<PurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
+        while (iterator.hasNext()) {
+            PurchaseOrderDetail current = iterator.next();
+            orderContent = orderContent + current.getProcuredStock().getName();
+            orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
+        }
+        try {
+            // send notification to supplier: using zi xuan's email address as a placeholder currently
+            SendEmailByPost.sendEmail("manufacturing", "aura.chrome@gmail.com",
+                    title, orderContent);
+        } catch (Exception ex) {
+            Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }    
 
     public ManufacturingFacility getMf() {
         return mf;
@@ -205,36 +237,12 @@ public class PurchaseOrderDeliveredManagedBean {
         this.status = status;
     }
 
-    public List<PurchaseOrder> getPurchaseOrderList() {
-        return purchaseOrderList;
-    }
-
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
-        this.purchaseOrderList = purchaseOrderList;
-    }
-
     public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
     public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
-    }
-
-    public List<ProcuredStock> getProcuredStockList() {
-        return procuredStockList;
-    }
-
-    public void setProcuredStockList(List<ProcuredStock> procuredStockList) {
-        this.procuredStockList = procuredStockList;
-    }
-
-    public List<Plant> getPlantList() {
-        return plantList;
-    }
-
-    public void setPlantList(List<Plant> plantList) {
-        this.plantList = plantList;
     }
 
     public PurchaseOrder getPurchaseOrder() {
