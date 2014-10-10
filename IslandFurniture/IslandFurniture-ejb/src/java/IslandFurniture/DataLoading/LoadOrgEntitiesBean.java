@@ -11,6 +11,7 @@ import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
+import java.util.ArrayList;
 import java.util.Locale;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -142,7 +143,6 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
 
             // Add Countries and Plants
             country = this.addCountry("Singapore");
-
             this.addGlobalHQ("Global HQ", country, "Asia/Singapore");
             co = this.addCountryOffice("Singapore", country, "Asia/Singapore");
             this.addStore("Alexandra", country, "Asia/Singapore", co);

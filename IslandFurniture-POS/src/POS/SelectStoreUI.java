@@ -48,7 +48,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
         cardId = (String) jsonObject.get("cardId");
-        welcomeLabel.setText("welcome " + name + " from " + plant + " store.");
+        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
     }
 
     /**
@@ -60,29 +60,18 @@ public class SelectStoreUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        welcomeLabel = new javax.swing.JLabel();
-        logoutButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         furnitureStoreButton = new javax.swing.JButton();
         retailStoreButton = new javax.swing.JButton();
         restaurantButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        welcomeLabel = new javax.swing.JLabel();
+        logoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1366, 720));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(44, 62, 50));
-        jLabel1.setText("Select Type of Store");
-
-        welcomeLabel.setText("Welcome");
-
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
-            }
-        });
-
+        furnitureStoreButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         furnitureStoreButton.setText("Furniture Store");
         furnitureStoreButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +79,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         });
 
+        retailStoreButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         retailStoreButton.setText("Retail Store");
         retailStoreButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,10 +87,26 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         });
 
+        restaurantButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         restaurantButton.setText("Restaurant");
         restaurantButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 restaurantButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(44, 62, 50));
+        jLabel1.setText("Select Type of Store:");
+
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        welcomeLabel.setText("Welcome");
+
+        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
             }
         });
 
@@ -109,21 +115,39 @@ public class SelectStoreUI extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(furnitureStoreButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
-                .addComponent(retailStoreButton)
-                .addGap(66, 66, 66)
-                .addComponent(restaurantButton))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(welcomeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logoutButton)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(furnitureStoreButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(retailStoreButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(restaurantButton))
+                            .addComponent(jLabel1))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logoutButton)
+                    .addComponent(welcomeLabel))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(furnitureStoreButton)
                     .addComponent(retailStoreButton)
                     .addComponent(restaurantButton))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -132,30 +156,15 @@ public class SelectStoreUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(welcomeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logoutButton)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(125, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logoutButton)
-                    .addComponent(welcomeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addGap(98, 98, 98)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(155, 155, 155))
+                .addContainerGap())
         );
 
         pack();
@@ -181,9 +190,8 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }//GEN-LAST:event_furnitureStoreButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI unifiedPointOfSaleUI = new LoginUI();
-        unifiedPointOfSaleUI.setVisible(true);
-        unifiedPointOfSaleUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        LoginUI loginUI = new LoginUI();
+        loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
 

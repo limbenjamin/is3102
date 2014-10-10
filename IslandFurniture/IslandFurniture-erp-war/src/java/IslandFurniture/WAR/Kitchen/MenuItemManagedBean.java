@@ -9,6 +9,7 @@ package IslandFurniture.WAR.Kitchen;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Kitchen.KitchenStockManagerLocal;
 import IslandFurniture.EJB.Kitchen.MenuManagerLocal;
+import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.Plant;
@@ -38,6 +39,8 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class MenuItemManagedBean implements Serializable {
+    @EJB
+    private CurrencyManagerLocal currencyManager;
     @EJB
     private MenuManagerLocal menuManager;
     @EJB
@@ -127,7 +130,7 @@ public class MenuItemManagedBean implements Serializable {
         this.menuTypeList = menuTypeList;
     }
      
-    @PostConstruct
+    @PostConstruct 
     public void init() {
         System.out.println("init:MenuItemManagedBean");
         HttpSession session = Util.getSession();
