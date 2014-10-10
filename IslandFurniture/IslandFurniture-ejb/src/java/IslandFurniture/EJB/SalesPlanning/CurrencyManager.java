@@ -87,11 +87,15 @@ public class CurrencyManager implements CurrencyManagerLocal {
         try {
             country = em.find(Country.class, countryID);
             currencyList = new ArrayList<Currency>();
-            country.setCurrency(currencyList);
             return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return "Unexpected error occured";
         }
+    }
+
+    @Override
+    public List<String> getAllCurrency() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
