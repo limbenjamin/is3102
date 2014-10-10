@@ -10,11 +10,9 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.GlobalHQ;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.List;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -26,7 +24,6 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-@LocalBean
 public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHierarchyBeanLocal {
 
     @PersistenceContext
