@@ -6,12 +6,14 @@
 package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcurementContractDetail;
 import IslandFurniture.Enums.ProdOrderStatus;
 import IslandFurniture.Entities.ProductionCapacity;
@@ -438,6 +440,14 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         po.setProdOrderDate(ca);
         po.setMf(MF);
         wpp.setProductionOrder(po);
+        
+        HashMap<Plant,Long> orders=QueryMethods.traceWPPToPlant(em, wpp);
+        
+        for (Plant p : orders.keySet())
+        {
+            ExternalTransferOrder eto = new ExternalTransferOrder();
+        }
+        
 
         persist(po);
         em.merge(wpp);

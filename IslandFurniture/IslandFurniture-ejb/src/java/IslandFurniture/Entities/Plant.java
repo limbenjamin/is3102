@@ -6,6 +6,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,6 +63,28 @@ public abstract class Plant implements Serializable {
     private List<Announcement> announcementList;
     @OneToMany(mappedBy = "plant")
     private List<Event> eventList;
+
+    @OneToMany(mappedBy = "requestingPlant")
+    private List<TransferOrder> requestedTransferOrders=new ArrayList<>();
+
+    @OneToMany(mappedBy = "fulfillingPlant")
+    private List<ExternalTransferOrder> transferOrdersToFufill=new ArrayList<>();
+
+    public List<TransferOrder> getRequestedTransferOrders() {
+        return requestedTransferOrders;
+    }
+
+    public void setRequestedTransferOrders(List<TransferOrder> requestedTransferOrders) {
+        this.requestedTransferOrders = requestedTransferOrders;
+    }
+
+    public List<ExternalTransferOrder> getTransferOrdersToFufill() {
+        return transferOrdersToFufill;
+    }
+
+    public void setTransferOrdersToFufill(List<ExternalTransferOrder> transferOrdersToFufill) {
+        this.transferOrdersToFufill = transferOrdersToFufill;
+    }
 
     public Long getId() {
         return id;
@@ -139,8 +162,6 @@ public abstract class Plant implements Serializable {
     public void setEventList(List<Event> eventList) {
         this.eventList = eventList;
     }
-    
-    
 
     @Override
     public int hashCode() {
