@@ -5,28 +5,13 @@
  */
 package IslandFurniture.StaticClasses;
 
-import IslandFurniture.DataLoading.LoadJamesTestDataRemote;
-import IslandFurniture.DataLoading.LoadOrgEntitiesBeanRemote;
-import IslandFurniture.DataLoading.LoadPrivilegeBeanRemote;
-import IslandFurniture.DataLoading.LoadSalesForecastBeanRemote;
-import IslandFurniture.DataLoading.LoadStaffDataBeanRemote;
-import IslandFurniture.DataLoading.LoadStocksBeanRemote;
-import IslandFurniture.DataLoading.LoadStorageDataBeanRemote;
-import IslandFurniture.DataLoading.LoadSupplierBeanRemote;
-import IslandFurniture.DataLoading.LoadTransactionBeanRemote;
-import IslandFurniture.DataLoading.MapPrivilegeDataBeanRemote;
-import IslandFurniture.DataLoading.MapStaffDataBeanRemote;
 import IslandFurniture.Entities.Country;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBean;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Remote;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  * This is a bean that will be automatically run at deployment. Use this to
@@ -131,6 +116,7 @@ public class InitialiseServerBean implements InitialiseServerBeanLocal {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
+    @Override
     public boolean isUpdateMssrStarted() {
         return updateMssrStarted;
     }
