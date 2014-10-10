@@ -7,6 +7,7 @@
 package POS;
 
 import java.io.IOException;
+import javax.swing.JFrame;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -55,12 +56,46 @@ public class SelectStoreUI extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         welcomeLabel = new javax.swing.JLabel();
+        furnitureStoreButton = new javax.swing.JButton();
+        retailStoreButton = new javax.swing.JButton();
+        restaurantButton = new javax.swing.JButton();
+        logoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 255));
         jLabel1.setText("Select Type of Store");
 
         welcomeLabel.setText("Welcome");
+
+        furnitureStoreButton.setText("Furniture Store");
+        furnitureStoreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                furnitureStoreButtonActionPerformed(evt);
+            }
+        });
+
+        retailStoreButton.setText("Retail Store");
+        retailStoreButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                retailStoreButtonActionPerformed(evt);
+            }
+        });
+
+        restaurantButton.setText("Restaurant");
+        restaurantButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restaurantButtonActionPerformed(evt);
+            }
+        });
+
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -69,25 +104,63 @@ public class SelectStoreUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addComponent(jLabel1))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(47, 47, 47)
+                        .addComponent(logoutButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(welcomeLabel)))
-                .addContainerGap(132, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(welcomeLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(furnitureStoreButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(retailStoreButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(restaurantButton)))
+                        .addGap(0, 88, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(logoutButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(welcomeLabel)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addGap(76, 76, 76)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(furnitureStoreButton)
+                    .addComponent(retailStoreButton)
+                    .addComponent(restaurantButton))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void furnitureStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_furnitureStoreButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_furnitureStoreButtonActionPerformed
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        LoginUI unifiedPointOfSaleUI = new LoginUI();
+        unifiedPointOfSaleUI.setVisible(true);
+        unifiedPointOfSaleUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setVisible(false);
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void retailStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retailStoreButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_retailStoreButtonActionPerformed
+
+    private void restaurantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_restaurantButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -125,7 +198,11 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton furnitureStoreButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JButton restaurantButton;
+    private javax.swing.JButton retailStoreButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
