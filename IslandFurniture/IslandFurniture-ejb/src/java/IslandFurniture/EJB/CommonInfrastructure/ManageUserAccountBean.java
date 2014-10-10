@@ -45,7 +45,13 @@ public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
     public Staff getStaffFromCardId(String cardId){
         Query query = em.createQuery("FROM Staff s where s.cardId=:cardId");
         query.setParameter("cardId", cardId);
-        staff = (Staff) query.getSingleResult();
+        try{
+            staff = (Staff) query.getSingleResult();
+        }catch(NoResultException nre){
+            return null;
+        }catch(NonUniqueResultException nre){
+            return null;
+        }
         return staff;
     }
     

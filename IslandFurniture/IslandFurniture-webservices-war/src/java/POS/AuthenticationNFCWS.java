@@ -46,9 +46,13 @@ public class AuthenticationNFCWS {
     public String loginNFC(@FormParam("cardId") String cardId) {
         System.err.println(cardId);
         Staff staff = muabl.getStaffFromCardId(cardId);
-        JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
-                .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
-        return object.toString();
+        if (staff == null){
+            return "Error";
+        }else{
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+                    .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
+            return object.toString();
+        }
     }
     
     @GET
