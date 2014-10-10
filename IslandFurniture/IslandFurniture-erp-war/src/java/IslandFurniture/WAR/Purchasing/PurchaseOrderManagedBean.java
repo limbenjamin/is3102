@@ -49,6 +49,8 @@ public class PurchaseOrderManagedBean implements Serializable {
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
+    private List<PurchaseOrder> deliveredOrderList;
+    private List<PurchaseOrder> paidOrderList;
     private List<ProcuredStockSupplier> supplierList;
     
     private Staff staff;
@@ -73,6 +75,8 @@ public class PurchaseOrderManagedBean implements Serializable {
             mf = (ManufacturingFacility) staff.getPlant();
             plannedOrderList = mpol.viewPlannedPurchaseOrders(mf);
             confirmedOrderList = mpol.viewConfirmedPurchaseOrders(mf);
+            deliveredOrderList = mpol.viewDeliveredPurchaseOrders(mf);
+            paidOrderList = mpol.viewPaidPurchaseOrders(mf);
             supplierList = mpol.viewContractedSuppliers(mf);
             System.out.println("Init");
         } else {
@@ -108,6 +112,7 @@ public class PurchaseOrderManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));
     }
+    
 
     public ProcuredStockSupplier getSupplier() {
         return supplier;
@@ -219,6 +224,22 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     public void setSml(SupplierManagerLocal sml) {
         this.sml = sml;
+    }
+
+    public List<PurchaseOrder> getDeliveredOrderList() {
+        return deliveredOrderList;
+    }
+
+    public void setDeliveredOrderList(List<PurchaseOrder> deliveredOrderList) {
+        this.deliveredOrderList = deliveredOrderList;
+    }
+
+    public List<PurchaseOrder> getPaidOrderList() {
+        return paidOrderList;
+    }
+
+    public void setPaidOrderList(List<PurchaseOrder> paidOrderList) {
+        this.paidOrderList = paidOrderList;
     }
 
 }

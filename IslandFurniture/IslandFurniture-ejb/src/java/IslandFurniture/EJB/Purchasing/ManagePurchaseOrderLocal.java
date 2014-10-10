@@ -47,4 +47,8 @@ public interface ManagePurchaseOrderLocal {
     List<PurchaseOrder> viewPlannedPurchaseOrders(Plant staffPlant);
 
     List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant);
+    
+    List<PurchaseOrder> viewDeliveredPurchaseOrders(Plant staffPlant);
+    
+    List<PurchaseOrder> viewPaidPurchaseOrders(Plant staffPlant);
 }
