@@ -28,13 +28,14 @@
                         <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                           <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
                           <li><a href="#confirmed" role="tab" data-toggle="tab">Confirmed</a></li>
+                          <li><a href="#delivered" role="tab" data-toggle="tab">Delivered</a></li>
+                          <li><a href="#paid" role="tab" data-toggle="tab">Paid</a></li>
                         </ul>
                         
                             <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active" id="planned">                     
-                        
-                            <section name="viewPO" class="panel">
+                        <div class="tab-pane active" id="planned">
+                            <section name="viewPlannedPO" class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                     All Planned Purchase Orders
                                 </div>
@@ -77,9 +78,9 @@
                                 </table>
                                 </div>
                             </section>
-                            </div>
-                            <div class="tab-pane" id="confirmed" >
-                            <section name="viewStorageBin" class="panel">
+                        </div>
+                        <div class="tab-pane" id="confirmed" >
+                            <section name="viewConfirmedPO" class="panel">
                                 <div class="panel-heading dashboard-title-panel">
                                     All Confirmed Purchase Orders
                                 </div>
@@ -114,6 +115,28 @@
                                         </ui:repeat>
                                     </h:form> 
                                 </table>
+                                </div>
+                            </section>
+                        </div>       
+                        <div class="tab-pane" id="delivered" >
+                            <section name="viewDeliveredPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Delivered Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+
+                                </div>
+                            </section>
+                        </div>   
+                        <div class="tab-pane" id="paid" >
+                            <section name="viewPaidPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Paid Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+
                                 </div>
                             </section>
                         </div>                            

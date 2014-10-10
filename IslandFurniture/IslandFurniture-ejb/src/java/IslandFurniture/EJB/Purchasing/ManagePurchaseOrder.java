@@ -148,4 +148,21 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         q.setParameter("plant", staffPlant);
         return q.getResultList();
     }
+    
+    @Override
+    public List<PurchaseOrder> viewDeliveredPurchaseOrders(Plant staffPlant) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.DELIVERED);
+        q.setParameter("plant", staffPlant);
+        return q.getResultList();
+    }    
+    
+    @Override
+    public List<PurchaseOrder> viewPaidPurchaseOrders(Plant staffPlant) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.PAID);
+        q.setParameter("plant", staffPlant);
+        return q.getResultList();
+    }    
+    
 }
