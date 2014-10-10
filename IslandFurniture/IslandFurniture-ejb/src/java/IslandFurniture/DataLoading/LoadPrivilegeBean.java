@@ -87,7 +87,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_stock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_ststock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Monitoring", "/inventorymgt/inventorymonitoring_stlocation.xhtml", "fa-dummy", "dummy", "false","0"},
-            { "Inventory Transfer", "/inventorymgt/inventorytransfer.xhtml", "fa-exchange", "Inventory Transfer", "true","18"},
+            { "Inventory Transfer", "/inventorymgt/inventorytransfer.xhtml", "fa-exchange", "Internal Inventory Transfer", "true","18"},
             { "Inventory Transfer", "/inventorymgt/inventorytransfer_movementlocation.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Inventory Transfer", "/inventorymgt/inventorytransfer_movementstock.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Storage Location", "/inventorymgt/storagelocation.xhtml", "fa-trello", "Storage Location", "true","19"},
