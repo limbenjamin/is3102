@@ -41,6 +41,7 @@ public class AuthenticationWS {
     }
     
     @POST
+    @Path("username")
     public String loginUsername(@FormParam("username") String username,
                                 @FormParam("password") String password) {
         System.err.println(username);
@@ -52,6 +53,20 @@ public class AuthenticationWS {
             return object.toString();
         }
         return "Error";
+    }
+    
+    @POST
+    @Path("nfc")
+    public String loginNFC(@FormParam("cardId") String cardId) {
+        System.err.println(cardId);
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+                    .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
+            return object.toString();
+        }
     }
     
     @GET

@@ -13,7 +13,7 @@ import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -59,7 +59,7 @@ public class PurchaseOrderConfirmedManagedBean {
     private PurchaseOrderDetail purchaseOrderDetail;
     private List<PurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
     private List<Plant> plantList;
@@ -81,29 +81,31 @@ public class PurchaseOrderConfirmedManagedBean {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
 
-        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("COid");
+        this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
         try {
             if(purchaseOrderId == null) {
                     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                     ec.redirect("purchaseorder.xhtml"); 
+            }else {
+                purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+                if (staff.getPlant() instanceof ManufacturingFacility) {
+                    mf = (ManufacturingFacility) staff.getPlant();
+                }
+                System.out.println("@Init PurchaseOrderConfirmedManagedBean:  this is the docomentid " + purchaseOrderId);
+                procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
+                purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+
+                if (purchaseOrder.getOrderDate() != null) {
+                    orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
+                }
+
+                System.out.println("loaded some lists");
+                System.out.println("Init");
             }
         } catch(IOException ex) {
             
         }        
-        purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
-        if (staff.getPlant() instanceof ManufacturingFacility) {
-            mf = (ManufacturingFacility) staff.getPlant();
-        }
-        System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
-        procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
 
-        if (purchaseOrder.getOrderDate() != null) {
-            orderDateString = df.format(purchaseOrder.getOrderDate().getTime());
-        }
-
-        System.out.println("loaded some lists");
-        System.out.println("Init");
     }
 
     public ManufacturingFacility getMf() {
@@ -258,11 +260,11 @@ public class PurchaseOrderConfirmedManagedBean {
         this.plant = plant;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 

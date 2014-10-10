@@ -20,8 +20,8 @@ import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContract;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContract;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProductionOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
@@ -29,7 +29,7 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Enums.MenuType;
@@ -221,12 +221,12 @@ public class QueryMethods {
         }
     }
 
-    public static Supplier findSupplierByName(EntityManager em, String supplierName) {
+    public static ProcuredStockSupplier findSupplierByName(EntityManager em, String supplierName) {
         Query q = em.createNamedQuery("findSupplierByName");
         q.setParameter("name", supplierName);
 
         try {
-            return (Supplier) q.getSingleResult();
+            return (ProcuredStockSupplier) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }
@@ -256,37 +256,37 @@ public class QueryMethods {
         }
     }
 
-    public static ProcurementContractDetail findPCDByStockMFAndSupplier(EntityManager em, ProcuredStock stock, ManufacturingFacility mf, Supplier s) {
-        Query q = em.createNamedQuery("getProcurementContractDetailByStockMFAndSupplier", ProcurementContractDetail.class);
+    public static ProcuredStockContractDetail findPCDByStockMFAndSupplier(EntityManager em, ProcuredStock stock, ManufacturingFacility mf, ProcuredStockSupplier s) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockMFAndSupplier", ProcuredStockContractDetail.class);
         q.setParameter("stock", stock);
         q.setParameter("mf", mf);
         q.setParameter("supplier", s);
 
         try {
-            return (ProcurementContractDetail) q.getSingleResult();
+            return (ProcuredStockContractDetail) q.getSingleResult();
         } catch (NoResultException NRE) {
             return null;
         }
     }
 
-    public static List<ProcurementContractDetail> findPCDByStockAndMF(EntityManager em, ProcuredStock stock, ManufacturingFacility mf) {
-        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF", ProcurementContractDetail.class);
+    public static List<ProcuredStockContractDetail> findPCDByStockAndMF(EntityManager em, ProcuredStock stock, ManufacturingFacility mf) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF", ProcuredStockContractDetail.class);
         q.setParameter("stock", stock);
         q.setParameter("mf", mf);
 
         try {
-            return (List<ProcurementContractDetail>) q.getResultList();
+            return (List<ProcuredStockContractDetail>) q.getResultList();
         } catch (NoResultException NRE) {
             return null;
         }
     }
 
-    public static List<ProcurementContractDetail> findPCDByStock(EntityManager em, ProcuredStock stock) {
-        Query q = em.createNamedQuery("getProcurementContractDetailByStock", ProcurementContractDetail.class);
+    public static List<ProcuredStockContractDetail> findPCDByStock(EntityManager em, ProcuredStock stock) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStock", ProcuredStockContractDetail.class);
         q.setParameter("stock", stock);
 
         try {
-            return (List<ProcurementContractDetail>) q.getResultList();
+            return (List<ProcuredStockContractDetail>) q.getResultList();
         } catch (NoResultException NRE) {
             return null;
         }
@@ -459,7 +459,7 @@ public class QueryMethods {
 
             return (MonthlyProductionPlan) q.getResultList().get(0);
         } catch (Exception ex) {
-            throw new RuntimeException("This MSSR does not have a MPP yet");
+            throw new Exception("This MSSR does not have a MPP yet");
         }
     }
 
@@ -624,12 +624,12 @@ public class QueryMethods {
         return (false);
     }
 
-    public static Supplier getSupplierByMfAndM(EntityManager em, ManufacturingFacility mf, Material mat) {
+    public static ProcuredStockSupplier getSupplierByMfAndM(EntityManager em, ManufacturingFacility mf, Material mat) {
 
-        Query q = em.createNamedQuery("ProcurementContract.getSupplierForMFAndMaterial");
+        Query q = em.createNamedQuery("ProcuredStockContract.getSupplierForMFAndMaterial");
         q.setParameter("mf", mf);
         q.setParameter("ma", mat);
-        ProcurementContract pc = (ProcurementContract) q.getResultList().get(0);
+        ProcuredStockContract pc = (ProcuredStockContract) q.getResultList().get(0);
         return (pc.getSupplier());
 
     }

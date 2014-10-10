@@ -18,7 +18,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -74,7 +73,6 @@ public class Country implements Serializable {
         this.name = name;
     }
 
-    @XmlTransient
     public List<Plant> getPlants() {
         return plants;
     }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -17,23 +16,25 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class RestaurantPurchaseOrder implements Serializable {
+public class StoreSection implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @OneToMany(mappedBy="purchaseOrder")
-    private List<RestaurantPurchaseOrderDetail> purchaseOrderDetails;
-    
-    @ManyToOne
-    private Supplier supplier;
+
+    private Integer storeLevel;
+    private String name;
+    private String description;
     
     @ManyToOne
-    private Store store;
+    Store store;
+    
+    @OneToMany(mappedBy = "locationInStore")
+    List<StorefrontInventory> storefrontInventories;
 
     public Long getId() {
         return id;
@@ -43,20 +44,28 @@ public class RestaurantPurchaseOrder implements Serializable {
         this.id = id;
     }
 
-    public List<RestaurantPurchaseOrderDetail> getPurchaseOrderDetails() {
-        return purchaseOrderDetails;
+    public Integer getStoreLevel() {
+        return storeLevel;
     }
 
-    public void setPurchaseOrderDetails(List<RestaurantPurchaseOrderDetail> purchaseOrderDetails) {
-        this.purchaseOrderDetails = purchaseOrderDetails;
+    public void setStoreLevel(Integer storeLevel) {
+        this.storeLevel = storeLevel;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public String getName() {
+        return name;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Store getStore() {
@@ -65,6 +74,14 @@ public class RestaurantPurchaseOrder implements Serializable {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public List<StorefrontInventory> getStorefrontInventories() {
+        return storefrontInventories;
+    }
+
+    public void setStorefrontInventories(List<StorefrontInventory> storefrontInventories) {
+        this.storefrontInventories = storefrontInventories;
     }
 
     @Override
@@ -77,10 +94,10 @@ public class RestaurantPurchaseOrder implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantPurchaseOrder)) {
+        if (!(object instanceof StoreSection)) {
             return false;
         }
-        RestaurantPurchaseOrder other = (RestaurantPurchaseOrder) object;
+        StoreSection other = (StoreSection) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -89,7 +106,7 @@ public class RestaurantPurchaseOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.PurchaseOrder[ id=" + id + " ]";
+        return "StoreSection[ id=" + id + " ]";
     }
-    
+
 }
