@@ -7,6 +7,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -48,6 +49,12 @@ public class ProcuredStockContractDetail implements Serializable {
     private ProcuredStock procuredStock;
     @OneToOne
     private ManufacturingFacility supplierFor;
+    @ManyToOne(cascade={CascadeType.PERSIST})
+    private Currency currency;
+
+    public ProcuredStockContractDetail() {
+        
+    }
 
     public Integer getLeadTimeInDays() {
         return leadTimeInDays;
@@ -63,10 +70,6 @@ public class ProcuredStockContractDetail implements Serializable {
 
     public void setLotSize(Integer lotSize) {
         this.lotSize = lotSize;
-    }
-
-    public ProcuredStockContractDetail() {
-        
     }
     
     public Long getId() {
@@ -99,6 +102,22 @@ public class ProcuredStockContractDetail implements Serializable {
 
     public void setSupplierFor(ManufacturingFacility supplierFor) {
         this.supplierFor = supplierFor;
+    }
+
+    public ProcuredStockContract getProcuredStockContract() {
+        return procuredStockContract;
+    }
+
+    public void setProcuredStockContract(ProcuredStockContract procuredStockContract) {
+        this.procuredStockContract = procuredStockContract;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 
     @Override

@@ -11,6 +11,7 @@ import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Currency;
+import IslandFurniture.Entities.ExchangeRate;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,7 +19,14 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LineChartSeries;
 
 /**
  *
@@ -33,8 +41,12 @@ public class CurrencyManagedBean implements Serializable {
     private ManageOrganizationalHierarchyBeanLocal mohBean;
     
     private String currencyParser;
-    private CountryOffice co;
-    private List<String> currencyList;
+    private List<Currency> currencyList;
+    private List<ExchangeRate> exchangeRates;
+    private Currency currency;
+    private boolean toDisplay;
+    private Long currencyID;
+    private LineChartModel lineModel;
 
     public String getCurrencyParser() {
         return currencyParser;
@@ -44,24 +56,105 @@ public class CurrencyManagedBean implements Serializable {
         this.currencyParser = currencyParser;
     }
 
-    public CountryOffice getCo() {
-        return co;
+    public List<Currency> getCurrencyList() {
+        return currencyList;
     }
 
-    public void setCo(CountryOffice co) {
-        this.co = co;
+    public void setCurrencyList(List<Currency> currencyList) {
+        this.currencyList = currencyList;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public boolean isToDisplay() {
+        return toDisplay;
+    }
+
+    public void setToDisplay(boolean toDisplay) {
+        this.toDisplay = toDisplay;
+    }
+
+    public Long getCurrencyID() {
+        return currencyID;
+    }
+
+    public void setCurrencyID(Long currencyID) {
+        this.currencyID = currencyID;
+    }
+
+    public List<ExchangeRate> getExchangeRates() {
+        return exchangeRates;
+    }
+
+    public void setExchangeRates(List<ExchangeRate> exchangeRates) {
+        this.exchangeRates = exchangeRates;
+    }
+
+    public LineChartModel getLineModel() {
+        return lineModel;
+    }
+
+    public void setLineModel(LineChartModel lineModel) {
+        this.lineModel = lineModel;
     }
      
     @PostConstruct
     public void init() { 
         System.out.println("init:CurrencyManagedBean");
-        currencyList = currencyManager.getAllCurrency();
-        
+        this.currencyID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("currencyID");
+        currencyList = currencyManager.getAllCurrency(); 
+        toDisplay = false;
+        if(currencyID != null) {
+            currency = currencyManager.getCurrency(currencyID);
+            exchangeRates = currency.getExchangeRates();
+            toDisplay = true;
+            createLineModels();
+        }
     }
-    public void addCurrency() {
-        System.out.println("CurrencyManagedBean.addCurrency()");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String countryID = request.getParameter("addCurrencyForm:countryID");
-        String currencyCode = request.getParameter("addCurrencyForm:currencyCode");
+    
+    public String displayCurrencyDetails() {
+        System.out.println("CurrencyManagedBean.displayCurrencyDetails()");
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Long currencyID = Long.parseLong(request.getParameter("selectCurrencyForm:currencyID"));
+        System.out.println(currencyID); 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("currencyID", currencyID);
+        return "currency.xhtml";
+    }
+    public String retrieveLatestRates() {
+        System.out.println("CurrencyManagedBean.retrieveLatestRates()");
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("currencyID", currencyID);
+        return "currency.xhtml";
+    }
+    private void createLineModels() {
+        lineModel = (LineChartModel) initLinearModel();
+        lineModel.setTitle("Exchange Rate");
+        lineModel.setLegendPosition("e");
+        Axis yAxis = lineModel.getAxis(AxisType.Y);
+        yAxis.setMin(0);
+        yAxis.setMax(10);
+        yAxis.setLabel("Year");
+    }
+    private LineChartModel initLinearModel() {
+        LineChartModel model = new LineChartModel();
+ 
+        LineChartSeries series1 = new LineChartSeries();
+        series1.setLabel("SGD");
+ 
+        series1.set(1, 2);
+        series1.set(2, 1);
+        series1.set(3, 3);
+        series1.set(4, 6);
+        series1.set(5, 8);
+ 
+        model.addSeries(series1);
+         
+        return model;
     }
 }

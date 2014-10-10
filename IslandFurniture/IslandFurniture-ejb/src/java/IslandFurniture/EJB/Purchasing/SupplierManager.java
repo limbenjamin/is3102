@@ -96,6 +96,7 @@ public class SupplierManager implements SupplierManagerLocal {
         Country country;
         try {
             System.out.println("SupplierManager.editSupplier()");
+            System.out.println("Supplier Name is " + name + " Country Name is " + countryName + ". Number is " + phoneNumber + ". email is " + email);
             supplier = em.find(ProcuredStockSupplier.class, id);
             country = findCountryByName(em, countryName);
             if(name != null)

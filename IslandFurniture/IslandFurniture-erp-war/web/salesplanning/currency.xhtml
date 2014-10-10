@@ -17,49 +17,42 @@
                             <li><a href="../dash.xhtml">Home</a></li>
                             <li class="active"><strong>Currency</strong></li>
                         </ol>                        
-                    </div>                     
+                    </div>         
+                </div>
+                <div class="row"> 
                     <div class="col-md-10">
-                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newCurrency">
-                            <i class="fa fa-fw fa-plus"></i>New Currency
-                        </button>
-                        <h4>Currency</h4><hr></hr>
+                        <h:form id="selectCurrencyForm" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Select Currency</label>
+                                <div class="col-sm-4">
+                                    <h:selectOneMenu id="currencyID" class="form-control needauto" pt:required="required">
+                                        <f:selectItem itemLabel="Select Currency" itemValue="" noSelectionOption="true" />
+                                        <f:selectItems value="#{currencyManagedBean.currencyList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
+                                    </h:selectOneMenu>
+                                </div> 
+                                <div class="col-sm-2">
+                                    <h:commandButton action="#{currencyManagedBean.displayCurrencyDetails()}" value="Select" class="btn btn-success btn-sm"></h:commandButton>
+                                </div>
+                            </div>
+                        </h:form>
                     </div>
                 </div>
-                <!--    Modal for New Currency  -->
-                    <div class="modal fade" id="newCurrency" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">Add New Currency</h4>
-                                </div>
-                                <h:form id="addCurrencyForm" class="form-horizontal">
-                                    <div class="modal-body"> 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Country: </label>
-                                            <div class="col-sm-9"> 
-                                                <h:selectOneMenu id="countryID" class="form-control needauto" pt:required="required">         
-                                                    <f:selectItem itemLabel="Select Country Office" itemValue="" noSelectionOption="true" />
-                                                    <f:selectItems value="#{currencyManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.id}" />
-                                                </h:selectOneMenu>
-                                            </div>
-                                        </div>  
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Currency Code: </label>
-                                            <div class="col-sm-8"> 
-                                                <h:inputText id="currencyCode" class="form-control" pt:required="required"></h:inputText>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                        <h:commandButton action="currency.xhtml" actionListener="#{currencyManagedBean.addCurrency}" value="Add Request" class="btn btn-success btn-round"> 
-                                        </h:commandButton>
-                                    </div>
-                                </h:form> 
-                            </div>
-                        </div>
-                    </div> 
+                <h:panelGroup class="row" rendered="#{currencyManagedBean.toDisplay}">
+                    <div class="col-md-10">           
+                        <span class="pull-right">         
+                            <h:form id="retrieveLatestRatesForm" class="form-horizontal">
+                                <h:commandButton action="#{currencyManagedBean.retrieveLatestRates}" class="btn btn-sm btn-success btn-right-margin" value="Retrieve Latest Exchange Rate">
+                                </h:commandButton>    
+                            </h:form>
+                        </span>            
+                        <h4><strong>#{currencyManagedBean.currency.name}</strong></h4><hr></hr>
+                        
+                    </div>
+                    <div class="col-md-10">
+                        <p:chart type="line" model="#{currencyManagedBean.lineModel}" style="height: 400px" />
+                    </div>
+                </h:panelGroup>
+                
             </ui:define>
         </ui:composition>
     </h:body>

@@ -9,6 +9,7 @@ import static IslandFurniture.EJB.Manufacturing.ManageProductionPlanning.FORWARD
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
@@ -22,6 +23,7 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContract;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.ProductionOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
@@ -29,7 +31,6 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
-import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Enums.MenuType;
@@ -74,6 +75,28 @@ public class QueryMethods {
         }
     }
 
+    public static Currency findCurrencyByName(EntityManager em, String name) {
+        Query q = em.createNamedQuery("findCurrencyByName");
+        q.setParameter("name", name);
+        
+        try {
+            return (Currency) q.getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
+    }
+
+    public static Currency findCurrencyByCode(EntityManager em, String code) {
+        Query q = em.createNamedQuery("findCurrencyByCode");
+        q.setParameter("code", code);
+        
+        try {
+            return (Currency) q.getSingleResult();
+        } catch(NoResultException nre) {
+            return null;
+        }
+    }
+    
     public static FurnitureModel findFurnitureByName(EntityManager em, String furnitureName) {
         Query q = em.createNamedQuery("findFurnitureByName");
         q.setParameter("name", furnitureName);

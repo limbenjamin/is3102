@@ -7,6 +7,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
@@ -23,6 +26,17 @@ import javax.persistence.Temporal;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findCurrencyByCode",
+            query = "SELECT a FROM Currency a WHERE a.currencyCode = :code"),
+    @NamedQuery(
+            name = "findCurrencyByName",
+            query = "SELECT a FROM Currency a WHERE a.name = :name"),
+    @NamedQuery(
+            name = "getAllCurrencies",
+            query = "SELECT a FROM Currency a")
+})
 public class Currency implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -33,6 +47,16 @@ public class Currency implements Serializable {
 
     @OneToMany(cascade={CascadeType.PERSIST})
     private List<ExchangeRate> exchangeRates;
+    
+    public Currency() {
+        
+    }
+    
+    public Currency(String name, String currencyCode) {
+        this.name = name;
+        this.currencyCode = currencyCode;
+        this.exchangeRates = new ArrayList<ExchangeRate>();
+    }
     
     public Long getId() {
         return id;

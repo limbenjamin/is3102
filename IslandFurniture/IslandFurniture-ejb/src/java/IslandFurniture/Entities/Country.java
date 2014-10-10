@@ -7,6 +7,7 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
 
 /**
@@ -44,6 +46,7 @@ public class Country implements Serializable {
     @OneToMany(mappedBy = "country")
     private List<Plant> plants;
 
+    @OneToOne(cascade={CascadeType.PERSIST})
     private Currency currency;
 
     public Long getId() {

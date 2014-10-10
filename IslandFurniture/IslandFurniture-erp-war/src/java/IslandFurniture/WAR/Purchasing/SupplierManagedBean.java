@@ -78,7 +78,7 @@ public class SupplierManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         supplierList = supplierManager.displaySupplierList();
         countryList = manageOrganizationalHierarchyBean.getCountries();
-        System.out.println("Init");
+        System.out.println("init:SupplierManagedBean");
     }
     
     public String addSupplier() {
@@ -104,8 +104,9 @@ public class SupplierManagedBean implements Serializable {
         return "procurementcontract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
-        System.out.println("SupplierManagedBean.editSupplier()");
+        System.out.println("SupplierManagedBean.editSupplier()"); 
         supplier = (ProcuredStockSupplier) event.getComponent().getAttributes().get("toEdit");
+        System.out.println("Supplier country is " + supplier.getCountry().getName());
         if(supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail())) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Procured Stock Supplier " + supplier.getName() + " has been updated", ""));
