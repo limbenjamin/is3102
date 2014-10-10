@@ -459,7 +459,7 @@ public class QueryMethods {
 
             return (MonthlyProductionPlan) q.getResultList().get(0);
         } catch (Exception ex) {
-            throw new RuntimeException("This MSSR does not have a MPP yet");
+            throw new Exception("This MSSR does not have a MPP yet");
         }
     }
 

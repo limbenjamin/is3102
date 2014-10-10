@@ -5,11 +5,14 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
+import IslandFurniture.Enums.TransferOrderStatus;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -29,6 +32,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     private Stock stock;
     private StockUnit stockUnit;
     private StorageBin storageBin;
+    private ReplenishmentTransferOrder replenishmentTransferOrder;
+    private ExternalTransferOrder externalTransferOrder;
 
     @Override
     public StockUnit getStockUnit(Long stockUnitId) {
@@ -48,8 +53,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         stockUnit.setBatchNo(batchNumber);
         em.merge(stockUnit);
         em.flush();
-    }  
-   
+    }
+
     @Override
     public void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin) {
         stockUnit = new StockUnit();
@@ -162,13 +167,13 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         return q.getResultList();
     }
 
-        @Override
+    @Override
     public List<StockUnit> viewStockUnitDistinctName(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId GROUP BY s.stock.name");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
-    
+
     @Override
     public List<StorageBin> viewStorageBin(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=" + plant.getId());
@@ -197,8 +202,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         Query q = em.createQuery("SELECT s " + "FROM Stock s");
         return q.getResultList();
     }
-    
-        @Override
+
+    @Override
     public List<StockUnit> viewStockUnitsOfAStock(Plant plant, Stock stock) {
         Query q = em.createQuery("SELECT s FROM StockUnit s WHERE (s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE)");
         q.setParameter("plantId", plant.getId());
@@ -206,4 +211,70 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         return q.getResultList();
     }
 
+//  Function: To display list of Replenishment Transfer Order (Requested)    
+    @Override
+    public List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequested(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return q.getResultList();
+    }
+
+//  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock  
+    @Override
+    public List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequestedForAParticularStock(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return q.getResultList();
+    }
+
+//  Function: To display list of Replenishment Transfer Order (Fulfilled)    
+    @Override
+    public List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderFulfilled(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.FULFILLED);
+        return q.getResultList();
+    }
+
+//  Function: To create a Replenishment Transfer Order (Status: Requested)
+    @Override
+    public void createReplenishmentTransferOrder(Plant plant, Stock stock, Integer quantity) {
+        replenishmentTransferOrder = new ReplenishmentTransferOrder();
+        replenishmentTransferOrder.setRequestingPlant(plant);
+        replenishmentTransferOrder.setStock(stock);
+        replenishmentTransferOrder.setQty(quantity);
+        replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        em.persist(replenishmentTransferOrder);
+        em.flush();
+    }
+
+//  Function: To delete a Replenishment Transfer Order  
+    @Override
+    public void deleteReplenishmentTransferOrder(Long id) {
+        replenishmentTransferOrder = (ReplenishmentTransferOrder) em.find(ReplenishmentTransferOrder.class, id);
+        em.remove(replenishmentTransferOrder);
+        em.flush();
+    }
+
+//  Function: To edit the Quantity of a Replenishment Transfer Order (Requested)
+    @Override
+    public void editReplenishmentTransferOrderQuantity(Long id, Integer qty) {
+        replenishmentTransferOrder = (ReplenishmentTransferOrder) em.find(ReplenishmentTransferOrder.class, id);
+        replenishmentTransferOrder.setQty(qty);
+        em.merge(replenishmentTransferOrder);
+        em.flush();
+    }
+    
+//  Function: To create a Replenishment Transfer Order (Status: Requested)
+    @Override
+    public void createExternalTransferOrder(Plant plant) {
+        externalTransferOrder = new ExternalTransferOrder();
+        externalTransferOrder.setRequestingPlant(plant);
+        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        em.persist(externalTransferOrder);
+        em.flush();
+    }
 }
