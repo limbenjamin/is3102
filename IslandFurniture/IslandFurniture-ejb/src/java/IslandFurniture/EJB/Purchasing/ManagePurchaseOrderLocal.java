@@ -11,7 +11,7 @@ import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.List;
@@ -24,7 +24,7 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
+    PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
 
     void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
 
@@ -38,7 +38,7 @@ public interface ManagePurchaseOrderLocal {
 
     PurchaseOrder getPurchaseOrder(Long id);
 
-    List<Supplier> viewContractedSuppliers(ManufacturingFacility mf);
+    List<ProcuredStockSupplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<PurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
 

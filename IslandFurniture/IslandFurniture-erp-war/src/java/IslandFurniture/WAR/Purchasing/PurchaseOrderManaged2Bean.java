@@ -13,7 +13,7 @@ import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
@@ -64,7 +64,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private PurchaseOrderDetail purchaseOrderDetail;
     private List<PurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
     private List<Plant> plantList;
@@ -164,7 +164,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         return "purchaseorder2";
     }
 
-    public void sendEmail(Supplier recipient) {
+    public void sendEmail(ProcuredStockSupplier recipient) {
         String title = "[Confirmed Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
                 + mf.getName();
         String orderContent = mf.getName() + " Manufacturing Facility would like to order the following: " + "\r\n ";
@@ -328,11 +328,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.plant = plant;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 

@@ -3,32 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
  * @author James
  */
 @Entity
-public class RestaurantPurchaseOrderDetail implements Serializable {
+public class IngredientPurchaseOrder implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
+    @OneToMany(mappedBy = "ingredPurchaseOrder")
+    private List<IngredientPurchaseOrderDetail> ingredPurchaseOrderDetails;
+
     @ManyToOne
-    private RestaurantPurchaseOrder purchaseOrder;
-    
+    private IngredientSupplier ingredSupplier;
+
     @ManyToOne
-    private Ingredient ingredient;
+    private Store store;
 
     public Long getId() {
         return id;
@@ -38,20 +43,28 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
         this.id = id;
     }
 
-    public RestaurantPurchaseOrder getPurchaseOrder() {
-        return purchaseOrder;
+    public List<IngredientPurchaseOrderDetail> getIngredPurchaseOrderDetails() {
+        return ingredPurchaseOrderDetails;
     }
 
-    public void setPurchaseOrder(RestaurantPurchaseOrder purchaseOrder) {
-        this.purchaseOrder = purchaseOrder;
+    public void setIngredPurchaseOrderDetails(List<IngredientPurchaseOrderDetail> ingredPurchaseOrderDetails) {
+        this.ingredPurchaseOrderDetails = ingredPurchaseOrderDetails;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
+    public IngredientSupplier getIngredSupplier() {
+        return ingredSupplier;
     }
 
-    public void setIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void setIngredSupplier(IngredientSupplier ingredSupplier) {
+        this.ingredSupplier = ingredSupplier;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     @Override
@@ -64,10 +77,10 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RestaurantPurchaseOrderDetail)) {
+        if (!(object instanceof IngredientPurchaseOrder)) {
             return false;
         }
-        RestaurantPurchaseOrderDetail other = (RestaurantPurchaseOrderDetail) object;
+        IngredientPurchaseOrder other = (IngredientPurchaseOrder) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -76,7 +89,7 @@ public class RestaurantPurchaseOrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.PurchaseOrderDetail[ id=" + id + " ]";
+        return "IngredientPurchaseOrder[ id=" + id + " ]";
     }
-    
+
 }

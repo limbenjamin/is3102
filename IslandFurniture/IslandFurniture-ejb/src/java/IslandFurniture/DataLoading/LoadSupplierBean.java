@@ -10,11 +10,11 @@ import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContract;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContract;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,8 +35,8 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private ProcurementContractDetail addProcurementContractDetail(ProcurementContract pc, ProcuredStock procuredStock, ManufacturingFacility mf, int leadTime, int lotSize) {
-        ProcurementContractDetail pcd = new ProcurementContractDetail();
+    private ProcuredStockContractDetail addProcurementContractDetail(ProcuredStockContract pc, ProcuredStock procuredStock, ManufacturingFacility mf, int leadTime, int lotSize) {
+        ProcuredStockContractDetail pcd = new ProcuredStockContractDetail();
         pcd.setProcuredStock(procuredStock);
         pcd.setSupplierFor(mf);
         pcd.setLeadTimeInDays(leadTime);
@@ -47,16 +47,16 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
         return pcd;
     }
 
-    private Supplier addSupplier(String name, Country country) {
-        Supplier supplier = QueryMethods.findSupplierByName(em, name);
+    private ProcuredStockSupplier addSupplier(String name, Country country) {
+        ProcuredStockSupplier supplier = QueryMethods.findSupplierByName(em, name);
 
         if (supplier == null) {
-            supplier = new Supplier();
+            supplier = new ProcuredStockSupplier();
             supplier.setName(name);
             supplier.setCountry(country);
-            ProcurementContract pc = new ProcurementContract();
+            ProcuredStockContract pc = new ProcuredStockContract();
             pc.setSupplier(supplier);
-            supplier.setProcurementContract(pc);
+            supplier.setProcuredStockContract(pc);
             em.persist(supplier);
 
             return supplier;
@@ -83,11 +83,11 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
             this.addSupplier("Speed Manufacture", country);
 
             List<ManufacturingFacility> mfList = em.createNamedQuery("getAllMFs").getResultList();
-            List<Supplier> suppliers = em.createNamedQuery("getAllSuppliers").getResultList();
+            List<ProcuredStockSupplier> suppliers = em.createNamedQuery("getAllSuppliers").getResultList();
             FurnitureModel fm;
 
-            ProcurementContractDetail pcd;
-            List<ProcurementContractDetail> pcdList;
+            ProcuredStockContractDetail pcd;
+            List<ProcuredStockContractDetail> pcdList;
 
             for (ManufacturingFacility mf : mfList) {
                 Set<ProcuredStock> reqStock = new HashSet();
@@ -107,11 +107,11 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
                 }
 
                 for (ProcuredStock eachStock : reqStock) {
-                    ProcurementContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcurementContract();
+                    ProcuredStockContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcuredStockContract();
                     pcd = this.addProcurementContractDetail(pc, eachStock, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
                     pcdList.add(pcd);
 
-                    pc.getProcurementContractDetails().add(pcd);
+                    pc.getProcuredStockContractDetails().add(pcd);
                 }
 
                 mf.setSuppliedBy(pcdList);

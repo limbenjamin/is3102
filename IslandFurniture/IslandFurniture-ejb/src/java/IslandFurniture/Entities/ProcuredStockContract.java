@@ -27,30 +27,27 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "getSupplierList",
-            query = "SELECT a.supplier FROM ProcurementContract a WHERE EXISTS "
-                    + "(SELECT p FROM ProcurementContractDetail p WHERE p.procurementContract.id = a.id AND p.supplierFor = :mf)")
+            query = "SELECT a.supplier FROM ProcuredStockContract a WHERE EXISTS "
+                    + "(SELECT p FROM ProcuredStockContractDetail p WHERE p.procuredStockContract.id = a.id AND p.supplierFor = :mf)")
         ,    @NamedQuery(
             name = "getSupplierForMaterial",
-            query = "SELECT a.supplier FROM ProcurementContract a WHERE EXISTS (SELECT p FROM ProcurementContractDetail p WHERE p.procurementContract.id = a.id AND  p.procuredStock=:mat AND p.supplierFor = :mf )"),
+            query = "SELECT a.supplier FROM ProcuredStockContract a WHERE EXISTS (SELECT p FROM ProcuredStockContractDetail p WHERE p.procuredStockContract.id = a.id AND  p.procuredStock=:mat AND p.supplierFor = :mf )"),
         @NamedQuery(
-        name="ProcurementContract.getSupplierForMFAndMaterial",
-                query="select pc from ProcurementContract pc where exists(select pcd from ProcurementContractDetail pcd where pcd.procurementContract.id=pc.id and pcd.supplierFor=:mf and pcd.procuredStock=:ma)"
+        name="ProcuredStockContract.getSupplierForMFAndMaterial",
+                query="select pc from ProcuredStockContract pc where exists(select pcd from ProcuredStockContractDetail pcd where pcd.procuredStockContract.id=pc.id and pcd.supplierFor=:mf and pcd.procuredStock=:ma)"
         )
-
-        
-        
 })
-public class ProcurementContract implements Serializable {
+public class ProcuredStockContract implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToOne
-    private Supplier supplier;
-    @OneToMany(mappedBy="procurementContract", cascade={CascadeType.PERSIST})
-    private List<ProcurementContractDetail> procurementContractDetails = new ArrayList();
+    private ProcuredStockSupplier supplier;
+    @OneToMany(mappedBy="procuredStockContract", cascade={CascadeType.PERSIST})
+    private List<ProcuredStockContractDetail> procuredStockContractDetails = new ArrayList();
     
-    public ProcurementContract() {
+    public ProcuredStockContract() {
         
     }
 
@@ -62,20 +59,20 @@ public class ProcurementContract implements Serializable {
         this.id = id;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 
-    public List<ProcurementContractDetail> getProcurementContractDetails() {
-        return procurementContractDetails;
+    public List<ProcuredStockContractDetail> getProcuredStockContractDetails() {
+        return procuredStockContractDetails;
     }
 
-    public void setProcurementContractDetails(List<ProcurementContractDetail> procurementContractDetails) {
-        this.procurementContractDetails = procurementContractDetails;
+    public void setProcuredStockContractDetails(List<ProcuredStockContractDetail> procuredStockContractDetails) {
+        this.procuredStockContractDetails = procuredStockContractDetails;
     }
 
     @Override
@@ -88,10 +85,10 @@ public class ProcurementContract implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProcurementContract)) {
+        if (!(object instanceof ProcuredStockContract)) {
             return false;
         }
-        ProcurementContract other = (ProcurementContract) object;
+        ProcuredStockContract other = (ProcuredStockContract) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -100,7 +97,7 @@ public class ProcurementContract implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.ProcurementContract[ id=" + id + " ]";
+        return "ProcuredStockContract[ id=" + id + " ]";
     }
     
 }
