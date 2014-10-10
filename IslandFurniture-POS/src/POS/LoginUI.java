@@ -1,6 +1,7 @@
 package POS;
 
 import Helper.Connector;
+import Helper.NFCMethods;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -43,7 +44,8 @@ public class LoginUI extends javax.swing.JFrame {
                         public void actionPerformed(ActionEvent event) {
                             try {
                                 if (acr122uCardTerminal.isCardPresent()){
-                                    String cardId = getID();
+                                    NFCMethods nfc = new NFCMethods();
+                                    String cardId = nfc.getID(acr122uCardTerminal);
                                     List params = new ArrayList();
                                     List values = new ArrayList();
                                     params.add("cardId");
@@ -308,50 +310,6 @@ public class LoginUI extends javax.swing.JFrame {
         store.setVisible(true);
         store.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(false);
-    }
-    
-    public String getID(){
-        byte[] byteArrayReadUID = { (byte)0xFF, (byte)0xCA, (byte)0x00, (byte)0x00, (byte)0x00 };
-        try 
-        {
-            acr122uCardTerminal.waitForCardPresent(0);
-            Card card = acr122uCardTerminal.connect("T=1");
-            CardChannel cardChannel = card.getBasicChannel();
-            return send(byteArrayReadUID, cardChannel);                        
-        }
-        catch (Exception ex) 
-        {
-            return "";
-        }
-        
-    }
-    
-    public String send(byte[] command, CardChannel cardChannel) 
-    {
-        String response = "";
-
-        byte[] byteArrayResponse = new byte[258];
-        ByteBuffer bufferedCommand = ByteBuffer.wrap(command);
-        ByteBuffer bufferedResponse = ByteBuffer.wrap(byteArrayResponse);
-
-        // output = The length of the received response APDU
-        int output = 0;
-
-        try 
-        {
-            output = cardChannel.transmit(bufferedCommand, bufferedResponse);
-        } 
-        catch (CardException ex) 
-        {
-            ex.printStackTrace();
-        }
-
-        for (int i = 0; i < output; i++) 
-        {
-            response += String.format("%02X", byteArrayResponse[i]);
-        }
-
-        return response;
     }
     
 }
