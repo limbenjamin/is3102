@@ -19,7 +19,7 @@
   <module>
     <web>
       <web-uri>IslandFurniture-webservices-war.war</web-uri>
-      <context-root>/IslandFurniture-webservices-war</context-root>
+      <context-root>ws</context-root>
     </web>
   </module>
 </application>
