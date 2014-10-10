@@ -127,33 +127,19 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
         }
     }
+    
+     // confirm purchase order
+    public String confirmPurchaseOrder() throws ParseException {
+        status = PurchaseOrderStatus.getPurchaseOrderStatus(1);
+        
+        mpol.updatePurchaseOrder(purchaseOrderId, status, Calendar.getInstance());
+        sendEmail(supplier);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
+        return "purchaseorder";
 
-    // new update purchase order method
-    public String updatePurchaseOrder() throws ParseException {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String selectedStatus = request.getParameter("updatePurchaseOrder:status");
-        status = PurchaseOrderStatus.getPurchaseOrderStatus(Integer.parseInt(selectedStatus));
-        System.out.println("selected status is: " + selectedStatus);
-        orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = (Date) formatter.parse(orderDateString);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        orderDate = cal;
-        mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
-        System.out.println("updated purchase order" + purchaseOrderId);
-        if (selectedStatus.equals("1")) {
-            sendEmail(supplier);
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
-            return "purchaseorder";
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-            return "purchaseorder2?faces-redirect=true";
-        }
-    }
+    }    
+    
 
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
