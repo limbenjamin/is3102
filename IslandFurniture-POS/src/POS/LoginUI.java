@@ -5,13 +5,10 @@ import Helper.NFCMethods;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.smartcardio.Card;
-import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
@@ -23,7 +20,7 @@ import org.json.simple.parser.ParseException;
 public class LoginUI extends javax.swing.JFrame {
 
     private CardTerminal acr122uCardTerminal = null;
-
+    private Boolean isChecking = false;
     
     public LoginUI() {
         initComponents();
@@ -43,19 +40,23 @@ public class LoginUI extends javax.swing.JFrame {
                         public void actionPerformed(ActionEvent event) {
                             try {
                                 if (acr122uCardTerminal.isCardPresent()){
-                                    NFCMethods nfc = new NFCMethods();
-                                    String cardId = nfc.getID(acr122uCardTerminal);
-                                    List params = new ArrayList();
-                                    List values = new ArrayList();
-                                    params.add("cardId");
-                                    values.add(cardId.substring(0, 8));
-                                    System.err.println(cardId.substring(0, 8));
-                                    String result = Connector.postForm(params, values, "authnfc");
-                                    if (result.equals("Error")) {
-                                        JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
-                                    } else {
-                                        System.err.println(result);
-                                        SelectScreen(result);
+                                    if (isChecking == false){
+                                        isChecking = true;
+                                        NFCMethods nfc = new NFCMethods();
+                                        String cardId = nfc.getID(acr122uCardTerminal);
+                                        List params = new ArrayList();
+                                        List values = new ArrayList();
+                                        params.add("cardId");
+                                        values.add(cardId.substring(0, 8));
+                                        String result = Connector.postForm(params, values, "auth/nfc");
+                                        if (result.equals("Error")) {
+                                            JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
+                                            isChecking = false;
+                                        } else {
+                                            System.err.println(result);
+                                            SelectScreen(result);
+                                        }
+                                        
                                     }
                                 }
                             } catch (CardException ex) {
@@ -65,7 +66,7 @@ public class LoginUI extends javax.swing.JFrame {
                             }
                         }
                     };
-                    Timer timerCheckCardPresent = new Timer(1000, actionListenerCheckCardPresent);
+                    Timer timerCheckCardPresent = new Timer(5000, actionListenerCheckCardPresent);
                     timerCheckCardPresent.setRepeats(true);
                     timerCheckCardPresent.start();
                 } else {
@@ -97,13 +98,17 @@ public class LoginUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Unified Point of Sale Login");
-        setPreferredSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(1920, 900));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setPreferredSize(new java.awt.Dimension(1920, 900));
 
+        jLabel1.setDisplayedMnemonic('2');
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel1.setForeground(new java.awt.Color(44, 62, 50));
         jLabel1.setText("Point of Sale Login");
+        jLabel1.setMaximumSize(null);
+        jLabel1.setMinimumSize(null);
 
         jUsernameFieldUsername.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jUsernameFieldUsername.addActionListener(new java.awt.event.ActionListener() {
@@ -154,46 +159,47 @@ public class LoginUI extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(236, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(222, 222, 222)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonExit, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                            .addComponent(jUsernameFieldUsername)
-                            .addComponent(jPasswordFieldPassword)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButtonLogin)
+                                .addComponent(jButtonClear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                                .addComponent(jButtonClear)))))
-                .addContainerGap(332, Short.MAX_VALUE))
+                                .addComponent(jButtonLogin))
+                            .addComponent(jUsernameFieldUsername, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 225, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonExit)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jUsernameFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonLogin)
                     .addComponent(jButtonClear))
-                .addGap(18, 18, 18)
-                .addComponent(jButtonExit, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(241, Short.MAX_VALUE))
         );
 
         jUsernameFieldUsername.getAccessibleContext().setAccessibleName("");
@@ -204,32 +210,20 @@ public class LoginUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(316, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jUsernameFieldUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsernameFieldUsernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
-
-    private void jPasswordFieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordFieldPasswordActionPerformed
-
-    private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
-        jUsernameFieldUsername.setText("");
-        jPasswordFieldPassword.setText("");
-    }//GEN-LAST:event_jButtonClearActionPerformed
+    private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButtonExitActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
 
@@ -240,7 +234,7 @@ public class LoginUI extends javax.swing.JFrame {
         params.add("password");
         values.add(jPasswordFieldPassword.getText());
         try {
-            String result = Connector.postForm(params, values, "auth");
+            String result = Connector.postForm(params, values, "auth/username");
             System.err.println(result);
             if (result.equals("Error")) {
                 JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
@@ -252,9 +246,18 @@ public class LoginUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
-    private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_jButtonExitActionPerformed
+    private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
+        jUsernameFieldUsername.setText("");
+        jPasswordFieldPassword.setText("");
+    }//GEN-LAST:event_jButtonClearActionPerformed
+
+    private void jPasswordFieldPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordFieldPasswordActionPerformed
+
+    private void jUsernameFieldUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUsernameFieldUsernameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -288,7 +291,7 @@ public class LoginUI extends javax.swing.JFrame {
             public void run() {
                 LoginUI unifiedPointOfSaleUI = new LoginUI();
                 unifiedPointOfSaleUI.setVisible(true);
-                unifiedPointOfSaleUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                //unifiedPointOfSaleUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
             }
         });
     }

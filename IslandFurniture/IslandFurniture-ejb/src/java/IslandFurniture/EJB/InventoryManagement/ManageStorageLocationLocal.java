@@ -54,8 +54,11 @@ public interface ManageStorageLocationLocal {
 
     //  Function: To view Storage Bins in Receiving Area only    
     List<StorageArea> viewStorageBinsAtReceivingOnly(Plant plant);
-    
+
     //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageArea(Long id);
+
+        //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
+    List<StorageBin> viewStorageBinsOfAStorageAreaOfAStock(Long id, Long stockId);
 
 }

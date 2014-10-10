@@ -1,16 +1,160 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <!--Start Header-->
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Replenishment Transfer Order</strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
+                                <i class="fa fa-fw fa-plus"></i> Create Replenishment Transfer Order
+                            </button>                            
+                        </span>   
+                        <h4>Replenishment Transfer Order</h4><hr></hr>
+                    </div>
+                    <!--End Header-->
+                    <!--Start Body-->
+                    <div class="col-md-10">                      
+                        <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                            <li class="active"><a href="#requested" role="tab" data-toggle="tab">Requested</a></li>
+                            <li><a href="#fulfilled" role="tab" data-toggle="tab">Fulfilled</a></li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="requested">                        
+                                <section name="Requested Tranfer Order" class="panel">  
+                                    <div class="panel-heading dashboard-title-panel">
+                                        Requested Replenishment Transfer Orders
+                                    </div>
+                                    <div class="list-group-item">
+                                        <h:outputText rendered="#{empty inventoryTransferReplenishManagedBean.replenishmentTransferOrderListRequestList}" value="There are no requested Replenishment Transfer Order"/>
+                                <h:panelGroup layout="block" rendered="#{not empty inventoryTransferReplenishManagedBean.replenishmentTransferOrderListRequestList}">
+                                        <table class="table table-hover">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Stock</th>
+                                                <th>Quantity</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                            <h:form class="form-horizontal">
+                                                <ui:repeat value="#{inventoryTransferReplenishManagedBean.replenishmentTransferOrderListRequestList}" var="list">
+                                                    <tr>
+                                                        <td>
+                                                            <h:outputText value="#{list.id}"></h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:outputText value="#{list.stock.name}"></h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:outputText value="#{list.qty}"></h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:commandButton action="inventorytransfer_replenish" actionListener="#{inventoryTransferReplenishManagedBean.deleteReplenishmentTransferOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                                <f:attribute name="toId" value="#{list.id}" />
+                                                            </h:commandButton>                                                    
+                                                            <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </h:form> 
+                                        </table>
+                                </h:panelGroup>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div class="tab-pane" id="fulfilled">                        
+                                <section name="Requested Tranfer Order" class="panel">  
+                                    <div class="panel-heading dashboard-title-panel">
+                                        Fulfilled Replenishment Transfer Orders
+                                    </div>
+                                    <div class="list-group-item">
+                                                   <h:outputText rendered="#{empty inventoryTransferReplenishManagedBean.replenishmentTransferOrderListFulfilledList}" value="There are no fulfilled Replenishment Transfer Order"/>
+                                <h:panelGroup layout="block" rendered="#{not empty inventoryTransferReplenishManagedBean.replenishmentTransferOrderListFulfilledList}">
+                                        <table class="table table-hover">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Stock</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                            <h:form class="form-horizontal">
+                                                <ui:repeat value="#{inventoryTransferReplenishManagedBean.replenishmentTransferOrderListFulfilledList}" var="list">
+                                                    <tr>
+                                                        <td>
+                                                            <h:outputText value="#{list.id}"></h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:outputText value="#{list.stock.name}"></h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:outputText value="#{list.qty}"></h:outputText>
+
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </h:form> 
+                                        </table>
+                                </h:panelGroup>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Create Replenishment Transfer Order -->
+                        <div class="modal fade" id="newGRDD" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Create Replenishment Transfer Order</h4>
+                                    </div>
+                                    <h:form id="createGRDD" class="form-horizontal">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Stock: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferReplenishManagedBean.stockId}" pt:required="true">
+                                                        <f:selectItem itemLabel="Select Stock"/>
+                                                        <f:selectItems value="#{inventoryTransferReplenishManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText id="stockQuantity" pt:type="number"  pt:required="true" class="form-control" value="#{inventoryTransferReplenishManagedBean.quantity}"></h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="inventorytransfer_replenish" actionListener="#{inventoryTransferReplenishManagedBean.createReplenishmentTransferOrder}" value="Create Replenishment Transfer Order" class="btn btn-success pull-right btn-round"> 
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>
+<!--End Body-->
