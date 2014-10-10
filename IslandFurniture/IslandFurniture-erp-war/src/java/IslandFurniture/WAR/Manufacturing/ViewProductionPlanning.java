@@ -10,6 +10,7 @@ import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
+import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
 import java.io.IOException;
@@ -277,6 +278,29 @@ public class ViewProductionPlanning implements Serializable {
 
     public void tooglePageLoader(String ID, String command) throws Exception {
         switch (command) {
+            case "CommenceMonth":
+                int monthNo = Integer.valueOf(Month.valueOf(ID.split("/")[0]).value);
+                int yearNo = Integer.valueOf(ID.split("/")[1]);
+                for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
+                    mpp.commitallWPP(i, monthNo, yearNo);
+                }
+                for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
+                    mpp.orderMaterials(i, monthNo, yearNo);
+                }
+                success_msg = "Successfully Commenced Month";
+                break;
+            case "UncommenceMonth":
+                monthNo = Integer.valueOf(Month.valueOf(ID.split("/")[0]).value);
+                yearNo = Integer.valueOf(ID.split("/")[1]);
+                for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
+                    mpp.uncommitallWPP(i, monthNo, yearNo);
+                }
+                for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
+                    mpp.unOrderMaterials(i, monthNo, yearNo);
+                }
+                success_msg = "Successfully Uncommenced Month";
+                break;
+
             case "Update_PC":
                 System.out.println("ViewProductionPlanning(): Updating Capacity");
                 updatePCTableToBean();
@@ -336,8 +360,8 @@ public class ViewProductionPlanning implements Serializable {
                 break;
             case "Commit_All_Material":
                 int weekNo = Integer.valueOf(ID.split("_")[0]);
-                int monthNo = Integer.valueOf(ID.split("_")[1]);
-                int yearNo = Integer.valueOf(ID.split("_")[2]);
+                monthNo = Integer.valueOf(ID.split("_")[1]);
+                yearNo = Integer.valueOf(ID.split("_")[2]);
                 mpp.commitallWPP(weekNo, monthNo, yearNo);
                 pullWeeklyProductionTable(this.currentDrill);
                 success_msg = "Commited all Materials For Week!";
