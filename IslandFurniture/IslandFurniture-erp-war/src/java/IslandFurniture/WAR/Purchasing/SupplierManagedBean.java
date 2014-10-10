@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.Entities.Country;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -36,9 +36,9 @@ public class SupplierManagedBean implements Serializable {
     @EJB
     private SupplierManagerLocal supplierManager;
     
-    private List<Supplier> supplierList;
+    private List<ProcuredStockSupplier> supplierList;
     private Long supplierID;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private List<Country> countryList;
 
     public List<Country> getCountryList() {
@@ -57,19 +57,19 @@ public class SupplierManagedBean implements Serializable {
         this.supplierID = supplierID;
     }
 
-    public List<Supplier> getSupplierList() {
+    public List<ProcuredStockSupplier> getSupplierList() {
         return supplierList;
     }
 
-    public void setSupplierList(List<Supplier> supplierList) {
+    public void setSupplierList(List<ProcuredStockSupplier> supplierList) {
         this.supplierList = supplierList;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
     
@@ -98,17 +98,17 @@ public class SupplierManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));              
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier " + supplier.getName() + " successfully created ", ""));             
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Procured Stock Supplier " + supplier.getName() + " successfully created ", ""));             
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementcontract?faces-redirect=true";
     }
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()");
-        supplier = (Supplier) event.getComponent().getAttributes().get("toEdit");
+        supplier = (ProcuredStockSupplier) event.getComponent().getAttributes().get("toEdit");
         if(supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail())) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier " + supplier.getName() + " has been updated", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Procured Stock Supplier " + supplier.getName() + " has been updated", ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unexpected error occured", ""));            
@@ -124,7 +124,7 @@ public class SupplierManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier has been successfully deleted", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Procured Stock Supplier has been successfully deleted", ""));
         }
         return "supplier";
     }

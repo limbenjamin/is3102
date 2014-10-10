@@ -13,7 +13,7 @@ import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
@@ -64,7 +64,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private PurchaseOrderDetail purchaseOrderDetail;
     private List<PurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
     private List<Plant> plantList;
@@ -127,33 +127,19 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
         }
     }
+    
+     // confirm purchase order
+    public String confirmPurchaseOrder() throws ParseException {
+        status = PurchaseOrderStatus.getPurchaseOrderStatus(1);
+        
+        mpol.updatePurchaseOrder(purchaseOrderId, status, Calendar.getInstance());
+        sendEmail(supplier);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
+        return "purchaseorder";
 
-    // new update purchase order method
-    public String updatePurchaseOrder() throws ParseException {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String selectedStatus = request.getParameter("updatePurchaseOrder:status");
-        status = PurchaseOrderStatus.getPurchaseOrderStatus(Integer.parseInt(selectedStatus));
-        System.out.println("selected status is: " + selectedStatus);
-        orderDateString = request.getParameter("updatePurchaseOrder:orderDateString");
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = (Date) formatter.parse(orderDateString);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        orderDate = cal;
-        mpol.updatePurchaseOrder(purchaseOrderId, status, orderDate);
-        System.out.println("updated purchase order" + purchaseOrderId);
-        if (selectedStatus.equals("1")) {
-            sendEmail(supplier);
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase Order Confirmed!", ""));
-            return "purchaseorder";
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-            return "purchaseorder2?faces-redirect=true";
-        }
-    }
+    }    
+    
 
     public String editStock(ActionEvent event) throws IOException {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
@@ -178,7 +164,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         return "purchaseorder2";
     }
 
-    public void sendEmail(Supplier recipient) {
+    public void sendEmail(ProcuredStockSupplier recipient) {
         String title = "[Confirmed Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
                 + mf.getName();
         String orderContent = mf.getName() + " Manufacturing Facility would like to order the following: " + "\r\n ";
@@ -342,11 +328,11 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.plant = plant;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 

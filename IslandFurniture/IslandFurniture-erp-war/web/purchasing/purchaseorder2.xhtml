@@ -26,36 +26,16 @@
                         <h4>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</h4>
                         <h5>Supplier: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.supplier.name}</strong>
                             | Supplied to: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.shipsTo.name}</strong></h5>
-                        <h5>Scheduled Order Date: <strong><h:outputText value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}" >
+                        <h5>Planned Order Date: <strong><h:outputText value="#{purchaseOrderManaged2Bean.purchaseOrder.orderDate.time}" >
                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{purchaseOrderManaged2Bean.plant.timeZoneID}"  /></h:outputText></strong>
                             | Status: <strong>#{purchaseOrderManaged2Bean.purchaseOrder.status}</strong>
                         </h5>
                         <h:messages globalOnly="true" />
-                        <table class="table table-hover">
-                            <tr>
-                                <th>Change Order Date</th>
-                                <th>Status</th>
-                                <th>Update</th>
-                            </tr>
-                            <h:form id="updatePurchaseOrder" class="form-horizontal">
-                                <tr>
-                                    <td>
-                                        <h:inputText id="orderDateString" value="#{purchaseOrderManaged2Bean.orderDateString}" p:type="date" class="form-control"></h:inputText>
-                                    </td>
-                                    <td>
-                                        <h:selectOneMenu id="status" class="form-control" value="#{purchaseOrderManaged2Bean.purchaseOrder.status.value}">
-                                            <f:selectItem itemValue="0" itemLabel="Planned" />
-                                            <f:selectItem itemValue="1" itemLabel="Confirmed" />
-                                        </h:selectOneMenu>
-                                    </td>                                   
-                                    <td>
-                                        <h:commandButton action="#{purchaseOrderManaged2Bean.updatePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                        </h:commandButton>
-                                        <i class="fa fa-lg fa-save icon-button"></i>
-                                    </td>
-                                </tr>
-                            </h:form> 
-                        </table>
+                        <br/>
+                        <h:form id="confirmPurchaseOrder" class="form-horizontal">
+                            <h:commandButton action="#{purchaseOrderManaged2Bean.confirmPurchaseOrder}" class="btn btn-success" value="Confirm Purchase Order"> 
+                            </h:commandButton>  
+                        </h:form>
                         <br></br>
                         <span class="pull-right">
                             <button type="button" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#newStock">

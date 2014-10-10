@@ -15,18 +15,17 @@ import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcurementContractDetail;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -179,25 +178,25 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         query.setParameter("month", month);
         query.setParameter("year", year);
         mppList = query.getResultList();
-        List<Supplier> uniqueSupplier = new ArrayList(); 
-        List<ProcurementContractDetail> pcdList = new ArrayList();
+        List<ProcuredStockSupplier> uniqueSupplier = new ArrayList(); 
+        List<ProcuredStockContractDetail> pcdList = new ArrayList();
         Iterator<MonthlyProcurementPlan> iterator = mppList.iterator();
         while(iterator.hasNext()){
             mpp = iterator.next();
-            query = em.createQuery("SELECT s FROM ProcurementContractDetail s WHERE s.supplierFor=:mf AND s.procuredStock=:stock");
+            query = em.createQuery("SELECT s FROM ProcuredStockContractDetail s WHERE s.supplierFor=:mf AND s.procuredStock=:stock");
             query.setParameter("mf", mpp.getManufacturingFacility());
             ProcuredStock ps = mpp.getRetailItem();
             Stock s = (Stock) ps;
             query.setParameter("stock", s);
-            ProcurementContractDetail pcd = (ProcurementContractDetail) query.getSingleResult();
+            ProcuredStockContractDetail pcd = (ProcuredStockContractDetail) query.getSingleResult();
             pcdList.add(pcd);
             if (!uniqueSupplier.contains(pcd.getProcurementContract().getSupplier())){
                 uniqueSupplier.add(pcd.getProcurementContract().getSupplier());
             }
         }
-        Iterator<Supplier> iterator2 = uniqueSupplier.iterator();
+        Iterator<ProcuredStockSupplier> iterator2 = uniqueSupplier.iterator();
         while(iterator2.hasNext()){
-            Supplier s = iterator2.next();
+            ProcuredStockSupplier s = iterator2.next();
             Calendar cal = new GregorianCalendar(year,month.value, 1);
             cal.setTimeZone(TimeZone.getTimeZone("UTC"));
             //day = date of first monday in month
@@ -217,9 +216,9 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
                 purchaseOrder.setSupplier(s);
                 em.persist(purchaseOrder);
-                Iterator<ProcurementContractDetail> iterator3 = pcdList.iterator();
+                Iterator<ProcuredStockContractDetail> iterator3 = pcdList.iterator();
                 while(iterator3.hasNext()){
-                    ProcurementContractDetail pcd = iterator3.next();
+                    ProcuredStockContractDetail pcd = iterator3.next();
                     if(pcd.getProcurementContract().getSupplier() == s){
                         ProcuredStock ps = pcd.getProcuredStock();
                         RetailItem ri = (RetailItem) ps;
@@ -248,9 +247,9 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             purchaseOrder.setStatus(PurchaseOrderStatus.PLANNED);
             purchaseOrder.setSupplier(s);
             em.persist(purchaseOrder);
-            Iterator<ProcurementContractDetail> iterator3 = pcdList.iterator();
+            Iterator<ProcuredStockContractDetail> iterator3 = pcdList.iterator();
             while(iterator3.hasNext()){
-                ProcurementContractDetail pcd = iterator3.next();
+                ProcuredStockContractDetail pcd = iterator3.next();
                 if(pcd.getProcurementContract().getSupplier() == s){
                     ProcuredStock ps = pcd.getProcuredStock();
                     RetailItem ri = (RetailItem) ps;

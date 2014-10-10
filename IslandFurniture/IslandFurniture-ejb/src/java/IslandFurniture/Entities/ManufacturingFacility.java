@@ -32,7 +32,7 @@ public class ManufacturingFacility extends Plant implements Serializable {
     @ManyToOne
     private CountryOffice countryOffice;
     @OneToMany(mappedBy = "supplierFor")
-    private List<ProcurementContractDetail> suppliedBy;
+    private List<ProcuredStockContractDetail> suppliedBy;
     @OneToMany(mappedBy = "manufacturingFacility")
     private List<StockSupplied> supplyingWhatTo;
     @OneToMany(mappedBy = "manufacturingFacility")
@@ -55,11 +55,11 @@ public class ManufacturingFacility extends Plant implements Serializable {
         this.countryOffice = countryOffice;
     }
 
-    public List<ProcurementContractDetail> getSuppliedBy() {
+    public List<ProcuredStockContractDetail> getSuppliedBy() {
         return suppliedBy;
     }
 
-    public void setSuppliedBy(List<ProcurementContractDetail> suppliedBy) {
+    public void setSuppliedBy(List<ProcuredStockContractDetail> suppliedBy) {
         this.suppliedBy = suppliedBy;
     }
 

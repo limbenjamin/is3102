@@ -52,7 +52,7 @@ public class PurchaseOrder implements Serializable {
     private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList();
     
     @ManyToOne
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     
     @OneToOne
     private GoodsReceiptDocument goodsReceiptDocument;
@@ -125,11 +125,11 @@ public class PurchaseOrder implements Serializable {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 
