@@ -33,10 +33,16 @@ public class Store extends Plant implements Serializable {
     private CountryOffice countryOffice;
 
     @OneToMany(mappedBy = "store")
+    private List<StorefrontInventory> storefrontInventories;
+
+    @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
 
     @ManyToMany
     private List<Stock> sells = new ArrayList();
+
+    @OneToMany(mappedBy = "store")
+    private List<StoreSection> storeSections;
 
     public CountryOffice getCountryOffice() {
         return countryOffice;
@@ -46,12 +52,21 @@ public class Store extends Plant implements Serializable {
         this.countryOffice = countryOffice;
     }
 
+    public List<StorefrontInventory> getStorefrontInventories() {
+        return storefrontInventories;
+    }
+
+    public void setStorefrontInventories(List<StorefrontInventory> storefrontInventories) {
+        this.storefrontInventories = storefrontInventories;
+    }
+
     public List<MonthlyMenuItemSalesForecast> getMonthlyMenuItemSalesForecasts() {
         return monthlyMenuItemSalesForecasts;
     }
 
     public void setMonthlyMenuItemSalesForecasts(List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts) {
         this.monthlyMenuItemSalesForecasts = monthlyMenuItemSalesForecasts;
+
     }
 
     public List<Stock> getSells() {
@@ -60,6 +75,14 @@ public class Store extends Plant implements Serializable {
 
     public void setSells(List<Stock> sells) {
         this.sells = sells;
+    }
+
+    public List<StoreSection> getStoreSections() {
+        return storeSections;
+    }
+
+    public void setStoreSections(List<StoreSection> storeSections) {
+        this.storeSections = storeSections;
     }
 
     @Override
@@ -85,6 +108,17 @@ public class Store extends Plant implements Serializable {
     @Override
     public String toString() {
         return "Store[ id=" + id + " ]";
+    }
+
+    // Extra Methods
+    public StorefrontInventory findStorefrontInventory(Stock stock) {
+        for (StorefrontInventory si : this.storefrontInventories) {
+            if (stock.equals(si.getStock())) {
+                return si;
+            }
+        }
+
+        return null;
     }
 
     // Entity Callbacks
