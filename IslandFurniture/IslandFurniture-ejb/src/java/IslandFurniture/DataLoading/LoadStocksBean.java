@@ -44,7 +44,6 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             furniture = new FurnitureModel();
             furniture.setName(name);
             furniture.setBom(bom);
-            furniture.setNfcList(new ArrayList());
             em.persist(furniture);
 
             return furniture;
@@ -61,7 +60,6 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         if (retailItem == null) {
             retailItem = new RetailItem();
             retailItem.setName(name);
-            retailItem.setNfcList(new ArrayList());
             em.persist(retailItem);
 
             return retailItem;
