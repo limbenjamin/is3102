@@ -78,4 +78,7 @@ public interface ManageInventoryTransferLocal {
     
 //  Function: To edit the Quantity of a Replenishment Transfer Order (Requested)
     void editReplenishmentTransferOrderQuantity(Long id, Integer qty);
+    
+     //  Function: To create a Replenishment Transfer Order (Status: Requested)
+    void createExternalTransferOrder(Plant plant);
 }

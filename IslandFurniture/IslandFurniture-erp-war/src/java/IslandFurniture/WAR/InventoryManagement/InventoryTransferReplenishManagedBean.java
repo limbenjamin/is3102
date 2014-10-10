@@ -35,29 +35,16 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class InventoryTransferReplenishManagedBean implements Serializable {
 
-//    private Long plantId;
-//    private Long storageBinId;
-//    private Long stockUnitId;
-//    private boolean ifStockUnitMovemementAllListEmpty;
-//
-//
-//    private List<StockUnit> stockUnitList;
-//    private List<StockUnit> stockUnitMovemementAllList;
-//    
     private Long storageAreaId;
+    private Long stockId;
+    private Integer quantity;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
-
-    private Long stockId;
-    private Integer quantity;
     private List<StockUnit> stockUnitList;
-
     private List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList;
     private List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList;
 
-//    private StorageBin storageBin;
-//    private StockUnit stockUnit;
     private String username;
     private Staff staff;
     private Plant plant;
@@ -75,11 +62,7 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-
-//        stockUnitList = transferBean.viewStockUnitDistinctName(plant);
-//        stockUnitMovemementAllList = transferBean.viewStockUnitMovementAll(plant);
-        storageAreaList = storageBean.viewStorageArea(plant);
-
+//        storageAreaList = storageBean.viewStorageArea(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
         replenishmentTransferOrderListRequestList = transferBean.viewReplenishmentTransferOrderRequested(plant);
         replenishmentTransferOrderListFulfilledList = transferBean.viewReplenishmentTransferOrderFulfilled(plant);
@@ -115,49 +98,52 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         transferBean.deleteReplenishmentTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
     }
 
-//
-////  Function: To delete the Stock Unit that are of pending movement status, ie. not confirmed
-//    public void deletePendingMovementofStockUnit(ActionEvent event) throws IOException {
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnit", event.getComponent().getAttributes().get("stockUnit"));
-//        stockUnit = (StockUnit) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnit");
-//        transferBean.editStockUnitQuantity(stockUnit.getCommitStockUnitId(), transferBean.getStockUnit(stockUnit.getCommitStockUnitId()).getQty() + stockUnit.getQty());
-//        transferBean.deleteStockUnit(stockUnit.getId());
-//        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
-//    }
-//
-////  Function: To confirm the movememt of a Stock Unit that is currently pending    
-//    public void confirmStockUnitMovement(ActionEvent event) throws IOException {
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
-//        stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
-//        stockUnit = transferBean.getStockUnit(stockUnitId);
-//        transferBean.confirmStockUnitMovement(stockUnitId);
-//
-//        StockUnit stockUnitOld = transferBean.getStockUnit(stockUnit.getCommitStockUnitId());
-//        if (stockUnitOld.getQty() == 0) {
-//            transferBean.deleteStockUnit(stockUnitOld.getId());
-//        }
-//
-//        stockUnitMovemementAllList = transferBean.viewStockUnitMovementAll(plant);
-//        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer.xhtml");
-//    }
-//
-////  Function: To view Stock Unit by Location
-//    public String viewStockUnitbyLocation() {
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", storageBinId);
-//        return "inventorytransfer_movementlocation?faces-redirect=true";
-//    }
-//
-////  Function: To view Stock Unit by Stock
-//    public String viewStockUnitbyStock() {
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockId", stockId);
-//        return "inventorytransfer_movementstock?faces-redirect=true";
-//    }
+    public Long getStorageAreaId() {
+        return storageAreaId;
+    }
+
+    public void setStorageAreaId(Long storageAreaId) {
+        this.storageAreaId = storageAreaId;
+    }
+
+    public List<StorageBin> getStorageBinList() {
+        return storageBinList;
+    }
+
+    public void setStorageBinList(List<StorageBin> storageBinList) {
+        this.storageBinList = storageBinList;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
+    }
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public List<StockUnit> getStockUnitList() {
+        return stockUnitList;
+    }
+
+    public void setStockUnitList(List<StockUnit> stockUnitList) {
+        this.stockUnitList = stockUnitList;
     }
 
     public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListRequestList() {
@@ -174,30 +160,6 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
 
     public void setReplenishmentTransferOrderListFulfilledList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList) {
         this.replenishmentTransferOrderListFulfilledList = replenishmentTransferOrderListFulfilledList;
-    }
-
-    public ManageUserAccountBeanLocal getStaffBean() {
-        return staffBean;
-    }
-
-    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
-        this.staffBean = staffBean;
-    }
-
-    public ManageInventoryTransferLocal getTransferBean() {
-        return transferBean;
-    }
-
-    public void setTransferBean(ManageInventoryTransferLocal transferBean) {
-        this.transferBean = transferBean;
-    }
-
-    public ManageStorageLocationLocal getStorageBean() {
-        return storageBean;
-    }
-
-    public void setStorageBean(ManageStorageLocationLocal storageBean) {
-        this.storageBean = storageBean;
     }
 
     public String getUsername() {
@@ -224,20 +186,28 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         this.plant = plant;
     }
 
-    public List<StockUnit> getStockUnitList() {
-        return stockUnitList;
+    public ManageUserAccountBeanLocal getStaffBean() {
+        return staffBean;
     }
 
-    public void setStockUnitList(List<StockUnit> stockUnitList) {
-        this.stockUnitList = stockUnitList;
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
+        this.staffBean = staffBean;
     }
 
-    public Long getStockId() {
-        return stockId;
+    public ManageInventoryTransferLocal getTransferBean() {
+        return transferBean;
     }
 
-    public void setStockId(Long stockId) {
-        this.stockId = stockId;
+    public void setTransferBean(ManageInventoryTransferLocal transferBean) {
+        this.transferBean = transferBean;
+    }
+
+    public ManageStorageLocationLocal getStorageBean() {
+        return storageBean;
+    }
+
+    public void setStorageBean(ManageStorageLocationLocal storageBean) {
+        this.storageBean = storageBean;
     }
 
 }

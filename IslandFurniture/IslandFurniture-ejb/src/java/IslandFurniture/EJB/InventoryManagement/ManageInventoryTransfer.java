@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
@@ -32,6 +33,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     private StockUnit stockUnit;
     private StorageBin storageBin;
     private ReplenishmentTransferOrder replenishmentTransferOrder;
+    private ExternalTransferOrder externalTransferOrder;
 
     @Override
     public StockUnit getStockUnit(Long stockUnitId) {
@@ -263,6 +265,16 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         replenishmentTransferOrder = (ReplenishmentTransferOrder) em.find(ReplenishmentTransferOrder.class, id);
         replenishmentTransferOrder.setQty(qty);
         em.merge(replenishmentTransferOrder);
+        em.flush();
+    }
+    
+//  Function: To create a Replenishment Transfer Order (Status: Requested)
+    @Override
+    public void createExternalTransferOrder(Plant plant) {
+        externalTransferOrder = new ExternalTransferOrder();
+        externalTransferOrder.setRequestingPlant(plant);
+        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        em.persist(externalTransferOrder);
         em.flush();
     }
 }
