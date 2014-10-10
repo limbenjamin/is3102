@@ -153,10 +153,14 @@ public class MenuManager implements MenuManagerLocal {
         MenuItemDetail menuItemDetail = null;
         Dish dish;
         try {
-            System.out.println("MenuManager.deleteMenuItemDetail()");
+            System.out.println("MenuManager.addMenuItemDetail()");
             menuItem = em.find(MenuItem.class, menuItemID);
             dish = em.find(Dish.class, dishID);
             
+            if(menuItem.isAlaCarte() && menuItem.getMenuItemDetails().size() > 0) {
+                System.out.println("Ala Carte menu items can only have one dish");
+                return "Invalid addition: Ala Carte Menu Items can only have one dish";
+            }
             for(MenuItemDetail detail : menuItem.getMenuItemDetails()) {
                 if(detail.getDish().equals(dish)) {
                     menuItemDetail = detail;

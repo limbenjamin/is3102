@@ -1,27 +1,68 @@
-<!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>PhoneGap</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+<head>
+<title>App Framework</title>
+<!-- <link rel="stylesheet" type="text/css" href="css/af.ui.css" /> -->
+      <link rel="stylesheet" type="text/css" href="css/main.css"  />
+      <link rel="stylesheet" type="text/css" href="css/appframework.css"  />
+      <link rel="stylesheet" type="text/css" href="css/lists.css"  />
+      <link rel="stylesheet" type="text/css" href="css/forms.css"  />
+      <link rel="stylesheet" type="text/css" href="css/buttons.css"  />        
+      <link rel="stylesheet" type="text/css" href="css/badges.css"  />  
+
+
+<link rel="stylesheet" type="text/css" href="css/icons.css" />
+<script type="text/javascript" charset="utf-8" src="ui/appframework.ui.min.js"></script>
+<script type="text/javascript" src="cordova.js">
+<script type="text/javascript">
+function showsplash(){
+navigator.splashscreen.show();
+setTimeout(function() {
+    navigator.splashscreen.hide();
+}, 5000);
+}
+</script>    
+</head>
+<body> 
+
+
+
+<div id="afui">
+
+<div id="header"></div>
+<div id="content">
+
+<div class="panel">
+<!-- header -->
+<header>
+  <a id="backButton" class="button backButton" href="location.go(-1);">Back...</a>
+  <h1>Island Furniture</h1>
+</header>
+<!-- content-->
+
+  <ul class="list">
+    <li><a class="icon tag">Latest Products</a></li>
+    <li><a class="icon info">Product Catalog</a></li>
+    <li><a class="icon key">Membership</a></li>
+    <li><a class="icon info">Locate</a></li>
+    <li><a class="icon settings">Settings</a></li>
+	    <li><a class="icon settings" onclick="location.href='NFC.html'	">Developer</a></li>
+  </ul>
+  
+ <!-- footer --> 
+  <footer>
+  <a class="icon home" href="#home">Home</a>
+  <a class="icon info" href="#settings">Catalog</a>
+  <a class="icon info" href="#bugs">Shopping List</a>
+  <a class="icon info" href="javascript:navigator.splashscreen.show();">About</a>
+      <a class="icon settings" href="#bugs">Membership</a>
+</footer>
+  
+</div>
+
+
+</div>
+<div id="navbar"></div>
+</div>
+</body>
 </html>
