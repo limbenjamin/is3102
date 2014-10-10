@@ -10,7 +10,6 @@ import IslandFurniture.Entities.Material;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyProductionPlanPK;
-import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.Staff;
@@ -529,8 +528,6 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         EndDayOfWeek.newCell("End Day");
 
         JDataTable.Row PlannedWeekProduction = null;
-        JDataTable.Row CommitWeek = null;
-        JDataTable.Row ActionRow = null;
         HashMap<Integer, Boolean> alluncommited = new HashMap<>();
         HashMap<Integer, Boolean> lockcolumn = new HashMap<>();
 
@@ -578,17 +575,17 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 PlannedWeekProduction = jdt.newRow().setColorClass(last_class);
                 PlannedWeekProduction.newCell(CFM+ " <br/> Total Week Requirement:"+QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff));
 
-                ActionRow = jdt.newRow().setColorClass(last_class);;
-                ActionRow.newCell("Commit to Production Order");
+//                ActionRow = jdt.newRow().setColorClass(last_class);;
+//                ActionRow.newCell("Commit to Production Order");
             }
-            Cell d = null;
+//            Cell d = null;
 
             boolean hasCommittedMaterial = QueryMethods.isOrderedMaterial(em, mff, wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo());
 
             Cell c = null;
             //Individual Cells
             if (wpp.isLocked()) {
-                d = ActionRow.newCell("Locked");
+//                d = ActionRow.newCell("Locked");
                 lockcolumn.put(wpp.getWeekNo(), true);
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 if (wpp.getProductionOrder() == null) {
@@ -597,23 +594,23 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                     c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 }
             } else if (hasCommittedMaterial) {
-                d = ActionRow.newCell("Remove MRP First");
+//                d = ActionRow.newCell("Remove MRP First");
                 if (wpp.getProductionOrder() == null) {
                     c = PlannedWeekProduction.newCell("0");
                 } else {
                     c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 }
             } else if (wpp.getProductionOrder() == null) {
-                alluncommited.put(ActionRow.rowdata.size(), true);
-                d = ActionRow.newCell("Commit");
-                d.setCommand("COMMIT_WPP");
-                d.setIdentifier(wpp.getId().toString());
+//                alluncommited.put(ActionRow.rowdata.size(), true);
+//                d = ActionRow.newCell("Commit");
+//                d.setCommand("COMMIT_WPP");
+//                d.setIdentifier(wpp.getId().toString());
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 c.setIsEditable(true);
             } else {
-                d = ActionRow.newCell("Uncommit");
-                d.setCommand("UNCOMMIT_WPP");
-                d.setIdentifier(wpp.getId().toString());
+//                d = ActionRow.newCell("Uncommit");
+//                d.setCommand("UNCOMMIT_WPP");
+//                d.setIdentifier(wpp.getId().toString());
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
             }
 
@@ -629,8 +626,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         }
 
-        JDataTable.Row SPACER = jdt.newRow().setColorClass("summary");
-        SPACER.newCell("Materials Required For Commited WPP");
+//        JDataTable.Row SPACER = jdt.newRow().setColorClass("summary");
+//        SPACER.newCell("Materials Required For Commited WPP");
 
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
@@ -659,32 +656,32 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             }
 
         }
-        CommitWeek = jdt.newRow();
-        CommitWeek.newCell("Commit all Materials");
-        JDataTable.Row commitMRP = jdt.newRow();
-        commitMRP.newCell("Generate Weekly MRP");
-        commitMRP.setColorClass("summary");
-        CommitWeek.setColorClass("summary");
+//        CommitWeek = jdt.newRow();
+//        CommitWeek.newCell("Commit all Materials");
+//        JDataTable.Row commitMRP = jdt.newRow();
+//        commitMRP.newCell("Generate Weekly MRP");
+//        commitMRP.setColorClass("summary");
+//        CommitWeek.setColorClass("summary");
 
         //all cells
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
             boolean hasCommittedMaterial = QueryMethods.isOrderedMaterial(em, mff, requestedMonth, requestedYear, i);
             if (lockcolumn.get(i) != null) {
-                CommitWeek.newCell("Locked");
-                commitMRP.newCell("LOCKED");
+//                CommitWeek.newCell("Locked");
+//                commitMRP.newCell("LOCKED");
 //            } else if (QueryMethods.isMaterialWeekLocked(em, mff, requestedMonth, requestedYear, i)) {
 //                commitMRP.newCell("Undo Material Schedule First !");
 //                CommitWeek.newCell("Undo Material Schedule First !");
             } else if (hasCommittedMaterial) {
-                commitMRP.newCell("Remove Weekly MRP Record").setCommand("UNCOMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
-                CommitWeek.newCell("Remove Weekly MRP Record First");
+//                commitMRP.newCell("Remove Weekly MRP Record").setCommand("UNCOMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
+////                CommitWeek.newCell("Remove Weekly MRP Record First");
             } else {
-                commitMRP.newCell("Confirm MRP Record for Week").setCommand("COMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
+//                commitMRP.newCell("Confirm MRP Record for Week").setCommand("COMMIT_WEEK_WPP").setIdentifier(i + "_" + requestedMonth + "_" + requestedYear);
                 if (alluncommited.get(i) == null) {
-                    CommitWeek.newCell("Uncommit All").setCommand("Uncommit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
+//                    CommitWeek.newCell("Uncommit All").setCommand("Uncommit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
                 } else {
-                    CommitWeek.newCell("Commit All").setCommand("Commit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
+//                    CommitWeek.newCell("Commit All").setCommand("Commit_All_Material").setIdentifier(i + "_" + requestedMonth.value + "_" + requestedYear);
                 }
             }
 

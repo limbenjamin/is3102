@@ -88,13 +88,13 @@
 
                             </f:facet>
 
-                            <p:columns  value="#{ProductionPlanning.wpp.columns}" var="datacolumn" columnIndexVar="dataCIndex" style="" >
+                            <p:columns  value="#{ProductionPlanning.wpp.columns}" var="datacolumn" columnIndexVar="dataCIndex" style="width:100%" >
                                 <f:facet name="header">
                                     <p:outputLabel escape="false" value="#{datacolumn}"/>
 
                                 </f:facet>
                                 <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false" style="word-wrap: break-word;"  rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
-                                <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="word-wrap: break-word;"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                                <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="word-wrap: break-word; max-width:80px;"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
                                 <p:commandButton style="white-space: normal" rendered="#{datarow.getCell(dataCIndex).command.length()>0}"  value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('wpp_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
@@ -105,7 +105,8 @@
                         <p:commandButton value="Manual Update" id="updateWPP">
                             <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
                         </p:commandButton>
-
+                        <p:commandButton value="Commence All" id="CommenceMonth" update=":#{p:component('wpp_dt')}" actionListener="#{ProductionPlanning.listenToCell}" label="CommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true" >
+                        </p:commandButton>
                     </p:tab>
 
                     <!-- Material Resource Planning -->
