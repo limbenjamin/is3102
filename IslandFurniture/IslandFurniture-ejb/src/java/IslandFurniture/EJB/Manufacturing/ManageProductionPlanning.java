@@ -7,6 +7,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
@@ -24,6 +25,7 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
+import IslandFurniture.Enums.TransferOrderStatus;
 import IslandFurniture.Exceptions.ProductionPlanExceedsException;
 import IslandFurniture.Exceptions.ProductionPlanNoCN;
 import IslandFurniture.StaticClasses.Helper;
@@ -408,14 +410,14 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 //                System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
 //            }
             WeeklyProductionPlan wp = addWeeklyPlan(mpp);
-            Double produce=0.0;
-            if (i < maxWeekNumber){
-            produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
-            }else{
-                produce=mpp.getQTY()-sum_produce.doubleValue();
+            Double produce = 0.0;
+            if (i < maxWeekNumber) {
+                produce = mpp.getQTY() * ((workingDaysInWeek + 0.0) / mpp.getNumWorkDays());
+            } else {
+                produce = mpp.getQTY() - sum_produce.doubleValue();
             }
             sum_produce += produce.intValue();
-            
+
             wp.setQTY(produce.intValue());
             System.out.println("Planned Year:" + mpp.getYear() + " month:" + mpp.getMonth() + " Week: " + i + " Split Product=" + wp.getQTY());
             mpp.getWeeklyProductionPlans().add(wp);
@@ -440,14 +442,31 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         po.setProdOrderDate(ca);
         po.setMf(MF);
         wpp.setProductionOrder(po);
-        
-        HashMap<Plant,Long> orders=QueryMethods.traceWPPToPlant(em, wpp);
-        
-        for (Plant p : orders.keySet())
-        {
-            ExternalTransferOrder eto = new ExternalTransferOrder();
+
+        HashMap<Plant, Long> orders = QueryMethods.traceWPPToPlant(em, wpp);
+
+        for (Plant p : orders.keySet()) {
+
+            Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
+            ll.setParameter("r", "WPP:" + wpp.getId()+" Plant:"+p.getName());
+
+            ExternalTransferOrder eto = null;
+            if (ll.getResultList().size() == 0) {
+                eto = new ExternalTransferOrder();
+                eto.setFulfillingPlant(this.MF);
+                eto.setRequestingPlant(p);
+                eto.setStatus(TransferOrderStatus.REQUESTED);
+                eto.setRemark("WPP:" + wpp.getId()+" Plant:"+p.getName());
+                persist(eto);
+            } else {
+                eto = (ExternalTransferOrder) ll.getResultList().get(0);
+            }
+            ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
+            etod.setExtTransOrder(eto);
+            etod.setQty(orders.get(p).intValue());
+            etod.setStock(wpp.getMonthlyProductionPlan().getFurnitureModel());
+            persist(etod);
         }
-        
 
         persist(po);
         em.merge(wpp);
@@ -464,6 +483,31 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         ProductionOrder po = wpp.getProductionOrder();
 
         wpp.setProductionOrder(null);
+        
+            HashMap<Plant, Long> orders = QueryMethods.traceWPPToPlant(em, wpp);
+
+        for (Plant p : orders.keySet()) {
+
+            Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
+            ll.setParameter("r", "WPP:" + wpp.getId()+" Plant:"+p.getName());
+
+            ExternalTransferOrder eto = null;
+            if (ll.getResultList().size() == 0) {
+
+            } else {
+                eto = (ExternalTransferOrder) ll.getResultList().get(0);
+            }
+            
+            
+            for (ExternalTransferOrderDetail etod: eto.getExtTransOrderDetails())
+            {
+                em.remove(etod);
+            }
+            
+            em.remove(eto);
+            
+        }
+        
 
         if (po == null) {
             return;
