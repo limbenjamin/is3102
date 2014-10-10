@@ -24,10 +24,10 @@ public class NFC implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique=true)
     private String nfcId; 
     @ManyToOne
     private Stock stock;
-    
     
     public Long getId() {
         return id;
@@ -43,6 +43,14 @@ public class NFC implements Serializable {
 
     public void setNfcId(String nfcId) {
         this.nfcId = nfcId;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     

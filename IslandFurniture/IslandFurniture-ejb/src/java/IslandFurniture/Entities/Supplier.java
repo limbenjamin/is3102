@@ -6,74 +6,33 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(
-            name = "findSupplierByName",
-            query = "SELECT a FROM Supplier a WHERE a.name = :name"),
-    @NamedQuery(
-            name = "getAllSuppliers",
-            query = "SELECT a FROM Supplier a")
-})
-public class Supplier implements Serializable {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Supplier implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String name;
-    private String phoneNumber;
-    private String email;
+    protected Long id;
+    protected String name;
+    protected String phoneNumber;
+    protected String email;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    @ManyToMany
-    private List<Ingredient> ingredients;
-    @OneToMany(mappedBy = "supplier")
-    private List<PurchaseOrder> purchaseOrders;
     @ManyToOne
-    private Country country;
-    @OneToMany(mappedBy = "supplier")
-    private List<RestaurantPurchaseOrder> restaurantPurchaseOrders;
-    @ManyToMany(mappedBy = "suppliers")
-    private List<ProcuredStock> procuredStocks;
-    @OneToOne(mappedBy = "supplier", cascade={CascadeType.PERSIST})
-    private ProcurementContract procurementContract;
+    protected Country country;
 
-    
-    public Supplier() {
-        
-    }
     public Long getId() {
         return id;
     }
@@ -90,20 +49,20 @@ public class Supplier implements Serializable {
         this.name = name;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public List<PurchaseOrder> getPurchaseOrders() {
-        return purchaseOrders;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
-        this.purchaseOrders = purchaseOrders;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Country getCountry() {
@@ -112,30 +71,6 @@ public class Supplier implements Serializable {
 
     public void setCountry(Country country) {
         this.country = country;
-    }
-
-    public List<RestaurantPurchaseOrder> getRestaurantPurchaseOrders() {
-        return restaurantPurchaseOrders;
-    }
-
-    public void setRestaurantPurchaseOrders(List<RestaurantPurchaseOrder> restaurantPurchaseOrders) {
-        this.restaurantPurchaseOrders = restaurantPurchaseOrders;
-    }
-
-    public List<ProcuredStock> getProcuredStocks() {
-        return procuredStocks;
-    }
-
-    public void setProcuredStocks(List<ProcuredStock> procuredStocks) {
-        this.procuredStocks = procuredStocks;
-    }
-
-    public ProcurementContract getProcurementContract() {
-        return procurementContract;
-    }
-
-    public void setProcurementContract(ProcurementContract procurementContract) {
-        this.procurementContract = procurementContract;
     }
 
     @Override
@@ -160,7 +95,7 @@ public class Supplier implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Supplier[ id=" + id + " ]";
+        return "Supplier[ id=" + id + " ]";
     }
 
 }

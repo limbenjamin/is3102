@@ -26,6 +26,7 @@ public class ExternalTransferOrder extends TransferOrder implements Serializable
     @OneToMany(mappedBy = "extTransOrder")
     private List<ExternalTransferOrderDetail> extTransOrderDetails;
 
+
     public Plant getFulfillingPlant() {
         return fulfillingPlant;
     }

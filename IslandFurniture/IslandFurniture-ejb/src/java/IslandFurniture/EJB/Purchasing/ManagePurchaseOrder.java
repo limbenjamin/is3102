@@ -11,10 +11,11 @@ import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.PurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -39,7 +40,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
     
     @Override
-    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, Supplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) {
+    public PurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setOrderDate(TimeMethods.convertToUtcTime(mf, orderDate));
         purchaseOrder.setStatus(status);
@@ -96,12 +97,23 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     @Override
     public List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf) {
         PurchaseOrder purchaseOrder = (PurchaseOrder) em.find(PurchaseOrder.class, orderId);
-        Supplier supplier = purchaseOrder.getSupplier();
+        ProcuredStockSupplier supplier = purchaseOrder.getSupplier();
 
         Query q = em.createNamedQuery("getStockList");
         q.setParameter("supplier", supplier);
         q.setParameter("mf", mf);
-        return (List<ProcuredStock>) q.getResultList();
+        List<ProcuredStock> availableStocks = (List<ProcuredStock>) q.getResultList();
+        List<PurchaseOrderDetail> orderedItems = viewPurchaseOrderDetails(orderId);
+        
+        //remove items from list of available stocks if already ordered
+        Iterator<PurchaseOrderDetail> iterator = orderedItems.iterator();
+        while (iterator.hasNext()) {
+            PurchaseOrderDetail orderDetail = iterator.next();
+            ProcuredStock item = (ProcuredStock) em.find(ProcuredStock.class, orderDetail.getProcuredStock().getId());
+            availableStocks.remove(item);
+        }        
+        
+        return availableStocks;
     }
 
     @Override
@@ -115,10 +127,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
 
     @Override
-    public List<Supplier> viewContractedSuppliers(ManufacturingFacility mf) {
+    public List<ProcuredStockSupplier> viewContractedSuppliers(ManufacturingFacility mf) {
         Query q = em.createNamedQuery("getSupplierList");
         q.setParameter("mf", mf);
-        return (List<Supplier>) q.getResultList();
+        return (List<ProcuredStockSupplier>) q.getResultList();
     }
 
     @Override
@@ -131,9 +143,26 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public List<PurchaseOrder> viewConfirmedPurchaseOrders(Plant staffPlant) {
-        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status!=:status AND s.manufacturingFacility=:plant");
-        q.setParameter("status", PurchaseOrderStatus.PLANNED);
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         q.setParameter("plant", staffPlant);
         return q.getResultList();
     }
+    
+    @Override
+    public List<PurchaseOrder> viewDeliveredPurchaseOrders(Plant staffPlant) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.DELIVERED);
+        q.setParameter("plant", staffPlant);
+        return q.getResultList();
+    }    
+    
+    @Override
+    public List<PurchaseOrder> viewPaidPurchaseOrders(Plant staffPlant) {
+        Query q = em.createQuery("SELECT s FROM PurchaseOrder s WHERE s.status=:status AND s.manufacturingFacility=:plant");
+        q.setParameter("status", PurchaseOrderStatus.PAID);
+        q.setParameter("plant", staffPlant);
+        return q.getResultList();
+    }    
+    
 }

@@ -10,7 +10,7 @@ import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Supplier;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -49,10 +49,12 @@ public class PurchaseOrderManagedBean implements Serializable {
     private PurchaseOrder purchaseOrder;
     private List<PurchaseOrder> plannedOrderList;
     private List<PurchaseOrder> confirmedOrderList;
-    private List<Supplier> supplierList;
+    private List<PurchaseOrder> deliveredOrderList;
+    private List<PurchaseOrder> paidOrderList;
+    private List<ProcuredStockSupplier> supplierList;
     
     private Staff staff;
-    private Supplier supplier;
+    private ProcuredStockSupplier supplier;
     private ManufacturingFacility mf;
     private String orderDateString = null;
 
@@ -73,6 +75,8 @@ public class PurchaseOrderManagedBean implements Serializable {
             mf = (ManufacturingFacility) staff.getPlant();
             plannedOrderList = mpol.viewPlannedPurchaseOrders(mf);
             confirmedOrderList = mpol.viewConfirmedPurchaseOrders(mf);
+            deliveredOrderList = mpol.viewDeliveredPurchaseOrders(mf);
+            paidOrderList = mpol.viewPaidPurchaseOrders(mf);
             supplierList = mpol.viewContractedSuppliers(mf);
             System.out.println("Init");
         } else {
@@ -108,12 +112,13 @@ public class PurchaseOrderManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Purchase order has been sucessfully deleted", ""));
     }
+    
 
-    public Supplier getSupplier() {
+    public ProcuredStockSupplier getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Supplier supplier) {
+    public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
 
@@ -205,11 +210,11 @@ public class PurchaseOrderManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public List<Supplier> getSupplierList() {
+    public List<ProcuredStockSupplier> getSupplierList() {
         return supplierList;
     }
 
-    public void setSupplierList(List<Supplier> supplierList) {
+    public void setSupplierList(List<ProcuredStockSupplier> supplierList) {
         this.supplierList = supplierList;
     }
 
@@ -219,6 +224,22 @@ public class PurchaseOrderManagedBean implements Serializable {
 
     public void setSml(SupplierManagerLocal sml) {
         this.sml = sml;
+    }
+
+    public List<PurchaseOrder> getDeliveredOrderList() {
+        return deliveredOrderList;
+    }
+
+    public void setDeliveredOrderList(List<PurchaseOrder> deliveredOrderList) {
+        this.deliveredOrderList = deliveredOrderList;
+    }
+
+    public List<PurchaseOrder> getPaidOrderList() {
+        return paidOrderList;
+    }
+
+    public void setPaidOrderList(List<PurchaseOrder> paidOrderList) {
+        this.paidOrderList = paidOrderList;
     }
 
 }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.TransferOrderStatus;
@@ -23,14 +22,25 @@ import javax.persistence.ManyToOne;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TransferOrder implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     protected TransferOrderStatus status;
-    
+
     @ManyToOne
     protected Plant requestingPlant;
+
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Long getId() {
         return id;
@@ -80,5 +90,5 @@ public abstract class TransferOrder implements Serializable {
     public String toString() {
         return "TransferOrder[ id=" + id + " ]";
     }
-    
+
 }

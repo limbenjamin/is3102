@@ -8,7 +8,6 @@ package IslandFurniture.Entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +49,7 @@ public abstract class Stock implements Serializable {
     @ManyToMany(mappedBy = "sells")
     protected List<Store> soldBy = new ArrayList();
     @OneToMany(mappedBy = "stock")
-    protected List<NFC> nfcList;
+    protected List<NFC> nfcList = new ArrayList();
 
     public Long getId() {
         return id;
@@ -108,16 +107,6 @@ public abstract class Stock implements Serializable {
         this.soldBy = soldBy;
     }
 
-    public List<NFC> getNfcList() {
-        return nfcList;
-    }
-
-    public void setNfcList(List<NFC> nfcList) {
-        this.nfcList = nfcList;
-    }
-
-    
-    
     @Override
     public int hashCode() {
         int hash = 0;
