@@ -87,6 +87,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setName(name);
         staff.setEmailAddress(emailAddress);
         staff.setPhoneNo(phoneNo);
+        staff.setCardId("00000000");
         preference = new Preference();
         notifications = new ArrayList<Notification>();
         todolist = new ArrayList<Todo>();
@@ -141,6 +142,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setName(name);
         staff.setEmailAddress(emailAddress);
         staff.setPhoneNo(phoneNo);
+        staff.setCardId("00000000");
         preference = new Preference();
         notifications = new ArrayList<Notification>();
         todolist = new ArrayList<Todo>();

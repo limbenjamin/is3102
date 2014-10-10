@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author Zee
@@ -87,13 +88,10 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
         this.purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
 
-        if (purchaseOrderId != null) {
+        if (purchaseOrderId != null || !(staff.getPlant() instanceof ManufacturingFacility)) {
             purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
+            mf = (ManufacturingFacility) staff.getPlant();
 
-            if (staff.getPlant() instanceof ManufacturingFacility) {
-                mf = (ManufacturingFacility) staff.getPlant();
-            }
-            System.out.println("@Init PurchaseOrderManaged2Bean:  this is the docomentid " + purchaseOrderId);
             procuredStockList = mpol.viewSupplierProcuredStocks(purchaseOrderId, mf);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
             supplier = purchaseOrder.getSupplier();
@@ -113,7 +111,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         }
     }
 
-    public String addStock() throws ParseException {
+    public void addStock() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
         quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
@@ -127,7 +125,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
         } finally {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", purchaseOrderId);
-            return "purchaseorder2";
         }
     }
 
@@ -162,12 +159,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         PurchaseOrderDetail pod = (PurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
 
-        mpol.updatePurchaseOrderDetail(pod, pod.getQuantity());
-        purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
+        mpol.updatePurchaseOrderDetail(pod);
+        purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
 
-        return "purchaseorder2?faces-redirect=true";
+        return "purchaseorder2";
     }
 
     public String deletePurchaseOrderDetail() {
@@ -180,25 +177,25 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
         return "purchaseorder2";
     }
-    
+
     public void sendEmail(Supplier recipient) {
         String title = "[Confirmed Purchase Order: #" + purchaseOrderId + "] from Island Furniture "
-                       + mf.getName();
+                + mf.getName();
         String orderContent = mf.getName() + " Manufacturing Facility would like to order the following: " + "\r\n ";
-        
+
         Iterator<PurchaseOrderDetail> iterator = purchaseOrderDetailList.iterator();
-	while (iterator.hasNext()) {
-                PurchaseOrderDetail current = iterator.next();
-		orderContent = orderContent + current.getProcuredStock().getName();
-                orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
-	}        
+        while (iterator.hasNext()) {
+            PurchaseOrderDetail current = iterator.next();
+            orderContent = orderContent + current.getProcuredStock().getName();
+            orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
+        }
         try {
             // send notification to supplier: using zi xuan's email address as a placeholder currently
-            SendEmailByPost.sendEmail("manufacturing", "aura.chrome@gmail.com", 
-            title, orderContent);
+            SendEmailByPost.sendEmail("manufacturing", "aura.chrome@gmail.com",
+                    title, orderContent);
         } catch (Exception ex) {
             Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }
 
     public ManufacturingFacility getMf() {
@@ -223,14 +220,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public SupplierManagerLocal getSml() {
-        return sml;
-    }
-
-    public void setSml(SupplierManagerLocal sml) {
-        this.sml = sml;
     }
 
     public String getUsername() {
@@ -375,14 +364,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
-    }
-
-    public ManageUserAccountBeanLocal getStaffBean() {
-        return staffBean;
-    }
-
-    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
-        this.staffBean = staffBean;
     }
 
 }

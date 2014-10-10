@@ -20,6 +20,8 @@ public interface ManageUserAccountBeanLocal {
     Staff getStaff(String username);
 
     Staff getStaffFromId(Long staffId);
+    
+    Staff getStaffFromCardId(String CardId);
 
     void modifyNote(String username, String notes);
 

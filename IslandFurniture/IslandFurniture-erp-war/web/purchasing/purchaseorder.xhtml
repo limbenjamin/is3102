@@ -60,13 +60,13 @@
                                                 </td>
                                                 <td>#{PO.supplier.name}</td>
                                                 <td>
-                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <h:commandButton action="purchaseorder2.xhtml" actionListener="#{purchaseOrderManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
                                                     <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
                                                 </td>  
                                                 <td>
-                                                    <h:commandButton action="#{purchaseOrderManagedBean.deletePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <h:commandButton action="purchaseorder.xhtml" actionListener="#{purchaseOrderManagedBean.deletePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:param name="POid" value="#{PO.id}" />
                                                     </h:commandButton>
                                                     <i class="fa fa-lg fa-trash-o icon-button"></i>
@@ -105,7 +105,7 @@
                                                 <td>#{CO.status}</td>
                                                 <td>#{CO.supplier.name}</td>
                                                 <td>
-                                                    <h:commandButton actionListener="#{purchaseOrderManagedBean.purchaseOrderConfirmedActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <h:commandButton action="purchaseorderconfirmed.xhtml" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="COid" value="#{CO.id}" />
                                                     </h:commandButton>
                                                     <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
@@ -149,7 +149,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                            <h:commandButton action="#{purchaseOrderManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success btn-round"></h:commandButton>
+                            <h:commandButton action="purchaseorder2.xhtml" actionListener="#{purchaseOrderManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success btn-round" />
                           </div>
                       </h:form>
                     </div>
