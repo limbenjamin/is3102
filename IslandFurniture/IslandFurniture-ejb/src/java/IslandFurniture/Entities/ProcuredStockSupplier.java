@@ -33,7 +33,7 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @OneToMany(mappedBy = "supplier")
-    private List<PurchaseOrder> purchaseOrders;
+    private List<ProcuredStockPurchaseOrder> purchaseOrders;
 
     @ManyToMany(mappedBy = "suppliers")
     private List<ProcuredStock> procuredStocks;
@@ -41,11 +41,11 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
     @OneToOne(mappedBy = "supplier", cascade = {CascadeType.PERSIST})
     private ProcuredStockContract procuredStockContract;
 
-    public List<PurchaseOrder> getPurchaseOrders() {
+    public List<ProcuredStockPurchaseOrder> getPurchaseOrders() {
         return purchaseOrders;
     }
 
-    public void setPurchaseOrders(List<PurchaseOrder> purchaseOrders) {
+    public void setPurchaseOrders(List<ProcuredStockPurchaseOrder> purchaseOrders) {
         this.purchaseOrders = purchaseOrders;
     }
 

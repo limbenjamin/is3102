@@ -55,7 +55,7 @@ public class ProcuredStockContractDetail implements Serializable {
     public ProcuredStockContractDetail() {
         
     }
-
+    
     public Integer getLeadTimeInDays() {
         return leadTimeInDays;
     }
@@ -71,6 +71,7 @@ public class ProcuredStockContractDetail implements Serializable {
     public void setLotSize(Integer lotSize) {
         this.lotSize = lotSize;
     }
+
     
     public Long getId() {
         return id;

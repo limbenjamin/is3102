@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -11,36 +12,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(
-            name = "findIngredientByName",
-            query = "SELECT a FROM Ingredient a WHERE a.name = :name"),
-    @NamedQuery(name = "getIngredientListByCountryOffice",
-            query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice"),
-    @NamedQuery(name = "getIngredientByCountryOfficeAndName",
-            query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice AND a.name = :name")
-})
-public class Ingredient implements Serializable {
-
+public class IngredientContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    private Integer leadTimeInDays;
+    private Integer lotSize;
     
     @ManyToOne
-    private CountryOffice countryOffice;
-
-    public Ingredient() {
-    }
+    private IngredientContract ingredContract;
+    
+    @ManyToOne
+    private Ingredient ingredient;
 
     public Long getId() {
         return id;
@@ -50,20 +40,36 @@ public class Ingredient implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getLeadTimeInDays() {
+        return leadTimeInDays;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLeadTimeInDays(Integer leadTimeInDays) {
+        this.leadTimeInDays = leadTimeInDays;
     }
 
-    public CountryOffice getCountryOffice() {
-        return countryOffice;
+    public Integer getLotSize() {
+        return lotSize;
     }
 
-    public void setCountryOffice(CountryOffice countryOffice) {
-        this.countryOffice = countryOffice;
+    public void setLotSize(Integer lotSize) {
+        this.lotSize = lotSize;
+    }
+
+    public IngredientContract getIngredContract() {
+        return ingredContract;
+    }
+
+    public void setIngredContract(IngredientContract ingredContract) {
+        this.ingredContract = ingredContract;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Override
@@ -76,10 +82,10 @@ public class Ingredient implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ingredient)) {
+        if (!(object instanceof IngredientContractDetail)) {
             return false;
         }
-        Ingredient other = (Ingredient) object;
+        IngredientContractDetail other = (IngredientContractDetail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -88,7 +94,7 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return "Ingredient[ id=" + id + " ]";
+        return "IngredientContractDetail[ id=" + id + " ]";
     }
-
+    
 }

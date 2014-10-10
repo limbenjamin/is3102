@@ -23,6 +23,8 @@ public class IngredientPurchaseOrderDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer quantity;
+    private Double subtotalPrice;
 
     @ManyToOne
     private IngredientPurchaseOrder ingredPurchaseOrder;
@@ -36,6 +38,22 @@ public class IngredientPurchaseOrderDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getSubtotalPrice() {
+        return subtotalPrice;
+    }
+
+    public void setSubtotalPrice(Double subtotalPrice) {
+        this.subtotalPrice = subtotalPrice;
     }
 
     public IngredientPurchaseOrder getIngredPurchaseOrder() {

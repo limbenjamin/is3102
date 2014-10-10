@@ -8,23 +8,18 @@ package IslandFurniture.Entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author James
  */
 @Entity
-public class IngredientPurchaseOrder implements Serializable {
+public class IngredientPurchaseOrder extends PurchaseOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @OneToMany(mappedBy = "ingredPurchaseOrder")
     private List<IngredientPurchaseOrderDetail> ingredPurchaseOrderDetails;
@@ -34,14 +29,9 @@ public class IngredientPurchaseOrder implements Serializable {
 
     @ManyToOne
     private Store store;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    
+    @OneToOne
+    private IngredientGoodsReceiptDocument ingredGoodsReceiptDoc;
 
     public List<IngredientPurchaseOrderDetail> getIngredPurchaseOrderDetails() {
         return ingredPurchaseOrderDetails;
@@ -65,6 +55,14 @@ public class IngredientPurchaseOrder implements Serializable {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public IngredientGoodsReceiptDocument getIngredGoodsReceiptDoc() {
+        return ingredGoodsReceiptDoc;
+    }
+
+    public void setIngredGoodsReceiptDoc(IngredientGoodsReceiptDocument ingredGoodsReceiptDoc) {
+        this.ingredGoodsReceiptDoc = ingredGoodsReceiptDoc;
     }
 
     @Override

@@ -20,8 +20,8 @@ import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Enums.ProdOrderStatus;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.ProductionOrder;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
@@ -874,12 +874,12 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         l.setParameter("m", monthNo);
         l.setParameter("y", yearNo);
 
-        PurchaseOrder po = null;
+        ProcuredStockPurchaseOrder po = null;
         String lastdate = "";
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) l.getResultList()) {
             if (wmrp.getPurchaseOrderDetail() == null) {
-                PurchaseOrderDetail pod = new PurchaseOrderDetail();
+                ProcuredStockPurchaseOrderDetail pod = new ProcuredStockPurchaseOrderDetail();
                 pod.setProcuredStock(wmrp.getMaterial());
                 pod.setQuantity(wmrp.getOrderAMT());
                 em.persist(pod);
@@ -898,7 +898,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         l.setParameter("m", monthNo);
         l.setParameter("y", yearNo);
 
-        PurchaseOrder po = null;
+        ProcuredStockPurchaseOrder po = null;
         String lastdate = "";
 
         for (WeeklyMRPRecord wmrp : (List<WeeklyMRPRecord>) l.getResultList()) {

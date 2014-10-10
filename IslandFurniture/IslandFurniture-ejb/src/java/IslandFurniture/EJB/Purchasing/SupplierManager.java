@@ -14,7 +14,7 @@ import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContract;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
-import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -116,10 +116,10 @@ public class SupplierManager implements SupplierManagerLocal {
     }
     public String deleteSupplier(Long id) {
         ProcuredStockSupplier supplier = null;
-        List<PurchaseOrder> poList;
+        List<ProcuredStockPurchaseOrder> poList;
         try {
             System.out.println("SupplierManager.deleteSupplier()");
-            poList = em.createNamedQuery("getAllPurchaseOrders", PurchaseOrder.class).getResultList();
+            poList = em.createNamedQuery("getAllPurchaseOrders", ProcuredStockPurchaseOrder.class).getResultList();
             for(int i=0; i<poList.size(); i++) {
                 if(poList.get(i).getSupplier().getId().equals(id)) {
                     supplier = poList.get(i).getSupplier();

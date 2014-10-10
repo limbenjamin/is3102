@@ -9,8 +9,8 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.ProcuredStockSupplier;
@@ -54,10 +54,10 @@ public class PurchaseOrderConfirmedManagedBean {
 
     private Calendar orderDate;
     private PurchaseOrderStatus status;
-    private PurchaseOrder purchaseOrder;
-    private List<PurchaseOrder> purchaseOrderList;
-    private PurchaseOrderDetail purchaseOrderDetail;
-    private List<PurchaseOrderDetail> purchaseOrderDetailList;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private List<ProcuredStockPurchaseOrder> purchaseOrderList;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
+    private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
     private Staff staff;
     private ProcuredStockSupplier supplier;
     private Plant plant;
@@ -204,19 +204,19 @@ public class PurchaseOrderConfirmedManagedBean {
         this.status = status;
     }
 
-    public List<PurchaseOrder> getPurchaseOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
     }
 
-    public void setPurchaseOrderList(List<PurchaseOrder> purchaseOrderList) {
+    public void setPurchaseOrderList(List<ProcuredStockPurchaseOrder> purchaseOrderList) {
         this.purchaseOrderList = purchaseOrderList;
     }
 
-    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+    public List<ProcuredStockPurchaseOrderDetail> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
-    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+    public void setPurchaseOrderDetailList(List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
     }
 
@@ -236,11 +236,11 @@ public class PurchaseOrderConfirmedManagedBean {
         this.plantList = plantList;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 
@@ -276,11 +276,11 @@ public class PurchaseOrderConfirmedManagedBean {
         this.mpol = mpol;
     }
 
-    public PurchaseOrderDetail getPurchaseOrderDetail() {
+    public ProcuredStockPurchaseOrderDetail getPurchaseOrderDetail() {
         return purchaseOrderDetail;
     }
 
-    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+    public void setPurchaseOrderDetail(ProcuredStockPurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
     }
 

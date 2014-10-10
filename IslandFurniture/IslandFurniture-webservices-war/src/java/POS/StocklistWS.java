@@ -57,9 +57,10 @@ public class StocklistWS {
             Iterator<FurnitureModel> iterator = furnitureList.iterator();
             while(iterator.hasNext()){
                 furnitureModel = iterator.next();
+                String id = String.valueOf(furnitureModel.getId());
                 String price = String.valueOf(furnitureModel.getPrice());
                 String category = String.valueOf(furnitureModel.getCategory().name());
-                builder.add(Json.createObjectBuilder().add("name", furnitureModel.getName())
+                builder.add(Json.createObjectBuilder().add("id",id).add("name", furnitureModel.getName())
                         .add("price", price).add("category", category).build());
             }
         }
@@ -78,9 +79,10 @@ public class StocklistWS {
             Iterator<RetailItem> iterator = retailList.iterator();
             while(iterator.hasNext()){
                 retailItem = iterator.next();
+                String id = String.valueOf(retailItem.getId());
                 String price = String.valueOf(retailItem.getPrice());
                 //String category = String.valueOf(retailItem.);
-                builder.add(Json.createObjectBuilder().add("name", retailItem.getName())
+                builder.add(Json.createObjectBuilder().add("id", id).add("name", retailItem.getName())
                         .add("price", price).build());
             }
         }

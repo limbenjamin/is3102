@@ -17,8 +17,8 @@ import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
-import IslandFurniture.Entities.PurchaseOrder;
-import IslandFurniture.Entities.PurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -68,8 +68,8 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     
     @EJB
     private ManageOrganizationalHierarchyBeanLocal mohb;
-    private PurchaseOrder purchaseOrder;
-    private PurchaseOrderDetail purchaseOrderDetail;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
     
     @Override
     public void createMonthlyProcumentPlan(ManufacturingFacility mf){
@@ -211,7 +211,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
             int maxDay = Helper.getNumWorkDays(month, year);
             int daysInLastWeek = Helper.getBoundaryWeekDays(month, year);
             for (int j=0;j< maxWeekNumber-1;j+=1){ //Add purchase order for week 1 to max week-1
-                purchaseOrder = new PurchaseOrder();
+                purchaseOrder = new ProcuredStockPurchaseOrder();
                 purchaseOrder.setManufacturingFacility(mf);
                 purchaseOrder.setShipsTo(mf);
                 purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
@@ -229,7 +229,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         purchaseOrder.setMonthlyProcurementPlan(mpp);
                         em.merge(mpp);
                         int qty = mpp.getQty()/maxDay*7;
-                        purchaseOrderDetail = new PurchaseOrderDetail();
+                        purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
                         purchaseOrderDetail.setQuantity(qty);
                         purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                         purchaseOrderDetail.setProcuredStock(ps);
@@ -270,7 +270,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 cal.add(Calendar.DATE, 7);
             }
             //last week
-            purchaseOrder = new PurchaseOrder();
+            purchaseOrder = new ProcuredStockPurchaseOrder();
             purchaseOrder.setManufacturingFacility(mf);
             purchaseOrder.setShipsTo(mf);
             purchaseOrder.setOrderDate(TimeMethods.convertToPlantTime(mf, cal));
@@ -298,7 +298,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     em.merge(mpp);
                     int qty = mpp.getQty()/maxDay*daysInLastWeek;
                     int qty2 = mpp2.getQty()/maxDay2*(7-daysInLastWeek);
-                    purchaseOrderDetail = new PurchaseOrderDetail();
+                    purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
                     purchaseOrderDetail.setQuantity(qty+qty2);
                     purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                     purchaseOrderDetail.setProcuredStock(ps);
@@ -319,13 +319,13 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     }
     
     @Override
-    public List<PurchaseOrder> viewPurchaseOrder(){
+    public List<ProcuredStockPurchaseOrder> viewPurchaseOrder(){
         Query query = em.createQuery("SELECT p FROM PuchaseOrder p");
         return query.getResultList();
     }
     
     @Override
-    public List<PurchaseOrderDetail> viewPurchaseOrderDetail(){
+    public List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetail(){
         Query query = em.createQuery("SELECT p FROM PuchaseOrderDetail p");
         return query.getResultList();
     }

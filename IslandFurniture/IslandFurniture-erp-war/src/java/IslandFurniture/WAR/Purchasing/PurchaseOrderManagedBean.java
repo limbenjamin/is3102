@@ -7,7 +7,7 @@ package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
-import IslandFurniture.Entities.PurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.ProcuredStockSupplier;
@@ -46,11 +46,11 @@ public class PurchaseOrderManagedBean implements Serializable {
     private Long purchaseOrderId;
     private Long supplierId;
 
-    private PurchaseOrder purchaseOrder;
-    private List<PurchaseOrder> plannedOrderList;
-    private List<PurchaseOrder> confirmedOrderList;
-    private List<PurchaseOrder> deliveredOrderList;
-    private List<PurchaseOrder> paidOrderList;
+    private ProcuredStockPurchaseOrder purchaseOrder;
+    private List<ProcuredStockPurchaseOrder> plannedOrderList;
+    private List<ProcuredStockPurchaseOrder> confirmedOrderList;
+    private List<ProcuredStockPurchaseOrder> deliveredOrderList;
+    private List<ProcuredStockPurchaseOrder> paidOrderList;
     private List<ProcuredStockSupplier> supplierList;
     
     private Staff staff;
@@ -162,19 +162,19 @@ public class PurchaseOrderManagedBean implements Serializable {
         this.purchaseOrderId = purchaseOrderId;
     }
 
-    public List<PurchaseOrder> getPlannedOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPlannedOrderList() {
         return plannedOrderList;
     }
 
-    public void setPlannedOrderList(List<PurchaseOrder> plannedOrderList) {
+    public void setPlannedOrderList(List<ProcuredStockPurchaseOrder> plannedOrderList) {
         this.plannedOrderList = plannedOrderList;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(ProcuredStockPurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 
@@ -194,11 +194,11 @@ public class PurchaseOrderManagedBean implements Serializable {
         this.mpol = mpol;
     }
 
-    public List<PurchaseOrder> getConfirmedOrderList() {
+    public List<ProcuredStockPurchaseOrder> getConfirmedOrderList() {
         return confirmedOrderList;
     }
 
-    public void setConfirmedOrderList(List<PurchaseOrder> confirmedOrderList) {
+    public void setConfirmedOrderList(List<ProcuredStockPurchaseOrder> confirmedOrderList) {
         this.confirmedOrderList = confirmedOrderList;
     }
 
@@ -226,19 +226,19 @@ public class PurchaseOrderManagedBean implements Serializable {
         this.sml = sml;
     }
 
-    public List<PurchaseOrder> getDeliveredOrderList() {
+    public List<ProcuredStockPurchaseOrder> getDeliveredOrderList() {
         return deliveredOrderList;
     }
 
-    public void setDeliveredOrderList(List<PurchaseOrder> deliveredOrderList) {
+    public void setDeliveredOrderList(List<ProcuredStockPurchaseOrder> deliveredOrderList) {
         this.deliveredOrderList = deliveredOrderList;
     }
 
-    public List<PurchaseOrder> getPaidOrderList() {
+    public List<ProcuredStockPurchaseOrder> getPaidOrderList() {
         return paidOrderList;
     }
 
-    public void setPaidOrderList(List<PurchaseOrder> paidOrderList) {
+    public void setPaidOrderList(List<ProcuredStockPurchaseOrder> paidOrderList) {
         this.paidOrderList = paidOrderList;
     }
 
