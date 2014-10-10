@@ -36,10 +36,9 @@ import java.security.cert.X509Certificate;
  */
 public class Connector {
     
-    static String url = "https://localhost/ws/rest/";
     
     public static String postForm(List params, List values, String path) throws Exception {
-    
+    String url = "https://localhost/ws/rest/";
     url += path;    
     System.err.println(url);    
     TrustManager[] trustAllCerts = new TrustManager[] {
