@@ -9,11 +9,13 @@ package IslandFurniture.Entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -27,13 +29,11 @@ public class Currency implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private double exchangeRate=1;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date effectiveDate;
-    
-    @ManyToMany
-    private List<Country> countries;
+    private String currencyCode;
 
+    @OneToMany(cascade={CascadeType.PERSIST})
+    private List<ExchangeRate> exchangeRates;
+    
     public Long getId() {
         return id;
     }
@@ -56,34 +56,20 @@ public class Currency implements Serializable {
         this.name = name;
     }
 
-    /**
-     * @return the ExchngRate
-     */
-    public double getExchangeRate() {
-        return exchangeRate;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 
-    /**
-     * @param exchangeRate the ExchngRate to set
-     */
-    public void setExchangeRate(double exchangeRate) {
-        this.exchangeRate = exchangeRate;
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
-    public Date getEffectiveDate() {
-        return effectiveDate;
+    public List<ExchangeRate> getExchangeRates() {
+        return exchangeRates;
     }
 
-    public void setEffectiveDate(Date effectiveDate) {
-        this.effectiveDate = effectiveDate;
-    }
-
-    public List<Country> getCountries() {
-        return countries;
-    }
-
-    public void setCountries(List<Country> countries) {
-        this.countries = countries;
+    public void setExchangeRates(List<ExchangeRate> exchangeRates) {
+        this.exchangeRates = exchangeRates;
     }
     
     @Override
