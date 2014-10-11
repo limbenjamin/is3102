@@ -19,7 +19,7 @@
                             <li class="active"><strong>#{procurementContractManagedBean.supplier.name} Procurement Contract</strong></li>
                         </ol>                        
                     </div>                    
-                    <div class="col-md-10">                        
+                    <div class="col-md-12">                        
                         <span class="pull-right">
                             <a href="supplier.xhtml">
                             <button type="button" class="btn btn-sm btn-default">
@@ -33,25 +33,37 @@
                         <h4><strong>#{procurementContractManagedBean.supplier.name}</strong>
                          | Procurement Contract</h4><hr></hr>   
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div class="tab-content">
                             <div class="tab-pane active">                        
                                 <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
                                         <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">  <!-- I didn't use tableStyle="width:auto" because an empty table looks very ugly -->
-                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}" style="width: 30%;">
+                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}" style="width: 20%;">
                                                 <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
                                             </p:column>
-                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}" style="width: 30%;"> 
+                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}" style="width: 20%;"> 
                                                 <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
                                             </p:column> 
-                                            <p:column headerText="Lot Size" style="width: 12%;">
+                                            <p:column headerText="Currency" style="width: 12%;"> 
+                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency.name}">
+                                                    <f:selectItem itemLabel="#{PCD.currency.name}" />
+                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
+                                                </h:selectOneMenu>
+                                            </p:column>  
+                                            <p:column headerText="Lot Price" style="width: 12%;">
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="lotPrice" value="#{PCD.lotPrice}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </p:column>
+                                            <p:column headerText="Lot Size" style="width: 10%;">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                     <h:inputText id="size" value="#{PCD.lotSize}" class="form-control transparent-form"></h:inputText>
                                                 </div>
                                             </p:column>
-                                            <p:column headerText="Lead Time(Days)" style="width: 12%;">
+                                            <p:column headerText="Lead Time(Days)" style="width: 10%;">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
                                                     <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
@@ -104,18 +116,33 @@
                                 </h:selectOneMenu>
                             </div>
                         </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Lot Size: </label>
-                                <div class="col-sm-8">
-                                    <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Currency: </label>
+                            <div class="col-sm-8">
+                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="Select Currency" pt:required="required">
+                                    <f:selectItem itemLabel="Select Currency" noSelectionOption="true" /> 
+                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
+                                </h:selectOneMenu>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Lead Time(days): </label>
-                                <div class="col-sm-8">
-                                    <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lot Size: </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lot Price: </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="lotPrice" class="form-control" pt:required="required"></h:inputText>
+                            </div> 
+                        </div> 
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lead Time(days): </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>

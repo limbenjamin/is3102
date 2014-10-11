@@ -42,9 +42,6 @@ public class CurrencyManager implements CurrencyManagerLocal {
         String s;
         String msg = null;
         StringBuffer inputLine = new StringBuffer();
-        String[] currencyCode;
-        Double[] currencyPrice;
-        JSONParser parser = new JSONParser();
         try {
             System.out.println("CurrencyManager.downloadURL");
             u = new URL("http://openexchangerates.org/api/latest.json?app_id=3e821a92a4f14e03b09de0e579a89fdf");

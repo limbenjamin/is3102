@@ -43,6 +43,7 @@ public class ProcuredStockContractDetail implements Serializable {
     private Long id;
     private Integer leadTimeInDays;
     private Integer lotSize;
+    private Double lotPrice;
     @ManyToOne
     private ProcuredStockContract procuredStockContract;
     @ManyToOne
@@ -119,6 +120,14 @@ public class ProcuredStockContractDetail implements Serializable {
 
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public Double getLotPrice() {
+        return lotPrice;
+    }
+
+    public void setLotPrice(Double lotPrice) {
+        this.lotPrice = lotPrice;
     }
 
     @Override

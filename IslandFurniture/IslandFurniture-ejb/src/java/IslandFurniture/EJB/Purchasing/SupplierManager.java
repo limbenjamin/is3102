@@ -9,17 +9,18 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContract;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
-import IslandFurniture.Entities.ProcuredStockSupplier;
 import static IslandFurniture.StaticClasses.QueryMethods.findCountryByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockAndMF;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockMFAndSupplier;
@@ -200,18 +201,20 @@ public class SupplierManager implements SupplierManagerLocal {
             return "Unexpected error occured";
         }
     }
-    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime) {
+    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID) {
         ProcuredStockSupplier supplier;
         ManufacturingFacility mf;
         ProcuredStock stock;
         ProcuredStockContract pc;
         List<ProcuredStockContractDetail> pcdList;
         ProcuredStockContractDetail pcd;
+        Currency currency;
         try {
             System.out.println("SupplierManager.addProcurementContractDetails()");            
             mf = em.find(ManufacturingFacility.class, mfID);
             stock = em.find(ProcuredStock.class, stockID);
             supplier = em.find(ProcuredStockSupplier.class, supplierID);
+            currency = em.find(Currency.class, currencyID);
             System.out.println("MF is " + mf.getName() + ", Stock is " + stock.getName() + ". Supplier is " + supplier.getName());
             
             pcd = findPCDByStockMFAndSupplier(em, stock, mf, supplier); 
@@ -236,6 +239,8 @@ public class SupplierManager implements SupplierManagerLocal {
                 pcd.setProcurementContract(pc);
                 pcd.setLeadTimeInDays(leadTime);
                 pcd.setLotSize(size);
+                pcd.setCurrency(currency);
+                pcd.setLotPrice(lotPrice);
 
                 pc.getProcuredStockContractDetails().add(pcd);
                 return null;
@@ -246,13 +251,17 @@ public class SupplierManager implements SupplierManagerLocal {
             return "Unexpected error occured";
         }
     }
-    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime) {
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID) {
         ProcuredStockContractDetail pcd;
+        Currency currency;
         try {
             System.out.println("SupplierManager.editProcurementContractDetails()");
             pcd = em.find(ProcuredStockContractDetail.class, id);
+            currency = em.find(Currency.class, currencyID);
             pcd.setLeadTimeInDays(leadTime);
-            pcd.setLotSize(size);
+            pcd.setLotSize(size); 
+            pcd.setCurrency(currency);
+            pcd.setLotPrice(lotPrice);
             em.persist(pcd);
             return null;
         } catch(Exception ex) {
