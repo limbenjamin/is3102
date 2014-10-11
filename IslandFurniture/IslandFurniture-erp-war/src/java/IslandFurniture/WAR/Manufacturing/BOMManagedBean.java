@@ -6,20 +6,27 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.BOMDetail;
+import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -40,6 +47,10 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class BOMManagedBean implements Serializable {
     @EJB
+    private CurrencyManagerLocal currencyManager;
+    @EJB
+    private ManageOrganizationalHierarchyBeanLocal manageOrganizationalHierarchyBean;
+    @EJB
     private SupplierManagerLocal supplierManager;
     @EJB
     private StockManagerLocal stockManager;
@@ -47,14 +58,18 @@ public class BOMManagedBean implements Serializable {
     private FurnitureModel furniture = null;
     private BOMDetail BOMdetail = null;
     private Long furnitureID;
-    private List<BOMDetail> bomList = null;
-    private List<Material> materialList;
     private Integer listSize = null;
     private boolean uneditable;
+    private boolean displayPrice;
     private List<FurnitureCategory> categoryList;
     private List<FurnitureSubcategory> subcategoryList;
     private List<CountryOffice> countryList;
     private List<Double> pricingList;
+    private List<BOMDetail> bomList = null;
+    private List<Material> materialList;
+    private List<Store> storeList;
+    private List<Country> storeInCountry;
+    private Set<Country> countryListNeedingPrice;
 
     public List<FurnitureSubcategory> getSubcategoryList() {
         return subcategoryList;
@@ -78,6 +93,14 @@ public class BOMManagedBean implements Serializable {
 
     public void setUneditable(boolean uneditable) {
         this.uneditable = uneditable;
+    }
+
+    public boolean isDisplayPrice() {
+        return displayPrice;
+    }
+
+    public void setDisplayPrice(boolean displayPrice) {
+        this.displayPrice = displayPrice;
     }
 
     public Integer getListSize() {
@@ -127,6 +150,46 @@ public class BOMManagedBean implements Serializable {
     public void setFurnitureID(Long furnitureID) {
         this.furnitureID = furnitureID;
     }
+
+    public List<CountryOffice> getCountryList() {
+        return countryList;
+    }
+
+    public void setCountryList(List<CountryOffice> countryList) {
+        this.countryList = countryList;
+    }
+
+    public List<Double> getPricingList() {
+        return pricingList;
+    }
+
+    public void setPricingList(List<Double> pricingList) {
+        this.pricingList = pricingList;
+    }
+
+    public List<Store> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(List<Store> storeList) {
+        this.storeList = storeList;
+    }
+
+    public List<Country> getStoreInCountry() {
+        return storeInCountry;
+    }
+
+    public void setStoreInCountry(List<Country> storeInCountry) {
+        this.storeInCountry = storeInCountry;
+    }
+
+    public Set<Country> getCountryListNeedingPrice() {
+        return countryListNeedingPrice;
+    }
+
+    public void setCountryListNeedingPrice(Set<Country> countryListNeedingPrice) {
+        this.countryListNeedingPrice = countryListNeedingPrice;
+    }
     
     @PostConstruct
     public void init() {
@@ -135,26 +198,35 @@ public class BOMManagedBean implements Serializable {
         this.furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fID");
         try {
             if(furnitureID == null) {
-                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                    ec.redirect("furniture.xhtml"); 
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect("furniture.xhtml"); 
+            } else {
+                System.out.println("FurnitureID is " + furnitureID);
+                this.furniture = stockManager.getFurniture(furnitureID);
+                displayPrice = false;
+                if(this.furniture.getPrice() != null)
+                    displayPrice = true;
+                this.materialList = stockManager.displayMaterialList();
+                this.bomList = stockManager.displayBOM(furnitureID);
+                this.uneditable = this.furniture.getBom().isUneditable();
+                this.subcategoryList = new ArrayList<>(EnumSet.allOf(FurnitureSubcategory.class));
+                this.categoryList = new ArrayList<>(EnumSet.allOf(FurnitureCategory.class));
+                this.countryList = supplierManager.getListOfCountryOffice();
+                this.storeList = manageOrganizationalHierarchyBean.displayStore();
+                countryListNeedingPrice = new HashSet<>();
+                for(Store s : storeList)
+                    countryListNeedingPrice.add(s.getCountry());
+                this.storeInCountry = new ArrayList<Country>(countryListNeedingPrice);
+                if(uneditable) 
+                    System.out.println("Furniture's BOM cannot be edited");
+                else
+                    System.out.println("Furniture's BOM can be edited");
+                System.out.println("BOMDetailList has " + this.bomList.size() + " items");
+                this.listSize = this.bomList.size();
             }
         } catch(IOException ex) {
             
         }
-        System.out.println("FurnitureID is " + furnitureID);
-        this.furniture = stockManager.getFurniture(furnitureID);
-        this.materialList = stockManager.displayMaterialList();
-        this.bomList = stockManager.displayBOM(furnitureID);
-        this.uneditable = this.furniture.getBom().isUneditable();
-        this.subcategoryList = new ArrayList<FurnitureSubcategory>(EnumSet.allOf(FurnitureSubcategory.class));
-        this.categoryList = new ArrayList<FurnitureCategory>(EnumSet.allOf(FurnitureCategory.class));
-        this.countryList = supplierManager.getListOfCountryOffice();
-        if(uneditable) 
-            System.out.println("Furniture's BOM cannot be edited");
-        else
-            System.out.println("Furniture's BOM can be edited");
-        System.out.println("BOMDetailList has " + this.bomList.size() + " items");
-        this.listSize = this.bomList.size();
     }
     
     public String addToBOM(ActionEvent event) {
@@ -253,12 +325,28 @@ public class BOMManagedBean implements Serializable {
         stockManager.editFurnitureSubcategory(furnitureID, fc);
         this.furniture.setSubcategory(fc); 
     }
-    public String editPriceList() {
-        System.out.println("BOMManagedBean.editPriceList()");
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Long fID = Long.parseLong(request.getParameter("pricingForm:fID"));
+    public Double outputPrice(Country country) {
+        if(this.furniture.getPrice() == null) 
+            return null;
+        DecimalFormat df = new DecimalFormat("#.00");
+        if(country.getCurrency().getExchangeRates().size() <= 0) 
+            return Double.parseDouble(df.format(0.0));
+        Double exchangeRate = country.getCurrency().getExchangeRates().get(country.getCurrency().getExchangeRates().size()-1).getExchangeRate();
+        return currencyManager.computeRetailPriceWithExchangeRate(this.furniture.getPrice(), exchangeRate);
+    }
+    public String updatePrice() {
+        System.out.println("BOMManagedBean.updatePrice");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String price = request.getParameter("pricingForm:price");
+        String msg = stockManager.editFurnitureModel(furnitureID, this.furniture.getName(), Double.parseDouble(price));      
+        if(msg != null) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
+        } 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
-        
-        
     }
 }

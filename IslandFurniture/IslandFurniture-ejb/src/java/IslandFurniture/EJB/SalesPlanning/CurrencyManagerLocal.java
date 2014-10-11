@@ -26,5 +26,7 @@ public interface CurrencyManagerLocal {
     public Currency getCurrency(Long currencyID);
 
     public Double updateExchangeRate(String currencyCode);
+
+    public Double computeRetailPriceWithExchangeRate(Double originalPrice, Double exchangeRate);
     
 }

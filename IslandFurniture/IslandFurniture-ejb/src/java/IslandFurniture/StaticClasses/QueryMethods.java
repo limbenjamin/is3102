@@ -74,6 +74,16 @@ public class QueryMethods {
             return null;
         }
     }
+    
+    public static List<Country> getAllCountryWithOperations(EntityManager em) {
+        Query q = em.createNamedQuery("getAllCountryWithOperations");
+        
+        try {
+            return (List<Country>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
 
     public static Currency findCurrencyByName(EntityManager em, String name) {
         Query q = em.createNamedQuery("findCurrencyByName");
