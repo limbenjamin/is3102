@@ -81,19 +81,6 @@ public class CurrencyManager implements CurrencyManagerLocal {
             return null;
         }
     }
-    public String addCurrency(Long countryID, String currencyCode) {
-        Country country;
-        List<Currency> currencyList;
-        try {
-            country = em.find(Country.class, countryID);
-            currencyList = new ArrayList<Currency>();
-            return null;
-        } catch(Exception ex) {
-            System.err.println("Something went wrong here");
-            return "Unexpected error occured";
-        }
-    }
-
     public List<Currency> getAllCurrency() {
         List<Currency> currencyList;
         try {

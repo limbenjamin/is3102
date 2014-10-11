@@ -128,7 +128,8 @@ public class CurrencyManagedBean implements Serializable {
     }
     public String retrieveLatestRates() {
         System.out.println("CurrencyManagedBean.retrieveLatestRates()");
-        
+        Double rate = currencyManager.retrieveExchangeRate(currencyManager.retrieveFullList(), currency.getCurrencyCode());
+        System.out.println("Exchange rate is " + rate);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("currencyID", currencyID);
         return "currency.xhtml";
     }

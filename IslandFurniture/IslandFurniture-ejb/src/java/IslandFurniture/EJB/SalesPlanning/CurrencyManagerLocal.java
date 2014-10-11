@@ -19,8 +19,6 @@ public interface CurrencyManagerLocal {
 
     public List<Currency> getAllCurrency();
 
-    public String addCurrency(Long countryID, String currencyCode);
-
     public Double retrieveExchangeRate(String currencyList, String currencyCode);
 
     public String retrieveFullList();
