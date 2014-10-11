@@ -14,11 +14,12 @@ import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
+import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
-import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -245,12 +246,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         while(iterator4.hasNext()){
                             ss = iterator4.next();
                             co = ss.getCountryOffice();
-                            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock=:stock AND m.countryOffice=:co AND m.year=:year AND m.month=:month");
-                            query.setParameter("stock", ss.getStock());
-                            query.setParameter("co", co);
-                            query.setParameter("month", month);
-                            query.setParameter("year", year);
-                            mssr = (MonthlyStockSupplyReq) query.getSingleResult();
+                            mssr = em.find(MonthlyStockSupplyReq.class, new MonthlyStockSupplyReqPK(ss.getStock().getId(), co.getId(), month, year));
                             qty = mssr.getQtyRequested()/maxDay*7;
                             ExternalTransferOrder eto = new ExternalTransferOrder();
                             eto.setRequestingPlant(co);
@@ -259,10 +255,13 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                             ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
                             etod.setQty(qty);
                             etod.setStock(mssr.getStock());
+                            em.persist(etod);
+                            em.persist(eto);
+                            em.flush();
                             eto.getExtTransOrderDetails().add(etod);
                             etod.setExtTransOrder(eto);
-                            em.persist(eto);
-                            em.persist(etod);
+                            
+                            
                         } 
                     }
                 }

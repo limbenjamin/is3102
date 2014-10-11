@@ -16,6 +16,7 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -140,6 +141,11 @@ public class PurchaseOrderDeliveredManagedBean {
             Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
+    
+    // get corresponding lot size of a procured stock
+    public Integer getStockLotSize(ProcuredStock stock) {
+        return mpol.getLotSize(stock, mf);
+    }     
 
     public ManufacturingFacility getMf() {
         return mf;

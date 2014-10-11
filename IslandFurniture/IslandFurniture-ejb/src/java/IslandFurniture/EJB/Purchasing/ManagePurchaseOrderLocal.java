@@ -26,7 +26,7 @@ public interface ManagePurchaseOrderLocal {
 
     ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
 
-    void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
+    void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException;
 
     void deletePurchaseOrder(Long poId);
 
@@ -41,6 +41,8 @@ public interface ManagePurchaseOrderLocal {
     List<ProcuredStockSupplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
+    
+    Integer getLotSize(ProcuredStock stock, ManufacturingFacility mf);
 
     List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf);
 

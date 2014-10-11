@@ -6,17 +6,19 @@
 package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
-import IslandFurniture.Enums.PurchaseOrderStatus;
-import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
-import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
-import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.StaticClasses.SendEmailByPost;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,6 +29,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -37,9 +41,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import IslandFurniture.StaticClasses.SendEmailByPost;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -60,6 +61,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private Calendar orderDate;
     private PurchaseOrderStatus status;
     private ProcuredStockPurchaseOrder purchaseOrder;
+    private ProcuredStock procuredStock;
     private List<ProcuredStockPurchaseOrder> purchaseOrderList;
     private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
     private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
@@ -67,10 +69,10 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private ProcuredStockSupplier supplier;
     private Plant plant;
     private ManufacturingFacility mf;
-    private List<Plant> plantList;
     private List<ProcuredStock> procuredStockList;
     private String orderDateString;
     private int quantity;
+    private int numberOfLots;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
@@ -114,9 +116,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     public void addStock() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
-        quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
+        numberOfLots = Integer.parseInt(request.getParameter("createPODetail:numberOfLots"));
         try {
-            mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
+            mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, numberOfLots);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock added successfully!", ""));
@@ -128,7 +130,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         }
     }
     
-     // confirm purchase order
+    // confirm purchase order
     public String confirmPurchaseOrder() throws ParseException {
         status = PurchaseOrderStatus.getPurchaseOrderStatus(1);
         
@@ -140,11 +142,15 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     }    
     
-
+    // get corresponding lot size of a procured stock
+    public Integer getStockLotSize(ProcuredStock stock) {
+        return mpol.getLotSize(stock, mf);
+    }
+    
     public String editStock(ActionEvent event) throws IOException {
         ProcuredStockPurchaseOrderDetail pod = (ProcuredStockPurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
-
+        
         mpol.updatePurchaseOrderDetail(pod);
         purchaseOrder = mpol.getPurchaseOrder(purchaseOrderId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -200,12 +206,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.orderDateString = orderDateString;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getNumberOfLots() {
+        return numberOfLots;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setNumberOfLots(int numberOfLots) {
+        this.numberOfLots = numberOfLots;
     }
 
     public String getUsername() {
@@ -296,14 +302,6 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.procuredStockList = procuredStockList;
     }
 
-    public List<Plant> getPlantList() {
-        return plantList;
-    }
-
-    public void setPlantList(List<Plant> plantList) {
-        this.plantList = plantList;
-    }
-
     public ProcuredStockPurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
@@ -350,6 +348,30 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setPurchaseOrderDetail(ProcuredStockPurchaseOrderDetail purchaseOrderDetail) {
         this.purchaseOrderDetail = purchaseOrderDetail;
+    }
+
+    public DateFormat getDf() {
+        return df;
+    }
+
+    public void setDf(DateFormat df) {
+        this.df = df;
+    }
+
+    public ManageUserAccountBeanLocal getStaffBean() {
+        return staffBean;
+    }
+
+    public void setStaffBean(ManageUserAccountBeanLocal staffBean) {
+        this.staffBean = staffBean;
+    }
+
+    public SupplierManagerLocal getSml() {
+        return sml;
+    }
+
+    public void setSml(SupplierManagerLocal sml) {
+        this.sml = sml;
     }
 
 }
