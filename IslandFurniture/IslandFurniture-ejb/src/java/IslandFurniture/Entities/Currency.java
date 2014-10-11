@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -35,6 +34,7 @@ import javax.persistence.OneToMany;
             query = "SELECT a FROM Currency a")
 })
 public class Currency implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,19 +42,18 @@ public class Currency implements Serializable {
     private String name;
     private String currencyCode;
 
-    @OneToMany(cascade={CascadeType.PERSIST})
-    private List<ExchangeRate> exchangeRates;
-    
+    @OneToMany(cascade = {CascadeType.PERSIST})
+    private List<ExchangeRate> exchangeRates = new ArrayList();
+
     public Currency() {
-        
+
     }
-    
+
     public Currency(String name, String currencyCode) {
         this.name = name;
         this.currencyCode = currencyCode;
-        this.exchangeRates = new ArrayList<ExchangeRate>();
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -62,17 +61,11 @@ public class Currency implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    /**
-     * @return the name
-     */
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
@@ -92,7 +85,7 @@ public class Currency implements Serializable {
     public void setExchangeRates(List<ExchangeRate> exchangeRates) {
         this.exchangeRates = exchangeRates;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
