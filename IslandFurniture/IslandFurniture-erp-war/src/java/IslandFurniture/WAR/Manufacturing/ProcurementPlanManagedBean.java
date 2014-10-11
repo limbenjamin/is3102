@@ -22,6 +22,8 @@ import IslandFurnitures.DataStructures.JDataTable.Row;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.TransactionAttribute;
@@ -70,7 +72,12 @@ public class ProcurementPlanManagedBean {
         dt = new JDataTable<String>();
         dt.Title = "Procurement Plan";
         dt.columns.add("");
-        int c_year = Helper.getCurrentYear();
+        int c_year = 0;
+        try {
+            c_year = Helper.getCurrentYear();
+        } catch (Exception ex) {
+            Logger.getLogger(ProcurementPlanManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         int c_month = Helper.getCurrentMonth().value;
         
         for (int i = 0; i <= 6; i++) {
@@ -90,7 +97,11 @@ public class ProcurementPlanManagedBean {
             r.newCell(retailItem.getName());
             size = r.getRowNo();
         }
-        c_year = Helper.getCurrentYear();
+        try {
+            c_year = Helper.getCurrentYear();
+        } catch (Exception ex) {
+            Logger.getLogger(ProcurementPlanManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         c_month = Helper.getCurrentMonth().value;
         int set=0;
         for (int j = 0; j <= size; j++) {
@@ -125,7 +136,7 @@ public class ProcurementPlanManagedBean {
                 int i_month = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, true);
                 int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
                 ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
-                if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year)){
+                if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year) || i == 0 || i == 1){
                     r.newCell("Locked");
                 }else{
                     r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);

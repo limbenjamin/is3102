@@ -8,10 +8,11 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
-import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -52,15 +53,18 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
     }
 
     @Override
-    public void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException {
+    public void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException {
         ProcuredStockPurchaseOrder purchaseOrder = (ProcuredStockPurchaseOrder) em.find(ProcuredStockPurchaseOrder.class, poId);
         ProcuredStock procuredStock = (ProcuredStock) em.find(ProcuredStock.class, stockId);
+        ManufacturingFacility mf = purchaseOrder.getManufacturingFacility();
+        Integer totalQuantity = getLotSize(procuredStock, mf) * numberOfLots;
 
         if (!purchaseOrder.hasProcuredStock(procuredStock)) {
             ProcuredStockPurchaseOrderDetail purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
             purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
             purchaseOrderDetail.setProcuredStock(procuredStock);
-            purchaseOrderDetail.setQuantity(quantity);
+            purchaseOrderDetail.setNumberOfLots(numberOfLots);
+            purchaseOrderDetail.setQuantity(totalQuantity);
             purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
 
             em.persist(purchaseOrderDetail);
@@ -81,6 +85,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
 
     @Override
     public void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod) {
+        ProcuredStock procuredStock = pod.getProcuredStock();
+        ManufacturingFacility mf = pod.getPurchaseOrder().getManufacturingFacility();
+        Integer totalQuantity = getLotSize(procuredStock, mf) * pod.getNumberOfLots();
+        pod.setQuantity(totalQuantity);
         em.merge(pod);
     }
 
@@ -102,7 +110,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         q.setParameter("supplier", supplier);
         q.setParameter("mf", mf);
         List<ProcuredStock> availableStocks = (List<ProcuredStock>) q.getResultList();
-        List<ProcuredStockPurchaseOrderDetail> orderedItems = viewPurchaseOrderDetails(orderId);
+        /*List<ProcuredStockPurchaseOrderDetail> orderedItems = viewPurchaseOrderDetails(orderId);
         
         //remove items from list of available stocks if already ordered
         Iterator<ProcuredStockPurchaseOrderDetail> iterator = orderedItems.iterator();
@@ -110,9 +118,19 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
             ProcuredStockPurchaseOrderDetail orderDetail = iterator.next();
             ProcuredStock item = (ProcuredStock) em.find(ProcuredStock.class, orderDetail.getProcuredStock().getId());
             availableStocks.remove(item);
-        }        
+        }*/        
         
         return availableStocks;
+    }
+    
+    @Override
+    public Integer getLotSize(ProcuredStock stock, ManufacturingFacility mf) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF");
+        q.setParameter("stock", stock);
+        q.setParameter("mf", mf);
+        
+        ProcuredStockContractDetail contract = (ProcuredStockContractDetail) q.getSingleResult();
+        return contract.getLotSize();
     }
 
     @Override
