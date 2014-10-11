@@ -8,10 +8,11 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
-import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -113,6 +114,16 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
         }        
         
         return availableStocks;
+    }
+    
+    @Override
+    public Integer getLotSize(ProcuredStock stock, ManufacturingFacility mf) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF");
+        q.setParameter("stock", stock);
+        q.setParameter("mf", mf);
+        
+        ProcuredStockContractDetail contract = (ProcuredStockContractDetail) q.getSingleResult();
+        return contract.getLotSize();
     }
 
     @Override

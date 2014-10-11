@@ -15,7 +15,7 @@
                           <li class="active"><strong>Purchase Order ##{purchaseOrderManaged2Bean.purchaseOrder.id}</strong></li>
                         </ol>                       
                     </div>                    
-                    <div class="col-md-8">                       
+                    <div class="col-md-10">                       
                         <span class="pull-right">
                             <a href="purchaseorder.xhtml">
                             <button type="button" class="btn btn-sm btn-default pull-right">
@@ -48,7 +48,8 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Stock</th>
-                                    <th>Quantity</th>
+                                    <th>Lot Size</th>
+                                    <th>No. of Lots</th>
                                     <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
@@ -59,10 +60,13 @@
                                                 #{pod.id}
                                             </td>                                            
                                             <td>
-                                                <h:outputText id="procuredStockId" value="#{pod.procuredStock.name}" />
+                                                #{pod.procuredStock.name}
                                             </td>
                                             <td>
-                                                <h:inputText id="quantity" value="#{pod.quantity}" class="form-control" p:required="true" p:type="number"></h:inputText>
+                                                #{purchaseOrderManaged2Bean.getStockLotSize(pod.procuredStock)}
+                                            </td>
+                                            <td>
+                                                <h:inputText id="quantity" value="#{pod.quantity}" class="form-control" p:required="true" p:type="number" p:min="1"></h:inputText>
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{purchaseOrderManaged2Bean.editStock}" class="btn btn-sm transparent-button" style="outline:0;"> 

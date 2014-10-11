@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
@@ -41,6 +42,8 @@ public interface ManagePurchaseOrderLocal {
     List<ProcuredStockSupplier> viewContractedSuppliers(ManufacturingFacility mf);
 
     List<ProcuredStockPurchaseOrderDetail> viewPurchaseOrderDetails(Long orderId);
+    
+    Integer getLotSize(ProcuredStock stock, ManufacturingFacility mf);
 
     List<ProcuredStock> viewSupplierProcuredStocks(Long orderId, ManufacturingFacility mf);
 
