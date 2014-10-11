@@ -56,7 +56,7 @@ import javax.persistence.Query;
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
-    public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
+    public static final int FORWARDLOCK = 2; //This determine how many months in advance production planning is locked
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -430,6 +430,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         Query q = em.createQuery("SELECT wpp from WeeklyProductionPlan wpp where wpp.id=:id");
         q.setParameter("id", wppID);
         WeeklyProductionPlan wpp = (WeeklyProductionPlan) q.getResultList().get(0);
+        
+        if (wpp.getQTY()<=0) return;
 
         ProductionOrder po = new ProductionOrder();
         po.setFurnitureModel(wpp.getMonthlyProductionPlan().getFurnitureModel());
@@ -583,6 +585,8 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         HashMap<Material, Long> hm = getMaterialsNeededForCommited(weekNo, YearNo, monthNo);
 
         for (Material m : (Set<Material>) hm.keySet()) {
+            
+            if (hm.get(m).intValue()==0) continue;
             WeeklyMRPRecord first = null;
 
             //Check if a wmrp already exists and if so use the current one then.

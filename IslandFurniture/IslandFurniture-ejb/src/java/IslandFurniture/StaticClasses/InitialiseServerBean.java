@@ -8,6 +8,9 @@ package IslandFurniture.StaticClasses;
 import IslandFurniture.Entities.Country;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
@@ -22,92 +25,15 @@ import javax.persistence.PersistenceContext;
 @Startup
 @Singleton
 public class InitialiseServerBean implements InitialiseServerBeanLocal {
-//
-//    @EJB
-//    private static LoadStorageDataBeanRemote loadStorageDataBean;
-//
-//    @EJB
-//    private static LoadSupplierBeanRemote loadSupplierBean;
-//
-//    @EJB
-//    private static LoadStocksBeanRemote loadStocksBean;
-//    @EJB
-//    private static LoadSalesForecastBeanRemote loadSalesForecastBean;
-//
-//    @EJB
-//    private static LoadTransactionBeanRemote loadTransactionBean;
-//
-//    @EJB
-//    private static LoadOrgEntitiesBeanRemote loadOrgEntitiesBean;
-//
-//    @EJB
-//    private static LoadStaffDataBeanRemote loadStaffDataBean;
-//
-//    @EJB
-//    private static MapStaffDataBeanRemote mapStaffDataBean;
-//
-//    @EJB
-//    private static LoadJamesTestDataRemote loadJamesTestData;
-//
-//    @EJB
-//    private static LoadPrivilegeBeanRemote loadPrivilegeBean;
-//
-//    @EJB
-//    private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
+
+
+
 
     Country country;
-    @PersistenceContext(unitName = "IslandFurniture")
-    private EntityManager em;
+
     private boolean updateMssrStarted;
 
-//    public void loaddata() {
-//        System.out.println("initialiseServer(): Server Started");
-//        Query q = em.createQuery("SELECT c from Country");
-//        if (q.getResultList().size() == 0) {
-//            System.out.println("initialiseServer(): DataLoading Started");
-//            try {
-//                loadOrgEntitiesBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadStocksBean.loadSampleData(0);
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadSupplierBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadStorageDataBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadTransactionBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadStaffDataBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                mapStaffDataBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadPrivilegeBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                mapPrivilegeDataBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//            try {
-//                loadSalesForecastBean.loadSampleData();
-//            } catch (Exception ex) {
-//            }
-//
-//        }
-//    }
+
 
     @PostConstruct
     public void initialiseServer() {
@@ -125,14 +51,13 @@ public class InitialiseServerBean implements InitialiseServerBeanLocal {
         this.updateMssrStarted = updateMssrStarted;
     }
 
-    // Extra Methods
     @Override
     public void startMssrTimer() {
         this.updateMssrStarted = true;
     }
+    
 
-    public void persist(Object object) {
-        em.persist(object);
-    }
+    
+    
 
 }
