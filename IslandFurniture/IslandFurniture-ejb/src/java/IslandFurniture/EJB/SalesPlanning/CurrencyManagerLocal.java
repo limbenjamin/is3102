@@ -17,10 +17,14 @@ import javax.ejb.Local;
 @Local
 public interface CurrencyManagerLocal {
 
-    public String retrieveFullList();
+    public List<Currency> getAllCurrency();
+
+    public String addCurrency(Long countryID, String currencyCode);
 
     public Double retrieveExchangeRate(String currencyList, String currencyCode);
 
-    public List<String> getAllCurrency();
+    public String retrieveFullList();
+
+    public Currency getCurrency(Long currencyID);
     
 }

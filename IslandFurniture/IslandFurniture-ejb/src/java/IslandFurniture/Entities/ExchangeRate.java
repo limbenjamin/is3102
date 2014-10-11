@@ -28,12 +28,32 @@ public class ExchangeRate implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Calendar effectiveDate;
 
+    public ExchangeRate() {
+        
+    }
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public double getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(double exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public Calendar getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(Calendar effectiveDate) {
+        this.effectiveDate = effectiveDate;
     }
 
     @Override

@@ -94,8 +94,25 @@ public class CurrencyManager implements CurrencyManagerLocal {
         }
     }
 
-    @Override
-    public List<String> getAllCurrency() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Currency> getAllCurrency() {
+        List<Currency> currencyList;
+        try {
+            currencyList = em.createNamedQuery("getAllCurrencies", Currency.class).getResultList();
+            return currencyList;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;  
+        }
+    }
+    public Currency getCurrency(Long currencyID) {
+        Currency currency;
+        try {
+            System.out.println("CurrencyManager.getCurrency()");
+            currency = em.find(Currency.class, currencyID);
+            return currency;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;  
+        }
     }
 }

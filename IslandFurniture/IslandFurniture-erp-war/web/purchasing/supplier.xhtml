@@ -53,14 +53,13 @@
                                                         <h:inputText id="supplierName" value="#{supplier.name}" class="form-control transparent-form"></h:inputText>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td> 
                                                     <div class="inner-addon left-addon">
                                                         <h:selectOneMenu id="supplierCountry" class="form-control needauto" value="#{supplier.country.name}">    
-                                                            <f:selectItem itemLabel="Select Country" noSelectionOption="true" />
                                                             <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
                                                         </h:selectOneMenu>
                                                     </div>
-                                                </td>
+                                                </td> 
                                                 <td>
                                                     <div class="inner-addon left-addon">
                                                         <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
