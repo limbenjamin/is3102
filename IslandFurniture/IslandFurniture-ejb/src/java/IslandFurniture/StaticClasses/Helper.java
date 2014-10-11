@@ -5,6 +5,7 @@
  */
 package IslandFurniture.StaticClasses;
 
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
 import IslandFurniture.Enums.Month;
 import java.util.Calendar;
 import java.util.logging.Level;
@@ -56,9 +57,11 @@ public class Helper {
 
     public static Month getCurrentMonth() {
         try {
-            return translateMonth((int) Calendar.getInstance().get(Calendar.MONTH));
+
+            
+            return translateMonth((int) ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH));
         } catch (Exception ex) {
-            Logger.getLogger(Helper.class.getName()).log(Level.SEVERE, null, ex);
+
         }
         return null;
     }
@@ -90,8 +93,11 @@ public class Helper {
 
     public static int addoneWeek(int month, int year, int week, int addWeeks, int return_what) throws Exception {
 
-        int direction = addWeeks / Math.abs(addWeeks);
-
+        int direction=0;
+        if (addWeeks>0){
+        direction = addWeeks / Math.abs(addWeeks);
+        }
+        
         while (direction * addWeeks > 0) {
 
             if (week + direction > Helper.getNumOfWeeks(month, year) || week + direction <= 0) {
@@ -135,8 +141,8 @@ public class Helper {
 
     }
 
-    public static int getCurrentYear() {
-        return Calendar.getInstance().get(Calendar.YEAR);
+    public static int getCurrentYear() throws Exception {
+        return ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR);
     }
 
     public static int getBoundaryWeekDays(Month month, int Year) {

@@ -60,7 +60,7 @@
                                 </f:facet>
                                 <p:outputLabel  value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}"  rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
                                 <h:inputText value="#{datarow.getCell(dataCIndex).value}" styleClass="#{datarow.getCell(dataCIndex).colorClass}" style="width:80px"   rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
-                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('MPP_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
+                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update="@([id$=capacity_dt])" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
                             </p:columns>
                         </p:dataTable>
 
@@ -80,6 +80,7 @@
                     <!-- Weekly Production Planning -->
 
                     <p:tab id="panel2" title="Weekly Production Planning" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
+                        <br/>
 
 
                         <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="wpp_dt"  var="datarow"  value="#{ProductionPlanning.wpp.internalrows}" rowIndexVar="ri" rendered="#{ProductionPlanning.wpp.internalrows.size() gt 0}">
@@ -88,25 +89,29 @@
 
                             </f:facet>
 
-                            <p:columns  value="#{ProductionPlanning.wpp.columns}" var="datacolumn" columnIndexVar="dataCIndex" style="width:100%" >
+                            <p:columns  value="#{ProductionPlanning.wpp.columns}" var="datacolumn" columnIndexVar="dataCIndex" style="width:100%;min-width:150px;max-width:400px" >
                                 <f:facet name="header">
                                     <p:outputLabel escape="false" value="#{datacolumn}"/>
 
                                 </f:facet>
                                 <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false" style="word-wrap: break-word;"  rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
-                                <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="word-wrap: break-word; max-width:80px;"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
-                                <p:commandButton style="white-space: normal" rendered="#{datarow.getCell(dataCIndex).command.length()>0}"  value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('wpp_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
+                                <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="word-wrap: break-word;"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
+                                <p:commandButton style="white-space: normal" rendered="#{datarow.getCell(dataCIndex).command.length()>0}"  value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update="@([id$=wpp_dt])" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
                             </p:columns>
 
                         </p:dataTable>
                         <br/>
-                        <p:commandButton value="Manual Update" id="updateWPP">
-                            <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
-                        </p:commandButton>
-                        <p:commandButton value="Commence All" id="CommenceMonth" update=":#{p:component('wpp_dt')}" actionListener="#{ProductionPlanning.listenToCell}" label="CommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true" >
-                        </p:commandButton>
+
+                        <!-- custom button-->
+                        <p:outputPanel style="display:block" id="cbuttons">
+                            <p:commandButton value="Manual Update" id="updateWPP">
+                                <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
+                            </p:commandButton>
+                            <p:commandButton id="commence_button" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='commit'}" value="Commence All"  update="@([id$=wpp_dt]),@([id$=cbuttons])" actionListener="#{ProductionPlanning.listenToCell}" label="CommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true"></p:commandButton>
+                            <p:commandButton id="commence_button2" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='uncommit'}" value="Uncommence All"  update="@([id$=wpp_dt]),@([id$=cbuttons])" actionListener="#{ProductionPlanning.listenToCell}" label="UncommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true"></p:commandButton>
+                        </p:outputPanel>
                     </p:tab>
 
                     <!-- Material Resource Planning -->
@@ -118,14 +123,14 @@
 
                             </f:facet>
 
-                            <p:columns  value="#{ProductionPlanning.mrp.columns}" var="datacolumn" columnIndexVar="dataCIndex"  style="min-width: 220px;">
+                            <p:columns  value="#{ProductionPlanning.mrp.columns}" var="datacolumn" columnIndexVar="dataCIndex"  style="width:100%;min-width:150px;max-width:400px">
                                 <f:facet name="header">
                                     <p:outputLabel escape="false" value="#{datacolumn}"/>
 
                                 </f:facet>
                                 <p:outputLabel value="#{datarow.getCell(dataCIndex).value}" escape="false"  style="width:96%;text-align:center" rendered="#{datarow.getCell(dataCIndex).isEditable==false and datarow.getCell(dataCIndex).command.length()==0}"/>
                                 <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="width:96%;text-align:center"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
-                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('mrp_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
+                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update="@([id$=capacity_dt])" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
                             </p:columns>
@@ -152,7 +157,7 @@
                                 </f:facet>
                                 <p:outputLabel value="#{datarow.getCell(dataCIndex).value}"  style="width:96%" rendered="#{datarow.getCell(dataCIndex).isEditable==false}"/>
                                 <h:inputText value="#{datarow.getCell(dataCIndex).value}"  style="text-align:center;width:96%"  rendered="#{datarow.getCell(dataCIndex).isEditable==true}"/>
-                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update=":#{p:component('capacity_dt')}" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
+                                <p:commandButton rendered="#{datarow.getCell(dataCIndex).command.length()>0}" style="width:100%" value="#{datarow.getCell(dataCIndex).value}" alt="#{datarow.getCell(dataCIndex).identifier}" label="#{datarow.getCell(dataCIndex).command}" ajax="true" update="@([id$=capacity_dt])" actionListener="#{ProductionPlanning.listenToCell}"></p:commandButton>
 
 
                             </p:columns>
