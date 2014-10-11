@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 /**
@@ -18,15 +20,59 @@ import javax.persistence.ManyToOne;
  * @author James
  */
 @Entity
-public class PromotionDetail implements Serializable {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class PromotionDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    protected Long id;
+
     @ManyToOne
-    private Stock stock;
-    @ManyToOne
-    private PromotionCampaign promotionCampaign;
+    protected PromotionCampaign promotionCampaign;
+    
+    protected double percentageDiscount;
+    protected double absoluteDiscount;
+    
+    protected MembershipTier membershiptier=null;
+    
+    protected Plant applicablePlant;
+
+    public Plant getApplicablePlant() {
+        return applicablePlant;
+    }
+
+    public void setApplicablePlant(Plant applicablePlant) {
+        this.applicablePlant = applicablePlant;
+    }
+    
+    
+
+    public MembershipTier getMembershiptier() {
+        return membershiptier;
+    }
+
+    public void setMembershiptier(MembershipTier membershiptier) {
+        this.membershiptier = membershiptier;
+    }
+    
+    
+
+    public double getPercentageDiscount() {
+        return percentageDiscount;
+    }
+
+    public void setPercentageDiscount(double percentageDiscount) {
+        this.percentageDiscount = percentageDiscount;
+    }
+
+    public double getAbsoluteDiscount() {
+        return absoluteDiscount;
+    }
+
+    public void setAbsoluteDiscount(double absoluteDiscount) {
+        this.absoluteDiscount = absoluteDiscount;
+    }
+    
 
     public Long getId() {
         return id;
@@ -36,13 +82,7 @@ public class PromotionDetail implements Serializable {
         this.id = id;
     }
 
-    public Stock getStock() {
-        return stock;
-    }
 
-    public void setStock(Stock stock) {
-        this.stock = stock;
-    }
 
     public PromotionCampaign getPromotionCampaign() {
         return promotionCampaign;
