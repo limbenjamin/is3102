@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -70,6 +72,16 @@ public class QueryMethods {
 
         try {
             return (Country) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    public static List<Country> getAllCountryWithOperations(EntityManager em) {
+        Query q = em.createNamedQuery("getAllCountryWithOperations");
+        
+        try {
+            return (List<Country>) q.getResultList();
         } catch (NoResultException nrex) {
             return null;
         }
@@ -372,8 +384,11 @@ public class QueryMethods {
 
             } catch (Exception ex) {
             }
-            q.setParameter("nm", Helper.getCurrentMonth().value + FORWARDLOCK + 1); //2 months in advance
-            q.setParameter("ny", Helper.getCurrentYear());
+            q.setParameter("nm", Helper.getCurrentMonth().value + FORWARDLOCK); //2 months in advance
+            try {
+                q.setParameter("ny", Helper.getCurrentYear());
+            } catch (Exception ex) {
+            }
             q.setParameter("co", ss.getCountryOffice());
             q.setParameter("stock", ss.getStock());
 
@@ -678,7 +693,7 @@ public class QueryMethods {
 
         long month_demand = wpp.getMonthlyProductionPlan().getQTY();
 
-        List<MonthlyStockSupplyReq> MSSR_List = getRelevantMSSR(em, wpp.getMonthlyProductionPlan().getManufacturingFacility(), wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
+        List<MonthlyStockSupplyReq> MSSR_List = getRelevantMssrAtPT(em,wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(),wpp.getMonthlyProductionPlan().getManufacturingFacility(),wpp.getMonthlyProductionPlan().getFurnitureModel());
 
         HashMap<Plant, Long> roundingAdjustment = new HashMap<Plant, Long>();
         if (Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear()) == wpp.getWeekNo()) {

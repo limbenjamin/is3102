@@ -74,8 +74,11 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
         public void addWeek() throws Exception {
 
             weekAdded++;
-
-            getCalendar();
+            Calendar c = getCalendar();
+            month = c.get(Calendar.MONTH);
+            week = Helper.getWeekNoFromDate(c);
+            year = c.get(Calendar.YEAR);
+            System.out.println("Event() : Now is " + week + "/" + (month + 1) + "/" + year);
 
         }
 
@@ -119,7 +122,6 @@ public class ManageProductionPlanTimerBean implements ProductionPlanningSingleto
             this.month = t_month;
             this.week = t_week;
             this.year = t_year;
-            System.out.println("Event() : Now is " + week + "/" + (month + 1) + "/" + year);
 
             return (Helper.getStartDateOfWeek(month, year, week));
 

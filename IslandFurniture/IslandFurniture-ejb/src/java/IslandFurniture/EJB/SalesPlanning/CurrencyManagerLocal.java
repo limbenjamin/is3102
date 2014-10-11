@@ -17,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface CurrencyManagerLocal {
 
-    public List<Currency> getAllCurrency();
+    public List<Currency> getAllCurrency(); 
 
     public Double retrieveExchangeRate(String currencyList, String currencyCode);
 
@@ -26,5 +26,7 @@ public interface CurrencyManagerLocal {
     public Currency getCurrency(Long currencyID);
 
     public Double updateExchangeRate(String currencyCode);
+
+    public Double computeRetailPriceWithExchangeRate(Double originalPrice, Double exchangeRate);
     
 }

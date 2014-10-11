@@ -24,6 +24,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -90,7 +92,12 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         dt.columns.add("Furniture Model");
         dt.columns.add("Maximum Daily Production");
 
-        int c_year = Helper.getCurrentYear();
+        int c_year = 0;
+        try {
+            c_year = Helper.getCurrentYear();
+        } catch (Exception ex) {
+
+        }
         int c_month = Helper.getCurrentMonth().value;
 
         for (int i = 0; i <= 6; i++) {
@@ -164,6 +171,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
     @Override
     public boolean updateListOfEntities(ArrayList<Object> listOfEntities) throws Exception {
+        int delta = 0;
         for (Object o : listOfEntities) {
 
             if (o instanceof MonthlyProductionPlan) {
@@ -206,11 +214,11 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
                 double totalproduction = 0;
                 int capacity = wpp.getMonthlyProductionPlan().getManufacturingFacility().findProductionCapacity(wpp.getMonthlyProductionPlan().getFurnitureModel()).getCapacity(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear());
-                int delta = 0;
+
                 int maxWeek = Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear());
                 int overflow = 0;
-                delta = ((WeeklyProductionPlan) em.find(WeeklyProductionPlan.class, wpp.getId())).getQTY();
-                delta = wpp.getQTY() - delta;
+                int temp = ((WeeklyProductionPlan) em.find(WeeklyProductionPlan.class, wpp.getId())).getQTY();
+                delta += wpp.getQTY() - temp;
 //                if (wpp.getWeekNo() == maxWeek) {
 //                    Double w1 = (Helper.getBoundaryWeekDays(wpp.getMonthlyProductionPlan().getMonth(), wpp.getMonthlyProductionPlan().getYear()) / 7.0);
 //
@@ -247,6 +255,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
     private JDataTable<String> getDemandPlanningTable(ManufacturingFacility MF) throws Exception {
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF");
         q.setParameter("mf", MF);
+        q.setParameter("m", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH));
+        q.setParameter("y", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));
         JDataTable<String> dt = new JDataTable<String>();
         dt.columns.add("Furniture Model");
         dt.columns.add("Data");
@@ -256,6 +266,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             mpp.CreateProductionPlanFromForecast();
             q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF"); //Refresh
             q.setParameter("mf", MF);
+            q.setParameter("m", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH));
+            q.setParameter("y", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));
         }
 
         String Cur_FM = "";
@@ -478,7 +490,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             if (wMRP.getOrderAMT() == 0) {
                 ScheduledReceipt.newCell("0");
                 PlannedReceipt.newCell("0");
-            } else if (wMRP.getPurchaseOrderDetail().getPurchaseOrder() != null) { //simple fix
+            } else if (wMRP.getPurchaseOrderDetail() != null && wMRP.getPurchaseOrderDetail().getPurchaseOrder() != null) { //simple fix
                 ScheduledReceipt.newCell(wMRP.getOrderAMT().toString());
                 PlannedReceipt.newCell("0");
             } else {
@@ -524,8 +536,10 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
         JDataTable.Row StartDayOfWeek = jdt.newRow();
         JDataTable.Row EndDayOfWeek = jdt.newRow();
+        StartDayOfWeek.setColorClass("summary");
         StartDayOfWeek.newCell("Start Day");
         EndDayOfWeek.newCell("End Day");
+        EndDayOfWeek.setColorClass("summary");
 
         JDataTable.Row PlannedWeekProduction = null;
         HashMap<Integer, Boolean> alluncommited = new HashMap<>();
@@ -555,7 +569,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         String last_class = "normal_odd";
         for (WeeklyProductionPlan wpp : (List<WeeklyProductionPlan>) q.getResultList()) {
             if (!CFM.equals(wpp.getMonthlyProductionPlan().getFurnitureModel().getName())) {
-                CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName(); 
+                CFM = wpp.getMonthlyProductionPlan().getFurnitureModel().getName();
                 if (last_class == "normal_odd") {
                     last_class = "normal_even";
                 } else {
@@ -565,6 +579,9 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 //Show breakdown to Country Offices
                 mssrLists = QueryMethods.traceWPPToPlant(em, wpp);
                 mf_rows = new HashMap<>();
+                JDataTable.Row space = jdt.newRow(); //spacer
+                space.setColorClass("summary");
+                space.newCell("");
                 for (Plant p : mssrLists.keySet()) {
                     JDataTable.Row r = jdt.newRow();
                     r.newCell(wpp.getMonthlyProductionPlan().getFurnitureModel().getName() + " <br/> To: " + p.getName());
@@ -573,7 +590,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 }
 
                 PlannedWeekProduction = jdt.newRow().setColorClass(last_class);
-                PlannedWeekProduction.newCell(CFM+ " <br/> Total Week Requirement:"+QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff));
+                PlannedWeekProduction.newCell(CFM + " <br/> Total Week Requirement:" + QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), mff));
 
 //                ActionRow = jdt.newRow().setColorClass(last_class);;
 //                ActionRow.newCell("Commit to Production Order");
@@ -585,6 +602,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             Cell c = null;
             //Individual Cells
             if (wpp.isLocked()) {
+                jdt.keyvaluepair.put("button", "");
+
 //                d = ActionRow.newCell("Locked");
                 lockcolumn.put(wpp.getWeekNo(), true);
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
@@ -594,6 +613,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                     c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 }
             } else if (hasCommittedMaterial) {
+                jdt.keyvaluepair.put("button", "uncommit");
 //                d = ActionRow.newCell("Remove MRP First");
                 if (wpp.getProductionOrder() == null) {
                     c = PlannedWeekProduction.newCell("0");
@@ -601,6 +621,10 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                     c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 }
             } else if (wpp.getProductionOrder() == null) {
+                if (jdt.keyvaluepair.get("button") == null) {
+                    jdt.keyvaluepair.put("button", "commit");
+                }
+
 //                alluncommited.put(ActionRow.rowdata.size(), true);
 //                d = ActionRow.newCell("Commit");
 //                d.setCommand("COMMIT_WPP");
@@ -608,27 +632,24 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
                 c.setIsEditable(true);
             } else {
+                jdt.keyvaluepair.put("button", "commit");
+
 //                d = ActionRow.newCell("Uncommit");
 //                d.setCommand("UNCOMMIT_WPP");
 //                d.setIdentifier(wpp.getId().toString());
                 c = PlannedWeekProduction.newBindedCell(String.valueOf(wpp.getQTY()), "QTY").setBinded_entity(wpp);
             }
 
-
-
-
-                //Populate distribution Table
-                HashMap<Plant, Long> dist = QueryMethods.traceWPPToPlant(em, wpp);
-                for (Plant p : dist.keySet()) {
-                    mf_rows.get(p).newCell(dist.get(p).toString());
-                }
-
+            //Populate distribution Table
+            HashMap<Plant, Long> dist = QueryMethods.traceWPPToPlant(em, wpp);
+            for (Plant p : dist.keySet()) {
+                mf_rows.get(p).newCell(dist.get(p).toString());
+            }
 
         }
 
 //        JDataTable.Row SPACER = jdt.newRow().setColorClass("summary");
 //        SPACER.newCell("Materials Required For Commited WPP");
-
         for (int i = 1; i <= jdt.columns.size() - 1; i++) {
 
             //Materials side---------------------
@@ -685,6 +706,12 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
                 }
             }
 
+        }
+
+        //only enable commencement for next month after lock
+        int currenttime = (ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH) + 1) + ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR) * 12;
+        if ((1 + requestedMonth.value) + requestedYear * 12 - currenttime != ManageProductionPlanning.FORWARDLOCK + 1) {
+            jdt.keyvaluepair.put("button", "");
         }
 
         System.out.println("getWeeklyPlans() Requesting for wpp for" + requestedMonth + " /" + requestedYear);

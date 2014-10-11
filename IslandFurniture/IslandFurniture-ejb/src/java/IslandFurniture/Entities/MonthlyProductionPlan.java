@@ -33,7 +33,7 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)=(:m+1)+:y*12 and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf order by MPP.furnitureModel.name"),
-    @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
+    @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf and ((MPP.month+1)+MPP.year*12)>=(:m+1)+:y*12 ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
 })
 public class MonthlyProductionPlan implements Serializable {
 

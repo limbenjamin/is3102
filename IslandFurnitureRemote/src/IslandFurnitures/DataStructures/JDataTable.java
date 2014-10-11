@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,7 +25,26 @@ public class JDataTable<T> implements Serializable {
     public ArrayList<String> columns = new ArrayList<String>();
     public String Title = "TABLE";
     public List<Row> Internalrows;
+    public HashMap<String,String> keyvaluepair=new HashMap<>();
 
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String Title) {
+        this.Title = Title;
+    }
+
+    public HashMap<String, String> getKeyvaluepair() {
+        return keyvaluepair;
+    }
+
+    public void setKeyvaluepair(HashMap<String, String> keyvaluepair) {
+        this.keyvaluepair = keyvaluepair;
+    }
+
+    
+    
     public List<Row> getInternalrows() {
         return Internalrows;
     }

@@ -39,7 +39,10 @@ import javax.xml.bind.annotation.XmlTransient;
             query = "SELECT a FROM Plant a WHERE a.country = :country AND a.name = :name"),
     @NamedQuery(
             name = "getAllPlants",
-            query = "SELECT a FROM Plant a")
+            query = "SELECT a FROM Plant a"),
+    @NamedQuery(
+            name = "getAllCountryWithOperations",
+            query = "SELECT DISTINCT a.country FROM Plant a")
 })
 @XmlRootElement
 public abstract class Plant implements Serializable {
