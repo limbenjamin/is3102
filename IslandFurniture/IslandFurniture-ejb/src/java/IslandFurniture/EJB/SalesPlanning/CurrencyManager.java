@@ -5,7 +5,6 @@
  */
 package IslandFurniture.EJB.SalesPlanning;
 
-import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.ExchangeRate;
 import static IslandFurniture.StaticClasses.QueryMethods.findCurrencyByCode;
@@ -22,7 +21,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
