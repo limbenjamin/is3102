@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,7 +37,7 @@ import javax.persistence.Query;
  *
  * @author James
  */
-@Stateless
+@Stateful
 public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningEJBBeanInterface {
 
     @EJB
@@ -143,7 +144,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
     @Override
     public Object getDemandPlanningTable(String MF) throws Exception {
         ManufacturingFacility mff = (ManufacturingFacility) em.createQuery("Select Mf from ManufacturingFacility Mf where Mf.name='" + MF + "'").getSingleResult();
-        return (getDemandPlanningTable(mff));
+        return (getDemandPlanningTable(mff,ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH),ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR)));
     }
 
     @Override
@@ -252,12 +253,17 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
     }
 
     //Not exposed
-    private JDataTable<String> getDemandPlanningTable(ManufacturingFacility MF) throws Exception {
+    private JDataTable<String> getDemandPlanningTable(ManufacturingFacility MF,Integer month , Integer year) throws Exception {
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF");
         q.setParameter("mf", MF);
         q.setParameter("m", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH));
         q.setParameter("y", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));
         JDataTable<String> dt = new JDataTable<String>();
+        dt.keyvaluepair.put("month", month.toString());
+        dt.keyvaluepair.put("year", year.toString());
+        
+        
+        
         dt.columns.add("Furniture Model");
         dt.columns.add("Data");
         if (q.getResultList().size() == 0) {
@@ -266,8 +272,8 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             mpp.CreateProductionPlanFromForecast();
             q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF"); //Refresh
             q.setParameter("mf", MF);
-            q.setParameter("m", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH));
-            q.setParameter("y", ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));
+            q.setParameter("m", month);
+            q.setParameter("y", year);
         }
 
         String Cur_FM = "";
