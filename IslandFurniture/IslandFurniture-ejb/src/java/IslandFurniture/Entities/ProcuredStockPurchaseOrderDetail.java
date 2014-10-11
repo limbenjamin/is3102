@@ -28,7 +28,7 @@ public class ProcuredStockPurchaseOrderDetail implements Serializable {
     @ManyToOne
     private ProcuredStock procuredStock;
     private Integer quantity;
-    private Double unitPrice;
+    private Integer numberOfLots;
 
     public Long getId() {
         return id;
@@ -62,12 +62,12 @@ public class ProcuredStockPurchaseOrderDetail implements Serializable {
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
-        return unitPrice;
+    public Integer getNumberOfLots() {
+        return numberOfLots;
     }
 
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setNumberOfLots(Integer numberOfLots) {
+        this.numberOfLots = numberOfLots;
     }
     
     @Override

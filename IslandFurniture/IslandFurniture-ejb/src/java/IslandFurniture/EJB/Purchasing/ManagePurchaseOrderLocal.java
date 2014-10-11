@@ -8,7 +8,6 @@ package IslandFurniture.EJB.Purchasing;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
-import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Enums.PurchaseOrderStatus;
@@ -27,7 +26,7 @@ public interface ManagePurchaseOrderLocal {
 
     ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
 
-    void createNewPurchaseOrderDetail(Long poId, Long stockId, int quantity) throws DuplicateEntryException;
+    void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException;
 
     void deletePurchaseOrder(Long poId);
 

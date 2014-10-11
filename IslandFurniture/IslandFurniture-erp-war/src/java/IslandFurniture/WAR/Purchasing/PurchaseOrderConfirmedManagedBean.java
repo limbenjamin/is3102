@@ -105,8 +105,12 @@ public class PurchaseOrderConfirmedManagedBean {
         } catch(IOException ex) {
             
         }        
-
     }
+    
+    // get corresponding lot size of a procured stock
+    public Integer getStockLotSize(ProcuredStock stock) {
+        return mpol.getLotSize(stock, mf);
+    }    
 
     public ManufacturingFacility getMf() {
         return mf;

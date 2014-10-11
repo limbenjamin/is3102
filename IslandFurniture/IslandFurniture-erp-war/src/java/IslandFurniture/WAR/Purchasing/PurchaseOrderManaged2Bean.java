@@ -61,6 +61,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private Calendar orderDate;
     private PurchaseOrderStatus status;
     private ProcuredStockPurchaseOrder purchaseOrder;
+    private ProcuredStock procuredStock;
     private List<ProcuredStockPurchaseOrder> purchaseOrderList;
     private ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
     private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
@@ -71,6 +72,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private List<ProcuredStock> procuredStockList;
     private String orderDateString;
     private int quantity;
+    private int numberOfLots;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
@@ -114,9 +116,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     public void addStock() throws ParseException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
-        quantity = Integer.parseInt(request.getParameter("createPODetail:quantity"));
+        numberOfLots = Integer.parseInt(request.getParameter("createPODetail:numberOfLots"));
         try {
-            mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, quantity);
+            mpol.createNewPurchaseOrderDetail(purchaseOrderId, procuredStockId, numberOfLots);
             purchaseOrderDetailList = mpol.viewPurchaseOrderDetails(purchaseOrderId);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock added successfully!", ""));
@@ -204,12 +206,12 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         this.orderDateString = orderDateString;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getNumberOfLots() {
+        return numberOfLots;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setNumberOfLots(int numberOfLots) {
+        this.numberOfLots = numberOfLots;
     }
 
     public String getUsername() {
