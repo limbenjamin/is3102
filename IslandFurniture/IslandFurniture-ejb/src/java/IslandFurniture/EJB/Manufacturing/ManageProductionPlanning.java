@@ -459,6 +459,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto.setFulfillingPlant(this.MF);
                 eto.setRequestingPlant(p);
                 eto.setStatus(TransferOrderStatus.REQUESTED);
+                eto.setTransferDate(Helper.getStartDateOfWeek(wpp.getMonthlyProductionPlan().getMonth().value,wpp.getMonthlyProductionPlan().getYear(),wpp.getWeekNo()));
                 eto.setRemark("WPP:" + wpp.getId()+" Plant:"+p.getName());
                 persist(eto);
             } else {
