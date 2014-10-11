@@ -38,18 +38,20 @@
                     </div>
                 </div>
                 <h:panelGroup class="row" rendered="#{currencyManagedBean.toDisplay}">
-                    <div class="col-md-10">           
-                        <span class="pull-right">         
-                            <h:form id="retrieveLatestRatesForm" class="form-horizontal">
-                                <h:commandButton action="#{currencyManagedBean.retrieveLatestRates}" class="btn btn-sm btn-success btn-right-margin" value="Retrieve Latest Exchange Rate">
-                                </h:commandButton>    
-                            </h:form>
-                        </span>            
-                        <h4><strong>#{currencyManagedBean.currency.name}</strong></h4><hr></hr>
-                        
+                    <div class="col-md-10">                    
+                        <h4><strong>#{currencyManagedBean.currency.name}</strong></h4><hr></hr> 
                     </div>
                     <div class="col-md-10">
-                        <p:chart type="line" model="#{currencyManagedBean.lineModel}" style="height: 400px" />
+                        <span class="pull-right">         
+                            <h:form id="retrieveLatestRatesForm" class="form-horizontal">
+                                <h:commandButton action="#{currencyManagedBean.updateExchangeRate}" class="btn btn-sm btn-success btn-right-margin" value="Retrieve Latest Exchange Rate">
+                                </h:commandButton>    
+                            </h:form>
+                        </span>   
+                        <h:outputText value="Singapore Dollar > #{currencyManagedBean.currency.name}: #{currencyManagedBean.latestRate}" ></h:outputText>
+                        <p:panel>
+                            <p:chart id="chart" type="line" model="#{currencyManagedBean.lineModel1}" style="height:300px;" widgetVar="chart"/>  
+                        </p:panel>
                     </div>
                 </h:panelGroup>
                 

@@ -7,13 +7,17 @@ package IslandFurniture.EJB.SalesPlanning;
 
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.Currency;
+import IslandFurniture.Entities.ExchangeRate;
+import static IslandFurniture.StaticClasses.QueryMethods.findCurrencyByCode;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -50,7 +54,6 @@ public class CurrencyManager implements CurrencyManagerLocal {
             dis = new DataInputStream(new BufferedInputStream(is));
             while ((s = dis.readLine()) != null)
                 inputLine.append(s); 
-            System.out.println(inputLine); 
             is.close();
             return inputLine.toString();
 
@@ -68,6 +71,7 @@ public class CurrencyManager implements CurrencyManagerLocal {
             
         } 
     }
+    @Override
     public Double retrieveExchangeRate(String currencyList, String currencyCode) {
         JSONParser parser = new JSONParser();
         try {
@@ -75,12 +79,14 @@ public class CurrencyManager implements CurrencyManagerLocal {
             JSONObject jsonObject = (JSONObject) parserObject;
             JSONObject currency = (JSONObject) jsonObject.get("rates");
             Double exchangeRate = (Double) currency.get(currencyCode);
-            System.out.println("Exchange rate of " + currencyCode + " is " + exchangeRate);
-            return exchangeRate;
+            Double SGD = (Double) currency.get("SGD");
+            System.out.println("Exchange rate of " + currencyCode + " is " + exchangeRate + ". SGD is " + SGD);
+            return exchangeRate/SGD;
         } catch(Exception ex) {
             return null;
         }
     }
+    
     public List<Currency> getAllCurrency() {
         List<Currency> currencyList;
         try {
@@ -97,6 +103,36 @@ public class CurrencyManager implements CurrencyManagerLocal {
             System.out.println("CurrencyManager.getCurrency()");
             currency = em.find(Currency.class, currencyID);
             return currency;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;  
+        }
+    }
+    
+    public Double updateExchangeRate(String currencyCode) {
+        Currency currency;
+        String currencyList;
+        Double rate;
+        ExchangeRate exchangeRate;
+        List<ExchangeRate> rateList;
+        DecimalFormat df;
+        try {
+            df = new DecimalFormat("#.000000");
+            currencyList = retrieveFullList();
+            rate = retrieveExchangeRate(currencyList, currencyCode);
+            rate = Double.parseDouble(df.format(rate));
+            currency = findCurrencyByCode(em, currencyCode);
+            rateList = currency.getExchangeRates();
+            if(rateList == null) {
+                rateList = new ArrayList<ExchangeRate>();
+                currency.setExchangeRates(rateList);
+            }
+            exchangeRate = new ExchangeRate();
+            exchangeRate.setExchangeRate(rate);
+            exchangeRate.setEffectiveDate(Calendar.getInstance());
+            currency.getExchangeRates().add(exchangeRate); 
+            em.flush();
+            return rate;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return null;  

@@ -24,8 +24,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
 /**
@@ -46,7 +48,8 @@ public class CurrencyManagedBean implements Serializable {
     private Currency currency;
     private boolean toDisplay;
     private Long currencyID;
-    private LineChartModel lineModel;
+    private LineChartModel lineModel1;
+    private Double latestRate;
 
     public String getCurrencyParser() {
         return currencyParser;
@@ -96,12 +99,17 @@ public class CurrencyManagedBean implements Serializable {
         this.exchangeRates = exchangeRates;
     }
 
-    public LineChartModel getLineModel() {
-        return lineModel;
+    public LineChartModel getLineModel1() {
+        System.out.println("Retrieving lineModel");
+        return lineModel1;
     }
 
-    public void setLineModel(LineChartModel lineModel) {
-        this.lineModel = lineModel;
+    public Double getLatestRate() {
+        return latestRate;
+    }
+
+    public void setLatestRate(Double latestRate) {
+        this.latestRate = latestRate; 
     }
      
     @PostConstruct
@@ -110,10 +118,14 @@ public class CurrencyManagedBean implements Serializable {
         this.currencyID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("currencyID");
         currencyList = currencyManager.getAllCurrency(); 
         toDisplay = false;
+        createLineModels();
         if(currencyID != null) {
-            currency = currencyManager.getCurrency(currencyID);
-            exchangeRates = currency.getExchangeRates();
-            toDisplay = true;
+            this.currency = currencyManager.getCurrency(currencyID);
+            this.exchangeRates = currency.getExchangeRates();
+            this.toDisplay = true;
+            if(exchangeRates.size() > 0)
+                this.latestRate = exchangeRates.get(exchangeRates.size()-1).getExchangeRate();
+            else this.latestRate = null; 
             createLineModels();
         }
     }
@@ -122,31 +134,30 @@ public class CurrencyManagedBean implements Serializable {
         System.out.println("CurrencyManagedBean.displayCurrencyDetails()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Long currencyID = Long.parseLong(request.getParameter("selectCurrencyForm:currencyID"));
-        System.out.println(currencyID); 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("currencyID", currencyID);
         return "currency.xhtml";
     }
-    public String retrieveLatestRates() {
-        System.out.println("CurrencyManagedBean.retrieveLatestRates()");
-        Double rate = currencyManager.retrieveExchangeRate(currencyManager.retrieveFullList(), currency.getCurrencyCode());
+    public String updateExchangeRate() {
+        System.out.println("CurrencyManagedBean.updateExchangeRate()");
+        Double rate = currencyManager.updateExchangeRate(currency.getCurrencyCode());
         System.out.println("Exchange rate is " + rate);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("currencyID", currencyID);
-        return "currency.xhtml";
-    }
+        return "currency.xhtml"; 
+    } 
     private void createLineModels() {
-        lineModel = (LineChartModel) initLinearModel();
-        lineModel.setTitle("Exchange Rate");
-        lineModel.setLegendPosition("e");
-        Axis yAxis = lineModel.getAxis(AxisType.Y);
+        lineModel1 = initLinearModel();
+        lineModel1.setTitle("Linear Chart");
+        lineModel1.setLegendPosition("e");
+        Axis yAxis = lineModel1.getAxis(AxisType.Y);
         yAxis.setMin(0);
         yAxis.setMax(10);
-        yAxis.setLabel("Year");
     }
-    private LineChartModel initLinearModel() {
+     
+    private LineChartModel initLinearModel() { 
         LineChartModel model = new LineChartModel();
  
         LineChartSeries series1 = new LineChartSeries();
-        series1.setLabel("SGD");
+        series1.setLabel("Series 1");
  
         series1.set(1, 2);
         series1.set(2, 1);

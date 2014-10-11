@@ -24,5 +24,7 @@ public interface CurrencyManagerLocal {
     public String retrieveFullList();
 
     public Currency getCurrency(Long currencyID);
+
+    public Double updateExchangeRate(String currencyCode);
     
 }
