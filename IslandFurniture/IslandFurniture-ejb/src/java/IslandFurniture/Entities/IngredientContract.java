@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -22,6 +24,12 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getIngredSupplierList",
+            query = "SELECT a.ingredSupplier FROM IngredientContract a WHERE EXISTS "
+                    + "(SELECT p FROM IngredientContractDetail p WHERE p.ingredContract.id = a.id AND p.supplierFor = :store)")
+})
 public class IngredientContract implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
