@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Ingredient Purchase Orders</strong></li>
+                        </ol>                        
+                    </div>
+                    <div class="col-md-10">                        
+                        <span class="pull-right">
+                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newPurchaseOrder">
+                            <i class="fa fa-fw fa-plus"></i>New Purchase Order
+                        </button>
+                        </span>
+                        <h4>Ingredient Purchase Orders</h4><hr></hr>
+                    </div>
+                    <div class="col-md-10">
+                        
+                        <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                          <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
+                          <li><a href="#confirmed" role="tab" data-toggle="tab">Confirmed</a></li>
+                          <li><a href="#delivered" role="tab" data-toggle="tab">Delivered</a></li>
+                          <li><a href="#paid" role="tab" data-toggle="tab">Paid</a></li>
+                        </ul>
+                        
+                            <!-- Tab panes -->
+                        <div class="tab-content">
+                        <div class="tab-pane active" id="planned">
+                            <section name="viewPlannedPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Planned Purchase Orders
+                                </div>
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Status</th>
+                                        <th>Planned Order Date</th>
+                                        <th>Supplier</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    <h:form id="viewPO" class="form-horizontal">
+                                        <ui:repeat value="#{ingredientPOManagedBean.plannedOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>#{PO.status}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="ingredientplannedpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                                </td>  
+                                                <td>
+                                                    <h:commandButton action="purchaseorder.xhtml" actionListener="#{ingredientPOManagedBean.deletePurchaseOrder}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                        <f:param name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                </td>                                                
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="tab-pane" id="confirmed" >
+                            <section name="viewConfirmedPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Confirmed Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Supplier</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form id="viewPOconfirmed" class="form-horizontal">
+                                        <ui:repeat value="#{ingredientPOManagedBean.confirmedOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="ingredientconfirmedpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                        </div>       
+                        <div class="tab-pane" id="delivered" >
+                            <section name="viewDeliveredPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Delivered Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Supplier</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form id="viewPOdelivered" class="form-horizontal">
+                                        <ui:repeat value="#{ingredientPOManagedBean.deliveredOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="ingredientdeliveredpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                        </div>   
+                        <div class="tab-pane" id="paid" >
+                            <section name="viewPaidPO" class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    All Paid Purchase Orders
+                                </div>
+                                
+                                <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Order Date</th>
+                                        <th>Status</th>
+                                        <th>Supplier</th>
+                                        <th>View</th>
+                                    </tr>
+                                    <h:form id="viewPOpaid" class="form-horizontal">
+                                        <ui:repeat value="#{ingredientPOManagedBean.paidOrderList}" var="PO">
+                                            <tr>
+                                                <td>#{PO.id}</td>
+                                                <td>
+                                                    <h:outputText value="#{PO.orderDate.time}" >
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                    </h:outputText>
+                                                </td>
+                                                <td>#{PO.status}</td>
+                                                <td>#{PO.supplier.name}</td>
+                                                <td>
+                                                    <h:commandButton action="ingredientpaidpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <f:attribute name="POid" value="#{PO.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-lg fa-file-o icon-button"></i>                                                    
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                                </div>
+                            </section>
+                        </div>                            
+                    </div>
+                    </div>
+                </div>   
+                
+                <!-- Purchase Order Modal -->
+                <div class="modal fade" id="newPurchaseOrder" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add Purchase Order</h4>
+                      </div>
+                      <h:form id="createPurchaseOrder" class="form-horizontal">
+                          <div class="modal-body">
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">Supplier: </label>
+                                <div class="col-sm-9">
+                                    <h:selectOneMenu id="supplierId" class="form-control needauto" p:required="true">
+                                        <f:selectItem itemLabel="Select Supplier"/>
+                                        <f:selectItems value="#{ingredientPOManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    </h:selectOneMenu>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                  <label class="col-sm-3 control-label">Planned Order Date: </label>
+                                <div class="col-sm-9">
+                                  <h:inputText id="orderDateString" p:type="date" class="form-control" p:required="true"></h:inputText>
+                                </div>
+                              </div>                                                                                     
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="ingredientplannedpo.xhtml" actionListener="#{ingredientPOManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success btn-round" />
+                          </div>
+                      </h:form>
+                    </div>
+                  </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

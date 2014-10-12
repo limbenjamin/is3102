@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                          <li><a href="ingredientpo.xhtml">Manage Purchase Orders</a></li>
+                          <li class="active"><strong>Purchase Order ##{ingredientPlannedPOManagedBean.purchaseOrder.id}</strong></li>
+                        </ol>                       
+                    </div>                    
+                    <div class="col-md-10">                       
+                        <span class="pull-right">
+                            <a href="ingredientpo.xhtml">
+                            <button type="button" class="btn btn-sm btn-default pull-right">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>
+                        </span>                        
+                        <h4>Purchase Order ##{ingredientPlannedPOManagedBean.purchaseOrder.id}</h4>
+                        <h5>Supplier: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.supplier.name}</strong>
+                            | Supplied to: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
+                        <h5>Planned Order Date: <strong><h:outputText value="#{ingredientPlannedPOManagedBean.purchaseOrder.orderDate.time}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{ingredientPlannedPOManagedBean.plant.timeZoneID}"  /></h:outputText></strong>
+                            | Status: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.status}</strong>
+                        </h5>
+                        <h:messages globalOnly="true" />
+                        <br/>
+                        <h:form id="confirmPurchaseOrder" class="form-horizontal">
+                            <h:commandButton action="#{ingredientPlannedPOManagedBean.confirmPurchaseOrder}" class="btn btn-success" value="Confirm Purchase Order"> 
+                            </h:commandButton>  
+                        </h:form>
+                        <br></br>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#newStock">
+                                <i class="fa fa-fw fa-plus"></i>Add Stock
+                            </button>
+                        </span>                        
+                        <h4>Items Added to this Order:</h4>
+                        <section name="PurchaseOrderDetails">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Stock</th>
+                                    <th>Lot Size</th>
+                                    <th>No. of Lots</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <h:form id="viewPODetail" class="form-horizontal">
+                                    <ui:repeat value="#{ingredientPlannedPOManagedBean.purchaseOrderDetailList}" var="pod">
+                                        <tr>
+                                            <td>
+                                                #{pod.id}
+                                            </td>                                            
+                                            <td>
+                                                #{pod.ingredient.name}
+                                            </td>
+                                            <td>
+                                                #{ingredientPlannedPOManagedBean.getStockLotSize(pod.ingredient)}
+                                            </td>
+                                            <td>
+                                                <h:inputText id="numberOfLots" value="#{pod.numberOfLots}" class="form-control" p:required="true" p:type="number" p:min="1"></h:inputText>
+                                            </td>
+                                            <td>
+                                                <h:commandButton actionListener="#{ingredientPlannedPOManagedBean.editStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:attribute name="PODid" value="#{pod}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>
+                                            </td>
+                                            <td>
+                                                <h:commandButton actionListener="#{ingredientPlannedPOManagedBean.deletePurchaseOrderDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="PODid" value="#{pod.id}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Purchase Order Detail Modal -->
+                <div class="modal fade" id="newStock" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Add Ingredient to Purchase Order</h4>
+                            </div>
+                            <h:form id="createPODetail" class="form-horizontal">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Ingredient Stock: </label>
+                                        <div class="col-sm-9">
+                                            <h:selectOneMenu id="ingredientId" class="form-control needauto" p:required="true">
+                                                <f:selectItems value="#{ingredientPlannedPOManagedBean.ingredientList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">No. Of Lots: </label>
+                                        <div class="col-sm-9">
+                                            <h:inputText id="numberOfLots" class="form-control" p:required="true" p:type="number" p:min="1"/>
+                                        </div>
+                                    </div>                                                                                     
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton action="ingredientplannedpo.xhtml" actionListener="#{ingredientPlannedPOManagedBean.addStock}" value="Add Stock" class="btn btn-success btn-round"> 
+                                        <f:attribute name="POid" value="#{ingredientPlannedPOManagedBean.purchaseOrderId}" />
+                                    </h:commandButton>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
