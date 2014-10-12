@@ -6,6 +6,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class PromotionCampaign implements Serializable {
     private List<MembershipTier> membershipTiers;
 
     @OneToMany(mappedBy = "promotionCampaign")
-    private List<PromotionDetail> promotionDetails;
+    private List<PromotionDetail> promotionDetails=new ArrayList<>();
 
     private String title;
 

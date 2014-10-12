@@ -8,7 +8,7 @@ package IslandFurniture.WAR.Manufacturing;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.WeeklyProductionPlan;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningEJBBeanInterface;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocalInterface;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
 import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -35,7 +35,7 @@ public class ViewProductionPlanning implements Serializable {
     private ManageProductionPlanningLocal mpp;
 
     @EJB
-    ManageProductionPlanningEJBBeanInterface dpv;
+    ManageProductionPlanningLocalInterface dpv;
 
     private String success_msg;
     private String currentDrill = "";

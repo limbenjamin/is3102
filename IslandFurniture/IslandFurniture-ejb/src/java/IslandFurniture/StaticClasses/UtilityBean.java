@@ -9,6 +9,7 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -51,10 +52,33 @@ public class UtilityBean implements UtilityBeanLocal {
     }
     @Override
     public List<MembershipTier> getAllTiers(){
-       Query q=em.createQuery("SELECT mt from MembershipTier");
+       Query q=em.createQuery("SELECT mt from MembershipTier mt");
+       
+       if (q.getResultList().size()==0){
+           //create some fake data
+           MembershipTier mt=new MembershipTier();
+           mt.setTitle("GOLD");
+           em.persist(mt);
+           
+           mt=new MembershipTier();
+           mt.setTitle("SILVER");
+           em.persist(mt);
+           
+           mt=new MembershipTier();
+           mt.setTitle("BRONZE");
+           em.persist(mt);
+           return getAllTiers();
+       }
+       
+       
        return ((List<MembershipTier>) q.getResultList());
     }
     
-    
+    public List<Stock> getAllStock(Plant countryOffice){
+        Query q=em.createQuery("select s from Stock s where EXISTS (select ss from StockSupplied ss where ss.countryOffice=:co)");
+        q.setParameter("co",countryOffice);
+        return (List<Stock>)q.getResultList();
+        
+    }
     
 }

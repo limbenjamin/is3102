@@ -97,6 +97,7 @@ public class StaffManagedBean  implements Serializable  {
         staff = muab.getStaff((String) session.getAttribute("username"));
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
+        
         id = msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
             System.out.println("Selected item: " + selected); 
@@ -118,7 +119,7 @@ public class StaffManagedBean  implements Serializable  {
         cardId = request.getParameter("globalStaffForm:cardId");
         plant = mohBean.findPlantByNameOnly(plantName);
         countryName = plant.getCountry().getName();
-        msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
+        //msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
             System.out.println("Selected item: " + selected); 
             msabl.addRoleToStaffByUsername(username,selected);

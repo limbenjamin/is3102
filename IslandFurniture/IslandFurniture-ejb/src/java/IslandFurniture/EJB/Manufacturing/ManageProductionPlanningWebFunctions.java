@@ -38,7 +38,7 @@ import javax.persistence.Query;
  * @author James
  */
 @Stateful
-public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningEJBBeanInterface {
+public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningLocalInterface {
 
     @EJB
     private ManageProductionPlanningLocal mpp;

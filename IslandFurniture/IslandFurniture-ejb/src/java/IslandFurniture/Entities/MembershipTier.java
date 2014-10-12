@@ -29,6 +29,18 @@ public class MembershipTier implements Serializable {
     private List<PromotionCampaign> promotionCampaigns;
     @OneToMany(mappedBy="membershipTier")
     private List<Customer> members;
+    
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    
+    
 
     public Long getId() {
         return id;
@@ -76,7 +88,10 @@ public class MembershipTier implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.MembershipTier[ id=" + id + " ]";
+        
+        //Dont change this. i need this. JAMES
+        return title;
+        
     }
     
 }
