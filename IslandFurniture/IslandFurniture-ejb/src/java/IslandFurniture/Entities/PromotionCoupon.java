@@ -3,67 +3,56 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 
 /**
  *
  * @author James
  */
 @Entity
-public class MembershipTier implements Serializable {
+public class PromotionCoupon implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToMany
-    private List<PromotionCampaign> promotionCampaigns;
-    @OneToMany(mappedBy="membershipTier")
-    private List<Customer> members;
     
-    private String title;
+    private Boolean oneTimeUsage=true;
 
-    public String getTitle() {
-        return title;
+    
+    @ManyToOne
+    private PromotionDetail promotionDetail;
+
+    public PromotionDetail getPromotionDetail() {
+        return promotionDetail;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setPromotionDetail(PromotionDetail promotionDetail) {
+        this.promotionDetail = promotionDetail;
+    }
+
+    public Boolean getOneTimeUsage() {
+        return oneTimeUsage;
+    }
+
+    public void setOneTimeUsage(Boolean oneTimeUsage) {
+        this.oneTimeUsage = oneTimeUsage;
     }
     
     
-
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<PromotionCampaign> getPromotionCampaigns() {
-        return promotionCampaigns;
-    }
-
-    public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
-        this.promotionCampaigns = promotionCampaigns;
-    }
-
-    public List<Customer> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Customer> members) {
-        this.members = members;
     }
 
     @Override
@@ -76,10 +65,10 @@ public class MembershipTier implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MembershipTier)) {
+        if (!(object instanceof PromotionCoupon)) {
             return false;
         }
-        MembershipTier other = (MembershipTier) object;
+        PromotionCoupon other = (PromotionCoupon) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -88,10 +77,7 @@ public class MembershipTier implements Serializable {
 
     @Override
     public String toString() {
-        
-        //Dont change this. i need this. JAMES
-        return title;
-        
+        return "IslandFurniture.Entities.PromotionCoupon[ id=" + id + " ]";
     }
     
 }

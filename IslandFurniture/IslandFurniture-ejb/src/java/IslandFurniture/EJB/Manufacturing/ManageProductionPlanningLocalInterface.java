@@ -5,18 +5,16 @@
  */
 package IslandFurniture.EJB.Manufacturing;
 
-import IslandFurnitures.DataStructures.JDataTable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 /**
  *
  * @author James
  */
 @Local
-public interface ManageProductionPlanningEJBBeanInterface {
+public interface ManageProductionPlanningLocalInterface {
 
     public HashMap<String, String>
             getAuthorizedMF(String AUTH);

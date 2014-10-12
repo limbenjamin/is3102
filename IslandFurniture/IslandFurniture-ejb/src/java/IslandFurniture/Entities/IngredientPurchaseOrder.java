@@ -89,5 +89,15 @@ public class IngredientPurchaseOrder extends PurchaseOrder implements Serializab
     public String toString() {
         return "IngredientPurchaseOrder[ id=" + id + " ]";
     }
+    
+    // Extra Methods
+    public boolean hasIngredient(Ingredient ingredient) {
+        for (IngredientPurchaseOrderDetail pod : ingredPurchaseOrderDetails) {
+            if (pod.getIngredient().equals(ingredient)) {
+                return true;
+            }
+        }
+        return false;
+    }    
 
 }

@@ -43,6 +43,7 @@ public class FurnitureModel extends Stock implements Serializable {
     private List colour;
 
     public FurnitureModel() {
+        
         this.category = FurnitureCategory.EMPTY;
         this.subcategory = FurnitureSubcategory.EMPTY;
     }

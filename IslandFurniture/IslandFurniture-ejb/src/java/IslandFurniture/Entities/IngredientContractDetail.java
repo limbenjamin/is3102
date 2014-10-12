@@ -12,12 +12,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getIngredientList",
+            query = "SELECT a.ingredient FROM IngredientContractDetail a WHERE a.ingredContract.ingredSupplier = :supplier AND a.supplierFor = :store"),
+    @NamedQuery(
+            name = "getIngredientContractDetailByIngredAndStore",
+            query = "SELECT a FROM IngredientContractDetail a WHERE a.ingredient = :ingredient AND a.supplierFor = :store")    
+})
 public class IngredientContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -26,6 +36,7 @@ public class IngredientContractDetail implements Serializable {
     private Integer leadTimeInDays;
     private Integer lotSize;
     private Double lotPrice;
+    private Store supplierFor;
     
     @ManyToOne
     private IngredientContract ingredContract;
@@ -79,6 +90,14 @@ public class IngredientContractDetail implements Serializable {
 
     public void setLotPrice(Double lotPrice) {
         this.lotPrice = lotPrice;
+    }
+
+    public Store getSupplierFor() {
+        return supplierFor;
+    }
+
+    public void setSupplierFor(Store supplierFor) {
+        this.supplierFor = supplierFor;
     }
 
     @Override
