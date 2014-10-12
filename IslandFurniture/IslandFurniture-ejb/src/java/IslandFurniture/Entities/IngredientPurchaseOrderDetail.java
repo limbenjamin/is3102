@@ -25,6 +25,7 @@ public class IngredientPurchaseOrderDetail implements Serializable {
     private Long id;
     private Integer quantity;
     private Double subtotalPrice;
+    private Integer numberOfLots;    
 
     @ManyToOne
     private IngredientPurchaseOrder ingredPurchaseOrder;
@@ -71,6 +72,14 @@ public class IngredientPurchaseOrderDetail implements Serializable {
     public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
     }
+    
+    public Integer getNumberOfLots() {
+        return numberOfLots;
+    }
+
+    public void setNumberOfLots(Integer numberOfLots) {
+        this.numberOfLots = numberOfLots;
+    }    
 
     @Override
     public int hashCode() {
