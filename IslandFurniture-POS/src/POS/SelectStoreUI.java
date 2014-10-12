@@ -182,7 +182,6 @@ public class SelectStoreUI extends javax.swing.JFrame {
             System.err.println(furniturelist);
             ScanItemsUI scanItem = new ScanItemsUI(this, staffJSON, furniturelist);
             scanItem.setVisible(true);
-            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.setVisible(false);
         }catch (Exception ex) {
             Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -206,7 +205,6 @@ public class SelectStoreUI extends javax.swing.JFrame {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
             ScanItemsUI scanItem = new ScanItemsUI(this, staffJSON, retaillist);
             scanItem.setVisible(true);
-            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             this.setVisible(false);
         }catch (Exception ex) {
             Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
