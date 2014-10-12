@@ -44,14 +44,16 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Material","Furniture","Retail Item","Create Forecast","View Notifications",
         "Review Forecast","Manage Production Status","Goods Issued","Goods Receipt",
         "Inventory Report","Inventory Monitoring","Inventory Transfer","Storage Location","Purchase Order",
-        "Production Planner","Procured Stock Supplier","Stock Supply","Procurement Plan","View Audit Log"};
+        "Production Planner","Procured Stock Supplier","Stock Supply","Procurement Plan","View Audit Log",
+        "Ingredient","Dish","Menu","Currency",};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
         "Change account password","Manage Stores, Manufacturing Facilities and Country Offices","Create staff account and assign roles ","Manage Roles amd privileges for each role","View MSSR",
         "Add and edit materials","Add and edit furnitures","Add and edit retail item","Create sales forecast","View all notifications",
         "Review sales forecast","Manage production status","Issue goods","Receive goods","View Inventory report","Monitor inventory","Transfer inventory","Manage Storage Locations",
-        "Manage purchase orders","Do production planning","View supplier","View stock supply","Generate Procurement Plan","View Audit Log"};
+        "Manage purchase orders","Do production planning","View supplier","View stock supply","Generate Procurement Plan","View Audit Log",
+        "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency",};
         
         
         String[][] arr = new String [][] { 
@@ -98,7 +100,12 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Procured Stock Supplier", "/purchasing/procurementcontract.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Stock Supply", "/manufacturing/stocksupplier.xhtml", "fa-cubes", "Stock Supply Request", "true","23"},
             { "Procurement Plan", "/manufacturing/procurementplan.xhtml", "fa-cube", "Procurement Plan", "true","24"},
-            { "View Audit Log", "/it/viewauditlog.xhtml", "fa-cube", "View Audit Log", "true","25"},
+            { "Ingredient", "/kitchen/ingredient.xhtml", "fa-cube", "Ingredient", "true","25"},
+            { "Dish", "/kitchen/dish.xhtml", "fa-cube", "Dish Item", "true","26"},
+            { "Dish", "/kitchen/recipe.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Menu", "/kitchen/menuitem.xhtml", "fa-cube", "Restaurant Menu", "true","27"},
+            { "Menu", "/kitchen/menuitemdetail.xhtml", "fa-dummy", "dummy", "false","0"},
+            { "Currency", "/salesplanning/currency.xhtml", "fa-cube", "Currency", "true","28"},
         };
         
         for (int i=0; i<privileges.length; i++){

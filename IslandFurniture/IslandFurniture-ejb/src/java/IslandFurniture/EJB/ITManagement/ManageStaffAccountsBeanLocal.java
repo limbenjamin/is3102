@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageStaffAccountsBeanLocal {
 
-    Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName);
+    Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName, String cardId);
     List<Staff> displayAllStaffAccounts();
     void deleteStaffAccount(Long id);
     void removeRoleFromStaff(Long staffId, Long roleId);
@@ -27,5 +27,5 @@ public interface ManageStaffAccountsBeanLocal {
     boolean checkIfStaffHasPrivilege(String staffName, Privilege privilege);
     List<Privilege> getPrivilegeListforStaff(String staffName);
     List<Staff> displayStaffAccountsFromPlant(String username);
-    void createStaffAccountinBulk(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName);
+    void createStaffAccountinBulk(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName, String cardId);
 }

@@ -38,7 +38,7 @@ public interface SupplierManagerLocal {
 
     public String deleteProcurementContractDetail(Long id, Long supplierID);
 
-    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
+    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID); 
 
     public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
 

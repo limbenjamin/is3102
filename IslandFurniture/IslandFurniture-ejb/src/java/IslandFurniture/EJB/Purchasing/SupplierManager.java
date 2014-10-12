@@ -246,7 +246,7 @@ public class SupplierManager implements SupplierManagerLocal {
                 return null;
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(); 
             System.err.println("Something went wrong here");
             return "Unexpected error occured";
         }

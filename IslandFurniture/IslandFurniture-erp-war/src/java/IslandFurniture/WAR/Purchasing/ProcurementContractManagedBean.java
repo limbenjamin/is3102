@@ -8,7 +8,7 @@ package IslandFurniture.WAR.Purchasing;
 
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
-import IslandFurniture.Entities.Currency;
+import IslandFurniture.Entities.Currency; 
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;

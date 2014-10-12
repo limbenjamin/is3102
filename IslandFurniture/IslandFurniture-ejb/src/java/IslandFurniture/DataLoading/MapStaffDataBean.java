@@ -80,6 +80,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             { "rolland", "pass", "Roland K. Riggs", "RolandKRiggs@limbenjamin.com", "345-584-2173","Malaysia","Malaysia"},
             { "jude", "pass", "Jude D. Anderson", "JudeDAnderson@limbenjamin.com", "385-584-3759","Malaysia","Malaysia"},
             { "james", "pass", "James Q. Myers", "JamesQMyersn@limbenjamin.com", "385-364-3239","Malaysia","Malaysia"},
+            { "leonard", "pass", "Leonard D. Sanchez", "LeonardDSanchez@limbenjamin.com", "615-464-6069","Singapore","Alexandra"},
         };
         
         String[] roles = new String [] {
@@ -88,7 +89,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
             "IT (CO)","Sales Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
-            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (CO)","IT (CO)",
+            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (CO)","IT (CO)","Cashier (Store)",
                                     };
         
         for (int i=0; i<arr.length; i++){
@@ -109,7 +110,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)","Cashier (Store)",
                                     };
         
         for (int i=0; i<allRoles.length; i++){
@@ -125,7 +126,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",
         "IT (Mfg)","Purchasing (Mfg)","Warehouse (Mfg)","Production Planning (Mfg)","Management (Mfg)",
         "IT (CO)","Cust. Service (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)",
-        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)", "IT (Store)", "General Staff"
+        "IT (HQ)","Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)", "Sales Manager (CO)", "IT (Store)", "General Staff","Cashier (Store)",
                                     };
         for (int i=0; i<allRolesSuperuser.length; i++){
             try {

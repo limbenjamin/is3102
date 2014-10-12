@@ -102,6 +102,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable = new javax.swing.JTable();
         logoutButton = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
+        checkoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -156,6 +157,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         totalLabel.setText("Grand total:");
 
+        checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        checkoutButton.setText("Checkout");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -171,7 +175,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addGap(0, 506, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(totalLabel, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(totalLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(checkoutButton)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -182,9 +189,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(welcomeLabel)
                     .addComponent(logoutButton))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(totalLabel)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(totalLabel)
+                    .addComponent(checkoutButton))
                 .addContainerGap())
         );
 
@@ -267,6 +276,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton checkoutButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;

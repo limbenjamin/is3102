@@ -55,6 +55,7 @@ public class StaffManagedBean  implements Serializable  {
     private String[] selectedRoles;
     private List<Role> roleList;
     private Role role;
+    private String cardId;
     
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
@@ -91,11 +92,12 @@ public class StaffManagedBean  implements Serializable  {
         password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
         emailAddress = request.getParameter("staffForm:emailAddress");
         phoneNo = request.getParameter("staffForm:phoneNo");
+        cardId = request.getParameter("staffForm:cardId");
         HttpSession session = Util.getSession();
         staff = muab.getStaff((String) session.getAttribute("username"));
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
-        id = msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        id = msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
             System.out.println("Selected item: " + selected); 
             msabl.addRoleToStaffByUsername(username,selected);
@@ -113,9 +115,10 @@ public class StaffManagedBean  implements Serializable  {
         emailAddress = request.getParameter("globalStaffForm:emailAddress");
         phoneNo = request.getParameter("globalStaffForm:phoneNo");
         plantName = request.getParameter("globalStaffForm:plantName");
+        cardId = request.getParameter("globalStaffForm:cardId");
         plant = mohBean.findPlantByNameOnly(plantName);
         countryName = plant.getCountry().getName();
-        msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName);
+        msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
             System.out.println("Selected item: " + selected); 
             msabl.addRoleToStaffByUsername(username,selected);
@@ -315,6 +318,14 @@ public class StaffManagedBean  implements Serializable  {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
     
     
