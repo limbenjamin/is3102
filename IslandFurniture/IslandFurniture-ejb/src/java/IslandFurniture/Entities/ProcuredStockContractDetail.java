@@ -48,7 +48,7 @@ public class ProcuredStockContractDetail implements Serializable {
     private ProcuredStockContract procuredStockContract;
     @ManyToOne
     private ProcuredStock procuredStock;
-    @OneToOne
+    @ManyToOne
     private ManufacturingFacility supplierFor;
     @ManyToOne(cascade={CascadeType.PERSIST})
     private Currency currency;
