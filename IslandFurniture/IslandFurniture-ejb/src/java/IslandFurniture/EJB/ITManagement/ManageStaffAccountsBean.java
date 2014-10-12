@@ -74,7 +74,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
 
 
     @Override
-    public Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
+    public Long createStaffAccount(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName, String cardId) {
         staff = new Staff();
         staff.setUsername(username);
         staff.setNotes("");
@@ -87,7 +87,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setName(name);
         staff.setEmailAddress(emailAddress);
         staff.setPhoneNo(phoneNo);
-        staff.setCardId("00000000");
+        staff.setCardId(cardId);
         preference = new Preference();
         notifications = new ArrayList<Notification>();
         todolist = new ArrayList<Todo>();
@@ -129,7 +129,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
     
     //This method does not send emails for bulk created accounts
     @Override
-    public void createStaffAccountinBulk(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName) {
+    public void createStaffAccountinBulk(String username, String password, String name, String emailAddress, String phoneNo, String countryName, String plantName, String cardId) {
         staff = new Staff();
         staff.setUsername(username);
         staff.setNotes("");
@@ -142,7 +142,7 @@ public class ManageStaffAccountsBean implements ManageStaffAccountRemote, Manage
         staff.setName(name);
         staff.setEmailAddress(emailAddress);
         staff.setPhoneNo(phoneNo);
-        staff.setCardId("00000000");
+        staff.setCardId(cardId);
         preference = new Preference();
         notifications = new ArrayList<Notification>();
         todolist = new ArrayList<Todo>();
