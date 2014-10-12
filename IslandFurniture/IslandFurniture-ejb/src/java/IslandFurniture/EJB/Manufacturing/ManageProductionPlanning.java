@@ -41,6 +41,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -286,7 +288,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         double AvaCapacity = getAvailCapacity(year, m);
 
         if (reqCapacity > AvaCapacity) {
-            throw new RuntimeException("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
+            throw new Exception("Insufficient Capacity to fufill current requirement till " + m + "/" + year);
         }
 
         //Set to zero whole chain of related capacity . else available capacity reading will be wrong
@@ -327,7 +329,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
             }
 
             if (deficit > 0) {
-                throw new RuntimeException("balanceProductionTill()Unknown Error: Unable to fufill requirements! Deficit by " + deficit + " For month till " + endmonth);
+                throw new Exception("balanceProductionTill()Unknown Error: Unable to fufill requirements! Deficit by " + deficit + " For month till " + endmonth);
             }
         }
 
