@@ -7,6 +7,8 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -36,6 +39,29 @@ public abstract class PromotionDetail implements Serializable {
     protected MembershipTier membershiptier=null;
     
     protected Plant applicablePlant;
+    
+    protected Integer usageCount;
+    
+    @OneToMany(mappedBy = "promotionDetail")
+    protected List<PromotionCoupon> promotionCoupons=new ArrayList<>();
+
+    public List<PromotionCoupon> getPromotionCoupons() {
+        return promotionCoupons;
+    }
+
+    public void setPromotionCoupons(List<PromotionCoupon> promotionCoupons) {
+        this.promotionCoupons = promotionCoupons;
+    }
+
+    
+    public Integer getUsageCount() {
+        return usageCount;
+    }
+
+    public void setUsageCount(Integer usageCount) {
+        this.usageCount = usageCount;
+    }
+    
 
     public Plant getApplicablePlant() {
         return applicablePlant;

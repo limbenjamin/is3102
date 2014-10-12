@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -42,7 +44,7 @@ public class PromotionCampaign implements Serializable {
     private String remark;
 
     private campaignGoal goal;
-
+    @Temporal(TemporalType.DATE)
     private Calendar until;
 
     public String getTitle() {
