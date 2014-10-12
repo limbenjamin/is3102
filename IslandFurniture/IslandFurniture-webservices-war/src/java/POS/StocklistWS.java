@@ -8,9 +8,11 @@ package POS;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Store;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
@@ -43,6 +45,8 @@ public class StocklistWS {
     ManageUserAccountBeanLocal muabl;
     @EJB
     StockManagerLocal sm;
+    @EJB
+    SupplierManagerLocal ssm;
     
     @POST
     @Path("furniturelist")
@@ -58,7 +62,8 @@ public class StocklistWS {
             while(iterator.hasNext()){
                 furnitureModel = iterator.next();
                 String id = String.valueOf(furnitureModel.getId());
-                String price = String.valueOf(furnitureModel.getPrice());
+                Store store = (Store) staff.getPlant();
+                String price = String.valueOf(ssm.getPriceForStock(store.getCountryOffice(), furnitureModel));
                 String category = String.valueOf(furnitureModel.getCategory().name());
                 builder.add(Json.createObjectBuilder().add("id",id).add("name", furnitureModel.getName())
                         .add("price", price).add("category", category).build());
@@ -80,7 +85,8 @@ public class StocklistWS {
             while(iterator.hasNext()){
                 retailItem = iterator.next();
                 String id = String.valueOf(retailItem.getId());
-                String price = String.valueOf(retailItem.getPrice());
+                Store store = (Store) staff.getPlant();
+                String price = String.valueOf(ssm.getPriceForStock(store.getCountryOffice(), retailItem));
                 //String category = String.valueOf(retailItem.);
                 builder.add(Json.createObjectBuilder().add("id", id).add("name", retailItem.getName())
                         .add("price", price).build());

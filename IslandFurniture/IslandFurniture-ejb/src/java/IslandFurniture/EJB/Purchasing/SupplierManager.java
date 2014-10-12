@@ -31,6 +31,7 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -434,5 +435,14 @@ public class SupplierManager implements SupplierManagerLocal {
             System.err.println("Something went wrong here");
             return false;
         }
+    }
+    
+    @Override
+    public Double getPriceForStock(CountryOffice co, Stock stock){
+        Query query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.countryOffice=:co AND s.stock=:stock");
+        query.setParameter("co", co);
+        query.setParameter("stock", stock);
+        StockSupplied ss = (StockSupplied) query.getSingleResult();
+        return ss.getPrice();
     }
 }

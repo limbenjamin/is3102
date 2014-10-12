@@ -32,6 +32,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     
     private String staffJSON = null;
     private String cardId = null;
+    private Boolean changing = false;
     
     public ScanItemsUI() {
         initComponents();
@@ -48,37 +49,50 @@ public class ScanItemsUI extends javax.swing.JFrame {
         System.err.println(listJSON);
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
+        jTable.changeSelection(0, 0, false, false);
+        jTable.editCellAt(0, 0);
+        jTable.getEditorComponent().requestFocusInWindow();
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                String id = String.valueOf(jTable.getModel().getValueAt(row, column));
-                if (column == 0){
-                   List<String> itemList = Arrays.asList(listJSON.substring(2, listJSON.length()-2).split("\\},\\{"));
-                   for (int i=0;i<itemList.size();i++){
-                       try {
-                           String JSONobj = "{" + itemList.get(i) + "}";
-                           JSONObject jsonObject = (JSONObject) jsonParser.parse(JSONobj);
-                           String currentId = (String) jsonObject.get("id");
-                           if (currentId.equals(id)){
-                               jTable.getModel().setValueAt(jsonObject.get("name"), row, 1);
-                               jTable.getModel().setValueAt(1, row, 2);
-                               jTable.getModel().setValueAt("10", row, 3);
+                if (changing.equals(false)){
+                    changing = true;
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+                    String id = String.valueOf(jTable.getModel().getValueAt(row, column));
+                    if (column == 0){
+                       List<String> itemList = Arrays.asList(listJSON.substring(2, listJSON.length()-2).split("\\},\\{"));
+                       for (int i=0;i<itemList.size();i++){
+                           try {
+                               String JSONobj = "{" + itemList.get(i) + "}";
+                               JSONObject jsonObject = (JSONObject) jsonParser.parse(JSONobj);
+                               String currentId = (String) jsonObject.get("id");
+                               if (currentId.equals(id)){
+                                   jTable.getModel().setValueAt(jsonObject.get("name"), row, 1);
+                                   jTable.getModel().setValueAt(jsonObject.get("price"), row, 2);
+                                   jTable.getModel().setValueAt("1", row, 3);
+                                   jTable.getModel().setValueAt(jsonObject.get("price"), row, 4);
+                               }
+                           } catch (ParseException ex) {
+                               Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
                            }
-                       } catch (ParseException ex) {
-                           Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
+
                        }
-                       
-                   }
-                   updateTotal();
-                }
-                else if (column == 2){
-                    int price = 10;
-                    String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
-                    int total = (Integer.valueOf(qty))*price;
-                    System.err.println(total);
-                    jTable.getModel().setValueAt(total, row, 3);
-                    updateTotal();
+                       updateTotal();
+                        jTable.changeSelection(row+1, column, false, false);
+                        jTable.editCellAt(row+1, column);
+                        jTable.getEditorComponent().requestFocusInWindow();
+                    }
+                    else if (column == 3){
+                        Double price = Double.parseDouble((String)jTable.getModel().getValueAt(row, 2));
+                        String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
+                        System.out.println(price + "   "+ qty);
+                        System.out.println(price.getClass()+ "    " + qty.getClass());
+                        Double total = (Integer.parseInt(qty))*price;
+                        System.err.println(total);
+                        jTable.getModel().setValueAt(total, row, 4);
+                        updateTotal();
+                    }
+                    changing = false;
                 }
             }
           });
@@ -101,18 +115,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         logoutButton = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
         checkoutButton = new javax.swing.JButton();
-        nineButton = new javax.swing.JButton();
-        acButton = new javax.swing.JButton();
-        eightButton = new javax.swing.JButton();
-        sevenButton = new javax.swing.JButton();
-        fourButton = new javax.swing.JButton();
-        fiveButton = new javax.swing.JButton();
-        sixButton = new javax.swing.JButton();
-        oneButton = new javax.swing.JButton();
-        twoButton = new javax.swing.JButton();
-        threeButton = new javax.swing.JButton();
-        zeroButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -123,26 +125,26 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Item ID", "Item Name", "Quantity", "Total"
+                "Item ID", "Item Name", "Unit Price", "Quantity", "Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, true, false
+                true, false, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -170,112 +172,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         checkoutButton.setText("Checkout");
 
-        nineButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        nineButton.setText("9");
-        nineButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        nineButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nineButtonActionPerformed(evt);
-            }
-        });
-
-        acButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        acButton.setText("AC");
-        acButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                acButtonActionPerformed(evt);
-            }
-        });
-
-        eightButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        eightButton.setText("8");
-        eightButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        eightButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eightButtonActionPerformed(evt);
-            }
-        });
-
-        sevenButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        sevenButton.setText("7");
-        sevenButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        sevenButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sevenButtonActionPerformed(evt);
-            }
-        });
-
-        fourButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        fourButton.setText("4");
-        fourButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        fourButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fourButtonActionPerformed(evt);
-            }
-        });
-
-        fiveButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        fiveButton.setText("5");
-        fiveButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        fiveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fiveButtonActionPerformed(evt);
-            }
-        });
-
-        sixButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        sixButton.setText("6");
-        sixButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        sixButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sixButtonActionPerformed(evt);
-            }
-        });
-
-        oneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        oneButton.setText("1");
-        oneButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        oneButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                oneButtonActionPerformed(evt);
-            }
-        });
-
-        twoButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        twoButton.setText("2");
-        twoButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        twoButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                twoButtonActionPerformed(evt);
-            }
-        });
-
-        threeButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        threeButton.setText("3");
-        threeButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        threeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                threeButtonActionPerformed(evt);
-            }
-        });
-
-        zeroButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        zeroButton.setText("0");
-        zeroButton.setPreferredSize(new java.awt.Dimension(100, 100));
-        zeroButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                zeroButtonActionPerformed(evt);
-            }
-        });
-
-        okButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -288,34 +184,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logoutButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(fourButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(fiveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(sixButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(oneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(twoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(threeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(zeroButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(acButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(sevenButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(eightButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(nineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addGap(365, 506, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -338,30 +207,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(totalLabel)
                     .addComponent(checkoutButton))
                 .addGap(24, 24, 24))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(zeroButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(acButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(oneButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(twoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(threeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fourButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fiveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sixButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(eightButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sevenButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -389,186 +234,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
-
-    private void zeroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zeroButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "0";
-        }
-        else{
-            value += "0";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_zeroButtonActionPerformed
-
-    private void oneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oneButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "1";
-        }
-        else{
-            value += "1";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_oneButtonActionPerformed
-
-    private void twoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twoButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "2";
-        }
-        else{
-            value += "2";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_twoButtonActionPerformed
-
-    private void threeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_threeButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "3";
-        }
-        else{
-            value += "3";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_threeButtonActionPerformed
-
-    private void fourButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fourButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "4";
-        }
-        else{
-            value += "4";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_fourButtonActionPerformed
-
-    private void fiveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fiveButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "5";
-        }
-        else{
-            value += "5";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_fiveButtonActionPerformed
-
-    private void sixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sixButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "6";
-        }
-        else{
-            value += "6";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_sixButtonActionPerformed
-
-    private void sevenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sevenButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "7";
-        }
-        else{
-            value += "7";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_sevenButtonActionPerformed
-
-    private void eightButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eightButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "8";
-        }
-        else{
-            value += "8";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_eightButtonActionPerformed
-
-    private void nineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nineButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        String value = String.valueOf(jTable.getModel().getValueAt(row,col));
-        if (value.equals("null")){
-            value = "9";
-        }
-        else{
-            value += "9";
-        }
-        jTable.getModel().setValueAt(String.valueOf(value), row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_nineButtonActionPerformed
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        if (col == 0){
-            jTable.changeSelection(row+1, col, false, false);
-            jTable.editCellAt(row+1, col);
-            jTable.getEditorComponent().requestFocusInWindow();
-        }
-    }//GEN-LAST:event_okButtonActionPerformed
-
-    private void acButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acButtonActionPerformed
-        jTable.getCellEditor().stopCellEditing();
-        int row = jTable.getSelectedRow();
-        int col = jTable.getSelectedColumn();
-        jTable.getModel().setValueAt("", row,col);
-        jTable.editCellAt(row, col);
-        jTable.getEditorComponent().requestFocusInWindow();
-    }//GEN-LAST:event_acButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -607,40 +272,28 @@ public class ScanItemsUI extends javax.swing.JFrame {
     
     public void updateTotal(){
         int rows = jTable.getModel().getRowCount();
-        int total = 0;
-        int current = 0;
+        Double total = 0.0;
+        Double current = 0.0;
         for (int i=0;i<rows;i++){
             try{
-                String val = String.valueOf(jTable.getModel().getValueAt(i, 3));
-                current = Integer.parseInt(val);
+                String val = String.valueOf(jTable.getModel().getValueAt(i, 4));
+                current = Double.parseDouble(val);
             }catch(Exception e){
                 
             }
             total += current;
-            current = 0;
+            current = 0.0;
         }
         totalLabel.setText("Grand Total: "+total);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton acButton;
     private javax.swing.JButton checkoutButton;
-    private javax.swing.JButton eightButton;
-    private javax.swing.JButton fiveButton;
-    private javax.swing.JButton fourButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
     private javax.swing.JButton logoutButton;
-    private javax.swing.JButton nineButton;
-    private javax.swing.JButton okButton;
-    private javax.swing.JButton oneButton;
-    private javax.swing.JButton sevenButton;
-    private javax.swing.JButton sixButton;
-    private javax.swing.JButton threeButton;
     private javax.swing.JLabel totalLabel;
-    private javax.swing.JButton twoButton;
     private javax.swing.JLabel welcomeLabel;
-    private javax.swing.JButton zeroButton;
     // End of variables declaration//GEN-END:variables
 }
