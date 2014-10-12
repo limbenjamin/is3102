@@ -25,6 +25,7 @@ public class IngredientContractDetail implements Serializable {
     private Long id;
     private Integer leadTimeInDays;
     private Integer lotSize;
+    private Double lotPrice;
     
     @ManyToOne
     private IngredientContract ingredContract;
@@ -70,6 +71,14 @@ public class IngredientContractDetail implements Serializable {
 
     public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public Double getLotPrice() {
+        return lotPrice;
+    }
+
+    public void setLotPrice(Double lotPrice) {
+        this.lotPrice = lotPrice;
     }
 
     @Override

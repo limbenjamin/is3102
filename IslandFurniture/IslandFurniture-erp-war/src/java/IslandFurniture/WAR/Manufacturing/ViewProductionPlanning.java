@@ -278,6 +278,17 @@ public class ViewProductionPlanning implements Serializable {
 
     public void tooglePageLoader(String ID, String command) throws Exception {
         switch (command) {
+            case "minusmonth":
+                dpv.minusOneMonth();
+                pullPPTableFromBean();
+                success_msg = "Month --";
+                break;
+            case "plusmonth":
+                dpv.addOneMonth();
+                pullPPTableFromBean();
+                success_msg = "Month ++";
+                break;
+
             case "CommenceMonth":
                 int monthNo = Integer.valueOf(Month.valueOf(ID.split("/")[0]).value);
                 int yearNo = Integer.valueOf(ID.split("/")[1]);

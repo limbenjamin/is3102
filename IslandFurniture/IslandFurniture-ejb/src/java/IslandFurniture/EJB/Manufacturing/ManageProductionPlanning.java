@@ -56,7 +56,7 @@ import javax.persistence.Query;
 @StatefulTimeout(unit = TimeUnit.MINUTES, value = 30)
 public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
-    public static final int FORWARDLOCK = 2; //This determine how many months in advance production planning is locked
+    public static final int FORWARDLOCK = 1; //This determine how many months in advance production planning is locked
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -459,6 +459,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto.setFulfillingPlant(this.MF);
                 eto.setRequestingPlant(p);
                 eto.setStatus(TransferOrderStatus.REQUESTED);
+                eto.setTransferDate(Helper.getStartDateOfWeek(wpp.getMonthlyProductionPlan().getMonth().value,wpp.getMonthlyProductionPlan().getYear(),wpp.getWeekNo()));
                 eto.setRemark("WPP:" + wpp.getId()+" Plant:"+p.getName());
                 persist(eto);
             } else {

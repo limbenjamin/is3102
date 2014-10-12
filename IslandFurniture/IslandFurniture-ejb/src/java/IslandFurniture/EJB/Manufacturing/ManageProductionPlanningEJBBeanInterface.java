@@ -32,4 +32,7 @@ public interface ManageProductionPlanningEJBBeanInterface {
     Object getWeeklyPlans(String period,String MFNAME) throws Exception;
     
     Object getWeeklyMRPTable(String period, String MFNAME) throws Exception;
+    
+    void addOneMonth();
+    void minusOneMonth();
 }
