@@ -24,10 +24,10 @@ import javax.persistence.PostPersist;
 @Entity
 @IdClass(StockSuppliedPK.class)
 @NamedQueries({
-@NamedQuery(name = "StockSupplied.FindByMf",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf"),
-    @NamedQuery(name = "StockSupplied.FindByMfAndS",query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s"),
-    @NamedQuery(name = "getAllStockSupplied",query = "select ss from StockSupplied SS"),
-    @NamedQuery(name = "findByStock",query = "select ss from StockSupplied SS where SS.stock=:s")
+    @NamedQuery(name = "StockSupplied.FindByMf", query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf"),
+    @NamedQuery(name = "StockSupplied.FindByMfAndS", query = "select ss from StockSupplied SS where SS.manufacturingFacility=:mf and SS.stock=:s"),
+    @NamedQuery(name = "getAllStockSupplied", query = "select ss from StockSupplied SS"),
+    @NamedQuery(name = "findByStock", query = "select ss from StockSupplied SS where SS.stock=:s")
 })
 public class StockSupplied implements Serializable {
 
@@ -42,9 +42,13 @@ public class StockSupplied implements Serializable {
     @ManyToOne
     private ManufacturingFacility manufacturingFacility;
 
+    // The currency of stated price is determined by CountryOffice's Country's Currency
+    private Double price;
+
     public StockSupplied() {
-        
+
     }
+
     public Stock getStock() {
         return stock;
     }
@@ -67,6 +71,14 @@ public class StockSupplied implements Serializable {
 
     public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
         this.manufacturingFacility = manufacturingFacility;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     @Override

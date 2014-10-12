@@ -7,7 +7,9 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -20,11 +22,14 @@ public class IngredientSupplier extends Supplier implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @OneToOne(mappedBy = "ingredSupplier")
+    @OneToOne(mappedBy = "ingredSupplier", cascade={CascadeType.PERSIST})
     private IngredientContract ingredContract;
 
     @OneToMany(mappedBy = "ingredSupplier")
     private List<IngredientPurchaseOrder> ingredPurchaseOrders;
+    
+    @ManyToOne
+    private CountryOffice co;
 
     public IngredientContract getIngredContract() {
         return ingredContract;
@@ -40,6 +45,14 @@ public class IngredientSupplier extends Supplier implements Serializable {
 
     public void setIngredPurchaseOrders(List<IngredientPurchaseOrder> ingredPurchaseOrders) {
         this.ingredPurchaseOrders = ingredPurchaseOrders;
+    }
+
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
     }
 
     @Override

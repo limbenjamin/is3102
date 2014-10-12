@@ -7,12 +7,13 @@
 package IslandFurniture.EJB.Purchasing;
 
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
+import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.ProcuredStockSupplier;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -37,9 +38,9 @@ public interface SupplierManagerLocal {
 
     public String deleteProcurementContractDetail(Long id, Long supplierID);
 
-    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime);
+    public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
 
-    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime);
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
 
     public List<StockSupplied> getAllStockSupplied();
 

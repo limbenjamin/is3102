@@ -6,11 +6,13 @@
 
 package IslandFurniture.WAR.Purchasing;
 
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
+import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
-import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,14 +36,18 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class ProcurementContractManagedBean implements Serializable {
     @EJB
+    private CurrencyManagerLocal currencyManager;
+    @EJB
     private SupplierManagerLocal supplierManager;
-    private List<ProcuredStockSupplier> supplierList;
+    
+    private Long supplierID;
     private ProcuredStockSupplier supplier;
+    private ProcuredStockContractDetail pcd;
+    private List<ProcuredStockSupplier> supplierList;
     private List<ProcuredStockContractDetail> detailList = null;
     private List<ProcuredStock> stockList;
     private List<ManufacturingFacility> mfList;
-    private Long supplierID;
-    private ProcuredStockContractDetail pcd;
+    private List<Currency> currencyList;
 
     public ProcuredStockContractDetail getPcd() {
         return pcd;
@@ -85,6 +91,13 @@ public class ProcurementContractManagedBean implements Serializable {
     public void setSupplier(ProcuredStockSupplier supplier) {
         this.supplier = supplier;
     }
+    public List<Currency> getCurrencyList() {
+        return currencyList;
+    }
+
+    public void setCurrencyList(List<Currency> currencyList) {
+        this.currencyList = currencyList;
+    }
     
     @PostConstruct
     public void init() {
@@ -95,20 +108,21 @@ public class ProcurementContractManagedBean implements Serializable {
             if(supplierID == null) {
                     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                     ec.redirect("supplier.xhtml");
+            } else { 
+                System.out.println("SupplierID is " + supplierID);
+
+                supplier = supplierManager.getSupplier(supplierID);
+                supplierList = supplierManager.displaySupplierList();
+                stockList = supplierManager.displayProcuredStock();
+                mfList = supplierManager.displayManufacturingFacility();
+                currencyList = currencyManager.getAllCurrency();
+
+                detailList = supplier.getProcuredStockContract().getProcuredStockContractDetails();
+                System.out.println("Supplier " + supplier.getName() + " has " + detailList.size() + " items");
             }
         } catch(IOException ex) {
             
         }
-            
-        System.out.println("SupplierID is " + supplierID);
-        
-        supplier = supplierManager.getSupplier(supplierID);
-        supplierList = supplierManager.displaySupplierList();
-        stockList = supplierManager.displayProcuredStock();
-        mfList = supplierManager.displayManufacturingFacility();
-        
-        detailList = supplier.getProcuredStockContract().getProcuredStockContractDetails();
-        System.out.println("Supplier " + supplier.getName() + " has " + detailList.size() + " items");
     }
     
     public String displayContractDetails() {
@@ -141,9 +155,11 @@ public class ProcurementContractManagedBean implements Serializable {
         String stockID = request.getParameter("addPCD:stockID");
         String mfID = request.getParameter("addPCD:mfID");
         String size = request.getParameter("addPCD:size");
-        String leadTime = request.getParameter("addPCD:leadTime");
+        String leadTime = request.getParameter("addPCD:leadTime"); 
+        String lotPrice = request.getParameter("addPCD:lotPrice");
+        String currencyID = request.getParameter("addPCD:currencyID");
         System.out.println("supplierID is " + this.getSupplierID() + ".supplierId is " + supplierId + ". stockID is " + stockID + ". mfID is " + mfID);
-        String msg = supplierManager.addProcurementContractDetail(Long.parseLong(supplierId), Long.parseLong(mfID), Long.parseLong(stockID), Integer.parseInt(size), Integer.parseInt(leadTime));
+        String msg = supplierManager.addProcurementContractDetail(Long.parseLong(supplierId), Long.parseLong(mfID), Long.parseLong(stockID), Integer.parseInt(size), Integer.parseInt(leadTime), Double.parseDouble(lotPrice), Long.parseLong(currencyID));
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
@@ -155,9 +171,10 @@ public class ProcurementContractManagedBean implements Serializable {
         return "procurementcontract";
     }
     public String editProcurementContractDetail(ActionEvent event) throws IOException { 
-        System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()");
-        pcd = (ProcuredStockContractDetail) event.getComponent().getAttributes().get("toEdit");
-        String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays());  
+        System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()"); 
+        pcd = (ProcuredStockContractDetail) event.getComponent().getAttributes().get("toEdit"); 
+        System.out.println("toEdit: Currency is " + pcd.getCurrency().getName());
+        String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), Long.parseLong(pcd.getCurrency().getName()));  
         if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));

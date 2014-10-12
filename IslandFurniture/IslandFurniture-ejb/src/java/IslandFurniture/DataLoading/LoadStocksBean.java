@@ -87,7 +87,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         }
     }
 
-    private StockSupplied addStockSupplied(Stock stock, CountryOffice co, ManufacturingFacility mf) {
+    private StockSupplied addStockSupplied(Stock stock, CountryOffice co, ManufacturingFacility mf, double price) {
         StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId(), mf.getId());
 
         StockSupplied stockSupplied = em.find(StockSupplied.class, stockSuppliedPK);
@@ -97,6 +97,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
             stockSupplied.setStock(stock);
             stockSupplied.setCountryOffice(co);
             stockSupplied.setManufacturingFacility(mf);
+            stockSupplied.setPrice(price);
             em.persist(stockSupplied);
             co.getSuppliedWithFrom().add(stockSupplied);
 
@@ -122,10 +123,10 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
     @Override
     public boolean loadSampleData(int mode) {
         try {
+            // Start Random var
+            Random rand = new Random(1);
+            
             if (mode == 0) {
-                // Start Random var
-                Random rand = new Random(1);
-
                 // Add some Materials
                 this.addMaterial("Flathead Screw, Plus (5mm x 15mm)", 10);
                 this.addMaterial("Flathead Screw, Minus (5mm x 15mm)", 10);
@@ -239,7 +240,8 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                     // Assign every item sold to an mf
                     for (Stock eachStock : stocksSold) {
-                        this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())));
+                        java.util.Currency javaCurrency = java.util.Currency.getInstance(eachCo.getCountry().getCurrency().getCurrencyCode());
+                        this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                     }
                 }
 
@@ -281,7 +283,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 fm.setBom(bom);
 
                 Set<RetailItem> retailItems = new HashSet();
-                
+
                 retailItems.add(this.addRetailItem("Pisang Goreng - Original - Regular"));
                 retailItems.add(this.addRetailItem("Pisang Goreng - Lightly Salted - Regular"));
                 retailItems.add(this.addRetailItem("Merlion Key Chain 01"));
@@ -296,14 +298,14 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"));
                 store.getSells().addAll(retailItems);
-                
-                store=(Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tampines");
+
+                store = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tampines");
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Swivel Chair"));
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"));
                 store.getSells().addAll(retailItems);
-                
-                store=(Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Johor Bahru - Kulai");
+
+                store = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Johor Bahru - Kulai");
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Swivel Chair"));
                 store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
                 store.getSells().addAll(retailItems);
@@ -324,7 +326,8 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                     // Assign every item sold to an mf
                     for (Stock eachStock : stocksSold) {
-                        this.addStockSupplied(eachStock, eachCo, mf);
+                        java.util.Currency javaCurrency = java.util.Currency.getInstance(eachCo.getCountry().getCurrency().getCurrencyCode());
+                        this.addStockSupplied(eachStock, eachCo, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                     }
                 }
 
