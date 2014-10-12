@@ -8,15 +8,94 @@
     <ui:composition template="../template.xhtml"
                     xmlns="http://www.w3.org/1999/xhtml"
                     xmlns:ui="http://java.sun.com/jsf/facelets"
-                    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                    xmlns:pz="http://primefaces.org/ui"
+                    >
+
+
+
 
         <ui:define name="content" id="page"> 
+            <style type="text/css">
+                legend{
+                    font-size:14px !important;
+                }
+                input{
+
+                    background-color: #fff !important;
+
+                    background-image:none !important;
+                }
+
+                select{
+
+                    background-color: #fff !important;
+
+                    background-image:none !important;
+                }
+
+
+            </style>
             <div class="col-md-12">
                 <ol class="breadcrumb">
                     <li><a href="../dash.xhtml">Home</a></li>
                     <li class="active"><strong>Promotion Manager</strong></li>
                 </ol>                        
             </div>
+            <br/>
+            <br/>
+            <br/>
+            CAL:
+            <p:calendar id="inline" value="#{marketing.newPromotionCampaign.until}" mode="inline" />
+
+
+            <p:tabView id="panel" dynamic="true" style="">
+                <p:tab title="Campaign Management" id="campaign_tab">
+                    <p:panel header="Existing Campagins">
+                        TBD
+                    </p:panel>
+                    <br/>
+
+                    <h:form id="make_new_campaign">
+                        <p:fieldset legend="New Campaign" toggleable="true" toggleSpeed="500" style="font-size:14px">
+
+                            <h:panelGrid columns="2" cellpadding="10">
+
+                                <p:outputLabel value="Campaign Title:" style="width:250px;margin-right:10px" />
+                                <p:inputText value="#{marketing.newPromotionCampaign.title}" style="background-color: #fff;background-image:none;"  ></p:inputText>
+
+                                <p:outputLabel value="Campaign Purpose:" style="width:250px;margin-right:10px" />
+
+                                <h:selectOneMenu id="country" value="#{marketing.newPromotionCampaign.goal}">
+                                    <f:selectItems value="${marketing.campaignGoals}"/>
+                                </h:selectOneMenu>
+
+                                <p:outputLabel value="Valid From: " style="width:250px;margin-right:10px" />
+                                <p:inputText type="date" id="button" value="#{marketing.newPromotionCampaign.validFrom}" ></p:inputText>
+
+                                <p:outputLabel value="Valid Until: " style="width:250px;margin-right:10px" />
+                                <p:inputText type="date" value="#{marketing.newPromotionCampaign.validUntil}"></p:inputText>
+
+                                <p:outputLabel value="Country Office: " style="width:250px;margin-right:10px" />
+                                <p:inputText disabled="true"  value="${marketing.newPromotionCampaign.countryOffice.name}"></p:inputText>
+
+                                <p:outputLabel value="Applicable Membership Tier" style="width:250px;margin-right:10px" />
+                                <p:selectManyMenu id="membership" value="#{marketing.newPromotionCampaign.membershipTiers}">
+                                    <f:selectItems value="${markleting.availableTiers}"></f:selectItems>
+                                </p:selectManyMenu>
+
+                                <p:outputLabel value="Campaign Remark: " style="width:250px;margin-right:10px" />
+                                <p:inputTextarea value="${marketing.newPromotionCampaign.remark}"></p:inputTextarea>
+
+
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </h:form>
+                </p:tab>
+                <p:tab title="Campaign Analytics" id="campaign_anal"></p:tab>
+                <p:tab title="Campaign Marketing" id="campaign_marketing"></p:tab>
+
+            </p:tabView>
 
         </ui:define>
     </ui:composition>

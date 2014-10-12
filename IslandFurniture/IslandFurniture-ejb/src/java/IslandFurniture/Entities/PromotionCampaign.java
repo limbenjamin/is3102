@@ -45,8 +45,30 @@ public class PromotionCampaign implements Serializable {
 
     private campaignGoal goal;
     @Temporal(TemporalType.DATE)
-    private Calendar until;
+    private Calendar validUntil;
 
+    @Temporal(TemporalType.DATE)
+    private Calendar validFrom;
+
+    public Calendar getValidUntil() {
+        return validUntil;
+    }
+
+    public void setValidUntil(Calendar validUntil) {
+        this.validUntil = validUntil;
+    }
+
+    public Calendar getValidFrom() {
+        return validFrom;
+    }
+
+    public void setValidFrom(Calendar validFrom) {
+        this.validFrom = validFrom;
+    }
+
+    
+    
+    
     public String getTitle() {
         return title;
     }
@@ -72,15 +94,16 @@ public class PromotionCampaign implements Serializable {
     }
 
     public Calendar getUntil() {
-        return until;
+        return validUntil;
     }
 
     public void setUntil(Calendar until) {
-        this.until = until;
+        this.validUntil = until;
     }
 
     public enum campaignGoal {
-        PROSPECTING(0),SALES_BOOST(1),SEASONAL_PROMO(2),COMPETITION(3),NEW_PRODUCT_TESTING(4);
+
+        PROSPECTING(0), SALES_BOOST(1), SEASONAL_PROMO(2), COMPETITION(3), NEW_PRODUCT_TESTING(4);
         public int value;
 
         private campaignGoal(int value) {
