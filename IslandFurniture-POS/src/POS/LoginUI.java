@@ -316,7 +316,6 @@ public class LoginUI extends javax.swing.JFrame {
     private void SelectScreen(String result) throws IOException, ParseException{
         SelectStoreUI store = new SelectStoreUI(this, result);
         store.setVisible(true);
-        store.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setVisible(false);
     }
     
