@@ -11,7 +11,7 @@
                     <div class="col-md-12">
                         <ol class="breadcrumb">
                             <li><a href="../dash.xhtml">Home</a></li>
-                          <li><a href="ingredientpo.xhtml">Manage Purchase Orders</a></li>
+                          <li><a href="ingredientpo.xhtml">Ingredient Purchase Orders</a></li>
                           <li class="active"><strong>Purchase Order ##{ingredientPlannedPOManagedBean.purchaseOrder.id}</strong></li>
                         </ol>                       
                     </div>                    
@@ -24,10 +24,10 @@
                             </a>
                         </span>                        
                         <h4>Purchase Order ##{ingredientPlannedPOManagedBean.purchaseOrder.id}</h4>
-                        <h5>Supplier: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.supplier.name}</strong>
+                        <h5>Supplier: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.ingredSupplier.name}</strong>
                             | Supplied to: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
                         <h5>Planned Order Date: <strong><h:outputText value="#{ingredientPlannedPOManagedBean.purchaseOrder.orderDate.time}" >
-                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{ingredientPlannedPOManagedBean.plant.timeZoneID}"  /></h:outputText></strong>
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{ingredientPlannedPOManagedBean.store.timeZoneID}"  /></h:outputText></strong>
                             | Status: <strong>#{ingredientPlannedPOManagedBean.purchaseOrder.status}</strong>
                         </h5>
                         <h:messages globalOnly="true" />
