@@ -11,9 +11,12 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
+import IslandFurniture.Enums.StorageAreaType;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -38,12 +41,13 @@ public class StorageLocationManagedBean implements Serializable {
     private Long storageBinId;
 
     private String storageAreaName;
+    private String storageAreaType;
     private String storageBinName;
     private String username;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
-
+    private List<StorageAreaType> storageAreaTypeList;
     private StorageArea storageArea;
     private StorageBin storageBin;
     private Staff staff;
@@ -62,15 +66,18 @@ public class StorageLocationManagedBean implements Serializable {
         plant = staff.getPlant();
         storageBinList = storageBean.viewStorageBin(plant);
         storageAreaList = storageBean.viewStorageArea(plant);
+        storageAreaTypeList = Arrays.asList(StorageAreaType.values());
     }
 
 //  Function: To create new Storage Area
     public String addStorageArea() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         storageAreaName = request.getParameter("createStorageArea:storageAreaName");
+        storageAreaType = request.getParameter("createStorageArea:storageAreaType");
 
         if (storageBean.checkIfNoStorageAreaWithSameName(plant, storageAreaName)) {
-            storageBean.createStorageArea(plant, storageAreaName);
+            storageBean.createStorageArea(plant, storageAreaName, storageAreaType); 
+            
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been created", ""));
         } else {
@@ -103,10 +110,9 @@ public class StorageLocationManagedBean implements Serializable {
 //  Function: To edit the Storage Area Name
     public String editStorageArea(ActionEvent event) throws IOException {
         StorageArea sa = (StorageArea) event.getComponent().getAttributes().get("said");
-        storageBean.editStorageArea(sa.getId(), sa.getName());
+        storageBean.editStorageArea(sa.getId(), sa.getName(), sa.getType().name());
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Area has sucessfully been edited", ""));
-        
         return "storagelocation";
     }
 
@@ -117,7 +123,7 @@ public class StorageLocationManagedBean implements Serializable {
         storageBinList = storageBean.viewStorageBin(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Storage Bin has sucessfully been edited", ""));
-        
+
         return "storagelocation";
     }
 
@@ -133,7 +139,7 @@ public class StorageLocationManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "There are Storage Bins associated with this Storage Area. Delete of Storage Area was unsuccessful.", ""));
         }
-        
+
         return "storagelocation";
     }
 
@@ -151,6 +157,34 @@ public class StorageLocationManagedBean implements Serializable {
         }
 
         return "storagelocation";
+    }
+
+    public String getStorageAreaType() {
+        return storageAreaType;
+    }
+
+    public void setStorageAreaType(String storageAreaType) {
+        this.storageAreaType = storageAreaType;
+    }
+
+    public List<StorageAreaType> getStorageAreaTypeList() {
+        return storageAreaTypeList;
+    }
+
+    public void setStorageAreaTypeList(List<StorageAreaType> storageAreaTypeList) {
+        this.storageAreaTypeList = storageAreaTypeList;
+    }
+
+    public void setStorageAreaTypeList(ArrayList<StorageAreaType> storageAreaTypeList) {
+        this.storageAreaTypeList = storageAreaTypeList;
+    }
+
+    public ManageStorageLocationLocal getStorageBean() {
+        return storageBean;
+    }
+
+    public void setStorageBean(ManageStorageLocationLocal storageBean) {
+        this.storageBean = storageBean;
     }
 
     public Long getPlantId() {

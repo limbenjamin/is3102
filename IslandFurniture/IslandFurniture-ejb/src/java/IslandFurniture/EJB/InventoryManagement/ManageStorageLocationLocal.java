@@ -8,6 +8,7 @@ package IslandFurniture.EJB.InventoryManagement;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
+import IslandFurniture.Enums.StorageAreaType;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public interface ManageStorageLocationLocal {
     boolean checkIfNoStorageAreaWithSameName(Plant plant, String name);
 
     //  Function: To add Storage Area
-    void createStorageArea(Plant plant, String name);
+    void createStorageArea(Plant plant, String name, String typeName);
 
     //  Function: To add Storage Bin
     void createStorageBin(StorageArea storageArea, String name);
@@ -35,7 +36,7 @@ public interface ManageStorageLocationLocal {
     void deleteStorageBin(Long storageBinId);
 
     //  Function: To edit Storage Area
-    void editStorageArea(Long storageAreaId, String name);
+    void editStorageArea(Long storageAreaId, String name, String typeName);
 
     //  Function: To edit Storage Bin
     void editStorageBin(Long storageAreaId, Long storageBinId, String name);
@@ -58,7 +59,10 @@ public interface ManageStorageLocationLocal {
     //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageArea(Long id);
 
-        //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
+    //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageAreaOfAStock(Long id, Long stockId);
+
+    //  Function: To view Storage Area Type
+    List<StorageAreaType> viewStorageAreaType(Plant plant);
 
 }

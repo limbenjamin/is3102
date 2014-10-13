@@ -11,7 +11,7 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
-import IslandFurniture.Entities.ReplenishmentTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -42,9 +42,11 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
-    private List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList;
-    private List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList;
+    private List<ExternalTransferOrder> externalTransferOrderListRequestList;
+    private List<ExternalTransferOrder> externalTransferOrderListFulfilledList;
 
+    private ExternalTransferOrder externalTransferOrder;
+    
     private String username;
     private Staff staff;
     private Plant plant;
@@ -64,8 +66,8 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         plant = staff.getPlant();
 //        storageAreaList = storageBean.viewStorageArea(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
-        replenishmentTransferOrderListRequestList = transferBean.viewReplenishmentTransferOrderRequested(plant);
-        replenishmentTransferOrderListFulfilledList = transferBean.viewReplenishmentTransferOrderFulfilled(plant);
+        externalTransferOrderListRequestList = transferBean.viewExternalTransferOrderRequested(plant);
+        externalTransferOrderListFulfilledList = transferBean.viewExternalTransferOrderFulfilled(plant);
     }
 
 ////  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
@@ -74,28 +76,31 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 //            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
 //        }
 //    }
-//  Function: To create a Replenishment Tranfer Order
-    public void createReplenishmentTransferOrder(ActionEvent event) throws IOException {
-        if (!replenishmentTransferOrderListRequestList.isEmpty()) {
-            for (ReplenishmentTransferOrder r : replenishmentTransferOrderListRequestList) {
-                List<ReplenishmentTransferOrder> checkList = transferBean.viewReplenishmentTransferOrderRequestedForAParticularStock(plant, transferBean.getStock(stockId));
-                if (!checkList.isEmpty()) {
-                    ReplenishmentTransferOrder to = checkList.get(0);
-                    transferBean.editReplenishmentTransferOrderQuantity(to.getId(), quantity + to.getQty());
-                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity for the existing Transfer Order for a " + to.getStock().getName() + " has been updated to reflect the increase of quantity.", ""));
-                    return;
-                }
-            }
+//  Function: To create a External Tranfer Order
+    public void createExternalTransferOrder(ActionEvent event) throws IOException {
+       externalTransferOrder = transferBean.createExternalTransferOrder(plant);
+       // add here
+        
+        if (!externalTransferOrderListRequestList.isEmpty()) {
+//            for (ExternalTransferOrder r : externalTransferOrderListRequestList) {
+//                List<ExternalTransferOrder> checkList = transferBean.viewExternalTransferOrderRequestedForAParticularStock(plant, transferBean.getStock(stockId));
+//                if (!checkList.isEmpty()) {
+//                    ExternalTransferOrder to = checkList.get(0);
+//                    transferBean.editExternalTransferOrderQuantity(to.getId(), quantity + to.getQty());
+//                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+//                            new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity for the existing Transfer Order for a " + to.getStock().getName() + " has been updated to reflect the increase of quantity.", ""));
+//                    return;
+//                }
+//            }
         }
-        transferBean.createReplenishmentTransferOrder(plant, transferBean.getStock(stockId), quantity);
+//        transferBean.createExternalTransferOrder(plant, transferBean.getStock(stockId), quantity);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The Transfer Order for a " + transferBean.getStock(stockId).getName() + " has been created.", ""));
     }
 
-//  Function: To delete a Replenishment Transfer Order  
-    public void deleteReplenishmentTransferOrder(ActionEvent event) throws IOException {
-        transferBean.deleteReplenishmentTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
+//  Function: To delete a External Transfer Order  
+    public void deleteExternalTransferOrder(ActionEvent event) throws IOException {
+//        transferBean.deleteExternalTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
     }
 
     public Long getStorageAreaId() {
@@ -146,20 +151,20 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         this.stockUnitList = stockUnitList;
     }
 
-    public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListRequestList() {
-        return replenishmentTransferOrderListRequestList;
+    public List<ExternalTransferOrder> getExternalTransferOrderListRequestList() {
+        return externalTransferOrderListRequestList;
     }
 
-    public void setReplenishmentTransferOrderListRequestList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList) {
-        this.replenishmentTransferOrderListRequestList = replenishmentTransferOrderListRequestList;
+    public void setExternalTransferOrderListRequestList(List<ExternalTransferOrder> externalTransferOrderListRequestList) {
+        this.externalTransferOrderListRequestList = externalTransferOrderListRequestList;
     }
 
-    public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListFulfilledList() {
-        return replenishmentTransferOrderListFulfilledList;
+    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledList() {
+        return externalTransferOrderListFulfilledList;
     }
 
-    public void setReplenishmentTransferOrderListFulfilledList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList) {
-        this.replenishmentTransferOrderListFulfilledList = replenishmentTransferOrderListFulfilledList;
+    public void setExternalTransferOrderListFulfilledList(List<ExternalTransferOrder> externalTransferOrderListFulfilledList) {
+        this.externalTransferOrderListFulfilledList = externalTransferOrderListFulfilledList;
     }
 
     public String getUsername() {

@@ -21,9 +21,10 @@
                     </div>                     
                     <div class="col-md-10"> 
                         <span class="pull-right">
-                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
-                                <i class="fa fa-fw fa-plus"></i> Create External Transfer Order
-                            </button>                            
+                        <h:form id="createGRD1"> 
+                            <h:commandButton action="inventorytranfer_externaldetail" actionListener="#{goodsReceiptManagedBean.addGoodsReceiptDocument}" value="Create External Transfer Order" class="btn btn-sm btn-success pull-right">
+                            </h:commandButton>
+                        </h:form> 
                         </span>   
                         <h4>External Transfer Order</h4><hr></hr>
                     </div>

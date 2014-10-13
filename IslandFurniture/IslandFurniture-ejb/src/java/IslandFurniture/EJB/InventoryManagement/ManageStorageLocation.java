@@ -8,6 +8,7 @@ package IslandFurniture.EJB.InventoryManagement;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
+import IslandFurniture.Enums.StorageAreaType;
 import static IslandFurniture.Enums.StorageAreaType.RECEIVING;
 import java.util.List;
 import javax.ejb.Stateful;
@@ -27,6 +28,7 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
     private StorageArea storageArea;
     private StorageBin storageBin;
+    private StorageAreaType storageAreaType;
 
 //  Function: To get StorageArea entity based on StorageAreaId
     @Override
@@ -44,10 +46,34 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
 //  Function: To add Storage Area
     @Override
-    public void createStorageArea(Plant plant, String name) {
+    public void createStorageArea(Plant plant, String name, String typeName) {
         storageArea = new StorageArea();
         storageArea.setPlant(plant);
         storageArea.setName(name);
+        
+        switch (typeName) {
+                case "RECEIVING":
+                    storageArea.setType(StorageAreaType.RECEIVING);
+                    break;
+                case "SHIPPING":
+                    storageArea.setType(StorageAreaType.SHIPPING);
+                    break;
+                case "STORAGE":
+                    storageArea.setType(StorageAreaType.STORAGE);
+                    break;
+                case "STOREFRONT":
+                    storageArea.setType(StorageAreaType.STOREFRONT);
+                    break;
+                case "HOLDING":
+                    storageArea.setType(StorageAreaType.HOLDING);
+                    break;
+                case "PRODUCTION":
+                    storageArea.setType(StorageAreaType.PRODUCTION);
+                    break;
+                default:
+                    break;
+            }
+        
         em.persist(storageArea);
         em.flush();
     }
@@ -64,9 +90,33 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
 //  Function: To edit Storage Area
     @Override
-    public void editStorageArea(Long storageAreaId, String name) {
+    public void editStorageArea(Long storageAreaId, String name, String typeName) {
         storageArea = getStorageArea(storageAreaId);
         storageArea.setName(name);
+        
+        switch (typeName) {
+                case "RECEIVING":
+                    storageArea.setType(StorageAreaType.RECEIVING);
+                    break;
+                case "SHIPPING":
+                    storageArea.setType(StorageAreaType.SHIPPING);
+                    break;
+                case "STORAGE":
+                    storageArea.setType(StorageAreaType.STORAGE);
+                    break;
+                case "STOREFRONT":
+                    storageArea.setType(StorageAreaType.STOREFRONT);
+                    break;
+                case "HOLDING":
+                    storageArea.setType(StorageAreaType.HOLDING);
+                    break;
+                case "PRODUCTION":
+                    storageArea.setType(StorageAreaType.PRODUCTION);
+                    break;
+                default:
+                    break;
+            }
+        
         em.merge(storageArea);
         em.flush();
     }
@@ -129,17 +179,19 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         return q.getResultList();
     }
 
-    /**
-     * @param id
-     * @param stockId
-     * @return 
-     * @since  To view Storage Bins in a particular Storage Area and a particular Stock - For AJAX purposes
-     */
+//  Function: To view Storage Bins in a particular Storage Area and a particular Stock - For AJAX purposes 
     @Override
     public List<StorageBin> viewStorageBinsOfAStorageAreaOfAStock(Long id, Long stockId) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.id=:id AND s.stockUnits.stock.id=:stockId");
         q.setParameter("id", id);
         q.setParameter("stockId", stockId);
+        return q.getResultList();
+    }
+
+//  Function: To view Storage Area Type
+    @Override
+    public List<StorageAreaType> viewStorageAreaType(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageAreaType s");
         return q.getResultList();
     }
 

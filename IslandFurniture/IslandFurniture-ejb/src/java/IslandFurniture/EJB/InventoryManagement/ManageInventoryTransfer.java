@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
@@ -34,6 +35,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     private StorageBin storageBin;
     private ReplenishmentTransferOrder replenishmentTransferOrder;
     private ExternalTransferOrder externalTransferOrder;
+    private ExternalTransferOrderDetail externalTransferOrderDetail;
 
     @Override
     public StockUnit getStockUnit(Long stockUnitId) {
@@ -268,13 +270,60 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
     
-//  Function: To create a Replenishment Transfer Order (Status: Requested)
+//  Function: To create a External Transfer Order (Status: Requested)
     @Override
-    public void createExternalTransferOrder(Plant plant) {
+    public ExternalTransferOrder createExternalTransferOrder(Plant plant) {
         externalTransferOrder = new ExternalTransferOrder();
         externalTransferOrder.setRequestingPlant(plant);
         externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
         em.persist(externalTransferOrder);
         em.flush();
+        return externalTransferOrder;
+    }
+    
+    //  Function: To delete a External Transfer Order  
+    @Override
+    public void deleteExternaTransferOrder(Long id) {
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, id);
+        em.remove(externalTransferOrder);
+        em.flush();
+    }
+    
+    //  Function: To edit the Quantity of a External Transfer Order Detail (Requested)
+    @Override
+    public void editExternalTransferOrderDetailQuantity(Long id, Integer qty) {
+        externalTransferOrderDetail = (ExternalTransferOrderDetail) em.find(ExternalTransferOrderDetail.class, id);
+        externalTransferOrderDetail.setQty(qty);
+        em.merge(externalTransferOrderDetail);
+        em.flush();
+    }
+    
+//  Function: To display list of External Transfer Order (Requested)    
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderRequested(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return q.getResultList();
+    }
+
+//  Need to edit this one!
+//  Function: To display list of External Transfer Order (Requested) -- For a particular Stock  
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderDetailRequestedForAParticularStock(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return q.getResultList();
+    }
+
+//  Function: To display list of External Transfer Order (Fulfilled)    
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilled(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.FULFILLED);
+        return q.getResultList();
     }
 }
