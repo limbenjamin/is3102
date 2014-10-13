@@ -101,7 +101,6 @@ public class CurrencyManagedBean implements Serializable {
     }
 
     public LineChartModel getLineModel1() {
-        System.out.println("Retrieving lineModel");
         return lineModel1;
     } 
     public LineChartModel getLineModel2() {
@@ -149,72 +148,26 @@ public class CurrencyManagedBean implements Serializable {
     } 
     private void createLineModels() {
         lineModel1 = initLinearModel();
-        lineModel1.setTitle("Linear Chart");
+        lineModel1.setTitle("SGD $1.00 / " + this.currency.getCurrencyCode());
         lineModel1.setLegendPosition("e");
-        Axis yAxis = lineModel1.getAxis(AxisType.Y);
-        yAxis.setMin(0);
-        yAxis.setMax(10);
-         
-        lineModel2 = initCategoryModel();
-        lineModel2.setTitle("Category Chart");
-        lineModel2.setLegendPosition("e");
-        lineModel2.setShowPointLabels(true);
-        lineModel2.getAxes().put(AxisType.X, new CategoryAxis("Years"));
-        yAxis = lineModel2.getAxis(AxisType.Y);
-        yAxis.setLabel("Births");
-        yAxis.setMin(0);
-        yAxis.setMax(200); 
+        Axis yAxis = lineModel1.getAxis(AxisType.Y); 
+        lineModel1.getAxes().put(AxisType.X, new CategoryAxis("Years"));
+        yAxis.setLabel("Exchange Rate"); 
     }
      
-    private LineChartModel initLinearModel() {
-        LineChartModel model = new LineChartModel();
+    private LineChartModel initLinearModel() { 
+        LineChartModel model = new LineChartModel(); 
  
-        LineChartSeries series1 = new LineChartSeries();
-        series1.setLabel("Series 1");
- 
-        series1.set(1, 2);
-        series1.set(2, 1);
-        series1.set(3, 3);
-        series1.set(4, 6);
-        series1.set(5, 8);
- 
-        LineChartSeries series2 = new LineChartSeries();
-        series2.setLabel("Series 2");
- 
-        series2.set(1, 6);
-        series2.set(2, 3);
-        series2.set(3, 2);
-        series2.set(4, 7);
-        series2.set(5, 9);
+        LineChartSeries series1 = new LineChartSeries(); 
+        series1.setLabel(this.currency.getCurrencyCode());
+           
+        for(int i=0; i<exchangeRates.size(); i++) {
+            System.out.println(exchangeRates.get(exchangeRates.size()-1-i).getExchangeRate() + ", " + i+1);
+            series1.set(i+1, exchangeRates.get(exchangeRates.size()-1-i).getExchangeRate());
+        }
  
         model.addSeries(series1);
-        model.addSeries(series2);
          
-        return model;
-    }
-     
-    private LineChartModel initCategoryModel() {
-        LineChartModel model = new LineChartModel();
- 
-        ChartSeries boys = new ChartSeries();
-        boys.setLabel("Boys");
-        boys.set("2004", 120);
-        boys.set("2005", 100);
-        boys.set("2006", 44);
-        boys.set("2007", 150);
-        boys.set("2008", 25);
- 
-        ChartSeries girls = new ChartSeries();
-        girls.setLabel("Girls");
-        girls.set("2004", 52);
-        girls.set("2005", 60);
-        girls.set("2006", 110);
-        girls.set("2007", 90);
-        girls.set("2008", 120);
- 
-        model.addSeries(boys);
-        model.addSeries(girls);
-         
-        return model;
+        return model; 
     }
 }

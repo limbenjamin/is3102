@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                          <li><a href="ingredientpo.xhtml">Ingredient Purchase Orders</a></li>
+                          <li class="active"><strong>Purchase Order ##{ingredientPaidPOManagedBean.purchaseOrder.id}</strong></li>
+                        </ol>                       
+                    </div>                     
+                    <div class="col-md-10">
+                        <span class="pull-right">
+                            <a href="ingredientpo.xhtml">
+                            <button type="button" class="btn btn-sm btn-default pull-right">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>
+                        </span>                        
+                        <h4>Purchase Order ##{ingredientPaidPOManagedBean.purchaseOrder.id}</h4>
+                        <h5>Supplier: <strong>#{ingredientPaidPOManagedBean.purchaseOrder.ingredSupplier.name}</strong>
+                            | Supplied to: <strong>#{ingredientPaidPOManagedBean.purchaseOrder.shipsTo.name}</strong></h5>
+                        <h5>Order Date: <strong><h:outputText value="#{ingredientPaidPOManagedBean.purchaseOrder.orderDate.time}" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{ingredientPaidPOManagedBean.store.timeZoneID}"  /></h:outputText></strong>
+                            | Status: <strong>#{ingredientPaidPOManagedBean.purchaseOrder.status}</strong>
+                        </h5>
+                        <br></br>
+                     
+                        <h4>Items Ordered:</h4>
+                        <section name="PurchaseOrderDetails">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ingredient</th>
+                                    <th>Lot Size</th>
+                                    <th>No. Of Lots Ordered</th>
+                                    <th>Total Quantity</th>
+                                </tr>
+                                <h:form id="viewPODetail" class="form-horizontal">
+                                    <ui:repeat value="#{ingredientPaidPOManagedBean.purchaseOrderDetailList}" var="pod">
+                                        <tr>
+                                            <td>
+                                                #{pod.id}
+                                            </td>   
+                                            <td>
+                                                #{pod.ingredient.name}
+                                            </td>
+                                            <td>
+                                                #{purchaseOrderConfirmedManagedBean.getStockLotSize(pod.ingredient)}
+                                            </td>
+                                            <td>
+                                                #{pod.numberOfLots}
+                                            </td>                                            
+                                            <td>
+                                                #{pod.quantity}
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form> 
+                            </table>
+                        </section>
+                    </div>
+                </div>                
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
