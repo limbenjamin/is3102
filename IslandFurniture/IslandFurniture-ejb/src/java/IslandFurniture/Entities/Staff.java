@@ -290,7 +290,7 @@ public class Staff implements Serializable {
     static String encryptionKey = "0123456789abcdef"; //TODO : move the keys into store entity
     
     // Used to encrypt name, email, phone no. to comply with PDPA's "reasonable security arrangements"
-    private String AESEncrypt(String plaintext){
+    public static String AESEncrypt(String plaintext){
         String ciphertext = "";
         try {
             Key key = new SecretKeySpec(encryptionKey.getBytes("UTF-8"), "AES");

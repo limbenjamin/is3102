@@ -6,7 +6,11 @@
 
 package IslandFurniture.Entities;
 
+import static IslandFurniture.Entities.Staff.AESDecrypt;
+import static IslandFurniture.Entities.Staff.AESEncrypt;
+import static IslandFurniture.Entities.Staff.SHA1Hash;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -25,6 +30,18 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    private String emailAddress;
+    private String password;
+    private String salt;
+    private String name;
+    private String phoneNo;
+    private String address;
+    private String dateOfBirth;
+    private Boolean active;
+    private String forgottenPasswordCode;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date lastLogon;
     @ManyToOne
     private MembershipTier membershipTier;
     @ManyToOne
@@ -84,6 +101,98 @@ public class Customer implements Serializable {
         this.redemptions = redemptions;
     }
 
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        String fullPassword = salt + "" + password;
+        String hashedPassword = SHA1Hash(fullPassword);
+        this.password = hashedPassword;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getName() {
+        String decName = AESDecrypt(name);
+        return decName;
+    }
+
+    public void setName(String name) {
+        String encName = AESEncrypt(name);
+        this.name = encName;
+    }
+
+    public String getPhoneNo() {
+        String decPhoneNo = AESDecrypt(phoneNo);
+        return decPhoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        String encPhoneNo = AESEncrypt(phoneNo);
+        this.phoneNo = encPhoneNo;
+    }
+
+    public String getAddress() {
+        String decAddress = AESDecrypt(address);
+        return decAddress;
+    }
+
+    public void setAddress(String address) {
+        String encAddress = AESEncrypt(address);
+        this.address = encAddress;
+    }
+
+    public String getDateOfBirth() {
+        String decDateOfBirth = AESDecrypt(dateOfBirth);
+        return decDateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        String encDateOfBirth = AESEncrypt(dateOfBirth);
+        this.dateOfBirth = encDateOfBirth;
+    }
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getForgottenPasswordCode() {
+        return forgottenPasswordCode;
+    }
+
+    public void setForgottenPasswordCode(String forgottenPasswordCode) {
+        this.forgottenPasswordCode = forgottenPasswordCode;
+    }
+
+    public Date getLastLogon() {
+        return lastLogon;
+    }
+
+    public void setLastLogon(Date lastLogon) {
+        this.lastLogon = lastLogon;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

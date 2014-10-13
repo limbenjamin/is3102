@@ -5,20 +5,12 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
     <navigation-rule>
         <navigation-case>
-            <from-outcome>dash</from-outcome>
-            <to-view-id>/dash.xhtml</to-view-id>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>modifyparticulars</from-outcome>
-            <to-view-id>/common/modifyparticulars.xhtml</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>messaging</from-outcome>
-            <to-view-id>/common/messaging.xhtml</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>broadcast</from-outcome>
-            <to-view-id>/common/broadcast.xhtml</to-view-id>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>
