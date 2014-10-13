@@ -34,11 +34,9 @@ public class PromotionCampaign implements Serializable {
     @ManyToOne
     private CountryOffice countryOffice;
 
-    @ManyToMany(mappedBy = "promotionCampaigns")
-    private List<MembershipTier> membershipTiers;
 
     @OneToMany(mappedBy = "promotionCampaign")
-    private List<PromotionDetail> promotionDetails=new ArrayList<>();
+    private List<PromotionDetail> promotionDetails = new ArrayList<>();
 
     private String title;
 
@@ -50,6 +48,32 @@ public class PromotionCampaign implements Serializable {
 
     @Temporal(TemporalType.DATE)
     private Calendar validFrom;
+
+    private Boolean locked = false;
+
+    public Boolean getExpired() {
+        if (Calendar.getInstance().after(validUntil)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setExpired(Boolean Expired) {
+        return;
+    }
+
+    public Boolean getLocked() {
+        if (locked == true) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public Calendar getValidUntil() {
         return validUntil;
@@ -67,9 +91,6 @@ public class PromotionCampaign implements Serializable {
         this.validFrom = validFrom;
     }
 
-    
-    
-    
     public String getTitle() {
         return title;
     }
@@ -128,13 +149,7 @@ public class PromotionCampaign implements Serializable {
         this.countryOffice = countryOffice;
     }
 
-    public List<MembershipTier> getMembershipTiers() {
-        return membershipTiers;
-    }
 
-    public void setMembershipTiers(List<MembershipTier> membershipTiers) {
-        this.membershipTiers = membershipTiers;
-    }
 
     public List<PromotionDetail> getPromotionDetails() {
         return promotionDetails;

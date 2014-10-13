@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -21,15 +20,14 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class MembershipTier implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToMany
-    private List<PromotionCampaign> promotionCampaigns;
-    @OneToMany(mappedBy="membershipTier")
+    @OneToMany(mappedBy = "membershipTier")
     private List<Customer> members;
-    
+
     private String title;
 
     public String getTitle() {
@@ -39,8 +37,6 @@ public class MembershipTier implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
-    
-    
 
     public Long getId() {
         return id;
@@ -48,14 +44,6 @@ public class MembershipTier implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<PromotionCampaign> getPromotionCampaigns() {
-        return promotionCampaigns;
-    }
-
-    public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
-        this.promotionCampaigns = promotionCampaigns;
     }
 
     public List<Customer> getMembers() {
@@ -88,10 +76,10 @@ public class MembershipTier implements Serializable {
 
     @Override
     public String toString() {
-        
+
         //Dont change this. i need this. JAMES
-        return title;
-        
+        return "[MembershipTier]" + id;
+
     }
-    
+
 }

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +17,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,6 +26,7 @@ import javax.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PromotionDetail implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,18 +34,36 @@ public abstract class PromotionDetail implements Serializable {
 
     @ManyToOne
     protected PromotionCampaign promotionCampaign;
-    
+
     protected double percentageDiscount;
-    protected double absoluteDiscount;
+    protected double absoluteDiscount = 0;
     
-    protected MembershipTier membershiptier=null;
-    
+    @OneToOne(cascade = CascadeType.REMOVE)
+    protected MembershipTier membershiptier = null;
+
     protected Plant applicablePlant;
-    
-    protected Integer usageCount;
-    
-    @OneToMany(mappedBy = "promotionDetail")
-    protected List<PromotionCoupon> promotionCoupons=new ArrayList<>();
+
+    protected Integer usageCount = 1;
+
+    @OneToMany(mappedBy = "promotionDetail",cascade = CascadeType.REMOVE)
+    protected List<PromotionCoupon> promotionCoupons = new ArrayList<>();
+
+    public String getCouponStatus() {
+        if (this.getPromotionCoupons().size() == 0) {
+            return "No Coupon";
+        }
+
+        if (this.getPromotionCoupons().get(0).getOneTimeUsage() == true) {
+            return "Non-Perishable Coupon";
+        }
+
+        return "Coupon";
+
+    }
+
+    public void setCouponStatus(String s) {
+        return; //dummy for stupid JSF EL
+    }
 
     public List<PromotionCoupon> getPromotionCoupons() {
         return promotionCoupons;
@@ -53,7 +73,6 @@ public abstract class PromotionDetail implements Serializable {
         this.promotionCoupons = promotionCoupons;
     }
 
-    
     public Integer getUsageCount() {
         return usageCount;
     }
@@ -61,7 +80,6 @@ public abstract class PromotionDetail implements Serializable {
     public void setUsageCount(Integer usageCount) {
         this.usageCount = usageCount;
     }
-    
 
     public Plant getApplicablePlant() {
         return applicablePlant;
@@ -70,8 +88,6 @@ public abstract class PromotionDetail implements Serializable {
     public void setApplicablePlant(Plant applicablePlant) {
         this.applicablePlant = applicablePlant;
     }
-    
-    
 
     public MembershipTier getMembershiptier() {
         return membershiptier;
@@ -80,8 +96,6 @@ public abstract class PromotionDetail implements Serializable {
     public void setMembershiptier(MembershipTier membershiptier) {
         this.membershiptier = membershiptier;
     }
-    
-    
 
     public double getPercentageDiscount() {
         return percentageDiscount;
@@ -98,7 +112,6 @@ public abstract class PromotionDetail implements Serializable {
     public void setAbsoluteDiscount(double absoluteDiscount) {
         this.absoluteDiscount = absoluteDiscount;
     }
-    
 
     public Long getId() {
         return id;
@@ -107,8 +120,6 @@ public abstract class PromotionDetail implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-
 
     public PromotionCampaign getPromotionCampaign() {
         return promotionCampaign;
@@ -142,5 +153,5 @@ public abstract class PromotionDetail implements Serializable {
     public String toString() {
         return "FW.IslandFurniture.Entities.CountryOffice.PromotionDetail[ id=" + id + " ]";
     }
-    
+
 }

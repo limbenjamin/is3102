@@ -116,10 +116,10 @@ public class MonthlyProductionPlan implements Serializable {
 
             Calendar t = Calendar.getInstance();
             t.set(this.year, this.month.value, 1);
-            t.add(Calendar.DAY_OF_MONTH, -1);
+            t.add(Calendar.DATE, -1);
 
             if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) {
-                System.out.println("Expired(): MPP=" + this.month + "/" + this.year + " VS Server Time:" + t.get(Calendar.MONTH) + "/" + t.get(Calendar.YEAR));
+                System.out.println("Expired(): MPP=" + this.month + "/" + this.year + " VS Server Time:" + ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH) + "/" + ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));
                 return (true);
             }
 

@@ -304,10 +304,7 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
             System.err.println("getDemandPlanningTable(): Warning! Not a single production plan ! Running automatic mode");
             mpp.setMF(MF.getName());
             mpp.CreateProductionPlanFromForecast();
-            q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF"); //Refresh
-            q.setParameter("mf", MF);
-            q.setParameter("m", this.month);
-            q.setParameter("y", this.year);
+            return (getDemandPlanningTable(MF)); //Recursive callback again
         }
 
         String Cur_FM = "";

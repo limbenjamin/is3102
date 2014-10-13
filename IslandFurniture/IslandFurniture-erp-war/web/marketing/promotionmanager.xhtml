@@ -3,13 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      >
 
     <ui:composition template="../template.xhtml"
                     xmlns="http://www.w3.org/1999/xhtml"
                     xmlns:ui="http://java.sun.com/jsf/facelets"
                     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-                    xmlns:pz="http://primefaces.org/ui"
+                    xmlns:o="http://omnifaces.org/ui"
                     >
 
 
@@ -43,6 +44,20 @@
 
                 }
 
+                td[role='gridcell']{
+                    border: 1px solid #333 !important;
+
+                }
+
+                .ui-menu{
+                    width:auto !important;
+
+                }
+
+
+
+
+
 
             </style>
             <div class="col-md-12">
@@ -62,45 +77,48 @@
             <!-- campaign Management-->
             <p:tabView id="panel" dynamic="true" style="">
                 <p:tab title="Campaign Management" id="campaign_tab">
-                    <p:panel header="Existing Campagins">
-                        <p:dataTable var="row" value="#{marketing.promotionCampaigns}">
-                            <p:column headerText="Title">
-                                <p:inputText value="#{row.title}"/>
-                            </p:column>
-                            <p:column headerText="Campaign Goals">
-                                <h:selectOneMenu id="country" value="#{row.goal}">
-                                    <f:selectItems value="${marketing.campaignGoals}"/>
-                                </h:selectOneMenu>
-                            </p:column>
-                            <p:column headerText="Valid From">
-                                <p:calendar showOn="button" value="#{row.validFrom}"/>
-                            </p:column>
-                            <p:column headerText="Valid Until">
-                                <p:calendar showOn="button" value="#{row.validUntil}"/>
-                            </p:column>
-                            <p:column headerText="Country Office">
-                                <p:inputText disabled="true"  value="${row.countryOffice.name}"></p:inputText>
-                            </p:column>
-                            <p:column headerText="Membership Tiers">
-                                <h:selectManyCheckbox id="membership" value="#{row.membershipTiers}">
-                                    <f:selectItems value="${row.membershipTiers}"></f:selectItems>
-                                </h:selectManyCheckbox>
-                            </p:column>
-                            <p:column headerText="Remark">
-                                <p:inputTextarea value="#{row.remark}"></p:inputTextarea>
-                            </p:column>
-                            <p:column headerText="Active">
-                                Yes/No
-                            </p:column>
-                            <p:column headerText="Terminate">
-                                Terminate
-                            </p:column>
+                    <br/>
+                    <h:form id="mod_campaign" rendered="${marketing.currentEdit==null}">
+                        <p:fieldset legend="Current Campaigns" toggleable="true" collapsed="false" toggleSpeed="500" style="font-size:14px">
 
-                        </p:dataTable>
-                    </p:panel>
+                            <p:dataTable var="row" value="#{marketing.promotionCampaigns}" id="campaign_overview" >
+                                <p:column headerText="Title">
+                                    <p:inputText value="#{row.title}"/>
+                                </p:column>
+                                <p:column headerText="Campaign Goals">
+                                    <h:selectOneMenu id="country" value="#{row.goal}">
+                                        <f:selectItems value="${marketing.campaignGoals}"/>
+                                    </h:selectOneMenu>
+                                </p:column>
+                                <p:column headerText="Period">
+                                    From: <br/><p:calendar value="#{row.validFrom.time}"/>
+                                    <br/>
+                                    Until: <br/><p:calendar value="#{row.validUntil.time}" />
+                                </p:column>
+                                <p:column headerText="Remark">
+                                    <p:inputTextarea value="#{row.remark}" style="height:125px"> </p:inputTextarea>
+                                </p:column>
+                                <p:column headerText="Actions" style="center">
+                                    <!--button for resume-->
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Unstop" rendered="#{row.locked and !row.expired}" value="RESUME CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"  ></p:commandButton>
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Stop" rendered="#{!row.locked}" value="STOP CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}" ></p:commandButton>
+                                    <br/>
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" value="Modify" alt="#{row.id}" label="Modify" actionListener="${marketing.campaignbutton}" update="@((id$=campaign_overview)),@([id$=msg])"></p:commandButton>
+                                    <br/>
+                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Manage"  rendered="#{!row.locked and !row.expired}" value="Manage" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
+
+                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Email Customers!"  rendered="#{!row.locked and !row.expired}" value="Email" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
+
+
+                                </p:column>
+
+
+                            </p:dataTable>
+                        </p:fieldset>
+                    </h:form>
                     <br/>
 
-                    <h:form id="make_new_campaign">
+                    <h:form id="make_new_campaign" rendered="${marketing.currentEdit==null}">
                         <p:fieldset legend="New Campaign" toggleable="true" collapsed="${marketing.newPromotionCampaign.title.length()==0}" toggleSpeed="500" style="font-size:14px">
 
                             <h:panelGrid columns="2">
@@ -124,11 +142,7 @@
                                 <p:outputLabel value="Country Office: " style="width:250px;margin-right:10px" />
                                 <p:inputText disabled="true"  value="${marketing.newPromotionCampaign.countryOffice.name}"></p:inputText>
 
-                                <p:outputLabel value="Applicable Membership Tier" style="width:250px;margin-right:10px" />
 
-                                <h:selectManyCheckbox id="membership" value="#{marketing.newPromotionCampaign.membershipTiers}">
-                                    <f:selectItems value="${marketing.membershipTiers}"></f:selectItems>
-                                </h:selectManyCheckbox>
 
                                 <p:outputLabel value="Campaign Remark: " style="width:250px;margin-right:10px" />
                                 <p:inputTextarea value="#{marketing.newPromotionCampaign.remark}"></p:inputTextarea>
@@ -136,12 +150,120 @@
 
 
                             </h:panelGrid>
-                            <p:commandButton value="Submit" ajax="true" update="@([id$=campaign_tab]),@([id$=msg])" actionListener="${marketing.newpromo}"/>
+                            <p:commandButton value="Submit" ajax="true" update="@([id$=campaign_tab]),@([id$=msg]),@((id$=campaign_overview))" actionListener="${marketing.newpromo}"/>
                         </p:fieldset>
                     </h:form>
+
+                    <h:form id="manage_campaign" rendered="${marketing.currentEdit!=null}">
+                        <p:fieldset legend="Manage Campaign:" toggleable="true" collapsed="false" toggleSpeed="500" style="font-size:14px">
+                            <p:dataTable var="row" value="#{marketing.currentEdit.promotionDetails}" id="manage_campaign_table" tableStyle="width:auto" >
+
+                                <p:column headerText="ID">
+                                    <p:outputLabel value="${row.id}" />
+                                </p:column>
+                                <p:column headerText="Promotion Type">
+                                    <h:outputText value="By Specified Products" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProduct'}"/>
+                                    <h:outputText value="By ProductCategory" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductCategory'}"/>
+                                    <h:outputText value="By ProductSubCategory" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductSubCategory'}"/>
+
+                                </p:column>
+
+                                <p:column headerText="Applicable Stores" id="updatecol4">
+                                    <p:selectOneMenu value="#{row.applicablePlant}" converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItems  value="${marketing.listOfStores}" var="member" itemLabel="#{member.name}" itemValue="#{member}"></f:selectItems>
+                                    </p:selectOneMenu>
+                                </p:column>
+
+                                <p:column headerText="Promotion Discount">
+                                
+                                        <h:outputText value="Dollar Discount*:"/>
+                                        <br/>
+                                        <p:inputText value="${row.absoluteDiscount}" style="width:50px"></p:inputText>
+                                        <br/>
+                                        <h:outputText value="Percentage(0-1):"/>
+                                        <br/>
+                                        <p:inputText value="${row.percentageDiscount}" style="width:50px"></p:inputText>
+                                  
+                                </p:column>
+
+                                <p:column headerText="Membership Tier" id="updatecol1">
+                                    <p:selectOneMenu  label="Membership Tiers"  value="#{row.membershiptier}" converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="${null}" itemLabel="ALL Customers" />
+                                        <f:selectItems  value="${marketing.membershipTiers}" var="member" itemLabel="#{member.title}" itemValue="#{member}"></f:selectItems>
+                                    </p:selectOneMenu>
+                                </p:column>
+
+                                <p:column headerText="Usage Limit">
+                                    <p:inputText value="${row.usageCount}" style="width:50px;"/>
+                                </p:column>
+
+                                <p:column headerText="Coupons **" id="updatecol2">
+                                    <p:selectOneMenu requiredMessage="PD_${row.id}" label="PD_${String.valueOf(row.id)}" value="${marketing.gHack(row)['s']}">
+                                        <p:ajax event="change"
+                                                listener="#{marketing.usecouponlisten}" update="@([id$=msg])"  />
+                                        <f:selectItem itemLabel="No Coupon" itemValue="No Coupon"/>
+                                        <f:selectItem  itemLabel="Coupon" itemValue="Coupon"/>
+                                        <f:selectItem  itemLabel="Non-Perishable Coupon" itemValue="Non-Perishable Coupon"/>                                            
+                                    </p:selectOneMenu>
+                                </p:column>
+
+                                <p:column headerText="Specific" id="updatecol3">
+                                    <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProduct'}">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetail(row)['stock']}" converter="omnifaces.SelectItemsConverter">
+                                        
+                                            <f:selectItems  value="${marketing.listOfStocks}" var="member" itemLabel="#{member.name}[$#{marketing.getPrice(member)}]" itemValue="#{member}"></f:selectItems>
+                                        </p:selectOneMenu>
+                                        <br/>
+                                        Discounted Price: <h:outputText  rendered="${marketing.typeCastPromoDetail(row)['stock']!=null}" value="${marketing.calcDiscount(marketing.typeCastPromoDetail(row)['stock'],marketing.typeCastPromoDetail(row))}"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductCategory'}">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPC(row)['category']}" converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItems  value="${marketing.furnitureCategory}" var="member" itemLabel="#{member}" itemValue="#{member}"></f:selectItems>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductSubCategory'}">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPSC(row)['category']}" converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItems  value="${marketing.furnitureSubCategory}" var="member" itemLabel="#{member}" itemValue="#{member}"></f:selectItems>
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+
+                                </p:column>
+
+                                <p:column headerText="Action">
+                                    <p:commandButton value="Remove" ajax="false" style="width:120px" alt="${row.id}" label="${String.valueOf(row.id)}" actionListener="${marketing.removepd}" update="@([id$=msg]),@([id$=manage_campaign_table])"/>
+                                    <br/><br/>
+                                    <p:commandButton value="Update" ajax="false" style="width:120px" alt="${row.id}"  update="@([id$=msg]),@([id$=manage_campaign_table])"/>
+
+
+                                </p:column>
+
+
+                            </p:dataTable>
+                            <br/>
+                            <p:splitButton icon=" ui-icon-gear" value="Actions Available">
+                                <p:menuitem ajax="false" icon="ui-icon-document-b" value="New By Products" actionListener="${marketing.newpromodetail}"/>
+                                <p:menuitem ajax="false" icon="ui-icon-document-b" value="New By Products Category"  actionListener="${marketing.newpromodetail}"/>
+                                <p:menuitem ajax="false" icon="ui-icon-document-b" value="New By Products Sub Category"  actionListener="${marketing.newpromodetail}"/>
+                                <p:separator />
+                                <p:menuitem icon="ui-icon-close" value="Save and Quit" ajax="true" update="@([id$=panel]),@([id$=msg])" actionListener="${marketing.newpromodetail}"/>
+                            </p:splitButton>
+                         
+                            <br/>
+                            <br/>
+                            <b><u>Note:</u></b><br/>
+                            * Dollar Discount supercedes percentage Discount<br/>
+                            ** Non-Perishable Coupon will make all issued Coupon Disappear
+                        </p:fieldset>
+                    </h:form>
+                    
                 </p:tab>
-                <p:tab title="Campaign Analytics" id="campaign_anal"></p:tab>
-                <p:tab title="Campaign Marketing" id="campaign_marketing"></p:tab>
+                <p:tab title="Campaign Analytics" id="campaign_anal">
+                    Hey DUDE ! WHY IS THERE NOTHING !!! Can i not do this.
+
+                </p:tab>
 
 
             </p:tabView>
