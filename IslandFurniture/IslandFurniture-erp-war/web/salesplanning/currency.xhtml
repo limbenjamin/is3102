@@ -51,13 +51,10 @@
                         <h:outputText value="Singapore Dollar > #{currencyManagedBean.currency.name}: #{currencyManagedBean.latestRate}" ></h:outputText>
                         <p:panel>
                             <p:chart type="line" model="#{currencyManagedBean.lineModel1}" style="height:300px;"/>
- 
-                            <p:chart type="line" model="#{currencyManagedBean.lineModel2}" style="height:300px;"/> 
                         </p:panel>
                     </div>
                 </h:panelGroup>
-                
             </ui:define>
         </ui:composition>
     </h:body>
-</html>
+</html> 

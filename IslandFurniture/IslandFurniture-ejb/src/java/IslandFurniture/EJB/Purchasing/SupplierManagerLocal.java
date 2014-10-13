@@ -60,4 +60,6 @@ public interface SupplierManagerLocal {
 
     public List<Stock> checkForValidPCD(Long stockID, Long mfID);
     
+    public Double getPriceForStock(CountryOffice co, Stock s);
+    
 }
