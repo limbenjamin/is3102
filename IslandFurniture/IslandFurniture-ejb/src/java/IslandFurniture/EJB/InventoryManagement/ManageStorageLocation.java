@@ -164,8 +164,8 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
 
 //  Function: To view Storage Bins in Receiving Area only    
     @Override
-    public List<StorageArea> viewStorageBinsAtReceivingOnly(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM StorageArea s WHERE s.plant.id=:plantId AND s.type=:type");
+    public List<StorageBin> viewStorageBinsAtReceivingOnly(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.type=:type");
         q.setParameter("plantId", plant.getId());
         q.setParameter("type", RECEIVING);
         return q.getResultList();

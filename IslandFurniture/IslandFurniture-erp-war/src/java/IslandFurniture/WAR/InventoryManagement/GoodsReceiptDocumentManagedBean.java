@@ -69,7 +69,6 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
     private List<GoodsReceiptDocumentDetail> goodsReceiptDocumentDetailList;
     private List<Stock> stockList;
     private List<StorageBin> storageBinList;
-    private List<StorageArea> storageAreaList;
     private List<ProcuredStockPurchaseOrder> purchaseOrderList;
     private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetailList;
 
@@ -108,7 +107,7 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
 
         goodsReceiptDocument = receiptBean.getGoodsReceiptDocument(goodsReceiptDocumentId);
         goodsReceiptDocument = receiptBean.getGoodsReceiptDocument(goodsReceiptDocumentId);
-        storageAreaList = storageBean.viewStorageBinsAtReceivingOnly(plant);
+        storageBinList = storageBean.viewStorageBinsAtReceivingOnly(plant);
         goodsReceiptDocumentDetailList = receiptBean.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
         goodsReceiptDocumentList = receiptBean.viewGoodsReceiptDocumentIndividual(goodsReceiptDocument);
         purchaseOrderList = receiptBean.viewPurchaseOrder(plant);
@@ -120,11 +119,6 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         goodsReceiptDocumentDetailList = receiptBean.viewGoodsReceiptDocumentDetail(goodsReceiptDocument);
     }
 
-    public void onStorageAreaChange(AjaxBehaviorEvent event) {
-        if (storageAreaId != null) {
-            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
-        }
-    }
 
 //  Function: To create Goods Receipt Document Detail    
     public String addGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
@@ -426,14 +420,6 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.storageBinList = storageBinList;
     }
 
-    public List<StorageArea> getStorageAreaList() {
-        return storageAreaList;
-    }
-
-    public void setStorageAreaList(List<StorageArea> storageAreaList) {
-        this.storageAreaList = storageAreaList;
-    }
-
     public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
         return purchaseOrderList;
     }
@@ -490,12 +476,12 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.purchaseOrder = purchaseOrder;
     }
 
-    public ManageGoodsReceiptLocal getMgrl() {
+    public ManageGoodsReceiptLocal getReceiptBean() {
         return receiptBean;
     }
 
-    public void setMgrl(ManageGoodsReceiptLocal mgrl) {
-        this.receiptBean = mgrl;
+    public void setReceiptBean(ManageGoodsReceiptLocal receiptBean) {
+        this.receiptBean = receiptBean;
     }
 
     public ManageInventoryTransferLocal getMitl() {
@@ -530,6 +516,4 @@ public class GoodsReceiptDocumentManagedBean implements Serializable {
         this.miml = miml;
     }
 
-    
-  
 }
