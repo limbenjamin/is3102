@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.ExternalTransferOrder;
@@ -99,5 +98,8 @@ public interface ManageInventoryTransferLocal {
     List<StockUnit> viewStockUnitsOfAStock(Plant plant, Stock stock);
 
     List<StorageBin> viewStorageBin(Plant plant);
-    
+
+    //  Function: To obtain the ExternalTransferOrder entity;
+    ExternalTransferOrder getExternalTransferOrder(Long id);
+
 }

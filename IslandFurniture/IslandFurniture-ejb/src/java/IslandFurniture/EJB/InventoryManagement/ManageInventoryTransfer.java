@@ -50,6 +50,12 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     }
 
     @Override
+    public ExternalTransferOrder getExternalTransferOrder(Long id) {
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, id);
+        return externalTransferOrder;
+    }
+
+    @Override
     public void updateBatchNumber(Long id, String batchNumber) {
         stockUnit = getStockUnit(id);
         stockUnit.setBatchNo(batchNumber);
@@ -269,7 +275,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(replenishmentTransferOrder);
         em.flush();
     }
-    
+
 //  Function: To create a External Transfer Order (Status: Requested)
     @Override
     public ExternalTransferOrder createExternalTransferOrder(Plant plant) {
@@ -278,9 +284,10 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
         em.persist(externalTransferOrder);
         em.flush();
+        em.refresh(externalTransferOrder);
         return externalTransferOrder;
     }
-    
+
     //  Function: To delete a External Transfer Order  
     @Override
     public void deleteExternaTransferOrder(Long id) {
@@ -288,7 +295,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.remove(externalTransferOrder);
         em.flush();
     }
-    
+
     //  Function: To edit the Quantity of a External Transfer Order Detail (Requested)
     @Override
     public void editExternalTransferOrderDetailQuantity(Long id, Integer qty) {
@@ -297,7 +304,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(externalTransferOrderDetail);
         em.flush();
     }
-    
+
 //  Function: To display list of External Transfer Order (Requested)    
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderRequested(Plant plant) {
@@ -321,7 +328,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
 //  Function: To display list of External Transfer Order (Fulfilled)    
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilled(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant=:plantId AND s.status=:status");
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();

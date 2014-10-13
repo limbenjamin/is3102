@@ -20,12 +20,12 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
+
 
 /**
  *
@@ -46,7 +46,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledList;
 
     private ExternalTransferOrder externalTransferOrder;
-    
+
     private String username;
     private Staff staff;
     private Plant plant;
@@ -70,32 +70,10 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         externalTransferOrderListFulfilledList = transferBean.viewExternalTransferOrderFulfilled(plant);
     }
 
-////  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
-//    public void onStorageAreaChange() {
-//        if (storageAreaId != null) {
-//            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
-//        }
-//    }
 //  Function: To create a External Tranfer Order
     public void createExternalTransferOrder(ActionEvent event) throws IOException {
-       externalTransferOrder = transferBean.createExternalTransferOrder(plant);
-       // add here
-        
-        if (!externalTransferOrderListRequestList.isEmpty()) {
-//            for (ExternalTransferOrder r : externalTransferOrderListRequestList) {
-//                List<ExternalTransferOrder> checkList = transferBean.viewExternalTransferOrderRequestedForAParticularStock(plant, transferBean.getStock(stockId));
-//                if (!checkList.isEmpty()) {
-//                    ExternalTransferOrder to = checkList.get(0);
-//                    transferBean.editExternalTransferOrderQuantity(to.getId(), quantity + to.getQty());
-//                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-//                            new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity for the existing Transfer Order for a " + to.getStock().getName() + " has been updated to reflect the increase of quantity.", ""));
-//                    return;
-//                }
-//            }
-        }
-//        transferBean.createExternalTransferOrder(plant, transferBean.getStock(stockId), quantity);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Transfer Order for a " + transferBean.getStock(stockId).getName() + " has been created.", ""));
+        externalTransferOrder = transferBean.createExternalTransferOrder(plant);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externaldetail.xhtml?id=" + externalTransferOrder.getId().toString());
     }
 
 //  Function: To delete a External Transfer Order  
@@ -103,28 +81,14 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 //        transferBean.deleteExternalTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
     }
 
+    
+    
     public Long getStorageAreaId() {
         return storageAreaId;
     }
 
     public void setStorageAreaId(Long storageAreaId) {
         this.storageAreaId = storageAreaId;
-    }
-
-    public List<StorageBin> getStorageBinList() {
-        return storageBinList;
-    }
-
-    public void setStorageBinList(List<StorageBin> storageBinList) {
-        this.storageBinList = storageBinList;
-    }
-
-    public List<StorageArea> getStorageAreaList() {
-        return storageAreaList;
-    }
-
-    public void setStorageAreaList(List<StorageArea> storageAreaList) {
-        this.storageAreaList = storageAreaList;
     }
 
     public Long getStockId() {
@@ -141,6 +105,22 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public List<StorageBin> getStorageBinList() {
+        return storageBinList;
+    }
+
+    public void setStorageBinList(List<StorageBin> storageBinList) {
+        this.storageBinList = storageBinList;
+    }
+
+    public List<StorageArea> getStorageAreaList() {
+        return storageAreaList;
+    }
+
+    public void setStorageAreaList(List<StorageArea> storageAreaList) {
+        this.storageAreaList = storageAreaList;
     }
 
     public List<StockUnit> getStockUnitList() {
@@ -165,6 +145,14 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 
     public void setExternalTransferOrderListFulfilledList(List<ExternalTransferOrder> externalTransferOrderListFulfilledList) {
         this.externalTransferOrderListFulfilledList = externalTransferOrderListFulfilledList;
+    }
+
+    public ExternalTransferOrder getExternalTransferOrder() {
+        return externalTransferOrder;
+    }
+
+    public void setExternalTransferOrder(ExternalTransferOrder externalTransferOrder) {
+        this.externalTransferOrder = externalTransferOrder;
     }
 
     public String getUsername() {
