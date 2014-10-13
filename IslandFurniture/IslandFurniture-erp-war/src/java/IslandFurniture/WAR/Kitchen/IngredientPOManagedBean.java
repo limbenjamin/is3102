@@ -56,8 +56,6 @@ public class IngredientPOManagedBean implements Serializable{
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     public IngredientProcurementManagerLocal ipml;
-    @EJB
-    public SupplierManagerLocal sml;
     
     @PostConstruct
     public void init() {
@@ -212,14 +210,6 @@ public class IngredientPOManagedBean implements Serializable{
 
     public void setIpml(IngredientProcurementManagerLocal ipml) {
         this.ipml = ipml;
-    }
-
-    public SupplierManagerLocal getSml() {
-        return sml;
-    }
-
-    public void setSml(SupplierManagerLocal sml) {
-        this.sml = sml;
     }
     
 }
