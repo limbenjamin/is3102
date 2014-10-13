@@ -37,13 +37,14 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="areas">                        
                                 <section name="Storage Area" class="panel">  
-                                         <div class="panel-heading dashboard-title-panel">
+                                    <div class="panel-heading dashboard-title-panel">
                                         View and Edit Storage Areas
                                     </div>
                                     <div class="list-group-item">
                                         <table class="table table-hover">
                                             <tr>
-                                                <th>Storage Area</th>
+                                                <th>Storage Area Name</th>
+                                                <th>Storage Area Type</th>
                                                 <th>Update</th>
                                                 <th>Delete</th>
                                             </tr>
@@ -55,6 +56,11 @@
                                                                 <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                                 <h:inputText id="storageAreaName" value="#{StorageArea.name}" class="form-control transparent-form"></h:inputText>
                                                             </div>
+                                                        </td>
+                                                        <td>
+                                                            <h:selectOneMenu id="storageAreaId" class="form-control needauto" value="#{StorageArea.type}">
+                                                                <f:selectItems value="#{storageLocationManagedBean.storageAreaTypeList}" var="s" itemLabel="#{s}" itemValue="#{s}" />
+                                                            </h:selectOneMenu>
                                                         </td>
                                                         <td>
                                                             <h:commandButton actionListener="#{storageLocationManagedBean.editStorageArea}" class="btn btn-sm transparent-button" style="outline:0;">
@@ -86,7 +92,7 @@
                                         <table class="table table-hover table-condensed">
                                             <tr>
                                                 <th>Storage Area</th>
-                                                <th>Storage Bin</th>
+                                                <th>Storage Bin Name</th>
                                                 <th>Update</th>
                                                 <th>Delete</th>
                                             </tr>
@@ -140,6 +146,15 @@
                                             <label class="col-sm-4 control-label">Storage Area Name: </label>
                                             <div class="col-sm-8">
                                                 <h:inputText id="storageAreaName" value="#{storageLocationManagedBean.storageAreaName}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Storage Area Type: </label>
+                                            <div class="col-sm-8">
+                                                 <h:selectOneMenu id="storageAreaType" class="form-control needauto" value="#{storageLocationManagedBean.storageAreaType}">
+                                                    <f:selectItem itemLabel="Select Storage Area Type"/>
+                                                    <f:selectItems value="#{storageLocationManagedBean.storageAreaTypeList}" var="s" itemLabel="#{s}" itemValue="#{s}" />
+                                                </h:selectOneMenu>
                                             </div>
                                         </div>
                                     </div>

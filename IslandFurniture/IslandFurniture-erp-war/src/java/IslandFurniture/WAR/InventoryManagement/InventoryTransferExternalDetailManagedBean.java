@@ -6,12 +6,13 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
+import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -38,6 +39,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     private Long storageAreaId;
     private Long stockId;
     private Integer quantity;
+    Long id;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
@@ -46,8 +48,11 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     private List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList;
 
     private String username;
+    private String externalDateString;
     private Staff staff;
     private Plant plant;
+
+    private ExternalTransferOrder externalTransferOrder;
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -64,8 +69,16 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         plant = staff.getPlant();
 //        storageAreaList = storageBean.viewStorageArea(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
-        replenishmentTransferOrderListRequestList = transferBean.viewReplenishmentTransferOrderRequested(plant);
-        replenishmentTransferOrderListFulfilledList = transferBean.viewReplenishmentTransferOrderFulfilled(plant);
+
+        try {
+            id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+            session.setAttribute("transferorderexternalid", id);
+        } catch (Exception e) {
+            System.out.println("It is null here *sobs*");
+            id = (Long) session.getAttribute("transferorderexternalid");
+        }
+        System.out.println("The id is " + id);
+        externalTransferOrder = transferBean.getExternalTransferOrder(id);
     }
 
 ////  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
@@ -96,6 +109,30 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
 //  Function: To delete a Replenishment Transfer Order  
     public void deleteReplenishmentTransferOrder(ActionEvent event) throws IOException {
         transferBean.deleteReplenishmentTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
+    }
+
+    public String getExternalDateString() {
+        return externalDateString;
+    }
+
+    public void setExternalDateString(String externalDateString) {
+        this.externalDateString = externalDateString;
+    }
+
+    public ExternalTransferOrder getExternalTransferOrder() {
+        return externalTransferOrder;
+    }
+
+    public void setExternalTransferOrder(ExternalTransferOrder externalTransferOrder) {
+        this.externalTransferOrder = externalTransferOrder;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getStorageAreaId() {

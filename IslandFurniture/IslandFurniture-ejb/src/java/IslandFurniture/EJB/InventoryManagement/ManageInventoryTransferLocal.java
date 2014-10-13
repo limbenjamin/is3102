@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
@@ -12,16 +13,20 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import java.util.List;
-import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
-@Local
 public interface ManageInventoryTransferLocal {
 
     void confirmStockUnitMovement(Long stockUnitId);
+
+    //  Function: To create a External Transfer Order (Status: Requested)
+    ExternalTransferOrder createExternalTransferOrder(Plant plant);
+
+    //  Function: To create a Replenishment Transfer Order (Status: Requested)
+    void createReplenishmentTransferOrder(Plant plant, Stock stock, Integer quantity);
 
     void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin);
 
@@ -29,7 +34,19 @@ public interface ManageInventoryTransferLocal {
 
     void createStockUnitMovement1(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, StorageBin newStorageBin);
 
+    //  Function: To delete a External Transfer Order
+    void deleteExternaTransferOrder(Long id);
+
+    //  Function: To delete a Replenishment Transfer Order
+    void deleteReplenishmentTransferOrder(Long id);
+
     void deleteStockUnit(Long stockUnitId);
+
+    //  Function: To edit the Quantity of a External Transfer Order Detail (Requested)
+    void editExternalTransferOrderDetailQuantity(Long id, Integer qty);
+
+    //  Function: To edit the Quantity of a Replenishment Transfer Order (Requested)
+    void editReplenishmentTransferOrderQuantity(Long id, Integer qty);
 
     void editStockUnitLocationDefault(Long stockUnitId, Long storageBinId);
 
@@ -40,6 +57,25 @@ public interface ManageInventoryTransferLocal {
     StockUnit getStockUnit(Long stockUnitId);
 
     void updateBatchNumber(Long id, String batchNumber);
+
+    //  Need to edit this one!
+    //  Function: To display list of External Transfer Order (Requested) -- For a particular Stock
+    List<ExternalTransferOrder> viewExternalTransferOrderDetailRequestedForAParticularStock(Plant plant, Stock stock);
+
+    //  Function: To display list of External Transfer Order (Fulfilled)
+    List<ExternalTransferOrder> viewExternalTransferOrderFulfilled(Plant plant);
+
+    //  Function: To display list of External Transfer Order (Requested)
+    List<ExternalTransferOrder> viewExternalTransferOrderRequested(Plant plant);
+
+    //  Function: To display list of Replenishment Transfer Order (Fulfilled)
+    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderFulfilled(Plant plant);
+
+    //  Function: To display list of Replenishment Transfer Order (Requested)
+    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequested(Plant plant);
+
+    //  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock
+    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequestedForAParticularStock(Plant plant, Stock stock);
 
     List<Stock> viewStock();
 
@@ -63,24 +99,7 @@ public interface ManageInventoryTransferLocal {
 
     List<StorageBin> viewStorageBin(Plant plant);
 
-//  Function: To display list of Replenishment Transfer Order (Requested)    
-    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequested(Plant plant);
+    //  Function: To obtain the ExternalTransferOrder entity;
+    ExternalTransferOrder getExternalTransferOrder(Long id);
 
-//  Function: To display list of Replenishment Transfer Order (Fulfilled)    
-    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderFulfilled(Plant plant);
-
-//  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock  
-    List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequestedForAParticularStock(Plant plant, Stock stock);
-    
-//  Function: To create a Replenishment Transfer Order (Status: Requested)
-    void createReplenishmentTransferOrder(Plant plant, Stock stock, Integer quantity);
-
-//  Function: To delete a Replenishment Transfer Order
-    void deleteReplenishmentTransferOrder(Long id);
-    
-//  Function: To edit the Quantity of a Replenishment Transfer Order (Requested)
-    void editReplenishmentTransferOrderQuantity(Long id, Integer qty);
-    
-     //  Function: To create a Replenishment Transfer Order (Status: Requested)
-    void createExternalTransferOrder(Plant plant);
 }

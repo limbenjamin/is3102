@@ -229,11 +229,17 @@
         <navigation-case>
             <from-outcome>inventorytransfer_external</from-outcome>
             <to-view-id>/inventorymgt/inventorytransfer_external.xhtml</to-view-id>
-        </navigation-case> 
+        </navigation-case>        
         <navigation-case>
             <from-outcome>inventorytransfer_externaldetail</from-outcome>
             <to-view-id>/inventorymgt/inventorytransfer_externaldetail.xhtml</to-view-id>
-        </navigation-case> 
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{inventoryTransferExternalDetailManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
+        </navigation-case>
         <navigation-case>
             <from-outcome>inventorytransfer_externalposted</from-outcome>
             <to-view-id>/inventorymgt/inventorytransfer_externalposted.xhtml</to-view-id>

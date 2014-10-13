@@ -129,14 +129,8 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Select Storage Location</label>
                                         <div class="col-sm-9">
-                                            <h:selectOneMenu class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.storageAreaId}" pt:required="true">
-                                                <p:ajax listener="#{goodsReceiptDocumentManagedBean.onStorageAreaChange}" update="storageBinMenu" />
-                                                <f:selectItem itemLabel="Select Storage Area" />
-                                                <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageAreaList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                            </h:selectOneMenu>
-
-                                            <h:selectOneMenu id="storageBinMenu" class="form-control" value="#{goodsReceiptDocumentManagedBean.storageBinId}" pt:required="true">
-                                                <f:selectItem itemLabel="Select Storage Bin" />
+                                            <h:selectOneMenu class="form-control needauto" value="#{goodsReceiptDocumentManagedBean.storageBinId}" pt:required="true">
+                                                <f:selectItem itemLabel="Select Storage Bin at Receiving Area" />
                                                 <f:selectItems value="#{goodsReceiptDocumentManagedBean.storageBinList}" var="storageBin" itemLabel="#{storageBin.name}" itemValue="#{storageBin.id}" />
                                             </h:selectOneMenu>
                                         </div>  
