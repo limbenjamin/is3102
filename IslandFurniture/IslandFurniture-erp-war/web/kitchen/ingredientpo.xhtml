@@ -3,8 +3,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
@@ -16,11 +15,6 @@
                         </ol>                        
                     </div>
                     <div class="col-md-10">                        
-                        <span class="pull-right">
-                        <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newPurchaseOrder">
-                            <i class="fa fa-fw fa-plus"></i>New Purchase Order
-                        </button>
-                        </span>
                         <h4>Ingredient Purchase Orders</h4><hr></hr>
                     </div>
                     <div class="col-md-10">
@@ -32,7 +26,7 @@
                           <li><a href="#paid" role="tab" data-toggle="tab">Paid</a></li>
                         </ul>
                         
-                            <!-- Tab panes -->
+                        <!-- Tab panes -->
                         <div class="tab-content">
                         <div class="tab-pane active" id="planned">
                             <section name="viewPlannedPO" class="panel">
@@ -56,10 +50,10 @@
                                                 <td>#{PO.status}</td>
                                                 <td>
                                                     <h:outputText value="#{PO.orderDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.store.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
-                                                <td>#{PO.supplier.name}</td>
+                                                <td>#{PO.ingredSupplier.name}</td>
                                                 <td>
                                                     <h:commandButton action="ingredientplannedpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
@@ -100,11 +94,11 @@
                                                 <td>#{PO.id}</td>
                                                 <td>
                                                     <h:outputText value="#{PO.orderDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.store.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{PO.status}</td>
-                                                <td>#{PO.supplier.name}</td>
+                                                <td>#{PO.ingredSupplier.name}</td>
                                                 <td>
                                                     <h:commandButton action="ingredientconfirmedpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
@@ -139,11 +133,11 @@
                                                 <td>#{PO.id}</td>
                                                 <td>
                                                     <h:outputText value="#{PO.orderDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.store.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{PO.status}</td>
-                                                <td>#{PO.supplier.name}</td>
+                                                <td>#{PO.ingredSupplier.name}</td>
                                                 <td>
                                                     <h:commandButton action="ingredientdeliveredpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
@@ -178,11 +172,11 @@
                                                 <td>#{PO.id}</td>
                                                 <td>
                                                     <h:outputText value="#{PO.orderDate.time}" >
-                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.manufacturingFacility.timeZoneID}"  />
+                                                        <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{PO.store.timeZoneID}"  />
                                                     </h:outputText>
                                                 </td>
                                                 <td>#{PO.status}</td>
-                                                <td>#{PO.supplier.name}</td>
+                                                <td>#{PO.ingredSupplier.name}</td>
                                                 <td>
                                                     <h:commandButton action="ingredientpaidpo.xhtml" actionListener="#{ingredientPOManagedBean.purchaseOrderDetailActionListener}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:attribute name="POid" value="#{PO.id}" />
@@ -199,41 +193,6 @@
                     </div>
                     </div>
                 </div>   
-                
-                <!-- Purchase Order Modal -->
-                <div class="modal fade" id="newPurchaseOrder" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add Purchase Order</h4>
-                      </div>
-                      <h:form id="createPurchaseOrder" class="form-horizontal">
-                          <div class="modal-body">
-                              <div class="form-group">
-                                <label class="col-sm-3 control-label">Supplier: </label>
-                                <div class="col-sm-9">
-                                    <h:selectOneMenu id="supplierId" class="form-control needauto" p:required="true">
-                                        <f:selectItem itemLabel="Select Supplier"/>
-                                        <f:selectItems value="#{ingredientPOManagedBean.supplierList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                    </h:selectOneMenu>
-                                </div>
-                              </div>
-                              <div class="form-group">
-                                  <label class="col-sm-3 control-label">Planned Order Date: </label>
-                                <div class="col-sm-9">
-                                  <h:inputText id="orderDateString" p:type="date" class="form-control" p:required="true"></h:inputText>
-                                </div>
-                              </div>                                                                                     
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                            <h:commandButton action="ingredientplannedpo.xhtml" actionListener="#{ingredientPOManagedBean.addPurchaseOrder}" value="New Order" class="btn btn-success btn-round" />
-                          </div>
-                      </h:form>
-                    </div>
-                  </div>
-                </div>
             </ui:define>
         </ui:composition>
     </h:body>
