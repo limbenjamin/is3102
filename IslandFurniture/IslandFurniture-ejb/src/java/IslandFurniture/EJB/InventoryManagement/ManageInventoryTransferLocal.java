@@ -64,11 +64,17 @@ public interface ManageInventoryTransferLocal {
     //  Function: To display list of External Transfer Order (Requested) -- For a particular Stock
     List<ExternalTransferOrder> viewExternalTransferOrderDetailRequestedForAParticularStock(Plant plant, Stock stock);
 
-    //  Function: To display list of External Transfer Order (Fulfilled)
-    List<ExternalTransferOrder> viewExternalTransferOrderFulfilled(Plant plant);
+    //  Function: To display list of External Transfer Order (Fulfilled) Pending   
+    List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPending(Plant plant);
 
-    //  Function: To display list of External Transfer Order (Requested)
-    List<ExternalTransferOrder> viewExternalTransferOrderRequested(Plant plant);
+    //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPosted(Plant plant);
+
+    //  Function: To display list of External Transfer Order (Requested) Pending   
+    List<ExternalTransferOrder> viewExternalTransferOrderRequestedPending(Plant plant);
+
+    //  Function: To display list of External Transfer Order (Requested) Posted   
+    List<ExternalTransferOrder> viewExternalTransferOrderRequestedPosted(Plant plant);
 
     //  Function: To display list of Replenishment Transfer Order (Fulfilled)
     List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderFulfilled(Plant plant);
@@ -121,5 +127,11 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To edit External Transfer Order  
     void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal);
+
+    //  Function: To edit External Transfer Order Request to Posted  
+    void editExternalTransferOrderStatusToRequestPosted(ExternalTransferOrder externalTransferOrder);
+    
+    //  Function: To edit External Transfer Order Request to Fulfilled 
+    void editExternalTransferOrderStatusToRequestFulfilled(ExternalTransferOrder externalTransferOrder, Plant plant);
 
 }

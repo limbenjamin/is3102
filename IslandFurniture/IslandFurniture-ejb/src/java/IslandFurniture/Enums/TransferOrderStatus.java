@@ -11,7 +11,7 @@ package IslandFurniture.Enums;
  */
 public enum TransferOrderStatus {
 
-    REQUESTED(0), FULFILLED(1);
+    REQUESTED(0), FULFILLED(1), REQUESTED_PENDING(3), FULFILLED_PENDING(4);
 
     public int value;
 

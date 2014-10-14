@@ -243,7 +243,33 @@
         <navigation-case>
             <from-outcome>inventorytransfer_externalposted</from-outcome>
             <to-view-id>/inventorymgt/inventorytransfer_externalposted.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{inventoryTransferExternalDetailManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>inventorytransfer_externalpending</from-outcome>
+            <to-view-id>/inventorymgt/inventorytransfer_externalpending.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{inventoryTransferExternalDetailManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
         </navigation-case>   
+        <navigation-case>
+            <from-outcome>inventorytransfer_externalfulfilled</from-outcome>
+            <to-view-id>/inventorymgt/inventorytransfer_externalfulfilled.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{inventoryTransferExternalDetailManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
+        </navigation-case>  
         <navigation-case>
             <from-outcome>currency</from-outcome>
             <to-view-id>/salesplanning/currency.xhtml</to-view-id>

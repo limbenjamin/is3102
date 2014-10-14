@@ -282,7 +282,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     public ExternalTransferOrder createExternalTransferOrder(Plant plant) {
         externalTransferOrder = new ExternalTransferOrder();
         externalTransferOrder.setRequestingPlant(plant);
-        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
         em.persist(externalTransferOrder);
         em.flush();
         em.refresh(externalTransferOrder);
@@ -314,9 +314,18 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
 
-//  Function: To display list of External Transfer Order (Requested)    
+//  Function: To display list of External Transfer Order (Requested) Pending   
     @Override
-    public List<ExternalTransferOrder> viewExternalTransferOrderRequested(Plant plant) {
+    public List<ExternalTransferOrder> viewExternalTransferOrderRequestedPending(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED_PENDING);
+        return q.getResultList();
+    }
+    
+    //  Function: To display list of External Transfer Order (Requested) Posted   
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderRequestedPosted(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
@@ -334,10 +343,20 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         return q.getResultList();
     }
 
-//  Function: To display list of External Transfer Order (Fulfilled)    
+//  Function: To display list of External Transfer Order (Fulfilled) Pending   
     @Override
-    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilled(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
+    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPending(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.country.id=:countryId AND s.status=:status AND s.requestingPlant.id!=:plantId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("countryId", plant.getCountry().getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return q.getResultList();
+    }
+    
+    //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPosted(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();
@@ -395,4 +414,22 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
     
+    //  Function: To edit External Transfer Order Request to Posted  
+    @Override
+    public void editExternalTransferOrderStatusToRequestPosted(ExternalTransferOrder externalTransferOrder) {
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, externalTransferOrder.getId());
+        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        em.merge(externalTransferOrder);
+        em.flush();
+    }
+    
+//  Function: To edit External Transfer Order Request to Fulfilled 
+    @Override
+    public void editExternalTransferOrderStatusToRequestFulfilled(ExternalTransferOrder externalTransferOrder, Plant plant) {
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, externalTransferOrder.getId());
+        externalTransferOrder.setFulfillingPlant(plant);
+        externalTransferOrder.setStatus(TransferOrderStatus.FULFILLED);
+        em.merge(externalTransferOrder);
+        em.flush();
+    }
 }

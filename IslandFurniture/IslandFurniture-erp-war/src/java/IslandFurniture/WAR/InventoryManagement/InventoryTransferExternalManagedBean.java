@@ -6,6 +6,7 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.StockUnit;
@@ -37,14 +38,16 @@ import javax.servlet.http.HttpSession;
 public class InventoryTransferExternalManagedBean implements Serializable {
 
     private Long storageAreaId;
+    private Long storageBinId;
     private Long stockId;
     private Integer quantity;
 
     private List<StorageBin> storageBinList;
-    private List<StorageArea> storageAreaList;
     private List<StockUnit> stockUnitList;
-    private List<ExternalTransferOrder> externalTransferOrderListRequestList;
-    private List<ExternalTransferOrder> externalTransferOrderListFulfilledList;
+    private List<ExternalTransferOrder> externalTransferOrderListRequestPendingList;
+    private List<ExternalTransferOrder> externalTransferOrderListRequestPostedList;
+    private List<ExternalTransferOrder> externalTransferOrderListFulfilledPendingList;
+    private List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedList;
 
     private ExternalTransferOrder externalTransferOrder;
 
@@ -65,10 +68,12 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-//        storageAreaList = storageBean.viewStorageArea(plant);
+        storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
-        externalTransferOrderListRequestList = transferBean.viewExternalTransferOrderRequested(plant);
-        externalTransferOrderListFulfilledList = transferBean.viewExternalTransferOrderFulfilled(plant);
+        externalTransferOrderListRequestPendingList = transferBean.viewExternalTransferOrderRequestedPending(plant);
+        externalTransferOrderListRequestPostedList = transferBean.viewExternalTransferOrderRequestedPosted(plant);
+        externalTransferOrderListFulfilledPendingList = transferBean.viewExternalTransferOrderFulfilledPending(plant);
+        externalTransferOrderListFulfilledPostedList = transferBean.viewExternalTransferOrderFulfilledPosted(plant);
     }
 
 //  Function: To create a External Tranfer Order
@@ -84,18 +89,25 @@ public class InventoryTransferExternalManagedBean implements Serializable {
             transferBean.deleteExternaTransferOrderDetail(g);
         }
         transferBean.deleteExternaTransferOrder(to.getId());
-        externalTransferOrderListRequestList = transferBean.viewExternalTransferOrderRequested(plant);
+        externalTransferOrderListRequestPendingList = transferBean.viewExternalTransferOrderRequestedPending(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The External Transfer Order was successfully deleted", ""));
     }
 
-
-public Long getStorageAreaId() {
+    public Long getStorageAreaId() {
         return storageAreaId;
     }
 
     public void setStorageAreaId(Long storageAreaId) {
         this.storageAreaId = storageAreaId;
+    }
+
+    public Long getStorageBinId() {
+        return storageBinId;
+    }
+
+    public void setStorageBinId(Long storageBinId) {
+        this.storageBinId = storageBinId;
     }
 
     public Long getStockId() {
@@ -122,14 +134,6 @@ public Long getStorageAreaId() {
         this.storageBinList = storageBinList;
     }
 
-    public List<StorageArea> getStorageAreaList() {
-        return storageAreaList;
-    }
-
-    public void setStorageAreaList(List<StorageArea> storageAreaList) {
-        this.storageAreaList = storageAreaList;
-    }
-
     public List<StockUnit> getStockUnitList() {
         return stockUnitList;
     }
@@ -138,20 +142,36 @@ public Long getStorageAreaId() {
         this.stockUnitList = stockUnitList;
     }
 
-    public List<ExternalTransferOrder> getExternalTransferOrderListRequestList() {
-        return externalTransferOrderListRequestList;
+    public List<ExternalTransferOrder> getExternalTransferOrderListRequestPendingList() {
+        return externalTransferOrderListRequestPendingList;
     }
 
-    public void setExternalTransferOrderListRequestList(List<ExternalTransferOrder> externalTransferOrderListRequestList) {
-        this.externalTransferOrderListRequestList = externalTransferOrderListRequestList;
+    public void setExternalTransferOrderListRequestPendingList(List<ExternalTransferOrder> externalTransferOrderListRequestPendingList) {
+        this.externalTransferOrderListRequestPendingList = externalTransferOrderListRequestPendingList;
     }
 
-    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledList() {
-        return externalTransferOrderListFulfilledList;
+    public List<ExternalTransferOrder> getExternalTransferOrderListRequestPostedList() {
+        return externalTransferOrderListRequestPostedList;
     }
 
-    public void setExternalTransferOrderListFulfilledList(List<ExternalTransferOrder> externalTransferOrderListFulfilledList) {
-        this.externalTransferOrderListFulfilledList = externalTransferOrderListFulfilledList;
+    public void setExternalTransferOrderListRequestPostedList(List<ExternalTransferOrder> externalTransferOrderListRequestPostedList) {
+        this.externalTransferOrderListRequestPostedList = externalTransferOrderListRequestPostedList;
+    }
+
+    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledPendingList() {
+        return externalTransferOrderListFulfilledPendingList;
+    }
+
+    public void setExternalTransferOrderListFulfilledPendingList(List<ExternalTransferOrder> externalTransferOrderListFulfilledPendingList) {
+        this.externalTransferOrderListFulfilledPendingList = externalTransferOrderListFulfilledPendingList;
+    }
+
+    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledPostedList() {
+        return externalTransferOrderListFulfilledPostedList;
+    }
+
+    public void setExternalTransferOrderListFulfilledPostedList(List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedList) {
+        this.externalTransferOrderListFulfilledPostedList = externalTransferOrderListFulfilledPostedList;
     }
 
     public ExternalTransferOrder getExternalTransferOrder() {

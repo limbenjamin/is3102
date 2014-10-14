@@ -35,9 +35,8 @@
                             <div class="list-group-item">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>External Transfer Order Request ID</th>
+                                        <th> External Transfer Order Request ID</th>
                                         <th>Requesting Plant</th>
-                                        <th>Fulfilling Plant</th>
                                         <th>Transfer Date</th>
                                     </tr>
                                     <h:form id="editGRD" class="form-horizontal">
@@ -45,7 +44,6 @@
                                                 <tr>
                                                     <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}"></h:outputText></td>
                                                     <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.name}"></h:outputText></td>
-                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.fulfillingPlant.name}"></h:outputText></td>
                                                     <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.transferDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.timeZoneID}"  />
                                                         </h:outputText></td>

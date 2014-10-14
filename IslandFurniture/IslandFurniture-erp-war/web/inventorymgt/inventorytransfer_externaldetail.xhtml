@@ -112,7 +112,7 @@
                             <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}">
                                 <h:form class="form-horizontal">
                                     <div class="form-group">
-                                        <h:commandButton action="inventorytransfer_externalposted.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addStockUnitfromGoodsReceiptDocument}" value="Post Goods Receipt Document" class="btn btn-primary pull-right btn-extra-right"> 
+                                        <h:commandButton action="inventorytransfer_externalposted.xhtml" actionListener="#{inventoryTransferExternalDetailManagedBean.updateExternalTransferOrderToPosted}" value="Post External Transfer Order Request" class="btn btn-primary pull-right btn-extra-right"> 
                                             <f:param name="id" value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}" />
                                         </h:commandButton>
                                     </div>

@@ -50,30 +50,30 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         storageArea = new StorageArea();
         storageArea.setPlant(plant);
         storageArea.setName(name);
-        
+
         switch (typeName) {
-                case "RECEIVING":
-                    storageArea.setType(StorageAreaType.RECEIVING);
-                    break;
-                case "SHIPPING":
-                    storageArea.setType(StorageAreaType.SHIPPING);
-                    break;
-                case "STORAGE":
-                    storageArea.setType(StorageAreaType.STORAGE);
-                    break;
-                case "STOREFRONT":
-                    storageArea.setType(StorageAreaType.STOREFRONT);
-                    break;
-                case "HOLDING":
-                    storageArea.setType(StorageAreaType.HOLDING);
-                    break;
-                case "PRODUCTION":
-                    storageArea.setType(StorageAreaType.PRODUCTION);
-                    break;
-                default:
-                    break;
-            }
-        
+            case "RECEIVING":
+                storageArea.setType(StorageAreaType.RECEIVING);
+                break;
+            case "SHIPPING":
+                storageArea.setType(StorageAreaType.SHIPPING);
+                break;
+            case "STORAGE":
+                storageArea.setType(StorageAreaType.STORAGE);
+                break;
+            case "STOREFRONT":
+                storageArea.setType(StorageAreaType.STOREFRONT);
+                break;
+            case "HOLDING":
+                storageArea.setType(StorageAreaType.HOLDING);
+                break;
+            case "PRODUCTION":
+                storageArea.setType(StorageAreaType.PRODUCTION);
+                break;
+            default:
+                break;
+        }
+
         em.persist(storageArea);
         em.flush();
     }
@@ -93,30 +93,30 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     public void editStorageArea(Long storageAreaId, String name, String typeName) {
         storageArea = getStorageArea(storageAreaId);
         storageArea.setName(name);
-        
+
         switch (typeName) {
-                case "RECEIVING":
-                    storageArea.setType(StorageAreaType.RECEIVING);
-                    break;
-                case "SHIPPING":
-                    storageArea.setType(StorageAreaType.SHIPPING);
-                    break;
-                case "STORAGE":
-                    storageArea.setType(StorageAreaType.STORAGE);
-                    break;
-                case "STOREFRONT":
-                    storageArea.setType(StorageAreaType.STOREFRONT);
-                    break;
-                case "HOLDING":
-                    storageArea.setType(StorageAreaType.HOLDING);
-                    break;
-                case "PRODUCTION":
-                    storageArea.setType(StorageAreaType.PRODUCTION);
-                    break;
-                default:
-                    break;
-            }
-        
+            case "RECEIVING":
+                storageArea.setType(StorageAreaType.RECEIVING);
+                break;
+            case "SHIPPING":
+                storageArea.setType(StorageAreaType.SHIPPING);
+                break;
+            case "STORAGE":
+                storageArea.setType(StorageAreaType.STORAGE);
+                break;
+            case "STOREFRONT":
+                storageArea.setType(StorageAreaType.STOREFRONT);
+                break;
+            case "HOLDING":
+                storageArea.setType(StorageAreaType.HOLDING);
+                break;
+            case "PRODUCTION":
+                storageArea.setType(StorageAreaType.PRODUCTION);
+                break;
+            default:
+                break;
+        }
+
         em.merge(storageArea);
         em.flush();
     }
@@ -167,7 +167,16 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     public List<StorageBin> viewStorageBinsAtReceivingOnly(Plant plant) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.type=:type");
         q.setParameter("plantId", plant.getId());
-        q.setParameter("type", RECEIVING);
+        q.setParameter("type", StorageAreaType.RECEIVING);
+        return q.getResultList();
+    }
+
+//  Function: To view Storage Bins in Shipping Area only    
+    @Override
+    public List<StorageBin> viewStorageBinsAtShippingOnly(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.type=:type");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("type", StorageAreaType.SHIPPING);
         return q.getResultList();
     }
 
