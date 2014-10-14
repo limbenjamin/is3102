@@ -273,6 +273,10 @@
         <navigation-case>
             <from-outcome>currency</from-outcome>
             <to-view-id>/salesplanning/currency.xhtml</to-view-id>
+        </navigation-case>    
+        <navigation-case>
+            <from-outcome>priceplanning</from-outcome>
+            <to-view-id>/salesplanning/priceplanning.xhtml</to-view-id>
         </navigation-case>                                                               
     </navigation-rule>
 </faces-config>
