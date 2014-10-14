@@ -6,22 +6,27 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.StockUnit;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -38,19 +43,27 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
 
     private Long storageAreaId;
     private Long stockId;
+    private Long plantId;
     private Integer quantity;
     Long id;
 
     private List<StorageBin> storageBinList;
     private List<StorageArea> storageAreaList;
-    private List<StockUnit> stockUnitList;
-    private List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList;
-    private List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList;
+    private List<Stock> stockList;
+    private List<Plant> plantList;
+    private List<ExternalTransferOrderDetail> externalTransferOrderDetailList;
 
     private String username;
     private String externalDateString;
+    private String plantType;
+    private String dateString;
+    private Date dateType;
+    private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private Calendar dateCal;
+
     private Staff staff;
     private Plant plant;
+    private Stock stock;
 
     private ExternalTransferOrder externalTransferOrder;
 
@@ -60,6 +73,8 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     public ManageInventoryTransferLocal transferBean;
     @EJB
     public ManageStorageLocationLocal storageBean;
+    @EJB
+    private ManageOrganizationalHierarchyBeanLocal orgBean;
 
     @PostConstruct
     public void init() {
@@ -67,48 +82,189 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-//        storageAreaList = storageBean.viewStorageArea(plant);
-        stockUnitList = transferBean.viewStockUnitDistinctName(plant);
-
+        stockList = transferBean.viewStock();
         try {
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
             session.setAttribute("transferorderexternalid", id);
         } catch (Exception e) {
-            System.out.println("It is null here *sobs*");
             id = (Long) session.getAttribute("transferorderexternalid");
         }
-        System.out.println("The id is " + id);
         externalTransferOrder = transferBean.getExternalTransferOrder(id);
+        externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
+
+        // start: To display date properly
+        if (externalTransferOrder.getTransferDate() != null) {
+            dateString = df.format(externalTransferOrder.getTransferDate().getTime());
+        }
+
+        if (externalTransferOrder.getRequestingPlant() != null) {
+            plantId = externalTransferOrder.getRequestingPlant().getId();
+        }
+
+        // end: To display date properly
+        // start: To display the Plant List properly
+        plantList = orgBean.displayPlant();
+        plantList.remove(plant);
+        for (Plant l : plantList) {
+            if (l.getClass().getSimpleName().equals("GlobalHQ")) {
+                plantList.remove(l);
+                break;
+            }
+        }
+        for (Plant g : plantList) {
+
+            plantType = g.getClass().getSimpleName();
+            if (plantType.equals("ManufacturingFacility")) {
+                plantType = "MFG";
+            } else if (plantType.equals("CountryOffice")) {
+                plantType = "CO";
+            } else if (plantType.equals("GlobalHQ")) {
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+            }
+
+            g.setName(g.getName() + " " + plantType);
+        }
+
+        // end: To display the Plant List properly
     }
 
-////  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
-//    public void onStorageAreaChange() {
-//        if (storageAreaId != null) {
-//            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
-//        }
-//    }
-//  Function: To create a Replenishment Tranfer Order
-    public void createReplenishmentTransferOrder(ActionEvent event) throws IOException {
-        if (!replenishmentTransferOrderListRequestList.isEmpty()) {
-            for (ReplenishmentTransferOrder r : replenishmentTransferOrderListRequestList) {
-                List<ReplenishmentTransferOrder> checkList = transferBean.viewReplenishmentTransferOrderRequestedForAParticularStock(plant, transferBean.getStock(stockId));
-                if (!checkList.isEmpty()) {
-                    ReplenishmentTransferOrder to = checkList.get(0);
-                    transferBean.editReplenishmentTransferOrderQuantity(to.getId(), quantity + to.getQty());
-                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                            new FacesMessage(FacesMessage.SEVERITY_INFO, "The quantity for the existing Transfer Order for a " + to.getStock().getName() + " has been updated to reflect the increase of quantity.", ""));
+//  Function: To create a External Transfer Order Detail
+    public void addExternalTransferOrderDetail(ActionEvent event) {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("transferorderexternalid");
+        stock = transferBean.getStock(stockId);
+        if (!externalTransferOrderDetailList.isEmpty()) {
+            for (ExternalTransferOrderDetail e : externalTransferOrderDetailList) {
+                if (e.getStock().equals(stock)) {
+                    transferBean.editExternalTransferOrderDetailQtyWhenSameStockIdIsAdded(e.getId(), e.getQty() + quantity);
+                    externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
                     return;
                 }
             }
         }
-        transferBean.createReplenishmentTransferOrder(plant, transferBean.getStock(stockId), quantity);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Transfer Order for a " + transferBean.getStock(stockId).getName() + " has been created.", ""));
+        transferBean.createExternalTransferOrderDetail(id, stockId, quantity);
+        externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
     }
 
-//  Function: To delete a Replenishment Transfer Order  
-    public void deleteReplenishmentTransferOrder(ActionEvent event) throws IOException {
-        transferBean.deleteReplenishmentTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
+//  Function: To edit a External Transfer Order    
+    public void editExternalTransferOrder(ActionEvent event) throws ParseException {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("transferorderexternalid");
+
+        dateType = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+        dateCal = Calendar.getInstance();
+        Date date = dateType;
+        dateCal.setTime(date);
+
+        transferBean.editExternalTransferOrder(externalTransferOrder, dateCal);
+
+    }
+
+//  Function: To edit a External Transfer Order Detail    
+    public void editExternalTransferOrderDetail(ActionEvent event) throws IOException {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("transferorderexternalid");
+        ExternalTransferOrderDetail tod = (ExternalTransferOrderDetail) event.getComponent().getAttributes().get("tod");
+        transferBean.editExternalTransferOrderDetail(tod, (Long) event.getComponent().getAttributes().get("stockId"));
+        externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
+    }
+
+//  Function: To edit a External Transfer Order Detail  
+    public void deleteExternalTransferOrderDetail(ActionEvent event) throws IOException {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("transferorderexternalid");
+        ExternalTransferOrderDetail externalTransferOrderDetail = (ExternalTransferOrderDetail) event.getComponent().getAttributes().get("tod");
+        transferBean.deleteExternaTransferOrderDetail(externalTransferOrderDetail);
+        externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
+    }
+
+    //  Function: To edit a External Transfer Order Detail  
+    public void updateExternalTransferOrderToPosted(ActionEvent event) throws IOException {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("transferorderexternalid");
+//        ExternalTransferOrderDetail externalTransferOrderDetail = (ExternalTransferOrderDetail) event.getComponent().getAttributes().get("tod");
+//        transferBean.deleteExternaTransferOrderDetail(externalTransferOrderDetail);
+//        externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
+    }
+
+    public Calendar getDateCal() {
+        return dateCal;
+    }
+
+    public void setDateCal(Calendar dateCal) {
+        this.dateCal = dateCal;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+    }
+
+    public Date getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(Date dateType) {
+        this.dateType = dateType;
+    }
+
+    public DateFormat getDf() {
+        return df;
+    }
+
+    public void setDf(DateFormat df) {
+        this.df = df;
+    }
+
+    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
+        return orgBean;
+    }
+
+    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
+        this.orgBean = orgBean;
+    }
+
+    public String getPlantType() {
+        return plantType;
+    }
+
+    public void setPlantType(String plantType) {
+        this.plantType = plantType;
+    }
+
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
+    }
+
+    public List<ExternalTransferOrderDetail> getExternalTransferOrderDetailList() {
+        return externalTransferOrderDetailList;
+    }
+
+    public void setExternalTransferOrderDetailList(List<ExternalTransferOrderDetail> externalTransferOrderDetailList) {
+        this.externalTransferOrderDetailList = externalTransferOrderDetailList;
+    }
+
+    public Long getPlantId() {
+        return plantId;
+    }
+
+    public void setPlantId(Long plantId) {
+        this.plantId = plantId;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     public String getExternalDateString() {
@@ -175,28 +331,12 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         this.quantity = quantity;
     }
 
-    public List<StockUnit> getStockUnitList() {
-        return stockUnitList;
+    public List<Stock> getStockList() {
+        return stockList;
     }
 
-    public void setStockUnitList(List<StockUnit> stockUnitList) {
-        this.stockUnitList = stockUnitList;
-    }
-
-    public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListRequestList() {
-        return replenishmentTransferOrderListRequestList;
-    }
-
-    public void setReplenishmentTransferOrderListRequestList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList) {
-        this.replenishmentTransferOrderListRequestList = replenishmentTransferOrderListRequestList;
-    }
-
-    public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListFulfilledList() {
-        return replenishmentTransferOrderListFulfilledList;
-    }
-
-    public void setReplenishmentTransferOrderListFulfilledList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList) {
-        this.replenishmentTransferOrderListFulfilledList = replenishmentTransferOrderListFulfilledList;
+    public void setStockList(List<Stock> stockList) {
+        this.stockList = stockList;
     }
 
     public String getUsername() {

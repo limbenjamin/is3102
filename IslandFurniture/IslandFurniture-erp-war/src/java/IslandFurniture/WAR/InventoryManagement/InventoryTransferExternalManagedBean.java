@@ -12,6 +12,7 @@ import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -20,12 +21,12 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
-
 
 /**
  *
@@ -78,12 +79,18 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 
 //  Function: To delete a External Transfer Order  
     public void deleteExternalTransferOrder(ActionEvent event) throws IOException {
-//        transferBean.deleteExternalTransferOrder((Long) event.getComponent().getAttributes().get("toId"));
+        ExternalTransferOrder to = (ExternalTransferOrder) event.getComponent().getAttributes().get("to");
+        for (ExternalTransferOrderDetail g : transferBean.viewExternalTransferOrderDetail(to.getId())) {
+            transferBean.deleteExternaTransferOrderDetail(g);
+        }
+        transferBean.deleteExternaTransferOrder(to.getId());
+        externalTransferOrderListRequestList = transferBean.viewExternalTransferOrderRequested(plant);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The External Transfer Order was successfully deleted", ""));
     }
 
-    
-    
-    public Long getStorageAreaId() {
+
+public Long getStorageAreaId() {
         return storageAreaId;
     }
 

@@ -21,13 +21,10 @@
                     <div class="col-md-10"> 
 
                         <span class="pull-right">
-                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#fromPO">
-                                <i class="fa fa-fw fa-plus"></i> Populate from Purchase Order
-                            </button>
-                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addStock">
                                 <i class="fa fa-fw fa-plus"></i> Add Stock
                             </button>   
-                            <a href="goodsreceipt.xhtml">
+                            <a href="inventorytransfer_external.xhtml">
                                 <button type="button" class="btn btn-sm btn-default pull-right">
                                     <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
                                 </button>
@@ -43,13 +40,122 @@
                                 External Transfer Order Document Details
                             </div>
                             <div class="list-group-item">
-
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Requesting Plant</th>
+                                        <th>Date</th>
+                                        <th>Update</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <tr>
+                                            <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.name}" /></td>
+                                            <td><h:inputText id="date" value="#{inventoryTransferExternalDetailManagedBean.dateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
+                                            <td>
+                                                <h:commandButton action="inventorytransfer_externaldetail" actionListener="#{inventoryTransferExternalDetailManagedBean.editExternalTransferOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                            </td>
+                                        </tr>
+                                    </h:form> 
+                                </table>    
                             </div>
                         </section>
-                        
+
                         <br/>
 
-                    
+                        <section name="Table of Contents of the External Transfer Order Document Details">
+                            <div class="panel-heading dashboard-title-panel">
+                                List of External Transfer Order Document Details
+                            </div>
+                            <div class="list-group-item">  
+                                <h:outputText rendered="#{empty inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}" value="There are no external transfer order details"/>
+                                <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Stock</th>
+                                            <th>Quantity</th>
+                                            <th>Update</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}" var="tod">
+                                                <tr>
+                                                    <td><h:selectOneMenu class="form-control needauto" value="#{tod.stock.id}">
+                                                            <f:selectItems value="#{inventoryTransferExternalDetailManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                        </h:selectOneMenu>
+                                                    </td>
+                                                    <td><h:inputText value="#{tod.qty}" class="form-control"></h:inputText></td>
+                                                    <td>
+                                                        <h:commandButton action="inventorytransfer_externaldetail" actionListener="#{inventoryTransferExternalDetailManagedBean.editExternalTransferOrderDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="tod" value="#{tod}" />
+                                                            <f:attribute name="stockId" value="#{tod.stock.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                                    </td>
+                                                    <td>
+                                                        <h:commandButton action="inventorytransfer_externaldetail" actionListener="#{inventoryTransferExternalDetailManagedBean.deleteExternalTransferOrderDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="tod" value="#{tod}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+
+                        <br/>
+
+                        <section name="Post External Transfer Order Request"> 
+                            <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}">
+                                <h:form class="form-horizontal">
+                                    <div class="form-group">
+                                        <h:commandButton action="inventorytransfer_externalposted.xhtml" actionListener="#{goodsReceiptDocumentManagedBean.addStockUnitfromGoodsReceiptDocument}" value="Post Goods Receipt Document" class="btn btn-primary pull-right btn-extra-right"> 
+                                            <f:param name="id" value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:form>
+                            </h:panelGroup>
+                        </section>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addStock" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Stock to External Transfer Order</h4>
+                                    </div>
+                                    <h:form id="createGRDD" class="form-horizontal">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Stock: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferExternalDetailManagedBean.stockId}" pt:required="true">
+                                                        <f:selectItem itemLabel="Select Stock"/>
+                                                        <f:selectItems value="#{inventoryTransferExternalDetailManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText id="stockQuantity" pt:type="number"  pt:required="true" class="form-control" value="#{inventoryTransferExternalDetailManagedBean.quantity}"></h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="inventorytransfer_externaldetail" actionListener="#{inventoryTransferExternalDetailManagedBean.addExternalTransferOrderDetail}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div> 
+
                     </div>
                 </div>
             </ui:define>
