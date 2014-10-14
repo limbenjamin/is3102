@@ -14,6 +14,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Enums.TransferOrderStatus;
+import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -295,6 +296,14 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.remove(externalTransferOrder);
         em.flush();
     }
+    
+    //  Function: To delete a External Transfer Order Detail
+    @Override
+    public void deleteExternaTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail) {
+        externalTransferOrderDetail = (ExternalTransferOrderDetail) em.find(ExternalTransferOrderDetail.class, externalTransferOrderDetail.getId());
+        em.remove(externalTransferOrderDetail);
+        em.flush();
+    }
 
     //  Function: To edit the Quantity of a External Transfer Order Detail (Requested)
     @Override
@@ -333,4 +342,57 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();
     }
+
+    //  Function: To display list of External Transfer Order Details in a External Transfer Order    
+    @Override
+    public List<ExternalTransferOrderDetail> viewExternalTransferOrderDetail(Long id) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrderDetail s WHERE s.extTransOrder.id=:id");
+        q.setParameter("id", id);
+        return q.getResultList();
+    }
+
+    //  Function: To edit/add the quantity of a External Transfer Order Detail, when a same Stock is added to the External Transfer Order
+    @Override
+    public void editExternalTransferOrderDetailQtyWhenSameStockIdIsAdded(Long id, Integer qty) {
+        externalTransferOrderDetail = (ExternalTransferOrderDetail) em.find(ExternalTransferOrderDetail.class, id);
+        externalTransferOrderDetail.setQty(qty);
+        em.merge(externalTransferOrderDetail);
+        em.flush();
+        em.refresh(externalTransferOrderDetail);
+    }
+    
+//  Function: To create External Transfer Order Detail    
+    @Override
+    public void createExternalTransferOrderDetail(Long id, Long stockId, Integer quantity) {
+        externalTransferOrderDetail = new ExternalTransferOrderDetail();
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, id);
+        stock = (Stock) em.find(Stock.class, stockId);
+        externalTransferOrderDetail.setExtTransOrder(externalTransferOrder);
+        externalTransferOrderDetail.setStock(stock);
+        externalTransferOrderDetail.setQty(quantity);
+        externalTransferOrder.getExtTransOrderDetails().add(externalTransferOrderDetail);
+        em.persist(externalTransferOrderDetail);
+        em.merge(externalTransferOrder);
+        em.flush();
+    }
+
+//  Function: To edit External Transfer Order Detail    
+    @Override
+    public void editExternalTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail, Long stockId) {
+        stock = (Stock) em.find(Stock.class, stockId);
+        externalTransferOrderDetail.setStock(stock);
+        externalTransferOrderDetail.setQty(externalTransferOrderDetail.getQty());
+        em.merge(externalTransferOrderDetail);
+        em.flush();
+    }
+    
+//  Function: To edit External Transfer Order  
+    @Override
+    public void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal) {
+        externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, externalTransferOrder.getId());
+        externalTransferOrder.setTransferDate(cal);
+        em.merge(externalTransferOrder);
+        em.flush();
+    }
+    
 }

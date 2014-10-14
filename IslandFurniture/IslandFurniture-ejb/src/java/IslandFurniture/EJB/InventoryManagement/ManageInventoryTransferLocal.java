@@ -6,12 +6,14 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.ExternalTransferOrder;
+import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -101,5 +103,23 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To obtain the ExternalTransferOrder entity;
     ExternalTransferOrder getExternalTransferOrder(Long id);
+
+    //  Function: To display list of External Transfer Order Details in a External Transfer Order    
+    List<ExternalTransferOrderDetail> viewExternalTransferOrderDetail(Long id);
+
+    //  Function: To edit/add the quantity of a External Transfer Order Detail, when a same Stock is added to the External Transfer Order
+    void editExternalTransferOrderDetailQtyWhenSameStockIdIsAdded(Long id, Integer qty);
+
+    //  Function: To create External Transfer Order Detail    
+    void createExternalTransferOrderDetail(Long id, Long stockId, Integer quantity);
+
+    //  Function: To edit External Transfer Order Detail    
+    void editExternalTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail, Long stockId);
+
+    //  Function: To delete a External Transfer Order Detail
+    void deleteExternaTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail);
+
+    //  Function: To edit External Transfer Order  
+    void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal);
 
 }

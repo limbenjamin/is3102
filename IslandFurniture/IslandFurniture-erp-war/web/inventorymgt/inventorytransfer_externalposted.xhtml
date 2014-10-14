@@ -1,16 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="inventorytransfer_external.xhtml">External Transfer Order</a></li>
+                            <li class="active"><strong>External Transfer Order Request ##{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}</strong></li>
+                        </ol>                      
+                    </div>                    
+                    <div class="col-md-8">  
+                        <span class="pull-right">
+                            <a href="inventorytransfer_external.xhtml">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>
+                        </span>                        
+                        <h4>External Transfer Order Request ##{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}</h4><hr></hr>
+                    </div>
+                    <div class="col-md-8">                      
+                        <section name="External Transfer Order">
+                            <div class="panel-heading dashboard-title-panel">
+                                External Transfer Order Request Details
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th> External Transfer Order Request ID</th>
+                                        <th>Requesting Plant</th>
+                                        <th>Transfer Date</th>
+                                    </tr>
+                                    <h:form id="editGRD" class="form-horizontal">
+                                            <tr>
+                                                <tr>
+                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}"></h:outputText></td>
+                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.name}"></h:outputText></td>
+                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.transferDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                </tr>
+                                            </tr>
+                                    </h:form> 
+                                </table>
+                            </div>
+                        </section>
+
+                        <br/>
+
+                        <section name="External Transfer Order Details">
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Stock Items Requested
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Stock</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrderDetailList}" var="e">
+                                            <tr>
+                                                <td><h:outputText value="#{e.stock.name}"/></td>
+                                                <td><h:outputText value="#{e.qty}"/></td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>

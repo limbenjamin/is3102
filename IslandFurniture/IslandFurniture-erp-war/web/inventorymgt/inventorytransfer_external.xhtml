@@ -22,9 +22,7 @@
                     <div class="col-md-10"> 
                         <span class="pull-right">
                             <h:form id="createGRD1"> 
-                                <h:commandButton  actionListener="#{inventoryTransferExternalManagedBean.createExternalTransferOrder}" value="Create External Transfer Order" class="btn btn-sm btn-success pull-right">
-                                    
-                                </h:commandButton>
+                                <h:commandButton  actionListener="#{inventoryTransferExternalManagedBean.createExternalTransferOrder}" value="Create External Transfer Order" class="btn btn-sm btn-success pull-right" />
                             </h:form> 
                         </span>   
                         <h4>External Transfer Order</h4><hr></hr>
@@ -33,25 +31,26 @@
                     <!--Start Body-->
                     <div class="col-md-10">                      
                         <ul class="nav nav-tabs dashboard-tabs" role="tablist">
-                            <li class="active"><a href="#requested" role="tab" data-toggle="tab">Requested</a></li>
-                            <li><a href="#fulfilled" role="tab" data-toggle="tab">Fulfilled</a></li>
+                            <li class="active"><a href="#request" role="tab" data-toggle="tab">Request</a></li>
+                            <li><a href="#fulfill" role="tab" data-toggle="tab">Fulfill</a></li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div class="tab-pane active" id="requested">                        
+                            <div class="tab-pane active" id="request">                        
                                 <section name="Requested Tranfer Order" class="panel">  
                                     <div class="panel-heading dashboard-title-panel">
-                                        Requested External Transfer Orders
+                                         Pending External Transfer Orders Request
                                     </div>
                                     <div class="list-group-item">
-                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}" value="There are no requested External Transfer Order"/>
+                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}" value="There are no pending External Transfer Order Request"/>
                                         <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}">
                                             <table class="table table-hover">
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Requesting Plant</th>
                                                     <th>Date</th>
+                                                    <th>Edit</th>
                                                     <th>Delete</th>
                                                 </tr>
                                                 <h:form class="form-horizontal">
@@ -64,13 +63,61 @@
                                                                 <h:outputText value="#{list.requestingPlant.name}"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText></h:outputText>
+                                                                <h:outputText value="#{list.transferDate.time}" >
+                                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{list.requestingPlant.timeZoneID}"  />
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td> <h:commandButton action="inventorytransfer_externaldetail" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                                    <f:param name="id" value="#{list.id}" />
+                                                                </h:commandButton>
+                                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
                                                             </td>
                                                             <td>
                                                                 <h:commandButton action="inventorytransfer_external" actionListener="#{inventoryTransferExternalManagedBean.deleteExternalTransferOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                                    <f:attribute name="toId" value="#{list.id}" />
+                                                                    <f:attribute name="to" value="#{list}" />
                                                                 </h:commandButton>                                                    
                                                                 <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </h:form> 
+                                            </table>
+                                        </h:panelGroup>
+                                    </div>
+                                    
+                                    <br/>
+                                    
+                                    <div class="panel-heading dashboard-title-panel">
+                                         Posted External Transfer Orders Request 
+                                    </div>
+                                    <div class="list-group-item">
+                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}" value="There are no posted External Transfer Order Request"/>
+                                        <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}">
+                                            <table class="table table-hover">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Requesting Plant</th>
+                                                    <th>Date</th>
+                                                    <th>View</th>
+                                                </tr>
+                                                <h:form class="form-horizontal">
+                                                    <ui:repeat value="#{inventoryTransferExternalManagedBean.externalTransferOrderListRequestList}" var="list">
+                                                        <tr>
+                                                            <td>
+                                                                <h:outputText value="#{list.id}"></h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{list.requestingPlant.name}"></h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{list.transferDate.time}" >
+                                                                    <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{list.requestingPlant.timeZoneID}"  />
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td> <h:commandButton action="inventorytransfer_externalposted" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                                    <f:param name="id" value="#{list.id}" />
+                                                                </h:commandButton>
+                                                                <i class="fa fa-lg fa-file-o icon-button"></i>
                                                             </td>
                                                         </tr>
                                                     </ui:repeat>
@@ -81,13 +128,51 @@
                                 </section>
                             </div>
 
-                            <div class="tab-pane" id="fulfilled">                        
-                                <section name="Requested Tranfer Order" class="panel">  
+                            <div class="tab-pane" id="fulfill">                        
+                                <section name="Fuilfill Transfer Order" class="panel">  
                                     <div class="panel-heading dashboard-title-panel">
-                                        Fulfilled External Transfer Orders
+                                         Pending Fulfill External Transfer Orders
                                     </div>
                                     <div class="list-group-item">
-                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}" value="There are no fulfilled External Transfer Order"/>
+                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}" value="There are no pending External Transfer Order Fulfillment"/>
+                                        <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}">
+                                            <table class="table table-hover">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Requesting Plant</th>
+                                                    <th>Fulfilling Plant</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                                <h:form class="form-horizontal">
+                                                    <ui:repeat value="#{inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}" var="list">
+                                                        <tr>
+                                                            <td>
+                                                                <h:outputText value="#{list.id}"></h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{list.requestingPlant.name}"></h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{list.fulfillingPlant.name}"></h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText></h:outputText>
+
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </h:form> 
+                                            </table>
+                                        </h:panelGroup>
+                                    </div>
+                                    
+                                    <br/>
+                                    
+                                    <div class="panel-heading dashboard-title-panel">
+                                         Posted Fulfill External Transfer Orders
+                                    </div>
+                                    <div class="list-group-item">
+                                        <h:outputText rendered="#{empty inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}" value="There are no posted External Transfer Order Fulfillment"/>
                                         <h:panelGroup layout="block" rendered="#{not empty inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledList}">
                                             <table class="table table-hover">
                                                 <tr>
