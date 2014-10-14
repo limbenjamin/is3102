@@ -85,7 +85,7 @@ public class StockSupplierManagedBean implements Serializable {
         mfList = supplierManager.getListOfMF();
         stockList = supplierManager.getListOfStock();
     }
-    public String deleteStockSupplyRequest(ActionEvent event) {
+    public String deleteStockSupplyRequest(ActionEvent event) { 
         System.out.println("StockSupplierManagedBean.deleteStockSupplyRequest()");
         String sID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("sID");
         String mfID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("mfID");
@@ -100,7 +100,7 @@ public class StockSupplierManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock Supply Request has been successfully deleted", ""));    
         }
-        return "stocksupplier";
+        return "stocksupplier#newSS";
     }
     public String addStockSupplyRequest(ActionEvent event) {
         System.out.println("StockSupplierManagedBean.addStockSupplyRequest()");

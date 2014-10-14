@@ -44,6 +44,7 @@ public class StockSupplied implements Serializable {
 
     // The currency of stated price is determined by CountryOffice's Country's Currency
     private Double price;
+    private Double cost;
 
     public StockSupplied() {
 
@@ -79,6 +80,14 @@ public class StockSupplied implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
     }
 
     @Override

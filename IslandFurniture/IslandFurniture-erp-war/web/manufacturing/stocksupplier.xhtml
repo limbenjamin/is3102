@@ -65,7 +65,7 @@
                                     <div class="modal-body"> 
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Country Office: </label>
-                                            <div class="col-sm-8"> 
+                                            <div class="col-sm-7"> 
                                                 <h:selectOneMenu id="cID" class="form-control needauto" pt:required="required">         
                                                     <f:selectItem itemLabel="Select Country Office" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{stockSupplierManagedBean.countryList}" var="c" itemLabel="#{c.name} (CO)" itemValue="#{c.id}" />
@@ -74,7 +74,7 @@
                                         </div>  
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Manufacturing Facility: </label>
-                                            <div class="col-sm-8"> 
+                                            <div class="col-sm-7"> 
                                                 <h:selectOneMenu id="mfID" class="form-control needauto" pt:required="required">          
                                                     <f:selectItem itemLabel="Select Manufacturing Facility" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{stockSupplierManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
@@ -83,7 +83,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Stock: </label>
-                                            <div class="col-sm-8">
+                                            <div class="col-sm-7">
                                                 <h:selectOneMenu id="sID" class="form-control needauto" pt:required="required">          
                                                     <f:selectItem itemLabel="Select Stock" itemValue="" noSelectionOption="true" />
                                                     <f:selectItems value="#{stockSupplierManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />

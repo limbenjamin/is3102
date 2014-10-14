@@ -48,7 +48,7 @@
                                 <div class="form-group"> 
                                     <label class="col-sm-5 control-label">Furniture Sub-category: </label>          
                                     <div class="col-sm-7"> 
-                                        <h:selectOneMenu id="subcategoryField" class="form-control" value="#{bOMManagedBean.furniture.subcategory}"> 
+                                        <h:selectOneMenu id="subcategoryField" class="form-control needauto" value="#{bOMManagedBean.furniture.subcategory}"> 
                                             <f:selectItems value="#{bOMManagedBean.subcategoryList}" var="subcategory" 
                                                            itemLabel="#{subcategory}" itemValue="#{subcategory}" />
                                             <f:ajax render="subcategoryField" listener="#{bOMManagedBean.editFurnitureSubcategory}" />

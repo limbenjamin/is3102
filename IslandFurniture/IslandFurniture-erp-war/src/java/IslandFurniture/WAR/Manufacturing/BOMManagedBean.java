@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
@@ -46,6 +45,7 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class BOMManagedBean implements Serializable {
+
     @EJB
     private CurrencyManagerLocal currencyManager;
     @EJB
@@ -54,7 +54,7 @@ public class BOMManagedBean implements Serializable {
     private SupplierManagerLocal supplierManager;
     @EJB
     private StockManagerLocal stockManager;
-    
+
     private FurnitureModel furniture = null;
     private BOMDetail BOMdetail = null;
     private Long furnitureID;
@@ -199,22 +199,23 @@ public class BOMManagedBean implements Serializable {
     public void setDescriptionTooLong(boolean descriptionTooLong) {
         this.descriptionTooLong = descriptionTooLong;
     }
-    
+
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
         System.out.println("init:BOMManagedBean");
         this.furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("fID");
         try {
-            if(furnitureID == null) {
+            if (furnitureID == null) {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                ec.redirect("furniture.xhtml"); 
+                ec.redirect("furniture.xhtml");
             } else {
                 System.out.println("FurnitureID is " + furnitureID);
                 this.furniture = stockManager.getFurniture(furnitureID);
                 displayPrice = false;
-                if(this.furniture.getPrice() != null)
+                if (this.furniture.getPrice() != null) {
                     displayPrice = true;
+                }
                 this.materialList = stockManager.displayMaterialList();
                 this.bomList = stockManager.displayBOM(furnitureID);
                 this.uneditable = this.furniture.getBom().isUneditable();
@@ -222,163 +223,182 @@ public class BOMManagedBean implements Serializable {
                 this.categoryList = new ArrayList<>(EnumSet.allOf(FurnitureCategory.class));
                 this.countryList = supplierManager.getListOfCountryOffice();
                 this.storeList = manageOrganizationalHierarchyBean.displayStore();
-                this.descriptionTooLong = this.furniture.getFurnitureDescription().length() > 20;
+                if (this.furniture.getFurnitureDescription() == null) {
+                    this.descriptionTooLong = false;
+                } else {
+                    this.descriptionTooLong = this.furniture.getFurnitureDescription().length() > 20;
+                }
                 countryListNeedingPrice = new HashSet<>();
-                for(Store s : storeList)
+                for (Store s : storeList) {
                     countryListNeedingPrice.add(s.getCountry());
+                }
                 this.storeInCountry = new ArrayList<>(countryListNeedingPrice);
-                if(uneditable) 
+                if (uneditable) {
                     System.out.println("Furniture's BOM cannot be edited");
-                else
+                } else {
                     System.out.println("Furniture's BOM can be edited");
+                }
                 System.out.println("BOMDetailList has " + this.bomList.size() + " items");
                 this.listSize = this.bomList.size();
             }
-        } catch(IOException ex) {
-            
+        } catch (IOException ex) {
+
         }
     }
-    
+
     public String addToBOM(ActionEvent event) {
         System.out.println("BOMManagedBean.addBOM()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String furID = request.getParameter("addToBOMForm:fID");
         String mID = request.getParameter("addToBOMForm:materialID");
         String mQuantity = request.getParameter("addToBOMForm:materialQuantity");
-        if(mID.isEmpty() || mQuantity.isEmpty()) { 
+        if (mID.isEmpty() || mQuantity.isEmpty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Incomplete form", ""));    
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());  
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
-        return "bom";
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Incomplete form", ""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+            return "bom";
         }
         System.out.println("FurnitureID is " + furID + ". materialID is " + mID + ". materialQuantity is " + mQuantity);
         String msg = stockManager.addToBOM(Long.parseLong(furID), Long.parseLong(mID), Integer.parseInt(mQuantity));
-        if(msg != null) {
+        if (msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));   
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Material successfully added into BOM", ""));        
-        } 
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
-        return "bom";
-    }
-    
-    public String editBOM(ActionEvent event) throws IOException {
-        System.out.println("BOMManagedBean.editBOM()");
-        BOMdetail = (BOMDetail) event.getComponent().getAttributes().get("toEdit");
-        String msg = stockManager.editBOMDetail(BOMdetail.getId(), BOMdetail.getQuantity());       
-        if(msg != null) { 
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been updated", ""));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Material successfully added into BOM", ""));
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
     }
+
+    public String editBOM(ActionEvent event) throws IOException {
+        System.out.println("BOMManagedBean.editBOM()");
+        BOMdetail = (BOMDetail) event.getComponent().getAttributes().get("toEdit");
+        String msg = stockManager.editBOMDetail(BOMdetail.getId(), BOMdetail.getQuantity());
+        if (msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been updated", ""));
+        }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
+    }
+
     public String deleteBOM() {
         System.out.println("BOMManagedBean.deleteBOM()");
         String ID = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bomID");
         System.out.println("ID is " + ID);
         Long id = new Long(ID);
-        String msg = stockManager.deleteBOMDetail(id);        
-        if(msg != null) { 
+        String msg = stockManager.deleteBOMDetail(id);
+        if (msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been successfully deleted", ""));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "BOM Detail has been successfully deleted", ""));
         }
         System.out.println("After deletion, BOMDetailList has " + bomList.size() + " items");
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
     }
+
     public void addMaterial(AjaxBehaviorEvent event) {
         System.out.println("BOMManagedBean.addMaterial()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String name = null;
         String weight = null;
         name = request.getParameter("addNewMaterialForm:materialName");
-        weight = request.getParameter("addNewMaterialForm:materialWeight"); 
+        weight = request.getParameter("addNewMaterialForm:materialWeight");
         System.out.println("Name is " + name + ". Weight is " + weight);
-        if(name.isEmpty() || weight.isEmpty() || name == null || weight == null) {
+        if (name.isEmpty() || weight.isEmpty() || name == null || weight == null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incomplete form", "")); 
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Incomplete form", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         }
-        if(stockManager.addMaterial(name, Double.parseDouble(weight))) {
+        if (stockManager.addMaterial(name, Double.parseDouble(weight))) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully created Material \"" + name + "\"", ""));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully created Material \"" + name + "\"", ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Material \"" + name + "\" already exists in database", ""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Material \"" + name + "\" already exists in database", ""));
         }
         this.materialList = stockManager.displayMaterialList();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
     }
+
     public void editFurnitureCategory(AjaxBehaviorEvent event) {
         System.out.println("BOMManagedBean.editFurnitureCategory()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String category = request.getParameter("categoryForm:categoryField");
         FurnitureCategory fc = FurnitureCategory.valueOf(category);
         stockManager.editFurnitureCategory(furnitureID, fc);
-        this.furniture.setCategory(fc); 
+        this.furniture.setCategory(fc);
     }
+
     public void editFurnitureSubcategory(AjaxBehaviorEvent event) {
         System.out.println("BOMManagedBean.editFurnitureSubcategory()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String category = request.getParameter("categoryForm:subcategoryField");
         FurnitureSubcategory fc = FurnitureSubcategory.valueOf(category);
         stockManager.editFurnitureSubcategory(furnitureID, fc);
-        this.furniture.setSubcategory(fc); 
+        this.furniture.setSubcategory(fc);
     }
+
     public Double outputPrice(Country country) {
-        if(this.furniture.getPrice() == null) 
+        if (this.furniture.getPrice() == null) {
             return null;
+        }
         DecimalFormat df = new DecimalFormat("#.00");
-        if(country.getCurrency().getExchangeRates().size() <= 0) 
+        if (country.getCurrency().getExchangeRates().size() <= 0) {
             return Double.parseDouble(df.format(0.0));
-        Double exchangeRate = country.getCurrency().getExchangeRates().get(country.getCurrency().getExchangeRates().size()-1).getExchangeRate();
+        }
+        Double exchangeRate = country.getCurrency().getExchangeRates().get(country.getCurrency().getExchangeRates().size() - 1).getExchangeRate();
         return currencyManager.computeRetailPriceWithExchangeRate(this.furniture.getPrice(), exchangeRate);
     }
+
     public String updatePrice() {
         System.out.println("BOMManagedBean.updatePrice()");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String price = request.getParameter("pricingForm:price");
-        String msg = stockManager.editFurnitureModel(furnitureID, this.furniture.getName(), Double.parseDouble(price));      
-        if(msg != null) { 
+        String msg = stockManager.editFurnitureModel(furnitureID, this.furniture.getName(), Double.parseDouble(price));
+        if (msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
-        } 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
+        }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
     }
+
     public String updateDescription() {
         System.out.println("BOMManagedBean.updateDescription()");
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String description = request.getParameter("descriptionForm:description");
-        String msg = stockManager.editFurnitureDescription(furnitureID, description);     
-        if(msg != null) { 
+        String msg = stockManager.editFurnitureDescription(furnitureID, description);
+        if (msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
-        } 
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture Description has been successfully updated", ""));
+        }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
     }
+
     public String truncateDescription() {
         System.out.println("BOMManagedBean.truncateDescription()");
-        if(this.furniture.getFurnitureDescription().length() > 20) 
+        if(this.furniture.getFurnitureDescription() == null)
+            return "";
+        else if (this.furniture.getFurnitureDescription().length() > 20) {
             return this.furniture.getFurnitureDescription().substring(0, 20) + " ...";
-        else 
+        } else {
             return this.furniture.getFurnitureDescription();
+        }
     }
 }
