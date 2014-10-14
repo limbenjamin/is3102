@@ -40,6 +40,7 @@ public class StockManager implements StockManagerLocal {
     @PersistenceContext
     EntityManager em;
     
+    @Override
     public boolean addMaterial(String name, Double weight) {
         Material material;
         try{
@@ -63,6 +64,7 @@ public class StockManager implements StockManagerLocal {
             return false;
         }
     }
+    @Override
     public List displayMaterialList() {
         Material material;
         List<Material> materialList;
@@ -76,8 +78,9 @@ public class StockManager implements StockManagerLocal {
         } catch(Exception ex) {
             ex.printStackTrace();
             return null;
-        }
+        } 
     }
+    @Override
     public boolean updateMaterial(Long id, String name, Double weight) {
         Material material;
         try {
@@ -93,6 +96,7 @@ public class StockManager implements StockManagerLocal {
             return false;
         }
     }
+    @Override
     public String deleteMaterial(Long materialID) {
         Material material;
         List<BOMDetail> bomList;
@@ -120,6 +124,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured during deletion";
         }
     }
+    @Override
     public String addFurnitureModel(String name, Double price) {
         FurnitureModel fm;
         BOM bom;
@@ -148,6 +153,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public FurnitureModel getFurniture(Long id) {
         FurnitureModel furniture;
         try {
@@ -159,6 +165,7 @@ public class StockManager implements StockManagerLocal {
             return null;
         }
     }
+    @Override
     public List<FurnitureModel> displayFurnitureList() {
         List furnitureList;
         try {
@@ -170,6 +177,7 @@ public class StockManager implements StockManagerLocal {
             return null;
         }
     }   
+    @Override
     public String editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
         FurnitureModel fm;
         try {
@@ -185,6 +193,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public String deleteFurnitureModel(Long furnitureID) {
         FurnitureModel fm;
         List<StockSupplied> stockList;
@@ -217,6 +226,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public String editFurnitureCategory(Long furnitureID, FurnitureCategory category) {
         FurnitureModel fm;
         try {
@@ -229,6 +239,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category) {
         FurnitureModel fm;
         try {
@@ -241,6 +252,20 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
+    public String editFurnitureDescription(Long furnitureID, String description) {
+        FurnitureModel fm;
+        try {
+            System.out.println("StockManager.editFurnitureDescription()");
+            fm = em.find(FurnitureModel.class, furnitureID);
+            fm.setFurnitureDescription(description);
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured";
+        }
+    }
+    @Override
     public void addFurnitureColour(Long furnitureID, String colour) {
         FurnitureModel fm;
         List colourList;
@@ -267,6 +292,7 @@ public class StockManager implements StockManagerLocal {
             System.err.println("Can't find name");
         }
     }
+    @Override
     public String addToBOM(Long furnitureID, Long materialID, Integer materialQuantity) {
         Material material;
         FurnitureModel fm;
@@ -308,6 +334,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public List displayBOM(Long furnitureID) {
         FurnitureModel fm;
         List<BOMDetail> BOMdetailsList;
@@ -321,6 +348,7 @@ public class StockManager implements StockManagerLocal {
             return null;
         }
     }
+    @Override
     public String editBOMDetail(Long BOMDetailID, Integer quantity) {
         BOMDetail BOMdetail;
         try {
@@ -334,6 +362,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpect error occured";
         }
     }
+    @Override
     public String deleteBOMDetail(Long BOMDetailID) {
         BOMDetail BOMdetail;
         BOM bom;
@@ -350,6 +379,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpect error occured";
         } 
     }
+    @Override
     public List<RetailItem> displayItemList() {
         List<RetailItem> itemList;
         try {
@@ -361,6 +391,7 @@ public class StockManager implements StockManagerLocal {
         }
         
     }
+    @Override
     public String editRetailItem(Long itemID, String itemName, Double itemPrice) {
         RetailItem item;
         try {
@@ -374,6 +405,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public String deleteRetailItem(Long itemID) {
         RetailItem item;
         List<StockSupplied> stockList;
@@ -402,6 +434,7 @@ public class StockManager implements StockManagerLocal {
             return "Unexpected error occured";
         }
     }
+    @Override
     public String addRetailItem(String itemName, Double itemPrice) {
         RetailItem item;
         try {

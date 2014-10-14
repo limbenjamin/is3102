@@ -41,6 +41,7 @@ public class FurnitureModel extends Stock implements Serializable {
     private FurnitureCategory category;
     private FurnitureSubcategory subcategory;
     private List colour;
+    private String furnitureDescription;
 
     public FurnitureModel() {
         
@@ -98,6 +99,14 @@ public class FurnitureModel extends Stock implements Serializable {
 
     public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
         this.productionCapacity = productionCapacity;
+    }
+
+    public String getFurnitureDescription() {
+        return furnitureDescription;
+    }
+
+    public void setFurnitureDescription(String furnitureDescription) {
+        this.furnitureDescription = furnitureDescription;
     }
 
     @Override

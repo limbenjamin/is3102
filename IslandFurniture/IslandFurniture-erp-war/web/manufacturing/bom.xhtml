@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-5 control-label">Furniture Category: </label>           
                                     <div class="col-sm-7">
-                                        <h:selectOneMenu id="categoryField" class="form-control needauto" value="#{bOMManagedBean.furniture.category}">
+                                        <h:selectOneMenu id="categoryField" class="form-control" value="#{bOMManagedBean.furniture.category}">
                                             <f:selectItems value="#{bOMManagedBean.categoryList}" var="category" 
                                                            itemLabel="#{category}" itemValue="#{category}" />
                                             <f:ajax render="categoryField" listener="#{bOMManagedBean.editFurnitureCategory}" />
@@ -48,7 +48,7 @@
                                 <div class="form-group"> 
                                     <label class="col-sm-5 control-label">Furniture Sub-category: </label>          
                                     <div class="col-sm-7"> 
-                                        <h:selectOneMenu id="subcategoryField" class="form-control needauto" value="#{bOMManagedBean.furniture.subcategory}"> 
+                                        <h:selectOneMenu id="subcategoryField" class="form-control" value="#{bOMManagedBean.furniture.subcategory}"> 
                                             <f:selectItems value="#{bOMManagedBean.subcategoryList}" var="subcategory" 
                                                            itemLabel="#{subcategory}" itemValue="#{subcategory}" />
                                             <f:ajax render="subcategoryField" listener="#{bOMManagedBean.editFurnitureSubcategory}" />
@@ -58,15 +58,39 @@
                             </h:form>
                         </div>
                         <h:panelGroup rendered="#{bOMManagedBean.displayPrice}">
-                            <div class="col-md-5 col-md-offset-1">
-                                <div class="form-horizontal">
-                                    <label class="col-sm-5 control-label">Price: $#{bOMManagedBean.furniture.price}</label>
-                                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#priceList">
+                            <div class="col-md-5 col-md-offset-1 form-horizontal"> 
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Price: </label>
+                                    <h:outputText class="col-sm-2" value="$#{bOMManagedBean.furniture.price}   "></h:outputText> 
+                                    <button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#priceList">
+                                        ...
+                                    </button>
+                                </div> 
+                            </div>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{bOMManagedBean.descriptionTooLong}">
+                            <div class="col-md-5 col-md-offset-1 form-horizontal"> 
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Furniture Description: </label> 
+                                    <h:outputText class="col-sm-5" value="#{bOMManagedBean.truncateDescription()}"></h:outputText> 
+                                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#furnitureDescription">
+                                        ...
+                                    </button>
+                                </div>
+                            </div> 
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{!bOMManagedBean.descriptionTooLong}">
+                            <div class="col-md-5 col-md-offset-1 form-horizontal"> 
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Furniture Description: </label> 
+                                    <h:outputText value="#{bOMManagedBean.truncateDescription()}"></h:outputText> 
+                                    <button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#furnitureDescription">
                                         ...
                                     </button>
                                 </div> 
                             </div> 
                         </h:panelGroup>
+                        
                     </div>
                     <div class="col-md-10"><hr></hr> 
                         <div class="panel-heading dashboard-title-panel">
@@ -229,6 +253,33 @@
                                 </div>
                             </div>
                         </div>  
+                        <!-- Modal for Furniture Description -->
+                        <div class="modal fade" id="furnitureDescription" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Edit Description</h4>
+                                    </div>
+                                    <h:form id="descriptionForm" class="form-horizontal">
+                                        <h:inputHidden value="#{bOMManagedBean.furnitureID}" id="fID" /> 
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Furniture Description: </label>
+                                                <div class="col-sm-8">
+                                                    <h:inputTextarea id="description" class="form-control" value="#{bOMManagedBean.furniture.furnitureDescription}"></h:inputTextarea>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="#{bOMManagedBean.updateDescription}" value="Update" class="btn btn-success btn-round" > 
+                                            </h:commandButton>
+                                        </div> 
+                                    </h:form> 
+                                </div>
+                            </div>
+                        </div> 
                 </div>
             </ui:define>
         </ui:composition>

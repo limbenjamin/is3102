@@ -59,5 +59,7 @@ public interface StockManagerLocal {
     public String editFurnitureCategory(Long furnitureID, FurnitureCategory category);
 
     public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category);
+
+    public String editFurnitureDescription(Long furnitureID, String description);
     
 }

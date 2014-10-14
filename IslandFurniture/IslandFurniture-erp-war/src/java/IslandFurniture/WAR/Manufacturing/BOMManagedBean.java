@@ -61,6 +61,7 @@ public class BOMManagedBean implements Serializable {
     private Integer listSize = null;
     private boolean uneditable;
     private boolean displayPrice;
+    private boolean descriptionTooLong;
     private List<FurnitureCategory> categoryList;
     private List<FurnitureSubcategory> subcategoryList;
     private List<CountryOffice> countryList;
@@ -190,6 +191,14 @@ public class BOMManagedBean implements Serializable {
     public void setCountryListNeedingPrice(Set<Country> countryListNeedingPrice) {
         this.countryListNeedingPrice = countryListNeedingPrice;
     }
+
+    public boolean isDescriptionTooLong() {
+        return descriptionTooLong;
+    }
+
+    public void setDescriptionTooLong(boolean descriptionTooLong) {
+        this.descriptionTooLong = descriptionTooLong;
+    }
     
     @PostConstruct
     public void init() {
@@ -213,10 +222,11 @@ public class BOMManagedBean implements Serializable {
                 this.categoryList = new ArrayList<>(EnumSet.allOf(FurnitureCategory.class));
                 this.countryList = supplierManager.getListOfCountryOffice();
                 this.storeList = manageOrganizationalHierarchyBean.displayStore();
+                this.descriptionTooLong = this.furniture.getFurnitureDescription().length() > 20;
                 countryListNeedingPrice = new HashSet<>();
                 for(Store s : storeList)
                     countryListNeedingPrice.add(s.getCountry());
-                this.storeInCountry = new ArrayList<Country>(countryListNeedingPrice);
+                this.storeInCountry = new ArrayList<>(countryListNeedingPrice);
                 if(uneditable) 
                     System.out.println("Furniture's BOM cannot be edited");
                 else
@@ -335,7 +345,7 @@ public class BOMManagedBean implements Serializable {
         return currencyManager.computeRetailPriceWithExchangeRate(this.furniture.getPrice(), exchangeRate);
     }
     public String updatePrice() {
-        System.out.println("BOMManagedBean.updatePrice");
+        System.out.println("BOMManagedBean.updatePrice()");
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String price = request.getParameter("pricingForm:price");
         String msg = stockManager.editFurnitureModel(furnitureID, this.furniture.getName(), Double.parseDouble(price));      
@@ -348,5 +358,27 @@ public class BOMManagedBean implements Serializable {
         } 
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         return "bom";
+    }
+    public String updateDescription() {
+        System.out.println("BOMManagedBean.updateDescription()");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String description = request.getParameter("descriptionForm:description");
+        String msg = stockManager.editFurnitureDescription(furnitureID, description);     
+        if(msg != null) { 
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
+        } 
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        return "bom";
+    }
+    public String truncateDescription() {
+        System.out.println("BOMManagedBean.truncateDescription()");
+        if(this.furniture.getFurnitureDescription().length() > 20) 
+            return this.furniture.getFurnitureDescription().substring(0, 20) + " ...";
+        else 
+            return this.furniture.getFurnitureDescription();
     }
 }
