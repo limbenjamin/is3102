@@ -100,14 +100,14 @@
                                 </p:column>
                                 <p:column headerText="Actions" style="center">
                                     <!--button for resume-->
-                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px;margin-left:auto;margin-right:auto" label="Unstop" rendered="#{row.locked and !row.expired}" value="RESUME CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"  ></p:commandButton>
-                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px;margin-left:auto;margin-right:auto" label="Stop" rendered="#{!row.locked}" value="STOP CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}" ></p:commandButton>
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Unstop" rendered="#{row.locked and !row.expired}" value="RESUME CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"  ></p:commandButton>
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Stop" rendered="#{!row.locked}" value="STOP CAMPAIGN" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}" ></p:commandButton>
                                     <br/>
-                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px;margin-left:auto;margin-right:auto" value="Modify" alt="#{row.id}" label="Modify" actionListener="${marketing.campaignbutton}" update="@((id$=campaign_overview)),@([id$=msg])"></p:commandButton>
+                                    <p:commandButton ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" value="Modify" alt="#{row.id}" label="Modify" actionListener="${marketing.campaignbutton}" update="@((id$=campaign_overview)),@([id$=msg])"></p:commandButton>
                                     <br/>
-                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px;margin-left:auto;margin-right:auto" label="Manage"  rendered="#{!row.locked and !row.expired}" value="Manage" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
+                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Manage"  rendered="#{!row.locked and !row.expired}" value="Manage" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
 
-                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px;margin-left:auto;margin-right:auto" label="Email"  rendered="#{!row.locked and !row.expired}" value="Email" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
+                                    <p:commandButton  ajax="true" styleClass="btn-primary" style="width:150px;margin-bottom:5px" label="Email Customers!"  rendered="#{!row.locked and !row.expired}" value="Email" alt="#{row.id}" update="@((id$=campaign_overview)),@([id$=msg])" actionListener="${marketing.campaignbutton}"></p:commandButton>
 
 
                                 </p:column>

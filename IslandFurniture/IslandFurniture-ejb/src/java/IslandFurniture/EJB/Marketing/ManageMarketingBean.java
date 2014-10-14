@@ -22,8 +22,6 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -62,14 +60,13 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
 
         }
-        
-        c.stream().distinct().forEach(cc->{
+
+        for (Customer cc : (Customer[]) c.stream().distinct().toArray()) {
             try {
                 SendEmailByPost.sendEmail("marketing@islandfurniture.com", cc.getEmailAddress(), "Island Furniture Promotion:" + pc.getTitle(), pc.getRemark());
             } catch (Exception ex) {
             }
-        });
-
+        }
 
         return c.stream().distinct().toArray().length;
 
