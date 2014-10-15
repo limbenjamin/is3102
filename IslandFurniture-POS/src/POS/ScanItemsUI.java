@@ -3,29 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package POS;
 
-import Helper.Connector;
 import Helper.NFCMethods;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -38,18 +33,17 @@ public class ScanItemsUI extends javax.swing.JFrame {
     /**
      * Creates new form ScanItems
      */
-    
     private String staffJSON = null;
     private String cardId = null;
     private Boolean changing = false;
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
-    
+
     public ScanItemsUI() {
         initComponents();
     }
-    
-    public ScanItemsUI(SelectStoreUI selectStoreUI, String staffJSON, String listJSON) throws IOException, ParseException{
+
+    public ScanItemsUI(SelectStoreUI selectStoreUI, String staffJSON, String listJSON) throws IOException, ParseException {
         this();
         this.staffJSON = staffJSON;
         JSONParser jsonParser = new JSONParser();
@@ -65,49 +59,48 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.getEditorComponent().requestFocusInWindow();
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
-                if (changing.equals(false)){
+                if (changing.equals(false)) {
                     changing = true;
                     int row = e.getFirstRow();
                     int column = e.getColumn();
                     String id = String.valueOf(jTable.getModel().getValueAt(row, column));
-                    if (column == 0){
-                       List<String> itemList = Arrays.asList(listJSON.substring(2, listJSON.length()-2).split("\\},\\{"));
-                       for (int i=0;i<itemList.size();i++){
-                           try {
-                               String JSONobj = "{" + itemList.get(i) + "}";
-                               JSONObject jsonObject = (JSONObject) jsonParser.parse(JSONobj);
-                               String currentId = (String) jsonObject.get("id");
-                               if (currentId.equals(id)){
-                                   jTable.getModel().setValueAt(jsonObject.get("name"), row, 1);
-                                   jTable.getModel().setValueAt(jsonObject.get("price"), row, 2);
-                                   jTable.getModel().setValueAt("1", row, 3);
-                                   jTable.getModel().setValueAt(jsonObject.get("price"), row, 4);
-                               }
-                           } catch (ParseException ex) {
-                               Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
-                           }
-
-                       }
-                       updateTotal();
-                        jTable.changeSelection(row+1, column, false, false);
-                        jTable.editCellAt(row+1, column);
-                        jTable.getEditorComponent().requestFocusInWindow();
-                    }
-                    else if (column == 3){
-                        Double price = Double.parseDouble((String)jTable.getModel().getValueAt(row, 2));
+                    //edited item id
+                    if (column == 0) {
+                        JSONArray array = (JSONArray) JSONValue.parse(listJSON);
+                        Iterator i = array.iterator();
+                        while (i.hasNext()) {
+                                JSONObject jsonObject = (JSONObject) i.next();
+                                String currentId = (String) jsonObject.get("id");
+                                if (currentId.equals(id)) {
+                                    jTable.getModel().setValueAt(jsonObject.get("name"), row, 1);
+                                    jTable.getModel().setValueAt(jsonObject.get("price"), row, 2);
+                                    jTable.getModel().setValueAt("1", row, 3);
+                                    jTable.getModel().setValueAt(jsonObject.get("price"), row, 4);
+                                }
+                        }
+                        Boolean res = consolidate(row);
+                        updateTotal();
+                        //no need sort if 1 row
+                        if (res.equals(Boolean.FALSE) || row == 0){
+                            jTable.changeSelection(row + 1, column, false, false);
+                            jTable.editCellAt(row + 1, column);
+                            jTable.getEditorComponent().requestFocusInWindow();
+                            System.err.println("if "+row);
+                        }else{
+                        }
+                    //edited qty    
+                    } else if (column == 3) {
+                        Double price = Double.parseDouble((String) jTable.getModel().getValueAt(row, 2));
                         String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
-                        System.out.println(price + "   "+ qty);
-                        System.out.println(price.getClass()+ "    " + qty.getClass());
-                        Double total = (Integer.parseInt(qty))*price;
-                        System.err.println(total);
+                        Double total = (Integer.parseInt(qty)) * price;
                         jTable.getModel().setValueAt(Math.round(total), row, 4);
                         updateTotal();
                     }
                     changing = false;
                 }
             }
-          });
-        
+        });
+
     }
 
     /**
@@ -129,7 +122,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         resetButton = new javax.swing.JButton();
         memberLabel = new javax.swing.JLabel();
         readCardButton = new javax.swing.JButton();
-        discLabel = new javax.swing.JLabel();
         idLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -187,6 +179,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
 
         checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         checkoutButton.setText("Checkout");
+        checkoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkoutButtonActionPerformed(evt);
+            }
+        });
 
         resetButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         resetButton.setText("Reset");
@@ -206,9 +203,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 readCardButtonActionPerformed(evt);
             }
         });
-
-        discLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        discLabel.setText("Disc: 0%");
 
         idLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         idLabel.setText("                                    ");
@@ -231,8 +225,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(readCardButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(discLabel)
-                        .addGap(18, 18, 18)
                         .addComponent(totalLabel)
                         .addGap(18, 18, 18)
                         .addComponent(checkoutButton))
@@ -258,8 +250,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(checkoutButton)
-                            .addComponent(totalLabel)
-                            .addComponent(discLabel)))
+                            .addComponent(totalLabel)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(memberLabel)
@@ -300,8 +291,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
         int row = jTable.getRowCount();
         int col = jTable.getColumnCount();
         changing = true;
-        for (int i=0;i<row;i++){
-            for (int j=0;j<col;j++){
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
                 jTable.setValueAt("", i, j);
             }
         }
@@ -320,8 +311,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 }
                 if (acr122uCardTerminal != null) {
                     try {
-                        if (acr122uCardTerminal.isCardPresent()){
-                            if (isChecking == false){
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            if (isChecking == false) {
                                 isChecking = true;
                                 NFCMethods nfc = new NFCMethods();
                                 String cardId = nfc.getID(acr122uCardTerminal);
@@ -340,6 +331,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
         } catch (Exception ex) {
         }
     }//GEN-LAST:event_readCardButtonActionPerformed
+
+    private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
+
+    }//GEN-LAST:event_checkoutButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -375,27 +370,59 @@ public class ScanItemsUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    public void updateTotal(){
+
+    public void updateTotal() {
         int rows = jTable.getModel().getRowCount();
         Double total = 0.0;
         Double current = 0.0;
-        for (int i=0;i<rows;i++){
-            try{
+        for (int i = 0; i < rows; i++) {
+            try {
                 String val = String.valueOf(jTable.getModel().getValueAt(i, 4));
                 current = Double.parseDouble(val);
-            }catch(Exception e){
-                
+            } catch (Exception e) {
+                //exception will occur on all empty rows
             }
             total += current;
             current = 0.0;
         }
-        totalLabel.setText("Grand Total: "+total);
+        totalLabel.setText("Grand Total: " + total);
     }
+    
+    public Boolean consolidate(int numrows){
+        //check if item already added, then add qty only
+        Boolean duplicate = false;
+        List<String> list = new ArrayList();
+        for (int i = 0; i <= numrows; i++) {
+            String val = String.valueOf(jTable.getModel().getValueAt(i, 0));
+            if (list.contains(val)){
+                try {
+                    duplicate = true;
+                    int pos = list.indexOf(val);
+                    String qty = String.valueOf(jTable.getModel().getValueAt(i, 3));
+                    String curr_qty = String.valueOf(jTable.getModel().getValueAt(pos, 3));
+                    String total_qty = String.valueOf(Integer.parseInt(qty)+Integer.parseInt(curr_qty));
+                    jTable.getModel().setValueAt(total_qty, pos, 3);
+                    Double price = Double.parseDouble((String) jTable.getModel().getValueAt(pos, 2));
+                    Double total = (Integer.parseInt(total_qty)) * price;
+                    jTable.getModel().setValueAt(Math.round(total * 100.0) / 100.0, pos, 4);
+                    jTable.getModel().setValueAt("", i, 0);
+                    jTable.getModel().setValueAt("", i, 1);
+                    jTable.getModel().setValueAt("", i, 2);
+                    jTable.getModel().setValueAt("", i, 3);
+                    jTable.getModel().setValueAt("", i, 4);
+                } catch (Exception e) {
+                    //exception will occur on all empty rows
+                }
+            }else{
+                list.add(val);
+            }
+        }
+        return duplicate;
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkoutButton;
-    private javax.swing.JLabel discLabel;
     private javax.swing.JLabel idLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
