@@ -277,6 +277,10 @@
         <navigation-case>
             <from-outcome>priceplanning</from-outcome>
             <to-view-id>/salesplanning/priceplanning.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>storesection</from-outcome>
+            <to-view-id>/inventorymgt/storesection.xhtml</to-view-id>
         </navigation-case>                                                               
     </navigation-rule>
 </faces-config>

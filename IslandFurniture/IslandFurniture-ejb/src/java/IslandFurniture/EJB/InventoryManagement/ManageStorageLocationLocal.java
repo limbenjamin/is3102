@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
@@ -17,11 +18,11 @@ import java.util.List;
  */
 public interface ManageStorageLocationLocal {
 
-    //  Function: To check if there is any Storage Bin with same name - to not allow duplicates
-    boolean checkIfNoStorageBinWithSameName(Plant plant, Long areaId, String binName);
-
     //  Function: To check if there is any Storage Area with same name - to not allow duplicates
     boolean checkIfNoStorageAreaWithSameName(Plant plant, String name);
+
+    //  Function: To check if there is any Storage Bin with same name - to not allow duplicates
+    boolean checkIfNoStorageBinWithSameName(Plant plant, Long areaId, String binName);
 
     //  Function: To add Storage Area
     void createStorageArea(Plant plant, String name, String typeName);
@@ -50,22 +51,22 @@ public interface ManageStorageLocationLocal {
     //  Function: To view Storage Areas in the Plant
     List<StorageArea> viewStorageArea(Plant plant);
 
+    //  Function: To view Storage Area Type
+    List<StorageAreaType> viewStorageAreaType(Plant plant);
+
     //  Function: To view Storage Bins in the Plant
     List<StorageBin> viewStorageBin(Plant plant);
 
-    //  Function: To view Storage Bins in Receiving Area only    
+    //  Function: To view Storage Bins in Receiving Area only
     List<StorageBin> viewStorageBinsAtReceivingOnly(Plant plant);
-    
-    //  Function: To view Storage Bins in Shipping Area only    
+
+    //  Function: To view Storage Bins in Shipping Area only
     List<StorageBin> viewStorageBinsAtShippingOnly(Plant plant);
 
     //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageArea(Long id);
 
-    //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
+    //  Function: To view Storage Bins in a particular Storage Area and a particular Stock - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageAreaOfAStock(Long id, Long stockId);
-
-    //  Function: To view Storage Area Type
-    List<StorageAreaType> viewStorageAreaType(Plant plant);
-
+    
 }
