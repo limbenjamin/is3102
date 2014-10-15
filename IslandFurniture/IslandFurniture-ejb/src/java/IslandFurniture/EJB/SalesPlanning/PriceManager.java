@@ -29,10 +29,10 @@ public class PriceManager implements PriceManagerLocal {
         List<StockSupplied> returnList;
         Stock s;
         try {
-            System.out.println("PriceManager.findCountryOfficeWithStock()");
+            System.out.println("PriceManager.findCountryOfficeWithStock() ");
             s = em.find(Stock.class, stockID); 
             returnList = getStockSuppliedByStock(em, s); 
-            return returnList;
+            return returnList; 
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return null;

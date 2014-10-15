@@ -20,18 +20,18 @@
                     </div>    
                     <div class="col-md-10">
                         <h4>Pricing</h4><hr></hr>
-                        <p:accordionPanel multiple="true">
+                        <p:accordionPanel multiple="true" activeIndex="0,1">
                             <p:tab title="Furniture Item">
                                 <table class="table table-hover">
                                     <tr>
                                         <th>Furniture Name</th>
                                         <th>Price</th>
                                     </tr>
-                                    <h:form id="selectStockForm">
+                                    <h:form id="selectFurnitureForm">
                                     <ui:repeat value="#{pricePlanningManagedBean.furnitureList}" var="fm" id="furnitureTable">
                                         <tr>
                                             <td>
-                                                <h:outputText value="#{fm.name}"></h:outputText>
+                                                <h:outputText value="#{fm.name}"></h:outputText> 
                                             </td>
                                             <td>
                                                 <a data-toggle="modal" data-target="#viewPricing">
@@ -47,20 +47,20 @@
                                 </table>  
                             </p:tab>
                             <p:tab title="Retail Item"> 
-                                <table class="table table-hover">
+                                <table class="table table-hover"> 
                                     <tr>
                                         <th>Furniture Name</th>
                                         <th>Price</th>
-                                    </tr>
-                                    <h:form id="selectStockForm">
-                                        <ui:repeat value="#{pricePlanningManagedBean.retailItemList}" var="ri" id="retailItemTable">
+                                    </tr> 
+                                    <h:form id="selectRetailItemForm">
+                                        <ui:repeat value="#{pricePlanningManagedBean.retailItemList}" var="item" id="retailItemTable">
                                         <tr>
                                             <td>
-                                                <h:outputText value="#{ri.name}"></h:outputText>
+                                                <h:outputText value="#{item.name}"></h:outputText>
                                             </td>
                                             <td>
                                                 <a data-toggle="modal" data-target="#viewPricing">
-                                                    <h:commandButton value="..." class="btn btn-xs">
+                                                    <h:commandButton value="..." class="btn btn-xs"> 
                                                         <f:ajax listener="#{pricePlanningManagedBean.viewPricing}" render=":viewPricingForm:content" />
                                                         <f:attribute name="stockID" value="#{item.id}" />
                                                     </h:commandButton>
@@ -86,7 +86,7 @@
                                 <h:panelGroup id="content" class="modal-body">
                                     <ui:repeat value="#{pricePlanningManagedBean.displayList}" varStatus="loop" var="ss">
                                         <div class="form-group">
-                                            <label class="col-sm-3 col-md-offset-2 control-label">#{ss.countryOffice.country.name}: </label>
+                                            <label class="col-sm-3 col-md-offset-1 control-label">#{ss.countryOffice.country.name}: </label>
                                             <div class="col-sm-6">
                                                 <h:inputText class="form-control" value="#{pricePlanningManagedBean.displayList[loop.index].price}" ></h:inputText> 
                                             </div> 
