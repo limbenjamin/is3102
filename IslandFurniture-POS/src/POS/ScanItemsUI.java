@@ -89,6 +89,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                     jTable.getModel().setValueAt(jsonObject.get("price"), row, 2);
                                     jTable.getModel().setValueAt("1", row, 3);
                                     jTable.getModel().setValueAt(jsonObject.get("price"), row, 4);
+                                    //TODO : print to 20x2 LCD
+                                    System.out.println(jsonObject.get("name") + " x 1");
+                                    System.out.println(jsonObject.get("price"));
                                 }
                         }
                         Boolean res = consolidate(row);
@@ -98,7 +101,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
                             jTable.changeSelection(row + 1, column, false, false);
                             jTable.editCellAt(row + 1, column);
                             jTable.getEditorComponent().requestFocusInWindow();
-                            System.err.println("if "+row);
                         }else{
                         }
                     //edited qty    
@@ -107,6 +109,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
                         Double total = (Integer.parseInt(qty)) * price;
                         jTable.getModel().setValueAt(Math.round(total), row, 4);
+                        //TODO : print to 20x2 LCD
+                        System.out.println(jTable.getModel().getValueAt(row, 1) + " x " + qty);
+                        System.out.println(Math.round(total));
                         updateTotal(row);
                     }
                     changing = false;
@@ -414,6 +419,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     jTable.getModel().setValueAt("", i, 2);
                     jTable.getModel().setValueAt("", i, 3);
                     jTable.getModel().setValueAt("", i, 4);
+                    //TODO : print to 20x2 LCD
+                    System.out.println(jTable.getModel().getValueAt(pos, 1) + " x " + total_qty);
+                    System.out.println(Math.round(total));
                 }catch(Exception e){
                 
                 }
