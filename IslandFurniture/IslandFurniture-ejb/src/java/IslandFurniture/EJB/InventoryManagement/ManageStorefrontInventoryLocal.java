@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.StoreSection;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorefrontInventory;
 import java.util.List;
 
@@ -28,5 +27,10 @@ public interface ManageStorefrontInventoryLocal {
 
     //  Function: To display list of StorefrontInventory
     List<StorefrontInventory> viewStorefrontInventory(Plant plant);
-    
+
+    //  Function: To get Storefront Inventory Entity
+    StorefrontInventory getStorefrontInventory(Plant plant, Long stockId);
+
+    //  Function: To edit Storefront Inventory Quantity
+    void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty); 
 }

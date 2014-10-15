@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
@@ -68,5 +67,8 @@ public interface ManageStorageLocationLocal {
 
     //  Function: To view Storage Bins in a particular Storage Area and a particular Stock - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageAreaOfAStock(Long id, Long stockId);
+
+    //  Function: To view Storage Bins in a particular Stock - For AJAX purposes
+    List<StorageBin> viewStorageBinsOfAStock(Plant plant, Long stockId);
     
 }

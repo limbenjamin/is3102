@@ -130,8 +130,14 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To edit External Transfer Order Request to Posted  
     void editExternalTransferOrderStatusToRequestPosted(ExternalTransferOrder externalTransferOrder);
-    
+
     //  Function: To edit External Transfer Order Request to Fulfilled 
     void editExternalTransferOrderStatusToRequestFulfilled(ExternalTransferOrder externalTransferOrder, Plant plant);
+
+    //  Function: To obtain the ReplenishmentTransferOrder entity;
+    ReplenishmentTransferOrder getReplenishmentTransferOrder(Long id);
+
+    //  Function: To edit Replenishment Transfer Order Request to Fulfilled 
+    void editReplenishmentTransferOrderStatusToRequestFulfilled(ReplenishmentTransferOrder replenishmentTransferOrder);
 
 }
