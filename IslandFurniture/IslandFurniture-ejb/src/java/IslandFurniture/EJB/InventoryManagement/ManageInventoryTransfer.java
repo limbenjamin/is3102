@@ -57,6 +57,12 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     }
 
     @Override
+    public ReplenishmentTransferOrder getReplenishmentTransferOrder(Long id) {
+        replenishmentTransferOrder = (ReplenishmentTransferOrder) em.find(ReplenishmentTransferOrder.class, id);
+        return replenishmentTransferOrder;
+    }
+
+    @Override
     public void updateBatchNumber(Long id, String batchNumber) {
         stockUnit = getStockUnit(id);
         stockUnit.setBatchNo(batchNumber);
@@ -296,7 +302,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.remove(externalTransferOrder);
         em.flush();
     }
-    
+
     //  Function: To delete a External Transfer Order Detail
     @Override
     public void deleteExternaTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail) {
@@ -322,7 +328,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         q.setParameter("status", TransferOrderStatus.REQUESTED_PENDING);
         return q.getResultList();
     }
-    
+
     //  Function: To display list of External Transfer Order (Requested) Posted   
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderRequestedPosted(Plant plant) {
@@ -352,7 +358,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         q.setParameter("status", TransferOrderStatus.REQUESTED);
         return q.getResultList();
     }
-    
+
     //  Function: To display list of External Transfer Order (Fulfilled) Posted   
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPosted(Plant plant) {
@@ -379,7 +385,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
         em.refresh(externalTransferOrderDetail);
     }
-    
+
 //  Function: To create External Transfer Order Detail    
     @Override
     public void createExternalTransferOrderDetail(Long id, Long stockId, Integer quantity) {
@@ -404,7 +410,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(externalTransferOrderDetail);
         em.flush();
     }
-    
+
 //  Function: To edit External Transfer Order  
     @Override
     public void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal) {
@@ -413,7 +419,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(externalTransferOrder);
         em.flush();
     }
-    
+
     //  Function: To edit External Transfer Order Request to Posted  
     @Override
     public void editExternalTransferOrderStatusToRequestPosted(ExternalTransferOrder externalTransferOrder) {
@@ -422,7 +428,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(externalTransferOrder);
         em.flush();
     }
-    
+
 //  Function: To edit External Transfer Order Request to Fulfilled 
     @Override
     public void editExternalTransferOrderStatusToRequestFulfilled(ExternalTransferOrder externalTransferOrder, Plant plant) {
@@ -430,6 +436,15 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         externalTransferOrder.setFulfillingPlant(plant);
         externalTransferOrder.setStatus(TransferOrderStatus.FULFILLED);
         em.merge(externalTransferOrder);
+        em.flush();
+    }
+    
+    //  Function: To edit Replenishment Transfer Order Request to Fulfilled 
+    @Override
+    public void editReplenishmentTransferOrderStatusToRequestFulfilled(ReplenishmentTransferOrder replenishmentTransferOrder) {
+        replenishmentTransferOrder = (ReplenishmentTransferOrder) em.find(ReplenishmentTransferOrder.class, replenishmentTransferOrder.getId());
+        replenishmentTransferOrder.setStatus(TransferOrderStatus.FULFILLED);
+        em.merge(replenishmentTransferOrder);
         em.flush();
     }
 }

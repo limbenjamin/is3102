@@ -56,6 +56,16 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         em.flush();
     }
 
+    //  Function: To edit Storefront Inventory Quantity
+    @Override
+    public void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty) {
+        StorefrontInventoryPK pk = new StorefrontInventoryPK(storefrontInventoryUpdated.getStore().getId(), storefrontInventoryUpdated.getStock().getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, pk);
+        storefrontInventory.setQty(qty);
+        em.merge(storefrontInventory);
+        em.flush();
+    }
+
 //  Function: To delete Storefront Inventory
     @Override
     public void deleteStorefrontInventory(StorefrontInventory storefrontInventory) {
@@ -71,6 +81,14 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
+    }
+
+//  Function: To get Storefront Inventory Entity
+    @Override
+    public StorefrontInventory getStorefrontInventory(Plant plant, Long stockId) {
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stockId);
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+        return storefrontInventory;
     }
 
 }

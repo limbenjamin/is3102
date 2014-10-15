@@ -66,11 +66,10 @@ public class StorefrontInventoryManagedBean implements Serializable {
         storeSectionList = storeSectionBean.viewStoreSectionList(plant);
         storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
         stockList = transferBean.viewStock();
-//        for (Stock s : stockList) {
-//            if (s instanceof Material) {
-//                stockList.remove(s);
+//        for (Stock s : transferBean.viewStock()) {
+//            if (!(s instanceof Material)) {
+//                stockList.add(s);
 //            }
-//
 //            for (StorefrontInventory i : storefrontInventoryList) {
 //                if (stockList.contains(i.getStock())) {
 //                    stockList.remove(i.getStock());

@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Enums.StorageAreaType;
@@ -185,6 +186,16 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
     public List<StorageBin> viewStorageBinsOfAStorageArea(Long id) {
         Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.id=:id");
         q.setParameter("id", id);
+        return q.getResultList();
+    }
+
+    //  Function: To view Storage Bins in a particular Stock - For AJAX purposes
+    @Override
+    public List<StorageBin> viewStorageBinsOfAStock(Plant plant, Long stockId) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.type=:type AND s.storageArea.plant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+//        q.setParameter("stock", (Stock) em.find(Stock.class, stockId));
+        q.setParameter("type", StorageAreaType.STORAGE);
         return q.getResultList();
     }
 
