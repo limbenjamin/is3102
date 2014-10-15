@@ -36,6 +36,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
      * Creates new form ScanItems
      */
     private String staffJSON = null;
+    private String listJSON = null;
     private String cardId = null;
     private Boolean changing = false;
     private CardTerminal acr122uCardTerminal = null;
@@ -45,9 +46,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public ScanItemsUI(SelectStoreUI selectStoreUI, String staffJSON, String listJSON) throws IOException, ParseException {
+    public ScanItemsUI(String staffJSON, String listJSON) throws IOException, ParseException {
         this();
         this.staffJSON = staffJSON;
+        this.listJSON = listJSON;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -138,9 +140,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel = new javax.swing.JLabel();
         checkoutButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
-        memberLabel = new javax.swing.JLabel();
-        readCardButton = new javax.swing.JButton();
-        idLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -185,7 +184,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         });
 
         totalLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        totalLabel.setText("Grand total: 0");
+        totalLabel.setText("Total: 0");
 
         checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         checkoutButton.setText("Checkout");
@@ -203,45 +202,25 @@ public class ScanItemsUI extends javax.swing.JFrame {
             }
         });
 
-        memberLabel.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        memberLabel.setText("Member:");
-
-        readCardButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        readCardButton.setText("Read Card");
-        readCardButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readCardButtonActionPerformed(evt);
-            }
-        });
-
-        idLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        idLabel.setText("                                    ");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 402, Short.MAX_VALUE)
                         .addComponent(resetButton)
                         .addGap(18, 18, 18)
                         .addComponent(logoutButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(memberLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(readCardButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(totalLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(checkoutButton))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(idLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 903, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(checkoutButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -254,20 +233,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addComponent(resetButton))
                     .addComponent(welcomeLabel))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(checkoutButton)
-                            .addComponent(totalLabel)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(memberLabel)
-                            .addComponent(readCardButton))
-                        .addGap(18, 18, 18)
-                        .addComponent(idLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkoutButton)
+                    .addComponent(totalLabel))
                 .addContainerGap())
         );
 
@@ -309,41 +279,34 @@ public class ScanItemsUI extends javax.swing.JFrame {
         changing = false;
     }//GEN-LAST:event_resetButtonActionPerformed
 
-    private void readCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readCardButtonActionPerformed
-        try {
-            TerminalFactory terminalFactory = TerminalFactory.getDefault();
-            if (!terminalFactory.terminals().list().isEmpty()) {
-                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
-                    if (cardTerminal.getName().contains("ACS ACR122")) {
-                        acr122uCardTerminal = cardTerminal;
-                        break;
-                    }
-                }
-                if (acr122uCardTerminal != null) {
-                    try {
-                        if (acr122uCardTerminal.isCardPresent()) {
-                            if (isChecking == false) {
-                                isChecking = true;
-                                NFCMethods nfc = new NFCMethods();
-                                String cardId = nfc.getID(acr122uCardTerminal);
-                                idLabel.setText(cardId);
-                            }
-                        }
-                    } catch (CardException ex) {
-                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (Exception ex) {
-                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                }
-            } else {
-            }
-        } catch (Exception ex) {
-        }
-    }//GEN-LAST:event_readCardButtonActionPerformed
-
     private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
-
+        List<List<String>> transaction = new ArrayList<>();
+        List<String> transactionDetail;
+        int row = jTable.getRowCount();
+        int col = jTable.getColumnCount();
+        for (int i = 0; i < row; i++) {
+                if (String.valueOf(jTable.getModel().getValueAt(i, 0)).isEmpty() || jTable.getModel().getValueAt(i, 0) == null){
+                    
+                }else{
+                    transactionDetail = new ArrayList<>();
+                    transactionDetail.add(String.valueOf(jTable.getModel().getValueAt(i, 0)));
+                    transactionDetail.add(String.valueOf(jTable.getModel().getValueAt(i, 1)));
+                    transactionDetail.add(String.valueOf(jTable.getModel().getValueAt(i, 2)));
+                    transactionDetail.add(String.valueOf(jTable.getModel().getValueAt(i, 3)));
+                    transactionDetail.add(String.valueOf(jTable.getModel().getValueAt(i, 4)));
+                    transaction.add(transactionDetail);
+                }
+        }
+        System.err.println(transaction);
+        CheckoutUI checkoutUI;
+        try {
+            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction);
+            checkoutUI.setVisible(true);
+            this.setVisible(false);
+        } catch (ParseException ex) {
+            Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_checkoutButtonActionPerformed
 
     /**
@@ -384,7 +347,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     public void updateTotal(int rows) {
         Double total = 0.0;
         Double current = 0.0;
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i <= rows; i++) {
             try{
                 String val = String.valueOf(jTable.getModel().getValueAt(i, 4));
                 current = Double.parseDouble(val);
@@ -435,13 +398,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkoutButton;
-    private javax.swing.JLabel idLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
     private javax.swing.JButton logoutButton;
-    private javax.swing.JLabel memberLabel;
-    private javax.swing.JButton readCardButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JLabel totalLabel;
     private javax.swing.JLabel welcomeLabel;
