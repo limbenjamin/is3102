@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Customer E-Services</title>
@@ -115,6 +116,22 @@
                     </div>
 		</div>
 	</header>
+        <div class="container">
+            <div class="row">
+                <c:if test="${flash.message.severity == 'ERROR 2'}">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
+                    </div>
+                </c:if>
+                <c:if test="${flash.message.severity == 'INFO 0'}">
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
+                    </div>
+                </c:if>
+            </div>
+        </div>    
         <ui:insert name="content" >Content</ui:insert>
 	<footer id="footer"><!--Footer-->		
             <div class="footer-content">

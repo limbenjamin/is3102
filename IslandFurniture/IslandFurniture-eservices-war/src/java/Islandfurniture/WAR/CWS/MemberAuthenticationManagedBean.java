@@ -25,6 +25,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
     private String phoneNo = null;
     private String dateOfBirth = null;
     private Long id;
+    private String confirmPassword = null;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -37,7 +38,12 @@ public class MemberAuthenticationManagedBean implements Serializable {
         if (customer != null){
             HttpSession session = Util.getSession();
             session.setAttribute("emailAddress", emailAddress);
-            System.err.println("logged in");
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                  new FacesMessage(FacesMessage.SEVERITY_INFO, "Logged in successfully",""));
+        }else{
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                  new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid email or password",""));
+            return "login";
         }
         
         return "index";
@@ -47,6 +53,12 @@ public class MemberAuthenticationManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         emailAddress = request.getParameter("registerForm:emailAddress");
         password = request.getParameter("registerForm:password");
+        confirmPassword = request.getParameter("registerForm:confirmPassword");
+        if (!password.equals(confirmPassword)){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                  new FacesMessage(FacesMessage.SEVERITY_ERROR, "Passwords do not match",""));
+            return "login";
+        }
         name = request.getParameter("registerForm:name");
         address = request.getParameter("registerForm:address");
         phoneNo = request.getParameter("registerForm:phoneNo");
@@ -117,6 +129,14 @@ public class MemberAuthenticationManagedBean implements Serializable {
 
     public void setMmab(ManageMemberAuthenticationBeanLocal mmab) {
         this.mmab = mmab;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
     
     
