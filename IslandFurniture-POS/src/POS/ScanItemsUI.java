@@ -174,6 +174,13 @@ public class ScanItemsUI extends javax.swing.JFrame {
         });
         jTable.setMaximumSize(new java.awt.Dimension(2147483647, 240));
         jScrollPane1.setViewportView(jTable);
+        if (jTable.getColumnModel().getColumnCount() > 0) {
+            jTable.getColumnModel().getColumn(0).setResizable(false);
+            jTable.getColumnModel().getColumn(1).setResizable(false);
+            jTable.getColumnModel().getColumn(2).setResizable(false);
+            jTable.getColumnModel().getColumn(3).setResizable(false);
+            jTable.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         logoutButton.setText("Logout");

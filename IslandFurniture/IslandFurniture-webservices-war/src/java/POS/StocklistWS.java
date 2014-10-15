@@ -6,9 +6,11 @@
 
 package POS;
 
+import IslandFurniture.EJB.CWS.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
@@ -47,6 +49,8 @@ public class StocklistWS {
     StockManagerLocal sm;
     @EJB
     SupplierManagerLocal ssm;
+    @EJB
+    ManageMemberAuthenticationBeanLocal mmab;
     
     @POST
     @Path("furniturelist")
@@ -94,4 +98,35 @@ public class StocklistWS {
         }
         return builder.build().toString();
     }
+    
+    @POST
+    @Path("checkpromo")
+    public String checkPromo(@FormParam("cardId") String cardId,
+                                @FormParam("customerCardId") String customerCardId,
+                                @FormParam("coupon") String coupon,
+                                @FormParam("stock") String stock,
+                                @FormParam("stockCoupon") String stockCoupon) {
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            System.err.println(cardId+"   "+customerCardId+"    "+coupon+"    "+stock+"    "+stockCoupon);
+        }
+        return "test";
+    }
+    
+    @POST
+    @Path("getcustomername")
+    public String getCustomerName(@FormParam("cardId") String cardId,
+                                @FormParam("customerCardId") String customerCardId){
+        Customer customer;
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+        }
+        return customer.getName();
+    }
+    
 }

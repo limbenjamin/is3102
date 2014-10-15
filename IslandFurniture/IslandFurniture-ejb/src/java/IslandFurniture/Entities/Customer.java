@@ -40,6 +40,7 @@ public class Customer implements Serializable {
     private String dateOfBirth;
     private Boolean active;
     private String forgottenPasswordCode;
+    private String loyaltyCardId;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne

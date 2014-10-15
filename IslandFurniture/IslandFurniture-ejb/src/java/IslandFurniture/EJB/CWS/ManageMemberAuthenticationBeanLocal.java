@@ -20,4 +20,5 @@ public interface ManageMemberAuthenticationBeanLocal {
 
     Long createCustomerAccount(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth);
     
+    Customer getCustomerFromLoyaltyCardId(String loyaltyCardId);
 }

@@ -76,5 +76,10 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         return customer.getId();
     }
     
-    
+    @Override
+    public Customer getCustomerFromLoyaltyCardId(String loyaltyCardId){
+        Query query = em.createQuery("SELECT c FROM Customer c WHERE c.loyaltyCardId=:id");
+        query.setParameter("id", loyaltyCardId);
+        return (Customer) query.getSingleResult();
+    }
 }

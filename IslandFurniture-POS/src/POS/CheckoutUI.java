@@ -5,14 +5,18 @@
  */
 package POS;
 
+import Helper.Connector;
 import Helper.NFCMethods;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -27,8 +31,10 @@ public class CheckoutUI extends javax.swing.JFrame {
     private String listJSON;
     private List<List<String>> transaction;
     private String cardId;
+    private String customerCardId = "";
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
+    private String customerName;
     
     /**
      * Creates new form CheckoutUI
@@ -51,6 +57,14 @@ public class CheckoutUI extends javax.swing.JFrame {
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         payButton.setVisible(Boolean.FALSE);
+        for (int i=0;i<transaction.size();i++){
+            ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
+            jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
+            jTable.getModel().setValueAt(transaction.get(i).get(1), i, 1);
+            jTable.getModel().setValueAt(transaction.get(i).get(2), i, 2);
+            jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
+            jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
+        }
     }
 
     /**
@@ -108,15 +122,39 @@ public class CheckoutUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel1.setText("Coupon :");
 
+        jTable.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+                "Item ID", "Item Name", "ItemPrice", "Coupon Code", "Item Qty", "Total Price"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable);
+        if (jTable.getColumnModel().getColumnCount() > 0) {
+            jTable.getColumnModel().getColumn(0).setResizable(false);
+            jTable.getColumnModel().getColumn(1).setResizable(false);
+            jTable.getColumnModel().getColumn(2).setResizable(false);
+            jTable.getColumnModel().getColumn(3).setResizable(false);
+            jTable.getColumnModel().getColumn(4).setResizable(false);
+            jTable.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         backButton.setText("Back");
@@ -247,7 +285,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                             if (isChecking == false) {
                                 isChecking = true;
                                 NFCMethods nfc = new NFCMethods();
-                                cardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
+                                customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
                                 readCardButton.setVisible(Boolean.FALSE);
                                 memberLabel.setText("Member: " + cardId);
                             }
@@ -279,6 +317,40 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
         calculateButton.setVisible(Boolean.FALSE);
+        int rows = jTable.getModel().getRowCount();
+        List params = new ArrayList();
+        List values = new ArrayList();
+        params.add("cardId");
+        values.add(cardId.substring(0, 8));
+        params.add("customerCardId");
+        values.add(customerCardId);
+        try {
+                customerName = Connector.postForm(params, values, "stock/getcustomername");
+                System.err.println(customerName);
+            } catch (Exception ex) {
+                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        for (int i=0;i<rows;i++){
+            params = new ArrayList();
+            values = new ArrayList();
+            params.add("cardId");
+            values.add(cardId.substring(0, 8));
+            params.add("customerCardId");
+            values.add(customerCardId);
+            params.add("coupon");
+            values.add(couponField.getText());
+            params.add("stock");
+            values.add(transaction.get(i).get(0));
+            params.add("stockCoupon");
+            values.add(jTable.getModel().getValueAt(i, 3));
+            
+            try {
+                String result = Connector.postForm(params, values, "stock/checkpromo");
+                System.err.println(result);
+            } catch (Exception ex) {
+                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         payButton.setVisible(Boolean.TRUE);
     }//GEN-LAST:event_calculateButtonActionPerformed
 
