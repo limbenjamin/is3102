@@ -66,7 +66,7 @@ public class StoreSectionManagedBean implements Serializable {
         storeSectionList = storeSectionBean.viewStoreSectionList(plant);
     }
     
-//  Function: To edit a Store Section
+//  Function: To delete a Store Section
     public void deleteStoreSection(ActionEvent event) throws IOException {
         StoreSection ss = (StoreSection) event.getComponent().getAttributes().get("storeSection");
         storeSectionBean.deleteStoreSection(ss);
@@ -144,7 +144,4 @@ public class StoreSectionManagedBean implements Serializable {
     public void setStoreSectionBean(ManageStoreSectionLocal storeSectionBean) {
         this.storeSectionBean = storeSectionBean;
     }
-
-  
-
 }
