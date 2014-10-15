@@ -180,7 +180,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String furniturelist = Connector.postForm(params, values, "stock/furniturelist");
             System.err.println(furniturelist);
-            ScanItemsUI scanItem = new ScanItemsUI(this, staffJSON, furniturelist);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -203,7 +203,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         values.add(cardId);
         try {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
-            ScanItemsUI scanItem = new ScanItemsUI(this, staffJSON, retaillist);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {

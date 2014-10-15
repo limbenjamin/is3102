@@ -3,8 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package POS;
+
+import Helper.NFCMethods;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -12,11 +23,34 @@ package POS;
  */
 public class CheckoutUI extends javax.swing.JFrame {
 
+    private String staffJSON;
+    private String listJSON;
+    private List<List<String>> transaction;
+    private String cardId;
+    private CardTerminal acr122uCardTerminal = null;
+    private Boolean isChecking = false;
+    
     /**
      * Creates new form CheckoutUI
      */
     public CheckoutUI() {
         initComponents();
+    }
+
+    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction) throws ParseException {
+        this();
+        this.staffJSON = staffJSON;
+        this.listJSON = listJSON;
+        this.transaction = transaction;
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
+        String name = (String) jsonObject.get("name");
+        String plant = (String) jsonObject.get("plant");
+        cardId = (String) jsonObject.get("cardId");
+        System.err.println(listJSON);
+        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
+        jTable.setRowHeight(50);
+        payButton.setVisible(Boolean.FALSE);
     }
 
     /**
@@ -28,7 +62,19 @@ public class CheckoutUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         logoutButton = new javax.swing.JButton();
+        welcomeLabel = new javax.swing.JLabel();
+        memberLabel = new javax.swing.JLabel();
+        readCardButton = new javax.swing.JButton();
+        couponField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable = new javax.swing.JTable();
+        backButton = new javax.swing.JButton();
+        payButton = new javax.swing.JButton();
+        grandTotalLabel = new javax.swing.JLabel();
+        calculateButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -41,21 +87,139 @@ public class CheckoutUI extends javax.swing.JFrame {
             }
         });
 
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        welcomeLabel.setText("welcome xxxxxxxxxxxxxxxxxxxx of xxxxxxxxxxx store");
+
+        memberLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        memberLabel.setText("Member:");
+
+        readCardButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        readCardButton.setText("Read Card");
+        readCardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readCardButtonActionPerformed(evt);
+            }
+        });
+
+        couponField.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        couponField.setMinimumSize(new java.awt.Dimension(200, 50));
+        couponField.setPreferredSize(new java.awt.Dimension(200, 50));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setText("Coupon :");
+
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable);
+
+        backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+
+        payButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        payButton.setText("Pay");
+        payButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payButtonActionPerformed(evt);
+            }
+        });
+
+        grandTotalLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        grandTotalLabel.setText("Grand Total : 0");
+
+        calculateButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        calculateButton.setText("Calculate");
+        calculateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(welcomeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                                .addComponent(backButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(logoutButton))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(memberLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(readCardButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(couponField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(grandTotalLabel)
+                .addGap(18, 18, 18)
+                .addComponent(calculateButton)
+                .addGap(18, 18, 18)
+                .addComponent(payButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(logoutButton)
+                    .addComponent(welcomeLabel)
+                    .addComponent(backButton))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(memberLabel)
+                    .addComponent(readCardButton)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(couponField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(payButton)
+                    .addComponent(grandTotalLabel)
+                    .addComponent(calculateButton))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(682, Short.MAX_VALUE)
-                .addComponent(logoutButton)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(logoutButton)
-                .addContainerGap(426, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -66,6 +230,63 @@ public class CheckoutUI extends javax.swing.JFrame {
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void readCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readCardButtonActionPerformed
+        try {
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+                if (acr122uCardTerminal != null) {
+                    try {
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            if (isChecking == false) {
+                                isChecking = true;
+                                NFCMethods nfc = new NFCMethods();
+                                cardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
+                                readCardButton.setVisible(Boolean.FALSE);
+                                memberLabel.setText("Member: " + cardId);
+                            }
+                        }
+                    } catch (CardException ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_readCardButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        try {
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            scanItem.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
+        calculateButton.setVisible(Boolean.FALSE);
+        payButton.setVisible(Boolean.TRUE);
+    }//GEN-LAST:event_calculateButtonActionPerformed
+
+    private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
+        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction);
+        payment.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_payButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -103,6 +324,18 @@ public class CheckoutUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton calculateButton;
+    private javax.swing.JTextField couponField;
+    private javax.swing.JLabel grandTotalLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JLabel memberLabel;
+    private javax.swing.JButton payButton;
+    private javax.swing.JButton readCardButton;
+    private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
