@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.smartcardio.CardException;
@@ -18,6 +19,7 @@ import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -63,6 +65,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     changing = true;
                     int row = e.getFirstRow();
                     int column = e.getColumn();
+                    if (row == jTable.getModel().getRowCount()-1){
+                        ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
+                    }
                     String id = String.valueOf(jTable.getModel().getValueAt(row, column));
                     //edited item id
                     if (column == 0) {
@@ -71,6 +76,14 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         while (i.hasNext()) {
                                 JSONObject jsonObject = (JSONObject) i.next();
                                 String currentId = (String) jsonObject.get("id");
+                                //remove item
+                                if (id.equals("")){
+                                    jTable.getModel().setValueAt("", row, 1);
+                                    jTable.getModel().setValueAt("", row, 2);
+                                    jTable.getModel().setValueAt("", row, 3);
+                                    jTable.getModel().setValueAt("", row, 4);
+                                    break;
+                                }
                                 if (currentId.equals(id)) {
                                     jTable.getModel().setValueAt(jsonObject.get("name"), row, 1);
                                     jTable.getModel().setValueAt(jsonObject.get("price"), row, 2);
@@ -79,7 +92,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                 }
                         }
                         Boolean res = consolidate(row);
-                        updateTotal();
+                        updateTotal(row);
                         //no need sort if 1 row
                         if (res.equals(Boolean.FALSE) || row == 0){
                             jTable.changeSelection(row + 1, column, false, false);
@@ -94,7 +107,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
                         Double total = (Integer.parseInt(qty)) * price;
                         jTable.getModel().setValueAt(Math.round(total), row, 4);
-                        updateTotal();
+                        updateTotal(row);
                     }
                     changing = false;
                 }
@@ -133,14 +146,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null}
             },
@@ -371,21 +376,20 @@ public class ScanItemsUI extends javax.swing.JFrame {
         });
     }
 
-    public void updateTotal() {
-        int rows = jTable.getModel().getRowCount();
+    public void updateTotal(int rows) {
         Double total = 0.0;
         Double current = 0.0;
         for (int i = 0; i < rows; i++) {
-            try {
+            try{
                 String val = String.valueOf(jTable.getModel().getValueAt(i, 4));
                 current = Double.parseDouble(val);
-            } catch (Exception e) {
-                //exception will occur on all empty rows
+                total += current;
+                current = 0.0;
+            }catch(Exception e){
+                
             }
-            total += current;
-            current = 0.0;
         }
-        totalLabel.setText("Grand Total: " + total);
+        totalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
     }
     
     public Boolean consolidate(int numrows){
@@ -395,7 +399,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         for (int i = 0; i <= numrows; i++) {
             String val = String.valueOf(jTable.getModel().getValueAt(i, 0));
             if (list.contains(val)){
-                try {
+                try{
                     duplicate = true;
                     int pos = list.indexOf(val);
                     String qty = String.valueOf(jTable.getModel().getValueAt(i, 3));
@@ -410,8 +414,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     jTable.getModel().setValueAt("", i, 2);
                     jTable.getModel().setValueAt("", i, 3);
                     jTable.getModel().setValueAt("", i, 4);
-                } catch (Exception e) {
-                    //exception will occur on all empty rows
+                }catch(Exception e){
+                
                 }
             }else{
                 list.add(val);
