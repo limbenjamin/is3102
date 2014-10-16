@@ -101,6 +101,10 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 4px;
 }
 
+.darkblue {
+    color: #2c3e50;
+}
+
 /************** TOP NAVBAR ******************/
 
 .contactinfo ul li:first-child{
@@ -169,7 +173,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .shop-menu ul li a i{
-	margin-right:3px;
+    margin-right:3px;
 }
 
 
@@ -189,8 +193,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mainmenu ul li{
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 20px;
 }
 
 .mainmenu ul li:first-child{
@@ -198,34 +201,34 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mainmenu ul li a {
-	color: #696763;
-	font-family: 'Roboto', sans-serif;
-	font-size: 17px;
-	font-weight: 300;
-	padding: 0;
-	padding-bottom: 10px;
+    color: #696763;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    padding: 0;
+    padding-bottom: 10px;
 }
 
 .mainmenu ul li a:hover, .mainmenu ul li a.active,  .shop-menu ul li a.active{
-	background:none;
-	color:#1aae88;
+    background:none;
+    color:#1aae88;
 }
 
 .search_box input {
-  background: #F0F0E9;
-  border: none;
-  border-radius: 3px;
-  color: #B2B2B2;
-  font-family: 'roboto';
-  font-size: 12px;
-  font-weight: 300;
-  height: 35px;
-  outline: medium none;
-  padding-left: 10px;
-  width: 205px;
-  background-image: url(../images/home/searchicon.png);
-  background-repeat: no-repeat;
-  background-position: 180px;
+    background: #F0F0E9;
+    border: none;
+    border-radius: 3px;
+    color: #B2B2B2;
+    font-family: 'roboto';
+    font-size: 12px;
+    font-weight: 300;
+    height: 35px;
+    outline: medium none;
+    padding-left: 10px;
+    width: 205px;
+    background-image: url(../images/home/searchicon.png);
+    background-repeat: no-repeat;
+    background-position: 180px;
 }
 
 
@@ -278,6 +281,16 @@ ul.sub-menu {
 
 .fa-angle-down{
   padding-left: 5px; 
+}
+
+/************** BREADCRUMBS ******************/
+
+.breadcrumb a {
+    color: #2c3e50;
+}
+
+.breadcrumb a:hover {
+    color: #269abc;
 }
 
 /************** SHOPPING LIST DETAIL **************/
@@ -874,6 +887,31 @@ h2.title {
 .product-details {
   overflow: hidden;
   margin-top: 10px;
+}
+
+.available {
+    font-size: 12px;
+    color: #fff;
+    background-color: #4cae4c;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.selling-fast {
+    font-size: 12px;
+    color: #fff;    
+    background-color: #FE980F;
+    padding: 5px;
+    margin-left: 10px;    
+}
+
+.sold-out {
+    font-size: 12px;
+    color: #fff;    
+    font-weight: bold;
+    background-color: #d43f3a;
+    padding: 5px;
+    margin-left: 10px;    
 }
 
 .view-product {
