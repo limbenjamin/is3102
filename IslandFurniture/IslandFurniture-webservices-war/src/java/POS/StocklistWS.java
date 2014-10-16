@@ -6,6 +6,7 @@
 
 package POS;
 
+import IslandFurniture.EJB.CWS.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CWS.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
@@ -46,11 +47,11 @@ public class StocklistWS {
     @EJB
     ManageUserAccountBeanLocal muabl;
     @EJB
-    StockManagerLocal sm;
-    @EJB
     SupplierManagerLocal ssm;
     @EJB
     ManageMemberAuthenticationBeanLocal mmab;
+    @EJB
+    ManageCatalogueBeanLocal mcbl;
     
     @POST
     @Path("furniturelist")
@@ -60,13 +61,13 @@ public class StocklistWS {
         if (staff == null){
             return "Error";
         }else{
-            furnitureList = sm.displayFurnitureList();
+            Store store = (Store) staff.getPlant();
+            furnitureList = mcbl.getStoreFurniture(store);
             builder = Json.createArrayBuilder();
             Iterator<FurnitureModel> iterator = furnitureList.iterator();
             while(iterator.hasNext()){
                 furnitureModel = iterator.next();
                 String id = String.valueOf(furnitureModel.getId());
-                Store store = (Store) staff.getPlant();
                 String price = String.valueOf(ssm.getPriceForStock(store.getCountryOffice(), furnitureModel));
                 String category = String.valueOf(furnitureModel.getCategory().name());
                 builder.add(Json.createObjectBuilder().add("id",id).add("name", furnitureModel.getName())
@@ -83,13 +84,13 @@ public class StocklistWS {
         if (staff == null){
             return "Error";
         }else{
-            retailList = sm.displayItemList();
+            Store store = (Store) staff.getPlant();
+            retailList = mcbl.getStoreRetailItems(store);
             builder = Json.createArrayBuilder();
             Iterator<RetailItem> iterator = retailList.iterator();
             while(iterator.hasNext()){
                 retailItem = iterator.next();
                 String id = String.valueOf(retailItem.getId());
-                Store store = (Store) staff.getPlant();
                 String price = String.valueOf(ssm.getPriceForStock(store.getCountryOffice(), retailItem));
                 //String category = String.valueOf(retailItem.);
                 builder.add(Json.createObjectBuilder().add("id", id).add("name", retailItem.getName())
