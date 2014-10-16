@@ -270,6 +270,22 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
 
+    //  Function: To create a Replenishment Transfer Order (Status: Requested) from Transaction
+    @Override
+    public void createReplenishmentTransferOrderFromTransaction(Plant plant, Stock stock) {
+        replenishmentTransferOrder = new ReplenishmentTransferOrder();
+        replenishmentTransferOrder.setRequestingPlant(plant);
+        replenishmentTransferOrder.setStock(stock);
+
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+
+        replenishmentTransferOrder.setQty(storefrontInventory.getMaxQty() - storefrontInventory.getQty());
+        replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        em.persist(replenishmentTransferOrder);
+        em.flush();
+    }
+
 //  Function: To delete a Replenishment Transfer Order  
     @Override
     public void deleteReplenishmentTransferOrder(Long id) {

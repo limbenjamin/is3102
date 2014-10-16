@@ -61,5 +61,4 @@ public class ManageMembership implements ManageMembershipLocal {
         Query q = em.createQuery("SELECT * FROM Customer");
         return q.getResultList();
     }
-
 }
