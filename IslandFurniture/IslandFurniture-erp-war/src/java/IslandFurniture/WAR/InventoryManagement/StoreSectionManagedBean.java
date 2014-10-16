@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageStoreSectionLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -16,8 +17,10 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
@@ -30,11 +33,11 @@ import javax.servlet.http.HttpSession;
 public class StoreSectionManagedBean implements Serializable {
 
     private List<StoreSection> storeSectionList;
-    
+
     private String username;
     private Staff staff;
     private Plant plant;
-    
+
     private String name;
     private int level;
     private String description;
@@ -52,11 +55,19 @@ public class StoreSectionManagedBean implements Serializable {
         plant = staff.getPlant();
         storeSectionList = storeSectionBean.viewStoreSectionList(plant);
     }
-    
+
 //  Function: To create a Store Section
     public void addStoreSection(ActionEvent event) throws IOException {
-        storeSectionBean.createStoreSection(plant, level, name, description);
-        storeSectionList = storeSectionBean.viewStoreSectionList(plant);
+        if (storeSectionBean.checkIfNoStoreSectionWithSameNameAndLevel(plant, name, level)) {
+            storeSectionBean.createStoreSection(plant, level, name, description);
+            storeSectionList = storeSectionBean.viewStoreSectionList(plant);
+
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Store Section has sucessfully been created", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Store Section with that name and level. Creation of Store Section was unsuccessful.", ""));
+        }
     }
 
 //  Function: To edit a Store Section
@@ -65,12 +76,21 @@ public class StoreSectionManagedBean implements Serializable {
         storeSectionBean.editStoreSection(ss);
         storeSectionList = storeSectionBean.viewStoreSectionList(plant);
     }
-    
+
 //  Function: To delete a Store Section
     public void deleteStoreSection(ActionEvent event) throws IOException {
         StoreSection ss = (StoreSection) event.getComponent().getAttributes().get("storeSection");
-        storeSectionBean.deleteStoreSection(ss);
-        storeSectionList = storeSectionBean.viewStoreSectionList(plant);
+
+        if (storeSectionBean.checkIfNoStorefrontInventoryInThisStoreSection(ss)) {
+            storeSectionBean.deleteStoreSection(ss);
+            storeSectionList = storeSectionBean.viewStoreSectionList(plant);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Store Section has sucessfully been deleted", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There are Storefront Inventory associated with this Store Section. Deletion of Store Section was unsuccessful.", ""));
+        }
+
     }
 
     public List<StoreSection> getStoreSectionList() {

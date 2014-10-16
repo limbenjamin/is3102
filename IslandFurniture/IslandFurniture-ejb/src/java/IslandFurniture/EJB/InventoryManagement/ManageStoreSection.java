@@ -6,8 +6,11 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.StoreSection;
+import IslandFurniture.Entities.StorefrontInventory;
+import IslandFurniture.Entities.StorefrontInventoryPK;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -25,6 +28,8 @@ public class ManageStoreSection implements ManageStoreSectionLocal {
     EntityManager em;
 
     private StoreSection storeSection;
+    private StorefrontInventory storefrontInventory;
+    private StorefrontInventoryPK storefrontInventoryPK;
 
 //  Function: To add Store Section
     @Override
@@ -64,4 +69,23 @@ public class ManageStoreSection implements ManageStoreSectionLocal {
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
+
+    //  Function: To check if there is any Store Section with same name and level - to not allow duplicates    
+    @Override
+    public boolean checkIfNoStoreSectionWithSameNameAndLevel(Plant plant, String name, int level) {
+        Query q = em.createQuery("SELECT s FROM StoreSection s WHERE s.store.id=:plantId AND s.name=:name AND s.storeLevel=:level");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("name", name);
+        q.setParameter("level", level);
+        return q.getResultList().isEmpty();
+    }
+
+    //  Function: To check if there is no Stock Inventory with a particular stock when deleting Store Section
+    @Override
+    public boolean checkIfNoStorefrontInventoryInThisStoreSection(StoreSection storeSection) {
+        Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.locationInStore.id=:id");
+        q.setParameter("id", storeSection.getId());
+        return q.getResultList().isEmpty();
+    }
+
 }
