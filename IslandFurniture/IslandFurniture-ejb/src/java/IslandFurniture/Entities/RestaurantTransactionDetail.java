@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -26,10 +24,6 @@ public class RestaurantTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
     private RestaurantTransaction restaurantTransaction;
     @ManyToOne
     private MenuItem menuItem;

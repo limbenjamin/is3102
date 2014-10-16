@@ -109,7 +109,7 @@ public class Url implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.EJB.Entities.Url[ id=" + id + " ]";
+        return "Url[ id=" + id + " ]";
     }
 
     @Override

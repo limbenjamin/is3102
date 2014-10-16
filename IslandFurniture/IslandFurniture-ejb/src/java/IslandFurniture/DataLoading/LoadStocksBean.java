@@ -15,7 +15,6 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
-import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -125,7 +124,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         try {
             // Start Random var
             Random rand = new Random(1);
-            
+
             if (mode == 0) {
                 // Add some Materials
                 this.addMaterial("Flathead Screw, Plus (5mm x 15mm)", 10);
@@ -206,45 +205,32 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addRetailItem("Sambal Cheese Stick - Regular");
                 this.addRetailItem("Sambal Cheese Stick - Party Pack");
 
-                // Add List of stuff each store will sell
-                List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
+                // Add StockSupplied Relationship (Dependant on prior data loading
+                // of Organisation Entities)
+                List<CountryOffice> coList = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
+                List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
+
                 List<FurnitureModel> furnitureModels = (List<FurnitureModel>) em.createNamedQuery("getAllFurnitureModels").getResultList();
                 List<RetailItem> retailItems = (List<RetailItem>) em.createNamedQuery("getAllRetailItems").getResultList();
 
-                for (Store eachStore : stores) {
+                java.util.Currency javaCurrency;
+
+                for (CountryOffice eachCo : coList) {
+                    javaCurrency = java.util.Currency.getInstance(eachCo.getCountry().getCurrency().getCurrencyCode());
+
                     for (FurnitureModel eachFm : furnitureModels) {
                         if (rand.nextBoolean()) {
-                            eachStore.getSells().add(eachFm);
+                            this.addStockSupplied(eachFm, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                         }
                     }
                     for (RetailItem eachRi : retailItems) {
                         if (rand.nextBoolean()) {
-                            eachStore.getSells().add(eachRi);
+                            this.addStockSupplied(eachRi, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                         }
                     }
 
                 }
-
-                // Add StockSupplied Relationship (Dependant on prior data loading
-                // of Organisation Entities)
-                List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
-                List<ManufacturingFacility> mfs = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
-
-                for (CountryOffice eachCo : countryOffices) {
-                    Set<Stock> stocksSold = new HashSet();
-
-                    // Grab all that stores sell and put in a list
-                    for (Store eachStore : eachCo.getStores()) {
-                        stocksSold.addAll(eachStore.getSells());
-                    }
-
-                    // Assign every item sold to an mf
-                    for (Stock eachStock : stocksSold) {
-                        java.util.Currency javaCurrency = java.util.Currency.getInstance(eachCo.getCountry().getCurrency().getCurrencyCode());
-                        this.addStockSupplied(eachStock, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
-                    }
-                }
-
+                
                 em.flush();
             } else {
                 // Manual data loading for first system release
@@ -292,45 +278,26 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 retailItems.add(this.addRetailItem("Durian Crisp - Regular"));
                 retailItems.add(this.addRetailItem("Sambal Cheese Stick - Regular"));
 
-                Store store;
-                store = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Alexandra");
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Swivel Chair"));
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"));
-                store.getSells().addAll(retailItems);
-
-                store = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tampines");
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Swivel Chair"));
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"));
-                store.getSells().addAll(retailItems);
-
-                store = (Store) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Johor Bahru - Kulai");
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Swivel Chair"));
-                store.getSells().add(QueryMethods.findFurnitureByName(em, "Coffee Table"));
-                store.getSells().addAll(retailItems);
-
-                List<CountryOffice> countryOffices = new ArrayList();
-                countryOffices.add((CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Singapore"));
-                countryOffices.add((CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Malaysia"));
-
+                CountryOffice co;
                 ManufacturingFacility mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tuas");
+                java.util.Currency javaCurrency;
 
-                for (CountryOffice eachCo : countryOffices) {
-                    Set<Stock> stocksSold = new HashSet();
-
-                    // Grab all that stores sell and put in a list (with dupes)
-                    for (Store eachStore : eachCo.getStores()) {
-                        stocksSold.addAll(eachStore.getSells());
-                    }
-
-                    // Assign every item sold to an mf
-                    for (Stock eachStock : stocksSold) {
-                        java.util.Currency javaCurrency = java.util.Currency.getInstance(eachCo.getCountry().getCurrency().getCurrencyCode());
-                        this.addStockSupplied(eachStock, eachCo, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
-                    }
+                co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Singapore");
+                javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                for (RetailItem ri : retailItems) {
+                    this.addStockSupplied(ri, co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                 }
 
+                co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Malaysia");
+                javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                for (RetailItem ri : retailItems) {
+                    this.addStockSupplied(ri, co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                }
             }
 
             return true;

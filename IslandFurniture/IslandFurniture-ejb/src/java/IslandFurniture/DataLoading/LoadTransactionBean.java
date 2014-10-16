@@ -11,7 +11,7 @@ import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
-import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
@@ -103,13 +103,13 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     fTransDetails.clear();
                     riTransDetails.clear();
 
-                    for (Stock stock : eachStore.getSells()) {
+                    for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
-                            if (stock instanceof FurnitureModel) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, 10));
+                            if (ss.getStock() instanceof FurnitureModel) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), 10));
 //                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, rand.nextInt(50) + 1));
-                            } else if (stock instanceof RetailItem) {
-                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, 10));
+                            } else if (ss.getStock() instanceof RetailItem) {
+                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), 10));
 //                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
                             }
                         }

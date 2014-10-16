@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -58,8 +57,6 @@ public abstract class Plant implements Serializable {
     protected Country country;
     @OneToMany(mappedBy = "plant")
     protected List<Staff> employees;
-    @ManyToMany
-    protected List<PlantStockInventory> plantStockInventories;
     @OneToMany(mappedBy = "plant")
     protected List<StorageArea> storageAreas;
     @OneToMany(mappedBy = "plant")
@@ -131,15 +128,6 @@ public abstract class Plant implements Serializable {
     }
 
     @XmlTransient
-    public List<PlantStockInventory> getPlantStockInventories() {
-        return plantStockInventories;
-    }
-
-    public void setPlantStockInventories(List<PlantStockInventory> plantStockInventories) {
-        this.plantStockInventories = plantStockInventories;
-    }
-
-    @XmlTransient
     public List<StorageArea> getStorageAreas() {
         return storageAreas;
     }
@@ -188,7 +176,7 @@ public abstract class Plant implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Plant[ id=" + id + " ]";
+        return "Plant[ id=" + id + " ]";
     }
 
 }

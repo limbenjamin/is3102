@@ -16,6 +16,7 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
+import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.QueryMethods.findFurnitureByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findMaterialByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStock;
@@ -206,7 +207,7 @@ public class StockManager implements StockManagerLocal {
             stockList = getStockSuppliedByStock(em, fm);
             bom = fm.getBom();
             bomDetailList = bom.getBomDetails();
-            if(fm.getSoldBy().size() > 1) {
+            if(QueryMethods.getStockSuppliedByStock(em, fm).size() >= 1) {
                 System.err.println("Invalid deletion as it is currently sold by a store");
                 return "Invalid deletion as it is currently sold by a store";
             }
@@ -415,7 +416,7 @@ public class StockManager implements StockManagerLocal {
             item = em.find(RetailItem.class, itemID);
             stockList = getStockSuppliedByStock(em, item); 
             pcdList = findPCDByStock(em, (ProcuredStock)item);
-            if(item.getSoldBy().size() >= 1) {
+            if(QueryMethods.getStockSuppliedByStock(em, item).size() >= 1) {
                 System.err.println("Can't delete " + item.getName() + " because it is currently sold by a store");
                 if(pcdList.size() > 0) { 
                     System.err.println("Invalid deletion due to existing Procurement Contract Detail for " + item.getName());

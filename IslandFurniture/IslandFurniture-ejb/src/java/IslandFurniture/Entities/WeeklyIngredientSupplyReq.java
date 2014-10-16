@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
+import IslandFurniture.Enums.Month;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -21,19 +20,25 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class WeeklyIngredientSupplyReq implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long period;
+    private Integer week;
+    private Month month;
+    private Integer year;
     private Long qty;
 
     @ManyToOne
     private Ingredient ingredient;
 
-    @OneToMany(mappedBy = "weeklyIngredientSupplyReq")
-    private List<DailyIngredientSupplyReq> dailyReq;
-    
+    @ManyToOne
+    private Store store;
+
+    @OneToOne
+    private IngredientPurchaseOrderDetail ingredPoDetail;
+
     public Long getId() {
         return id;
     }
@@ -42,12 +47,28 @@ public class WeeklyIngredientSupplyReq implements Serializable {
         this.id = id;
     }
 
-    public Long getPeriod() {
-        return period;
+    public Integer getWeek() {
+        return week;
     }
 
-    public void setPeriod(Long period) {
-        this.period = period;
+    public void setWeek(Integer week) {
+        this.week = week;
+    }
+
+    public Month getMonth() {
+        return month;
+    }
+
+    public void setMonth(Month month) {
+        this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Long getQty() {
@@ -66,12 +87,20 @@ public class WeeklyIngredientSupplyReq implements Serializable {
         this.ingredient = ingredient;
     }
 
-    public List<DailyIngredientSupplyReq> getDailyReq() {
-        return dailyReq;
+    public Store getStore() {
+        return store;
     }
 
-    public void setDailyReq(List<DailyIngredientSupplyReq> dailyReq) {
-        this.dailyReq = dailyReq;
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public IngredientPurchaseOrderDetail getIngredPoDetail() {
+        return ingredPoDetail;
+    }
+
+    public void setIngredPoDetail(IngredientPurchaseOrderDetail ingredPoDetail) {
+        this.ingredPoDetail = ingredPoDetail;
     }
 
     @Override
@@ -96,7 +125,7 @@ public class WeeklyIngredientSupplyReq implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.DailyIngredientSupplyReq[ id=" + id + " ]";
+        return "WeeklyIngredientSupplyReq[ id=" + id + " ]";
     }
-    
+
 }

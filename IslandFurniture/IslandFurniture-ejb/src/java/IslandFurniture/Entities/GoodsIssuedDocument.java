@@ -6,14 +6,9 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.time.*;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -24,12 +19,10 @@ import javax.persistence.TemporalType;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class GoodsIssuedDocument implements Serializable {
+public class GoodsIssuedDocument extends Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    
     @ManyToOne
     private Plant plant;
     @ManyToOne
@@ -49,14 +42,6 @@ public class GoodsIssuedDocument implements Serializable {
 
     public void setReceived(Boolean received) {
         this.received = received;
-    }
-        
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Plant getPlant() {

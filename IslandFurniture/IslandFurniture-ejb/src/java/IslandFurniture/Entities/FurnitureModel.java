@@ -42,6 +42,8 @@ public class FurnitureModel extends Stock implements Serializable {
     private FurnitureSubcategory subcategory;
     private List colour;
     private String furnitureDescription;
+    @OneToMany
+    private List<Picture> pictures;
 
     public FurnitureModel() {
         
@@ -107,6 +109,14 @@ public class FurnitureModel extends Stock implements Serializable {
 
     public void setFurnitureDescription(String furnitureDescription) {
         this.furnitureDescription = furnitureDescription;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
     }
 
     @Override

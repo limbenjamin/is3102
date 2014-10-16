@@ -9,9 +9,6 @@ import IslandFurniture.Enums.PurchaseOrderStatus;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
@@ -25,30 +22,19 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class PurchaseOrder implements Serializable {
+public abstract class PurchaseOrder extends Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
     @Temporal(TemporalType.TIMESTAMP)
-    private Calendar orderDate;
-    private Double price;
-    private PurchaseOrderStatus status;
+    protected Calendar orderDate;
+    protected Double price;
+    protected PurchaseOrderStatus status;
 
     @OneToOne
-    private Currency currency;
+    protected Currency currency;
 
     @ManyToOne
-    private Plant shipsTo;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    protected Plant shipsTo;
 
     public Calendar getOrderDate() {
         return orderDate;

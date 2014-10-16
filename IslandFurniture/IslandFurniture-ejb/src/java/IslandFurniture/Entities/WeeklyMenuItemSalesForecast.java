@@ -15,17 +15,20 @@ import javax.persistence.ManyToOne;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class DailyIngredientSupplyReq implements Serializable {
+public class WeeklyMenuItemSalesForecast implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer weekNo;
+    private Integer qty;
+    private Boolean locked;
     
     @ManyToOne
-    private WeeklyIngredientSupplyReq weeklyIngredientSupplyReq;
+    private MonthlyMenuItemSalesForecast mmsf;
 
     public Long getId() {
         return id;
@@ -35,12 +38,36 @@ public class DailyIngredientSupplyReq implements Serializable {
         this.id = id;
     }
 
-    public WeeklyIngredientSupplyReq getWeeklyIngredientSupplyReq() {
-        return weeklyIngredientSupplyReq;
+    public Integer getWeekNo() {
+        return weekNo;
     }
 
-    public void setWeeklyIngredientSupplyReq(WeeklyIngredientSupplyReq weeklyIngredientSupplyReq) {
-        this.weeklyIngredientSupplyReq = weeklyIngredientSupplyReq;
+    public void setWeekNo(Integer weekNo) {
+        this.weekNo = weekNo;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public Boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public MonthlyMenuItemSalesForecast getMmsf() {
+        return mmsf;
+    }
+
+    public void setMmsf(MonthlyMenuItemSalesForecast mmsf) {
+        this.mmsf = mmsf;
     }
 
     @Override
@@ -53,10 +80,10 @@ public class DailyIngredientSupplyReq implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DailyIngredientSupplyReq)) {
+        if (!(object instanceof WeeklyMenuItemSalesForecast)) {
             return false;
         }
-        DailyIngredientSupplyReq other = (DailyIngredientSupplyReq) object;
+        WeeklyMenuItemSalesForecast other = (WeeklyMenuItemSalesForecast) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -65,7 +92,7 @@ public class DailyIngredientSupplyReq implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.DailyIngredientSupplyReq[ id=" + id + " ]";
+        return "IslandFurniture.Entities.WeeklyMenuItemSalesForecast[ id=" + id + " ]";
     }
     
 }
