@@ -30,6 +30,9 @@ public interface ManageInventoryTransferLocal {
     //  Function: To create a Replenishment Transfer Order (Status: Requested)
     void createReplenishmentTransferOrder(Plant plant, Stock stock, Integer quantity);
 
+    //  Function: To create a Replenishment Transfer Order (Status: Requested) from Transaction
+    void createReplenishmentTransferOrderFromTransaction(Plant plant, Stock stock);
+
     void createStockUnit(Stock stock, String batchNo, Long quantity, StorageBin storageBin);
 
     void createStockUnit2(Stock stock, Long stockUnitId, String batchNo, Long quantity, StorageBin storageBin, GoodsIssuedDocument gid);
@@ -139,5 +142,8 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To edit Replenishment Transfer Order Request to Fulfilled 
     void editReplenishmentTransferOrderStatusToRequestFulfilled(ReplenishmentTransferOrder replenishmentTransferOrder);
+
+    //  Function: To check Replenishment Transfer Order (Requested) already exists  
+    boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock);
 
 }

@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:define name="content">
+        <!-- extra styles for rotatable product -->
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/prism.css"></link>
+        <link rel="stylesheet" href="#{application.contextPath}/assets/css/threesixty.css"></link>        
+	<section>
+	<div class="container">
+            <div class="row">
+                <!--product-details-->
+                <div class="product-details">
+                        <div class="col-sm-4">
+                            <div class="rotate-label">
+                                Drag mouse to rotate product
+                            </div>
+                            <section class="container-fluid" id="container" style="max-width:512px;">
+                                <div class="threesixty product1">
+                                    <div class="spinner">
+                                      <span>0%</span>
+                                    </div>
+                                    <ol class="threesixty_images"></ol>
+                                </div>
+                            </section>
+                        </div>
+			<div class="col-sm-8">
+                            <!--/product-information-->
+                            <div class="product-information">
+                                <h2>Children's Wooden Passion Chair</h2>
+                                <h4>SGD $26.00</h4>
+                                <span class="product-options">
+                                    <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
+                                    <a href="#"><i class="fa fa-eye"></i> View in Room Planner</a>
+                                </span>
+                                <hr/>
+                                <div class="col-sm-8">
+                                    <p><b>Manufactured in:</b> Cambodia</p>
+                                    <p><b>Condition:</b> New</p>
+                                    <p><b>Discount:</b> Not available</p>
+                                    <br/>
+                                    <form class="form-horizontal" role="form">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 col-xs-3 control-label" style="text-align: left;">Quantity: </label>
+                                            <div class="col-sm-3 col-xs-4">
+                                                <input type="number" class="form-control" value="1" min="1"></input>
+                                            </div>
+                                        </div>
+                                        <!-- add to shopping list and popover -->
+                                        <div class="popover-markup">
+                                            <a class="btn btn-success btn-round trigger">
+                                                <i class="fa fa-shopping-cart"></i> Add to Shopping List
+                                            </a>
+                                            <div class="head hide">Select a List</div>
+                                            <div class="content hide">
+                                              <div class="form-group">
+                                                  <div class="col-sm-12 radiolist">
+                                                      <input type="radio" name="list" value="1" onclick="document.getElementById('newList').disabled = true;"/> First list<br/>
+                                                      <input type="radio" name="list" value="2" onclick="document.getElementById('newList').disabled = true;"/> Second list<br/>
+                                                      <input onclick="document.getElementById('newList').disabled = false; " type="radio" name="list"/>
+                                                      <input type="text" id="newList" value="New List" />
+                                                  </div>
+                                              </div>
+                                              <div class="form-group">
+                                                  <div class="col-sm-12">
+                                                    <button type="submit" class="btn btn-round btn-success">Add Item</button>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                        </div>
+	                            </form>
+	                            <br/><br/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p><strong>Product Availability</strong>:</p><br/>
+                                    <strong>Alexandra:</strong>
+                                    <span class="available">AVAILABLE</span><br/>
+                                    <strong>Tampines:</strong>
+                                    <span class="selling-fast">SELLING FAST</span><br/>
+                                    <br/><br/>
+                                </div>
+                                <div class="col-sm-12">  
+                                    <!--category-tabs-->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="active"><a href="#details" role="tab" data-toggle="tab">
+                                                <i class="fa fa-fw fa-info-circle"></i> Product Details
+                                            </a></li>
+                                        <li><a href="#feedback" role="tab" data-toggle="tab">
+                                                <i class="fa fa-fw fa-comments"></i> Feedback
+                                            </a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="details">
+                                            <div class="col-xs-12">
+                                                <div class="col-sm-3">
+                                                    <h5>Product dimensions</h5>
+                                                    <p>Tested for: 50 kg<br/>
+                                                        Depth: 52 cm<br/>
+                                                        Seat width: 35 cm<br/>
+                                                        Width: 53 cm</p>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <h5>Care Instructions</h5>
+                                                    <p>Wipe clean with a cloth dampened in a mild cleaner.<br/>
+                                                        Wipe clean with a dry cloth.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="feedback">
+                                            <div class="col-xs-12">
+                                                <form class="form-horizontal feedback-form" role="form">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Title</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" placeholder="Title"/>
+                                                        </div>
+                                                        <label class="col-sm-2 control-label">Email</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="email" class="form-control" placeholder="Email"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Feedback</label>
+                                                        <div class="col-sm-10">
+                                                            <textarea class="form-control" placeholder="Your Feedback" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <button type="submit" class="btn btn-success">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+			</div>
+                    </div>
+                    <br/><br/>
+                    <div class="recommended_items"><!--recommended_items-->
+                        <h2>RECOMMENDED (7)</h2>
+                        <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <h2>$3.20</h2>
+                                                    <a href="#"><p>Merlion Magnet</p></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </div>
+                    </div><!--/recommended_items-->
+                </div>
+            </div>
+	</section>
+        <script type="text/javascript">
+            window.onload = init;
+
+            var product;
+            function init(){
+
+              product1 = $('.product1').ThreeSixty({
+                totalFrames: 36,
+                endFrame: 36,
+                currentFrame: 1,
+
+                imgList: '.threesixty_images',
+                progress: '.spinner',
+                imagePath:'assets/images/rotate/redchair/',
+                filePrefix: '',
+                ext: '.png',
+                height: 320,
+                width: 1000,
+                navigation: true,
+                responsive: true
+              });
+
+            }
+        </script>
+        <script>
+            $('.popover-markup>.trigger').popover({
+                html: true,
+                title: function () {
+                    return $(this).parent().find('.head').html();
+                },
+                content: function () {
+                    return $(this).parent().find('.content').html();
+                }
+            });
+        </script>        
+    </ui:define>
+</ui:composition>

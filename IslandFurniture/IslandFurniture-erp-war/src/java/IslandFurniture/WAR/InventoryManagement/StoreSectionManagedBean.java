@@ -9,7 +9,6 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageStoreSectionLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
