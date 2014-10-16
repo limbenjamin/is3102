@@ -11,7 +11,6 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageStoreSectionLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
-import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.Entities.StorefrontInventory;
@@ -21,8 +20,10 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
@@ -47,7 +48,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
 
     private int replenishQty;
     private int maxQty;
-    
+
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
@@ -81,15 +82,37 @@ public class StorefrontInventoryManagedBean implements Serializable {
 
 //  Function: To create a Storefront Inventory
     public void addStorefrontInventory(ActionEvent event) throws IOException {
-        storefrontInventoryBean.createStorefrontInventory(plant, stockId, replenishQty, maxQty, storeSectionId);
-        storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+        if (replenishQty > maxQty) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be lesser than Maximum Quantity. Creation of Storefront Inventory was unsuccessful.", ""));
+
+        } else if (replenishQty > maxQty * .5) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be minimally 50% or lesser than the Maximum Quantity. <br/> The suggested Replenishment Quantity with Maximum Quantity of " + maxQty + " should be " + Math.floor((double) maxQty * .5) + " or lesser. <br/> Creation of Storefront Inventory was unsuccessful.", ""));
+        } else {
+            storefrontInventoryBean.createStorefrontInventory(plant, stockId, replenishQty, maxQty, storeSectionId);
+            storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Storefront Inventory has sucessfully been created", ""));
+        }
     }
 
 //  Function: To edit a Storefront Inventory
     public void editStorefrontInventory(ActionEvent event) throws IOException {
         StorefrontInventory si = (StorefrontInventory) event.getComponent().getAttributes().get("storefrontInventory");
-        storefrontInventoryBean.editStorefrontInventory(si);
-        storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+        if (si.getRepQty() > si.getMaxQty()) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be lesser than Maximum Quantity. Editing of Storefront Inventory was unsuccessful.", ""));
+
+        } else if (si.getRepQty() > si.getMaxQty() * .5) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be minimally 50% or lesser than the Maximum Quantity. <br/> The suggested Replenishment Quantity with Maximum Quantity of " + si.getMaxQty() + " should be " + Math.floor((double) si.getMaxQty() * .5) + " or lesser. <br/> Editing of Storefront Inventory was unsuccessful.", ""));
+        } else {
+            storefrontInventoryBean.editStorefrontInventory(si);
+            storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Storefront Inventory has sucessfully been edited", ""));
+        }
     }
 
 //  Function: To delete a Storefront Inventory

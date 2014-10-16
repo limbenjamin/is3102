@@ -32,5 +32,8 @@ public interface ManageStorefrontInventoryLocal {
     StorefrontInventory getStorefrontInventory(Plant plant, Long stockId);
 
     //  Function: To edit Storefront Inventory Quantity
-    void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty); 
+    void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty);
+
+
+    
 }
