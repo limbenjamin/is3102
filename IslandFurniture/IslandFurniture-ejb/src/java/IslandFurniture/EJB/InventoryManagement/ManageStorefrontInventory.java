@@ -91,4 +91,16 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         return storefrontInventory;
     }
 
+    //  Function: To check if current quantity is below replenishment levels
+    @Override
+    public boolean checkIfStorefrontInventoryCurrentQtyBelowReplenishmentQtyPlant (Plant plant, Long stockId) {
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stockId);
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+        if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

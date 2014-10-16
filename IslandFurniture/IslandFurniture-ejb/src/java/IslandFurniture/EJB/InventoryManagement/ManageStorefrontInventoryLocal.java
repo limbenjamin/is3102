@@ -34,6 +34,7 @@ public interface ManageStorefrontInventoryLocal {
     //  Function: To edit Storefront Inventory Quantity
     void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty);
 
+    //  Function: To check if current quantity is below replenishment levels
+    boolean checkIfStorefrontInventoryCurrentQtyBelowReplenishmentQtyPlant(Plant plant, Long stockId);
 
-    
 }

@@ -140,4 +140,7 @@ public interface ManageInventoryTransferLocal {
     //  Function: To edit Replenishment Transfer Order Request to Fulfilled 
     void editReplenishmentTransferOrderStatusToRequestFulfilled(ReplenishmentTransferOrder replenishmentTransferOrder);
 
+    //  Function: To check Replenishment Transfer Order (Requested) already exists  
+    boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock);
+
 }

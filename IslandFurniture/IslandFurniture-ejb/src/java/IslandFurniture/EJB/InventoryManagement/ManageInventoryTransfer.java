@@ -13,6 +13,8 @@ import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
+import IslandFurniture.Entities.StorefrontInventory;
+import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
 import java.util.Calendar;
 import java.util.List;
@@ -37,6 +39,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     private ReplenishmentTransferOrder replenishmentTransferOrder;
     private ExternalTransferOrder externalTransferOrder;
     private ExternalTransferOrderDetail externalTransferOrderDetail;
+    private StorefrontInventory storefrontInventory;
+    private StorefrontInventoryPK storefrontInventoryPK;
 
     @Override
     public StockUnit getStockUnit(Long stockUnitId) {
@@ -283,6 +287,17 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
 
+    //  Function: To check Replenishment Transfer Order (Requested) already exists  
+    @Override
+    public boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2)");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        q.setParameter("status2", TransferOrderStatus.REQUESTED_PENDING);
+        return q.getResultList().isEmpty();
+    }
+
 //  Function: To create a External Transfer Order (Status: Requested)
     @Override
     public ExternalTransferOrder createExternalTransferOrder(Plant plant) {
@@ -438,7 +453,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(externalTransferOrder);
         em.flush();
     }
-    
+
     //  Function: To edit Replenishment Transfer Order Request to Fulfilled 
     @Override
     public void editReplenishmentTransferOrderStatusToRequestFulfilled(ReplenishmentTransferOrder replenishmentTransferOrder) {
