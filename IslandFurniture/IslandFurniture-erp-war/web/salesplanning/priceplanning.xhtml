@@ -86,7 +86,7 @@
                                 <h:panelGroup id="content" class="modal-body">
                                     <ui:repeat value="#{pricePlanningManagedBean.displayList}" varStatus="loop" var="ss">
                                         <div class="form-group">
-                                            <label class="col-sm-3 col-md-offset-1 control-label">#{ss.countryOffice.country.name}: </label>
+                                            <label class="col-sm-3 col-md-offset-1 control-label">#{ss.countryOffice.country.name} (#{ss.countryOffice.country.currency.currencyCode}): </label>
                                             <div class="col-sm-6">
                                                 <h:inputText class="form-control" value="#{pricePlanningManagedBean.displayList[loop.index].price}" ></h:inputText> 
                                             </div> 

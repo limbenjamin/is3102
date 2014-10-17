@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import java.util.List;
@@ -61,5 +62,7 @@ public interface StockManagerLocal {
     public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category);
 
     public String editFurnitureDescription(Long furnitureID, String description);
+
+    public Stock getStock(Long id);
     
 }
