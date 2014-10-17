@@ -76,12 +76,13 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
         //JPA delete query
-        Query q = em.createQuery("SELECT pcd FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
+        Query q = em.createQuery("DELETE FROM PromotionCoupon zz where zz.promotionDetail.promotionCampaign=:pc");
         q.setParameter("pc", pc);
+        q.executeUpdate();
 
-        for (PromotionDetail pd : (List<PromotionDetail>) q.getResultList()) {
-            em.remove(pd);
-        }
+        q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
+        q.setParameter("pc", pc);
+        q.executeUpdate();
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
@@ -90,16 +91,22 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
 
             pd.setPromotionCampaign(pc);
-            em.merge(pd);
+            em.merge(pd); //unncessary
 
             if (pd.getPromotionCoupons().size() > 0) {
+                
                 if (pd.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
                     pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
                     Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
                     l.executeUpdate();
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
                     em.merge(pd.getPromotionCoupons().get(0));
+                    
                 } else {
+                    
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(null);
+                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0));
 
                     Query l = em.createQuery("SELECT pc FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
@@ -108,9 +115,9 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                         throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
                     }
 
-                    for (int i = l.getResultList().size(); i <= pd.getUsageCount().intValue(); i++) {
+                    for (int i = l.getResultList().size()+1; i <= pd.getUsageCount().intValue(); i++) {
                         PromotionCoupon new_pc = new PromotionCoupon();
-                        new_pc.setOneTimeUsage(false);
+                        new_pc.setOneTimeUsage(true);
                         new_pc.setPromotionDetail(pd);
                         pd.getPromotionCoupons().add(new_pc);
                         em.merge(new_pc);
