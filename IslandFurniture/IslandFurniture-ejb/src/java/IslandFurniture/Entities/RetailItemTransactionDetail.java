@@ -25,6 +25,8 @@ public class RetailItemTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer qty;
+    private Double unitPrice;
+    private Integer unitPoints;
 
     @ManyToOne
     private RetailItemTransaction retailItemTransaction;
@@ -73,6 +75,22 @@ public class RetailItemTransactionDetail implements Serializable {
         this.promotionDetail = promotionDetail;
     }
 
+    public Double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Integer getUnitPoints() {
+        return unitPoints;
+    }
+
+    public void setUnitPoints(Integer unitPoints) {
+        this.unitPoints = unitPoints;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -96,6 +114,15 @@ public class RetailItemTransactionDetail implements Serializable {
     @Override
     public String toString() {
         return "RetailItemTransactionDetail[ id=" + id + " ]";
+    }
+
+    // Extra Methods
+    public Double getSubtotal() {
+        return this.qty * this.unitPrice;
+    }
+
+    public Integer getTotalPoints() {
+        return this.qty * this.unitPoints;
     }
 
     // Entity Callbacks

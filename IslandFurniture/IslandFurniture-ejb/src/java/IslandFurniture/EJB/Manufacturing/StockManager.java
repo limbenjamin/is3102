@@ -13,6 +13,7 @@ import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
@@ -163,6 +164,18 @@ public class StockManager implements StockManagerLocal {
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return null;
+        }
+    }
+    @Override
+    public Stock getStock(Long id) {
+        Stock stock;
+        try {
+            System.out.println("StockManager.getStock()");
+            stock = em.find(Stock.class, id);
+            return stock;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;  
         }
     }
     @Override
