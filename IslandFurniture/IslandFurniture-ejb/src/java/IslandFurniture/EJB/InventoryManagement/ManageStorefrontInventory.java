@@ -6,12 +6,15 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.Entities.StorefrontInventoryPK;
+import IslandFurniture.Enums.TransferOrderStatus;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +32,10 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
 
     private StorefrontInventory storefrontInventory;
     private StorefrontInventoryPK storefrontInventoryPK;
+    private ReplenishmentTransferOrder replenishmentTransferOrder;
+
+    @EJB
+    public ManageInventoryTransferLocal transferBean;
 
 //  Function: To add Storefront Inventory
     @Override
@@ -52,16 +59,6 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory.setRepQty(storefrontInventoryUpdated.getRepQty());
         storefrontInventory.setMaxQty(storefrontInventoryUpdated.getMaxQty());
         storefrontInventory.setLocationInStore((StoreSection) em.find(StoreSection.class, storefrontInventoryUpdated.getLocationInStore().getId()));
-        em.merge(storefrontInventory);
-        em.flush();
-    }
-
-    //  Function: To edit Storefront Inventory Quantity
-    @Override
-    public void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty) {
-        StorefrontInventoryPK pk = new StorefrontInventoryPK(storefrontInventoryUpdated.getStore().getId(), storefrontInventoryUpdated.getStock().getId());
-        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, pk);
-        storefrontInventory.setQty(qty);
         em.merge(storefrontInventory);
         em.flush();
     }
@@ -90,17 +87,41 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         return storefrontInventory;
     }
-
-    //  Function: To check if current quantity is below replenishment levels
+    
+//  Function: To edit Storefront Inventory quantity
     @Override
-    public boolean checkIfStorefrontInventoryCurrentQtyBelowReplenishmentQtyPlant (Plant plant, Long stockId) {
-        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stockId);
+    public void editStorefrontInventoryQty(StorefrontInventory si, int qty) {
+        storefrontInventoryPK = new StorefrontInventoryPK(si.getStore().getId(), si.getStock().getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
-        if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
-            return true;
-        } else {
-            return false;
-        }
+        storefrontInventory.setQty(qty);
+        em.merge(storefrontInventory);
+        em.flush(); 
     }
 
+    //  Function: To reduce Storefront Inventory from Transaction
+    @Override
+    public void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty) {
+        // Start: Reduce Qty from Transaction : Current - Qty        
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+        storefrontInventory.setQty(storefrontInventory.getQty() - qty);
+        em.merge(storefrontInventory);
+        em.flush();
+        em.refresh(storefrontInventory);
+        // End: Reduce Qty from Transaction : Current - Qty 
+
+        // Start: If curr < replenishment, then create Replenishment Transfer Order
+        if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
+            if (transferBean.checkIfReplenishmentTransferOrderforStockDoNotExists(plant, stock)) {
+                replenishmentTransferOrder = new ReplenishmentTransferOrder();
+                replenishmentTransferOrder.setRequestingPlant(plant);
+                replenishmentTransferOrder.setStock(stock);
+                replenishmentTransferOrder.setQty(storefrontInventory.getMaxQty() - storefrontInventory.getQty());
+                replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
+                em.persist(replenishmentTransferOrder);
+                em.flush();
+            }
+        }
+        // End: If curr < replenishment, then create Replenishment Transfer Order 
+    }
 }

@@ -31,10 +31,10 @@ public interface ManageStorefrontInventoryLocal {
     //  Function: To get Storefront Inventory Entity
     StorefrontInventory getStorefrontInventory(Plant plant, Long stockId);
 
-    //  Function: To edit Storefront Inventory Quantity
-    void editStorefrontInventoryQty(StorefrontInventory storefrontInventoryUpdated, int qty);
-
-    //  Function: To check if current quantity is below replenishment levels
-    boolean checkIfStorefrontInventoryCurrentQtyBelowReplenishmentQtyPlant(Plant plant, Long stockId);
+    //  Function: To reduce Storefront Inventory from Transaction
+    void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty);
+    
+    //  Function: To edit Storefront Inventory quantity
+    void editStorefrontInventoryQty(StorefrontInventory si, int qty);
 
 }

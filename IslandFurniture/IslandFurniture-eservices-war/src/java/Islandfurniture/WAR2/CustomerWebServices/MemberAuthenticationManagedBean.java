@@ -1,5 +1,5 @@
 
-package IslandFurniture.WAR.CWS;
+package Islandfurniture.WAR2.CustomerWebServices;
 
 
 
