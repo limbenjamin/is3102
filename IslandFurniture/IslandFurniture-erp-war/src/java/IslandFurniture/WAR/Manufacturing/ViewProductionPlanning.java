@@ -297,7 +297,13 @@ public class ViewProductionPlanning implements Serializable {
                 }
                 for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
                     mpp.orderMaterials(i, monthNo, yearNo);
+                    mpp.createPOForWeekMRP(i, monthNo, yearNo);
                 }
+                
+                
+                
+                
+                
                 pullWeeklyProductionTable(this.currentDrill);
                 success_msg = "Successfully Commenced Month";
                 break;
@@ -305,6 +311,7 @@ public class ViewProductionPlanning implements Serializable {
                 monthNo = Integer.valueOf(Month.valueOf(ID.split("/")[0]).value);
                 yearNo = Integer.valueOf(ID.split("/")[1]);
                 for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {
+                    mpp.uncreatePOForWeekMRP(i, monthNo, yearNo);
                     mpp.unOrderMaterials(i, monthNo, yearNo);
                 }
                 for (int i = 1; i <= Helper.getNumOfWeeks(monthNo, yearNo); i++) {

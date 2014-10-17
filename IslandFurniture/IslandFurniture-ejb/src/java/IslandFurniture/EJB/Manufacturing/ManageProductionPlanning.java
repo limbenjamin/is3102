@@ -41,8 +41,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -455,7 +453,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         for (Plant p : orders.keySet()) {
 
             Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
-            ll.setParameter("r", "Plant:" + p.getName());
+            ll.setParameter("r", "Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
 
             ExternalTransferOrder eto = null;
             if (ll.getResultList().size() == 0) {
@@ -464,7 +462,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto.setRequestingPlant(p);
                 eto.setStatus(TransferOrderStatus.REQUESTED);
                 eto.setTransferDate(Helper.getStartDateOfWeek(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo()));
-                eto.setRemark("Plant:" + p.getName());
+                eto.setRemark("Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
                 persist(eto);
             } else {
                 eto = (ExternalTransferOrder) ll.getResultList().get(0);
@@ -888,6 +886,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
                 ProcuredStockPurchaseOrderDetail pod = new ProcuredStockPurchaseOrderDetail();
                 pod.setProcuredStock(wmrp.getMaterial());
                 pod.setQuantity(wmrp.getOrderAMT());
+                pod.setNumberOfLots(wmrp.getOrderLot());
                 em.persist(pod);
                 wmrp.setPurchaseOrderDetail(pod);
                 System.out.println("createPOForWeekMRP(): Created POD for" + wmrp);

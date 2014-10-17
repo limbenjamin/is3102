@@ -35,12 +35,11 @@ import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Enums.MenuType;
 import IslandFurniture.Enums.Month;
+import IslandFurniture.Enums.MssrStatus;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -379,6 +378,7 @@ public class QueryMethods {
 
             Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockBefore");
             q.setParameter("y", year);
+            q.setParameter("status", MssrStatus.APPROVED);
             try {
                 q.setParameter("m", Helper.translateMonth(m).value);
 
@@ -417,6 +417,7 @@ public class QueryMethods {
             }
             Query q = em.createNamedQuery("MonthlyStockSupplyReq.FindByCoStockAT");
             q.setParameter("y", year);
+            q.setParameter("status", MssrStatus.APPROVED);
             try {
                 q.setParameter("m", Helper.translateMonth(m).value);
 

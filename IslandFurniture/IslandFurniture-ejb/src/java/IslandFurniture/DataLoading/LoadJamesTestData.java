@@ -11,6 +11,7 @@ import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
+import IslandFurniture.Enums.MssrStatus;
 import IslandFurniture.StaticClasses.Helper;
 import java.util.List;
 import java.util.Random;
@@ -87,7 +88,7 @@ public class LoadJamesTestData implements LoadJamesTestDataRemote {
                     MSSR.setCountryOffice(SS.getCountryOffice());
                     int qtydemanded = r.nextInt(max) + max / 4;
                     MSSR.setQtyRequested(qtydemanded); //Max of 1.25
-                    MSSR.setApproved(true);
+                    MSSR.setStatus(MssrStatus.APPROVED);
 
                     try {
                         em.persist(MSSR);

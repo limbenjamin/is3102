@@ -17,7 +17,7 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author a0101774
+ * @author a0101774 
  */
 @Stateless
 public class PriceManager implements PriceManagerLocal {
@@ -25,6 +25,7 @@ public class PriceManager implements PriceManagerLocal {
     @PersistenceContext
     EntityManager em;
     
+    @Override
     public List<StockSupplied> findCountryOfficeWithStock(Long stockID) {
         List<StockSupplied> returnList;
         Stock s;
@@ -38,6 +39,8 @@ public class PriceManager implements PriceManagerLocal {
             return null;
         }
     }
+    
+    @Override
     public String editPrice(StockSupplied ss, Double price) {
         StockSuppliedPK pk;
         StockSupplied stockSupplied;
