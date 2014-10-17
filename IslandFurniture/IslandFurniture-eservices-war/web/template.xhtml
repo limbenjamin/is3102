@@ -114,14 +114,16 @@
                             </div>
                             </div>
                             <div class="col-sm-3">
-                                <h:form>
+                                <h:form id="selectCountry">
                                     <div class="input-group pull-right" style="max-width: 200px;">
-                                        <select class="form-control">
-                                            <option>Singapore</option>
-                                            <option>Malaysia</option>
-                                        </select>                                        
+                                    <h:selectOneMenu id="countryId" class="form-control">
+                                        <f:selectItem itemLabel="Select Supplier"/>
+                                        <f:selectItems value="#{countryManagedBean.countryList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                    </h:selectOneMenu>                                        
                                       <span class="input-group-btn">
-                                          <h:button value="Go!" class="btn btn-default"></h:button>
+                                          <h:commandButton value="Go!" class="btn btn-default" actionListener="#{countryManagedBean.goCountry}">
+                                              <f:param name="countryId" value="" />
+                                          </h:commandButton>
                                       </span>
                                     </div>
                                 </h:form>
