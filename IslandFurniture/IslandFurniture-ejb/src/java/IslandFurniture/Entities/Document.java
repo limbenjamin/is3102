@@ -116,5 +116,6 @@ public abstract class Document implements Serializable {
     @PrePersist
     public void prePersist(){
         this.creationTime = Calendar.getInstance();
+        this.lastModTime = Calendar.getInstance();
     }
 }
