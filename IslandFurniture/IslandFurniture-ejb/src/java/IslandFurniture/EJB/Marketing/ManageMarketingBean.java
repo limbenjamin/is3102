@@ -91,7 +91,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
 
             pd.setPromotionCampaign(pc);
-            em.merge(pd); //unncessary
+//            em.merge(pd); 
 
             if (pd.getPromotionCoupons().size() > 0) {
                 
@@ -101,7 +101,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                     l.setParameter("pd", pd);
                     l.executeUpdate();
                     pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
-                    em.merge(pd.getPromotionCoupons().get(0));
+//                    em.merge(pd.getPromotionCoupons().get(0));
                     
                 } else {
                     
@@ -120,7 +120,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                         new_pc.setOneTimeUsage(true);
                         new_pc.setPromotionDetail(pd);
                         pd.getPromotionCoupons().add(new_pc);
-                        em.merge(new_pc);
+//                        em.merge(new_pc);
 
                     }
                 }
@@ -301,7 +301,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             PromotionDetailByProductSubCategory pdbpsc = (PromotionDetailByProductSubCategory) pd;
             if (s instanceof FurnitureModel) {
                 FurnitureModel fm = (FurnitureModel) s;
-                if (fm.getCategory().equals(pdbpsc.getCategory())) {
+                if (fm.getSubcategory().equals(pdbpsc.getCategory())) {
                     if (pd.getPercentageDiscount() > 0) {
                         newprice = (1 - pd.getPercentageDiscount()) * op;
                     }
