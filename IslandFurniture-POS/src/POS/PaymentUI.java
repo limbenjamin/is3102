@@ -6,10 +6,14 @@
 
 package POS;
 
+import Helper.Connector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
@@ -29,6 +33,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private Double cashAmt = 0.0;
     private Double changeAmt = 0.0;
     private Double payableAmt =0.0;
+    private String cardId;
     
     /**
      * Creates new form PaymentUI
@@ -37,7 +42,7 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, Double grandTotal) {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, Double grandTotal) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
@@ -48,6 +53,12 @@ public class PaymentUI extends javax.swing.JFrame {
         grandTotalLabel.setText("Grand Total : "+ grandTotal);
         checkoutButton.setVisible(Boolean.FALSE);
         cashCreditField.setEditable(Boolean.FALSE);
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
+        String name = (String) jsonObject.get("name");
+        String plant = (String) jsonObject.get("plant");
+        cardId = (String) jsonObject.get("cardId");
+        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
     }
 
     /**
@@ -112,6 +123,11 @@ public class PaymentUI extends javax.swing.JFrame {
 
         verifyVoucherButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         verifyVoucherButton.setText("Verify");
+        verifyVoucherButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifyVoucherButtonActionPerformed(evt);
+            }
+        });
 
         addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         addButton.setText("Add");
@@ -350,6 +366,21 @@ public class PaymentUI extends javax.swing.JFrame {
         cashAmt = Double.parseDouble(cashCreditField.getText());
         calculateTotal();
     }//GEN-LAST:event_payButtonActionPerformed
+
+    private void verifyVoucherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyVoucherButtonActionPerformed
+        List params = new ArrayList();
+        List values = new ArrayList();
+        params.add("cardId");
+        values.add(cardId.substring(0, 8));
+        params.add("voucher");
+        values.add(voucherField.getText());
+        try {
+            String value = Connector.postForm(params, values, "stock/checkvoucher");
+            System.err.println(value);
+            } catch (Exception ex) {
+                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_verifyVoucherButtonActionPerformed
 
     /**
      * @param args the command line arguments

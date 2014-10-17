@@ -377,7 +377,12 @@ public class CheckoutUI extends javax.swing.JFrame {
     }//GEN-LAST:event_calculateButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
-        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, grandTotal);
+        PaymentUI payment = null;
+        try {
+            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, grandTotal);
+        } catch (ParseException ex) {
+            Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         payment.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_payButtonActionPerformed
