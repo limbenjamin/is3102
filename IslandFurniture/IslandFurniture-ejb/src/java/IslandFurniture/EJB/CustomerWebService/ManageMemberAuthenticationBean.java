@@ -32,6 +32,7 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     EntityManager em;
     
     @Resource SessionContext ctx;
+    private Customer customer;
     
     @Override
     public Customer authenticate(String emailAddress, String password){
@@ -82,4 +83,18 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         query.setParameter("id", loyaltyCardId);
         return (Customer) query.getSingleResult();
     }
+    
+    @Override
+    public Customer getCustomer(String emailAddress){
+        Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
+        query.setParameter("emailAddress", emailAddress);
+        return (Customer) query.getSingleResult();
+    }    
+    
+    @Override
+    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name){
+        customer = getCustomer(emailAddress);
+        customer.setPhoneNo(phoneNo);
+        customer.setName(name);
+    }    
 }

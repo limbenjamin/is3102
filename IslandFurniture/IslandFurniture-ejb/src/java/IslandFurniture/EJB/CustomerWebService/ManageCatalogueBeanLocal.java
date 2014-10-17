@@ -18,7 +18,7 @@ import java.util.List;
  */
 public interface ManageCatalogueBeanLocal {
     
-    public List<FurnitureModel> getAllFurniture();
+    List<FurnitureModel> getAllFurniture();
 
     // get a list of furniture sold in a store
     List<FurnitureModel> getStoreFurniture(Store store);
