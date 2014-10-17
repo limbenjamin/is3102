@@ -291,11 +291,11 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
     private JDataTable<String> getDemandPlanningTable(ManufacturingFacility MF) throws Exception {
         Query q = em.createNamedQuery("MonthlyProductionPlan.FindAllOfMF");
         q.setParameter("mf", MF);
-            q.setParameter("m", this.month);
-            q.setParameter("y", this.year);
-            q.setParameter("lm", Helper.addMonth(Helper.translateMonth(this.month), this.year, 6, true));
-            q.setParameter("ly", Helper.addMonth(Helper.translateMonth(this.month), this.year, 6, false));
-            
+        q.setParameter("m", this.month);
+        q.setParameter("y", this.year);
+        q.setParameter("lm", Helper.addMonth(Helper.translateMonth(this.month), this.year, 6, true));
+        q.setParameter("ly", Helper.addMonth(Helper.translateMonth(this.month), this.year, 6, false));
+
         JDataTable<String> dt = new JDataTable<String>();
 
         dt.columns.add("Furniture Model");
@@ -331,8 +331,6 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
         HashMap<String, Long> iinventory = new HashMap<>();
 
         for (MonthlyProductionPlan pp : (List<MonthlyProductionPlan>) q.getResultList()) {
-            
-            
 
             if (!Cur_FM.equals(pp.getFurnitureModel().getName())) {
                 if (colorclass.equals("normal_odd")) {
