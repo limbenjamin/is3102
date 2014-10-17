@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package POS;
+package IslandFurniture.WAR3.POS;
 
-import IslandFurniture.EJB.CWS.ManageCatalogueBeanLocal;
-import IslandFurniture.EJB.CWS.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
@@ -113,7 +113,8 @@ public class StocklistWS {
         }else{
             System.err.println(cardId+"   "+customerCardId+"    "+coupon+"    "+stock+"    "+stockCoupon);
         }
-        return "test";
+        JsonObject object = Json.createObjectBuilder().add("price", "1.0").add("promo", "Sample").build();
+        return object.toString();
     }
     
     @POST

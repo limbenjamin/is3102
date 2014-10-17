@@ -3,7 +3,7 @@ package IslandFurniture.WAR.CWS;
 
 
 
-import IslandFurniture.EJB.CWS.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.Entities.Customer;
 import java.io.Serializable;
 import javax.ejb.EJB;
