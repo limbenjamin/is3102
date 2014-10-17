@@ -25,6 +25,7 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Enums.Month;
+import IslandFurniture.Enums.MssrStatus;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.StaticClasses.TimeMethods;
@@ -94,9 +95,10 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
         mssrList = new ArrayList();
         tempMssrList = new ArrayList();
         for (int i=0;i<coList.size();i++){
-            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock=:stock AND m.countryOffice=:co AND m.approved = 1");
+            query = em.createQuery("SELECT m FROM MonthlyStockSupplyReq m WHERE m.stock=:stock AND m.countryOffice=:co AND m.status=:status");
             query.setParameter("stock", stockList.get(i));
             query.setParameter("co", coList.get(i));
+            query.setParameter("status", MssrStatus.APPROVED);
             tempMssrList = query.getResultList();
             Iterator<MonthlyStockSupplyReq> iterator2 = tempMssrList.iterator();
             while(iterator2.hasNext()){
