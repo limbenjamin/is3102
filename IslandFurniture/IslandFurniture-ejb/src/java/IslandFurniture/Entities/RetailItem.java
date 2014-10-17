@@ -31,7 +31,7 @@ public class RetailItem extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
     private Double price;
     private String riDescription;
-    private Long reqPoints;
+    private Long pointsWorth;
 
     @OneToOne
     private Picture thumbnail;
@@ -56,12 +56,12 @@ public class RetailItem extends ProcuredStock implements Serializable {
         this.riDescription = riDescription;
     }
 
-    public Long getReqPoints() {
-        return reqPoints;
+    public Long getPointsWorth() {
+        return pointsWorth;
     }
 
-    public void setReqPoints(Long reqPoints) {
-        this.reqPoints = reqPoints;
+    public void setPointsWorth(Long pointsWorth) {
+        this.pointsWorth = pointsWorth;
     }
 
     public Picture getThumbnail() {

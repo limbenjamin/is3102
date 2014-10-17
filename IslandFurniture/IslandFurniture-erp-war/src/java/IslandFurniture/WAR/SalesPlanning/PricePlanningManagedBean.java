@@ -46,6 +46,10 @@ public class PricePlanningManagedBean {
     private Set<FurnitureModel> furnitureSet;
     private Set<RetailItem> retailItemSet;
     private Stock stock;
+    private FurnitureModel furniture;
+    private RetailItem retailItem;
+    private boolean displayFurniture;
+    private boolean displayRetailItem;
 
     public List<FurnitureModel> getFurnitureList() {
         return furnitureList;
@@ -94,6 +98,38 @@ public class PricePlanningManagedBean {
     public void setRetailItemSet(Set<RetailItem> retailItemSet) {
         this.retailItemSet = retailItemSet;
     }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public FurnitureModel getFurniture() {
+        return furniture;
+    }
+
+    public void setFurniture(FurnitureModel furniture) {
+        this.furniture = furniture;
+    }
+
+    public RetailItem getRetailItem() {
+        return retailItem;
+    }
+
+    public void setRetailItem(RetailItem retailItem) {
+        this.retailItem = retailItem;
+    }
+
+    public boolean isDisplayFurniture() {
+        return displayFurniture;
+    }
+
+    public boolean isDisplayRetailItem() {
+        return displayRetailItem;
+    }
     
     @PostConstruct
     public void init() {
@@ -114,11 +150,30 @@ public class PricePlanningManagedBean {
         System.out.println("PricePlanningManagedBean.viewPricing()");
         Long stockID = (Long) event.getComponent().getAttributes().get("stockID");
         stock = stockManager.getStock(stockID);
+        if(stock instanceof FurnitureModel){
+            furniture = (FurnitureModel) stock;
+            this.displayFurniture = true;
+            this.displayRetailItem = false;
+        } else {
+            retailItem = (RetailItem) stock;
+            this.displayRetailItem = true;
+            this.displayFurniture = false;
+        }
         displayList = priceManager.findCountryOfficeWithStock(stockID);
     }
     public String editPrice() {
         System.out.println("PricePlanningManagedBean.editPrice()");
         String msg = "";
+        if(displayFurniture) {
+            msg = priceManager.editPoints(this.stock.getId(), this.furniture.getPointsWorth());
+        } else {
+            msg = priceManager.editPoints(this.stock.getId(), this.retailItem.getPointsWorth());
+        }
+        if (msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+            return "priceplanning";
+        } 
         for(StockSupplied ss : displayList) {
             msg = priceManager.editPrice(ss, ss.getPrice());
             if(msg != null) {
@@ -127,7 +182,7 @@ public class PricePlanningManagedBean {
             } 
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Pricing for \"" + stock.getName() + "\" has been updated", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Pricing/Points for \"" + stock.getName() + "\" has been updated", ""));
 
         return "priceplanning";
     }

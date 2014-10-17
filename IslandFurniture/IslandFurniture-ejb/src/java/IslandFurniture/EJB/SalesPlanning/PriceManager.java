@@ -6,6 +6,8 @@
 
 package IslandFurniture.EJB.SalesPlanning;
 
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
@@ -54,6 +56,26 @@ public class PriceManager implements PriceManagerLocal {
         } catch(Exception ex) {
             System.err.println("Something went wrong here");
             return null; 
+        }
+    }
+    @Override
+    public String editPoints(Long stockID, Long pointsWorth) {
+        Stock s;
+        FurnitureModel fm;
+        RetailItem item;
+        try {
+            s = em.find(Stock.class, stockID);
+            if(s instanceof FurnitureModel) {
+                fm = (FurnitureModel) s;
+                fm.setPointsWorth(pointsWorth);
+            } else {
+                item = (RetailItem) s;
+                item.setPointsWorth(pointsWorth);
+            }
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return null;  
         }
     }
 }

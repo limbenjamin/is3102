@@ -39,7 +39,7 @@ public class FurnitureModel extends Stock implements Serializable {
     private List<ProductionCapacity> productionCapacity;
     private Double price;
     private List colour;
-    private Long reqPoints;
+    private Long pointsWorth;
     
     // Attributes for the website
     private FurnitureCategory category;
@@ -94,12 +94,12 @@ public class FurnitureModel extends Stock implements Serializable {
         this.colour = colour;
     }
 
-    public Long getReqPoints() {
-        return reqPoints;
+    public Long getPointsWorth() {
+        return pointsWorth;
     }
 
-    public void setReqPoints(Long reqPoints) {
-        this.reqPoints = reqPoints;
+    public void setPointsWorth(Long pointsWorth) {
+        this.pointsWorth = pointsWorth;
     }
 
     public FurnitureCategory getCategory() {
