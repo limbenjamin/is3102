@@ -386,7 +386,7 @@ public class SupplierManager implements SupplierManagerLocal {
     public List<Stock> checkForValidPCD(Long stockID, Long mfID) {
         Stock stock;
         ManufacturingFacility mf;
-        List<Stock> pcdList = new ArrayList<Stock>();
+        List<Stock> missingPCDList = new ArrayList<>();
         FurnitureModel fm;
         List<BOMDetail> bomList;
         try {
@@ -399,8 +399,8 @@ public class SupplierManager implements SupplierManagerLocal {
                     return null;
                 } else {
                     System.out.println(mf.getName() + " doesn't carry Retail Item " + stock.getName());
-                    pcdList.add(stock);
-                    return pcdList;
+                    missingPCDList.add(stock);
+                    return missingPCDList;
                 }
             } else if(stock instanceof FurnitureModel) {
                 fm = (FurnitureModel)stock;
@@ -408,11 +408,11 @@ public class SupplierManager implements SupplierManagerLocal {
                 for(int i=0; i<bomList.size(); i++) {
                     if(!checkForPCD((ProcuredStock)(bomList.get(i).getMaterial()), mf)) {
                         System.out.println(mf.getName() + " doesn't carry Material " + bomList.get(i).getMaterial().getName());
-                        pcdList.add(bomList.get(i).getMaterial());
+                        missingPCDList.add(bomList.get(i).getMaterial());
                     }
                 }
-                if(pcdList.size() > 0)
-                    return pcdList;
+                if(missingPCDList.size() > 0)
+                    return missingPCDList;
                 else 
                     return null;
             } else 

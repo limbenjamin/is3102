@@ -69,13 +69,7 @@ public class FurnitureManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println("FurnitureManagedBean.addFurnitureModel()");
         String name = request.getParameter("addFurnitureForm:name");
-        String price = request.getParameter("addFurnitureForm:price");
-        if(name.isEmpty() || price.isEmpty()) { 
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: Invalid input", ""));      
-            return "furniture";
-        }
-        String output = stockManager.addFurnitureModel(name, Double.parseDouble(price));
+        String output = stockManager.addFurnitureModel(name);
         System.out.println("Output is " + output); 
         String id = output.split("#")[0];
         String msg = output.split("#")[1];
@@ -97,12 +91,7 @@ public class FurnitureManagedBean implements Serializable {
     public String editFurnitureModel(ActionEvent event) throws IOException {
         System.out.println("FurnitureManagedBean.editFurnitureModel()");
         furniture = (FurnitureModel) event.getComponent().getAttributes().get("toEdit");
-        if(!(furniture.getPrice() instanceof Double)) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid input. Please insert a number", ""));
-            return "furniture";            
-        } 
-        String msg = stockManager.editFurnitureModel(furniture.getId(), furniture.getName(), furniture.getPrice());
+        String msg = stockManager.editFurnitureModel(furniture.getId(), furniture.getName());
         if(msg == null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture " + furniture.getName() + " has been updated", ""));            

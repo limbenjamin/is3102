@@ -166,6 +166,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
         payButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         payButton.setText("Pay");
+        payButton.setPreferredSize(new java.awt.Dimension(200, 53));
         payButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 payButtonActionPerformed(evt);
@@ -177,6 +178,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
         calculateButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         calculateButton.setText("Calculate");
+        calculateButton.setPreferredSize(new java.awt.Dimension(200, 53));
         calculateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 calculateButtonActionPerformed(evt);
@@ -213,9 +215,9 @@ public class CheckoutUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(grandTotalLabel)
                 .addGap(18, 18, 18)
-                .addComponent(calculateButton)
+                .addComponent(calculateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(payButton)
+                .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -237,9 +239,9 @@ public class CheckoutUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(payButton)
+                    .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(grandTotalLabel)
-                    .addComponent(calculateButton))
+                    .addComponent(calculateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -320,16 +322,19 @@ public class CheckoutUI extends javax.swing.JFrame {
         int rows = jTable.getModel().getRowCount();
         List params = new ArrayList();
         List values = new ArrayList();
-        params.add("cardId");
-        values.add(cardId.substring(0, 8));
-        params.add("customerCardId");
-        values.add(customerCardId);
-        try {
-                customerName = Connector.postForm(params, values, "stock/getcustomername");
-                System.err.println(customerName);
-            } catch (Exception ex) {
-                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if (customerCardId != ""){
+            params.add("cardId");
+            values.add(cardId.substring(0, 8));
+            params.add("customerCardId");
+            values.add(customerCardId);
+            try {
+                    customerName = Connector.postForm(params, values, "stock/getcustomername");
+                    System.err.println(customerName);
+                } catch (Exception ex) {
+                    Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+        
         for (int i=0;i<rows;i++){
             params = new ArrayList();
             values = new ArrayList();
@@ -346,16 +351,32 @@ public class CheckoutUI extends javax.swing.JFrame {
             
             try {
                 String result = Connector.postForm(params, values, "stock/checkpromo");
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+                String price = (String) jsonObject.get("price");
+                String promo = (String) jsonObject.get("promo");
+                transaction.get(i).add(5, promo);
+                transaction.get(i).set(2, price);
                 System.err.println(result);
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        for (int i=0;i<transaction.size();i++){
+            ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
+            jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
+            jTable.getModel().setValueAt(transaction.get(i).get(1), i, 1);
+            jTable.getModel().setValueAt(transaction.get(i).get(2), i, 2);
+            jTable.getModel().setValueAt(transaction.get(i).get(5), i, 3);
+            jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
+            jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
+        }
+        updateTotal();
         payButton.setVisible(Boolean.TRUE);
     }//GEN-LAST:event_calculateButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
-        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction);
+        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction, customerName);
         payment.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_payButtonActionPerformed
@@ -393,6 +414,32 @@ public class CheckoutUI extends javax.swing.JFrame {
                 new CheckoutUI().setVisible(true);
             }
         });
+    }
+    
+    public void updateTotal() {
+        Double total = 0.0;
+        Double current = 0.0;
+        int rows = jTable.getModel().getRowCount()-1;
+        for (int i = 0; i <= rows; i++) {
+            Double price = Double.parseDouble((String) jTable.getModel().getValueAt(i, 2));
+            String qty = String.valueOf(jTable.getModel().getValueAt(i, 4));
+            total = (Integer.parseInt(qty)) * price;
+            jTable.getModel().setValueAt(Math.round(total), rows, 5);
+            //TODO : print to 20x2 LCD
+            System.out.println(jTable.getModel().getValueAt(rows, 1) + " x " + qty);
+            System.out.println(Math.round(total));
+        }
+        for (int i = 0; i <= rows; i++) {
+            try{
+                String val = String.valueOf(jTable.getModel().getValueAt(i, 5));
+                current = Double.parseDouble(val);
+                total += current;
+                current = 0.0;
+            }catch(Exception e){
+                
+            }
+        }
+        grandTotalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
