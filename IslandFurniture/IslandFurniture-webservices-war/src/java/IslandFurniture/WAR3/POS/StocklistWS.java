@@ -6,16 +6,25 @@
 
 package IslandFurniture.WAR3.POS;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
-import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.Manufacturing.StockManager;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
+import IslandFurniture.EJB.Marketing.ManageMarketingBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManagePOSLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.PromotionCoupon;
+import IslandFurniture.Entities.PromotionDetail;
+import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
@@ -52,6 +61,12 @@ public class StocklistWS {
     ManageMemberAuthenticationBeanLocal mmab;
     @EJB
     ManageCatalogueBeanLocal mcbl;
+    @EJB
+    StockManagerLocal sm;
+    @EJB
+    ManageMarketingBeanLocal mmb;
+    @EJB
+    ManagePOSLocal mpl;
     
     @POST
     @Path("furniturelist")
@@ -108,13 +123,31 @@ public class StocklistWS {
                                 @FormParam("stock") String stock,
                                 @FormParam("stockCoupon") String stockCoupon) {
         Staff staff = muabl.getStaffFromCardId(cardId);
+        PromotionDetail Successful_promotion;
+        String d_price;
+        List<PromotionCoupon> couponList;
         if (staff == null){
             return "Error";
         }else{
-            System.err.println(cardId+"   "+customerCardId+"    "+coupon+"    "+stock+"    "+stockCoupon);
+            /*Customer c;
+            c = mmab.getCustomerFromLoyaltyCardId("B00DBD31");
+            Stock s = sm.getFurniture(Long.parseLong(stock));
+            Store store = (Store) staff.getPlant();
+            CountryOffice co = store.getCountryOffice();
+            if (coupon == "" && stockCoupon ==""){
+                HashMap<String, Object> hash = mmb.getDiscountedPrice(s, co, c);
+            }else{
+                if (coupon != ""){
+                    couponList.add(null)
+                }
+            }
+            d_price = String.valueOf(hash.get("D_PRICE"));
+            Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
+            */
+
         }
-        JsonObject object = Json.createObjectBuilder().add("price", "1.0").add("promo", "Sample").build();
-        return object.toString();
+        //JsonObject object = Json.createObjectBuilder().add("price", d_price).add("promo", Successful_promotion.getPromotionCampaign().getTitle()).build();
+        return "0";//object.toString();
     }
     
     @POST
@@ -129,6 +162,20 @@ public class StocklistWS {
             customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
         }
         return customer.getName();
+    }
+    
+    @POST
+    @Path("checkvoucher")
+    public String checkVoucher(@FormParam("cardId") String cardId,
+                                @FormParam("voucher") String voucherId){
+        int value;
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            value = mpl.getVoucher(voucherId);
+        }
+        return String.valueOf(value);
     }
     
 }

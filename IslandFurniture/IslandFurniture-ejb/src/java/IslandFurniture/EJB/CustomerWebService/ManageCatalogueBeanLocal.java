@@ -11,14 +11,16 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author Zee
  */
+@Local
 public interface ManageCatalogueBeanLocal {
     
-    public List<FurnitureModel> getAllFurniture();
+    List<FurnitureModel> getAllFurniture();
 
     // get a list of furniture sold in a store
     List<FurnitureModel> getStoreFurniture(Store store);

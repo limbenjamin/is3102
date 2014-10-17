@@ -28,21 +28,31 @@ import javax.persistence.PostPersist;
             query = "SELECT a FROM CountryOffice a")
 })
 public class CountryOffice extends Plant implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "countryOffice")
     private List<Store> stores = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
     private List<ManufacturingFacility> manufacturingFacilities = new ArrayList();
-    
+
     @OneToMany(mappedBy = "countryOffice")
     private List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
     private List<StockSupplied> suppliedWithFrom = new ArrayList();
-    
+
     @OneToMany(mappedBy = "countryOffice")
     private List<PromotionCampaign> promotionCampaigns = new ArrayList();
+
+    @OneToMany(mappedBy = "countryOffice")
+    private List<RedeemableItem> redeemableItems = new ArrayList();
+    
+    // Web customisation attributes
+    @OneToMany(mappedBy = "countryOffice")
+    private List<WebBanner> webBanners;
+    @OneToMany
+    private List<Stock> featuredProducts;
 
     public List<Store> getStores() {
         return stores;
@@ -82,6 +92,30 @@ public class CountryOffice extends Plant implements Serializable {
 
     public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
         this.promotionCampaigns = promotionCampaigns;
+    }
+
+    public List<RedeemableItem> getRedeemableItems() {
+        return redeemableItems;
+    }
+
+    public void setRedeemableItems(List<RedeemableItem> redeemableItems) {
+        this.redeemableItems = redeemableItems;
+    }
+
+    public List<WebBanner> getWebBanners() {
+        return webBanners;
+    }
+
+    public void setWebBanners(List<WebBanner> webBanners) {
+        this.webBanners = webBanners;
+    }
+
+    public List<Stock> getFeaturedProducts() {
+        return featuredProducts;
+    }
+
+    public void setFeaturedProducts(List<Stock> featuredProducts) {
+        this.featuredProducts = featuredProducts;
     }
 
     @Override
