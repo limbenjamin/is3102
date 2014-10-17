@@ -41,8 +41,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -888,6 +886,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
                 ProcuredStockPurchaseOrderDetail pod = new ProcuredStockPurchaseOrderDetail();
                 pod.setProcuredStock(wmrp.getMaterial());
                 pod.setQuantity(wmrp.getOrderAMT());
+                pod.setNumberOfLots(wmrp.getOrderLot());
                 em.persist(pod);
                 wmrp.setPurchaseOrderDetail(pod);
                 System.out.println("createPOForWeekMRP(): Created POD for" + wmrp);
