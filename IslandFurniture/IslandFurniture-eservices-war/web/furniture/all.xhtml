@@ -14,18 +14,14 @@
                     <div class="col-sm-12">
                         <div class="catalogue">
                             <h2 class="title text-center">ALL ITEMS</h2>
-                            <h3>#{catalogueManagedBean.name}</h3>
-                            <h:form>
-                                <h:commandButton actionListener="#{catalogueManagedBean.sayHi}" value="Say Hi" class="btn btn-success btn-round" />
-                            </h:form>
                             <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
                                 <div class="col-sm-3">
                                     <div class="product-image-wrapper">
                                         <div class="single-products">
                                             <div class="productinfo text-center">
-                                                <img src="../assets/images/home/product7.jpg" alt="" />
+                                                <img src="../assets/images/home/product1.jpg" alt="" />
                                                 <h2>$#{furniture.price}</h2>
-                                                <p>#{furniture.name}</p>
+                                                <a href="#"><p>#{furniture.name}</p></a>
                                                 <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
                                             </div>
                                         </div>

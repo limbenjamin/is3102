@@ -6,7 +6,7 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
-import IslandFurniture.EJB.CWS.ManageCatalogueBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
@@ -40,10 +40,6 @@ public class CatalogueManagedBean implements Serializable{
     public void init() {
         furnitureList = mcbl.getAllFurniture();
         System.out.println("loaded furniture models");
-    }
-    
-    public void sayHi() {
-        System.out.println("Hello, you got me!");
     }
 
     public List<FurnitureModel> getFurnitureList() {
