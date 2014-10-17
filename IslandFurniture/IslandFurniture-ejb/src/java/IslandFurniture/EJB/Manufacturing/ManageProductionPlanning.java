@@ -453,7 +453,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         for (Plant p : orders.keySet()) {
 
             Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
-            ll.setParameter("r", "Plant:" + p.getName());
+            ll.setParameter("r", "Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
 
             ExternalTransferOrder eto = null;
             if (ll.getResultList().size() == 0) {
@@ -462,7 +462,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto.setRequestingPlant(p);
                 eto.setStatus(TransferOrderStatus.REQUESTED);
                 eto.setTransferDate(Helper.getStartDateOfWeek(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo()));
-                eto.setRemark("Plant:" + p.getName());
+                eto.setRemark("Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
                 persist(eto);
             } else {
                 eto = (ExternalTransferOrder) ll.getResultList().get(0);
