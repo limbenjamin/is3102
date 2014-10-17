@@ -27,6 +27,9 @@ public interface ManageInventoryTransferLocal {
     //  Function: To create a External Transfer Order (Status: Requested)
     ExternalTransferOrder createExternalTransferOrder(Plant plant);
 
+     //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
+    ExternalTransferOrder createExternalTransferOrderFromManufacturing(Plant fulfillingPlant, Plant requestingPlant);
+
     //  Function: To create a Replenishment Transfer Order (Status: Requested)
     void createReplenishmentTransferOrder(Plant plant, Stock stock, Integer quantity);
 

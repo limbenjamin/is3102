@@ -281,7 +281,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
 
         replenishmentTransferOrder.setQty(storefrontInventory.getMaxQty() - storefrontInventory.getQty());
-        replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
+        replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
         em.persist(replenishmentTransferOrder);
         em.flush();
     }
@@ -320,6 +320,19 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         externalTransferOrder = new ExternalTransferOrder();
         externalTransferOrder.setRequestingPlant(plant);
         externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
+        em.persist(externalTransferOrder);
+        em.flush();
+        em.refresh(externalTransferOrder);
+        return externalTransferOrder;
+    }
+
+    //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
+    @Override
+    public ExternalTransferOrder createExternalTransferOrderFromManufacturing(Plant fulfillingPlant, Plant requestingPlant) {
+        externalTransferOrder = new ExternalTransferOrder();
+        externalTransferOrder.setRequestingPlant(requestingPlant);
+        externalTransferOrder.setFulfillingPlant(fulfillingPlant);
+        externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
         em.persist(externalTransferOrder);
         em.flush();
         em.refresh(externalTransferOrder);
