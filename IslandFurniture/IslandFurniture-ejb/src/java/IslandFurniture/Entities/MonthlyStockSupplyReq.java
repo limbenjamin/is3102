@@ -38,17 +38,17 @@ import javax.persistence.PostPersist;
             + "a.year*12 + a.month <= :endYr*12 + :endMth"),
     @NamedQuery(
             name = "MonthlyStockSupplyReq.FindByCoStockBefore",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.approved=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)"),
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.status=:status and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)"),
     @NamedQuery(
             name = "MonthlyStockSupplyReq.FindByCoStockAT",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)=:y*12+(:m+1) and MSSR.approved=TRUE"),
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)=:y*12+(:m+1) and MSSR.status=:status"),
 
     @NamedQuery(
             name = "getMssrByCO",
             query = "SELECT a FROM MonthlyStockSupplyReq a WHERE a.countryOffice=:countryOffice"),
     @NamedQuery(
             name = "MonthlyStockSupplyReq.FindByCoStock",
-            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.approved=TRUE and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
+            query = "SELECT MSSR FROM MonthlyStockSupplyReq MSSR WHERE MSSR.countryOffice = :co and MSSR.stock=:stock and MSSR.year*12+(MSSR.month+1)<=:y*12+(:m+1) and MSSR.status=:status and MSSR.year*12+(MSSR.month+1)>=:ny*12+(:nm+1)")
 })
 public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlyStockSupplyReq> {
 
@@ -74,7 +74,6 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private MssrStatus status;
     private boolean endMthUpdated = false;
     private boolean varianceUpdated = false;
-    private boolean approved = false;
 
     @OneToMany(mappedBy = "monthlyStockSupplyReq")
     private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
@@ -182,14 +181,6 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     public void setVarianceUpdated(boolean varianceUpdated) {
         this.varianceUpdated = varianceUpdated;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 
     public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {

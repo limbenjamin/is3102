@@ -297,7 +297,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                     
                     if (currMthYr.compareTo(lockoutCutoff) > 0) {
                         mssr.setStatus(MssrStatus.PENDING);
-                        mssr.setApproved(false);
 
                         em.merge(mssr);
                         impacted = true;
@@ -330,7 +329,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
                     if (mssr.getStatus() == MssrStatus.PENDING) {
                         if (approved == true) {
                             mssr.setStatus(MssrStatus.APPROVED);
-                            mssr.setApproved(true);
                         } else {
                             mssr.setStatus(MssrStatus.REJECTED);
                         }
