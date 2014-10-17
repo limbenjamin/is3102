@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.WAR.CWS;
+package Islandfurniture.WAR2.CustomerWebServices;
 
 /**
  *
