@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -60,15 +59,15 @@ public abstract class Plant implements Serializable {
     @OneToMany(mappedBy = "plant")
     protected List<StorageArea> storageAreas;
     @OneToMany(mappedBy = "plant")
-    private List<Announcement> announcementList;
+    protected List<Announcement> announcementList;
     @OneToMany(mappedBy = "plant")
-    private List<Event> eventList;
+    protected List<Event> eventList;
 
     @OneToMany(mappedBy = "requestingPlant")
-    private List<TransferOrder> requestedTransferOrders=new ArrayList<>();
+    protected List<TransferOrder> requestedTransferOrders=new ArrayList<>();
 
     @OneToMany(mappedBy = "fulfillingPlant")
-    private List<ExternalTransferOrder> transferOrdersToFufill=new ArrayList<>();
+    protected List<ExternalTransferOrder> transferOrdersToFufill=new ArrayList<>();
 
     public List<TransferOrder> getRequestedTransferOrders() {
         return requestedTransferOrders;
@@ -118,7 +117,6 @@ public abstract class Plant implements Serializable {
         this.country = country;
     }
 
-    @XmlTransient
     public List<Staff> getEmployees() {
         return employees;
     }
@@ -127,7 +125,6 @@ public abstract class Plant implements Serializable {
         this.employees = employees;
     }
 
-    @XmlTransient
     public List<StorageArea> getStorageAreas() {
         return storageAreas;
     }
@@ -136,7 +133,6 @@ public abstract class Plant implements Serializable {
         this.storageAreas = storageAreas;
     }
 
-    @XmlTransient
     public List<Announcement> getAnnouncementList() {
         return announcementList;
     }
@@ -145,7 +141,6 @@ public abstract class Plant implements Serializable {
         this.announcementList = announcementList;
     }
 
-    @XmlTransient
     public List<Event> getEventList() {
         return eventList;
     }
