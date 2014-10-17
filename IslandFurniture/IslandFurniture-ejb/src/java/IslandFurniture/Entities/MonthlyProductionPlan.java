@@ -7,6 +7,7 @@ package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
 import IslandFurniture.StaticClasses.Helper;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import javax.persistence.OneToMany;
     @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)=(:m+1)+:y*12 and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf order by MPP.furnitureModel.name"),
-    @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf and ((MPP.month+1)+MPP.year*12)>=(:m+1)+:y*12 ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
+    @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf and ((MPP.month+1)+MPP.year*12)>=(:m+1)+:y*12 and ((MPP.month+1)+MPP.year*12)<(:lm+1)+:ly*12 ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")
 })
 public class MonthlyProductionPlan implements Serializable {
 
@@ -116,7 +117,9 @@ public class MonthlyProductionPlan implements Serializable {
 
             Calendar t = Calendar.getInstance();
             t.set(this.year, this.month.value, 1);
+            t.add(Calendar.MONTH,ManageProductionPlanning.FORWARDLOCK);
             t.add(Calendar.DATE, -1);
+            
 
             if (t.before(ManageProductionPlanTimerBean.cdate.getCalendar())) {
                 System.out.println("Expired(): MPP=" + this.month + "/" + this.year + " VS Server Time:" + ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.MONTH) + "/" + ManageProductionPlanTimerBean.cdate.getCalendar().get(Calendar.YEAR));

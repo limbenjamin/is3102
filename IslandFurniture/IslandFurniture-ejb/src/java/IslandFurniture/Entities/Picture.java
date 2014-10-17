@@ -23,6 +23,7 @@ public class Picture implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String description;
 
     @Lob
     private byte[] content;
@@ -33,6 +34,14 @@ public class Picture implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public byte[] getContent() {

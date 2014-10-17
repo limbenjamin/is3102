@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.WAR.CWS;
+package Islandfurniture.WAR2.CustomerWebServices;
 
 /**
  *
@@ -41,4 +41,12 @@ public class Util {
         else
             return null;
       }
+      
+      public static String getCountry() {
+        HttpSession session = getSession();
+        if ( session != null )
+            return (String) session.getAttribute("country");
+        else
+            return null;
+      }      
 }

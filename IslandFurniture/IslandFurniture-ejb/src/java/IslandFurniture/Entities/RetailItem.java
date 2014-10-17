@@ -31,9 +31,10 @@ public class RetailItem extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
     private Double price;
     private String riDescription;
+    private Long reqPoints;
 
-    @OneToOne(cascade={CascadeType.PERSIST})
-    private Picture picture;
+    @OneToOne
+    private Picture thumbnail;
 
     public RetailItem() {
 
@@ -55,12 +56,20 @@ public class RetailItem extends ProcuredStock implements Serializable {
         this.riDescription = riDescription;
     }
 
-    public Picture getPicture() {
-        return picture;
+    public Long getReqPoints() {
+        return reqPoints;
     }
 
-    public void setPicture(Picture picture) {
-        this.picture = picture;
+    public void setReqPoints(Long reqPoints) {
+        this.reqPoints = reqPoints;
+    }
+
+    public Picture getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Picture thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     @Override

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.EJB.CWS;
+package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
 import static IslandFurniture.Entities.Staff.SHA1Hash;

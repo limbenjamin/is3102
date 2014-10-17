@@ -344,3 +344,19 @@ input[type="checkbox"] {
 .own-message{
     text-align: right;
 }
+
+/************************* PrimeFaces Datepicker Override ***********************************/
+
+.ui-datepicker-calendar .ui-state-default {
+	border: 1px solid #ffffff;
+	background: #ffffff url("#{resource['primefaces-flat2:images/ui-bg_flat_0_ffffff_40x100.png']}") 50% 50% repeat-x;
+	font-weight: normal;
+	color: #2c3e50;
+}
+
+.ui-datepicker-calendar .ui-state-active {
+	border: 1px solid #2c3e50;
+	background: #2c3e50 url("#{resource['primefaces-flat2:images/ui-bg_flat_0_2c3e50_40x100.png']}") 50% 50% repeat-x;
+	font-weight: normal;
+	color: #ffffff;    
+}

@@ -9,7 +9,6 @@ import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
-import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCampaign;
 import IslandFurniture.Entities.PromotionCoupon;
@@ -21,6 +20,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -76,7 +76,11 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
         //JPA delete query
-        Query q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
+        Query q = em.createQuery("DELETE FROM PromotionCoupon zz where zz.promotionDetail.promotionCampaign=:pc");
+        q.setParameter("pc", pc);
+        q.executeUpdate();
+
+        q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
         q.setParameter("pc", pc);
         q.executeUpdate();
 
@@ -87,16 +91,22 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
 
             pd.setPromotionCampaign(pc);
-            em.merge(pd);
+            em.merge(pd); //unncessary
 
             if (pd.getPromotionCoupons().size() > 0) {
+                
                 if (pd.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
                     pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
                     Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
                     l.executeUpdate();
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
                     em.merge(pd.getPromotionCoupons().get(0));
+                    
                 } else {
+                    
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(null);
+                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0));
 
                     Query l = em.createQuery("SELECT pc FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
@@ -105,9 +115,9 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                         throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
                     }
 
-                    for (int i = l.getResultList().size(); i <= pd.getUsageCount().intValue(); i++) {
+                    for (int i = l.getResultList().size()+1; i <= pd.getUsageCount().intValue(); i++) {
                         PromotionCoupon new_pc = new PromotionCoupon();
-                        new_pc.setOneTimeUsage(false);
+                        new_pc.setOneTimeUsage(true);
                         new_pc.setPromotionDetail(pd);
                         pd.getPromotionCoupons().add(new_pc);
                         em.merge(new_pc);
@@ -174,19 +184,77 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return pd.getClass().getName();
     }
 
-    public double getDiscountedPrice(Stock s, CountryOffice co, Customer c) {
+    @Override
+    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c) {
+        ArrayList<PromotionCoupon> n = new ArrayList<>();
+        return (getDiscountedPrice(s, co, c, n));
+    }
+
+    @Override
+    public void expand_promotion(PromotionDetail pd, PromotionCoupon pc) {
+        if (pc.getOneTimeUsage() == true) {
+            pd.getPromotionCoupons().remove(pc);
+            pc.setPromotionDetail(null);
+            System.out.println("expand_promotion(): Expanded" + pc);
+        }
+
+        pd.setUsageCount((pd.getUsageCount() - 1));
+        System.out.println("expand_promotion(): Expanded" + pd.getPromotionCampaign() + " Count Now: " + pd.getUsageCount());
+
+    }
+
+    @Override
+    public PromotionCoupon getCouponFromID(Long id) {
+
+        return (em.find(PromotionCoupon.class, id));
+    }
+
+    @Override
+    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c, List<PromotionCoupon> couponLists) {
         Query q = em.createQuery("select pcd from PromotionDetail pcd where (pcd.membershiptier=:mt or pcd.membershiptier is null) and EXISTS(select s from Store s where s.countryOffice=:co and s.id=pcd.applicablePlant.id)");
         q.setParameter("mt", c.getMembershipTier());
         q.setParameter("co", co);
         double minprice = this.getPrice(s, co);
+        PromotionCoupon effective_coupon = null;
+        HashMap<String, Object> returnobj = new HashMap<>();
+        PromotionDetail successful_pd = null;
 
         for (PromotionDetail pd : (List<PromotionDetail>) q.getResultList()) {
+
+            if (pd.getPromotionCoupons().size() > 0) {
+                effective_coupon = null;
+
+                for (PromotionCoupon pc : pd.getPromotionCoupons()) {
+                    if (couponLists.contains(pc)) {
+                        effective_coupon = pc;
+                        break;
+                    }
+                }
+
+                if (effective_coupon == null) {
+                    continue; //Skip this since dont have coupon
+                }
+
+            } else {
+                effective_coupon = null;
+            }
+
             if (calcDiscount(s, co, pd) < minprice) {
                 minprice = calcDiscount(s, co, pd);
+                successful_pd = pd;
             }
         }
 
-        return minprice;
+        returnobj.put("O_PRICE", this.getPrice(s, co));
+        returnobj.put("D_PRICE", minprice);
+        if (effective_coupon != null) {
+            returnobj.put("USED_COUPON", effective_coupon);
+        }
+        if (successful_pd != null) {
+            returnobj.put("Successful_promotion", successful_pd);
+        }
+
+        return returnobj;
 
     }
 
@@ -249,11 +317,17 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     }
 
     public double getDiscountedPrice(Stock s, CountryOffice co) {
-        Query q = em.createQuery("select pcd from PromotionDetail pcd where EXISTS(select s from Store s where s.countryOffice=:co and s.id=pcd.applicablePlant.id)");
+
+        //Assume there is a coupon usage 
+        Query q = em.createQuery("select pcd from PromotionDetail pcd where EXISTS(select s from Store s where s.countryOffice=:co and s.id=pcd.applicablePlant.id) and pcd.promotionCampaign.locked=false");
         q.setParameter("co", co);
         double minprice = this.getPrice(s, co);
 
         for (PromotionDetail pd : (List<PromotionDetail>) q.getResultList()) {
+            if (pd.getPromotionCampaign().getExpired() == true) {
+                continue;
+            }
+
             if (calcDiscount(s, co, pd) < minprice) {
                 minprice = calcDiscount(s, co, pd);
             }

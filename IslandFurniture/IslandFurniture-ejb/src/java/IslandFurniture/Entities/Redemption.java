@@ -3,14 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -19,24 +15,23 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class Redemption implements Serializable {
+public class Redemption extends Document implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
+    private Boolean claimed;
+
     @ManyToOne
     private Customer customer;
-    
+
     @OneToOne
     private RedeemableItem redeemableItem;
 
-    public Long getId() {
-        return id;
+    public Boolean isClaimed() {
+        return claimed;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setClaimed(Boolean claimed) {
+        this.claimed = claimed;
     }
 
     public Customer getCustomer() {
@@ -79,5 +74,5 @@ public class Redemption implements Serializable {
     public String toString() {
         return "Redemption[ id=" + id + " ]";
     }
-    
+
 }

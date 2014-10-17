@@ -32,6 +32,9 @@ public interface ManageStorefrontInventoryLocal {
     StorefrontInventory getStorefrontInventory(Plant plant, Long stockId);
 
     //  Function: To reduce Storefront Inventory from Transaction
-    void reduceStorefrontInventoryFromTransaction(Plant plant, Stock stock, int qty);
+    void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty);
+    
+    //  Function: To edit Storefront Inventory quantity
+    void editStorefrontInventoryQty(StorefrontInventory si, int qty);
 
 }

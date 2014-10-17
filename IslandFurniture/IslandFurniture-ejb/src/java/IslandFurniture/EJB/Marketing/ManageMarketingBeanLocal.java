@@ -6,10 +6,13 @@
 package IslandFurniture.EJB.Marketing;
 
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCampaign;
+import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.Stock;
+import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -27,10 +30,18 @@ public interface ManageMarketingBeanLocal {
     public List<Plant> getStoresInCo(CountryOffice co);
 
     public List<Stock> getProductInCo(CountryOffice co);
-    
-    public double getPrice(Stock s,CountryOffice co);
-    
+
+    public double getPrice(Stock s, CountryOffice co);
+
     public int EmailCustomer(PromotionCampaign pc, CountryOffice co);
-    
+
     public double calcDiscount(Stock s, CountryOffice co, PromotionDetail pd);
+
+    public void expand_promotion(PromotionDetail pd, PromotionCoupon pc);
+
+    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c, List<PromotionCoupon> couponLists);
+
+    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c);
+    
+    public PromotionCoupon getCouponFromID(Long id);
 }

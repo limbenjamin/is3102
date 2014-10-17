@@ -364,7 +364,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 
             }
         }
-        totalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
+        totalLabel.setText("Total: " + Math.round(total * 100.0) / 100.0);
     }
     
     public Boolean consolidate(int numrows){

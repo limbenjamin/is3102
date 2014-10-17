@@ -89,7 +89,6 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory());
                     }
 
-                    eachMssr.setApproved(true);
                     eachMssr.setStatus(MssrStatus.APPROVED);
 
                     System.out.println(eachMssr);
