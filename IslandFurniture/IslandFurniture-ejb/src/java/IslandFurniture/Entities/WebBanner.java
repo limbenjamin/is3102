@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -11,23 +10,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class RedeemableItem implements Serializable {
+public class WebBanner implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
+    private Long id;
+    private String headerText;
+    private String subheaderText;
+    private String bodyText;
+    private String buttonText;
+    private String buttonUrl;
+
+    @OneToOne
+    private Picture picture;
+    
     @ManyToOne
-    protected CountryOffice countryOffice;
+    private CountryOffice countryOffice;
 
     public Long getId() {
         return id;
@@ -35,6 +42,54 @@ public abstract class RedeemableItem implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getHeaderText() {
+        return headerText;
+    }
+
+    public void setHeaderText(String headerText) {
+        this.headerText = headerText;
+    }
+
+    public String getSubheaderText() {
+        return subheaderText;
+    }
+
+    public void setSubheaderText(String subheaderText) {
+        this.subheaderText = subheaderText;
+    }
+
+    public String getBodyText() {
+        return bodyText;
+    }
+
+    public void setBodyText(String bodyText) {
+        this.bodyText = bodyText;
+    }
+
+    public String getButtonText() {
+        return buttonText;
+    }
+
+    public void setButtonText(String buttonText) {
+        this.buttonText = buttonText;
+    }
+
+    public String getButtonUrl() {
+        return buttonUrl;
+    }
+
+    public void setButtonUrl(String buttonUrl) {
+        this.buttonUrl = buttonUrl;
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
     }
 
     public CountryOffice getCountryOffice() {
@@ -55,10 +110,10 @@ public abstract class RedeemableItem implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RedeemableItem)) {
+        if (!(object instanceof WebBanner)) {
             return false;
         }
-        RedeemableItem other = (RedeemableItem) object;
+        WebBanner other = (WebBanner) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -67,7 +122,7 @@ public abstract class RedeemableItem implements Serializable {
 
     @Override
     public String toString() {
-        return "RedeemableItem[ id=" + id + " ]";
+        return "WebBanner[ id=" + id + " ]";
     }
-    
+
 }

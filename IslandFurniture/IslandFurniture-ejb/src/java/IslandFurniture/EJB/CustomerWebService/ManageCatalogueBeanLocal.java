@@ -11,11 +11,13 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author Zee
  */
+@Local
 public interface ManageCatalogueBeanLocal {
     
     List<FurnitureModel> getAllFurniture();

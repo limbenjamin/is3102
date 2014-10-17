@@ -9,7 +9,6 @@ import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
-import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCampaign;
 import IslandFurniture.Entities.PromotionCoupon;
@@ -77,7 +76,11 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
         //JPA delete query
-        Query q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
+        Query q = em.createQuery("DELETE FROM PromotionCoupon zz where zz.promotionDetail.promotionCampaign=:pc");
+        q.setParameter("pc", pc);
+        q.executeUpdate();
+
+        q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
         q.setParameter("pc", pc);
         q.executeUpdate();
 
@@ -88,16 +91,22 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
 
             pd.setPromotionCampaign(pc);
-            em.merge(pd);
+//            em.merge(pd); 
 
             if (pd.getPromotionCoupons().size() > 0) {
+                
                 if (pd.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
                     pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
                     Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
                     l.executeUpdate();
-                    em.merge(pd.getPromotionCoupons().get(0));
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
+//                    em.merge(pd.getPromotionCoupons().get(0));
+                    
                 } else {
+                    
+                    pd.getPromotionCoupons().get(0).setPromotionDetail(null);
+                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0));
 
                     Query l = em.createQuery("SELECT pc FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
@@ -106,12 +115,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                         throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
                     }
 
-                    for (int i = l.getResultList().size(); i <= pd.getUsageCount().intValue(); i++) {
+                    for (int i = l.getResultList().size()+1; i <= pd.getUsageCount().intValue(); i++) {
                         PromotionCoupon new_pc = new PromotionCoupon();
-                        new_pc.setOneTimeUsage(false);
+                        new_pc.setOneTimeUsage(true);
                         new_pc.setPromotionDetail(pd);
                         pd.getPromotionCoupons().add(new_pc);
-                        em.merge(new_pc);
+//                        em.merge(new_pc);
 
                     }
                 }
@@ -192,6 +201,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         pd.setUsageCount((pd.getUsageCount() - 1));
         System.out.println("expand_promotion(): Expanded" + pd.getPromotionCampaign() + " Count Now: " + pd.getUsageCount());
 
+    }
+
+    @Override
+    public PromotionCoupon getCouponFromID(Long id) {
+
+        return (em.find(PromotionCoupon.class, id));
     }
 
     @Override
@@ -286,7 +301,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             PromotionDetailByProductSubCategory pdbpsc = (PromotionDetailByProductSubCategory) pd;
             if (s instanceof FurnitureModel) {
                 FurnitureModel fm = (FurnitureModel) s;
-                if (fm.getCategory().equals(pdbpsc.getCategory())) {
+                if (fm.getSubcategory().equals(pdbpsc.getCategory())) {
                     if (pd.getPercentageDiscount() > 0) {
                         newprice = (1 - pd.getPercentageDiscount()) * op;
                     }

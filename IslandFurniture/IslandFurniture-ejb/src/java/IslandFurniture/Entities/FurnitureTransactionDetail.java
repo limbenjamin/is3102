@@ -27,7 +27,9 @@ public class FurnitureTransactionDetail implements Serializable {
     private Integer qty;
     private Integer numReturned;
     private Integer numClaimed;
-    
+    private Double unitPrice;
+    private Integer unitPoints;
+
     @ManyToOne
     private FurnitureTransaction furnitureTransaction;
     @ManyToOne
@@ -65,6 +67,22 @@ public class FurnitureTransactionDetail implements Serializable {
 
     public void setNumClaimed(Integer numClaimed) {
         this.numClaimed = numClaimed;
+    }
+
+    public Double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Integer getUnitPoints() {
+        return unitPoints;
+    }
+
+    public void setUnitPoints(Integer unitPoints) {
+        this.unitPoints = unitPoints;
     }
 
     public FurnitureTransaction getFurnitureTransaction() {
@@ -116,8 +134,16 @@ public class FurnitureTransactionDetail implements Serializable {
         return "FurnitureTransactionDetail[ id=" + id + " ]";
     }
 
+    // Extra Methods
+    public Double getSubtotal() {
+        return this.qty * this.unitPrice;
+    }
+
+    public Integer getTotalPoints() {
+        return this.qty * this.unitPoints;
+    }
+
     // Entity Callbacks
-    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);

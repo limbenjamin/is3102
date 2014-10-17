@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -450,7 +448,7 @@ public class marketing implements Serializable {
     }
 
     public double calcDiscount(Stock s, PromotionDetail pd) {
-        return mbean.calcDiscount(s, ubean.getCountryOffice(currentUser.getPlant()), pd);
+        return Math.round(mbean.calcDiscount(s, ubean.getCountryOffice(currentUser.getPlant()), pd)*100)/100.0;
     }
 
 }
