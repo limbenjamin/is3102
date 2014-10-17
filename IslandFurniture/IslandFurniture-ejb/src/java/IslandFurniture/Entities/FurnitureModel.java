@@ -33,43 +33,49 @@ import javax.persistence.PostPersist;
 public class FurnitureModel extends Stock implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToOne(cascade={CascadeType.PERSIST})
+    @OneToOne(cascade = {CascadeType.PERSIST})
     private BOM bom;
-    @OneToMany(mappedBy = "furnitureModel", cascade={CascadeType.PERSIST})
+    @OneToMany(mappedBy = "furnitureModel", cascade = {CascadeType.PERSIST})
     private List<ProductionCapacity> productionCapacity;
     private Double price;
+    private List colour;
+    private Long reqPoints;
+    
+    // Attributes for the website
     private FurnitureCategory category;
     private FurnitureSubcategory subcategory;
-    private List colour;
     private String furnitureDescription;
+    @OneToOne
+    private Picture thumbnail;
     @OneToMany
-    private List<Picture> pictures;
+    private List<Picture> galleryPictures;
 
     public FurnitureModel() {
-        
+
         this.category = FurnitureCategory.EMPTY;
         this.subcategory = FurnitureSubcategory.EMPTY;
     }
+
     public FurnitureModel(String name) {
         this.category = FurnitureCategory.EMPTY;
         this.subcategory = FurnitureSubcategory.EMPTY;
         this.name = name;
     }
 
-    public FurnitureSubcategory getSubcategory() {
-        return subcategory;
+    public BOM getBom() {
+        return bom;
     }
 
-    public void setSubcategory(FurnitureSubcategory subcategory) {
-        this.subcategory = subcategory;
+    public void setBom(BOM bom) {
+        this.bom = bom;
     }
 
-    public FurnitureCategory getCategory() {
-        return category;
+    public List<ProductionCapacity> getProductionCapacity() {
+        return productionCapacity;
     }
 
-    public void setCategory(FurnitureCategory category) {
-        this.category = category;
+    public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
+        this.productionCapacity = productionCapacity;
     }
 
     public Double getPrice() {
@@ -87,20 +93,29 @@ public class FurnitureModel extends Stock implements Serializable {
     public void setColour(List colour) {
         this.colour = colour;
     }
-    public BOM getBom() {
-        return bom;
+
+    public Long getReqPoints() {
+        return reqPoints;
     }
 
-    public void setBom(BOM bom) {
-        this.bom = bom;
+    public void setReqPoints(Long reqPoints) {
+        this.reqPoints = reqPoints;
     }
 
-    public List<ProductionCapacity> getProductionCapacity() {
-        return productionCapacity;
+    public FurnitureCategory getCategory() {
+        return category;
     }
 
-    public void setProductionCapacity(List<ProductionCapacity> productionCapacity) {
-        this.productionCapacity = productionCapacity;
+    public void setCategory(FurnitureCategory category) {
+        this.category = category;
+    }
+
+    public FurnitureSubcategory getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(FurnitureSubcategory subcategory) {
+        this.subcategory = subcategory;
     }
 
     public String getFurnitureDescription() {
@@ -111,13 +126,22 @@ public class FurnitureModel extends Stock implements Serializable {
         this.furnitureDescription = furnitureDescription;
     }
 
-    public List<Picture> getPictures() {
-        return pictures;
+    public Picture getThumbnail() {
+        return thumbnail;
     }
 
-    public void setPictures(List<Picture> pictures) {
-        this.pictures = pictures;
+    public void setThumbnail(Picture thumbnail) {
+        this.thumbnail = thumbnail;
     }
+
+    public List<Picture> getGalleryPictures() {
+        return galleryPictures;
+    }
+
+    public void setGalleryPictures(List<Picture> galleryPictures) {
+        this.galleryPictures = galleryPictures;
+    }
+
 
     @Override
     public int hashCode() {
