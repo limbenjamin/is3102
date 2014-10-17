@@ -20,6 +20,7 @@ import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -50,6 +51,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     private List<MonthlyStockSupplyReq> mssrList;
     private MonthlyStockSupplyReq mssr;
     private CountryOffice co;
+    private CountryOffice co2;
     private ManufacturingFacility mf;
     private MonthlyProcurementPlan mpp;
     private Month month;
@@ -58,12 +60,16 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     private List<MonthlyProcurementPlan> mppList;
     private List<CountryOffice> coList;
     private List<StockSupplied> ssList;
+    private List<StockSupplied> ss2List;
     private List<Stock> stockList;
     private StockSupplied ss;
+    private StockSupplied ss2;
     private Stock stock;
     private Integer year;
     private int monthInt;
     private List<MonthlyStockSupplyReq> tempMssrList;
+    private List<ProcuredStockPurchaseOrder> poList;
+    private List<ProcuredStockPurchaseOrder> po2List;
     
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -239,32 +245,7 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         em.persist(purchaseOrderDetail);
                         purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
                         em.merge(purchaseOrder);
-                        query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf AND s.stock.id=:stockid");
-                        query.setParameter("mf", mf);
-                        query.setParameter("stockid", ri.getId());
-                        ssList = query.getResultList();
-                        Iterator<StockSupplied> iterator4 = ssList.iterator();
-                        coList = new ArrayList();
-                        while(iterator4.hasNext()){
-                            ss = iterator4.next();
-                            co = ss.getCountryOffice();
-                            mssr = em.find(MonthlyStockSupplyReq.class, new MonthlyStockSupplyReqPK(ss.getStock().getId(), co.getId(), month, year));
-                            qty = mssr.getQtyRequested()/maxDay*7;
-                            ExternalTransferOrder eto = new ExternalTransferOrder();
-                            eto.setRequestingPlant(co);
-                            eto.setFulfillingPlant(mf);
-                            eto.setTransferDate(TimeMethods.convertToPlantTime(mf, cal));
-                            ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
-                            etod.setQty(qty);
-                            etod.setStock(mssr.getStock());
-                            em.persist(etod);
-                            em.persist(eto);
-                            em.flush();
-                            eto.getExtTransOrderDetails().add(etod);
-                            etod.setExtTransOrder(eto);
-                            
-                            
-                        } 
+                        poList.add(purchaseOrder);
                     }
                 }
                 em.flush();
@@ -306,8 +287,10 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     em.persist(purchaseOrderDetail);
                     purchaseOrder.getPurchaseOrderDetails().add(purchaseOrderDetail);
                     em.merge(purchaseOrder);
+                    poList.add(purchaseOrder);
                 }
             }
+            createTransferOrder();
             em.flush();
         }
     }
@@ -335,6 +318,55 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
     public List<RetailItem> viewRetailItems(){
         Query query = em.createQuery("SELECT r FROM RetailItem r");
         return query.getResultList();
+    }
+
+    
+    private void createTransferOrder(){
+    /*    Query query = em.createQuery("SELECT s FROM StockSupplied s WHERE s.manufacturingFacility=:mf");
+        query.setParameter("mf", mf);
+        ssList = query.getResultList();
+        Iterator<StockSupplied> iterator4 = ssList.iterator();
+        coList = new ArrayList();
+        while(iterator4.hasNext()){
+            ss = iterator4.next();
+            co = ss.getCountryOffice();
+            Calendar cal = new GregorianCalendar(year,month.value, 1);
+            cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+            //day = date of first monday in month
+            int day = cal.get(Calendar.DAY_OF_WEEK);
+            while (day != 3) {
+               cal.add(Calendar.DATE, 1);
+                day = cal.get(Calendar.DAY_OF_WEEK);
+            }
+            int maxWeekNumber = Helper.getNumOfWeeks( month.value,year);
+            int maxDay = Helper.getNumWorkDays(month, year);
+            int daysInLastWeek = Helper.getBoundaryWeekDays(month, year);
+            for (int j=0;j< maxWeekNumber-1;j+=1){ //Get purchase order for week 1 to max week-1
+                ExternalTransferOrder eto = new ExternalTransferOrder();
+                eto.setRequestingPlant(co);
+                eto.setFulfillingPlant(mf);
+                eto.setTransferDate(TimeMethods.convertToPlantTime(mf, cal));
+                Iterator<ProcuredStockPurchaseOrder> iterator5 = poList.iterator();
+                while(iterator5.hasNext()){
+                    purchaseOrder = iterator5.next();
+                    if (purchaseOrder.getShipsTo() == co && purchaseOrder.getOrderDate() == TimeMethods.convertToPlantTime(mf, cal)){
+                        for (int i=0;i<purchaseOrder.getPurchaseOrderDetails().size();i++){
+                            ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
+                            int qty = purchaseOrder.getPurchaseOrderDetails().get(i).getQuantity()/maxDay*7;
+                            etod.setQty(qty);
+                            etod.setStock(mssr.getStock());
+                            em.persist(etod);
+                            em.persist(eto);
+                            em.flush();
+                            eto.getExtTransOrderDetails().add(etod);
+                            etod.setExtTransOrder(eto);
+                        }
+                    }
+                }
+            }
+                
+                
+        }*/
     }
     
 }

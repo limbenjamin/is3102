@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="index.xhtml"><img src="assets/images/islandfurniture.png" alt="" /></a>
+                                <a href="#{application.contextPath}/index.xhtml"><img src="#{application.contextPath}/assets/images/islandfurniture.png" alt="" /></a>
                             </div>
                         </div>
                         <div class="col-sm-8">
@@ -36,8 +36,8 @@
                                 <ul class="nav navbar-nav">
                                     <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
                                     <li><a href="#"><i class="fa fa-star"></i> Wish List</a></li>
-                                    <li><a href="shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
-                                    <li><a href="login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a href="#{application.contextPath}/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
+                                    <li><a href="#{application.contextPath}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -114,9 +114,17 @@
                             </div>
                             </div>
                             <div class="col-sm-3">
-                                <div class="search_box pull-right">
-                                    <input type="text" placeholder="Search"/>
-                                </div>
+                                <h:form>
+                                    <div class="input-group pull-right" style="max-width: 200px;">
+                                        <select class="form-control">
+                                            <option>Singapore</option>
+                                            <option>Malaysia</option>
+                                        </select>                                        
+                                      <span class="input-group-btn">
+                                          <h:button value="Go!" class="btn btn-default"></h:button>
+                                      </span>
+                                    </div>
+                                </h:form>
                             </div>
                         </div>
                     </div>

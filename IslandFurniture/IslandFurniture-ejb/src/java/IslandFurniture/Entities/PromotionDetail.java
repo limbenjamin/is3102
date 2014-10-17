@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +27,7 @@ import javax.persistence.OneToOne;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "DTYPE",discriminatorType = DiscriminatorType.STRING,length = 255)
 public abstract class PromotionDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,8 +41,8 @@ public abstract class PromotionDetail implements Serializable {
     protected double percentageDiscount;
     protected double absoluteDiscount = 0;
     
-    @OneToOne(cascade = CascadeType.REMOVE)
-    protected MembershipTier membershiptier = null;
+    @ManyToOne
+    protected MembershipTier membershiptier;
 
     protected Plant applicablePlant;
 
