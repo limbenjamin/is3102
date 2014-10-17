@@ -100,7 +100,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
 
     //  Function: To reduce Storefront Inventory from Transaction
     @Override
-    public void reduceStorefrontInventoryFromTransaction(Plant plant, Stock stock, int qty) {
+    public void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty) {
         // Start: Reduce Qty from Transaction : Current - Qty        
         storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
