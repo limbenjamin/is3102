@@ -35,25 +35,29 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private ProcuredStockContractDetail addProcurementContractDetail(ProcuredStockContract pc, ProcuredStock procuredStock, ManufacturingFacility mf, int leadTime, int lotSize) {
+    private ProcuredStockContractDetail addProcurementContractDetail(ProcuredStockContract pc, ProcuredStock procuredStock, ManufacturingFacility mf, int leadTime, int lotSize, double lotPrice) {
         ProcuredStockContractDetail pcd = new ProcuredStockContractDetail();
         pcd.setProcuredStock(procuredStock);
         pcd.setSupplierFor(mf);
         pcd.setLeadTimeInDays(leadTime);
         pcd.setLotSize(lotSize);
         pcd.setProcurementContract(pc);
+        pcd.setLotPrice(lotPrice);
+        pcd.setCurrency(mf.getCountry().getCurrency());
         em.persist(pcd);
         
         return pcd;
     }
 
-    private ProcuredStockSupplier addSupplier(String name, Country country) {
+    private ProcuredStockSupplier addSupplier(String name, Country country, String email, String phoneNo) {
         ProcuredStockSupplier supplier = QueryMethods.findSupplierByName(em, name);
 
         if (supplier == null) {
             supplier = new ProcuredStockSupplier();
             supplier.setName(name);
             supplier.setCountry(country);
+            supplier.setEmail(email);
+            supplier.setPhoneNumber(phoneNo);
             ProcuredStockContract pc = new ProcuredStockContract();
             pc.setSupplier(supplier);
             supplier.setProcuredStockContract(pc);
@@ -74,13 +78,13 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
             Random rand = new Random(1);
 
             Country country = QueryMethods.findCountryByName(em, "Singapore");
-            this.addSupplier("Global Supplies Inc.", country);
-            this.addSupplier("Woodcraft Solutions", country);
-            this.addSupplier("Metalworks", country);
-            this.addSupplier("Quality Finest", country);
-            this.addSupplier("Nippon Colours", country);
-            this.addSupplier("Atlantic Co.", country);
-            this.addSupplier("Speed Manufacture", country);
+            this.addSupplier("Global Supplies Inc.", country, "dave@globalsupplies.com", "(+65) 6345 9743");
+            this.addSupplier("Woodcraft Solutions", country, "woody@woods.com", "(+65) 6327 2621");
+            this.addSupplier("Metalworks", country, "tinman@metal.net", "(+65) 6351 9942");
+            this.addSupplier("Quality Finest", country, "mickey@qualityfinest.com", "(+65) 6742 8746");
+            this.addSupplier("Nippon Colours", country, "relations@nippon.com", "(+65) 6354 8732");
+            this.addSupplier("Atlantic Co.", country, "ralph@atlantic.com.sg", "(+65) 6736 8273");
+            this.addSupplier("Speed Manufacture", country, "gary@speedmanu.com", "(+65) 6534 9843");
 
             List<ManufacturingFacility> mfList = em.createNamedQuery("getAllMFs").getResultList();
             List<ProcuredStockSupplier> suppliers = em.createNamedQuery("getAllSuppliers").getResultList();
@@ -108,7 +112,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
 
                 for (ProcuredStock eachStock : reqStock) {
                     ProcuredStockContract pc = suppliers.get(rand.nextInt(suppliers.size())).getProcuredStockContract();
-                    pcd = this.addProcurementContractDetail(pc, eachStock, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100);
+                    pcd = this.addProcurementContractDetail(pc, eachStock, mf, rand.nextInt(7) + 4, (rand.nextInt(5) + 1) * 100, rand.nextInt(9000)/100.0 + 10);
                     pcdList.add(pcd);
 
                     pc.getProcuredStockContractDetails().add(pcd);
