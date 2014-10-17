@@ -35,6 +35,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
     private String customerName;
+    private Double grandTotal;
     
     /**
      * Creates new form CheckoutUI
@@ -376,7 +377,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     }//GEN-LAST:event_calculateButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
-        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction, customerName);
+        PaymentUI payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, grandTotal);
         payment.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_payButtonActionPerformed
@@ -419,16 +420,18 @@ public class CheckoutUI extends javax.swing.JFrame {
     public void updateTotal() {
         Double total = 0.0;
         Double current = 0.0;
-        int rows = jTable.getModel().getRowCount()-1;
-        for (int i = 0; i <= rows; i++) {
-            Double price = Double.parseDouble((String) jTable.getModel().getValueAt(i, 2));
-            String qty = String.valueOf(jTable.getModel().getValueAt(i, 4));
-            total = (Integer.parseInt(qty)) * price;
-            jTable.getModel().setValueAt(Math.round(total), rows, 5);
-            //TODO : print to 20x2 LCD
-            System.out.println(jTable.getModel().getValueAt(rows, 1) + " x " + qty);
-            System.out.println(Math.round(total));
+        int rows = transaction.size();
+        for (int i = 0; i < rows; i++) {
+            System.err.println("heerere i "+i);
+            Double price = Double.parseDouble(transaction.get(i).get(2));
+            String qty = String.valueOf(transaction.get(i).get(3));
+            System.err.println("price "+price);
+            System.err.println("qty "+qty);
+            total = (Double.parseDouble(qty)) * price;
+            System.err.println("heerere "+i+"   "+qty+"   "+total);
+            jTable.getModel().setValueAt(Math.round(total), i, 5);
         }
+        total = 0.0;
         for (int i = 0; i <= rows; i++) {
             try{
                 String val = String.valueOf(jTable.getModel().getValueAt(i, 5));
@@ -440,6 +443,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             }
         }
         grandTotalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
+        grandTotal = Math.round(total * 100.0) / 100.0;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

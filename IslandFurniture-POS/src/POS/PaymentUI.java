@@ -22,6 +22,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private String listJSON;
     private List<List<String>> transaction;
     private String customerName;
+    private Double grandTotal;
     
     /**
      * Creates new form PaymentUI
@@ -30,12 +31,14 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName) {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, Double grandTotal) {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.transaction = transaction;
         this.customerName = customerName;
+        this.grandTotal = grandTotal;
+        grandTotalLabel.setText("Grand Total : "+ grandTotal);
         checkoutButton.setVisible(Boolean.FALSE);
     }
 
@@ -66,7 +69,7 @@ public class PaymentUI extends javax.swing.JFrame {
         receiptCredit = new javax.swing.JLabel();
         doneButton = new javax.swing.JButton();
         checkoutButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        grandTotalLabel = new javax.swing.JLabel();
         backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -218,8 +221,8 @@ public class PaymentUI extends javax.swing.JFrame {
         checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         checkoutButton.setText("Checkout");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("Grand Total : 0");
+        grandTotalLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        grandTotalLabel.setText("Grand Total : 0");
 
         backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         backButton.setText("Back");
@@ -245,8 +248,7 @@ public class PaymentUI extends javax.swing.JFrame {
                             .addGap(18, 18, 18)
                             .addComponent(logoutButton))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel1)
+                            .addComponent(grandTotalLabel)
                             .addGap(18, 18, 18)
                             .addComponent(checkoutButton))
                         .addGroup(layout.createSequentialGroup()
@@ -254,9 +256,7 @@ public class PaymentUI extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(receiptCredit)
                                 .addComponent(voucherCredit))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(doneButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -276,7 +276,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 451, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(checkoutButton)
-                    .addComponent(jLabel1))
+                    .addComponent(grandTotalLabel))
                 .addContainerGap())
         );
 
@@ -355,7 +355,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private javax.swing.JButton checkoutButton;
     private javax.swing.JToggleButton creditCardButton;
     private javax.swing.JButton doneButton;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel grandTotalLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
