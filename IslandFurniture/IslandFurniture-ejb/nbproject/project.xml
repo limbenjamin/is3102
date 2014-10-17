@@ -9,6 +9,7 @@
             <included-library dirs="200">libs.javaee-api-7.0.classpath</included-library>
             <included-library dirs="200">reference.IslandFurnitureRemote.jar</included-library>
             <included-library dirs="200">file.reference.json-simple-1.1.1.jar</included-library>
+            <included-library dirs="200">file.reference.junit-4.11.jar</included-library>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>
