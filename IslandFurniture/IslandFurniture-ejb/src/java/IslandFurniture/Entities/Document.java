@@ -15,8 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -108,13 +108,13 @@ public abstract class Document implements Serializable {
     }
     
     // Entity Callbacks
-    @PostUpdate
-    public void postUpdate(){
+    @PreUpdate
+    public void preUpdate(){
         this.lastModTime = Calendar.getInstance();
     }
     
-    @PostPersist
-    public void postPersist(){
+    @PrePersist
+    public void prePersist(){
         this.creationTime = Calendar.getInstance();
     }
 }
