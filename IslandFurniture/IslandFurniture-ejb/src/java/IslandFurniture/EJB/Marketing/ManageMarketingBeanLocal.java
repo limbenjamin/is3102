@@ -42,4 +42,6 @@ public interface ManageMarketingBeanLocal {
     public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c, List<PromotionCoupon> couponLists);
 
     public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c);
+    
+    public PromotionCoupon getCouponFromID(Long id);
 }

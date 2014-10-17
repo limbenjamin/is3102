@@ -9,7 +9,6 @@ import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
-import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCampaign;
 import IslandFurniture.Entities.PromotionCoupon;
@@ -77,9 +76,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
         //JPA delete query
-        Query q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
+        Query q = em.createQuery("SELECT pcd FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
         q.setParameter("pc", pc);
-        q.executeUpdate();
+
+        for (PromotionDetail pd : (List<PromotionDetail>) q.getResultList()) {
+            em.remove(pd);
+        }
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
@@ -192,6 +194,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         pd.setUsageCount((pd.getUsageCount() - 1));
         System.out.println("expand_promotion(): Expanded" + pd.getPromotionCampaign() + " Count Now: " + pd.getUsageCount());
 
+    }
+
+    @Override
+    public PromotionCoupon getCouponFromID(Long id) {
+
+        return (em.find(PromotionCoupon.class, id));
     }
 
     @Override

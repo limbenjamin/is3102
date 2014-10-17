@@ -18,6 +18,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,6 +29,13 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
     
     @PersistenceContext
     EntityManager em;    
+    
+    // get all furniture
+    @Override
+    public List<FurnitureModel> getAllFurniture() {
+        Query q = em.createNamedQuery("getAllFurnitureModels");
+        return (List<FurnitureModel>) q.getResultList();
+    }   
     
     // get a list of furniture sold in a store
     @Override

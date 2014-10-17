@@ -41,4 +41,12 @@ public class Util {
         else
             return null;
       }
+      
+      public static String getCountry() {
+        HttpSession session = getSession();
+        if ( session != null )
+            return (String) session.getAttribute("country");
+        else
+            return null;
+      }      
 }
