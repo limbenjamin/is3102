@@ -36,8 +36,8 @@
                                 <ul class="nav navbar-nav">
                                     <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
                                     <li><a href="#"><i class="fa fa-star"></i> Wish List</a></li>
-                                    <li><a href="#{application.contextPath}/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
-                                    <li><a href="#{application.contextPath}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
+                                    <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
                                 </ul>
                             </div>
                         </div>

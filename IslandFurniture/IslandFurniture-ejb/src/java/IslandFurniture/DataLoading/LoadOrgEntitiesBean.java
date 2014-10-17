@@ -285,12 +285,13 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         }
     }
 
-    private CountryOffice addCountryOffice(String coName, Country country, String timeZoneID) {
+    private CountryOffice addCountryOffice(String coName, String code, Country country, String timeZoneID) {
         CountryOffice co = (CountryOffice) QueryMethods.findPlantByName(em, country, coName);
 
         if (co == null) {
             co = new CountryOffice();
             co.setName(coName);
+            co.setUrlCode(code);
             co.setCountry(country);
             co.setTimeZoneID(timeZoneID);
             em.persist(co);
@@ -353,44 +354,44 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         // Add Countries and Plants
         country = this.addCountry("Singapore");
         this.addGlobalHQ("Global HQ", country, "Asia/Singapore");
-        co = this.addCountryOffice("Singapore", country, "Asia/Singapore");
+        co = this.addCountryOffice("Singapore", "sg", country, "Asia/Singapore");
         this.addStore("Alexandra", country, "Asia/Singapore", co);
         this.addStore("Tampines", country, "Asia/Singapore", co);
         this.addManufacturingFacility("Tuas", country, "Asia/Singapore", co);
 
         country = this.addCountry("Malaysia");
-        co = this.addCountryOffice("Malaysia", country, "Asia/Kuala_Lumpur");
+        co = this.addCountryOffice("Malaysia", "my", country, "Asia/Kuala_Lumpur");
         this.addStore("Johor Bahru - Kulai", country, "Asia/Kuala_Lumpur", co);
 
         country = this.addCountry("China");
-        co = this.addCountryOffice("China", country, "Asia/Shanghai");
+        co = this.addCountryOffice("China", "cn", country, "Asia/Shanghai");
         this.addStore("Yunnan - Yuanjiang", country, "Asia/Shanghai", co);
         this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country, "Asia/Shanghai", co);
 
         country = this.addCountry("Indonesia");
-        co = this.addCountryOffice("Indonesia", country, "Asia/Jakarta");
+        co = this.addCountryOffice("Indonesia", "in", country, "Asia/Jakarta");
         this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co);
         this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co);
 
         country = this.addCountry("Cambodia");
-        co = this.addCountryOffice("Cambodia", country, "Asia/Phnom_Penh");
+        co = this.addCountryOffice("Cambodia", "camb", country, "Asia/Phnom_Penh");
         this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co);
 
         country = this.addCountry("Thailand");
-        co = this.addCountryOffice("Thailand", country, "Asia/Bangkok");
+        co = this.addCountryOffice("Thailand", "th", country, "Asia/Bangkok");
         this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co);
         this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co);
 
         country = this.addCountry("Vietnam");
-        co = this.addCountryOffice("Vietnam", country, "Asia/Ho_Chi_Minh");
+        co = this.addCountryOffice("Vietnam", "viet", country, "Asia/Ho_Chi_Minh");
         this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co);
 
         country = this.addCountry("Laos");
-        co = this.addCountryOffice("Laos", country, "Asia/Vientiane");
+        co = this.addCountryOffice("Laos", "laos", country, "Asia/Vientiane");
         this.addStore("Vientiane", country, "Asia/Vientiane", co);
 
         country = this.addCountry("Canada");
-        co = this.addCountryOffice("Canada", country, "Canada/Pacific");
+        co = this.addCountryOffice("Canada", "ca", country, "Canada/Pacific");
         this.addStore("Toronto", country, "Canada/Eastern", co);
 
         em.flush();

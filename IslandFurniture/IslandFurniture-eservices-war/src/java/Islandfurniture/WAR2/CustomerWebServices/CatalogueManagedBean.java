@@ -7,6 +7,8 @@
 package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
@@ -16,6 +18,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -33,10 +37,16 @@ public class CatalogueManagedBean implements Serializable{
     private FurnitureSubcategory subcategory;   
     
     @EJB
+    private ManageLocalizationBeanLocal manageLocalizationBean;
+    
+    @EJB
     private ManageCatalogueBeanLocal mcbl;
     
     @PostConstruct
     public void init() {
+        HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        CountryOffice co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
+        
         furnitureList = mcbl.getAllFurniture();
         System.out.println("loaded furniture models");
     }
