@@ -6,6 +6,7 @@
 
 package IslandFurniture.WAR.SalesPlanning;
 
+import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.EJB.SalesPlanning.PriceManagerLocal;
 import IslandFurniture.Entities.FurnitureModel;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -31,6 +33,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 @ViewScoped
 public class PricePlanningManagedBean {
     @EJB
+    private StockManagerLocal stockManager;
+    @EJB
     private SupplierManagerLocal supplierManager;
     @EJB
     private PriceManagerLocal priceManager;
@@ -41,6 +45,7 @@ public class PricePlanningManagedBean {
     private List<StockSupplied> displayList; 
     private Set<FurnitureModel> furnitureSet;
     private Set<RetailItem> retailItemSet;
+    private Stock stock;
 
     public List<FurnitureModel> getFurnitureList() {
         return furnitureList;
@@ -108,13 +113,22 @@ public class PricePlanningManagedBean {
     public void viewPricing(AjaxBehaviorEvent event) {
         System.out.println("PricePlanningManagedBean.viewPricing()");
         Long stockID = (Long) event.getComponent().getAttributes().get("stockID");
+        stock = stockManager.getStock(stockID);
         displayList = priceManager.findCountryOfficeWithStock(stockID);
     }
     public String editPrice() {
         System.out.println("PricePlanningManagedBean.editPrice()");
+        String msg = "";
         for(StockSupplied ss : displayList) {
-            priceManager.editPrice(ss, ss.getPrice());
+            msg = priceManager.editPrice(ss, ss.getPrice());
+            if(msg != null) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
+            } 
         }
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Pricing for \"" + stock.getName() + "\" has been updated", ""));
+
         return "priceplanning";
     }
 }
