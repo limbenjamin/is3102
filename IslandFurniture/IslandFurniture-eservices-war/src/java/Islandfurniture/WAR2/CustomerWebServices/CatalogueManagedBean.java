@@ -27,7 +27,7 @@ import javax.inject.Named;
 public class CatalogueManagedBean implements Serializable{
 
     private List<FurnitureModel> furnitureList;
-    private String name = "yay";
+    private String name;
     private String furnitureDescription;
     private Double price;
     private FurnitureCategory category;

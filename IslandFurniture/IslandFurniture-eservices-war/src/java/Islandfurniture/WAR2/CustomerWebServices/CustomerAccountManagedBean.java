@@ -47,9 +47,9 @@ public class CustomerAccountManagedBean implements Serializable{
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
         if (emailAddress == null) {
-            try {
+            try {              
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                ec.redirect("../login.xhtml");
+                ec.redirect("login.xhtml");
             } catch (IOException ex) {   
             }
         }   
@@ -69,7 +69,7 @@ public class CustomerAccountManagedBean implements Serializable{
         mmab.modifyPersonalParticulars(emailAddress, phoneNo, name);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
-        return "modifyparticulars";
+        return "account";
     }    
 
     public String getName() {
