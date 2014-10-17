@@ -87,10 +87,20 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         return storefrontInventory;
     }
+    
+//  Function: To edit Storefront Inventory quantity
+    @Override
+    public void editStorefrontInventoryQty(StorefrontInventory si, int qty) {
+        storefrontInventoryPK = new StorefrontInventoryPK(si.getStore().getId(), si.getStock().getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+        storefrontInventory.setQty(qty);
+        em.merge(storefrontInventory);
+        em.flush(); 
+    }
 
     //  Function: To reduce Storefront Inventory from Transaction
     @Override
-    public void reduceStorefrontInventoryFromTransaction(Plant plant, Stock stock, int qty) {
+    public void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty) {
         // Start: Reduce Qty from Transaction : Current - Qty        
         storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);

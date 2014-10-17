@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package POS;
+package IslandFurniture.WAR3.POS;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -30,8 +30,8 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(POS.AuthenticationWS.class);
-        resources.add(POS.StocklistWS.class);
+        resources.add(IslandFurniture.WAR3.POS.AuthenticationWS.class);
+        resources.add(IslandFurniture.WAR3.POS.StocklistWS.class);
     }
     
 }
