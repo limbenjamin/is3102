@@ -21,6 +21,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private String staffJSON;
     private String listJSON;
     private List<List<String>> transaction;
+    private String customerName;
     
     /**
      * Creates new form PaymentUI
@@ -29,11 +30,13 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction) {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName) {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.transaction = transaction;
+        this.customerName = customerName;
+        checkoutButton.setVisible(Boolean.FALSE);
     }
 
     /**
@@ -46,11 +49,149 @@ public class PaymentUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        welcomeLabel = new javax.swing.JLabel();
+        voucherLabel = new javax.swing.JLabel();
+        returnReceiptLabel = new javax.swing.JLabel();
+        voucherField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        returnReceiptField = new javax.swing.JTextPane();
+        jPanel2 = new javax.swing.JPanel();
+        verifyVoucherButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        cashButton = new javax.swing.JToggleButton();
+        jTextField1 = new javax.swing.JTextField();
+        creditCardButton = new javax.swing.JToggleButton();
         logoutButton = new javax.swing.JButton();
+        voucherCredit = new javax.swing.JLabel();
+        receiptCredit = new javax.swing.JLabel();
+        doneButton = new javax.swing.JButton();
+        checkoutButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
+
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        welcomeLabel.setText("welcome xxxxxxxxxxxxxxxxxxxx of xxxxxxxxxxx store");
+
+        voucherLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        voucherLabel.setText("Voucher:");
+
+        returnReceiptLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        returnReceiptLabel.setText("Return Receipt:");
+
+        voucherField.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        voucherField.setMinimumSize(new java.awt.Dimension(200, 50));
+        voucherField.setPreferredSize(new java.awt.Dimension(400, 50));
+
+        jScrollPane1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(200, 50));
+
+        returnReceiptField.setPreferredSize(new java.awt.Dimension(400, 50));
+        jScrollPane1.setViewportView(returnReceiptField);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        verifyVoucherButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        verifyVoucherButton.setText("Verify");
+
+        addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        addButton.setText("Add");
+
+        cashButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        cashButton.setText("Cash");
+        cashButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cashButtonActionPerformed(evt);
+            }
+        });
+
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jTextField1.setMinimumSize(new java.awt.Dimension(400, 50));
+        jTextField1.setPreferredSize(new java.awt.Dimension(400, 50));
+
+        creditCardButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        creditCardButton.setText("Credit Card");
+        creditCardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creditCardButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(welcomeLabel)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(returnReceiptLabel)
+                            .addComponent(voucherLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(voucherField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(verifyVoucherButton)
+                            .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cashButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(creditCardButton))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(welcomeLabel)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(48, 48, 48)
+                                    .addComponent(voucherLabel))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addGap(42, 42, 42)
+                                    .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(42, 42, 42)
+                                .addComponent(verifyVoucherButton)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addButton)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(returnReceiptLabel)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(89, 89, 89)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cashButton)
+                    .addComponent(creditCardButton))
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         logoutButton.setText("Logout");
@@ -60,6 +201,26 @@ public class PaymentUI extends javax.swing.JFrame {
             }
         });
 
+        voucherCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        voucherCredit.setText("Credit:0");
+
+        receiptCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        receiptCredit.setText("Credit:0");
+
+        doneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        doneButton.setText("Done");
+        doneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doneButtonActionPerformed(evt);
+            }
+        });
+
+        checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        checkoutButton.setText("Checkout");
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setText("Grand Total : 0");
+
         backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
@@ -68,41 +229,54 @@ public class PaymentUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(548, Short.MAX_VALUE)
-                .addComponent(backButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(logoutButton)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(logoutButton)
-                    .addComponent(backButton))
-                .addContainerGap(372, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 878, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(170, 170, 170)
+                            .addComponent(backButton)
+                            .addGap(18, 18, 18)
+                            .addComponent(logoutButton))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel1)
+                            .addGap(18, 18, 18)
+                            .addComponent(checkoutButton))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(309, 309, 309)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(receiptCredit)
+                                .addComponent(voucherCredit))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutButton)
+                    .addComponent(backButton))
+                .addGap(43, 43, 43)
+                .addComponent(voucherCredit)
+                .addGap(18, 18, 18)
+                .addComponent(receiptCredit)
+                .addGap(18, 18, 18)
+                .addComponent(doneButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 451, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkoutButton)
+                    .addComponent(jLabel1))
                 .addContainerGap())
         );
 
@@ -126,6 +300,18 @@ public class PaymentUI extends javax.swing.JFrame {
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
+        checkoutButton.setVisible(Boolean.TRUE);
+    }//GEN-LAST:event_doneButtonActionPerformed
+
+    private void creditCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creditCardButtonActionPerformed
+        cashButton.setSelected(Boolean.FALSE);
+    }//GEN-LAST:event_creditCardButtonActionPerformed
+
+    private void cashButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cashButtonActionPerformed
+        creditCardButton.setSelected(Boolean.FALSE);
+    }//GEN-LAST:event_cashButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -163,8 +349,25 @@ public class PaymentUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JButton backButton;
+    private javax.swing.JToggleButton cashButton;
+    private javax.swing.JButton checkoutButton;
+    private javax.swing.JToggleButton creditCardButton;
+    private javax.swing.JButton doneButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JLabel receiptCredit;
+    private javax.swing.JTextPane returnReceiptField;
+    private javax.swing.JLabel returnReceiptLabel;
+    private javax.swing.JButton verifyVoucherButton;
+    private javax.swing.JLabel voucherCredit;
+    private javax.swing.JTextField voucherField;
+    private javax.swing.JLabel voucherLabel;
+    private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

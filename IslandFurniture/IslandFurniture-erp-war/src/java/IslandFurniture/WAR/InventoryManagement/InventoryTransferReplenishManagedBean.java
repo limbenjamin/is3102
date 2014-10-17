@@ -56,6 +56,7 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
     private String username;
     private Staff staff;
     private Plant plant;
+    private StockUnit stockUnit;
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -112,12 +113,16 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
     public void updateReplenishmentTransferOrder(ActionEvent event) throws IOException {
         ReplenishmentTransferOrder rto = transferBean.getReplenishmentTransferOrder(rtoId);
         StorefrontInventory si = storefrontInventoryBean.getStorefrontInventory(plant, rto.getStock().getId());
+        stockUnit = transferBean.getStockUnit(stockUnitId);
+        
+        System.out.println("RI stock is " + rto.getQty());
+        System.out.println("StorefrontInventory QTY is " + si.getQty());
 
         if (transferBean.getStockUnit(stockUnitId).getQty() < rto.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity in the Stock Unit is not enough to perform fulfillment. The Replenishment Transfer Order is not fulfilled.", ""));
         } else {
-            transferBean.editStockUnitQuantity(stockUnitId, transferBean.getStockUnit(stockUnitId).getQty() - rto.getQty());
+            transferBean.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - rto.getQty());
             storefrontInventoryBean.editStorefrontInventoryQty(si, rto.getQty() + si.getQty());
             transferBean.editReplenishmentTransferOrderStatusToRequestFulfilled(rto);
 
@@ -129,6 +134,14 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         }
 
         // End
+    }
+
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
     }
 
     public void createReplenishmentTransferOrderforPOS(ActionEvent event) throws IOException {

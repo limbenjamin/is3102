@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package POS;
+package IslandFurniture.WAR3.POS;
 
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
