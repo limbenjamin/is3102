@@ -6,6 +6,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ public class RetailItem extends ProcuredStock implements Serializable {
     private Double price;
     private String riDescription;
 
-    @OneToOne
+    @OneToOne(cascade={CascadeType.PERSIST})
     private Picture picture;
 
     public RetailItem() {

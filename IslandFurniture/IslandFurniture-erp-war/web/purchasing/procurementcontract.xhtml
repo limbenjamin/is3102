@@ -38,7 +38,7 @@
                             <div class="tab-pane active">                        
                                 <section class="panel">
                                     <h:form id="deletePCDForm" class="form-horizontal">
-                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList">  <!-- I didn't use tableStyle="width:auto" because an empty table looks very ugly -->
+                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList"> 
                                             <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}" style="width: 20%;">
                                                 <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
                                             </p:column>
@@ -50,7 +50,7 @@
                                                     <f:selectItem itemLabel="#{PCD.currency.name}" />
                                                     <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
                                                 </h:selectOneMenu>
-                                            </p:column>  
+                                            </p:column>   
                                             <p:column headerText="Lot Price" style="width: 12%;">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>

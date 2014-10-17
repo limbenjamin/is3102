@@ -17,14 +17,13 @@
                             <li class="active"><strong>Suppliers</strong></li>
                         </ol>                        
                     </div>                    
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newSupplier">
                             <i class="fa fa-fw fa-plus"></i>New Procured Stock Supplier
                         </button>                         
                         <h4>Suppliers</h4><hr></hr>   
                     </div>
-                    <div class="col-md-10">
-                        
+                    <div class="col-md-12">
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane active" id="areas">                        
@@ -40,7 +39,7 @@
                                         <th>Country</th>
                                         <th>Contact No.</th>
                                         <th>Email</th> 
-                                        <th>Contract Details</th>
+                                        <th>Details</th>
                                         <th>Update</th>
                                         <th>Delete</th>
                                     </tr>
@@ -73,9 +72,10 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" value="View" class="btn btn-success btn-xs"> 
+                                                    <h:commandButton actionListener="#{supplierManagedBean.pcActionListener}" class="btn btn-sm transparent-button" style="outline:0px; text-align: center;"> 
                                                         <f:attribute name="sID" value="#{supplier.id}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-search-plus icon-button"></i> 
                                                 </td> 
                                                 <td><h:commandButton actionListener="#{supplierManagedBean.editSupplier}" class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:attribute name="toEdit" value="#{supplier}" />
