@@ -434,7 +434,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             System.err.println("qty "+qty);
             total = (Double.parseDouble(qty)) * price;
             System.err.println("heerere "+i+"   "+qty+"   "+total);
-            jTable.getModel().setValueAt(Math.round(total), i, 5);
+            jTable.getModel().setValueAt(Math.floor(total), i, 5);
         }
         total = 0.0;
         for (int i = 0; i <= rows; i++) {
@@ -447,8 +447,8 @@ public class CheckoutUI extends javax.swing.JFrame {
                 
             }
         }
-        grandTotalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
-        grandTotal = Math.round(total * 100.0) / 100.0;
+        grandTotalLabel.setText("Grand Total: " + Math.floor(total * 100.0) / 100.0);
+        grandTotal = Math.floor(total * 100.0) / 100.0;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
