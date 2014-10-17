@@ -26,7 +26,7 @@ public interface StockManagerLocal {
 
     public boolean addMaterial(String name, Double weight);
 
-    public String addFurnitureModel(String name, Double price);
+    public String addFurnitureModel(String name);
 
     public List<FurnitureModel> displayFurnitureList();
 
@@ -42,7 +42,7 @@ public interface StockManagerLocal {
 
     public String deleteFurnitureModel(Long furnitureID);
 
-    public String editFurnitureModel(Long furnitureID, String furnitureName, Double price);
+    public String editFurnitureModel(Long furnitureID, String furnitureName);
 
     public FurnitureModel getFurniture(Long id);
 

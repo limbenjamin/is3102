@@ -126,7 +126,7 @@ public class StockManager implements StockManagerLocal {
         }
     }
     @Override
-    public String addFurnitureModel(String name, Double price) {
+    public String addFurnitureModel(String name) {
         FurnitureModel fm;
         BOM bom;
         List<BOMDetail> bomList;
@@ -137,10 +137,9 @@ public class StockManager implements StockManagerLocal {
             if(fm == null) {
                 fm = new FurnitureModel(name);
                 bom = new BOM();
-                bomList = new ArrayList<BOMDetail>();
+                bomList = new ArrayList<>();
 
                 bom.setBomDetails(bomList);
-                fm.setPrice(price);
                 fm.setBom(bom);
                 em.persist(fm);
                 msg = "" + fm.getId() + "#0"; 
@@ -179,14 +178,13 @@ public class StockManager implements StockManagerLocal {
         }
     }   
     @Override
-    public String editFurnitureModel(Long furnitureID, String furnitureName, Double price) {
+    public String editFurnitureModel(Long furnitureID, String furnitureName) {
         FurnitureModel fm;
         try {
             System.out.println("StockManager.editFurnitureModel()");
             fm = em.find(FurnitureModel.class, furnitureID);
             System.out.println("Updating furniture information of " + fm.getName());
             fm.setName(furnitureName);
-            fm.setPrice(price);
             em.persist(fm);
             return null;
         } catch(NoResultException ex) {

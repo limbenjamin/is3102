@@ -18,6 +18,7 @@ import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -270,21 +271,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.flush();
     }
 
-    //  Function: To create a Replenishment Transfer Order (Status: Requested) from Transaction
-    @Override
-    public void createReplenishmentTransferOrderFromTransaction(Plant plant, Stock stock) {
-        replenishmentTransferOrder = new ReplenishmentTransferOrder();
-        replenishmentTransferOrder.setRequestingPlant(plant);
-        replenishmentTransferOrder.setStock(stock);
 
-        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
-        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
-
-        replenishmentTransferOrder.setQty(storefrontInventory.getMaxQty() - storefrontInventory.getQty());
-        replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
-        em.persist(replenishmentTransferOrder);
-        em.flush();
-    }
 
 //  Function: To delete a Replenishment Transfer Order  
     @Override

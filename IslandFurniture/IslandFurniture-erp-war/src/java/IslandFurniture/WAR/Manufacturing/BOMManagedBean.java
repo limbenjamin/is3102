@@ -359,22 +359,6 @@ public class BOMManagedBean implements Serializable {
         return currencyManager.computeRetailPriceWithExchangeRate(this.furniture.getPrice(), exchangeRate);
     }
 
-    public String updatePrice() {
-        System.out.println("BOMManagedBean.updatePrice()");
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String price = request.getParameter("pricingForm:price");
-        String msg = stockManager.editFurnitureModel(furnitureID, this.furniture.getName(), Double.parseDouble(price));
-        if (msg != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture price has been successfully updated", ""));
-        }
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
-        return "bom";
-    }
-
     public String updateDescription() {
         System.out.println("BOMManagedBean.updateDescription()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
