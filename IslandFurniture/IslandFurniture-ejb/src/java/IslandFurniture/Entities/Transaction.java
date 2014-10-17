@@ -5,15 +5,9 @@
  */
 package IslandFurniture.Entities;
 
-import IslandFurniture.Entities.TransactionPK;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
@@ -27,7 +21,6 @@ import javax.persistence.TemporalType;
  * @author James
  */
 @Entity
-@IdClass(TransactionPK.class)
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
     @NamedQuery(
@@ -35,13 +28,9 @@ import javax.persistence.TemporalType;
             name = "getStoreTransactions",
             query = "SELECT a FROM Transaction a WHERE a.transTime >= :startDate AND a.transTime <= :endDate AND a.store = :store")
 })
-public abstract class Transaction implements Serializable {
+public abstract class Transaction extends Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Long id;
-    @Id
     @ManyToOne
     protected Store store;
     @Temporal(TemporalType.TIMESTAMP)
@@ -50,13 +39,6 @@ public abstract class Transaction implements Serializable {
     @ManyToOne
     protected Customer member;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Store getStore() {
         return store;
@@ -64,14 +46,6 @@ public abstract class Transaction implements Serializable {
 
     public void setStore(Store store) {
         this.store = store;
-    }
-
-    public Customer getMember() {
-        return member;
-    }
-
-    public void setMember(Customer member) {
-        this.member = member;
     }
 
     public Calendar getTransTime() {
@@ -82,13 +56,18 @@ public abstract class Transaction implements Serializable {
         this.transTime = transTime;
     }
 
+    public Customer getMember() {
+        return member;
+    }
 
+    public void setMember(Customer member) {
+        this.member = member;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id);
-        hash = 71 * hash + Objects.hashCode(this.store);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -99,7 +78,10 @@ public abstract class Transaction implements Serializable {
             return false;
         }
         Transaction other = (Transaction) object;
-        return this.id.equals(other.id) && this.store.equals(other.store);
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -3,35 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Lob;
 
 /**
  *
- * @author James
+ * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class PlantStockInventory implements Serializable {
+public class Picture implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar recordTime;
-    @ManyToOne
-    private Plant plant;
-    @ManyToOne
-    private Stock stock;
+
+    @Lob
+    private byte[] content;
 
     public Long getId() {
         return id;
@@ -41,28 +35,12 @@ public class PlantStockInventory implements Serializable {
         this.id = id;
     }
 
-    public Calendar getRecordTime() {
-        return recordTime;
+    public byte[] getContent() {
+        return content;
     }
 
-    public void setRecordTime(Calendar recordTime) {
-        this.recordTime = recordTime;
-    }
-
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public void setPlant(Plant plant) {
-        this.plant = plant;
-    }
-
-    public Stock getStock() {
-        return stock;
-    }
-
-    public void setStock(Stock stock) {
-        this.stock = stock;
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     @Override
@@ -75,10 +53,10 @@ public class PlantStockInventory implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PlantStockInventory)) {
+        if (!(object instanceof Picture)) {
             return false;
         }
-        PlantStockInventory other = (PlantStockInventory) object;
+        Picture other = (Picture) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -87,7 +65,7 @@ public class PlantStockInventory implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.PlantStockInventory[ id=" + id + " ]";
+        return "Picture[ id=" + id + " ]";
     }
-    
+
 }

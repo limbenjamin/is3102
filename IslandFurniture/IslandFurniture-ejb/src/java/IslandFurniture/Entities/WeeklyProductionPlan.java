@@ -6,19 +6,13 @@
 package IslandFurniture.Entities;
 
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanning;
 import IslandFurniture.StaticClasses.Helper;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.NamedQueries;
@@ -124,7 +118,7 @@ public class WeeklyProductionPlan implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.WeeklyProductionPlan[ id=" + id + " ]";
+        return "WeeklyProductionPlan[ id=" + id + " ]";
     }
 
     public int getWeekNo() {

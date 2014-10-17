@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostPersist;
 
@@ -29,10 +27,6 @@ public class RetailItemTransactionDetail implements Serializable {
     private Integer qty;
 
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
     private RetailItemTransaction retailItemTransaction;
     @ManyToOne
     private RetailItem retailItem;

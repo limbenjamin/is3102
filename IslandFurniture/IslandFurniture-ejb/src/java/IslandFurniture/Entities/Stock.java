@@ -15,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -40,12 +39,10 @@ public abstract class Stock implements Serializable {
 
     @OneToMany(mappedBy = "stock")
     protected List<StockUnit> stockUnit = new ArrayList();
-    @OneToMany(mappedBy = "stock")
-    protected List<PlantStockInventory> plantStockInventories = new ArrayList();
+    
     @OneToMany(mappedBy = "stock")
     protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
-    @ManyToMany(mappedBy = "sells")
-    protected List<Store> soldBy = new ArrayList();
+    
     @OneToMany(mappedBy = "stock")
     protected List<NFC> nfcList = new ArrayList();
 
@@ -73,14 +70,6 @@ public abstract class Stock implements Serializable {
         this.stockUnit = stockUnit;
     }
 
-    public List<PlantStockInventory> getPlantStockInventories() {
-        return plantStockInventories;
-    }
-
-    public void setPlantStockInventories(List<PlantStockInventory> plantStockInventories) {
-        this.plantStockInventories = plantStockInventories;
-    }
-
     public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
         return monthlyStockSupplyReqs;
     }
@@ -89,12 +78,12 @@ public abstract class Stock implements Serializable {
         this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
 
-    public List<Store> getSoldBy() {
-        return soldBy;
+    public List<NFC> getNfcList() {
+        return nfcList;
     }
 
-    public void setSoldBy(List<Store> soldBy) {
-        this.soldBy = soldBy;
+    public void setNfcList(List<NFC> nfcList) {
+        this.nfcList = nfcList;
     }
 
     @Override

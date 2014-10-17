@@ -8,9 +8,6 @@ package IslandFurniture.Entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -20,29 +17,18 @@ import javax.persistence.OneToOne;
  * @author James
  */
 @Entity
-public class IngredientGoodsReceiptDocument implements Serializable {
+public class IngredientGoodsReceiptDocument extends Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     @ManyToOne
     private IngredientSupplier supplier;
 
     @OneToMany(mappedBy = "ingredGoodsReceiptDocument")
     private List<IngredientGoodsReceiptDocumentDetail> ingredGoodsReceiptDocumentDetails;
-    
-    @OneToOne (mappedBy = "ingredGoodsReceiptDoc")
+
+    @OneToOne(mappedBy = "ingredGoodsReceiptDoc")
     private IngredientPurchaseOrder ingredientPurchaseOrder;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public IngredientSupplier getSupplier() {
         return supplier;

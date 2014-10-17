@@ -6,13 +6,14 @@
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
-import IslandFurniture.Entities.MonthlyMenuItemSalesForecastPK;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -33,6 +34,9 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     @Id
     @ManyToOne
     private MenuItem menuItem;
+
+    @OneToMany(mappedBy = "mmsf")
+    private List<WeeklyMenuItemSalesForecast> wmsfList;
 
     public Month getMonth() {
         return month;
@@ -64,6 +68,14 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
+    }
+
+    public List<WeeklyMenuItemSalesForecast> getWmsfList() {
+        return wmsfList;
+    }
+
+    public void setWmsfList(List<WeeklyMenuItemSalesForecast> wmsfList) {
+        this.wmsfList = wmsfList;
     }
 
     @Override

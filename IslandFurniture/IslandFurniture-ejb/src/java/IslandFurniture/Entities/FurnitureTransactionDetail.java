@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostPersist;
 
@@ -27,12 +25,10 @@ public class FurnitureTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer qty;
+    private Integer numReturned;
+    private Integer numClaimed;
     
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "TRANSACTION_ID", referencedColumnName = "ID"),
-        @JoinColumn(name = "STORE_ID", referencedColumnName = "STORE_ID")
-    })
     private FurnitureTransaction furnitureTransaction;
     @ManyToOne
     private FurnitureModel furnitureModel;
@@ -53,6 +49,22 @@ public class FurnitureTransactionDetail implements Serializable {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getNumReturned() {
+        return numReturned;
+    }
+
+    public void setNumReturned(Integer numReturned) {
+        this.numReturned = numReturned;
+    }
+
+    public Integer getNumClaimed() {
+        return numClaimed;
+    }
+
+    public void setNumClaimed(Integer numClaimed) {
+        this.numClaimed = numClaimed;
     }
 
     public FurnitureTransaction getFurnitureTransaction() {

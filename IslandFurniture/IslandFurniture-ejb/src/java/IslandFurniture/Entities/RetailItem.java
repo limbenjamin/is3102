@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
 
 /**
@@ -28,18 +29,39 @@ public class RetailItem extends ProcuredStock implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Double price;
+    private String riDescription;
+
+    @OneToOne
+    private Picture picture;
+
+    public RetailItem() {
+
+    }
 
     public Double getPrice() {
-        return price; 
+        return price;
     }
 
     public void setPrice(Double price) {
         this.price = price;
     }
-    
-    public RetailItem() {
-       
+
+    public String getRiDescription() {
+        return riDescription;
     }
+
+    public void setRiDescription(String riDescription) {
+        this.riDescription = riDescription;
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Picture picture) {
+        this.picture = picture;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

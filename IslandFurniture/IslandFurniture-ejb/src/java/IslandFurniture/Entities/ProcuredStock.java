@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -27,10 +26,11 @@ import javax.persistence.OneToMany;
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class ProcuredStock extends Stock implements Serializable {
+
     protected static final long serialVersionUID = 1L;
     @ManyToMany
     protected List<ProcuredStockSupplier> suppliers;
-    @OneToMany(mappedBy="procuredStock")
+    @OneToMany(mappedBy = "procuredStock")
     protected List<ProcuredStockContractDetail> procuredStockContractDetails;
 
     public List<ProcuredStockSupplier> getSuppliers() {
@@ -41,11 +41,11 @@ public abstract class ProcuredStock extends Stock implements Serializable {
         this.suppliers = suppliers;
     }
 
-    public List<ProcuredStockContractDetail> getProcurementContractDetails() {
+    public List<ProcuredStockContractDetail> getProcuredStockContractDetails() {
         return procuredStockContractDetails;
     }
 
-    public void setProcurementContractDetails(List<ProcuredStockContractDetail> procuredStockContractDetails) {
+    public void setProcuredStockContractDetails(List<ProcuredStockContractDetail> procuredStockContractDetails) {
         this.procuredStockContractDetails = procuredStockContractDetails;
     }
 
@@ -71,7 +71,7 @@ public abstract class ProcuredStock extends Stock implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.Procuredstock[ id=" + id + " ]";
+        return "Procuredstock[ id=" + id + " ]";
     }
-    
+
 }
