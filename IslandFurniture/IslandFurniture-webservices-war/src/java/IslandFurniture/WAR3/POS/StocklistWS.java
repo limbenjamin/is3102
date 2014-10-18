@@ -125,7 +125,7 @@ public class StocklistWS {
                                 @FormParam("stockCoupon") String stockCoupon) {
         Staff staff = muabl.getStaffFromCardId(cardId);
         PromotionDetail Successful_promotion = null;
-        String d_price = null;
+        String d_price = "";
         String title = null;
         List<PromotionCoupon> couponList = new ArrayList();
         HashMap<String, Object> hash;
@@ -157,13 +157,13 @@ public class StocklistWS {
                     }
                     hash = mmb.getDiscountedPrice(s, co, c, couponList);
                 }
-                d_price = String.valueOf(hash.get("D_PRICE"));
-                Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
-                if (Successful_promotion == null){
-                    title = "";
-                }else{
-                    title = Successful_promotion.getPromotionCampaign().getTitle();
-                }
+            }
+            d_price = String.valueOf(hash.get("D_PRICE"));
+            Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
+            if (Successful_promotion == null){
+                title = "";
+            }else{
+                title = Successful_promotion.getPromotionCampaign().getTitle();
             }
 
         }

@@ -138,7 +138,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable = new javax.swing.JTable();
         logoutButton = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
-        checkoutButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -193,11 +193,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         totalLabel.setText("Total: 0");
 
-        checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        checkoutButton.setText("Checkout");
-        checkoutButton.addActionListener(new java.awt.event.ActionListener() {
+        nextButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        nextButton.setText("Next");
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkoutButtonActionPerformed(evt);
+                nextButtonActionPerformed(evt);
             }
         });
 
@@ -227,7 +227,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(totalLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(checkoutButton)))
+                        .addComponent(nextButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -243,7 +243,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkoutButton)
+                    .addComponent(nextButton)
                     .addComponent(totalLabel))
                 .addContainerGap())
         );
@@ -286,7 +286,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         changing = false;
     }//GEN-LAST:event_resetButtonActionPerformed
 
-    private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         List<List<String>> transaction = new ArrayList<>();
         List<String> transactionDetail;
         int row = jTable.getRowCount();
@@ -314,7 +314,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
             Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }//GEN-LAST:event_checkoutButtonActionPerformed
+    }//GEN-LAST:event_nextButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -404,11 +404,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton checkoutButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JButton nextButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JLabel totalLabel;
     private javax.swing.JLabel welcomeLabel;

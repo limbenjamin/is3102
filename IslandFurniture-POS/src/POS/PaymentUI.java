@@ -53,6 +53,11 @@ public class PaymentUI extends javax.swing.JFrame {
         grandTotalLabel.setText("Grand Total : "+ grandTotal);
         checkoutButton.setVisible(Boolean.FALSE);
         cashCreditField.setEditable(Boolean.FALSE);
+        cashButton.setSelected(Boolean.TRUE);
+        cashButton.setEnabled(Boolean.FALSE);
+        creditCardButton.setEnabled(Boolean.FALSE);
+        payButton.setEnabled(Boolean.FALSE);
+        logoutButton.setEnabled(false);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -247,6 +252,11 @@ public class PaymentUI extends javax.swing.JFrame {
 
         checkoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         checkoutButton.setText("Checkout");
+        checkoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkoutButtonActionPerformed(evt);
+            }
+        });
 
         voucherCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         voucherCredit.setText("Credit:0");
@@ -264,6 +274,11 @@ public class PaymentUI extends javax.swing.JFrame {
 
         addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         doneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         doneButton.setText("Done");
@@ -349,6 +364,10 @@ public class PaymentUI extends javax.swing.JFrame {
         addButton.setVisible(Boolean.FALSE);
         voucherField.setEditable(Boolean.FALSE);
         returnReceiptField.setEditable(Boolean.FALSE);
+        doneButton.setVisible(Boolean.FALSE);
+        cashButton.setEnabled(Boolean.TRUE);
+        creditCardButton.setEnabled(Boolean.TRUE);
+        payButton.setEnabled(Boolean.TRUE);
         cashCreditField.setEditable(Boolean.TRUE);
     }//GEN-LAST:event_doneButtonActionPerformed
 
@@ -366,6 +385,9 @@ public class PaymentUI extends javax.swing.JFrame {
     }//GEN-LAST:event_payButtonActionPerformed
 
     private void verifyVoucherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyVoucherButtonActionPerformed
+        if (voucherField.getText().equals("")){
+            return;
+        }
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("cardId");
@@ -379,6 +401,24 @@ public class PaymentUI extends javax.swing.JFrame {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_verifyVoucherButtonActionPerformed
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        if (returnReceiptField.getText().equals("")){
+            return;
+        }
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
+        try {
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            scanItem.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_checkoutButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -416,6 +456,7 @@ public class PaymentUI extends javax.swing.JFrame {
     }
     
     public void calculateTotal(){
+        checkoutButton.setVisible(Boolean.FALSE);
         changeAmt = 0.0;
         payableAmt = 0.0;
         grandTotalAmt = oriTotal - voucherAmt - receiptAmt;
@@ -430,10 +471,16 @@ public class PaymentUI extends javax.swing.JFrame {
             payableAmt = 0.0;
         }
         grandTotalLabel.setText("Grand Total: "+grandTotalAmt);
-        changeDueLabel.setText("Change Due: "+changeAmt);
-        payableLabel.setText("Total Payable: "+payableAmt);
-        if (payableAmt == 0.0 && changeAmt == 0.0){
+        changeDueLabel.setText("Change Due: "+Math.round(changeAmt * 100.0) / 100.0);
+        payableLabel.setText("Total Payable: "+Math.round(payableAmt * 100.0) / 100.0);
+        if (payableAmt == 0.0){
             checkoutButton.setVisible(Boolean.TRUE);
+            cashCreditField.setEditable(Boolean.FALSE);
+            payButton.setVisible(Boolean.FALSE);
+            backButton.setEnabled(false);           
+            cashButton.setEnabled(Boolean.FALSE);
+            creditCardButton.setEnabled(Boolean.FALSE);
+            //print receipt, open cash till
         }
     }
     
