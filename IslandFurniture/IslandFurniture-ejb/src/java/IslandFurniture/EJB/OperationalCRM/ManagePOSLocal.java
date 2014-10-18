@@ -16,7 +16,5 @@ import javax.ejb.Local;
 public interface ManagePOSLocal {
 
     int getVoucher(String id);
-
-    int getReceipt(String receiptId);
     
 }
