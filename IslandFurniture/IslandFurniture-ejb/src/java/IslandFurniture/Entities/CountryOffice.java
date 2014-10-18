@@ -30,6 +30,8 @@ import javax.persistence.PostPersist;
 public class CountryOffice extends Plant implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String urlCode;
+    
     @OneToMany(mappedBy = "countryOffice")
     private List<Store> stores = new ArrayList();
 
@@ -53,6 +55,14 @@ public class CountryOffice extends Plant implements Serializable {
     private List<WebBanner> webBanners;
     @OneToMany
     private List<Stock> featuredProducts;
+
+    public String getUrlCode() {
+        return urlCode;
+    }
+
+    public void setUrlCode(String urlCode) {
+        this.urlCode = urlCode;
+    }
 
     public List<Store> getStores() {
         return stores;

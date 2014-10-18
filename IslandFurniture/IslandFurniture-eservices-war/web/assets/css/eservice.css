@@ -89,6 +89,7 @@ a:focus {
 }
 
 a {
+  color: #000;
   -webkit-transition: 100ms;
   -moz-transition: 100ms;
     -o-transition: 100ms;
@@ -126,6 +127,43 @@ h1, h2, h3, h4, h5, h6 {
 
 .darkblue {
     color: #2c3e50;
+}
+
+/******************************* special forms *************************************/
+
+.transparent-form {
+    background-color: transparent;
+    border: transparent;
+    border-radius: 3px;
+}
+
+.transparent-form:focus {
+    border: 1px solid #bdc3c7;
+}
+
+.inner-addon { 
+    position: relative; 
+}
+
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align icon */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 20px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  30px; }
+.right-addon input { padding-right: 30px; }
+
+.select2-container-multi, .select2-choices {
+    -webkit-appearance: none;
+    background-image: none;
+    border-radius: 3px;
+    border: 1px solid #e3e6f3;
 }
 
 /************** TOP NAVBAR ******************/
@@ -314,6 +352,12 @@ ul.sub-menu {
 
 .breadcrumb a:hover {
     color: #269abc;
+}
+
+/************** CUSTOMER ACCOUNT ******************/
+
+#particularsForm {
+    margin-bottom: 100px;
 }
 
 /************** FOOTER ******************/

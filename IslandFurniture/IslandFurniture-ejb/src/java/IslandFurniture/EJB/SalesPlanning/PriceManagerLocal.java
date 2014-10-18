@@ -20,5 +20,7 @@ public interface PriceManagerLocal {
     public List<StockSupplied> findCountryOfficeWithStock(Long stockID);
 
     public String editPrice(StockSupplied ss, Double price);
+
+    public String editPoints(Long stockID, Long pointsWorth);
     
 }
