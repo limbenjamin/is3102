@@ -126,15 +126,14 @@ public class StocklistWS {
         Staff staff = muabl.getStaffFromCardId(cardId);
         PromotionDetail Successful_promotion = null;
         String d_price = null;
+        String title = null;
         List<PromotionCoupon> couponList = new ArrayList();
         HashMap<String, Object> hash;
-        customerCardId = "B00DBD31";
-        System.err.println("here " + stock + "a " + stockCoupon);
         if (staff == null){
             return "Error";
         }else{
             Customer c;
-            if (customerCardId == null){
+            if (customerCardId.equals("")){
                 Stock s = sm.getFurniture(Long.parseLong(stock));
                 Store store = (Store) staff.getPlant();
                 CountryOffice co = store.getCountryOffice();
@@ -160,10 +159,16 @@ public class StocklistWS {
                 }
                 d_price = String.valueOf(hash.get("D_PRICE"));
                 Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
+                if (Successful_promotion == null){
+                    title = "";
+                }else{
+                    title = Successful_promotion.getPromotionCampaign().getTitle();
+                }
             }
 
         }
-        JsonObject object = Json.createObjectBuilder().add("price", d_price).add("promo", Successful_promotion.getPromotionCampaign().getTitle()).build();
+        JsonObject object = Json.createObjectBuilder().add("price", d_price)
+                .add("promo",title ).build();
         return object.toString();
     }
     
