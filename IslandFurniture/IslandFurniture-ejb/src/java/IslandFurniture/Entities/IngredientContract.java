@@ -28,7 +28,7 @@ import javax.persistence.OneToOne;
     @NamedQuery(
             name = "getIngredSupplierList",
             query = "SELECT a.ingredSupplier FROM IngredientContract a WHERE EXISTS "
-                    + "(SELECT p FROM IngredientContractDetail p WHERE p.ingredContract.id = a.id AND p.supplierFor = :store)")
+                    + "(SELECT p FROM IngredientContractDetail p WHERE p.ingredContract.id = a.id AND p.ingredContract.ingredSupplier.co = :co)")
 })
 public class IngredientContract implements Serializable {
     private static final long serialVersionUID = 1L;

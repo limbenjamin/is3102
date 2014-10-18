@@ -6,6 +6,7 @@
 package dataloader;
 
 import IslandFurniture.DataLoading.LoadJamesTestDataRemote;
+import IslandFurniture.DataLoading.LoadKitchenDataBeanRemote;
 import IslandFurniture.DataLoading.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.DataLoading.LoadPrivilegeBeanRemote;
 import IslandFurniture.DataLoading.LoadSalesForecastBeanRemote;
@@ -27,6 +28,8 @@ import javax.ejb.EJB;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+    @EJB
+    private static LoadKitchenDataBeanRemote loadKitchenDataBean;
 
     @EJB
     private static LoadStorageDataBeanRemote loadStorageDataBean;
@@ -59,7 +62,7 @@ public class Main {
 
     @EJB
     private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
-    
+
     private static final int AUTO = 0;
     private static final int MANUAL = 1;
 
@@ -96,6 +99,16 @@ public class Main {
                 System.out.println("Supplier data (incl. procurement contracts) loaded successfully!");
             } else {
                 System.out.println("Failed to load Supplier data. Check for existing data and/or recreate islandFurniture database");
+            }
+        }
+
+        // Load Stock Entities (FurnitureModel, RetailItem, Materials) & StockSupplied relationships
+        System.out.print("Load Restaurant/Kitchen Related Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadKitchenDataBean.loadSampleData()) {
+                System.out.println("Kitchen data (incl. Suppliers all the way to Ingredients) loaded successfully!");
+            } else {
+                System.out.println("Failed to load Kitchen data. Check for existing data and/or recreate islandFurniture database");
             }
         }
 
@@ -166,7 +179,6 @@ public class Main {
 //                System.out.println("Failed to emulate Production Capacity Data");
 //            }
 //        }
-
     }
 
 }

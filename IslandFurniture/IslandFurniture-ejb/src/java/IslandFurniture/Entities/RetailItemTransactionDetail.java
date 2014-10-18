@@ -26,7 +26,7 @@ public class RetailItemTransactionDetail implements Serializable {
     private Long id;
     private Integer qty;
     private Double unitPrice;
-    private Integer unitPoints;
+    private Long unitPoints;
 
     @ManyToOne
     private RetailItemTransaction retailItemTransaction;
@@ -83,11 +83,11 @@ public class RetailItemTransactionDetail implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getUnitPoints() {
+    public Long getUnitPoints() {
         return unitPoints;
     }
 
-    public void setUnitPoints(Integer unitPoints) {
+    public void setUnitPoints(Long unitPoints) {
         this.unitPoints = unitPoints;
     }
 
@@ -121,7 +121,7 @@ public class RetailItemTransactionDetail implements Serializable {
         return this.qty * this.unitPrice;
     }
 
-    public Integer getTotalPoints() {
+    public Long getTotalPoints() {
         return this.qty * this.unitPoints;
     }
 

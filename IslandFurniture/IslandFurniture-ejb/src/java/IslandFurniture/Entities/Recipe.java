@@ -7,6 +7,7 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class Recipe implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(mappedBy="recipe", cascade={CascadeType.PERSIST})
-    private List<RecipeDetail> recipeDetails;
+    private List<RecipeDetail> recipeDetails = new ArrayList();
     private boolean uneditable = false;
 
     public Recipe() {
@@ -79,7 +80,7 @@ public class Recipe implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.Recipe[ id=" + id + " ]";
+        return "Recipe[ id=" + id + " ]";
     }
     
 }

@@ -8,13 +8,18 @@ package IslandFurniture.DataLoading;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Enums.StorageAreaType;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.StoreSection;
+import IslandFurniture.Entities.StorefrontInventory;
+import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -66,11 +71,17 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
 
     @Override
     public boolean loadSampleData() {
+        Random rand = new Random(1);
+        
         List<Plant> plants = em.createNamedQuery("getAllPlants").getResultList();
         StorageArea sa;
         List<StorageArea> saList;
         StorageBin sb;
         List<StorageBin> sbList;
+        
+        StoreSection storeSect;
+        StorefrontInventory storeInv;
+        List<StorefrontInventory> storeInvList;
 
         for (Plant plant : plants) {
             if (plant instanceof Store || plant instanceof ManufacturingFacility || plant instanceof CountryOffice) {
@@ -123,6 +134,47 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                 }
 
                 plant.setStorageAreas(saList);
+                
+                // Populate Storefront Inventories and Sections
+                if (plant instanceof Store) {
+                    // Create Store Sections
+                    storeSect = new StoreSection();
+                    storeSect.setName("Storefront Warehouse");
+                    storeSect.setStore((Store) plant);
+                    storeSect.setStoreLevel(1);
+                    storeSect.setDescription("The warehouse area accessible to the public for self-service furniture retrieval.");
+                    em.persist(storeSect);
+                    ((Store) plant).getStoreSections().add(storeSect);
+
+                    // Create storefront Inventories
+                    storeInvList = new ArrayList();
+                    for (StockSupplied ss : ((Store) plant).getCountryOffice().getSuppliedWithFrom()) {
+                        int maxQty = rand.nextInt(11) * 10 + 50;
+                        storeInv = new StorefrontInventory();
+                        storeInv.setStock(ss.getStock());
+                        storeInv.setStore((Store) plant);
+                        storeInv.setMaxQty(maxQty);
+                        storeInv.setRepQty((int) Math.floor(maxQty * 0.2));
+                        storeInv.setQty((int) Math.floor(maxQty * (rand.nextInt(5) * 0.1 + 0.3)));
+                        storeInv.setLocationInStore(storeSect);
+                        em.persist(storeInv);
+
+                        ((Store) plant).getStorefrontInventories().add(storeInv);
+                        storeInvList.add(storeInv);
+                    }
+                    storeSect.setStorefrontInventories(storeInvList);
+
+                    // Create the rest of the Store Sections
+                    for (FurnitureCategory fCat : FurnitureCategory.values()) {
+                        storeSect = new StoreSection();
+                        storeSect.setName(fCat.toString().substring(0, 1) + fCat.toString().toLowerCase().substring(1));
+                        storeSect.setStore((Store) plant);
+                        storeSect.setStoreLevel(1);
+                        storeSect.setDescription("Area of the store containing " + fCat.toString().toLowerCase() + " products.");
+                        em.persist(storeSect);
+                        ((Store) plant).getStoreSections().add(storeSect);
+                    }
+                }
             }
         }
 

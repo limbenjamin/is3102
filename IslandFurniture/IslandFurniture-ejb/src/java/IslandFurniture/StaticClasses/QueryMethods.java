@@ -13,6 +13,7 @@ import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.MenuItem;
@@ -163,6 +164,18 @@ public class QueryMethods {
         }
     }
 
+    public static List<IngredientSupplier> getIngredSuppliersByCo(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getIngredSuppliersByCo");
+        q.setParameter("co", countryOffice);
+
+        try {
+            return (List<IngredientSupplier>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    
     public static Ingredient getIngredientByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
         Query q = em.createNamedQuery("getIngredientByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
@@ -261,6 +274,18 @@ public class QueryMethods {
 
         try {
             return (ProcuredStockSupplier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    public static IngredientSupplier findIngredSupplierByNameAndCo(EntityManager em, String supplierName, CountryOffice co) {
+        Query q = em.createNamedQuery("findIngredSupplierByNameAndCo");
+        q.setParameter("name", supplierName);
+        q.setParameter("co", co);
+
+        try {
+            return (IngredientSupplier) q.getSingleResult();
         } catch (NoResultException nrex) {
             return null;
         }

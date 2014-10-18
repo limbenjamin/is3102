@@ -288,7 +288,7 @@ public class SupplierManager implements SupplierManagerLocal {
         CountryOffice co;
         try {
             System.out.println("SupplierManager.deleteStockSupplyRequest()");
-            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            pk = new StockSuppliedPK(stockID, countryID);
             ss = em.find(StockSupplied.class, pk);
             if(ss == null)
                 System.out.println("StockSupplied is null");
@@ -315,7 +315,7 @@ public class SupplierManager implements SupplierManagerLocal {
         StockSuppliedPK pk;
         try {
             System.out.println("SupplierManager.addStockSupplyRequest()");
-            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            pk = new StockSuppliedPK(stockID, countryID);
             ss = em.find(StockSupplied.class, pk);
             if(ss != null) {
                 System.out.println("Request already exists");
