@@ -77,6 +77,10 @@
             <!-- campaign Management-->
             <p:tabView id="panel" dynamic="true" style="">
                 <p:tab title="Campaign Management" id="campaign_tab">
+
+
+
+
                     <br/>
                     <h:form id="mod_campaign" rendered="${marketing.currentEdit==null}">
                         <p:fieldset legend="Current Campaigns" toggleable="true" collapsed="false" toggleSpeed="500" style="font-size:14px">
@@ -175,15 +179,15 @@
                                 </p:column>
 
                                 <p:column headerText="Promotion Discount">
-                                
-                                        <h:outputText value="Dollar Discount*:"/>
-                                        <br/>
-                                        <p:inputText value="${row.absoluteDiscount}" style="width:50px"></p:inputText>
-                                        <br/>
-                                        <h:outputText value="Percentage(0-1):"/>
-                                        <br/>
-                                        <p:inputText value="${row.percentageDiscount}" style="width:50px"></p:inputText>
-                                  
+
+                                    <h:outputText value="Dollar Discount*:"/>
+                                    <br/>
+                                    <p:inputText value="${row.absoluteDiscount}" style="width:50px"></p:inputText>
+                                    <br/>
+                                    <h:outputText value="Percentage(0-1):"/>
+                                    <br/>
+                                    <p:inputText value="${row.percentageDiscount}" style="width:50px"></p:inputText>
+
                                 </p:column>
 
                                 <p:column headerText="Membership Tier" id="updatecol1">
@@ -195,6 +199,17 @@
 
                                 <p:column headerText="Usage Limit">
                                     <p:inputText value="${row.usageCount}" style="width:50px;"/>
+                                    <p:dialog header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200">
+                                        <p:dataTable value="#{row.promotionCoupons}" var="coupon" rendered="${marketing.currentEdit!=null}" style="width:400px">
+                                            <p:column headerText="CouponID" style="width:200px">
+                                                <h:outputText value="${coupon.id}"/>
+                                            </p:column>
+                                            <p:column headerText="Persihable?" style="width:200px">
+                                                <h:outputText value="${coupon.oneTimeUsage}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:dialog>
+
                                 </p:column>
 
                                 <p:column headerText="Coupons **" id="updatecol2">
@@ -205,12 +220,19 @@
                                         <f:selectItem  itemLabel="Coupon" itemValue="Coupon"/>
                                         <f:selectItem  itemLabel="Non-Perishable Coupon" itemValue="Non-Perishable Coupon"/>                                            
                                     </p:selectOneMenu>
+                                    <br/>
+                                    <p:commandLink value="[Show Coupons]" onclick="PF('Coupons_${row.id}').show();" rendered="${row.promotionCoupons.size()>0}">
+                                    </p:commandLink>
+                                    
+
                                 </p:column>
+
+
 
                                 <p:column headerText="Specific" id="updatecol3">
                                     <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProduct'}">
                                         <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetail(row)['stock']}" converter="omnifaces.SelectItemsConverter">
-                                        
+
                                             <f:selectItems  value="${marketing.listOfStocks}" var="member" itemLabel="#{member.name}[$#{marketing.getPrice(member)}]" itemValue="#{member}"></f:selectItems>
                                         </p:selectOneMenu>
                                         <br/>
@@ -250,7 +272,7 @@
                                 <p:separator />
                                 <p:menuitem icon="ui-icon-close" value="Save and Quit" ajax="true" update="@([id$=panel]),@([id$=msg])" actionListener="${marketing.newpromodetail}"/>
                             </p:splitButton>
-                         
+
                             <br/>
                             <br/>
                             <b><u>Note:</u></b><br/>
@@ -258,7 +280,7 @@
                             ** Non-Perishable Coupon will make all issued Coupon Disappear
                         </p:fieldset>
                     </h:form>
-                    
+
                 </p:tab>
                 <p:tab title="Campaign Analytics" id="campaign_anal">
                     Hey DUDE ! WHY IS THERE NOTHING !!! Can i not do this.

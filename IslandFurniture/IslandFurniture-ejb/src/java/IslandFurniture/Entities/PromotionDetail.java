@@ -56,7 +56,7 @@ public abstract class PromotionDetail implements Serializable {
             return "No Coupon";
         }
 
-        if (this.getPromotionCoupons().get(0).getOneTimeUsage() == true) {
+        if (this.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
             return "Non-Perishable Coupon";
         }
 
