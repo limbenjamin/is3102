@@ -22,7 +22,9 @@ public interface ManageMemberAuthenticationBeanLocal {
     
     Customer getCustomerFromLoyaltyCardId(String loyaltyCardId);
     
-    Customer getCustomer(String username);
+    Customer getCustomer(String emailAddress);
     
     void modifyPersonalParticulars(String emailAddress, String phoneNo, String name);
+    
+    void setCustomerLoyaltyCardId(Customer customer, String loyaltyCardId);
 }

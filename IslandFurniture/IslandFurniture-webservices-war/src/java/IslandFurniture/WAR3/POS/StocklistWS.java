@@ -24,6 +24,7 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -123,31 +124,52 @@ public class StocklistWS {
                                 @FormParam("stock") String stock,
                                 @FormParam("stockCoupon") String stockCoupon) {
         Staff staff = muabl.getStaffFromCardId(cardId);
-        PromotionDetail Successful_promotion;
-        String d_price;
-        List<PromotionCoupon> couponList;
+        PromotionDetail Successful_promotion = null;
+        String d_price = null;
+        String title = null;
+        List<PromotionCoupon> couponList = new ArrayList();
+        HashMap<String, Object> hash;
         if (staff == null){
             return "Error";
         }else{
-            /*Customer c;
-            c = mmab.getCustomerFromLoyaltyCardId("B00DBD31");
-            Stock s = sm.getFurniture(Long.parseLong(stock));
-            Store store = (Store) staff.getPlant();
-            CountryOffice co = store.getCountryOffice();
-            if (coupon == "" && stockCoupon ==""){
-                HashMap<String, Object> hash = mmb.getDiscountedPrice(s, co, c);
-            }else{
-                if (coupon != ""){
-                    couponList.add(null)
+            Customer c;
+            if (customerCardId.equals("")){
+                Stock s = sm.getFurniture(Long.parseLong(stock));
+                Store store = (Store) staff.getPlant();
+                CountryOffice co = store.getCountryOffice();
+                hash = mmb.getDiscountedPrice(s, co, new Customer());
+            }
+            else{
+                c = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+                Stock s = sm.getFurniture(Long.parseLong(stock));
+                Store store = (Store) staff.getPlant();
+                CountryOffice co = store.getCountryOffice();
+                if (coupon.equals("") && stockCoupon.equals("null")){
+                   hash = mmb.getDiscountedPrice(s, co, c);
+                }else{
+                    if (!coupon.equals("")){
+                        PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(coupon));
+                        couponList.add(pc);
+                    }
+                    if (!stockCoupon.equals("null")){
+                        PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(stockCoupon));
+                        couponList.add(pc);
+                    }
+                    hash = mmb.getDiscountedPrice(s, co, c, couponList);
+                }
+                d_price = String.valueOf(hash.get("D_PRICE"));
+                Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
+                if (Successful_promotion == null){
+                    title = "";
+                }else{
+                    title = Successful_promotion.getPromotionCampaign().getTitle();
                 }
             }
-            d_price = String.valueOf(hash.get("D_PRICE"));
-            Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
-            */
 
         }
-        //JsonObject object = Json.createObjectBuilder().add("price", d_price).add("promo", Successful_promotion.getPromotionCampaign().getTitle()).build();
-        return "0";//object.toString();
+        JsonObject object = Json.createObjectBuilder().add("price", d_price)
+                .add("promo",title ).build();
+        return object.toString();
     }
     
     @POST
