@@ -200,4 +200,18 @@ public class StocklistWS {
         return String.valueOf(value);
     }
     
+    @POST
+    @Path("checkreceipt")
+    public String checkReceipt(@FormParam("cardId") String cardId,
+                                @FormParam("receipt") String receiptId){
+        int value;
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            value = mpl.getReceipt(receiptId);
+        }
+        return String.valueOf(value);
+    }
+    
 }
