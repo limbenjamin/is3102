@@ -7,8 +7,14 @@
 package IslandFurniture.DataLoading;
 
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.Voucher;
+import java.util.Calendar;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -32,6 +38,9 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
     @EJB
     ManageMemberAuthenticationBeanLocal mmabl;
     
+    @EJB
+    ManageOrganizationalHierarchyBeanLocal mohb;
+    
     @Override
     @TransactionAttribute(REQUIRED)
     public boolean loadSampleData() {
@@ -45,6 +54,26 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         mmabl.setCustomerLoyaltyCardId(c, "92CEA65D");
         c = mmabl.getCustomer("craig@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "2234A75D");
+        
+        Voucher v = new Voucher();
+        CountryOffice co = mohb.findCountryOfficeByName("Singapore");
+        Calendar ca = Calendar.getInstance();
+        ca.set(Calendar.YEAR, 2015);
+        ca.set(Calendar.MONTH, 0);
+        ca.set(Calendar.DATE, 1);
+        v.setCashValue(10);
+        v.setCountryOffice(co);
+        v.setExpiryDate(ca);
+        em.persist(v);
+        em.flush();
+        Redemption r;
+        for (int i=0;i<20;i++){
+            r = new Redemption();
+            r.setClaimed(Boolean.FALSE);
+            r.setCustomer(c);
+            r.setRedeemableItem(v);
+            em.persist(r);
+        }
         return true;
     }
     

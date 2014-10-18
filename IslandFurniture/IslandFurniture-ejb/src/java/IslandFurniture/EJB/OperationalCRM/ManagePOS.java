@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.RedeemableItem;
+import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Voucher;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,12 +26,12 @@ public class ManagePOS implements ManagePOSLocal {
 
     @Override
     public int getVoucher(String id){
-        Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.redeemableItem.id=:id");
+        Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.id=:id AND r.claimed=FALSE");
         query.setParameter("id", Long.valueOf(id));
         Voucher v ;
         try{
-            RedeemableItem redeemableItem = (RedeemableItem) query.getSingleResult();
-            v = (Voucher) redeemableItem;
+            Redemption redemption = (Redemption) query.getSingleResult();
+            v = (Voucher) redemption.getRedeemableItem();
         }catch(Exception e){
             return -1;
         }

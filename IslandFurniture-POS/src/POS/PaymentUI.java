@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -34,6 +36,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private Double changeAmt = 0.0;
     private Double payableAmt =0.0;
     private String cardId;
+    private List<String> voucherList = new ArrayList();
     
     /**
      * Creates new form PaymentUI
@@ -80,7 +83,6 @@ public class PaymentUI extends javax.swing.JFrame {
         voucherLabel = new javax.swing.JLabel();
         returnReceiptLabel = new javax.swing.JLabel();
         voucherField = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
         cashButton = new javax.swing.JToggleButton();
         cashCreditField = new javax.swing.JTextField();
         creditCardButton = new javax.swing.JToggleButton();
@@ -89,14 +91,14 @@ public class PaymentUI extends javax.swing.JFrame {
         changeDueLabel = new javax.swing.JLabel();
         payButton = new javax.swing.JButton();
         payableLabel = new javax.swing.JLabel();
+        verifyVoucherButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        voucherCredit = new javax.swing.JLabel();
+        receiptCredit = new javax.swing.JLabel();
+        doneButton = new javax.swing.JButton();
         logoutButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
         checkoutButton = new javax.swing.JButton();
-        voucherCredit = new javax.swing.JLabel();
-        receiptCredit = new javax.swing.JLabel();
-        verifyVoucherButton = new javax.swing.JButton();
-        addButton = new javax.swing.JButton();
-        doneButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(1366, 720));
@@ -114,17 +116,6 @@ public class PaymentUI extends javax.swing.JFrame {
         voucherField.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         voucherField.setMinimumSize(new java.awt.Dimension(200, 50));
         voucherField.setPreferredSize(new java.awt.Dimension(400, 50));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
 
         cashButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         cashButton.setText("Cash");
@@ -166,6 +157,36 @@ public class PaymentUI extends javax.swing.JFrame {
         payableLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         payableLabel.setText("Total Payable : 0");
 
+        verifyVoucherButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        verifyVoucherButton.setText("Verify");
+        verifyVoucherButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifyVoucherButtonActionPerformed(evt);
+            }
+        });
+
+        addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+
+        voucherCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        voucherCredit.setText("Credit : 0");
+
+        receiptCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        receiptCredit.setText("Credit : 0");
+
+        doneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        doneButton.setText("Done");
+        doneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doneButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -179,11 +200,21 @@ public class PaymentUI extends javax.swing.JFrame {
                             .addComponent(returnReceiptLabel)
                             .addComponent(voucherLabel))
                         .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(returnReceiptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(verifyVoucherButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(returnReceiptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(283, 283, 283)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(receiptCredit)
+                                .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(voucherCredit)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cashButton)
                         .addGap(18, 18, 18)
@@ -194,7 +225,8 @@ public class PaymentUI extends javax.swing.JFrame {
                         .addComponent(payButton))
                     .addComponent(grandTotalLabel)
                     .addComponent(changeDueLabel)
-                    .addComponent(payableLabel)))
+                    .addComponent(payableLabel))
+                .addGap(156, 156, 156))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,35 +235,42 @@ public class PaymentUI extends javax.swing.JFrame {
                 .addComponent(welcomeLabel)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(78, 78, 78)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(278, 278, 278)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cashButton)
+                            .addComponent(creditCardButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cashCreditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(payButton))
+                        .addGap(18, 18, 18)
+                        .addComponent(grandTotalLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(payableLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(changeDueLabel)
+                        .addContainerGap(134, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(48, 48, 48)
                                 .addComponent(voucherLabel))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(27, 27, 27)
+                                .addGap(41, 41, 41)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(verifyVoucherButton)
+                                    .addComponent(voucherCredit))))
+                        .addGap(24, 24, 24)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(returnReceiptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(returnReceiptLabel))))
-                .addGap(116, 116, 116)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cashButton)
-                    .addComponent(creditCardButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cashCreditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(payButton))
-                .addGap(18, 18, 18)
-                .addComponent(grandTotalLabel)
-                .addGap(18, 18, 18)
-                .addComponent(payableLabel)
-                .addGap(18, 18, 18)
-                .addComponent(changeDueLabel)
-                .addContainerGap(118, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(returnReceiptField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addButton)
+                                .addComponent(receiptCredit))
+                            .addComponent(returnReceiptLabel))
+                        .addGap(18, 18, 18)
+                        .addComponent(doneButton)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
@@ -258,61 +297,20 @@ public class PaymentUI extends javax.swing.JFrame {
             }
         });
 
-        voucherCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        voucherCredit.setText("Credit:0");
-
-        receiptCredit.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        receiptCredit.setText("Credit:0");
-
-        verifyVoucherButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        verifyVoucherButton.setText("Verify");
-        verifyVoucherButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                verifyVoucherButtonActionPerformed(evt);
-            }
-        });
-
-        addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        addButton.setText("Add");
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
-
-        doneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        doneButton.setText("Done");
-        doneButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doneButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1011, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(backButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(logoutButton))
-                            .addComponent(checkoutButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(verifyVoucherButton)
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(voucherCredit, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(receiptCredit, javax.swing.GroupLayout.Alignment.TRAILING))))
-                    .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1002, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(checkoutButton)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(logoutButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -323,16 +321,6 @@ public class PaymentUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logoutButton)
                     .addComponent(backButton))
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(voucherCredit)
-                    .addComponent(verifyVoucherButton))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(receiptCredit)
-                    .addComponent(addButton))
-                .addGap(30, 30, 30)
-                .addComponent(doneButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(checkoutButton)
                 .addContainerGap())
@@ -397,6 +385,15 @@ public class PaymentUI extends javax.swing.JFrame {
         try {
             String value = Connector.postForm(params, values, "stock/checkvoucher");
             System.err.println(value);
+            if (value.equals("-1")){
+                voucherField.setText("");
+                JOptionPane.showMessageDialog(new JFrame(), "Unable to apply voucher", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                voucherAmt += Double.parseDouble(value);
+                voucherCredit.setText("Credit : "+voucherAmt);
+                voucherList.add(voucherField.getText());
+                voucherField.setText("");
+            }
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -497,7 +494,6 @@ public class PaymentUI extends javax.swing.JFrame {
     private javax.swing.JButton doneButton;
     private javax.swing.JLabel grandTotalLabel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton payButton;
     private javax.swing.JLabel payableLabel;
