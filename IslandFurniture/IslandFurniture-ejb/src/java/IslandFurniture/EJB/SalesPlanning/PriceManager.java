@@ -10,13 +10,14 @@ import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
+import IslandFurniture.Entities.StockSuppliedPK;
 import static IslandFurniture.StaticClasses.QueryMethods.getStockSuppliedByStock;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
+/**aaa
  *
  * @author a0101774 
  */
@@ -43,12 +44,14 @@ public class PriceManager implements PriceManagerLocal {
     
     @Override
     public String editPrice(StockSupplied ss, Double price) {
+        StockSuppliedPK pk;
+        StockSupplied stockSupplied;
         try {
             System.out.println("PriceManager.editPrice()");
             System.out.println("Editing for Country Office " + ss.getCountryOffice().getName() + ". Price to " + price);
-            em.merge(ss);
-            ss.setPrice(price);
-            
+            pk = new StockSuppliedPK(ss.getStock().getId(), ss.getCountryOffice().getId());
+            stockSupplied = em.find(StockSupplied.class, pk);
+            stockSupplied.setPrice(price);
             return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here");

@@ -94,7 +94,7 @@ public class Helper {
     public static int addoneWeek(int month, int year, int week, int addWeeks, int return_what) throws Exception {
 
         int direction=0;
-        if (addWeeks>0){
+        if (addWeeks !=0){
         direction = addWeeks / Math.abs(addWeeks);
         }
         

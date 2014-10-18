@@ -58,6 +58,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         payButton.setVisible(Boolean.FALSE);
+        logoutButton.setEnabled(Boolean.FALSE);
         for (int i=0;i<transaction.size();i++){
             ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
             jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
@@ -290,7 +291,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                                 NFCMethods nfc = new NFCMethods();
                                 customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
                                 readCardButton.setVisible(Boolean.FALSE);
-                                memberLabel.setText("Member: " + cardId);
+                                memberLabel.setText("Member: " + customerCardId);
                             }
                         }
                     } catch (CardException ex) {
@@ -320,10 +321,12 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
         calculateButton.setVisible(Boolean.FALSE);
+        couponField.setEditable(Boolean.FALSE);
+        readCardButton.setEnabled(Boolean.FALSE);
         int rows = jTable.getModel().getRowCount();
         List params = new ArrayList();
         List values = new ArrayList();
-        if (customerCardId != ""){
+        if (!customerCardId.equals("")){
             params.add("cardId");
             values.add(cardId.substring(0, 8));
             params.add("customerCardId");
@@ -427,14 +430,10 @@ public class CheckoutUI extends javax.swing.JFrame {
         Double current = 0.0;
         int rows = transaction.size();
         for (int i = 0; i < rows; i++) {
-            System.err.println("heerere i "+i);
             Double price = Double.parseDouble(transaction.get(i).get(2));
             String qty = String.valueOf(transaction.get(i).get(3));
-            System.err.println("price "+price);
-            System.err.println("qty "+qty);
             total = (Double.parseDouble(qty)) * price;
-            System.err.println("heerere "+i+"   "+qty+"   "+total);
-            jTable.getModel().setValueAt(Math.round(total), i, 5);
+            jTable.getModel().setValueAt(Math.round(total * 100.0) / 100.0, i, 5);
         }
         total = 0.0;
         for (int i = 0; i <= rows; i++) {

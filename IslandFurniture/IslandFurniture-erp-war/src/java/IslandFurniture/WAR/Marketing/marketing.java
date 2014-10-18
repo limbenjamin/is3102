@@ -23,7 +23,9 @@ import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -390,21 +392,29 @@ public class marketing implements Serializable {
                 break;
             }
         }
-        target.getPromotionCoupons().clear();
-        if (som.getValue().equals("No Coupon")) {
 
+        if (target.getPromotionCoupons().size() > 0) {
+            if (target.getPromotionCoupons().get(0).getId() == -1L) {
+                target.getPromotionCoupons().remove(target.getPromotionCoupons().get(0));
+                target.getPromotionCoupons().get(0).setPromotionDetail(null);
+            }
+        }
+
+        if (som.getValue().equals("No Coupon")) {
             success_msg = "Set: No Coupon !";
             return;
 
         } else if (som.getValue().equals("Coupon")) {
-
-            target.getPromotionCoupons().add(new PromotionCoupon());
+            PromotionCoupon pc = new PromotionCoupon();
+            pc.setId(-1L);
+            target.getPromotionCoupons().add(0, pc);
             success_msg = "Using Coupon ! remember to set limited Quantity";
             return;
         } else {
             PromotionCoupon pc = new PromotionCoupon();
+            pc.setId(-1L);
             pc.setOneTimeUsage(false);
-            target.getPromotionCoupons().add(pc);
+            target.getPromotionCoupons().add(0, pc);
             success_msg = "Using Coupon ! Non-Perishable";
             return;
 
@@ -448,7 +458,7 @@ public class marketing implements Serializable {
     }
 
     public double calcDiscount(Stock s, PromotionDetail pd) {
-        return Math.round(mbean.calcDiscount(s, ubean.getCountryOffice(currentUser.getPlant()), pd)*100)/100.0;
+        return Math.round(mbean.calcDiscount(s, ubean.getCountryOffice(currentUser.getPlant()), pd) * 100) / 100.0;
     }
 
 }

@@ -21,7 +21,8 @@ public class LoginUI extends javax.swing.JFrame {
 
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
-    
+    private List<Timer> timerList = new ArrayList();
+            
     public LoginUI() {
         initComponents();
         try {
@@ -41,6 +42,7 @@ public class LoginUI extends javax.swing.JFrame {
                             try {
                                 if (acr122uCardTerminal.isCardPresent()){
                                     if (isChecking == false){
+                                        timerList.get(0).stop();
                                         isChecking = true;
                                         NFCMethods nfc = new NFCMethods();
                                         String cardId = nfc.getID(acr122uCardTerminal);
@@ -52,6 +54,7 @@ public class LoginUI extends javax.swing.JFrame {
                                         if (result.equals("Error")) {
                                             JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
                                             isChecking = false;
+                                            timerList.get(0).start();
                                         } else {
                                             System.err.println(result);
                                             SelectScreen(result);
@@ -66,9 +69,10 @@ public class LoginUI extends javax.swing.JFrame {
                             }
                         }
                     };
-                    Timer timerCheckCardPresent = new Timer(5000, actionListenerCheckCardPresent);
+                    Timer timerCheckCardPresent = new Timer(1000, actionListenerCheckCardPresent);
                     timerCheckCardPresent.setRepeats(true);
                     timerCheckCardPresent.start();
+                    timerList.add(timerCheckCardPresent);
                 } else {
                 }
             } else {

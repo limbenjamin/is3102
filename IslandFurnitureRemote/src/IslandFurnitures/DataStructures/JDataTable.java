@@ -150,9 +150,11 @@ public class JDataTable<T> implements Serializable {
                     return transform(Value.toString());
                 }
             } catch (Exception ex) {
+                System.out.println("Not Binded !");
                 return "[Error]";
             }
             try {
+                
                 Method m = binded_entity.getClass().getDeclaredMethod("get" + this.propertyname);
                 return String.valueOf(m.invoke(binded_entity));
             } catch (NoSuchMethodException ex) {
@@ -166,7 +168,7 @@ public class JDataTable<T> implements Serializable {
             } catch (InvocationTargetException ex) {
                 System.err.println(ex.getMessage());
             }
-            System.out.println("JDataTable() Binding Failed to get property[" + propertyname + "] !");
+            System.out.println("JDataTable() Binding Failed to get property[" + "get" + this.propertyname + "] !");
             return "[ERROR]";
         }
 

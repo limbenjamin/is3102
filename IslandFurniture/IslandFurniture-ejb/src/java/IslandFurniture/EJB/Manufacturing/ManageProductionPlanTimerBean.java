@@ -35,7 +35,7 @@ import javax.persistence.Query;
 @Startup
 @Singleton
 @Lock(WRITE)
-public class ManageProductionPlanTimerBean implements ProductionPlanningSingletonRemote {
+public class ManageProductionPlanTimerBean implements ProductionPlanningSingletonLocal {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;

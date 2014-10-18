@@ -5,8 +5,8 @@
  */
 package dataloader;
 
+
 import IslandFurniture.DataLoading.LoadJamesTestDataRemote;
-import IslandFurniture.DataLoading.LoadKitchenDataBeanRemote;
 import IslandFurniture.DataLoading.LoadOrgEntitiesBeanRemote;
 import IslandFurniture.DataLoading.LoadPrivilegeBeanRemote;
 import IslandFurniture.DataLoading.LoadSalesForecastBeanRemote;
@@ -17,6 +17,8 @@ import IslandFurniture.DataLoading.LoadSupplierBeanRemote;
 import IslandFurniture.DataLoading.LoadTransactionBeanRemote;
 import IslandFurniture.DataLoading.MapPrivilegeDataBeanRemote;
 import IslandFurniture.DataLoading.MapStaffDataBeanRemote;
+import IslandFurniture.DataLoading.LoadCustomerAndVoucherBeanRemote;
+import IslandFurniture.DataLoading.LoadKitchenDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
@@ -62,7 +64,11 @@ public class Main {
 
     @EJB
     private static MapPrivilegeDataBeanRemote mapPrivilegeDataBean;
-
+    
+    @EJB
+    private static LoadCustomerAndVoucherBeanRemote loadCustomerAndVoucherBeanRemote; 
+    
+    
     private static final int AUTO = 0;
     private static final int MANUAL = 1;
 
@@ -101,8 +107,8 @@ public class Main {
                 System.out.println("Failed to load Supplier data. Check for existing data and/or recreate islandFurniture database");
             }
         }
-
-        // Load Stock Entities (FurnitureModel, RetailItem, Materials) & StockSupplied relationships
+        
+        // Load Kitchen Entities
         System.out.print("Load Restaurant/Kitchen Related Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
             if (loadKitchenDataBean.loadSampleData()) {
@@ -111,7 +117,7 @@ public class Main {
                 System.out.println("Failed to load Kitchen data. Check for existing data and/or recreate islandFurniture database");
             }
         }
-
+        
         // Load Storage Related Entites (StorageArea, StorageBin)
         System.out.print("Load Storage Related Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
@@ -157,7 +163,17 @@ public class Main {
                 System.out.println("Failed to map privilege data. Check for errors in server log.");
             }
         }
-
+        
+        System.out.print("Load Customer Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadCustomerAndVoucherBeanRemote.loadSampleData()) {
+                System.out.println("Customer data loaded successfully!");
+            } else {
+                System.out.println("Failed to load customer data. Check for errors in server log.");
+            }
+        }
+        
+        
         // Load Sales Forecasts from given set of Transactions
         System.out.print("Generate sales forecasts? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
@@ -179,6 +195,7 @@ public class Main {
 //                System.out.println("Failed to emulate Production Capacity Data");
 //            }
 //        }
+
     }
 
 }

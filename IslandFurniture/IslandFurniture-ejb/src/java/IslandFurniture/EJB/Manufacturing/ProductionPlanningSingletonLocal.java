@@ -14,6 +14,6 @@ import javax.ejb.Remote;
  * @author James
  */
 @Local
-public interface ProductionPlanningSingletonRemote {
+public interface ProductionPlanningSingletonLocal {
     public void setAdvanceWeek(int week);
 }

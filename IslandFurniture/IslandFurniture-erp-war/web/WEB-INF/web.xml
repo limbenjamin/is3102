@@ -39,10 +39,4 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    <ejb-local-ref>
-        <ejb-ref-name>PriceManager</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <local>IslandFurniture.EJB.SalesPlanning.PriceManagerLocal</local>
-        <ejb-link>IslandFurniture-ejb.jar#PriceManager</ejb-link>
-    </ejb-local-ref>
 </web-app>
