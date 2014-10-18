@@ -21,6 +21,7 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
+import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.QueryMethods.findCountryByName;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockAndMF;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockMFAndSupplier;
@@ -425,7 +426,7 @@ public class SupplierManager implements SupplierManagerLocal {
     public boolean checkForPCD(ProcuredStock stock, ManufacturingFacility mf) {
         List<ProcuredStockContractDetail> pcdList;
         try {
-            pcdList = findPCDByStockAndMF(em, stock, mf);
+            pcdList = QueryMethods.findPCDByStockAndMF(em, stock, mf);
             if(pcdList.size() < 1) {
                 return false;
             } else
