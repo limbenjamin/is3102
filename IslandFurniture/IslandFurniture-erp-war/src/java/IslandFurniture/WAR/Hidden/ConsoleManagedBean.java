@@ -5,7 +5,7 @@
  */
 package IslandFurniture.WAR.Hidden;
 
-import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonRemote;
+import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -25,7 +25,7 @@ public class ConsoleManagedBean implements Serializable {
     private InitialiseServerBeanLocal initialiseServerBean;
 
     @EJB
-    private ProductionPlanningSingletonRemote singleatom;
+    private ProductionPlanningSingletonLocal singleatom;
 
     private String statusMessage;
 

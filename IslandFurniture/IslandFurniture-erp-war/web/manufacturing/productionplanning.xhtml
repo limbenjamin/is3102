@@ -55,11 +55,11 @@
                         <p:dataTable tableStyle="width:auto" rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{ProductionPlanning.dt.internalrows}"  rowIndexVar="ri" rendered="#{ProductionPlanning.dt.internalrows.size() gt 0}">
                             <f:facet name="header">
                                 <p:outputPanel style="display:block;height:50px">
-                                <p:commandButton update="@([id$=MPP_dt]),@([id$=msg])" ajax="true" actionListener="${ProductionPlanning.listenToCell}" label="minusmonth" alt=""  value=""  icon="ui-icon-arrow-1-w" style="float:left;height:50px">
-                                </p:commandButton>
-                                Production Planning Table
-                                <p:commandButton update="@([id$=MPP_dt]),@([id$=msg])" value="" icon="ui-icon-arrow-1-e" label="plusmonth" alt="" actionListener="${ProductionPlanning.listenToCell}" style="float:right;height:50px">
-                                </p:commandButton>
+                                    <p:commandButton update="@([id$=MPP_dt]),@([id$=msg])" ajax="true" actionListener="${ProductionPlanning.listenToCell}" label="minusmonth" alt=""  value=""  icon="ui-icon-arrow-1-w" style="float:left;height:50px">
+                                    </p:commandButton>
+                                    Production Planning Table
+                                    <p:commandButton update="@([id$=MPP_dt]),@([id$=msg])" value="" icon="ui-icon-arrow-1-e" label="plusmonth" alt="" actionListener="${ProductionPlanning.listenToCell}" style="float:right;height:50px">
+                                    </p:commandButton>
                                 </p:outputPanel>
                             </f:facet>
 
@@ -120,14 +120,14 @@
                             <p:commandButton value="Manual Update" id="updateWPP">
                                 <f:ajax event="click"  render=":ppform" execute=":ppform" listener="#{ProductionPlanning.updateWPPTableToBean()}" />
                             </p:commandButton>
-                            <p:commandButton id="commence_button" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='commit'}" value="Commence All"  update="@([id$=wpp_dt]),@([id$=cbuttons]),@([id$=msg])" actionListener="#{ProductionPlanning.listenToCell}" label="CommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true"></p:commandButton>
-                            <p:commandButton id="commence_button2" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='uncommit'}" value="Uncommence All"  update="@([id$=wpp_dt]),@([id$=cbuttons]),@([id$=msg])" actionListener="#{ProductionPlanning.listenToCell}" label="UncommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="true"></p:commandButton>
+                            <p:commandButton id="commence_button" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='commit'}" value="Commence All"  actionListener="#{ProductionPlanning.listenToCell}" label="CommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="false"></p:commandButton>
+                            <p:commandButton id="commence_button2" rendered="#{ProductionPlanning.wpp.keyvaluepair.get('button')=='uncommit'}" value="Uncommence All" actionListener="#{ProductionPlanning.listenToCell}" label="UncommenceMonth" alt="#{ProductionPlanning.currentDrill}" ajax="false"></p:commandButton>
                         </p:outputPanel>
                     </p:tab>
 
                     <!-- Material Resource Planning -->
 
-                    <p:tab title="Material Resource Planning" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
+                    <p:tab id="mrp_tab" title="Material Resource Planning" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
                         <p:dataTable tableStyle="width:auto"  rowStyleClass="#{datarow.colorClass}" id="mrp_dt"  var="datarow"  value="#{ProductionPlanning.mrp.internalrows}"  rowIndexVar="ri" rendered="#{ProductionPlanning.mrp.internalrows.size() gt 0}">
                             <f:facet name="header">
                                 Material Resource Plan for <p:outputLabel value="#{ProductionPlanning.currentDrill}"/>
@@ -147,7 +147,10 @@
                             </p:columns>
 
                         </p:dataTable>
+                        <br/>
+                        <p:commandButton ajax="true" update="@([id$=mrp_dt])" value="Modification" id="wmrpbutton"  actionListener="#{ProductionPlanning.tooglePage('','Update_MRP')}">
 
+                        </p:commandButton>
 
                     </p:tab>
 
