@@ -4,19 +4,17 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.EJB.OperationalCRM;
+package IslandFurniture.DataLoading;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Benjamin
  */
-@Local
-public interface ManagePOSLocal {
+@Remote
+public interface LoadCustomerAndVoucherBeanRemote {
 
-    int getVoucher(String id);
-
-    int getReceipt(String receiptId);
+    boolean loadSampleData();
     
 }

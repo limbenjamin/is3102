@@ -85,6 +85,11 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }
     
     @Override
+    public void setCustomerLoyaltyCardId(Customer customer, String loyaltyCardId){
+        customer.setLoyaltyCardId(loyaltyCardId);
+    }
+    
+    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);

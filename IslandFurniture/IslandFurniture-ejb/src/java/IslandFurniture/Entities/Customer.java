@@ -192,6 +192,14 @@ public class Customer implements Serializable {
         this.lastLogon = lastLogon;
     }
 
+    public String getLoyaltyCardId() {
+        return loyaltyCardId;
+    }
+
+    public void setLoyaltyCardId(String loyaltyCardId) {
+        this.loyaltyCardId = loyaltyCardId;
+    }
+
     
     
     @Override

@@ -75,6 +75,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     @Override
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
+        
+        //clear the persistence cache and sync
         //JPA delete query
         Query q = em.createQuery("DELETE FROM PromotionCoupon zz where zz.promotionDetail.promotionCampaign=:pc");
         q.setParameter("pc", pc);
@@ -83,6 +85,13 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
         q.setParameter("pc", pc);
         q.executeUpdate();
+        
+        q = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail.promotionCampaign=:pc");
+        q.setParameter("pc", pc);
+        q.executeUpdate();
+        
+        
+        
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
@@ -94,28 +103,36 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 //            em.merge(pd); 
 
             if (pd.getPromotionCoupons().size() > 0) {
-                
+
                 if (pd.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
-                    pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
+
+                    PromotionCoupon new_pc = pd.getPromotionCoupons().get(0);
+                    new_pc.setPromotionDetail(pd);
+                    new_pc.setId(null);
+                    pd.getPromotionCoupons().clear();
+                    pd.getPromotionCoupons().add(new_pc);
                     Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
                     l.setParameter("pd", pd);
                     l.executeUpdate();
                     pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
 //                    em.merge(pd.getPromotionCoupons().get(0));
-                    
+
                 } else {
-                    
-                    pd.getPromotionCoupons().get(0).setPromotionDetail(null);
-                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0));
 
-                    Query l = em.createQuery("SELECT pc FROM PromotionCoupon pc where pc.promotionDetail=:pd");
-                    l.setParameter("pd", pd);
-
-                    if (l.getResultList().size() > pd.getUsageCount().intValue()) {
-                        throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
+                    for (int i=0;i<pd.getPromotionCoupons().size();i++) {
+                        if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false) {
+                            pd.getPromotionCoupons().get(i).setPromotionDetail(null);
+                            pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(i));
+                        }
                     }
 
-                    for (int i = l.getResultList().size()+1; i <= pd.getUsageCount().intValue(); i++) {
+                    if (pd.getPromotionCoupons().size() > pd.getUsageCount().intValue()) {
+                        throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
+                    }
+                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0)); //just a signal
+
+                    for (int i = pd.getPromotionCoupons().size() + 1; i <= pd.getUsageCount().intValue(); i++) {
+                        System.out.println("Creating new Coupons No:" + i);
                         PromotionCoupon new_pc = new PromotionCoupon();
                         new_pc.setOneTimeUsage(true);
                         new_pc.setPromotionDetail(pd);
@@ -126,7 +143,6 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                 }
 
             }
-
         }
 
         em.merge(pc);
