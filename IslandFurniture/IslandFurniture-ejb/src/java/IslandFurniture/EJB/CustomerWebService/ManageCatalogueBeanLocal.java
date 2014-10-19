@@ -9,7 +9,6 @@ package IslandFurniture.EJB.CustomerWebService;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
-import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import java.util.List;
 import javax.ejb.Local;
