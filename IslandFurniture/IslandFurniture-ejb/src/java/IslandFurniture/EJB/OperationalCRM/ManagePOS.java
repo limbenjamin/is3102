@@ -10,6 +10,7 @@ import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Voucher;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class ManagePOS implements ManagePOSLocal {
     @Override
     public int getVoucher(String id){
         Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.id=:id AND r.claimed=FALSE");
-        query.setParameter("id", Long.valueOf(id));
+        query.setParameter("id", Long.parseLong(id));
         Voucher v ;
         try{
             Redemption redemption = (Redemption) query.getSingleResult();
@@ -41,6 +42,17 @@ public class ManagePOS implements ManagePOSLocal {
             return -1;
         }
         return v.getCashValue();
+    }
+    
+    @Override
+    public void useVoucher(String voucherId){
+        Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.id=:id AND r.claimed=FALSE");
+        query.setParameter("id", Long.parseLong(voucherId));
+        try{
+            Redemption redemption = (Redemption) query.getSingleResult();
+            redemption.setClaimed(Boolean.TRUE);
+        }catch(Exception e){
+        }
     }
     
     @Override
@@ -61,6 +73,38 @@ public class ManagePOS implements ManagePOSLocal {
             return -1;
         }
         return amount;
+    }
+    @Override
+    public void linkReceipt(String id,FurnitureTransaction ft){
+        Query query = em.createQuery("SELECT f FROM FurnitureTransaction f WHERE f.id=:id");
+        query.setParameter("id", Long.valueOf(id));
+        int amount = 0;
+        try{
+            FurnitureTransaction ftold = (FurnitureTransaction) query.getSingleResult();
+            //TODO : link receipt
+        }catch(Exception e){
+            System.err.print(e);
+        }
+    }
+    @Override
+    public Stock getStock(Long id){
+        Query query = em.createQuery("SELECT s FROM Stock s WHERE s.id=:id");
+        query.setParameter("id", id);
+        try{
+            Stock stock = (Stock) query.getSingleResult();
+            return stock;
+        }catch(Exception e){
+            System.err.print(e);
+            return null;
+        }
+    }
+    
+    public void persistFTD(FurnitureTransactionDetail ftd){
+        em.persist(ftd);
+    }
+    
+    public void persistFT(FurnitureTransaction ft){
+        em.persist(ft);
     }
     
 }

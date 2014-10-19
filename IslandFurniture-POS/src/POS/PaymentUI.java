@@ -9,11 +9,14 @@ package POS;
 import Helper.Connector;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -39,6 +42,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private List<String> voucherList = new ArrayList();
     private String staffname;
     private String plantname;
+    private String customerCardId;
     
     /**
      * Creates new form PaymentUI
@@ -47,7 +51,7 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, Double grandTotal) throws ParseException {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, String customerCardId, Double grandTotal) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
@@ -55,6 +59,7 @@ public class PaymentUI extends javax.swing.JFrame {
         this.customerName = customerName;
         this.grandTotalAmt = grandTotal;
         this.oriTotal = grandTotal;
+        this.customerCardId = customerCardId;
         grandTotalLabel.setText("Grand Total : "+ grandTotal);
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
@@ -220,20 +225,15 @@ public class PaymentUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(payableLabel)
-                            .addComponent(changeDueLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(finishButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 593, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backButton)
                         .addGap(18, 18, 18)
                         .addComponent(logoutButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(payableLabel)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -266,7 +266,11 @@ public class PaymentUI extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(payButton))
                             .addComponent(grandTotalLabel))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(changeDueLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(finishButton)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -304,10 +308,10 @@ public class PaymentUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(payableLabel)
                 .addGap(18, 18, 18)
-                .addComponent(changeDueLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
-                .addComponent(finishButton)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeDueLabel)
+                    .addComponent(finishButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -357,7 +361,7 @@ public class PaymentUI extends javax.swing.JFrame {
         cashButton.setEnabled(Boolean.TRUE);
         creditCardButton.setEnabled(Boolean.TRUE);
         payButton.setEnabled(Boolean.TRUE);
-        cashCreditField.setEditable(Boolean.TRUE);
+        cashCreditField.setEnabled(Boolean.TRUE);
         calculateTotal();
     }//GEN-LAST:event_doneButtonActionPerformed
 
@@ -372,6 +376,45 @@ public class PaymentUI extends javax.swing.JFrame {
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         cashAmt = Double.parseDouble(cashCreditField.getText());
         calculateTotal();
+        if (payableAmt == 0.0){
+            System.err.println("");
+            System.err.println("");
+            System.err.println(transaction.toString());
+            System.err.println(staffname);
+            System.err.println(plantname);
+            System.err.println(voucherList.toString());
+            System.err.println(returnReceiptField.getText());
+            System.err.println(customerName);
+            System.err.println("");
+            System.err.println("");
+            JSONArray transactionList = new JSONArray();
+            for (int i=0;i<transaction.size();i++){
+                Map obj=new LinkedHashMap();
+                obj.put("id",transaction.get(i).get(0));
+                obj.put("name", transaction.get(i).get(1));
+                obj.put("price", transaction.get(i).get(2));
+                obj.put("qty", transaction.get(i).get(3));
+                obj.put("disc", transaction.get(i).get(5));
+                transactionList.add(obj);
+            }
+            List params = new ArrayList();
+            List values = new ArrayList();
+            params.add("cardId");
+            values.add(cardId.substring(0, 8));
+            params.add("transaction");
+            values.add(transactionList);            
+            params.add("voucher");
+            values.add(voucherList.toString());     
+            params.add("receipt");
+            values.add(returnReceiptField.getText());             
+            params.add("customerCardId");
+            values.add(customerCardId);
+            try {
+                Connector.postForm(params, values, "stock/maketransaction");   
+            } catch (Exception ex) {
+                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_payButtonActionPerformed
 
     private void verifyVoucherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyVoucherButtonActionPerformed
@@ -430,12 +473,6 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         try {
-            System.err.println("");
-            System.err.println(transaction.toString());
-            System.err.println(staffname);
-            System.err.println(plantname);
-            System.err.println(voucherList.toString());
-            System.err.println(returnReceiptField.getText());
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
             scanItem.setVisible(true);
             this.setVisible(false);
@@ -482,7 +519,7 @@ public class PaymentUI extends javax.swing.JFrame {
     }
     
     public void calculateTotal(){
-        finishButton.setVisible(Boolean.FALSE);
+        finishButton.setEnabled(Boolean.FALSE);
         changeAmt = 0.0;
         payableAmt = 0.0;
         grandTotalAmt = oriTotal; 
@@ -490,6 +527,7 @@ public class PaymentUI extends javax.swing.JFrame {
         //voucher and reciept overshot total
         if (grandTotalAmt < voucherAmt+receiptAmt){
             changeAmt = 0.0;
+            payableAmt = 0.0;
         }
         else{
             if (cashButton.isSelected() == true){

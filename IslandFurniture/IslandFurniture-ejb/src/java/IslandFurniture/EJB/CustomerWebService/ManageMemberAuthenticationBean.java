@@ -111,5 +111,8 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
-    }    
+    }
+    
+    
+    
 }
