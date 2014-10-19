@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
@@ -40,46 +39,46 @@ public class MessagingManagedBean implements Serializable {
     private Staff staff;
     private List<Staff> staffList;
     private String[] selectedRecipients;
-    
+
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     private ManageStaffAccountsBeanLocal msaBean;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         this.inbox = messageBean.displayAllThreads(username);
         staffList = msaBean.displayAllStaffAccounts();
     }
-    
+
     public String addThread() {
-      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      title = request.getParameter("threadForm:title");
-      
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        title = request.getParameter("threadForm:title");
+
         for (String selectedItem : selectedRecipients) {
-            System.out.println("Selected item: " + selectedItem); 
+            System.out.println("Selected item: " + selectedItem);
             recipients += selectedItem + ",";
-        }      
-      
-      System.out.println("selected recipients: " + recipients);
-      recipients += username;
-      messageBean.createNewThread(title, recipients);
-      recipients = "";
-    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-              new FacesMessage(FacesMessage.SEVERITY_INFO, "Thread added",""));
-      return "messaging";
+        }
+
+        System.out.println("selected recipients: " + recipients);
+        recipients += username;
+        messageBean.createNewThread(title, recipients);
+        recipients = "";
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Thread added", ""));
+        return "messaging";
     }
-    
+
     public String unsubThread() {
-      id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-      messageBean.unsubscribeFromThread(username, id);
-    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-              new FacesMessage(FacesMessage.SEVERITY_INFO, "Unsubscribed from thread",""));
-      return "messaging";
+        id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+        messageBean.unsubscribeFromThread(username, id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Unsubscribed from thread", ""));
+        return "messaging";
     }
 
     public String getUsername() {
@@ -177,6 +176,5 @@ public class MessagingManagedBean implements Serializable {
     public void setSelectedRecipients(String[] selectedRecipients) {
         this.selectedRecipients = selectedRecipients;
     }
-    
-    
+
 }

@@ -36,20 +36,24 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     
     @Override
     public Customer authenticate(String emailAddress, String password){
+        System.out.println("Authenticating customer...");
         Customer customer = null;
         Query query = em.createQuery("SELECT c FROM Customer c where c.emailAddress=:email");
         query.setParameter("email", emailAddress);
         try{
             customer = (Customer) query.getSingleResult();
         }catch(NoResultException | NonUniqueResultException nre){
+            System.out.println("No such customer");
             return null;
         }
         String correctPassword = customer.getPassword();
         String hashedPassword = SHA1Hash(customer.getSalt() + password);
         if (!correctPassword.equals(hashedPassword)){
+            System.out.println("Wrong password");
             return null;
         }else{
             customer.setLastLogon(new Date());
+            System.out.println("Logged in at ejb");
             return customer;
         }
     }

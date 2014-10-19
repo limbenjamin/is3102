@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.CommonInfrastructure;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageMessagesBeanLocal;
@@ -44,63 +43,63 @@ public class MessagingManaged2Bean implements Serializable {
     private Integer messageListSize;
     private List<Staff> staffList;
     private String timezone;
-    
+
     @EJB
     private ManageMessagesBeanLocal messageBean;
     @EJB
     private ManageUserAccountBeanLocal staffBean;
-    @EJB 
-    private ManageNotificationsBeanLocal notificationBean;  
-    
+    @EJB
+    private ManageNotificationsBeanLocal notificationBean;
+
     @PostConstruct
-    public void init(){
+    public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         timezone = staffBean.getStaff(username).getPlant().getTimeZoneID();
-        try{
+        try {
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
             session.setAttribute("threadid", id);
-        }catch (Exception e){
+        } catch (Exception e) {
             id = (Long) session.getAttribute("threadid");
         }
         messageThread = messageBean.getMessageThread(id);
         messageList = messageThread.getMessages();
         messageListSize = messageList.size();
     }
-    
+
     public String displayMessages() {
-      HttpSession session = Util.getSession();
-      id = (Long) session.getAttribute("threadid");
-      messageThread = messageBean.getMessageThread(id);
-      messageList = messageThread.getMessages();
-      return "messaging2";
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("threadid");
+        messageThread = messageBean.getMessageThread(id);
+        messageList = messageThread.getMessages();
+        return "messaging2";
     }
-    
+
     public String addMessage() {
-      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-      HttpSession session = Util.getSession();
-      id = (Long) session.getAttribute("threadid");
-      messageThread = messageBean.getMessageThread(id);
-      content = request.getParameter("AddMessageForm:content");
-      messageBean.sendMessage(username, id, content);
-      staffList = messageThread.getRecipient();
-      //dont want to receive your own notification
-      staffList.remove(staffBean.getStaff(username));
-      Iterator<Staff> iterator = staffList.iterator();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("threadid");
+        messageThread = messageBean.getMessageThread(id);
+        content = request.getParameter("AddMessageForm:content");
+        messageBean.sendMessage(username, id, content);
+        staffList = messageThread.getRecipient();
+        //dont want to receive your own notification
+        staffList.remove(staffBean.getStaff(username));
+        Iterator<Staff> iterator = staffList.iterator();
         while (iterator.hasNext()) {
-                staff = (Staff) iterator.next();
-		notificationBean.createNewNotificationForStaff("New Message", username + " : " + content, "/common/messaging2.xhtml?id="+id, "Read", staff);
-	}
-      return "messaging2";
+            staff = (Staff) iterator.next();
+            notificationBean.createNewNotificationForStaff("New Message", username + " : " + content, "/common/messaging2.xhtml?id=" + id, "Read", staff);
+        }
+        return "messaging2";
     }
- 
+
     public void pullMessage() {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("threadid");
         messageThread = messageBean.getMessageThread(id);
-        messageList = messageThread.getMessages();     
-        if (messageList.size() != messageListSize){
-            message = messageList.get(messageList.size()-1);
+        messageList = messageThread.getMessages();
+        if (messageList.size() != messageListSize) {
+            message = messageList.get(messageList.size() - 1);
             this.setMessage(message);
         }
     }
@@ -232,7 +231,5 @@ public class MessagingManaged2Bean implements Serializable {
     public void setNotificationBean(ManageNotificationsBeanLocal notificationBean) {
         this.notificationBean = notificationBean;
     }
-    
-    
-    
+
 }

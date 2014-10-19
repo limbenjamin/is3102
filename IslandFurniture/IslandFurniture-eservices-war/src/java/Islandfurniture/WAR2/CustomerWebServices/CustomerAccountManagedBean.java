@@ -17,7 +17,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -47,10 +46,12 @@ public class CustomerAccountManagedBean implements Serializable{
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
         if (emailAddress == null) {
-            try {              
+            try {
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                ec.redirect("/login.xhtml");
-            } catch (IOException ex) {   
+                
+                ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
+            } catch (IOException ex) {
+                
             }
         }   
         else {

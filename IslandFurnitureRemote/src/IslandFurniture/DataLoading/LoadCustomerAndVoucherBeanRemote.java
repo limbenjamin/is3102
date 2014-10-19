@@ -15,6 +15,6 @@ import javax.ejb.Remote;
 @Remote
 public interface LoadCustomerAndVoucherBeanRemote {
 
-    boolean loadSampleData() throws Exception;
+    boolean loadSampleData();
     
 }

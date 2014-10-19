@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
@@ -30,7 +29,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class StaffManaged2Bean  implements Serializable  {
+public class StaffManaged2Bean implements Serializable {
 
     private String username;
     private Staff staff;
@@ -41,22 +40,22 @@ public class StaffManaged2Bean  implements Serializable  {
     private Long roleId;
     private String roleName;
     private Role role;
-    
+
     @EJB
     private ManageUserAccountBeanLocal muaib;
     @EJB
     private ManageRolesBeanLocal mrbl;
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
-        try{
+        try {
             staffId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
             session.setAttribute("staffid", staffId);
-        }catch (Exception e){
+        } catch (Exception e) {
             staffId = (Long) session.getAttribute("staffid");
         }
         staff = muaib.getStaffFromId(staffId);
@@ -70,27 +69,27 @@ public class StaffManaged2Bean  implements Serializable  {
             globalRoleList.remove(r);
         }
     }
-    
-    public String displayRoles(){
+
+    public String displayRoles() {
         return "managestaff2";
     }
-    
-    public String removeRoleFromStaff(){
+
+    public String removeRoleFromStaff() {
         HttpSession session = Util.getSession();
-        try{
+        try {
             staffId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-        }catch (Exception e){
+        } catch (Exception e) {
             staffId = (Long) session.getAttribute("staffid");
         }
         roleId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("roleId"));
         msabl.removeRoleFromStaff(staffId, roleId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role removed",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Role removed", ""));
         return "managestaff2";
     }
-    
-   public String addRoleToStaff(){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+    public String addRoleToStaff() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         roleName = request.getParameter("staffRoleForm:roleName");
         HttpSession session = Util.getSession();
         staffId = (Long) session.getAttribute("staffid");
@@ -98,7 +97,7 @@ public class StaffManaged2Bean  implements Serializable  {
         role = mrbl.getRoleFromName(roleName);
         globalRoleList.remove(role);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Role added",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Role added", ""));
         return "managestaff2";
     }
 
@@ -141,7 +140,6 @@ public class StaffManaged2Bean  implements Serializable  {
     public void setMuaib(ManageUserAccountBeanLocal muaib) {
         this.muaib = muaib;
     }
-
 
     public Long getStaffId() {
         return staffId;
@@ -198,7 +196,5 @@ public class StaffManaged2Bean  implements Serializable  {
     public void setGlobalRoleList(List<Role> globalRoleList) {
         this.globalRoleList = globalRoleList;
     }
-    
-    
-    
+
 }

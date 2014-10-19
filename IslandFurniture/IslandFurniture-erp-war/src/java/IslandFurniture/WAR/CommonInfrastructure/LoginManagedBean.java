@@ -9,7 +9,6 @@ package IslandFurniture.WAR.CommonInfrastructure;
  *
  * @author Benjamin
  */
-
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Url;
 import IslandFurniture.Entities.Privilege;
@@ -74,8 +73,7 @@ public class LoginManagedBean implements Serializable {
     private ManageNotificationsBeanLocal mnb;
     @EJB
     private ManageSystemAuditLogBeanLocal msalb;
-    
-    
+
     public String login() {
         boolean result = authBean.authenticate(username, password);
         if (result) {
@@ -107,8 +105,8 @@ public class LoginManagedBean implements Serializable {
                 Iterator<Url> iterator3 = urlList.iterator();
                 while (iterator3.hasNext()) {
                     url = iterator3.next();
-                    if (url.isVisible() == true && !existingUrlList.contains(url)){
-                       existingUrlList.add(url);
+                    if (url.isVisible() == true && !existingUrlList.contains(url)) {
+                        existingUrlList.add(url);
                     }
                 }
             }
@@ -116,22 +114,22 @@ public class LoginManagedBean implements Serializable {
             Iterator<Url> iterator3 = existingUrlList.iterator();
             while (iterator3.hasNext()) {
                 url = iterator3.next();
-                menu += "<li><a href="+ absoluteWebPath +url.getLink()+"><i class=\"fa "+url.getIcon()+"\"></i><span>"+url.getMenuItemName()+"</span></a></li>";
-            }            
+                menu += "<li><a href=" + absoluteWebPath + url.getLink() + "><i class=\"fa " + url.getIcon() + "\"></i><span>" + url.getMenuItemName() + "</span></a></li>";
+            }
             return "dash";
         } else {
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username or password",""));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid username or password", ""));
             // invalidate session, and redirect to other pages
             //message = "Invalid Login. Please Try Again!";
             return "login";
         }
     }
-    
+
     public void pullNotification() {
         staff = muab.getStaff(username);
         notificationList = mnb.displayNotificationForStaff(staff);
-        if (notificationList.size() != notificationListSize){
+        if (notificationList.size() != notificationListSize) {
             count = mnb.getUnreadForStaff(staff);
             notificationListSize = notificationList.size();
             this.setNotificationList(notificationList);
@@ -145,21 +143,21 @@ public class LoginManagedBean implements Serializable {
             }
         }
     }
-    
+
     public void pullCount() {
         count = mnb.getUnreadForStaff(staff);
     }
-    
+
     public void read() {
         FacesContext context = FacesContext.getCurrentInstance();
-        Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+        Map<String, String> params = context.getExternalContext().getRequestParameterMap();
         nid = Long.valueOf(params.get("nid"));
         notification = mnb.getNotification(nid);
-        if (notification.isIsread() == false){
+        if (notification.isIsread() == false) {
             count = mnb.getUnreadForStaff(staff);
             mnb.setNotificationToRead(notification);
         }
-        
+
     }
 
     public String getUsername() {
@@ -216,7 +214,7 @@ public class LoginManagedBean implements Serializable {
 
     public Notification getNotification() {
         return notification;
-        
+
     }
 
     public void setNotification(Notification notification) {
@@ -375,6 +373,4 @@ public class LoginManagedBean implements Serializable {
         this.timezone = timezone;
     }
 
-    
-    
 }
