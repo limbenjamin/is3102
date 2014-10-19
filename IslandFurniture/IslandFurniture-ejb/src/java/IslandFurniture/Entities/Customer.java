@@ -41,6 +41,8 @@ public class Customer implements Serializable {
     private Boolean active;
     private String forgottenPasswordCode;
     private String loyaltyCardId;
+    private CustomerSegment customerSegment;
+    
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne
@@ -53,6 +55,15 @@ public class Customer implements Serializable {
     private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "customer")
     private List<Redemption> redemptions;
+
+    public CustomerSegment getCustomerSegment() {
+        return customerSegment;
+    }
+
+    public void setCustomerSegment(CustomerSegment customerSegment) {
+        this.customerSegment = customerSegment;
+    }
+    
     
     public Long getId() {
         return id;
