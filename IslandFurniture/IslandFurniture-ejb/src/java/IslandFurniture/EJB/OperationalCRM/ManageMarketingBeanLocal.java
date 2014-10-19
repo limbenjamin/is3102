@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.EJB.Marketing;
+package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -12,6 +12,7 @@ import IslandFurniture.Entities.PromotionCampaign;
 import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Store;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Local;
@@ -39,9 +40,9 @@ public interface ManageMarketingBeanLocal {
 
     public void expand_promotion(PromotionDetail pd, PromotionCoupon pc);
 
-    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c, List<PromotionCoupon> couponLists);
+    public HashMap<String, Object> getDiscountedPrice(Stock s,Store ss, Customer c, List<PromotionCoupon> couponLists);
 
-    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c);
+    public HashMap<String, Object> getDiscountedPrice(Stock s,Store ss, Customer c);
     
     public PromotionCoupon getCouponFromID(Long id);
 }

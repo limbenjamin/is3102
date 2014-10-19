@@ -3,19 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.DataLoading;
 
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBean;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
+import IslandFurniture.Entities.PromotionCampaign;
+import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Voucher;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -29,42 +34,104 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRemote {
-    
+
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    
+
     @EJB
     ManageMembershipLocal mml;
-    
+
     @EJB
     ManageMemberAuthenticationBeanLocal mmabl;
-    
+
     @EJB
     ManageOrganizationalHierarchyBeanLocal mohb;
-    
-    private MembershipTier addMembershipTier(String title){
+
+    @EJB
+    ManageMarketingBeanLocal mmb;
+
+    private MembershipTier addMembershipTier(String title) {
         MembershipTier tier = QueryMethods.findMembershipTierByTitle(em, title);
-        
-        if(tier == null){
+
+        if (tier == null) {
             tier = new MembershipTier();
             tier.setTitle(title);
             em.persist(tier);
         }
-        
+
         return tier;
     }
-    
+
     @Override
     @TransactionAttribute(REQUIRED)
-    public boolean loadSampleData() {
+    public boolean loadSampleData() throws Exception {
         // Create Membership Tiers
-        this.addMembershipTier("Bronze");
-        this.addMembershipTier("Silver");
-        this.addMembershipTier("Gold");
-        
-        // Load Promotion for membershiptier
-        // :: James to add on
-        
+        MembershipTier bronze = this.addMembershipTier("Bronze");
+        MembershipTier silver = this.addMembershipTier("Silver");
+        MembershipTier Gold = this.addMembershipTier("Gold");
+
+        // Load Promotion for bronze membershiptier
+        PromotionCampaign pc = new PromotionCampaign();
+        pc.setTitle("Bronze Membership Discount 5%");
+        pc.setCountryOffice(null); //global
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.YEAR, 999);
+        pc.setValidUntil(now);
+        pc.setValidFrom(Calendar.getInstance());
+        PromotionDetailByProductCategory pdbpc = new PromotionDetailByProductCategory();
+        pdbpc.setId(-1L);        
+        pdbpc.setPercentageDiscount(0.05);
+        pdbpc.setApplicablePlant(null);
+        pdbpc.setUsageCount(Integer.MAX_VALUE);
+        pdbpc.setCategory(null);
+        pdbpc.setMembershiptier(bronze);
+        pc.getPromotionDetails().add(pdbpc);
+        pdbpc.setPromotionCampaign(pc);
+
+            mmb.CommitNewCampaign(pc);
+
+
+        // Load Promotion for silver membershiptier
+        pc = new PromotionCampaign();
+        pc.setTitle("Silver Membership Discount 10%");
+        pc.setCountryOffice(null); //global
+        now = Calendar.getInstance();
+        now.add(Calendar.YEAR, 999);
+        pc.setValidUntil(now);
+        pc.setValidFrom(Calendar.getInstance());
+        pdbpc = new PromotionDetailByProductCategory();
+        pdbpc.setId(-1L);
+        pdbpc.setPercentageDiscount(0.1);
+        pdbpc.setApplicablePlant(null);
+        pdbpc.setUsageCount(Integer.MAX_VALUE);
+        pdbpc.setCategory(null);
+        pdbpc.setMembershiptier(silver);
+        pc.getPromotionDetails().add(pdbpc);
+        pdbpc.setPromotionCampaign(pc);
+
+            mmb.CommitNewCampaign(pc);
+
+
+        // Load Promotion for gold membershiptier
+        pc = new PromotionCampaign();
+        pc.setTitle("Gold Membership Discount 15%");
+        pc.setCountryOffice(null); //global
+        now = Calendar.getInstance();
+        now.add(Calendar.YEAR, 999);
+        pc.setValidUntil(now);
+        pc.setValidFrom(Calendar.getInstance());
+        pdbpc = new PromotionDetailByProductCategory();
+        pdbpc.setId(-1L);
+        pdbpc.setPercentageDiscount(0.15);
+        pdbpc.setApplicablePlant(null);
+        pdbpc.setUsageCount(Integer.MAX_VALUE);
+        pdbpc.setCategory(null);
+        pdbpc.setMembershiptier(Gold);
+        pc.getPromotionDetails().add(pdbpc);
+        pdbpc.setPromotionCampaign(pc);
+
+            mmb.CommitNewCampaign(pc);
+
         // Create Customers
         mml.createCustomerAccount("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989");
         mml.createCustomerAccount("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958");
@@ -75,7 +142,7 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         mmabl.setCustomerLoyaltyCardId(c, "92CEA65D");
         c = mmabl.getCustomer("craig@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "2234A75D");
-        
+
         Voucher v = new Voucher();
         CountryOffice co = mohb.findCountryOfficeByName("Singapore");
         Calendar ca = Calendar.getInstance();
@@ -88,7 +155,7 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         em.persist(v);
         em.flush();
         Redemption r;
-        for (int i=0;i<20;i++){
+        for (int i = 0; i < 20; i++) {
             r = new Redemption();
             r.setClaimed(Boolean.FALSE);
             r.setCustomer(c);
@@ -97,5 +164,5 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         }
         return true;
     }
-    
+
 }

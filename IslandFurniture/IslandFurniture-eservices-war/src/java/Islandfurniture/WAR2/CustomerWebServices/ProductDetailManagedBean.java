@@ -10,6 +10,9 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Store;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -27,7 +30,9 @@ import javax.servlet.http.HttpSession;
 public class ProductDetailManagedBean {
 
     private Long id = null;
+    private Stock stock = null;
     private FurnitureModel furniture = null;
+    private List<Store> localStores = null;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
@@ -47,7 +52,6 @@ public class ProductDetailManagedBean {
                 session.setAttribute("id", id);
             }
             else {
-                //id = Long.parseLong("436");
                 id = (Long) session.getAttribute("id");
             }
         }catch (Exception e){
@@ -55,10 +59,11 @@ public class ProductDetailManagedBean {
         }
         
         furniture = mcbl.getFurnitureModel(id);
+        localStores = co.getStores();
         System.out.println("Got furniture model " + furniture.getName());
     }    
     
-    public String displayProductDetails() {
+    /**public String displayProductDetails() {
       System.out.println("displayProductDetails()");
       HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
       String coCode = (String) httpReq.getAttribute("coCode");
@@ -67,7 +72,7 @@ public class ProductDetailManagedBean {
       //id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       furniture = mcbl.getFurnitureModel(id);
       return "/coCode" + "/productdetail";
-    }    
+    }**/
 
     public Long getId() {
         return id;
@@ -99,6 +104,14 @@ public class ProductDetailManagedBean {
 
     public void setMcbl(ManageCatalogueBeanLocal mcbl) {
         this.mcbl = mcbl;
+    }
+
+    public List<Store> getLocalStores() {
+        return localStores;
+    }
+
+    public void setLocalStores(List<Store> localStores) {
+        this.localStores = localStores;
     }
     
 }

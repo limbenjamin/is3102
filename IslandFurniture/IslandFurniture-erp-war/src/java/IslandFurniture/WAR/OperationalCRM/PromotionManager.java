@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.WAR.Marketing;
+package IslandFurniture.WAR.OperationalCRM;
 
-import IslandFurniture.EJB.Marketing.ManageMarketingBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCampaign;
@@ -23,9 +23,7 @@ import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -44,7 +42,7 @@ import org.primefaces.model.menu.MenuItem;
  */
 @SessionScoped
 @ManagedBean(name = "marketing")
-public class marketing implements Serializable {
+public class PromotionManager implements Serializable {
 
     @EJB
     ManageMarketingBeanLocal mbean;
@@ -225,7 +223,7 @@ public class marketing implements Serializable {
         this.newPromotionCampaign = newPromotionCampaign;
     }
 
-    public marketing() {
+    public PromotionManager() {
     }
 
     public void newpromo(ActionEvent event) {

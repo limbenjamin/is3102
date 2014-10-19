@@ -31,8 +31,7 @@ public class Material extends ProcuredStock implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Double materialWeight;
-    @OneToMany(mappedBy = "material")
-    private List<WeeklyMRPRecord> weeklyMRPRecords;
+
     private boolean hidden;
 
     public boolean isHidden() {
@@ -59,13 +58,6 @@ public class Material extends ProcuredStock implements Serializable {
         this.name = name;
     }
 
-    public List<WeeklyMRPRecord> getWeeklyMRPRecords() {
-        return weeklyMRPRecords;
-    }
-
-    public void setWeeklyMRPRecords(List<WeeklyMRPRecord> weeklyMRPRecords) {
-        this.weeklyMRPRecords = weeklyMRPRecords;
-    }
 
     @Override
     public int hashCode() {
