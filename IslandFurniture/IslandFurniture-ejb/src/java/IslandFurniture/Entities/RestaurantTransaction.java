@@ -8,6 +8,7 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -18,7 +19,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class RestaurantTransaction extends Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy = "restaurantTransaction")
+    @OneToMany(mappedBy = "restaurantTransaction", cascade = {CascadeType.ALL})
     private List<RestaurantTransactionDetail> restaurantTransactionDetails;
 
     public List<RestaurantTransactionDetail> getRestaurantTransactionDetails() {

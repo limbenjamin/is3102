@@ -23,7 +23,6 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
 import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.QueryMethods.findCountryByName;
-import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockAndMF;
 import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockMFAndSupplier;
 import static IslandFurniture.StaticClasses.QueryMethods.findSupplierByName;
 import java.util.ArrayList;
@@ -289,7 +288,7 @@ public class SupplierManager implements SupplierManagerLocal {
         CountryOffice co;
         try {
             System.out.println("SupplierManager.deleteStockSupplyRequest()");
-            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            pk = new StockSuppliedPK(stockID, countryID);
             ss = em.find(StockSupplied.class, pk);
             if(ss == null)
                 System.out.println("StockSupplied is null");
@@ -316,7 +315,7 @@ public class SupplierManager implements SupplierManagerLocal {
         StockSuppliedPK pk;
         try {
             System.out.println("SupplierManager.addStockSupplyRequest()");
-            pk = new StockSuppliedPK(stockID, countryID, mfID);
+            pk = new StockSuppliedPK(stockID, countryID);
             ss = em.find(StockSupplied.class, pk);
             if(ss != null) {
                 System.out.println("Request already exists");

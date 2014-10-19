@@ -32,16 +32,16 @@ public class Store extends Plant implements Serializable {
     private CountryOffice countryOffice;
 
     @OneToMany(mappedBy = "store")
-    private List<StorefrontInventory> storefrontInventories;
+    private List<StorefrontInventory> storefrontInventories = new ArrayList();
 
     @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
 
     @OneToMany(mappedBy = "store")
-    private List<StoreSection> storeSections;
+    private List<StoreSection> storeSections = new ArrayList();
     
     @OneToMany (mappedBy = "store")
-    private List<IngredientInventory> ingredInvents;
+    private List<IngredientInventory> ingredInvents = new ArrayList();
 
     public CountryOffice getCountryOffice() {
         return countryOffice;

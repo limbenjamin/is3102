@@ -107,7 +107,7 @@ public class IngredientProcurementManager implements IngredientProcurementManage
 
         Query q = em.createNamedQuery("getIngredientList");
         q.setParameter("supplier", supplier);
-        q.setParameter("store", store);
+        q.setParameter("co", store.getCountryOffice());
         List<Ingredient> availableStocks = (List<Ingredient>) q.getResultList();     
         
         return availableStocks;
@@ -115,9 +115,9 @@ public class IngredientProcurementManager implements IngredientProcurementManage
     
     @Override
     public Integer getLotSize(Ingredient ingredient, Store store) {
-        Query q = em.createNamedQuery("getIngredientContractDetailByIngredAndStore");
+        Query q = em.createNamedQuery("getIngredientContractDetailByIngredAndCo");
         q.setParameter("ingredient", ingredient);
-        q.setParameter("store", store);
+        q.setParameter("co", store.getCountryOffice());
         
         IngredientContractDetail contract = (IngredientContractDetail) q.getSingleResult();
         return contract.getLotSize();
@@ -136,7 +136,7 @@ public class IngredientProcurementManager implements IngredientProcurementManage
     @Override
     public List<IngredientSupplier> viewIngredContractedSuppliers(Store store) {
         Query q = em.createNamedQuery("getIngredSupplierList");
-        q.setParameter("store", store);
+        q.setParameter("co", store.getCountryOffice());
         return (List<IngredientSupplier>) q.getResultList();
     } 
     

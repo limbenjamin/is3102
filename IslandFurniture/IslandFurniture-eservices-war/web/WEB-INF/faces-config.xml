@@ -21,6 +21,16 @@
                     <value>#{countryManagedBean.country}</value>
                 </view-param>  
             </redirect> 
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>productdetail</from-outcome>
+            <to-view-id>/productdetail.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{productDetailManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
         </navigation-case>        
     </navigation-rule>
 </faces-config>

@@ -43,6 +43,9 @@ public class CountryOffice extends Plant implements Serializable {
 
     @OneToMany(mappedBy = "countryOffice")
     private List<StockSupplied> suppliedWithFrom = new ArrayList();
+    
+    @OneToMany(mappedBy = "countryOffice")
+    private List<MenuItem> menuItems = new ArrayList();
 
     @OneToMany(mappedBy = "countryOffice")
     private List<PromotionCampaign> promotionCampaigns = new ArrayList();
@@ -100,6 +103,14 @@ public class CountryOffice extends Plant implements Serializable {
         return promotionCampaigns;
     }
 
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
+    }
+
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
+    }
+
     public void setPromotionCampaigns(List<PromotionCampaign> promotionCampaigns) {
         this.promotionCampaigns = promotionCampaigns;
     }
@@ -153,6 +164,19 @@ public class CountryOffice extends Plant implements Serializable {
         return "CountryOffice[ id=" + id + " ]";
     }
 
+    // Extra Methods
+    
+    public StockSupplied findStockSupplied(Stock stock) {
+        for (StockSupplied eachSs : this.suppliedWithFrom) {
+            if (eachSs.getStock().equals(stock)) {
+                return eachSs;
+            }
+        }
+
+        return null;
+    }
+    
+    
     // Entity Callbacks
     @PostPersist
     public void postPersist() {

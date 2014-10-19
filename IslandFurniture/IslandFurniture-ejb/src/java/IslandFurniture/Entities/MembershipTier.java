@@ -6,12 +6,14 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -19,6 +21,11 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findMembershipTierByTitle",
+            query = "SELECT a FROM MembershipTier a WHERE a.title = :title")
+})
 public class MembershipTier implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +33,7 @@ public class MembershipTier implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @OneToMany(mappedBy = "membershipTier")
-    private List<Customer> members;
+    private List<Customer> members = new ArrayList();
 
     private String title;
 

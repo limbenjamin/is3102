@@ -12,10 +12,16 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/prism.css"></link>
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/threesixty.css"></link>        
 	<section>
-	<div class="container">
-            <div class="row">
+	<div class="container">           
+            <div class="row">               
                 <!--product-details-->
                 <div class="product-details">
+                        <div class="col-md-12">
+                            <ol class="breadcrumb">
+                              <li><a href="home.xhtml">Home</a></li>
+                              <li class="active"><strong>Product: #{productDetailManagedBean.furniture.name}</strong></li>
+                            </ol>
+                        </div>                     
                         <div class="col-sm-4">
                             <div class="rotate-label">
                                 Drag mouse to rotate product
@@ -153,7 +159,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -165,7 +171,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -177,7 +183,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -189,7 +195,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -203,7 +209,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -215,7 +221,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -227,7 +233,7 @@
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="#"><img src="assets/images/home/product8.jpg" alt="" /></a>
+                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
                                                     <h2>$3.20</h2>
                                                     <a href="#"><p>Merlion Magnet</p></a>
                                                 </div>
@@ -260,7 +266,7 @@
 
                 imgList: '.threesixty_images',
                 progress: '.spinner',
-                imagePath:'assets/images/rotate/redchair/',
+                imagePath:'#{application.contextPath}/assets/images/rotate/redchair/',
                 filePrefix: '',
                 ext: '.png',
                 height: 320,

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostPersist;
 
 /**
  *
@@ -23,8 +24,13 @@ public class RestaurantTransactionDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer qty;
+    private Double unitPrice;
+    private Long unitPoints;
+
     @ManyToOne
     private RestaurantTransaction restaurantTransaction;
+
     @ManyToOne
     private MenuItem menuItem;
 
@@ -34,6 +40,30 @@ public class RestaurantTransactionDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public Double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Long getUnitPoints() {
+        return unitPoints;
+    }
+
+    public void setUnitPoints(Long unitPoints) {
+        this.unitPoints = unitPoints;
     }
 
     public RestaurantTransaction getRestaurantTransaction() {
@@ -75,6 +105,21 @@ public class RestaurantTransactionDetail implements Serializable {
     @Override
     public String toString() {
         return "RestaurantTransactionDetail[ id=" + id + " ]";
+    }
+
+    // Extra Methods
+    public Double getSubtotal() {
+        return this.qty * this.unitPrice;
+    }
+
+    public Long getTotalPoints() {
+        return this.qty * this.unitPoints;
+    }
+
+    // Entity Callbacks
+    @PostPersist
+    public void postPersist() {
+        System.out.println("Successfully persisted " + this);
     }
 
 }

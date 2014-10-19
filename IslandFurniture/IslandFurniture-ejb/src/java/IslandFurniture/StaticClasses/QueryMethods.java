@@ -13,8 +13,10 @@ import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
@@ -163,6 +165,18 @@ public class QueryMethods {
         }
     }
 
+    public static List<IngredientSupplier> getIngredSuppliersByCo(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getIngredSuppliersByCo");
+        q.setParameter("co", countryOffice);
+
+        try {
+            return (List<IngredientSupplier>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    
     public static Ingredient getIngredientByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
         Query q = em.createNamedQuery("getIngredientByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
@@ -265,6 +279,18 @@ public class QueryMethods {
             return null;
         }
     }
+    
+    public static IngredientSupplier findIngredSupplierByNameAndCo(EntityManager em, String supplierName, CountryOffice co) {
+        Query q = em.createNamedQuery("findIngredSupplierByNameAndCo");
+        q.setParameter("name", supplierName);
+        q.setParameter("co", co);
+
+        try {
+            return (IngredientSupplier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
 
     public static StorageArea findStorageAreaByName(EntityManager em, String storageAreaName, Plant plant) {
         Query q = em.createNamedQuery("findStorageAreaByName");
@@ -361,6 +387,13 @@ public class QueryMethods {
         q.setParameter("m", m);
 
         return (List<BOMDetail>) q.getResultList();
+    }
+    
+    public static MembershipTier findMembershipTierByTitle(EntityManager em, String title) {
+        Query q = em.createNamedQuery("findMembershipTierByTitle");
+        q.setParameter("title", title);
+
+        return (MembershipTier) q.getSingleResult();
     }
 
     public static List<MonthlyStockSupplyReq> getRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {

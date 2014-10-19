@@ -34,7 +34,7 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
+                                    <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/account.xhtml"><i class="fa fa-user"></i> Account</a></li>
                                     <li><a href="#"><i class="fa fa-star"></i> Wish List</a></li>
                                     <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
                                     <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
@@ -48,7 +48,7 @@
             <div class="header-bottom">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-9">
+                        <div class="col-sm-12">
                             <div class="navbar-header">
                                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                                     <span class="sr-only">Toggle navigation</span>
@@ -59,7 +59,7 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="index.html" class="active">Home</a></li>
+                                <li><a href="home.xhtml" class="active">Home</a></li>
                                 <li class="dropdown"><a href="#">Bedroom</a>
                                     <ul role="menu" class="sub-menu">
                                         <li><a href="#">Beds &amp; Mattresses</a></li>
@@ -109,11 +109,11 @@
                                         <li><a href="#">Toys</a></li>
                                     </ul>
                                 </li>
-				<li><a href="#">Restaurants</a></li>
+				<li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/all.xhtml">All Products</a></li>
                                 </ul>
                             </div>
                             </div>
-                            <div class="col-sm-3">
+                            <!--<div class="col-sm-3">
                                 <h:form>
                                     <div class="input-group pull-right" style="max-width: 200px;">
                                         <select class="form-control">
@@ -124,8 +124,8 @@
                                           <h:button value="Go!" class="btn btn-default"></h:button>
                                       </span>
                                     </div>
-                                </h:form>
-                            </div>
+                                </h:form> 
+                            </div> !-->
                         </div>
                     </div>
 		</div>

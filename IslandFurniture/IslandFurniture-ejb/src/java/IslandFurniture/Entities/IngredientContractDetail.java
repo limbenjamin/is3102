@@ -23,10 +23,10 @@ import javax.persistence.NamedQuery;
 @NamedQueries({
     @NamedQuery(
             name = "getIngredientList",
-            query = "SELECT a.ingredient FROM IngredientContractDetail a WHERE a.ingredContract.ingredSupplier = :supplier AND a.supplierFor = :store"),
+            query = "SELECT a.ingredient FROM IngredientContractDetail a WHERE a.ingredContract.ingredSupplier = :supplier AND a.ingredContract.ingredSupplier.co = :co"),
     @NamedQuery(
-            name = "getIngredientContractDetailByIngredAndStore",
-            query = "SELECT a FROM IngredientContractDetail a WHERE a.ingredient = :ingredient AND a.supplierFor = :store")    
+            name = "getIngredientContractDetailByIngredAndCo",
+            query = "SELECT a FROM IngredientContractDetail a WHERE a.ingredient = :ingredient AND a.ingredContract.ingredSupplier.co = :co")    
 })
 public class IngredientContractDetail implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -36,7 +36,6 @@ public class IngredientContractDetail implements Serializable {
     private Integer leadTimeInDays;
     private Integer lotSize;
     private Double lotPrice;
-    private Store supplierFor;
     
     @ManyToOne
     private IngredientContract ingredContract;
@@ -90,14 +89,6 @@ public class IngredientContractDetail implements Serializable {
 
     public void setLotPrice(Double lotPrice) {
         this.lotPrice = lotPrice;
-    }
-
-    public Store getSupplierFor() {
-        return supplierFor;
-    }
-
-    public void setSupplierFor(Store supplierFor) {
-        this.supplierFor = supplierFor;
     }
 
     @Override

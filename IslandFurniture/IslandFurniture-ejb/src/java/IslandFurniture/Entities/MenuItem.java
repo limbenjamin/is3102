@@ -42,12 +42,17 @@ public class MenuItem implements Serializable {
     private Long id;
     private String name;
     private Double price;
-    @ManyToOne
-    private CountryOffice countryOffice;
-    @OneToMany(mappedBy="menuItem", cascade={CascadeType.PERSIST})
-    private List<MenuItemDetail> menuItemDetails;
+    private Long pointsWorth;
+    
     private MenuType menuType;
     private boolean alaCarte;
+    
+    @ManyToOne
+    private CountryOffice countryOffice;
+    
+    @OneToMany(mappedBy="menuItem", cascade={CascadeType.PERSIST})
+    private List<MenuItemDetail> menuItemDetails;
+    
 
     public MenuItem() {
         
@@ -76,6 +81,16 @@ public class MenuItem implements Serializable {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public Long getPointsWorth() {
+        return pointsWorth;
+    }
+
+    public void setPointsWorth(Long pointsWorth) {
+        this.pointsWorth = pointsWorth;
+    }
+
+
 
     public CountryOffice getCountryOffice() {
         return countryOffice;
@@ -131,7 +146,7 @@ public class MenuItem implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.STORE.MenuItem[ id=" + id + " ]";
+        return "MenuItem[ id=" + id + " ]";
     }
     
 }

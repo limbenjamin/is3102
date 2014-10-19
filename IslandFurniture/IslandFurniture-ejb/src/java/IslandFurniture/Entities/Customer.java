@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -30,7 +31,7 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+        private CustomerSegment customerSegment;
     private String emailAddress;
     private String password;
     private String salt;
@@ -41,15 +42,13 @@ public class Customer implements Serializable {
     private Boolean active;
     private String forgottenPasswordCode;
     private String loyaltyCardId;
-    private CustomerSegment customerSegment;
-    
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne
     private MembershipTier membershipTier;
     @ManyToOne
     private Country country;
-    @OneToMany
+    @ManyToMany(mappedBy = "customers")
     private List<ShoppingList> shoppingLists;
     @OneToMany(mappedBy="member")
     private List<Feedback> feedbacks;
