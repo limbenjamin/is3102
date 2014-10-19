@@ -64,7 +64,7 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
 
     @Override
     @TransactionAttribute(REQUIRED)
-    public boolean loadSampleData() throws Exception {
+    public boolean loadSampleData(){
         // Create Membership Tiers
         MembershipTier bronze = this.addMembershipTier("Bronze");
         MembershipTier silver = this.addMembershipTier("Silver");
@@ -88,7 +88,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         pc.getPromotionDetails().add(pdbpc);
         pdbpc.setPromotionCampaign(pc);
 
+        try {
             mmb.CommitNewCampaign(pc);
+        } catch (Exception ex) {
+            Logger.getLogger(LoadCustomerAndVoucherBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
         // Load Promotion for silver membershiptier
@@ -109,7 +113,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         pc.getPromotionDetails().add(pdbpc);
         pdbpc.setPromotionCampaign(pc);
 
+        try {
             mmb.CommitNewCampaign(pc);
+        } catch (Exception ex) {
+            Logger.getLogger(LoadCustomerAndVoucherBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
         // Load Promotion for gold membershiptier
@@ -130,7 +138,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         pc.getPromotionDetails().add(pdbpc);
         pdbpc.setPromotionCampaign(pc);
 
+        try {
             mmb.CommitNewCampaign(pc);
+        } catch (Exception ex) {
+            Logger.getLogger(LoadCustomerAndVoucherBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         // Create Customers
         mml.createCustomerAccount("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989");
@@ -140,9 +152,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         mmabl.setCustomerLoyaltyCardId(c, "B00DBD31");
         c = mmabl.getCustomer("stella@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "92CEA65D");
+        mmabl.setCustomerMembershipTier(c, "Silver");
         c = mmabl.getCustomer("craig@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "2234A75D");
-
+        mmabl.setCustomerMembershipTier(c, "Gold");
+        
         Voucher v = new Voucher();
         CountryOffice co = mohb.findCountryOfficeByName("Singapore");
         Calendar ca = Calendar.getInstance();

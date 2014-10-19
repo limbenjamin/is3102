@@ -321,7 +321,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
         calculateButton.setVisible(Boolean.FALSE);
-        couponField.setEditable(Boolean.FALSE);
+        couponField.setEnabled(Boolean.FALSE);
         readCardButton.setEnabled(Boolean.FALSE);
         int rows = jTable.getModel().getRowCount();
         List params = new ArrayList();
