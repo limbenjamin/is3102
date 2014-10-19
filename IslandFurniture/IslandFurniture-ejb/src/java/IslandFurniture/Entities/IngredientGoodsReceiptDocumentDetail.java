@@ -23,6 +23,10 @@ public class IngredientGoodsReceiptDocumentDetail implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer qty;
+    
+    @ManyToOne
+    private Ingredient ingredient;
 
     @ManyToOne
     private IngredientGoodsReceiptDocument ingredGoodsReceiptDocument;
@@ -33,6 +37,22 @@ public class IngredientGoodsReceiptDocumentDetail implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     public IngredientGoodsReceiptDocument getIngredGoodsReceiptDocument() {
