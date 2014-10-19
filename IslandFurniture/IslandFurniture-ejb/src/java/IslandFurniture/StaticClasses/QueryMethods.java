@@ -16,6 +16,7 @@ import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
@@ -386,6 +387,13 @@ public class QueryMethods {
         q.setParameter("m", m);
 
         return (List<BOMDetail>) q.getResultList();
+    }
+    
+    public static MembershipTier findMembershipTierByTitle(EntityManager em, String title) {
+        Query q = em.createNamedQuery("findMembershipTierByTitle");
+        q.setParameter("title", title);
+
+        return (MembershipTier) q.getSingleResult();
     }
 
     public static List<MonthlyStockSupplyReq> getRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
