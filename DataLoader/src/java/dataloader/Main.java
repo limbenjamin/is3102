@@ -18,6 +18,7 @@ import IslandFurniture.DataLoading.LoadTransactionBeanRemote;
 import IslandFurniture.DataLoading.MapPrivilegeDataBeanRemote;
 import IslandFurniture.DataLoading.MapStaffDataBeanRemote;
 import IslandFurniture.DataLoading.LoadCustomerAndVoucherBeanRemote;
+import IslandFurniture.DataLoading.LoadKitchenDataBeanRemote;
 import java.util.Scanner;
 import javax.ejb.EJB;
 
@@ -29,6 +30,8 @@ import javax.ejb.EJB;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+    @EJB
+    private static LoadKitchenDataBeanRemote loadKitchenDataBean;
 
     @EJB
     private static LoadStorageDataBeanRemote loadStorageDataBean;
@@ -104,7 +107,17 @@ public class Main {
                 System.out.println("Failed to load Supplier data. Check for existing data and/or recreate islandFurniture database");
             }
         }
-
+        
+        // Load Kitchen Entities
+        System.out.print("Load Restaurant/Kitchen Related Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadKitchenDataBean.loadSampleData()) {
+                System.out.println("Kitchen data (incl. Suppliers all the way to Ingredients) loaded successfully!");
+            } else {
+                System.out.println("Failed to load Kitchen data. Check for existing data and/or recreate islandFurniture database");
+            }
+        }
+        
         // Load Storage Related Entites (StorageArea, StorageBin)
         System.out.print("Load Storage Related Data? (y/n):");
         if (sc.nextLine().equalsIgnoreCase("y")) {
