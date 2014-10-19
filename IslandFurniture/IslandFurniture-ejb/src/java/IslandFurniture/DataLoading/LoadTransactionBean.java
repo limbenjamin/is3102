@@ -8,6 +8,9 @@ package IslandFurniture.DataLoading;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.MenuItem;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
@@ -39,6 +42,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         fTrans.setStore(store);
         fTrans.setTransTime(transTime);
         for (FurnitureTransactionDetail eachDetail : fTransDetails) {
+            eachDetail.setUnitPrice(store.getCountryOffice().findStockSupplied(eachDetail.getFurnitureModel()).getPrice());
             eachDetail.setFurnitureTransaction(fTrans);
         }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
@@ -50,6 +54,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
     private FurnitureTransactionDetail addFurnitureTransactionDetail(FurnitureModel furniture, int qty) {
         FurnitureTransactionDetail fTransDetail = new FurnitureTransactionDetail();
+        fTransDetail.setUnitPoints(furniture.getPointsWorth());
         fTransDetail.setFurnitureModel(furniture);
         fTransDetail.setQty(qty);
 
@@ -61,6 +66,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         riTrans.setStore(store);
         riTrans.setTransTime(transTime);
         for (RetailItemTransactionDetail eachDetail : riTransDetails) {
+            eachDetail.setUnitPrice(store.getCountryOffice().findStockSupplied(eachDetail.getRetailItem()).getPrice());
             eachDetail.setRetailItemTransaction(riTrans);
         }
         riTrans.setRetailItemTransactionDetails(riTransDetails);
@@ -72,10 +78,35 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
     private RetailItemTransactionDetail addRetailItemTransactionDetail(RetailItem retailItem, int qty) {
         RetailItemTransactionDetail riTransDetail = new RetailItemTransactionDetail();
+        riTransDetail.setUnitPoints(retailItem.getPointsWorth());
         riTransDetail.setRetailItem(retailItem);
         riTransDetail.setQty(qty);
 
         return riTransDetail;
+    }
+
+    private RestaurantTransaction addRestaurantTransaction(Store store, List<RestaurantTransactionDetail> restTransDetails, Calendar transTime) {
+        RestaurantTransaction restTrans = new RestaurantTransaction();
+        restTrans.setStore(store);
+        restTrans.setTransTime(transTime);
+        for (RestaurantTransactionDetail eachDetail : restTransDetails) {
+            eachDetail.setRestaurantTransaction(restTrans);
+        }
+        restTrans.setRestaurantTransactionDetails(restTransDetails);
+
+        em.persist(restTrans);
+
+        return restTrans;
+    }
+
+    private RestaurantTransactionDetail addRestaurantTransactionDetail(MenuItem menuItem, int qty) {
+        RestaurantTransactionDetail miTransDetail = new RestaurantTransactionDetail();
+        miTransDetail.setUnitPrice(menuItem.getPrice());
+        miTransDetail.setUnitPoints(menuItem.getPointsWorth());
+        miTransDetail.setMenuItem(menuItem);
+        miTransDetail.setQty(qty);
+
+        return miTransDetail;
     }
 
     @Override
@@ -91,17 +122,19 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
             List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
             List<RetailItemTransactionDetail> riTransDetails = new ArrayList();
+            List<RestaurantTransactionDetail> restTransDetails = new ArrayList();
 
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
 
             for (Store eachStore : stores) {
-                    // Get current time in store's timezone
-                    curr = TimeMethods.getPlantCurrTime(eachStore);
+                // Get current time in store's timezone
+                curr = TimeMethods.getPlantCurrTime(eachStore);
 
                 for (int i = 0; i < 800; i++) {
                     // Add Furniture Transaction & Retail Item Transaction
                     fTransDetails.clear();
                     riTransDetails.clear();
+                    restTransDetails.clear();
 
                     for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
                         if (rand.nextBoolean()) {
@@ -112,6 +145,12 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                                 riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), 10));
 //                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
                             }
+                        }
+                    }
+
+                    for (MenuItem mi : eachStore.getCountryOffice().getMenuItems()) {
+                        if (rand.nextBoolean()) {
+                            restTransDetails.add(this.addRestaurantTransactionDetail(mi, rand.nextInt(10) + 1));
                         }
                     }
 
@@ -133,6 +172,16 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
                         cal = TimeMethods.convertToUtcTime(eachStore, cal);
                         this.addRetailItemTransaction(eachStore, riTransDetails, cal);
+                    }
+
+                    if (!restTransDetails.isEmpty()) {
+                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                        do {
+                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                        } while (cal.after(curr));
+
+                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
+                        this.addRestaurantTransaction(eachStore, restTransDetails, cal);
                     }
                 }
 

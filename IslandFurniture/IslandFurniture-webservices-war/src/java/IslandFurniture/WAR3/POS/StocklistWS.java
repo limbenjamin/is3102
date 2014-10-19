@@ -78,7 +78,7 @@ public class StocklistWS {
             return "Error";
         }else{
             Store store = (Store) staff.getPlant();
-            furnitureList = mcbl.getStoreFurniture(store);
+            furnitureList = mcbl.getStoreFurniture(store.getCountryOffice());
             builder = Json.createArrayBuilder();
             Iterator<FurnitureModel> iterator = furnitureList.iterator();
             while(iterator.hasNext()){
@@ -101,7 +101,7 @@ public class StocklistWS {
             return "Error";
         }else{
             Store store = (Store) staff.getPlant();
-            retailList = mcbl.getStoreRetailItems(store);
+            retailList = mcbl.getStoreRetailItems(store.getCountryOffice());
             builder = Json.createArrayBuilder();
             Iterator<RetailItem> iterator = retailList.iterator();
             while(iterator.hasNext()){
@@ -196,20 +196,6 @@ public class StocklistWS {
             return "Error";
         }else{
             value = mpl.getVoucher(voucherId);
-        }
-        return String.valueOf(value);
-    }
-    
-    @POST
-    @Path("checkreceipt")
-    public String checkReceipt(@FormParam("cardId") String cardId,
-                                @FormParam("receipt") String receiptId){
-        int value;
-        Staff staff = muabl.getStaffFromCardId(cardId);
-        if (staff == null){
-            return "Error";
-        }else{
-            value = mpl.getReceipt(receiptId);
         }
         return String.valueOf(value);
     }

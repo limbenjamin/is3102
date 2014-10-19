@@ -49,7 +49,7 @@ public class PriceManager implements PriceManagerLocal {
         try {
             System.out.println("PriceManager.editPrice()");
             System.out.println("Editing for Country Office " + ss.getCountryOffice().getName() + ". Price to " + price);
-            pk = new StockSuppliedPK(ss.getStock().getId(), ss.getCountryOffice().getId(), ss.getManufacturingFacility().getId());
+            pk = new StockSuppliedPK(ss.getStock().getId(), ss.getCountryOffice().getId());
             stockSupplied = em.find(StockSupplied.class, pk);
             stockSupplied.setPrice(price);
             return null;

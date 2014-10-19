@@ -10,6 +10,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -18,6 +20,14 @@ import javax.persistence.OneToOne;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getIngredSuppliersByCo",
+            query = "SELECT a FROM IngredientSupplier a WHERE a.co = :co"),
+    @NamedQuery(
+            name = "findIngredSupplierByNameAndCo",
+            query = "SELECT a FROM IngredientSupplier a WHERE a.name = :name AND a.co = :co"),
+})
 public class IngredientSupplier extends Supplier implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -453,7 +453,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         for (Plant p : orders.keySet()) {
 
             Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
-            ll.setParameter("r", "Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
+            ll.setParameter("r", "Plant:" + p.getName() + wpp.getMonthlyProductionPlan().getMonth() + wpp.getWeekNo());
 
             ExternalTransferOrder eto = null;
             if (ll.getResultList().size() == 0) {
@@ -462,13 +462,12 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto.setRequestingPlant(p);
                 eto.setStatus(TransferOrderStatus.REQUESTED);
                 eto.setTransferDate(Helper.getStartDateOfWeek(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(), wpp.getWeekNo()));
-                eto.setRemark("Plant:" + p.getName()+wpp.getMonthlyProductionPlan().getMonth()+wpp.getWeekNo());
+                eto.setRemark("Plant:" + p.getName() + wpp.getMonthlyProductionPlan().getMonth() + wpp.getWeekNo());
                 persist(eto);
             } else {
                 eto = (ExternalTransferOrder) ll.getResultList().get(0);
             }
-            
-            
+
             ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
             etod.setExtTransOrder(eto);
             etod.setQty(orders.get(p).intValue());
@@ -504,11 +503,13 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 eto = (ExternalTransferOrder) ll.getResultList().get(0);
             }
 
-            for (ExternalTransferOrderDetail etod : eto.getExtTransOrderDetails()) {
-                em.remove(etod);
-            }
+            if (eto != null) {
+                for (ExternalTransferOrderDetail etod : eto.getExtTransOrderDetails()) {
+                    em.remove(etod);
+                }
+                em.remove(eto);
 
-            em.remove(eto);
+            }
 
         }
 
@@ -710,26 +711,26 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
                 if (first == null) {
                     first = dummy_wMRP;
                 }
-            
-            
 
-            //next iteration
-            int temp_i_w = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.WEEK_OF_MONTH);
-            int temp_i_m = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.MONTH);
-            int temp_i_y = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.YEAR);
-            i_w = temp_i_w;
-            i_m = temp_i_m;
-            i_y = temp_i_y;
-            currentpt = i_m * 10 + i_w + i_y * 1000;
+                //next iteration
+                int temp_i_w = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.WEEK_OF_MONTH);
+                int temp_i_m = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.MONTH);
+                int temp_i_y = Helper.addoneWeek(i_m, i_y, i_w, 1, Calendar.YEAR);
+                i_w = temp_i_w;
+                i_m = temp_i_m;
+                i_y = temp_i_y;
+                currentpt = i_m * 10 + i_w + i_y * 1000;
+            }
+            //Recalculate the whole chain
+            cascadeWMRP(first);
+
+            System.out.println("orderMaterials(): Success For: Week:" + weekNo + "Month:" + monthNo + "year:" + YearNo);
         }
-        //Recalculate the whole chain
-        cascadeWMRP(first);
-
-        System.out.println("orderMaterials(): Success For: Week:" + weekNo + "Month:" + monthNo + "year:" + YearNo);
     }
-}
 
-private void calculatePO(WeeklyMRPRecord wMRP) {
+    //Calc planned order
+    @Override
+    public void calculatePO(WeeklyMRPRecord wMRP) {
         while (wMRP != null) {
             wMRP.setPlannedOrder(QueryMethods.getOrderedatwMRP(em, wMRP));
             em.merge(wMRP);
@@ -777,7 +778,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
             cal.set(Calendar.DAY_OF_WEEK, 1);
             cal.setFirstDayOfWeek(Calendar.MONDAY);
 
-            Double orderday = Math.ceil(getLeadTime(current.getMaterial()) / 7.0) * 7.0;
+            Double orderday = Math.ceil(getLeadTime(current.getMaterial()) / 7.0)*7.0;
             Calendar order_date = Helper.addWeek(current.getMonth().value, current.getYear(), current.getWeek(), -orderday.intValue());
 
             try {
@@ -806,13 +807,13 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
             System.out.println("CascadeWMRP(): Current=" + wMRP.getMaterial().getName() + " " + current.getWeek() + "/" + current.getMonth().value + " RECEIPT=" + current.getOrderAMT() + "USED=" + current.getQtyReq() + " ONHAND=" + current.getOnHand());
 
         }
-
+        System.out.println("Working Backward ...");
         calculatePO(last);
         System.out.println("CascadeWMRP(): Done");
     }
 
     @Override
-        public void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception {
+    public void unOrderMaterials(int weekNo, int monthNo, int YearNo) throws Exception {
 
         Query qq = em.createNamedQuery("weeklyMRPRecord.findwMRPatMF");
         qq.setParameter("mf", this.MF);
@@ -829,7 +830,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
     }
 
     @Override
-        public int getLeadTime(Material m) {
+    public int getLeadTime(Material m) {
         List<ProcuredStockContractDetail> pcs = MF.getSuppliedBy();
         for (ProcuredStockContractDetail pc : pcs) {
             if (pc.getProcuredStock().equals(m)) {
@@ -841,7 +842,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
     }
 
     @Override //mass commit
-        public void commitallWPP(int weekNo, int monthNo, int yearNo) throws Exception {
+    public void commitallWPP(int weekNo, int monthNo, int yearNo) throws Exception {
         Query q = em.createNamedQuery("WeeklyProductionPlan.getForMFatWK");
         q.setParameter("MF", this.MF);
         q.setParameter("wk", weekNo);
@@ -857,7 +858,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
     }
 
     @Override //mass commit
-        public void uncommitallWPP(int weekNo, int monthNo, int yearNo) throws Exception {
+    public void uncommitallWPP(int weekNo, int monthNo, int yearNo) throws Exception {
         Query q = em.createNamedQuery("WeeklyProductionPlan.getForMFatWK");
         q.setParameter("MF", this.MF);
         q.setParameter("wk", weekNo);
@@ -870,7 +871,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
     }
 
     @Override
-        public void createPOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception {
+    public void createPOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception {
 
         Query l = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFMnospecmat");
         l.setParameter("mf", this.MF);
@@ -895,7 +896,7 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
     }
 
     @Override
-        public void uncreatePOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception {
+    public void uncreatePOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception {
 
         Query l = em.createNamedQuery("weeklyMRPRecord.findwMRPatMFMnospecmat");
         l.setParameter("mf", this.MF);
@@ -918,6 +919,14 @@ private void calculatePO(WeeklyMRPRecord wMRP) {
                 System.out.println("uncreatePOForWeekMRP(): Created POD for" + wmrp);
             }
         }
+    }
+
+    @Override
+    public void updatewMRP(Long id, Integer qty) throws Exception {
+        WeeklyMRPRecord wmrp = (WeeklyMRPRecord) em.find(WeeklyMRPRecord.class, id);
+        wmrp.setQtyReq(qty);
+        cascadeWMRP(wmrp);
+
     }
 
 }

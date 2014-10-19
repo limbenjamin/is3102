@@ -13,8 +13,10 @@ import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
@@ -75,10 +77,10 @@ public class QueryMethods {
             return null;
         }
     }
-    
+
     public static List<Country> getAllCountryWithOperations(EntityManager em) {
         Query q = em.createNamedQuery("getAllCountryWithOperations");
-        
+
         try {
             return (List<Country>) q.getResultList();
         } catch (NoResultException nrex) {
@@ -89,10 +91,10 @@ public class QueryMethods {
     public static Currency findCurrencyByName(EntityManager em, String name) {
         Query q = em.createNamedQuery("findCurrencyByName");
         q.setParameter("name", name);
-        
+
         try {
             return (Currency) q.getSingleResult();
-        } catch(NoResultException nre) {
+        } catch (NoResultException nre) {
             return null;
         }
     }
@@ -100,14 +102,14 @@ public class QueryMethods {
     public static Currency findCurrencyByCode(EntityManager em, String code) {
         Query q = em.createNamedQuery("findCurrencyByCode");
         q.setParameter("code", code);
-        
+
         try {
             return (Currency) q.getSingleResult();
-        } catch(NoResultException nre) {
+        } catch (NoResultException nre) {
             return null;
         }
     }
-    
+
     public static FurnitureModel findFurnitureByName(EntityManager em, String furnitureName) {
         Query q = em.createNamedQuery("findFurnitureByName");
         q.setParameter("name", furnitureName);
@@ -163,6 +165,18 @@ public class QueryMethods {
         }
     }
 
+    public static List<IngredientSupplier> getIngredSuppliersByCo(EntityManager em, CountryOffice countryOffice) {
+        Query q = em.createNamedQuery("getIngredSuppliersByCo");
+        q.setParameter("co", countryOffice);
+
+        try {
+            return (List<IngredientSupplier>) q.getResultList();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+    
+    
     public static Ingredient getIngredientByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
         Query q = em.createNamedQuery("getIngredientByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
@@ -265,6 +279,18 @@ public class QueryMethods {
             return null;
         }
     }
+    
+    public static IngredientSupplier findIngredSupplierByNameAndCo(EntityManager em, String supplierName, CountryOffice co) {
+        Query q = em.createNamedQuery("findIngredSupplierByNameAndCo");
+        q.setParameter("name", supplierName);
+        q.setParameter("co", co);
+
+        try {
+            return (IngredientSupplier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
 
     public static StorageArea findStorageAreaByName(EntityManager em, String storageAreaName, Plant plant) {
         Query q = em.createNamedQuery("findStorageAreaByName");
@@ -361,6 +387,13 @@ public class QueryMethods {
         q.setParameter("m", m);
 
         return (List<BOMDetail>) q.getResultList();
+    }
+    
+    public static MembershipTier findMembershipTierByTitle(EntityManager em, String title) {
+        Query q = em.createNamedQuery("findMembershipTierByTitle");
+        q.setParameter("title", title);
+
+        return (MembershipTier) q.getSingleResult();
     }
 
     public static List<MonthlyStockSupplyReq> getRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
@@ -589,7 +622,7 @@ public class QueryMethods {
             return sum;
 
         } catch (Exception ex) {
-            System.out.println("getPrevMRP(): ERROR !" + ex.getMessage());
+            System.out.println("getOrderedatwMRP(): ERROR !" + ex.getMessage());
             return 0;
         }
     }
@@ -692,11 +725,13 @@ public class QueryMethods {
 
         HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
 
-        long month_demand = wpp.getMonthlyProductionPlan().getQTY();
+        long month_demand = QueryMethods.getTotalDemand(em,wpp.getMonthlyProductionPlan(), wpp.getMonthlyProductionPlan().getManufacturingFacility());
 
-        List<MonthlyStockSupplyReq> MSSR_List = getRelevantMssrAtPT(em,wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(),wpp.getMonthlyProductionPlan().getManufacturingFacility(),wpp.getMonthlyProductionPlan().getFurnitureModel());
+        List<MonthlyStockSupplyReq> MSSR_List = getRelevantMssrAtPT(em, wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(), wpp.getMonthlyProductionPlan().getManufacturingFacility(), wpp.getMonthlyProductionPlan().getFurnitureModel());
 
         HashMap<Plant, Long> roundingAdjustment = new HashMap<Plant, Long>();
+
+        //last week procedure
         if (Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear()) == wpp.getWeekNo()) {
             for (int i = 1; i < wpp.getWeekNo(); i++) {
                 for (int j = 0; j < wpp.getMonthlyProductionPlan().getWeeklyProductionPlans().size(); j++) {
@@ -719,14 +754,15 @@ public class QueryMethods {
         }
 
         int distr = 0;
+        int total_req = 0;
 
         ArrayList<MonthlyStockSupplyReq> mssr_l2 = MSSR_List.stream().filter(mssr -> mssr.getStock().equals(wpp.getMonthlyProductionPlan().getFurnitureModel())).collect(Collectors.toCollection(ArrayList::new));
 
         for (MonthlyStockSupplyReq mssr : mssr_l2) {
-
             if (roundingAdjustment.get(mssr.getCountryOffice()) != null) {
-                returnObj.put(mssr.getCountryOffice(), mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice()));
-                distr += mssr.getQtyRequested() - roundingAdjustment.get(mssr.getCountryOffice());
+                Double add=((mssr.getQtyRequested() + 0.0) / month_demand)*wpp.getMonthlyProductionPlan().getQTY()- roundingAdjustment.get(mssr.getCountryOffice());
+                returnObj.put(mssr.getCountryOffice(), add.longValue());
+                distr +=((mssr.getQtyRequested() + 0.0) / month_demand)*wpp.getMonthlyProductionPlan().getQTY()- roundingAdjustment.get(mssr.getCountryOffice());
             } else {
                 Double weight = (mssr.getQtyRequested() + 0.0) / month_demand;
                 weight *= wpp.getQTY();
@@ -734,6 +770,8 @@ public class QueryMethods {
                 distr += weight;
             }
         }
+
+        //add undistributed qty to remaining
         if (Helper.getNumOfWeeks(wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear()) != wpp.getWeekNo()) {
             if (wpp.getQTY() - distr > 0) {
                 for (MonthlyStockSupplyReq mssr : MSSR_List) {
@@ -745,6 +783,15 @@ public class QueryMethods {
             }
         }
 
+//        //adjustment for manual edit
+//        if (wpp.getQTY() != distr) {
+//
+//            for (Plant p : returnObj.keySet()) {
+//                Double adjusted = returnObj.get(p) * (wpp.getQTY() + 0.0) / (total_req + 0.0);
+//                returnObj.put(p, adjusted.longValue());
+//            }
+//        }
+//
         return returnObj;
 
     }

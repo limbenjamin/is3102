@@ -49,7 +49,7 @@ public class CustomerAccountManagedBean implements Serializable{
         if (emailAddress == null) {
             try {              
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                ec.redirect("login.xhtml");
+                ec.redirect("/login.xhtml");
             } catch (IOException ex) {   
             }
         }   

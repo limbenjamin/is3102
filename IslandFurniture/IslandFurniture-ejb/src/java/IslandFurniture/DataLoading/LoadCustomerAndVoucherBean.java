@@ -15,6 +15,11 @@ import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Voucher;
 import java.util.Calendar;
 import java.util.Date;
+import IslandFurniture.Entities.MembershipTier;
+import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.Voucher;
+import IslandFurniture.StaticClasses.QueryMethods;
+import java.util.Calendar;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -40,11 +45,31 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
     
     @EJB
     ManageOrganizationalHierarchyBeanLocal mohb;
+
+    private MembershipTier addMembershipTier(String title){
+        MembershipTier tier = QueryMethods.findMembershipTierByTitle(em, title);
+        
+        if(tier == null){
+            tier = new MembershipTier();
+            tier.setTitle(title);
+            em.persist(tier);
+        }
+        
+        return tier;
+    }
     
     @Override
     @TransactionAttribute(REQUIRED)
     public boolean loadSampleData() {
-          
+        // Create Membership Tiers
+        this.addMembershipTier("Bronze");
+        this.addMembershipTier("Silver");
+        this.addMembershipTier("Gold");
+        
+        // Load Promotion for membershiptier
+        // :: James to add on
+        
+        // Create Customers
         mml.createCustomerAccount("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989");
         mml.createCustomerAccount("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958");
         mml.createCustomerAccount("craig@limbenjamin.com", "pass", "Craig H. Cotter", "210-967-1644", "2703 Bell Street San Antonio, TX 78233", "11-04-1985");

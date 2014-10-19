@@ -93,6 +93,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
             ProcuredStockContractDetail pcd;
             List<ProcuredStockContractDetail> pcdList;
 
+            // Assign random supplier to each material/retail item required at each mf
             for (ManufacturingFacility mf : mfList) {
                 Set<ProcuredStock> reqStock = new HashSet();
                 pcdList = new ArrayList();

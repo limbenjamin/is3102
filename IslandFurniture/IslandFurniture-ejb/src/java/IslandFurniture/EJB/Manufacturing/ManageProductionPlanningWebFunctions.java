@@ -35,7 +35,7 @@ import javax.persistence.Query;
  * @author James
  */
 @Stateful
-public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningLocalInterface {
+public class ManageProductionPlanningWebFunctions implements ManageProductionPlanningWebFunctionsLocal {
 
     @EJB
     private ManageProductionPlanningLocal mpp;
@@ -518,10 +518,11 @@ public class ManageProductionPlanningWebFunctions implements ManageProductionPla
 
             }
             if (wMRP.getQtyReq() != null) {
-                MPS.newCell(wMRP.getQtyReq().toString());
-            } else {
-                MPS.newCell("0");
 
+                MPS.newBindedCell(wMRP.getQtyReq().toString(), "QtyReq").setBinded_entity(wMRP).setIsEditable(true);
+
+            } else {
+                MPS.newBindedCell("0", "QtyReq").setBinded_entity(wMRP).setIsEditable(true);
             }
 
             if (wMRP.getOrderAMT() == 0) {

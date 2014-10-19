@@ -54,7 +54,7 @@ public class CountryOfficeFilter implements Filter {
         try {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse res = (HttpServletResponse) response;
-
+            System.out.println("generated url is " + req.getServletPath());
             String[] urlComponents = req.getServletPath().split("/");
             System.out.println(urlComponents[1]);
 

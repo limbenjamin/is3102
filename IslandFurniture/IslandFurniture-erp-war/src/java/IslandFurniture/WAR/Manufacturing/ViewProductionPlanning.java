@@ -8,8 +8,9 @@ package IslandFurniture.WAR.Manufacturing;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.WeeklyProductionPlan;
-import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocalInterface;
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningWebFunctionsLocal;
 import IslandFurniture.EJB.Manufacturing.ManageProductionPlanningLocal;
+import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurnitures.DataStructures.JDataTable;
@@ -35,7 +36,7 @@ public class ViewProductionPlanning implements Serializable {
     private ManageProductionPlanningLocal mpp;
 
     @EJB
-    ManageProductionPlanningLocalInterface dpv;
+    ManageProductionPlanningWebFunctionsLocal dpv;
 
     private String success_msg;
     private String currentDrill = "";
@@ -299,12 +300,8 @@ public class ViewProductionPlanning implements Serializable {
                     mpp.orderMaterials(i, monthNo, yearNo);
                     mpp.createPOForWeekMRP(i, monthNo, yearNo);
                 }
-                
-                
-                
-                
-                
                 pullWeeklyProductionTable(this.currentDrill);
+                pullMRPTableFromBean(this.currentDrill);
                 success_msg = "Successfully Commenced Month";
                 break;
             case "UncommenceMonth":
@@ -340,7 +337,7 @@ public class ViewProductionPlanning implements Serializable {
             case "Update_PP":
                 ArrayList<Object> o = dt.getStateChangedEntities();
                 if (o.size() == 0) {
-                    throw new Exception("No Production Plan !");
+                    throw new Exception("No Change !");
                 }
                 dpv.updateListOfEntities(o);
                 MonthlyProductionPlan mppz = (MonthlyProductionPlan) o.get(0);
@@ -348,6 +345,24 @@ public class ViewProductionPlanning implements Serializable {
                 success_msg += "Status: Update Planning Capacity Success new value=" + mppz.getQTY() + " FOR " + MF;
 
                 break;
+
+            case "Update_MRP":
+
+                o = mrp.getStateChangedEntities();
+                if (o.size() == 0) {
+                    throw new Exception("No Change");
+                }
+
+                for (Object oo : o) {
+                    if (oo instanceof WeeklyMRPRecord) {
+                        WeeklyMRPRecord wmrp = (WeeklyMRPRecord) oo;
+                        mpp.updatewMRP(wmrp.getId(), wmrp.getQtyReq());
+                    }
+                }
+                pullMRPTableFromBean(this.currentDrill);
+                success_msg = "Successfully Updated Weekly MRP!";
+                break;
+
             case "Capacity_Table":
                 pullcapacityTableFromBean();
                 success_msg = "Capacity Table pulled";

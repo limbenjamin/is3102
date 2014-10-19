@@ -14,7 +14,7 @@ import javax.ejb.Local;
  * @author James
  */
 @Local
-public interface ManageProductionPlanningLocalInterface {
+public interface ManageProductionPlanningWebFunctionsLocal {
 
     public HashMap<String, String>
             getAuthorizedMF(String AUTH);

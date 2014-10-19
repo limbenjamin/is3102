@@ -8,6 +8,7 @@ package IslandFurniture.EJB.Manufacturing;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.ProcuredStockSupplier;
+import IslandFurniture.Entities.WeeklyMRPRecord;
 import java.util.HashMap;
 import javax.ejb.Local;
 
@@ -59,5 +60,9 @@ public interface ManageProductionPlanningLocal {
     void uncreatePOForWeekMRP(int weekNo, int monthNo, int yearNo) throws Exception;
 
     void createOrUpdateCapacityExternal(String fmName, String mancFacName, int daily_max_capacity);
+    
+    void calculatePO(WeeklyMRPRecord wMRP);
+    
+    void updatewMRP(Long id,Integer qty) throws Exception;
 
 }

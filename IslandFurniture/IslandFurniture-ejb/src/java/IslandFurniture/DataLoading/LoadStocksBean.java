@@ -11,10 +11,13 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.ProductionCapacity;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
+import IslandFurniture.Enums.FurnitureCategory;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,14 +38,18 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private FurnitureModel addFurnitureModel(String name) {
+    private FurnitureModel addFurnitureModel(String name, long points, String description, FurnitureCategory fCat, FurnitureSubcategory fsCat) {
         FurnitureModel furniture = QueryMethods.findFurnitureByName(em, name);
 
         if (furniture == null) {
             BOM bom = new BOM();
             furniture = new FurnitureModel();
             furniture.setName(name);
+            furniture.setPointsWorth(points);
+            furniture.setFurnitureDescription(description);
             furniture.setBom(bom);
+            furniture.setCategory(fCat);
+            furniture.setSubcategory(fsCat);
             em.persist(furniture);
 
             return furniture;
@@ -53,12 +60,14 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
         }
     }
 
-    private RetailItem addRetailItem(String name) {
+    private RetailItem addRetailItem(String name, long points) {
         RetailItem retailItem = QueryMethods.findRetailItemByName(em, name);
 
         if (retailItem == null) {
             retailItem = new RetailItem();
             retailItem.setName(name);
+            retailItem.setPointsWorth(points);
+            retailItem.setRiDescription("This is an item sold at your local IslandFurniture store. Grab yours today!");
             em.persist(retailItem);
 
             return retailItem;
@@ -87,7 +96,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
     }
 
     private StockSupplied addStockSupplied(Stock stock, CountryOffice co, ManufacturingFacility mf, double price) {
-        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId(), mf.getId());
+        StockSuppliedPK stockSuppliedPK = new StockSuppliedPK(stock.getId(), co.getId());
 
         StockSupplied stockSupplied = em.find(StockSupplied.class, stockSuppliedPK);
 
@@ -148,13 +157,13 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addMaterial("Steel Knob 03", 65);
 
                 // Add some Furniture Models
-                this.addFurnitureModel("Swivel Chair");
-                this.addFurnitureModel("Round Table");
-                this.addFurnitureModel("Coffee Table");
-                this.addFurnitureModel("Study Table - Dinosaur Edition");
-                this.addFurnitureModel("Bedside Lamp H31");
-                this.addFurnitureModel("Bathroom Rug E64");
-                this.addFurnitureModel("Kitchen Stool");
+                this.addFurnitureModel("Swivel Chair", 500, "A chair that goes round and round and round, and up and down.", FurnitureCategory.WORKSPACE, FurnitureSubcategory.CHAIRS);
+                this.addFurnitureModel("Round Table", 2500, "A perfectly round solid wooden table. We guarantee you won't find a rough edge.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
+                this.addFurnitureModel("Coffee Table", 3000, "The Coffee table perfect for coffee. Comes in coffee colour that blends perfectly with coffeee spills.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
+                this.addFurnitureModel("Study Table - Dinosaur Edition", 3250, "An artpiece loved by all from young to old. Has pointy razor sharp teethed edges to cover all your severing needs!", FurnitureCategory.WORKSPACE, FurnitureSubcategory.TABLES);
+                this.addFurnitureModel("Bedside Lamp H31", 80, "This lamp goes well with any bed you can imagine. Never out of place and definitely a bright addition to your lovely room.", FurnitureCategory.LIGHTING, FurnitureSubcategory.LIGHTING);
+                this.addFurnitureModel("Bathroom Rug E64", 30, "With this bathroom rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
+                this.addFurnitureModel("Kitchen Stool", 250, "A chair without a back, perfect for the lazy bones to correct their posture.", FurnitureCategory.KITCHEN, FurnitureSubcategory.CHAIRS);
 
                 // Add BOM to FurnitureModel
                 List<FurnitureModel> fmList = em.createNamedQuery("getAllFurnitureModels").getResultList();
@@ -186,24 +195,24 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 }
 
                 // Add some Retail Items
-                this.addRetailItem("Pisang Goreng - Original - Regular");
-                this.addRetailItem("Pisang Goreng - Original - Party Pack");
-                this.addRetailItem("Pisang Goreng - Lightly Salted - Regular");
-                this.addRetailItem("Pisang Goreng - Lightly Salted - Party Pack");
-                this.addRetailItem("Pisang Goreng - Spicy - Regular");
-                this.addRetailItem("Pisang Goreng - Spicy - Party Pack");
-                this.addRetailItem("Merlion Key Chain 01");
-                this.addRetailItem("Merlion Key Chain 02");
-                this.addRetailItem("Merlion Key Chain 03");
-                this.addRetailItem("Orchid Paper Weight 01");
-                this.addRetailItem("Orchid Paper Weight 02");
-                this.addRetailItem("Tote Bag - Esplanade Design");
-                this.addRetailItem("Tote Bag - MBS Design");
-                this.addRetailItem("Tote Bag - Botanic Gardens Design");
-                this.addRetailItem("Durian Crisp - Regular");
-                this.addRetailItem("Durian Crisp - Party Pack");
-                this.addRetailItem("Sambal Cheese Stick - Regular");
-                this.addRetailItem("Sambal Cheese Stick - Party Pack");
+                this.addRetailItem("Pisang Goreng - Original - Regular", 50);
+                this.addRetailItem("Pisang Goreng - Original - Party Pack", 80);
+                this.addRetailItem("Pisang Goreng - Lightly Salted - Regular", 50);
+                this.addRetailItem("Pisang Goreng - Lightly Salted - Party Pack", 80);
+                this.addRetailItem("Pisang Goreng - Spicy - Regular", 50);
+                this.addRetailItem("Pisang Goreng - Spicy - Party Pack", 80);
+                this.addRetailItem("Merlion Key Chain 01", 30);
+                this.addRetailItem("Merlion Key Chain 02", 30);
+                this.addRetailItem("Merlion Key Chain 03", 40);
+                this.addRetailItem("Orchid Paper Weight 01", 100);
+                this.addRetailItem("Orchid Paper Weight 02", 110);
+                this.addRetailItem("Tote Bag - Esplanade Design", 180);
+                this.addRetailItem("Tote Bag - MBS Design", 180);
+                this.addRetailItem("Tote Bag - Botanic Gardens Design", 180);
+                this.addRetailItem("Durian Crisp - Regular", 50);
+                this.addRetailItem("Durian Crisp - Party Pack", 80);
+                this.addRetailItem("Sambal Cheese Stick - Regular", 60);
+                this.addRetailItem("Sambal Cheese Stick - Party Pack", 90);
 
                 // Add StockSupplied Relationship (Dependant on prior data loading
                 // of Organisation Entities)
@@ -230,7 +239,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                     }
 
                 }
-                
+
                 em.flush();
             } else {
                 // Manual data loading for first system release
@@ -243,7 +252,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 BOM bom;
                 List<BOMDetail> bomDetails = new ArrayList();
 
-                fm = this.addFurnitureModel("Swivel Chair");
+                fm = this.addFurnitureModel("Swivel Chair", 500, "A chair that goes round and round and round, and up and down.", FurnitureCategory.WORKSPACE, FurnitureSubcategory.CHAIRS);
                 bom = new BOM();
                 bomDetails.clear();
                 bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 4));
@@ -251,7 +260,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 bom.setBomDetails(bomDetails);
                 fm.setBom(bom);
 
-                fm = this.addFurnitureModel("Coffee Table");
+                fm = this.addFurnitureModel("Coffee Table", 3000, "The Coffee table perfect for coffee. Comes in coffee colour that blends perfectly with coffeee spills.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
                 bom = new BOM();
                 bomDetails.clear();
                 bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 6));
@@ -259,7 +268,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 bom.setBomDetails(bomDetails);
                 fm.setBom(bom);
 
-                fm = this.addFurnitureModel("Study Table - Dinosaur Edition");
+                fm = this.addFurnitureModel("Study Table - Dinosaur Edition", 3250, "An artpiece loved by all from young to old. Has pointy razor sharp teethed edges to cover all your severing needs!", FurnitureCategory.WORKSPACE, FurnitureSubcategory.TABLES);
                 bom = new BOM();
                 bomDetails.clear();
                 bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 6));
@@ -270,13 +279,13 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                 Set<RetailItem> retailItems = new HashSet();
 
-                retailItems.add(this.addRetailItem("Pisang Goreng - Original - Regular"));
-                retailItems.add(this.addRetailItem("Pisang Goreng - Lightly Salted - Regular"));
-                retailItems.add(this.addRetailItem("Merlion Key Chain 01"));
-                retailItems.add(this.addRetailItem("Orchid Paper Weight 01"));
-                retailItems.add(this.addRetailItem("Tote Bag - Esplanade Design"));
-                retailItems.add(this.addRetailItem("Durian Crisp - Regular"));
-                retailItems.add(this.addRetailItem("Sambal Cheese Stick - Regular"));
+                retailItems.add(this.addRetailItem("Pisang Goreng - Original - Regular", 50));
+                retailItems.add(this.addRetailItem("Pisang Goreng - Lightly Salted - Regular", 50));
+                retailItems.add(this.addRetailItem("Merlion Key Chain 01", 30));
+                retailItems.add(this.addRetailItem("Orchid Paper Weight 01", 100));
+                retailItems.add(this.addRetailItem("Tote Bag - Esplanade Design", 180));
+                retailItems.add(this.addRetailItem("Durian Crisp - Regular", 50));
+                retailItems.add(this.addRetailItem("Sambal Cheese Stick - Regular", 60));
 
                 CountryOffice co;
                 ManufacturingFacility mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tuas");
@@ -297,6 +306,20 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
                 for (RetailItem ri : retailItems) {
                     this.addStockSupplied(ri, co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                }
+            }
+
+            // Populate production capacities for each manufacturing facilities, each furniture model
+            List<ManufacturingFacility> mfList = (List<ManufacturingFacility>) em.createNamedQuery("getAllMFs").getResultList();
+            for (ManufacturingFacility eachMf : mfList) {
+                for (StockSupplied ss : eachMf.getSupplyingWhatTo()) {
+                    if (ss.getStock() instanceof FurnitureModel) {
+                        ProductionCapacity prodCap = new ProductionCapacity();
+                        prodCap.setFurnitureModel((FurnitureModel) ss.getStock());
+                        prodCap.setManufacturingFacility(eachMf);
+                        prodCap.setQty(500);
+                        em.merge(prodCap);
+                    }
                 }
             }
 
