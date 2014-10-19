@@ -19,7 +19,8 @@
                         <div class="col-md-12">
                             <ol class="breadcrumb">
                               <li><a href="home.xhtml">Home</a></li>
-                              <li class="active"><strong>Product: #{productDetailManagedBean.furniture.name}</strong></li>
+                              <li><a href="all.xhtml">All Furniture</a></li>
+                              <li class="active"><strong>#{productDetailManagedBean.furniture.name}</strong></li>
                             </ol>
                         </div>                     
                         <div class="col-sm-4">
@@ -38,17 +39,17 @@
 			<div class="col-sm-8">
                             <!--/product-information-->
                             <div class="product-information">
-                                <h2>Children's Wooden Passion Chair</h2>
-                                <h4>SGD $26.00</h4>
+                                <h2>#{productDetailManagedBean.furniture.name}</h2>
+                                <h4>SGD $#{productDetailManagedBean.furniture.price}</h4>
                                 <span class="product-options">
                                     <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
                                     <a href="#"><i class="fa fa-eye"></i> View in Room Planner</a>
                                 </span>
                                 <hr/>
                                 <div class="col-sm-8">
-                                    <p><b>Manufactured in:</b> Cambodia</p>
-                                    <p><b>Condition:</b> New</p>
-                                    <p><b>Discount:</b> Not available</p>
+                                    <p><b>Category:</b> #{productDetailManagedBean.furniture.category}</p>
+                                    <p><b>Sub-Category:</b> #{productDetailManagedBean.furniture.subcategory}</p>                                    
+                                    <p><b>Points worth:</b> #{productDetailManagedBean.furniture.pointsWorth}</p>
                                     <br/>
                                     <form class="form-horizontal" role="form">
                                         <div class="form-group">
@@ -83,11 +84,11 @@
 	                            <br/><br/>
                                 </div>
                                 <div class="col-sm-4">
-                                    <p><strong>Product Availability</strong>:</p><br/>
-                                    <strong>Alexandra:</strong>
-                                    <span class="available">AVAILABLE</span><br/>
-                                    <strong>Tampines:</strong>
-                                    <span class="selling-fast">SELLING FAST</span><br/>
+                                    <p><strong>Product Availability</strong>:</p><br/>                                    
+                                    <ui:repeat value="#{productDetailManagedBean.localStores}" var="store">
+                                        <strong>#{store.name}</strong>
+                                        <span class="available">AVAILABLE</span><br/>
+                                    </ui:repeat>
                                     <br/><br/>
                                 </div>
                                 <div class="col-sm-12">  
@@ -103,12 +104,9 @@
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="details">
                                             <div class="col-xs-12">
-                                                <div class="col-sm-3">
-                                                    <h5>Product dimensions</h5>
-                                                    <p>Tested for: 50 kg<br/>
-                                                        Depth: 52 cm<br/>
-                                                        Seat width: 35 cm<br/>
-                                                        Width: 53 cm</p>
+                                                <div class="col-sm-5">
+                                                    <h5>Description</h5>
+                                                    <p>#{productDetailManagedBean.furniture.furnitureDescription}</p>
                                                 </div>
                                                 <div class="col-sm-5">
                                                     <h5>Care Instructions</h5>
