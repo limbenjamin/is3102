@@ -9,6 +9,7 @@ package IslandFurniture.WAR3.POS;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.Manufacturing.StockManager;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
@@ -17,6 +18,9 @@ import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.FurnitureTransaction;
+import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
@@ -24,17 +28,26 @@ import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.JsonValue;
+import javax.json.stream.JsonParser;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -68,6 +81,8 @@ public class StocklistWS {
     ManageMarketingBeanLocal mmb;
     @EJB
     ManagePOSLocal mpl;
+    @EJB
+    ManageStorefrontInventoryLocal msfl;
     
     @POST
     @Path("furniturelist")
@@ -198,6 +213,80 @@ public class StocklistWS {
             value = mpl.getVoucher(voucherId);
         }
         return String.valueOf(value);
+    }
+    
+    @POST
+    @Path("checkreceipt")
+    public String checkReceipt(@FormParam("cardId") String cardId,
+                                @FormParam("receipt") String receiptId){
+        int value;
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            value = mpl.getReceipt(receiptId);
+        }
+        return String.valueOf(value);
+    }
+    
+    @POST
+    @Path("maketransaction")
+    public String makeTransaction(@FormParam("cardId") String cardId,
+                                    @FormParam("transaction") String transaction,
+                                    @FormParam("voucher") String voucher,
+                                    @FormParam("receipt") String receipt,
+                                    @FormParam("customerCardId") String customerCardId
+                                    ){
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        Customer customer;
+        if (staff == null){
+            return "Error";
+        }else{
+            Plant plant = staff.getPlant();
+            System.err.println(transaction);
+            FurnitureTransaction ft = new FurnitureTransaction();
+            ft.setCreatedBy(staff);
+            ft.setStore((Store) plant);
+            TimeZone tz = TimeZone.getTimeZone(plant.getTimeZoneID());
+            ft.setCreationTime(Calendar.getInstance(tz));
+            mpl.persistFT(ft);
+            //customer = mmab.getCustomerFromLoyaltyCardId(customerCardId); TODO
+            //ft.setMember(customer);
+            JsonReader reader = Json.createReader(new StringReader(transaction));
+            JsonArray arr = reader.readArray();
+            for (JsonValue jsonValue : arr) {
+                JsonObject jo = (JsonObject) jsonValue;
+                Long id = Long.parseLong(jo.getString("id"));
+                Stock stock = mpl.getStock(id);
+                int qty = Integer.parseInt(jo.getString("qty"));
+                Double price = Double.parseDouble(jo.getString("price"));
+                System.err.println(id+"  "+qty);
+                FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
+                ftd.setNumClaimed(0);
+                ftd.setNumReturned(0);
+                ftd.setQty(qty);
+                ftd.setUnitPrice(price);
+                FurnitureModel fm = (FurnitureModel) stock;
+                ftd.setFurnitureModel(fm);
+                Long points = fm.getPointsWorth();
+                ftd.setUnitPoints(points);
+                ftd.setFurnitureTransaction(ft);
+                ft.getFurnitureTransactionDetails().add(ftd);
+                mpl.persistFTD(ftd);
+                msfl.reduceStockfrontInventoryFromTransaction(plant, stock, qty);
+            }
+            String vouchers = voucher.substring(1, voucher.length()-1);
+            System.err.println(vouchers);
+            String[] voucherArr = vouchers.split(",");
+            for (String v : voucherArr){
+                if (!v.trim().isEmpty()){
+                    mpl.useVoucher(v.trim());
+                }
+            }
+            mpl.linkReceipt(receipt, ft);
+            //mmb.expand_promotion(null, null); TODO
+        }
+        return "1";
     }
     
 }

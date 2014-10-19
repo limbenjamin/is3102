@@ -246,6 +246,7 @@ public class LoginUI extends javax.swing.JFrame {
             if (result.equals("Error")) {
                 JOptionPane.showMessageDialog(new JFrame(), "Error. Unable to authenticate", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
+                timerList.get(0).stop();
                 SelectScreen(result);
             }
         } catch (Exception ex) {
