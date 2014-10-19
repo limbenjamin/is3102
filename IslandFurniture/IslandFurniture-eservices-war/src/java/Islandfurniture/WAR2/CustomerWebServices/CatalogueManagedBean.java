@@ -10,16 +10,21 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,7 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 public class CatalogueManagedBean implements Serializable{
 
     private List<FurnitureModel> furnitureList;
-    private String name = "yay";
+    private List<RetailItem> retailItemList;
+    private String name;
     private String furnitureDescription;
     private Double price;
     private FurnitureCategory category;
@@ -47,9 +53,22 @@ public class CatalogueManagedBean implements Serializable{
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         CountryOffice co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         
-        furnitureList = mcbl.getAllFurniture();
-        System.out.println("loaded furniture models");
+        furnitureList = mcbl.getStoreFurniture(co);
+        retailItemList = mcbl.getStoreRetailItems(co);
+        System.out.println("loaded " + co.getName() + " furniture models and retail items");
     }
+    
+    public void displayProductDetails(ActionEvent event) throws IOException {
+      System.out.println("displayProductDetails()");
+      // get country office code
+      HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
+      String coCode = (String) httpReq.getAttribute("coCode");
+      
+      String furnitureId = event.getComponent().getAttributes().get("furnitureId").toString();
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      
+      ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/productdetail.xhtml?id=" + furnitureId);
+    }     
 
     public List<FurnitureModel> getFurnitureList() {
         return furnitureList;
@@ -105,6 +124,14 @@ public class CatalogueManagedBean implements Serializable{
 
     public void setMcbl(ManageCatalogueBeanLocal mcbl) {
         this.mcbl = mcbl;
+    }
+
+    public List<RetailItem> getRetailItemList() {
+        return retailItemList;
+    }
+
+    public void setRetailItemList(List<RetailItem> retailItemList) {
+        this.retailItemList = retailItemList;
     }
     
 }
