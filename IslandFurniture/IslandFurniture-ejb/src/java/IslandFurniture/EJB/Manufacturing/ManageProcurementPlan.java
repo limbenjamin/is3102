@@ -8,19 +8,15 @@ package IslandFurniture.EJB.Manufacturing;
 
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.ExternalTransferOrder;
-import IslandFurniture.Entities.ExternalTransferOrderDetail;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.MonthlyProcurementPlan;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
-import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
-import IslandFurniture.Entities.PurchaseOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
@@ -234,8 +230,6 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                         ProcuredStock ps = pcd.getProcuredStock();
                         RetailItem ri = (RetailItem) ps;
                         mpp = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),ri.getId(),month,year));
-                        mpp.getPurchaseOrderList().add(purchaseOrder);
-                        purchaseOrder.setMonthlyProcurementPlan(mpp);
                         em.merge(mpp);
                         int qty = mpp.getQty()/maxDay*7;
                         purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
@@ -275,8 +269,6 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     }
                     MonthlyProcurementPlan mpp2 = em.find(MonthlyProcurementPlan.class, new MonthlyProcurementPlanPK(mf.getId(),ri.getId(),newmonth,year));
                     int maxDay2 = Helper.getNumWorkDays(mpp2.getMonth(), mpp2.getYear());
-                    mpp.getPurchaseOrderList().add(purchaseOrder);
-                    purchaseOrder.setMonthlyProcurementPlan(mpp);
                     em.merge(mpp);
                     int qty = mpp.getQty()/maxDay*daysInLastWeek;
                     int qty2 = mpp2.getQty()/maxDay2*(7-daysInLastWeek);

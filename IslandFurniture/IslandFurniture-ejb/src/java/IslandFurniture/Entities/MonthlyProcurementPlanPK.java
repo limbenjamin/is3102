@@ -8,7 +8,6 @@ package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -50,6 +49,6 @@ public class MonthlyProcurementPlanPK implements Serializable {
     
     @Override
     public String toString() {
-        return month + ", " + year + ", " + retailItem + manufacturingFacility;
+        return month + ", " + year + ", " + retailItem + "," + manufacturingFacility;
     }
 }
