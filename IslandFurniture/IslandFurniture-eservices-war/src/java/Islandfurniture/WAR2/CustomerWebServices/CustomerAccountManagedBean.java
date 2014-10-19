@@ -37,6 +37,7 @@ public class CustomerAccountManagedBean implements Serializable{
     private String newPassword = null;
     private String confirmNewPassword = null;
     private String hashedOldPassword = null;
+    private String coDir;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -45,10 +46,15 @@ public class CustomerAccountManagedBean implements Serializable{
     public void init(){
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest httpReq = (HttpServletRequest) ec.getRequest();
+        coDir = (String) httpReq.getAttribute("coCode");
+        if(coDir !=null && !coDir.isEmpty()){
+            coDir = "/"+ coDir;
+        }
+        
         if (emailAddress == null) {
             try {
-                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-                
                 ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
             } catch (IOException ex) {
                 
@@ -61,16 +67,17 @@ public class CustomerAccountManagedBean implements Serializable{
         }
     }    
     
-    public String modifyPersonalParticulars() {
+    public void modifyPersonalParticulars() throws IOException{
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         phoneNo = request.getParameter("particularsForm:phoneNo");
         name = request.getParameter("particularsForm:name");
         mmab.modifyPersonalParticulars(emailAddress, phoneNo, name);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
-        return "account";
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
     }    
 
     public String getName() {

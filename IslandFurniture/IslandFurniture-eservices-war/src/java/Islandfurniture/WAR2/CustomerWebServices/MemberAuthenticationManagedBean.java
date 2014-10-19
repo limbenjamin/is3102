@@ -25,6 +25,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
     private String dateOfBirth = null;
     private Long id;
     private String confirmPassword = null;
+    private String coDir;
 
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -35,18 +36,25 @@ public class MemberAuthenticationManagedBean implements Serializable {
         emailAddress = request.getParameter("loginForm:emailAddress");
         password = request.getParameter("loginForm:password");
 
+        coDir = ec.getRequestParameterMap().get("coCode");
+        if (coDir == null || coDir.isEmpty()) {
+            coDir = "";
+        } else {
+            coDir = "/" + coDir;
+        }
+
         Customer customer = mmab.authenticate(emailAddress, password);
         if (customer != null) {
             HttpSession session = Util.getSession();
             session.setAttribute("emailAddress", emailAddress);
             System.out.println(customer.getName() + " logged in.");
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Logged in successfully", ""));
-            ec.redirect(ec.getRequestContextPath() + "/home.xhtml");
+            ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
         } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid email or password", ""));
-            ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
+            ec.redirect(ec.getRequestContextPath() + coDir + "/login.xhtml");
         }
     }
 
@@ -57,17 +65,24 @@ public class MemberAuthenticationManagedBean implements Serializable {
         password = request.getParameter("registerForm:password");
         confirmPassword = request.getParameter("registerForm:confirmPassword");
 
+        coDir = ec.getRequestParameterMap().get("coCode");
+        if (coDir == null || coDir.isEmpty()) {
+            coDir = "";
+        } else {
+            coDir = "/" + coDir;
+        }
+
         if (!password.equals(confirmPassword)) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Passwords do not match", ""));
-            ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
+            ec.redirect(ec.getRequestContextPath() + coDir + "/login.xhtml");
         }
         name = request.getParameter("registerForm:name");
         address = request.getParameter("registerForm:address");
         phoneNo = request.getParameter("registerForm:phoneNo");
         dateOfBirth = request.getParameter("registerForm:dateOfBirth");
         id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, dateOfBirth);
-        ec.redirect(ec.getRequestContextPath() + "/home.xhtml");
+        ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
     }
 
     public String getEmailAddress() {

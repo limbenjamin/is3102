@@ -40,7 +40,7 @@ public class IndexManagedBean implements Serializable {
         String coCode = event.getComponent().getAttributes().get("coCode").toString();
         
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        System.out.println(ec.getRequestContextPath() + coCode + "/home.xhtml");
+        System.out.println("Redirecting to localised page: " + ec.getRequestContextPath() + "/" + coCode + "/home.xhtml");
         ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/home.xhtml");
     }
 

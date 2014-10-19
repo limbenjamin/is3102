@@ -20,6 +20,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -54,21 +55,32 @@ public class CountryOfficeFilter implements Filter {
         try {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse res = (HttpServletResponse) response;
-            System.out.println("generated url is " + req.getServletPath());
-            String[] urlComponents = req.getServletPath().split("/");
+            String newDest = req.getServletPath();
+            String coDir = "";
+
+            System.out.println("generated url is " + newDest);
+            String[] urlComponents = newDest.split("/");
             System.out.println(urlComponents[1]);
 
             if (manageLocalizationBean.isValidCoCode(urlComponents[1])) {
                 request.setAttribute("coCode", urlComponents[1]);
+                coDir = "/" + urlComponents[1];
 
-                System.out.println(req.getServletPath().substring(req.getServletPath().indexOf("/", 1)));
-                request.getRequestDispatcher(req.getServletPath().substring(req.getServletPath().indexOf("/", 1))).forward(request, response);
-            } else {
-                System.out.println("No CountryOffice code information. Allow through without processing.");
-                chain.doFilter(request, response);
-                //res.sendRedirect(request.getServletContext().getContextPath());
+                newDest = newDest.substring(req.getServletPath().indexOf("/", 1));
             }
 
+            if (newDest.startsWith("/member/")) {
+                System.out.println("Attempt to access member pages. Checking for login...");
+                HttpSession session = req.getSession(false);
+                if (session == null || session.getAttribute("emailAddress") == null) {
+                    res.sendRedirect(req.getContextPath() + coDir + "/login.xhtml");
+                    res.flushBuffer();
+                }
+            }
+
+            if (!res.isCommitted()) {
+                request.getRequestDispatcher(newDest).forward(request, response);
+            }
         } catch (Throwable t) {
             // If an exception is thrown somewhere down the filter chain,
             // we still want to execute our after processing, and then
