@@ -105,5 +105,10 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
-    }    
+    }
+    
+    @Override
+    public void setCustomerMembershipTier(Customer customer, String membershipTier){
+        //stub to allow deployment
+    }
 }
