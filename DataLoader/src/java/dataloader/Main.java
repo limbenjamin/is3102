@@ -30,6 +30,7 @@ import javax.ejb.EJB;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 public class Main {
+    
     @EJB
     private static LoadKitchenDataBeanRemote loadKitchenDataBean;
 
