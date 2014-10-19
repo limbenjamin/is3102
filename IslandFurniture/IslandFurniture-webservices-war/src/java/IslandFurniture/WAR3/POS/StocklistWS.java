@@ -11,7 +11,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManager;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
-import IslandFurniture.EJB.Marketing.ManageMarketingBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManagePOSLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
@@ -137,7 +137,7 @@ public class StocklistWS {
                 Stock s = sm.getFurniture(Long.parseLong(stock));
                 Store store = (Store) staff.getPlant();
                 CountryOffice co = store.getCountryOffice();
-                hash = mmb.getDiscountedPrice(s, co, new Customer());
+                hash = mmb.getDiscountedPrice(s, store, new Customer());
             }
             else{
                 c = mmab.getCustomerFromLoyaltyCardId(customerCardId);
@@ -145,7 +145,7 @@ public class StocklistWS {
                 Store store = (Store) staff.getPlant();
                 CountryOffice co = store.getCountryOffice();
                 if (coupon.equals("") && stockCoupon.equals("null")){
-                   hash = mmb.getDiscountedPrice(s, co, c);
+                   hash = mmb.getDiscountedPrice(s, store, c);
                 }else{
                     if (!coupon.equals("")){
                         PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(coupon));
@@ -155,7 +155,7 @@ public class StocklistWS {
                         PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(stockCoupon));
                         couponList.add(pc);
                     }
-                    hash = mmb.getDiscountedPrice(s, co, c, couponList);
+                    hash = mmb.getDiscountedPrice(s, store, c, couponList);
                 }
             }
             d_price = String.valueOf(hash.get("D_PRICE"));

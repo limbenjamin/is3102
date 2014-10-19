@@ -175,8 +175,7 @@ public class QueryMethods {
             return null;
         }
     }
-    
-    
+
     public static Ingredient getIngredientByCountryOfficeAndName(EntityManager em, CountryOffice countryOffice, String name) {
         Query q = em.createNamedQuery("getIngredientByCountryOfficeAndName");
         q.setParameter("countryOffice", countryOffice);
@@ -279,7 +278,7 @@ public class QueryMethods {
             return null;
         }
     }
-    
+
     public static IngredientSupplier findIngredSupplierByNameAndCo(EntityManager em, String supplierName, CountryOffice co) {
         Query q = em.createNamedQuery("findIngredSupplierByNameAndCo");
         q.setParameter("name", supplierName);
@@ -388,12 +387,16 @@ public class QueryMethods {
 
         return (List<BOMDetail>) q.getResultList();
     }
-    
-    public static MembershipTier findMembershipTierByTitle(EntityManager em, String title) {
-        Query q = em.createNamedQuery("findMembershipTierByTitle");
-        q.setParameter("title", title);
 
-        return (MembershipTier) q.getSingleResult();
+    public static MembershipTier findMembershipTierByTitle(EntityManager em, String title) {
+        try {
+            Query q = em.createNamedQuery("findMembershipTierByTitle");
+            q.setParameter("title", title);
+
+            return (MembershipTier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
     }
 
     public static List<MonthlyStockSupplyReq> getRelevantMSSR(EntityManager em, ManufacturingFacility MF, int m, int year) {
@@ -725,7 +728,7 @@ public class QueryMethods {
 
         HashMap<Plant, Long> returnObj = new HashMap<Plant, Long>();
 
-        long month_demand = QueryMethods.getTotalDemand(em,wpp.getMonthlyProductionPlan(), wpp.getMonthlyProductionPlan().getManufacturingFacility());
+        long month_demand = QueryMethods.getTotalDemand(em, wpp.getMonthlyProductionPlan(), wpp.getMonthlyProductionPlan().getManufacturingFacility());
 
         List<MonthlyStockSupplyReq> MSSR_List = getRelevantMssrAtPT(em, wpp.getMonthlyProductionPlan().getMonth().value, wpp.getMonthlyProductionPlan().getYear(), wpp.getMonthlyProductionPlan().getManufacturingFacility(), wpp.getMonthlyProductionPlan().getFurnitureModel());
 
@@ -760,9 +763,9 @@ public class QueryMethods {
 
         for (MonthlyStockSupplyReq mssr : mssr_l2) {
             if (roundingAdjustment.get(mssr.getCountryOffice()) != null) {
-                Double add=((mssr.getQtyRequested() + 0.0) / month_demand)*wpp.getMonthlyProductionPlan().getQTY()- roundingAdjustment.get(mssr.getCountryOffice());
+                Double add = ((mssr.getQtyRequested() + 0.0) / month_demand) * wpp.getMonthlyProductionPlan().getQTY() - roundingAdjustment.get(mssr.getCountryOffice());
                 returnObj.put(mssr.getCountryOffice(), add.longValue());
-                distr +=((mssr.getQtyRequested() + 0.0) / month_demand)*wpp.getMonthlyProductionPlan().getQTY()- roundingAdjustment.get(mssr.getCountryOffice());
+                distr += ((mssr.getQtyRequested() + 0.0) / month_demand) * wpp.getMonthlyProductionPlan().getQTY() - roundingAdjustment.get(mssr.getCountryOffice());
             } else {
                 Double weight = (mssr.getQtyRequested() + 0.0) / month_demand;
                 weight *= wpp.getQTY();

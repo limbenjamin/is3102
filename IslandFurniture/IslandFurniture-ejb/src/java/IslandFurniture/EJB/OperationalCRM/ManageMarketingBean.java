@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.EJB.Marketing;
+package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
@@ -18,6 +18,7 @@ import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +76,6 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     @Override
     public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
-        
         //clear the persistence cache and sync
         //JPA delete query
         Query q = em.createQuery("DELETE FROM PromotionCoupon zz where zz.promotionDetail.promotionCampaign=:pc");
@@ -85,13 +85,10 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         q = em.createQuery("DELETE FROM PromotionDetail pcd where pcd.promotionCampaign=:pc");
         q.setParameter("pc", pc);
         q.executeUpdate();
-        
+
         q = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail.promotionCampaign=:pc");
         q.setParameter("pc", pc);
         q.executeUpdate();
-        
-        
-        
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
@@ -119,7 +116,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
                 } else {
 
-                    for (int i=0;i<pd.getPromotionCoupons().size();i++) {
+                    for (int i = 0; i < pd.getPromotionCoupons().size(); i++) {
                         if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false) {
                             pd.getPromotionCoupons().get(i).setPromotionDetail(null);
                             pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(i));
@@ -200,11 +197,6 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return pd.getClass().getName();
     }
 
-    @Override
-    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c) {
-        ArrayList<PromotionCoupon> n = new ArrayList<>();
-        return (getDiscountedPrice(s, co, c, n));
-    }
 
     @Override
     public void expand_promotion(PromotionDetail pd, PromotionCoupon pc) {
@@ -213,8 +205,9 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             pc.setPromotionDetail(null);
             System.out.println("expand_promotion(): Expanded" + pc);
         }
-
-        pd.setUsageCount((pd.getUsageCount() - 1));
+        if (pd.getUsageCount() < Integer.MAX_VALUE) {
+            pd.setUsageCount((pd.getUsageCount() - 1));
+        }
         System.out.println("expand_promotion(): Expanded" + pd.getPromotionCampaign() + " Count Now: " + pd.getUsageCount());
 
     }
@@ -225,12 +218,25 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return (em.find(PromotionCoupon.class, id));
     }
 
+    
+    
+    
+    
+    //the no coupon version
     @Override
-    public HashMap<String, Object> getDiscountedPrice(Stock s, CountryOffice co, Customer c, List<PromotionCoupon> couponLists) {
-        Query q = em.createQuery("select pcd from PromotionDetail pcd where (pcd.membershiptier=:mt or pcd.membershiptier is null) and EXISTS(select s from Store s where s.countryOffice=:co and s.id=pcd.applicablePlant.id)");
+    public HashMap<String, Object> getDiscountedPrice(Stock s, Store ss, Customer c) {
+        ArrayList<PromotionCoupon> n = new ArrayList<>();
+        return (getDiscountedPrice(s, ss, c, n));
+    }
+    
+    
+    @Override
+    public HashMap<String, Object> getDiscountedPrice(Stock s, Store ss, Customer c, List<PromotionCoupon> couponLists) {
+        Query q = em.createQuery("select pcd from PromotionDetail pcd where (pcd.promotionCampaign.countryOffice is null or pcd.promotionCampaign.countryOffice=:co) and (pcd.membershiptier=:mt or pcd.membershiptier is null) and (pcd.applicablePlant is null or EXISTS(select s from Store s where s=:ss and (s.id=pcd.applicablePlant.id)))");
         q.setParameter("mt", c.getMembershipTier());
-        q.setParameter("co", co);
-        double minprice = this.getPrice(s, co);
+        q.setParameter("ss", ss);
+        q.setParameter("co", ss.getCountryOffice());
+        double minprice = this.getPrice(s, ss.getCountryOffice());
         PromotionCoupon effective_coupon = null;
         HashMap<String, Object> returnobj = new HashMap<>();
         PromotionDetail successful_pd = null;
@@ -255,13 +261,13 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                 effective_coupon = null;
             }
 
-            if (calcDiscount(s, co, pd) < minprice) {
-                minprice = calcDiscount(s, co, pd);
+            if (calcDiscount(s, ss.getCountryOffice(), pd) < minprice) {
+                minprice = calcDiscount(s, ss.getCountryOffice(), pd);
                 successful_pd = pd;
             }
         }
 
-        returnobj.put("O_PRICE", this.getPrice(s, co));
+        returnobj.put("O_PRICE", this.getPrice(s, ss.getCountryOffice()));
         returnobj.put("D_PRICE", minprice);
         if (effective_coupon != null) {
             returnobj.put("USED_COUPON", effective_coupon);
@@ -273,6 +279,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return returnobj;
 
     }
+
+
 
     @Override
     public double calcDiscount(Stock s, CountryOffice co, PromotionDetail pd) {
@@ -303,7 +311,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             PromotionDetailByProductCategory pdbpc = (PromotionDetailByProductCategory) pd;
             if (s instanceof FurnitureModel) {
                 FurnitureModel fm = (FurnitureModel) s;
-                if (fm.getCategory().equals(pdbpc.getCategory())) {
+                if (pdbpc.getCategory()==null ||fm.getCategory().equals(pdbpc.getCategory())) {
                     if (pd.getPercentageDiscount() > 0) {
                         newprice = (1 - pd.getPercentageDiscount()) * op;
                     }
@@ -332,25 +340,5 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
     }
 
-    public double getDiscountedPrice(Stock s, CountryOffice co) {
-
-        //Assume there is a coupon usage 
-        Query q = em.createQuery("select pcd from PromotionDetail pcd where EXISTS(select s from Store s where s.countryOffice=:co and s.id=pcd.applicablePlant.id) and pcd.promotionCampaign.locked=false");
-        q.setParameter("co", co);
-        double minprice = this.getPrice(s, co);
-
-        for (PromotionDetail pd : (List<PromotionDetail>) q.getResultList()) {
-            if (pd.getPromotionCampaign().getExpired() == true) {
-                continue;
-            }
-
-            if (calcDiscount(s, co, pd) < minprice) {
-                minprice = calcDiscount(s, co, pd);
-            }
-        }
-
-        return minprice;
-
-    }
 
 }

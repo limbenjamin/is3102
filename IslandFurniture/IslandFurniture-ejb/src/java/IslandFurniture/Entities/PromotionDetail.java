@@ -46,7 +46,7 @@ public abstract class PromotionDetail implements Serializable {
 
     protected Plant applicablePlant;
 
-    protected Integer usageCount = 1;
+    protected Integer usageCount = Integer.MAX_VALUE;
 
     @OneToMany(mappedBy = "promotionDetail",cascade = CascadeType.REMOVE)
     protected List<PromotionCoupon> promotionCoupons = new ArrayList<>();
