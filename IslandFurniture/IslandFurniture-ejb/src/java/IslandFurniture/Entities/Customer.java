@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -30,7 +31,7 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+        private CustomerSegment customerSegment;
     private String emailAddress;
     private String password;
     private String salt;
@@ -47,12 +48,21 @@ public class Customer implements Serializable {
     private MembershipTier membershipTier;
     @ManyToOne
     private Country country;
-    @OneToMany
+    @ManyToMany(mappedBy = "customers")
     private List<ShoppingList> shoppingLists;
     @OneToMany(mappedBy="member")
     private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "customer")
     private List<Redemption> redemptions;
+
+    public CustomerSegment getCustomerSegment() {
+        return customerSegment;
+    }
+
+    public void setCustomerSegment(CustomerSegment customerSegment) {
+        this.customerSegment = customerSegment;
+    }
+    
     
     public Long getId() {
         return id;
