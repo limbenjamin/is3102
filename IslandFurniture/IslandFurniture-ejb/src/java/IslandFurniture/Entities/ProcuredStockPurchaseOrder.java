@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -27,9 +26,6 @@ public class ProcuredStockPurchaseOrder extends PurchaseOrder implements Seriali
 
     private static final long serialVersionUID = 1L;
 
-    @ManyToOne
-    private MonthlyProcurementPlan monthlyProcurementPlan;
-
     @OneToMany(mappedBy = "purchaseOrder", cascade = {CascadeType.ALL})
     private List<ProcuredStockPurchaseOrderDetail> purchaseOrderDetails = new ArrayList();
 
@@ -40,16 +36,7 @@ public class ProcuredStockPurchaseOrder extends PurchaseOrder implements Seriali
     private GoodsReceiptDocument goodsReceiptDocument;
 
     @OneToOne
-    @JoinColumn(name = "MF_ID", referencedColumnName = "ID")
     private ManufacturingFacility manufacturingFacility;
-
-    public MonthlyProcurementPlan getMonthlyProcurementPlan() {
-        return monthlyProcurementPlan;
-    }
-
-    public void setMonthlyProcurementPlan(MonthlyProcurementPlan monthlyProcurementPlan) {
-        this.monthlyProcurementPlan = monthlyProcurementPlan;
-    }
 
     public List<ProcuredStockPurchaseOrderDetail> getPurchaseOrderDetails() {
         return purchaseOrderDetails;

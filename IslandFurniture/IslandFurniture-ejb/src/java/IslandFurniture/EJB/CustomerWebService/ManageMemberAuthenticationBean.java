@@ -7,7 +7,6 @@
 package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
-import IslandFurniture.Entities.MembershipTier;
 import static IslandFurniture.Entities.Staff.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
@@ -37,20 +36,24 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     
     @Override
     public Customer authenticate(String emailAddress, String password){
+        System.out.println("Authenticating customer...");
         Customer customer = null;
         Query query = em.createQuery("SELECT c FROM Customer c where c.emailAddress=:email");
         query.setParameter("email", emailAddress);
         try{
             customer = (Customer) query.getSingleResult();
         }catch(NoResultException | NonUniqueResultException nre){
+            System.out.println("No such customer");
             return null;
         }
         String correctPassword = customer.getPassword();
         String hashedPassword = SHA1Hash(customer.getSalt() + password);
         if (!correctPassword.equals(hashedPassword)){
+            System.out.println("Wrong password");
             return null;
         }else{
             customer.setLastLogon(new Date());
+            System.out.println("Logged in at ejb");
             return customer;
         }
     }
@@ -91,15 +94,6 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }
     
     @Override
-    public void setCustomerMembershipTier(Customer customer, String membershipTier){
-        Query query = em.createQuery("SELECT m FROM MembershipTier m WHERE m.title=:title");
-        query.setParameter("title", membershipTier);
-        MembershipTier mt = (MembershipTier) query.getSingleResult();
-        customer.setMembershipTier(mt);
-        mt.getMembers().add(customer);
-    }
-    
-    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);
@@ -111,8 +105,5 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
-    }
-    
-    
-    
+    }    
 }

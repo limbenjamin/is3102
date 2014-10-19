@@ -58,15 +58,15 @@ public class CountryOfficeFilter implements Filter {
             String[] urlComponents = req.getServletPath().split("/");
             System.out.println(urlComponents[1]);
 
-            if (urlComponents[1].equals("index.xhtml") || urlComponents[1].equals("javax.faces.resource")) {
-                chain.doFilter(request, response);
-            } else if (manageLocalizationBean.isValidCoCode(urlComponents[1])) {
+            if (manageLocalizationBean.isValidCoCode(urlComponents[1])) {
                 request.setAttribute("coCode", urlComponents[1]);
 
+                System.out.println(req.getServletPath().substring(req.getServletPath().indexOf("/", 1)));
                 request.getRequestDispatcher(req.getServletPath().substring(req.getServletPath().indexOf("/", 1))).forward(request, response);
             } else {
-                System.out.println("Invalid URL");
-                res.sendRedirect(request.getServletContext().getContextPath());
+                System.out.println("No CountryOffice code information. Allow through without processing.");
+                chain.doFilter(request, response);
+                //res.sendRedirect(request.getServletContext().getContextPath());
             }
 
         } catch (Throwable t) {

@@ -18,7 +18,6 @@ import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.PostPersist;
 
 /**
@@ -74,9 +73,6 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
     private MssrStatus status;
     private boolean endMthUpdated = false;
     private boolean varianceUpdated = false;
-
-    @OneToMany(mappedBy = "monthlyStockSupplyReq")
-    private List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails;
 
     public Stock getStock() {
         return stock;
@@ -181,14 +177,6 @@ public class MonthlyStockSupplyReq implements Serializable, Comparable<MonthlySt
 
     public void setVarianceUpdated(boolean varianceUpdated) {
         this.varianceUpdated = varianceUpdated;
-    }
-
-    public List<GoodsIssuedDocumentDetail> getGoodsIssuedDocumentDetails() {
-        return goodsIssuedDocumentDetails;
-    }
-
-    public void setGoodsIssuedDocumentDetails(List<GoodsIssuedDocumentDetail> goodsIssuedDocumentDetails) {
-        this.goodsIssuedDocumentDetails = goodsIssuedDocumentDetails;
     }
 
     @Override

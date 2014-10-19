@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -29,14 +27,6 @@ public class GoodsIssuedDocumentDetail implements Serializable {
     private GoodsIssuedDocument goodsIssuedDocument;
     @ManyToOne
     private Stock stock;
-    @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "STOCK_ID", referencedColumnName = "STOCK_ID", insertable = false, updatable = false),
-        @JoinColumn(name = "COUNTRYOFFICE_ID", referencedColumnName = "COUNTRYOFFICE_ID"),
-        @JoinColumn(name = "MONTH", referencedColumnName = "MONTH"),
-        @JoinColumn(name = "YEAR", referencedColumnName = "YEAR")
-    })
-    private MonthlyStockSupplyReq monthlyStockSupplyReq;
     private Long quantity;
 
     public Long getId() {
@@ -61,14 +51,6 @@ public class GoodsIssuedDocumentDetail implements Serializable {
 
     public void setStock(Stock stock) {
         this.stock = stock;
-    }
-
-    public MonthlyStockSupplyReq getMonthlyStockSupplyReq() {
-        return monthlyStockSupplyReq;
-    }
-
-    public void setMonthlyStockSupplyReq(MonthlyStockSupplyReq monthlyStockSupplyReq) {
-        this.monthlyStockSupplyReq = monthlyStockSupplyReq;
     }
 
     public Long getQuantity() {
@@ -101,7 +83,7 @@ public class GoodsIssuedDocumentDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.GoodsIssuedDocumentDetail[ id=" + id + " ]";
+        return "GoodsIssuedDocumentDetail[ id=" + id + " ]";
     }
 
 }

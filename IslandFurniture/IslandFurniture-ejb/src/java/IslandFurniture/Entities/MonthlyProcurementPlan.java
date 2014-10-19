@@ -3,19 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyProcurementPlanPK;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -24,6 +21,7 @@ import javax.persistence.OneToMany;
 @Entity
 @IdClass(MonthlyProcurementPlanPK.class)
 public class MonthlyProcurementPlan implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     private Month month;
@@ -33,12 +31,10 @@ public class MonthlyProcurementPlan implements Serializable {
     private RetailItem retailItem;
     @Id
     @ManyToOne
-    private ManufacturingFacility manufacturingFacility;    
-    @OneToMany(mappedBy="monthlyProcurementPlan")
-    private List<ProcuredStockPurchaseOrder> purchaseOrderList;
+    private ManufacturingFacility manufacturingFacility;
+
     private Integer qty;
     private Boolean locked;
-
 
     public Month getMonth() {
         return month;
@@ -80,14 +76,6 @@ public class MonthlyProcurementPlan implements Serializable {
         this.locked = locked;
     }
 
-    public List<ProcuredStockPurchaseOrder> getPurchaseOrderList() {
-        return purchaseOrderList;
-    }
-
-    public void setPurchaseOrderList(List<ProcuredStockPurchaseOrder> purchaseOrderList) {
-        this.purchaseOrderList = purchaseOrderList;
-    }
-
     public ManufacturingFacility getManufacturingFacility() {
         return manufacturingFacility;
     }
@@ -95,8 +83,6 @@ public class MonthlyProcurementPlan implements Serializable {
     public void setManufacturingFacility(ManufacturingFacility manufacturingFacility) {
         this.manufacturingFacility = manufacturingFacility;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -104,7 +90,7 @@ public class MonthlyProcurementPlan implements Serializable {
         hash = 53 * hash + Objects.hashCode(this.month);
         hash = 53 * hash + Objects.hashCode(this.year);
         hash = 53 * hash + Objects.hashCode(this.retailItem);
-        hash = 53 * hash + Objects.hashCode(this.purchaseOrderList);
+        hash = 53 * hash + Objects.hashCode(this.manufacturingFacility);
         return hash;
     }
 
@@ -115,12 +101,12 @@ public class MonthlyProcurementPlan implements Serializable {
             return false;
         }
         MonthlyProcurementPlan other = (MonthlyProcurementPlan) object;
-        return this.month.equals(other.month) && this.year.equals(other.year) && this.retailItem.equals(other.retailItem) && this.purchaseOrderList.equals(other.purchaseOrderList);
+        return this.month.equals(other.month) && this.year.equals(other.year) && this.retailItem.equals(other.retailItem)&& this.manufacturingFacility.equals(other.manufacturingFacility);
     }
 
     @Override
     public String toString() {
-        return "IslandFurniture.FW.Entities.MonthlyProcurementPlan[ id=" + month + ", " + year + ", " + this.retailItem.getId() + ", " + this.purchaseOrderList + " ]";
+        return "MonthlyProcurementPlan[ id=" + month + ", " + year + ", " + this.retailItem + ", " + this.manufacturingFacility + " ]";
     }
-    
+
 }

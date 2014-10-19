@@ -18,8 +18,6 @@ import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
