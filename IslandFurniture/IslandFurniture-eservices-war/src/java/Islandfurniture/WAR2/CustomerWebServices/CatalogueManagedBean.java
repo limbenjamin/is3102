@@ -13,14 +13,18 @@ import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -53,6 +57,18 @@ public class CatalogueManagedBean implements Serializable{
         retailItemList = mcbl.getStoreRetailItems(co);
         System.out.println("loaded " + co.getName() + " furniture models and retail items");
     }
+    
+    public void displayProductDetails(ActionEvent event) throws IOException {
+      System.out.println("displayProductDetails()");
+      // get country office code
+      HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
+      String coCode = (String) httpReq.getAttribute("coCode");
+      
+      String furnitureId = event.getComponent().getAttributes().get("furnitureId").toString();
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      
+      ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/productdetail.xhtml?id=" + furnitureId);
+    }     
 
     public List<FurnitureModel> getFurnitureList() {
         return furnitureList;

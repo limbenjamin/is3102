@@ -59,6 +59,7 @@ public class ProductDetailManagedBean {
     }    
     
     public String displayProductDetails() {
+      System.out.println("displayProductDetails()");
       HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
       String coCode = (String) httpReq.getAttribute("coCode");
       HttpSession session = Util.getSession();
