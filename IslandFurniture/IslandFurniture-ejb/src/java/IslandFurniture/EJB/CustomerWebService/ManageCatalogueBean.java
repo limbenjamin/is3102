@@ -87,4 +87,9 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
         return retailItemList;
     }      
     
+    @Override
+    public FurnitureModel getFurnitureModel(Long id) {
+        return (FurnitureModel) em.find(FurnitureModel.class, id);
+    }
+    
 }

@@ -13,13 +13,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <ol class="breadcrumb">
-                              <li><a href="index.xhtml">Home</a></li>
+                              <li><a href="home.xhtml">Home</a></li>
                               <li class="active"><strong>All Products</strong></li>
                             </ol>                                         
                         </div>                        
                         <div class="col-sm-12">
                             <div class="catalogue">
                                 <h2 class="title text-center">ALL FURNITURE</h2>
+                                <h:form>
                                 <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
                                     <div class="col-sm-4">
                                         <div class="product-image-wrapper">
@@ -27,13 +28,16 @@
                                                 <div class="productinfo text-center">
                                                     <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
                                                     <h2>$#{furniture.price}</h2>
-                                                    <a href="#"><p>#{furniture.name}</p></a>
+                                                        <h:commandButton value="#{furniture.name}" actionListener="#{productDetailManagedBean.displayProductDetails}">
+                                                            <f:param name="id" value="#{furniture.id}" />
+                                                        </h:commandButton>
                                                     <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </ui:repeat>
+                                </h:form>
                             </div>	
                         </div>
                         <br/><br/>

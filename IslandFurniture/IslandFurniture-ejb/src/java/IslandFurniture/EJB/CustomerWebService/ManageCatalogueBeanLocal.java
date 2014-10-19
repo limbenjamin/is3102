@@ -32,4 +32,7 @@ public interface ManageCatalogueBeanLocal {
     // get a list of retail items sold in a store
     List<RetailItem> getStoreRetailItems(CountryOffice co);
     
+    // get details of a furniture model
+    FurnitureModel getFurnitureModel(Long id);
+    
 }
