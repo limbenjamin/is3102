@@ -9,9 +9,14 @@ package POS;
 import Helper.Connector;
 import Helper.LCD;
 import gnu.io.SerialPort;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -621,7 +628,66 @@ public class PaymentUI extends javax.swing.JFrame {
             }catch(Exception ex){
                 System.err.println("Unable to write to Partner Pole Display");
             }
-            //print receipt, open cash till
+            String receipt = "Island Furniture\n\r";
+            receipt += plantname + " Store\n\r";
+            receipt += new Date() + " \n\r";
+            receipt += "\n\r\n\r";
+            receipt += "Transactions\n\r";
+            receipt += "----------------------------------------------\n\r";//46 chars
+            for (int i=0;i<transaction.size();i++){
+                System.err.println(transaction.get(i).get(0));
+                System.err.println(transaction.get(i).get(1));
+                System.err.println(transaction.get(i).get(2));
+                System.err.println(transaction.get(i).get(3));
+                System.err.println(transaction.get(i).get(4));
+                System.err.println(transaction.get(i).get(5));
+                receipt += transaction.get(i).get(0)+"  ";
+                receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
+                Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
+                receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+            }
+            receipt += "----------------------------------------------\n\r";
+            receipt+= "Grand Total: " +currencyCode+" "+grandTotalAmt+ "\n\r";
+            Double d = voucherAmt + receiptAmt;
+            receipt+= "Discounts: " +currencyCode+" "+ d + "\n\r";
+            receipt+= "Amount Payable: " +currencyCode+" "+ totalPayable+ "\n\r\n\r";
+            
+            if (cashButton.isSelected() == true){
+                receipt+= "Payment Mode: Cash\n\r";
+                receipt+= "Cash Amount: " +currencyCode+" "+ cashAmt + "\n\r";
+                d = Math.round(changeAmt * 100.0) / 100.0;
+                receipt+= "Change: " +currencyCode+" " + d + "\n\r";
+            }else{
+                receipt+= "Payment Mode : Credit Card\n\r";
+            }
+            receipt+= "Cashier : "+ staffname +"\n\r\n\r";
+            if (customerName == null){
+                receipt+= "Thank you for shopping with us!";
+            }else{
+                receipt+= customerName+", thank you for shopping with us!\n\r";
+            }
+            
+            
+            try
+            {
+                JTextArea printing = new JTextArea();
+                printing.setText(receipt);
+                Double margin = 20.0;
+                Integer lines = 8;
+                PrinterJob printerJob = PrinterJob.getPrinterJob();
+                PageFormat pageFormat = printerJob.defaultPage();
+                Paper paper = new Paper();
+                paper.setSize(180.0, (double) (paper.getHeight() + lines * 10.0));
+                paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
+                pageFormat.setPaper(paper);
+                pageFormat.setOrientation(PageFormat.PORTRAIT);
+                printerJob.setPrintable(printing.getPrintable(null, null), pageFormat);
+                printerJob.print();
+            }
+            catch(PrinterException ex)
+            {
+                JOptionPane.showMessageDialog(null, "Unable to print to Partner Thermal Printer: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     
