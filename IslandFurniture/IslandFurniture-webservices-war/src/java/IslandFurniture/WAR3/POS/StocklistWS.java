@@ -25,13 +25,17 @@ import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.Transaction;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -149,14 +153,14 @@ public class StocklistWS {
         }else{
             Customer c;
             if (customerCardId.equals("")){
-                Stock s = sm.getFurniture(Long.parseLong(stock));
+                Stock s = mpl.getStock(Long.parseLong(stock));
                 Store store = (Store) staff.getPlant();
                 CountryOffice co = store.getCountryOffice();
                 hash = mmb.getDiscountedPrice(s, store, new Customer());
             }
             else{
                 c = mmab.getCustomerFromLoyaltyCardId(customerCardId);
-                Stock s = sm.getFurniture(Long.parseLong(stock));
+                Stock s = mpl.getStock(Long.parseLong(stock));
                 Store store = (Store) staff.getPlant();
                 CountryOffice co = store.getCountryOffice();
                 if (coupon.equals("") && stockCoupon.equals("null")){
@@ -239,40 +243,66 @@ public class StocklistWS {
                                     ){
         Staff staff = muabl.getStaffFromCardId(cardId);
         Customer customer;
+        Stock stock = null;
         if (staff == null){
             return "Error";
         }else{
             Plant plant = staff.getPlant();
+            TimeZone tz = TimeZone.getTimeZone(plant.getTimeZoneID());
+            Calendar now=Calendar.getInstance(tz);
+            now.setTime(new Date());
             System.err.println(transaction);
             FurnitureTransaction ft = new FurnitureTransaction();
             ft.setCreatedBy(staff);
             ft.setStore((Store) plant);
-            TimeZone tz = TimeZone.getTimeZone(plant.getTimeZoneID());
-            ft.setCreationTime(Calendar.getInstance(tz));
-            mpl.persistFT(ft);
-            //customer = mmab.getCustomerFromLoyaltyCardId(customerCardId); TODO
-            //ft.setMember(customer);
+            ft.setCreationTime(now);
+            ft.setTransTime(now);
+            RetailItemTransaction rt = new RetailItemTransaction();
+            rt.setCreatedBy(staff);
+            rt.setStore((Store) plant);
+            rt.setCreationTime(now);
+            rt.setTransTime(now);
+            if (!customerCardId.trim().isEmpty()){
+                customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+                ft.setMember(customer);
+                rt.setMember(customer);
+            }
             JsonReader reader = Json.createReader(new StringReader(transaction));
             JsonArray arr = reader.readArray();
             for (JsonValue jsonValue : arr) {
                 JsonObject jo = (JsonObject) jsonValue;
                 Long id = Long.parseLong(jo.getString("id"));
-                Stock stock = mpl.getStock(id);
+                stock = mpl.getStock(id);
                 int qty = Integer.parseInt(jo.getString("qty"));
                 Double price = Double.parseDouble(jo.getString("price"));
                 System.err.println(id+"  "+qty);
-                FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
-                ftd.setNumClaimed(0);
-                ftd.setNumReturned(0);
-                ftd.setQty(qty);
-                ftd.setUnitPrice(price);
-                FurnitureModel fm = (FurnitureModel) stock;
-                ftd.setFurnitureModel(fm);
-                Long points = fm.getPointsWorth();
-                ftd.setUnitPoints(points);
-                ftd.setFurnitureTransaction(ft);
-                ft.getFurnitureTransactionDetails().add(ftd);
-                mpl.persistFTD(ftd);
+                if (stock instanceof FurnitureModel){
+                    mpl.persistFT(ft);
+                    FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
+                    ftd.setNumClaimed(0);
+                    ftd.setNumReturned(0);
+                    ftd.setQty(qty);
+                    ftd.setUnitPrice(price);
+                    FurnitureModel fm = (FurnitureModel) stock;
+                    ftd.setFurnitureModel(fm);
+                    Long points = fm.getPointsWorth();
+                    ftd.setUnitPoints(points);
+                    ftd.setFurnitureTransaction(ft);
+                    ft.getFurnitureTransactionDetails().add(ftd);
+                    mpl.persistFTD(ftd);
+                }else if (stock instanceof RetailItem){
+                    mpl.persistRT(rt);
+                    RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
+                    rtd.setQty(qty);
+                    rtd.setUnitPrice(price);
+                    RetailItem ri = (RetailItem) stock;
+                    rtd.setRetailItem(ri);
+                    Long points = ri.getPointsWorth();
+                    rtd.setUnitPoints(points);
+                    rtd.setRetailItemTransaction(rt);
+                    rt.getRetailItemTransactionDetails().add(rtd);
+                    mpl.persistRTD(rtd);
+                }
                 msfl.reduceStockfrontInventoryFromTransaction(plant, stock, qty);
             }
             String vouchers = voucher.substring(1, voucher.length()-1);
@@ -284,7 +314,11 @@ public class StocklistWS {
                 }
             }
             if (!receipt.isEmpty()){
-                mpl.linkReceipt(receipt, ft);
+                if (stock instanceof RetailItem){
+                    mpl.linkReceipt(receipt, (Transaction) rt);
+                }else if (stock instanceof FurnitureModel){
+                    mpl.linkReceipt(receipt, (Transaction) ft);
+                }
             }
             //mmb.expand_promotion(null, null); TODO
         }

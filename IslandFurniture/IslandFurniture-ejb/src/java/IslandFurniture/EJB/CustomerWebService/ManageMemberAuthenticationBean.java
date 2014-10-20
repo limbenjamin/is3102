@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.MembershipTier;
 import static IslandFurniture.Entities.Staff.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
@@ -127,6 +128,9 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     
     @Override
     public void setCustomerMembershipTier(Customer customer, String membershipTier){
-        //stub to allow deployment
+        Query query = em.createQuery("SELECT m FROM MembershipTier m WHERE m.title=:title");
+        query.setParameter("title", membershipTier);
+        MembershipTier m = (MembershipTier) query.getSingleResult();
+        customer.setMembershipTier(m);
     }
 }

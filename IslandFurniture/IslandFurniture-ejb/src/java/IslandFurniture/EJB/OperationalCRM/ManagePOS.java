@@ -10,7 +10,10 @@ import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Transaction;
 import IslandFurniture.Entities.Voucher;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -75,12 +78,12 @@ public class ManagePOS implements ManagePOSLocal {
         return amount;
     }
     @Override
-    public void linkReceipt(String id,FurnitureTransaction ft){
-        Query query = em.createQuery("SELECT f FROM FurnitureTransaction f WHERE f.id=:id");
+    public void linkReceipt(String id,Transaction t){
+        Query query = em.createQuery("SELECT t FROM Transaction t WHERE t.id=:id");
         query.setParameter("id", Long.valueOf(id));
         int amount = 0;
         try{
-            FurnitureTransaction ftold = (FurnitureTransaction) query.getSingleResult();
+            Transaction tr = (Transaction) query.getSingleResult();
             //TODO : link receipt
         }catch(Exception e){
             System.err.print(e);
@@ -98,13 +101,20 @@ public class ManagePOS implements ManagePOSLocal {
             return null;
         }
     }
-    
+    @Override
     public void persistFTD(FurnitureTransactionDetail ftd){
         em.persist(ftd);
     }
-    
+    @Override
     public void persistFT(FurnitureTransaction ft){
         em.persist(ft);
     }
-    
+    @Override
+    public void persistRTD(RetailItemTransactionDetail rtd){
+        em.persist(rtd);
+    }
+    @Override
+    public void persistRT(RetailItemTransaction rt){
+        em.persist(rt);
+    }
 }
