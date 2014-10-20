@@ -6,9 +6,15 @@
 package POS;
 
 import Helper.Connector;
+import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -16,6 +22,7 @@ import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -36,6 +43,14 @@ public class CheckoutUI extends javax.swing.JFrame {
     private Boolean isChecking = false;
     private String customerName;
     private Double grandTotal;
+    private Double totalRegisterCash;
+    private String currencyCode;
+    
+    private OutputStream partnerPoleDisplayOutputStream;
+    SerialPort serialPort;
+    byte[] clear = {0x0C};
+    byte[] newLine = {0x0A};
+    byte[] carriageReturn = {0x0D};
     
     /**
      * Creates new form CheckoutUI
@@ -44,21 +59,24 @@ public class CheckoutUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction) throws ParseException {
+    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction, Double totalRegisterCash) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.transaction = transaction;
+        this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
+        currencyCode = (String) jsonObject.get("symbol");
+        grandTotalLabel.setText("Grand Total: " +currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
         System.err.println(listJSON);
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         payButton.setVisible(Boolean.FALSE);
-        logoutButton.setEnabled(Boolean.FALSE);
+        reconcileButton.setEnabled(Boolean.FALSE);
         for (int i=0;i<transaction.size();i++){
             ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
             jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
@@ -67,6 +85,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
             jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
         }
+        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
     }
 
     /**
@@ -79,7 +98,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        logoutButton = new javax.swing.JButton();
+        reconcileButton = new javax.swing.JButton();
         welcomeLabel = new javax.swing.JLabel();
         memberLabel = new javax.swing.JLabel();
         readCardButton = new javax.swing.JButton();
@@ -95,11 +114,11 @@ public class CheckoutUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+        reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setText("Reconcile");
+        reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+                reconcileButtonActionPerformed(evt);
             }
         });
 
@@ -199,10 +218,10 @@ public class CheckoutUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(welcomeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                                 .addComponent(backButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(logoutButton))
+                                .addComponent(reconcileButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(memberLabel)
                                 .addGap(18, 18, 18)
@@ -227,7 +246,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logoutButton)
+                    .addComponent(reconcileButton)
                     .addComponent(welcomeLabel)
                     .addComponent(backButton))
                 .addGap(18, 18, 18)
@@ -267,11 +286,20 @@ public class CheckoutUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
-        loginUI.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
+        try {
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            store.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void readCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readCardButtonActionPerformed
         try {
@@ -292,6 +320,17 @@ public class CheckoutUI extends javax.swing.JFrame {
                                 customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
                                 readCardButton.setVisible(Boolean.FALSE);
                                 memberLabel.setText("Member: " + customerCardId);
+                                try{
+                                    partnerPoleDisplayOutputStream.write(clear);
+                                    partnerPoleDisplayOutputStream.write(new String("Member Id:").getBytes());
+                                    partnerPoleDisplayOutputStream.write(newLine);
+                                    partnerPoleDisplayOutputStream.write(carriageReturn);
+                                    String s = customerCardId;
+                                    partnerPoleDisplayOutputStream.write(s.getBytes());
+                                } catch (Exception ex) {
+                                    System.err.println("Unable to write to Partner Pole Display");
+                                }
+                                
                             }
                         }
                     } catch (CardException ex) {
@@ -308,8 +347,11 @@ public class CheckoutUI extends javax.swing.JFrame {
     }//GEN-LAST:event_readCardButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -377,12 +419,16 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
         updateTotal();
         payButton.setVisible(Boolean.TRUE);
+        
     }//GEN-LAST:event_calculateButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         PaymentUI payment = null;
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
-            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal);
+            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash);
         } catch (ParseException ex) {
             Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -446,8 +492,19 @@ public class CheckoutUI extends javax.swing.JFrame {
                 
             }
         }
-        grandTotalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
+        grandTotalLabel.setText("Grand Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
         grandTotal = Math.round(total * 100.0) / 100.0;
+        try
+        {
+            partnerPoleDisplayOutputStream.write(clear);
+            partnerPoleDisplayOutputStream.write(new String("Grand Total").getBytes());
+            partnerPoleDisplayOutputStream.write(newLine);
+            partnerPoleDisplayOutputStream.write(carriageReturn);
+            String s = currencyCode+" "+ Math.round(total * 100.0) / 100.0;
+            partnerPoleDisplayOutputStream.write(s.getBytes());
+        }catch(Exception ex){
+            System.err.println("Unable to write to Partner Pole Display");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -459,10 +516,10 @@ public class CheckoutUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JLabel memberLabel;
     private javax.swing.JButton payButton;
     private javax.swing.JButton readCardButton;
+    private javax.swing.JButton reconcileButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

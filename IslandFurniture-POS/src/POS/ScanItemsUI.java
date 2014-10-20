@@ -5,8 +5,11 @@
  */
 package POS;
 
+import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.SerialPort;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -41,26 +44,39 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private Boolean changing = false;
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
-
+    private Double totalRegisterCash;
+    private String currencyCode;
+    
+    
+    private OutputStream partnerPoleDisplayOutputStream;
+    SerialPort serialPort;
+    byte[] clear = {0x0C};
+    byte[] newLine = {0x0A};
+    byte[] carriageReturn = {0x0D};
+    
     public ScanItemsUI() {
         initComponents();
     }
 
-    public ScanItemsUI(String staffJSON, String listJSON) throws IOException, ParseException {
+    public ScanItemsUI(String staffJSON, String listJSON, Double totalRegisterCash) throws IOException, ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
+        this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
         cardId = (String) jsonObject.get("cardId");
+        currencyCode = (String) jsonObject.get("symbol");
+        totalLabel.setText("Total: " +currencyCode+" 0");
         System.err.println(listJSON);
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         jTable.changeSelection(0, 0, false, false);
         jTable.editCellAt(0, 0);
         jTable.getEditorComponent().requestFocusInWindow();
+        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (changing.equals(false)) {
@@ -94,6 +110,18 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                     //TODO : print to 20x2 LCD
                                     System.out.println(jsonObject.get("name") + " x 1");
                                     System.out.println(jsonObject.get("price"));
+                                    try
+                                    {
+                                        partnerPoleDisplayOutputStream.write(clear);
+                                        String s = (String) jsonObject.get("name");
+                                        partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        partnerPoleDisplayOutputStream.write(newLine);
+                                        partnerPoleDisplayOutputStream.write(carriageReturn);
+                                        s = (String) jsonObject.get("price");
+                                        partnerPoleDisplayOutputStream.write(s.getBytes());
+                                    }catch(Exception ex){
+                                        System.err.println("Unable to write to Partner Pole Display");
+                                    }
                                 }
                         }
                         Boolean res = consolidate(row);
@@ -110,11 +138,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         Double price = Double.parseDouble((String) jTable.getModel().getValueAt(row, 2));
                         String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
                         Double total = (Integer.parseInt(qty)) * price;
-                        jTable.getModel().setValueAt(Math.round(total), row, 4);
+                        jTable.getModel().setValueAt(Math.round(total * 100.0) / 100.0, row, 4);
                         //TODO : print to 20x2 LCD
                         System.out.println(jTable.getModel().getValueAt(row, 1) + " x " + qty);
-                        System.out.println(Math.round(total));
-                        updateTotal(row);
+                        System.out.println(Math.round(total * 100.0) / 100.0);
+                        updateTotal(jTable.getModel().getRowCount());
                     }
                     changing = false;
                 }
@@ -136,7 +164,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         welcomeLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
-        logoutButton = new javax.swing.JButton();
+        reconcileButton = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
@@ -182,11 +210,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
             jTable.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+        reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setText("Reconcile");
+        reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+                reconcileButtonActionPerformed(evt);
             }
         });
 
@@ -219,10 +247,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 402, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
                         .addComponent(resetButton)
                         .addGap(18, 18, 18)
-                        .addComponent(logoutButton))
+                        .addComponent(reconcileButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(totalLabel)
@@ -236,7 +264,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(logoutButton)
+                        .addComponent(reconcileButton)
                         .addComponent(resetButton))
                     .addComponent(welcomeLabel))
                 .addGap(18, 18, 18)
@@ -268,11 +296,20 @@ public class ScanItemsUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
-        loginUI.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
+        try {
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            store.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         int row = jTable.getRowCount();
@@ -305,9 +342,12 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 }
         }
         System.err.println(transaction);
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         CheckoutUI checkoutUI;
         try {
-            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction);
+            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash);
             checkoutUI.setVisible(true);
             this.setVisible(false);
         } catch (ParseException ex) {
@@ -364,7 +404,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 
             }
         }
-        totalLabel.setText("Total: " + Math.round(total * 100.0) / 100.0);
+        totalLabel.setText("Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
     }
     
     public Boolean consolidate(int numrows){
@@ -391,7 +431,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     jTable.getModel().setValueAt("", i, 4);
                     //TODO : print to 20x2 LCD
                     System.out.println(jTable.getModel().getValueAt(pos, 1) + " x " + total_qty);
-                    System.out.println(Math.round(total));
+                    System.out.println(Math.round(total * 100.0) / 100.0);
                 }catch(Exception e){
                 
                 }
@@ -407,8 +447,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JButton nextButton;
+    private javax.swing.JButton reconcileButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JLabel totalLabel;
     private javax.swing.JLabel welcomeLabel;

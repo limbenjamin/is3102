@@ -6,13 +6,11 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,9 +23,10 @@ public class CustomerPeriodAnalysisReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @OneToOne
     private CountryPeriodAnalysisReport countryPeriodAnalysisReport;
 
+    @OneToOne
     private CustomerSegment customerSegment;
 
     private Long qty;

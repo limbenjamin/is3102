@@ -44,6 +44,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
         }
 
         Customer customer = mmab.authenticate(emailAddress, password);
+        System.out.println(customer.getName());
         if (customer != null) {
             HttpSession session = Util.getSession();
             session.setAttribute("emailAddress", emailAddress);
@@ -52,6 +53,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Logged in successfully", ""));
             ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
         } else {
+            System.out.println("Error logging in.");
             FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid email or password", ""));
             ec.redirect(ec.getRequestContextPath() + coDir + "/login.xhtml");
@@ -82,6 +84,8 @@ public class MemberAuthenticationManagedBean implements Serializable {
         phoneNo = request.getParameter("registerForm:phoneNo");
         dateOfBirth = request.getParameter("registerForm:dateOfBirth");
         id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, dateOfBirth);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Created", ""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
     }
 

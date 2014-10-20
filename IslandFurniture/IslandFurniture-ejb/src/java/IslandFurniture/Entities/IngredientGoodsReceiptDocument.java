@@ -29,7 +29,7 @@ public class IngredientGoodsReceiptDocument extends Document implements Serializ
     @Temporal(TemporalType.DATE)
     private Calendar receiptDate;
     private String deliveryNote;
-    private Boolean confirm;
+    private Boolean posted;
 
     @ManyToOne
     private Store store;
@@ -64,12 +64,12 @@ public class IngredientGoodsReceiptDocument extends Document implements Serializ
         this.deliveryNote = deliveryNote;
     }
 
-    public Boolean isConfirm() {
-        return confirm;
+    public Boolean isPosted() {
+        return posted;
     }
 
-    public void setConfirm(Boolean confirm) {
-        this.confirm = confirm;
+    public void setPosted(Boolean posted) {
+        this.posted = posted;
     }
 
     public Store getStore() {

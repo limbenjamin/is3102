@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.MembershipTier;
 import static IslandFurniture.Entities.Staff.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
@@ -82,6 +83,24 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }
     
     @Override
+    public Long createCustomerAccountNoEmail(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth) {
+        Customer customer = new Customer();
+        customer.setActive(Boolean.TRUE);
+        //generate salt
+        String salt = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
+        customer.setSalt(salt);
+        customer.setEmailAddress(emailAddress);
+        customer.setPassword(password);
+        customer.setName(name);
+        customer.setPhoneNo(phoneNo);
+        customer.setAddress(address);
+        customer.setDateOfBirth(dateOfBirth);
+        em.persist(customer);
+        em.flush();
+        return customer.getId();
+    }
+    
+    @Override
     public Customer getCustomerFromLoyaltyCardId(String loyaltyCardId){
         Query query = em.createQuery("SELECT c FROM Customer c WHERE c.loyaltyCardId=:id");
         query.setParameter("id", loyaltyCardId);
@@ -109,6 +128,9 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     
     @Override
     public void setCustomerMembershipTier(Customer customer, String membershipTier){
-        //stub to allow deployment
+        Query query = em.createQuery("SELECT m FROM MembershipTier m WHERE m.title=:title");
+        query.setParameter("title", membershipTier);
+        MembershipTier m = (MembershipTier) query.getSingleResult();
+        customer.setMembershipTier(m);
     }
 }

@@ -12,7 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import IslandFurniture.Entities.CustomerPeriodAnalysisReport;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -26,8 +26,10 @@ public class CountryPeriodAnalysisReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @OneToOne
     private CountryOffice countryOffice;
 
+    @OneToOne
     private CompanyPeriodAnalysisReport companyPeriodAnalysisReport;
 
     @OneToMany(mappedBy = "countryPeriodAnalysisReport")
@@ -69,17 +71,6 @@ public class CountryPeriodAnalysisReport implements Serializable {
 
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
-    }
-
-    @OneToMany(mappedBy = "countryPeriodAnalysisReport")
-    private List<StorePeriodAnalysisReport> storeperiodAnalysisReports;
-
-    public List<StorePeriodAnalysisReport> getStoreperiodAnalysisReports() {
-        return storeperiodAnalysisReports;
-    }
-
-    public void setStoreperiodAnalysisReports(List<StorePeriodAnalysisReport> storeperiodAnalysisReports) {
-        this.storeperiodAnalysisReports = storeperiodAnalysisReports;
     }
 
     public Long getId() {

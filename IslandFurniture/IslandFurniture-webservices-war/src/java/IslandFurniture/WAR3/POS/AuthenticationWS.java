@@ -9,6 +9,8 @@ package IslandFurniture.WAR3.POS;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
+import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,6 +37,8 @@ public class AuthenticationWS {
     ManageAuthenticationBeanLocal mabl;
     @EJB
     ManageUserAccountBeanLocal muabl;
+    @EJB
+    ManageRolesBeanLocal mrbl;
     
     public AuthenticationWS(){
     
@@ -48,7 +52,7 @@ public class AuthenticationWS {
         System.err.println(password);
         if(mabl.authenticate(username, password)){
             Staff staff = muabl.getStaff(username);
-            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName()).add("symbol", staff.getPlant().getCountry().getCurrency().getCurrencyCode())
                     .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
             return object.toString();
         }
@@ -63,9 +67,25 @@ public class AuthenticationWS {
         if (staff == null){
             return "Error";
         }else{
-            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName()).add("symbol", staff.getPlant().getCountry().getCurrency().getCurrencyCode())
                     .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
             return object.toString();
+        }
+    }
+    
+    @POST
+    @Path("supervisornfc")
+    public String supervisorNFC(@FormParam("cardId") String cardId) {
+        System.err.println(cardId);
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }        
+        Role role = mrbl.getRoleFromName("Cashier Supervisor (Store)");
+        if(!staff.getRoles().contains(role)){ //staff is not a cashier supervisor
+            return "Error";
+        }else{
+            return "OK";
         }
     }
     

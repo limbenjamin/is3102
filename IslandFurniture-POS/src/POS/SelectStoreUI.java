@@ -7,11 +7,15 @@
 package POS;
 
 import Helper.Connector;
+import Helper.NFCMethods;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
 import javax.swing.JFrame;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +34,10 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private LoginUI loginUI = null;
     private String staffJSON = null;
     private String cardId = null;
+    private Double totalRegisterCash;
+    private CardTerminal acr122uCardTerminal = null;
+    private Boolean isChecking = false;
+    private String currencyCode;
     /**
      * Creates new form SelectStore
      */
@@ -37,16 +45,22 @@ public class SelectStoreUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    public SelectStoreUI(LoginUI loginUI, String staffJSON) throws IOException, ParseException
+    public SelectStoreUI(String staffJSON, Double totalRegisterCash) throws IOException, ParseException
     {
         this();
         
-        this.loginUI = loginUI;
         this.staffJSON = staffJSON;
+        this.totalRegisterCash = totalRegisterCash;
+        confirmButton.setEnabled(Boolean.FALSE);
+        newBalanceField.setEnabled(Boolean.FALSE);
+        
+        logoutButton.setEnabled(Boolean.FALSE);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
+        currencyCode = (String) jsonObject.get("symbol");
+        cashBalanceLabel.setText("Cash Balance : " +currencyCode +" "+ totalRegisterCash);
         cardId = (String) jsonObject.get("cardId");
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
     }
@@ -68,12 +82,13 @@ public class SelectStoreUI extends javax.swing.JFrame {
         welcomeLabel = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        supervisorField = new javax.swing.JLabel();
+        cashBalanceLabel = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        newBalanceField = new javax.swing.JTextField();
+        confirmButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        readButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -120,21 +135,34 @@ public class SelectStoreUI extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         jLabel2.setText("Reconcile Total");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel3.setText("Supervisor : OK");
+        supervisorField.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        supervisorField.setText("Supervisor : ");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel4.setText("Cash Balance : 50");
+        cashBalanceLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        cashBalanceLabel.setText("Cash Balance :");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel5.setText("New Balance : ");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jTextField1.setMinimumSize(new java.awt.Dimension(200, 50));
-        jTextField1.setPreferredSize(new java.awt.Dimension(200, 50));
+        newBalanceField.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        newBalanceField.setMinimumSize(new java.awt.Dimension(200, 50));
+        newBalanceField.setPreferredSize(new java.awt.Dimension(200, 50));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jButton1.setText("Confirm");
+        confirmButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        confirmButton.setText("Confirm");
+        confirmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmButtonActionPerformed(evt);
+            }
+        });
+
+        readButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        readButton.setText("Read");
+        readButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -152,13 +180,16 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                 .addComponent(logoutButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(supervisorField)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(readButton))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(newBalanceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jButton1))
+                                        .addComponent(confirmButton))
                                     .addComponent(jLabel2))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
@@ -171,7 +202,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(restaurantButton))
                             .addComponent(jLabel1)
-                            .addComponent(jLabel4))
+                            .addComponent(cashBalanceLabel))
                         .addGap(0, 15, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -193,14 +224,16 @@ public class SelectStoreUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(supervisorField)
+                    .addComponent(readButton))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel4)
+                .addComponent(cashBalanceLabel)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(newBalanceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(confirmButton))
                 .addContainerGap(246, Short.MAX_VALUE))
         );
 
@@ -234,7 +267,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String furniturelist = Connector.postForm(params, values, "stock/furniturelist");
             System.err.println(furniturelist);
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -257,7 +290,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         values.add(cardId);
         try {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -278,6 +311,57 @@ public class SelectStoreUI extends javax.swing.JFrame {
             Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_restaurantButtonActionPerformed
+
+    private void readButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readButtonActionPerformed
+        try {
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+                if (acr122uCardTerminal != null) {
+                    try {
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            NFCMethods nfc = new NFCMethods();
+                            String id = (nfc.getID(acr122uCardTerminal)).substring(0, 8);                           
+                            List params = new ArrayList();
+                            List values = new ArrayList();
+                            params.add("cardId");
+                            values.add(id);
+                            String result = "";
+                            try {
+                                result = Connector.postForm(params, values, "auth/supervisornfc");
+                            }catch (Exception ex) {
+                                Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            if(result.equals("OK")){
+                                readButton.setVisible(Boolean.FALSE);
+                                supervisorField.setText("Supervisor : OK");
+                                confirmButton.setEnabled(Boolean.TRUE);
+                                newBalanceField.setEnabled(Boolean.TRUE);
+                                logoutButton.setEnabled(Boolean.TRUE);
+                            }
+                        }
+                    } catch (CardException ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_readButtonActionPerformed
+
+    private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
+        totalRegisterCash = Double.parseDouble(newBalanceField.getText());
+        cashBalanceLabel.setText("Cash Balance : " +currencyCode + " "+ totalRegisterCash);
+    }//GEN-LAST:event_confirmButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,19 +399,20 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel cashBalanceLabel;
+    private javax.swing.JButton confirmButton;
     private javax.swing.JButton furnitureStoreButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton logoutButton;
+    private javax.swing.JTextField newBalanceField;
+    private javax.swing.JButton readButton;
     private javax.swing.JButton restaurantButton;
     private javax.swing.JButton retailStoreButton;
+    private javax.swing.JLabel supervisorField;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -32,6 +32,8 @@ public class ShoppingList implements Serializable {
     private List<Customer> customers; // Shopping list can be collaborated upon.
     @ManyToOne
     private Store store;
+    private String name;
+    private Double totalPrice;
 
     public Long getId() {
         return id;
@@ -89,5 +91,43 @@ public class ShoppingList implements Serializable {
     public String toString() {
         return "ShoppingList[ id=" + id + " ]";
     }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the totalPrice
+     */
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    /**
+     * @param totalPrice the totalPrice to set
+     */
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+    
+    // Extra Methods
+    public boolean hasFurniture(FurnitureModel furniture) {
+        for (ShoppingListDetail detail : shoppingListDetails) {
+            if (detail.getFurnitureModel().equals(furniture)) {
+                return true;
+            }
+        }
+        return false;
+    }    
     
 }
