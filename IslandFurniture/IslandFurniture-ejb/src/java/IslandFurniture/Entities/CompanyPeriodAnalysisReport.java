@@ -20,15 +20,16 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class CompanyPeriodAnalysisReport implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-        private Month month;
+
+    private Month month;
     private Integer week;
     private Integer Year;
-    
+
     @OneToMany(mappedBy = "companyPeriodAnalysisReport")
     private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports;
 
@@ -39,8 +40,6 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     public void setCountryPeriodAnalysisReports(List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports) {
         this.countryPeriodAnalysisReports = countryPeriodAnalysisReports;
     }
-
-    
 
     public Month getMonth() {
         return month;
@@ -65,7 +64,6 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     public void setYear(Integer Year) {
         this.Year = Year;
     }
-    
 
     public Long getId() {
         return id;
@@ -99,5 +97,5 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     public String toString() {
         return "IslandFurniture.Entities.CompanyPeriodAnalysisReport[ id=" + id + " ]";
     }
-    
+
 }

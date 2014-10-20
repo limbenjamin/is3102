@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -29,8 +31,11 @@ public class CampaignAnalysisReport implements Serializable {
     private Integer week;
     private Integer Year;
 
+    @OneToOne
     private PromotionCampaign promotionCampaign;
     private double TotalRevenue;
+    
+    @ManyToMany
     private List<Customer> customers;
 
     public Month getMonth() {
