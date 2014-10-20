@@ -11,12 +11,12 @@ import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.ShoppingList;
+import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -31,14 +31,16 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class ShoppingListManagedBean {
-
+public class ShoppingListDetailManagedBean {
+    
+    private Long listId;
+    private Customer customer;    
+    private ShoppingList shoppingList;    
     private String emailAddress = null;
-    private Customer customer;
-    private List<ShoppingList> shoppingLists;
-    private List<Store> localStores;
+    private List<ShoppingListDetail> shoppingListDetails;
     private String coDir;
-    private CountryOffice countryOffice;
+    private CountryOffice countryOffice;    
+    private List<Store> localStores;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
@@ -64,23 +66,33 @@ public class ShoppingListManagedBean {
             }
         }   
         else {
+            listId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+            if (listId != null) {
+                System.out.println("list id is " + listId);
+                session.setAttribute("id", listId);
+            }
+            else {
+                listId = (Long) session.getAttribute("id");
+            }
             customer = mslbl.getCustomer(emailAddress);
-            shoppingLists = customer.getShoppingLists();
-            countryOffice = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
-            localStores = countryOffice.getStores();
         }
-    }
-    
-    public void newShoppingList() throws IOException {
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
-        Long storeId = Long.parseLong(request.getParameter("newShoppingList:storeId"));
-        String name = request.getParameter("newShoppingList:listName");
-        ShoppingList newList = mslbl.createShoppingList(emailAddress, storeId, name);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-        new FacesMessage(FacesMessage.SEVERITY_INFO, name + " has been sucessfully created", ""));
-        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
     }    
+
+    public Long getListId() {
+        return listId;
+    }
+
+    public void setListId(Long listId) {
+        this.listId = listId;
+    }
+
+    public ShoppingList getShoppingList() {
+        return shoppingList;
+    }
+
+    public void setShoppingList(ShoppingList shoppingList) {
+        this.shoppingList = shoppingList;
+    }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -90,20 +102,12 @@ public class ShoppingListManagedBean {
         this.emailAddress = emailAddress;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public List<ShoppingListDetail> getShoppingListDetails() {
+        return shoppingListDetails;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public List<ShoppingList> getShoppingLists() {
-        return shoppingLists;
-    }
-
-    public void setShoppingLists(List<ShoppingList> shoppingLists) {
-        this.shoppingLists = shoppingLists;
+    public void setShoppingListDetails(List<ShoppingListDetail> shoppingListDetails) {
+        this.shoppingListDetails = shoppingListDetails;
     }
 
     public String getCoDir() {
@@ -114,12 +118,12 @@ public class ShoppingListManagedBean {
         this.coDir = coDir;
     }
 
-    public ManageShoppingListBeanLocal getMslbl() {
-        return mslbl;
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
     }
 
-    public void setMslbl(ManageShoppingListBeanLocal mslbl) {
-        this.mslbl = mslbl;
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public List<Store> getLocalStores() {
@@ -130,20 +134,28 @@ public class ShoppingListManagedBean {
         this.localStores = localStores;
     }
 
-    public CountryOffice getCountryOffice() {
-        return countryOffice;
-    }
-
-    public void setCountryOffice(CountryOffice countryOffice) {
-        this.countryOffice = countryOffice;
-    }
-
     public ManageLocalizationBeanLocal getManageLocalizationBean() {
         return manageLocalizationBean;
     }
 
     public void setManageLocalizationBean(ManageLocalizationBeanLocal manageLocalizationBean) {
         this.manageLocalizationBean = manageLocalizationBean;
+    }
+
+    public ManageShoppingListBeanLocal getMslbl() {
+        return mslbl;
+    }
+
+    public void setMslbl(ManageShoppingListBeanLocal mslbl) {
+        this.mslbl = mslbl;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
     
 }

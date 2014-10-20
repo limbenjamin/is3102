@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<h:body>
+    <ui:composition template="../template.xhtml">
+        <ui:define name="content">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                          <li><a href="index.xhtml">Home</a></li>
+                          <li><a href="shoppinglist.xhtml">Shopping List</a></li>
+                          <li class="active"><strong></strong></li>
+                        </ol>                            
+                        <h3></h3><hr/>
+                    </div> 
+                    <div class="col-md-12">
+                    <div class="table-responsive list_info">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr class="list_menu">
+                                <td class="image">Item</td>
+                                <td class="description"></td>
+                                <td class="price">Price</td>
+                                <td class="quantity">Quantity</td>
+                                <td>Update</td>
+                                <td>Remove</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="list_product">
+                                    <a href=""><img src="assets/images/home/product3.jpg" alt="" /></a>
+                                </td>
+                                <td class="list_description">
+                                    <h4><a href="">Color block Scuba</a></h4>
+                                    <p>Web ID: 1089772</p>
+                                </td>
+                                <td class="list_price">
+                                    <p>$59</p>
+                                </td>
+                                <td class="list_quantity">
+                                    <input class="form-control list_quantity_input" type="number" name="quantity" value="1"/>
+                                </td>
+                                <td>
+                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
+                                    </h:commandButton>                                    
+                                    <i class="fa fa-lg fa-save icon-button"></i>
+                                </td>
+                                <td>
+                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
+                                    </h:commandButton>                                     
+                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="list_product">
+                                    <a href=""><img src="assets/images/home/product3.jpg" alt="" /></a>
+                                </td>
+                                <td class="list_description">
+                                    <h4><a href="">Color block Scuba</a></h4>
+                                    <p>Web ID: 1089772</p>
+                                </td>
+                                <td class="list_price">
+                                    <p>$59</p>
+                                </td>
+                                <td class="list_quantity">
+                                    <input class="form-control list_quantity_input" type="number" name="quantity" value="1"/>
+                                </td>
+                                <td>
+                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
+                                    </h:commandButton>                                    
+                                    <i class="fa fa-lg fa-save icon-button"></i>
+                                </td>
+                                <td>
+                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
+                                    </h:commandButton>                                     
+                                    <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                </td>
+                            </tr>                                
+                            </tbody>
+                        </table> 
+                    </div>
+                    <div class="sub-total pull-right">
+                        <h4><strong>Subtotal (2 items) :</strong> SGD $230.50</h4>
+                        <hr/>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
