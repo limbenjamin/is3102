@@ -115,11 +115,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         Double price = Double.parseDouble((String) jTable.getModel().getValueAt(row, 2));
                         String qty = String.valueOf(jTable.getModel().getValueAt(row, column));
                         Double total = (Integer.parseInt(qty)) * price;
-                        jTable.getModel().setValueAt(Math.round(total), row, 4);
+                        jTable.getModel().setValueAt(Math.round(total * 100.0) / 100.0, row, 4);
                         //TODO : print to 20x2 LCD
                         System.out.println(jTable.getModel().getValueAt(row, 1) + " x " + qty);
-                        System.out.println(Math.round(total));
-                        updateTotal(row);
+                        System.out.println(Math.round(total * 100.0) / 100.0);
+                        updateTotal(jTable.getModel().getRowCount());
                     }
                     changing = false;
                 }
@@ -402,7 +402,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     jTable.getModel().setValueAt("", i, 4);
                     //TODO : print to 20x2 LCD
                     System.out.println(jTable.getModel().getValueAt(pos, 1) + " x " + total_qty);
-                    System.out.println(Math.round(total));
+                    System.out.println(Math.round(total * 100.0) / 100.0);
                 }catch(Exception e){
                 
                 }
