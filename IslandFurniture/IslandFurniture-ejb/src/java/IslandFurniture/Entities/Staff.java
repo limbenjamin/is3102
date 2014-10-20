@@ -31,7 +31,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -73,7 +72,7 @@ public class Staff implements Serializable {
     private List<Role> roles;
     @OneToOne(cascade={CascadeType.ALL})
     private Preference preference;
-    @OneToMany(cascade={CascadeType.ALL})
+    @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL})
     private List<Notification> notifications;
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
     private List<Announcement> announcements;

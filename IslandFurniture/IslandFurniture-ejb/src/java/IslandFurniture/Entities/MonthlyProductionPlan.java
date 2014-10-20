@@ -51,7 +51,6 @@ public class MonthlyProductionPlan implements Serializable {
     private Integer year;
 
     @OneToMany(mappedBy = "monthlyProductionPlan", cascade = {CascadeType.ALL})
-
     private List<WeeklyProductionPlan> weeklyProductionPlans = new ArrayList<WeeklyProductionPlan>();
 
     private Integer QTY;

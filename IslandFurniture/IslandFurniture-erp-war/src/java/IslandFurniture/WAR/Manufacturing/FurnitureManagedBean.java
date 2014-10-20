@@ -116,13 +116,7 @@ public class FurnitureManagedBean implements Serializable {
         }
         return "furniture";
     }
-    public String addFurnitureColour(ActionEvent event) throws IOException {
-        System.out.println("FurnitureManagedBean.addFurnitureColour()");
-//        Long id = (Long) event.getComponent().getAttributes().get("addColour");
-//        System.out.println("Furniture ID is " + id);
-        stockManager.addFurnitureColour(Long.parseLong("46"), "000");
-        return "furniture";
-    }
+
     public void bomActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", event.getComponent().getAttributes().get("fID"));
         furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");

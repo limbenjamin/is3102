@@ -29,6 +29,7 @@ public class IngredientInventory implements Serializable {
     private Ingredient ingredient;
 
     private Integer qty;
+    private Integer threshold;
 
     public Store getStore() {
         return store;
@@ -52,6 +53,14 @@ public class IngredientInventory implements Serializable {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
     }
 
     @Override

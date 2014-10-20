@@ -278,33 +278,6 @@ public class StockManager implements StockManagerLocal {
         }
     }
     @Override
-    public void addFurnitureColour(Long furnitureID, String colour) {
-        FurnitureModel fm;
-        List colourList;
-        try {
-            System.out.println("StockManager.addFurnitureColour()");
-            fm = em.find(FurnitureModel.class, furnitureID);
-            System.out.println("Adding new furniture colour of " + fm.getName());
-            if(colour != null) {
-                System.out.println("Adding " + colour + " to colour option");
-                colourList = fm.getColour();
-                if(colourList != null) {
-                    colourList.add(colour);
-                    fm.setColour(colourList);
-                    em.persist(fm);
-                } else {
-                    System.out.println("colourList is null");
-                    colourList = new ArrayList<String>();
-                    colourList.add(colour);
-                    fm.setColour(colourList);
-                    em.persist(fm);
-                }
-            }
-        } catch(NoResultException ex) {
-            System.err.println("Can't find name");
-        }
-    }
-    @Override
     public String addToBOM(Long furnitureID, Long materialID, Integer materialQuantity) {
         Material material;
         FurnitureModel fm;

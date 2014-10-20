@@ -92,7 +92,7 @@ public class WeeklyMenuItemSalesForecast implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.WeeklyMenuItemSalesForecast[ id=" + id + " ]";
+        return "WeeklyMenuItemSalesForecast[ id=" + id + " ]";
     }
     
 }

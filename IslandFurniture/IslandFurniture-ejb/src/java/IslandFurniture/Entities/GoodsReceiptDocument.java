@@ -116,7 +116,7 @@ public class GoodsReceiptDocument extends Document implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.MANUFACTURING.GoodsReceiptDocument[ id=" + id + " ]";
+        return "GoodsReceiptDocument[ id=" + id + " ]";
     }
 
 }
