@@ -62,7 +62,9 @@
                                     <ui:repeat value="#{shoppingListManagedBean.shoppingLists}" var="list">
                                     <tr>
                                         <td>
-                                            <a href="#"><i class="fa fa-search-plus"></i> #{list.name}</a>
+                                            <a href="shoppinglistdetail.xhtml?id=#{list.id}">
+                                                <i class="fa fa-search-plus"></i> #{list.name}
+                                            </a>
                                         </td>
                                         <td>#{list.store.name}</td>
                                         <td style="text-align:center;">$#{list.totalPrice}</td>

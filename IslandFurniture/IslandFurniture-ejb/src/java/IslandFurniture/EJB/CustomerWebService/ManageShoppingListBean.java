@@ -34,6 +34,11 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     private Customer customer;
     
     @Override
+    public ShoppingList getShoppingList(Long id) {
+        return (ShoppingList) em.find(ShoppingList.class, id);
+    }    
+    
+    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);

@@ -18,6 +18,8 @@ import java.util.List;
  * @author Zee
  */
 public interface ManageShoppingListBeanLocal {
+    
+    ShoppingList getShoppingList(Long id);
 
     ShoppingList createShoppingList(String emailAddress, Long storeId, String name);
 
