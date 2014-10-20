@@ -41,15 +41,17 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private Boolean changing = false;
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
+    private Double totalRegisterCash;
 
     public ScanItemsUI() {
         initComponents();
     }
 
-    public ScanItemsUI(String staffJSON, String listJSON) throws IOException, ParseException {
+    public ScanItemsUI(String staffJSON, String listJSON, Double totalRegisterCash) throws IOException, ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
+        this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -136,7 +138,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         welcomeLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
-        logoutButton = new javax.swing.JButton();
+        reconcileButton = new javax.swing.JButton();
         totalLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
@@ -182,11 +184,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
             jTable.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+        reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setText("Reconcile");
+        reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+                reconcileButtonActionPerformed(evt);
             }
         });
 
@@ -219,10 +221,10 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 402, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
                         .addComponent(resetButton)
                         .addGap(18, 18, 18)
-                        .addComponent(logoutButton))
+                        .addComponent(reconcileButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(totalLabel)
@@ -236,7 +238,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(logoutButton)
+                        .addComponent(reconcileButton)
                         .addComponent(resetButton))
                     .addComponent(welcomeLabel))
                 .addGap(18, 18, 18)
@@ -268,11 +270,17 @@ public class ScanItemsUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
-        loginUI.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        try {
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            store.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         int row = jTable.getRowCount();
@@ -307,7 +315,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         System.err.println(transaction);
         CheckoutUI checkoutUI;
         try {
-            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction);
+            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash);
             checkoutUI.setVisible(true);
             this.setVisible(false);
         } catch (ParseException ex) {
@@ -407,8 +415,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JButton nextButton;
+    private javax.swing.JButton reconcileButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JLabel totalLabel;
     private javax.swing.JLabel welcomeLabel;

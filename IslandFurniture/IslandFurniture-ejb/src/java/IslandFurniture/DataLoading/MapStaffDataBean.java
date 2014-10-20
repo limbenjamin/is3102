@@ -104,7 +104,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
         
         //add extra sales manager role to evelyn.
         msal.addRoleToStaffByUsername("evelyn", "Sales Manager (CO)");
-        
+        msal.addRoleToStaffByUsername("leonard", "Cashier Supervisor (Store)");
         //add all roles to rose (SUPER USER) except for IT (Store) and General Staff which has been added above.;
        String[] allRoles = new String [] {
         "Cust. Service (Store)","Kitchen (Store)","Warehouse (Store)","Management (Store)",

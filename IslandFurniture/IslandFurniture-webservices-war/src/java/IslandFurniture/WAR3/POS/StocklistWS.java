@@ -283,7 +283,9 @@ public class StocklistWS {
                     mpl.useVoucher(v.trim());
                 }
             }
-            mpl.linkReceipt(receipt, ft);
+            if (!receipt.isEmpty()){
+                mpl.linkReceipt(receipt, ft);
+            }
             //mmb.expand_promotion(null, null); TODO
         }
         return "1";

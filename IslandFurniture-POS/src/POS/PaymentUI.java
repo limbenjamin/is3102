@@ -43,6 +43,8 @@ public class PaymentUI extends javax.swing.JFrame {
     private String staffname;
     private String plantname;
     private String customerCardId;
+    private Double totalPayable;
+    private Double totalRegisterCash;
     
     /**
      * Creates new form PaymentUI
@@ -51,7 +53,7 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, String customerCardId, Double grandTotal) throws ParseException {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, String customerCardId, Double grandTotal, Double totalRegisterCash) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
@@ -60,6 +62,7 @@ public class PaymentUI extends javax.swing.JFrame {
         this.grandTotalAmt = grandTotal;
         this.oriTotal = grandTotal;
         this.customerCardId = customerCardId;
+        this.totalRegisterCash = totalRegisterCash;
         grandTotalLabel.setText("Grand Total : "+ grandTotal);
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
@@ -67,7 +70,7 @@ public class PaymentUI extends javax.swing.JFrame {
         cashButton.setEnabled(Boolean.FALSE);
         creditCardButton.setEnabled(Boolean.FALSE);
         payButton.setEnabled(Boolean.FALSE);
-        logoutButton.setEnabled(false);
+        reconcileButton.setEnabled(false);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         staffname = (String) jsonObject.get("name");
@@ -104,7 +107,7 @@ public class PaymentUI extends javax.swing.JFrame {
         receiptCredit = new javax.swing.JLabel();
         doneButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
-        logoutButton = new javax.swing.JButton();
+        reconcileButton = new javax.swing.JButton();
         finishButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -202,11 +205,11 @@ public class PaymentUI extends javax.swing.JFrame {
             }
         });
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+        reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setText("Reconcile");
+        reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+                reconcileButtonActionPerformed(evt);
             }
         });
 
@@ -230,7 +233,7 @@ public class PaymentUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backButton)
                         .addGap(18, 18, 18)
-                        .addComponent(logoutButton))
+                        .addComponent(reconcileButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(payableLabel)
@@ -279,7 +282,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(welcomeLabel)
-                    .addComponent(logoutButton)
+                    .addComponent(reconcileButton)
                     .addComponent(backButton))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -336,7 +339,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -346,11 +349,17 @@ public class PaymentUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_backButtonActionPerformed
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
-        loginUI.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        try {
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            store.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
         verifyVoucherButton.setEnabled(Boolean.FALSE);
@@ -473,7 +482,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -524,6 +533,7 @@ public class PaymentUI extends javax.swing.JFrame {
         payableAmt = 0.0;
         grandTotalAmt = oriTotal; 
         payableAmt = grandTotalAmt - voucherAmt - receiptAmt;
+        totalPayable = payableAmt;
         //voucher and reciept overshot total
         if (grandTotalAmt < voucherAmt+receiptAmt){
             changeAmt = 0.0;
@@ -547,6 +557,9 @@ public class PaymentUI extends javax.swing.JFrame {
         changeDueLabel.setText("Change Due: "+Math.round(changeAmt * 100.0) / 100.0);
         payableLabel.setText("Total Payable: "+Math.round(payableAmt * 100.0) / 100.0);
         if (payableAmt == 0.0){
+            if (cashButton.isSelected() == true){
+                totalRegisterCash += totalPayable;
+            }
             finishButton.setEnabled(Boolean.TRUE);
             cashCreditField.setEnabled(Boolean.FALSE);
             payButton.setEnabled(Boolean.FALSE);
@@ -570,10 +583,10 @@ public class PaymentUI extends javax.swing.JFrame {
     private javax.swing.JButton finishButton;
     private javax.swing.JLabel grandTotalLabel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JButton payButton;
     private javax.swing.JLabel payableLabel;
     private javax.swing.JLabel receiptCredit;
+    private javax.swing.JButton reconcileButton;
     private javax.swing.JTextField returnReceiptField;
     private javax.swing.JLabel returnReceiptLabel;
     private javax.swing.JButton verifyVoucherButton;

@@ -36,6 +36,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private Boolean isChecking = false;
     private String customerName;
     private Double grandTotal;
+    private Double totalRegisterCash;
     
     /**
      * Creates new form CheckoutUI
@@ -44,11 +45,12 @@ public class CheckoutUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction) throws ParseException {
+    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction, Double totalRegisterCash) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.transaction = transaction;
+        this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -58,7 +60,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         payButton.setVisible(Boolean.FALSE);
-        logoutButton.setEnabled(Boolean.FALSE);
+        reconcileButton.setEnabled(Boolean.FALSE);
         for (int i=0;i<transaction.size();i++){
             ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
             jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
@@ -79,7 +81,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        logoutButton = new javax.swing.JButton();
+        reconcileButton = new javax.swing.JButton();
         welcomeLabel = new javax.swing.JLabel();
         memberLabel = new javax.swing.JLabel();
         readCardButton = new javax.swing.JButton();
@@ -95,11 +97,11 @@ public class CheckoutUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        logoutButton.setText("Logout");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+        reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setText("Reconcile");
+        reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+                reconcileButtonActionPerformed(evt);
             }
         });
 
@@ -199,10 +201,10 @@ public class CheckoutUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(welcomeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                                 .addComponent(backButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(logoutButton))
+                                .addComponent(reconcileButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(memberLabel)
                                 .addGap(18, 18, 18)
@@ -227,7 +229,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(logoutButton)
+                    .addComponent(reconcileButton)
                     .addComponent(welcomeLabel)
                     .addComponent(backButton))
                 .addGap(18, 18, 18)
@@ -267,11 +269,17 @@ public class CheckoutUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
-        loginUI.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        try {
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            store.setVisible(true);
+            this.setVisible(false);
+        } catch (IOException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void readCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readCardButtonActionPerformed
         try {
@@ -309,7 +317,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -382,7 +390,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         PaymentUI payment = null;
         try {
-            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal);
+            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash);
         } catch (ParseException ex) {
             Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -459,10 +467,10 @@ public class CheckoutUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private javax.swing.JButton logoutButton;
     private javax.swing.JLabel memberLabel;
     private javax.swing.JButton payButton;
     private javax.swing.JButton readCardButton;
+    private javax.swing.JButton reconcileButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

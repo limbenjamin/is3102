@@ -319,7 +319,7 @@ public class LoginUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void SelectScreen(String result) throws IOException, ParseException{
-        SelectStoreUI store = new SelectStoreUI(this, result);
+        SelectStoreUI store = new SelectStoreUI(result, 0.0);
         store.setVisible(true);
         this.setVisible(false);
     }
