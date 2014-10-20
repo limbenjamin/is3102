@@ -5,8 +5,11 @@
  */
 package POS;
 
+import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.SerialPort;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -44,6 +47,13 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private Double totalRegisterCash;
     private String currencyCode;
     
+    
+    private OutputStream partnerPoleDisplayOutputStream;
+    SerialPort serialPort;
+    byte[] clear = {0x0C};
+    byte[] newLine = {0x0A};
+    byte[] carriageReturn = {0x0D};
+    
     public ScanItemsUI() {
         initComponents();
     }
@@ -66,6 +76,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.changeSelection(0, 0, false, false);
         jTable.editCellAt(0, 0);
         jTable.getEditorComponent().requestFocusInWindow();
+        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (changing.equals(false)) {
@@ -99,6 +110,18 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                     //TODO : print to 20x2 LCD
                                     System.out.println(jsonObject.get("name") + " x 1");
                                     System.out.println(jsonObject.get("price"));
+                                    try
+                                    {
+                                        partnerPoleDisplayOutputStream.write(clear);
+                                        String s = (String) jsonObject.get("name");
+                                        partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        partnerPoleDisplayOutputStream.write(newLine);
+                                        partnerPoleDisplayOutputStream.write(carriageReturn);
+                                        s = (String) jsonObject.get("price");
+                                        partnerPoleDisplayOutputStream.write(s.getBytes());
+                                    }catch(Exception ex){
+                                        System.err.println("Unable to write to Partner Pole Display");
+                                    }
                                 }
                         }
                         Boolean res = consolidate(row);
@@ -274,6 +297,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
             store.setVisible(true);
@@ -316,6 +342,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 }
         }
         System.err.println(transaction);
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         CheckoutUI checkoutUI;
         try {
             checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash);

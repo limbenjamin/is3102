@@ -6,9 +6,15 @@
 package POS;
 
 import Helper.Connector;
+import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -16,6 +22,7 @@ import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,6 +45,12 @@ public class CheckoutUI extends javax.swing.JFrame {
     private Double grandTotal;
     private Double totalRegisterCash;
     private String currencyCode;
+    
+    private OutputStream partnerPoleDisplayOutputStream;
+    SerialPort serialPort;
+    byte[] clear = {0x0C};
+    byte[] newLine = {0x0A};
+    byte[] carriageReturn = {0x0D};
     
     /**
      * Creates new form CheckoutUI
@@ -72,6 +85,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
             jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
         }
+        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
     }
 
     /**
@@ -273,6 +287,9 @@ public class CheckoutUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
             store.setVisible(true);
@@ -303,6 +320,17 @@ public class CheckoutUI extends javax.swing.JFrame {
                                 customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
                                 readCardButton.setVisible(Boolean.FALSE);
                                 memberLabel.setText("Member: " + customerCardId);
+                                try{
+                                    partnerPoleDisplayOutputStream.write(clear);
+                                    partnerPoleDisplayOutputStream.write(new String("Member Id:").getBytes());
+                                    partnerPoleDisplayOutputStream.write(newLine);
+                                    partnerPoleDisplayOutputStream.write(carriageReturn);
+                                    String s = customerCardId;
+                                    partnerPoleDisplayOutputStream.write(s.getBytes());
+                                } catch (Exception ex) {
+                                    System.err.println("Unable to write to Partner Pole Display");
+                                }
+                                
                             }
                         }
                     } catch (CardException ex) {
@@ -319,6 +347,9 @@ public class CheckoutUI extends javax.swing.JFrame {
     }//GEN-LAST:event_readCardButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
             scanItem.setVisible(true);
@@ -388,10 +419,14 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
         updateTotal();
         payButton.setVisible(Boolean.TRUE);
+        
     }//GEN-LAST:event_calculateButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         PaymentUI payment = null;
+        if(serialPort != null){
+            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        }
         try {
             payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash);
         } catch (ParseException ex) {
@@ -459,6 +494,17 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
         grandTotalLabel.setText("Grand Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
         grandTotal = Math.round(total * 100.0) / 100.0;
+        try
+        {
+            partnerPoleDisplayOutputStream.write(clear);
+            partnerPoleDisplayOutputStream.write(new String("Grand Total").getBytes());
+            partnerPoleDisplayOutputStream.write(newLine);
+            partnerPoleDisplayOutputStream.write(carriageReturn);
+            String s = currencyCode+" "+ Math.round(total * 100.0) / 100.0;
+            partnerPoleDisplayOutputStream.write(s.getBytes());
+        }catch(Exception ex){
+            System.err.println("Unable to write to Partner Pole Display");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
