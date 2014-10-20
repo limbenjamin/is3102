@@ -39,15 +39,17 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         query.setParameter("emailAddress", emailAddress);
         return (Customer) query.getSingleResult();
     }
-    
+
     @Override
-    public ShoppingList createShoppingList(String emailAddress, Store store, String name) {
+    public ShoppingList createShoppingList(String emailAddress, Long storeId, String name) {
         Customer customer = getCustomer(emailAddress);
         List<Customer> newList = new ArrayList();
         newList.add(customer);        
+        Store store = (Store) em.find(Store.class, storeId);
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setStore(store);
         shoppingList.setName(name);
+        shoppingList.setTotalPrice(0.00);
         shoppingList.setCustomers(newList);
         em.persist(shoppingList);
         return shoppingList;
