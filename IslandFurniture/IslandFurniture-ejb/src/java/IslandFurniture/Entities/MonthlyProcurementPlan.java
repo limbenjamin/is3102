@@ -28,6 +28,7 @@ public class MonthlyProcurementPlan implements Serializable {
     @Id
     private Integer year;
     @Id
+    @ManyToOne
     private RetailItem retailItem;
     @Id
     @ManyToOne

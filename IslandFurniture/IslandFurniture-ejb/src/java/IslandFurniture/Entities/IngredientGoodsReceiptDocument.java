@@ -6,11 +6,14 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -21,8 +24,15 @@ public class IngredientGoodsReceiptDocument extends Document implements Serializ
 
     private static final long serialVersionUID = 1L;
 
+    @Temporal(TemporalType.DATE)
+    private Calendar postingDate;
+    @Temporal(TemporalType.DATE)
+    private Calendar receiptDate;
+    private String deliveryNote;
+    private Boolean posted;
+
     @ManyToOne
-    private IngredientSupplier supplier;
+    private Store store;
 
     @OneToMany(mappedBy = "ingredGoodsReceiptDocument")
     private List<IngredientGoodsReceiptDocumentDetail> ingredGoodsReceiptDocumentDetails;
@@ -30,12 +40,44 @@ public class IngredientGoodsReceiptDocument extends Document implements Serializ
     @OneToOne(mappedBy = "ingredGoodsReceiptDoc")
     private IngredientPurchaseOrder ingredientPurchaseOrder;
 
-    public IngredientSupplier getSupplier() {
-        return supplier;
+    public Calendar getPostingDate() {
+        return postingDate;
     }
 
-    public void setSupplier(IngredientSupplier supplier) {
-        this.supplier = supplier;
+    public void setPostingDate(Calendar postingDate) {
+        this.postingDate = postingDate;
+    }
+
+    public Calendar getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Calendar receiptDate) {
+        this.receiptDate = receiptDate;
+    }
+
+    public String getDeliveryNote() {
+        return deliveryNote;
+    }
+
+    public void setDeliveryNote(String deliveryNote) {
+        this.deliveryNote = deliveryNote;
+    }
+
+    public Boolean isPosted() {
+        return posted;
+    }
+
+    public void setPosted(Boolean posted) {
+        this.posted = posted;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     public List<IngredientGoodsReceiptDocumentDetail> getIngredGoodsReceiptDocumentDetails() {

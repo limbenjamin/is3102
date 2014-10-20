@@ -38,7 +38,6 @@ public class FurnitureModel extends Stock implements Serializable {
     @OneToMany(mappedBy = "furnitureModel", cascade = {CascadeType.PERSIST})
     private List<ProductionCapacity> productionCapacity;
     private Double price;
-    private List colour;
     private Long pointsWorth;
     
     // Attributes for the website
@@ -84,14 +83,6 @@ public class FurnitureModel extends Stock implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public List getColour() {
-        return colour;
-    }
-
-    public void setColour(List colour) {
-        this.colour = colour;
     }
 
     public Long getPointsWorth() {

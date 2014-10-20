@@ -499,7 +499,6 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
             em.persist(mssr);
 
             co.getMonthlyStockSupplyReqs().add(mssr);
-            stock.getMonthlyStockSupplyReqs().add(mssr);
         }
 
         return mssr;

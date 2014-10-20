@@ -5,6 +5,7 @@
  */
 package IslandFurniture.Entities;
 
+import IslandFurniture.Enums.MmsfStatus;
 import IslandFurniture.Enums.Month;
 import java.io.Serializable;
 import java.util.List;
@@ -34,6 +35,11 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     @Id
     @ManyToOne
     private MenuItem menuItem;
+
+    private int qtyForecasted = 0;
+    private int qtySold = 0;
+    private MmsfStatus status;
+    private boolean endMthUpdated = false;
 
     @OneToMany(mappedBy = "mmsf")
     private List<WeeklyMenuItemSalesForecast> wmsfList;
@@ -68,6 +74,38 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
 
     public void setMenuItem(MenuItem menuItem) {
         this.menuItem = menuItem;
+    }
+
+    public int getQtyForecasted() {
+        return qtyForecasted;
+    }
+
+    public void setQtyForecasted(int qtyForecasted) {
+        this.qtyForecasted = qtyForecasted;
+    }
+
+    public int getQtySold() {
+        return qtySold;
+    }
+
+    public void setQtySold(int qtySold) {
+        this.qtySold = qtySold;
+    }
+
+    public MmsfStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MmsfStatus status) {
+        this.status = status;
+    }
+
+    public boolean isEndMthUpdated() {
+        return endMthUpdated;
+    }
+
+    public void setEndMthUpdated(boolean endMthUpdated) {
+        this.endMthUpdated = endMthUpdated;
     }
 
     public List<WeeklyMenuItemSalesForecast> getWmsfList() {

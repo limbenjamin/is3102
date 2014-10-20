@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -28,18 +27,9 @@ import javax.persistence.OneToMany;
 public abstract class ProcuredStock extends Stock implements Serializable {
 
     protected static final long serialVersionUID = 1L;
-    @ManyToMany
-    protected List<ProcuredStockSupplier> suppliers;
+
     @OneToMany(mappedBy = "procuredStock")
     protected List<ProcuredStockContractDetail> procuredStockContractDetails;
-
-    public List<ProcuredStockSupplier> getSuppliers() {
-        return suppliers;
-    }
-
-    public void setSuppliers(List<ProcuredStockSupplier> suppliers) {
-        this.suppliers = suppliers;
-    }
 
     public List<ProcuredStockContractDetail> getProcuredStockContractDetails() {
         return procuredStockContractDetails;

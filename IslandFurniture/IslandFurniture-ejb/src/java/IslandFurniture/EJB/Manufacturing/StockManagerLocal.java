@@ -55,8 +55,6 @@ public interface StockManagerLocal {
 
     public String deleteBOMDetail(Long BOMDetailID);
 
-    public void addFurnitureColour(Long furnitureID, String colour);
-
     public String editFurnitureCategory(Long furnitureID, FurnitureCategory category);
 
     public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category);

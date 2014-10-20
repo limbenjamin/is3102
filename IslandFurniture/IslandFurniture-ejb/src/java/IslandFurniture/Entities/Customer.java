@@ -42,6 +42,8 @@ public class Customer implements Serializable {
     private Boolean active;
     private String forgottenPasswordCode;
     private String loyaltyCardId;
+    private Integer currentPoints;
+    private Integer cumulativePoints;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne
@@ -55,6 +57,22 @@ public class Customer implements Serializable {
     @OneToMany(mappedBy = "customer")
     private List<Redemption> redemptions;
 
+    public Integer getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(Integer currentPoints) {
+        this.currentPoints = currentPoints;
+    }
+
+    public Integer getCumulativePoints() {
+        return cumulativePoints;
+    }
+
+    public void setCumulativePoints(Integer cumulativePoints) {
+        this.cumulativePoints = cumulativePoints;
+    }
+    
     public CustomerSegment getCustomerSegment() {
         return customerSegment;
     }

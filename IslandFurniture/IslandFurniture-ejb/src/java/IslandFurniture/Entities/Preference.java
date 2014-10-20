@@ -7,7 +7,6 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +25,7 @@ public class Preference implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String settings;
     @OneToOne(mappedBy="preference")
     private Staff staff;
 
@@ -35,6 +35,14 @@ public class Preference implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSettings() {
+        return settings;
+    }
+
+    public void setSettings(String settings) {
+        this.settings = settings;
     }
 
     public Staff getStaff() {
