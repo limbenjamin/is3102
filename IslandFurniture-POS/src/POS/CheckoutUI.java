@@ -37,6 +37,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private String customerName;
     private Double grandTotal;
     private Double totalRegisterCash;
+    private String currencyCode;
     
     /**
      * Creates new form CheckoutUI
@@ -55,6 +56,8 @@ public class CheckoutUI extends javax.swing.JFrame {
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
+        currencyCode = (String) jsonObject.get("symbol");
+        grandTotalLabel.setText("Grand Total: " +currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
         System.err.println(listJSON);
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
@@ -454,7 +457,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                 
             }
         }
-        grandTotalLabel.setText("Grand Total: " + Math.round(total * 100.0) / 100.0);
+        grandTotalLabel.setText("Grand Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
         grandTotal = Math.round(total * 100.0) / 100.0;
     }
 

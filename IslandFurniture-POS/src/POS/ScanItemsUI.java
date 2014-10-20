@@ -42,7 +42,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
     private Double totalRegisterCash;
-
+    private String currencyCode;
+    
     public ScanItemsUI() {
         initComponents();
     }
@@ -57,6 +58,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
         cardId = (String) jsonObject.get("cardId");
+        currencyCode = (String) jsonObject.get("symbol");
+        totalLabel.setText("Total: " +currencyCode+" 0");
         System.err.println(listJSON);
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
@@ -372,7 +375,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 
             }
         }
-        totalLabel.setText("Total: " + Math.round(total * 100.0) / 100.0);
+        totalLabel.setText("Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
     }
     
     public Boolean consolidate(int numrows){

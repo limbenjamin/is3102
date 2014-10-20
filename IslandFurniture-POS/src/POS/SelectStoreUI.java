@@ -37,6 +37,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private Double totalRegisterCash;
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
+    private String currencyCode;
     /**
      * Creates new form SelectStore
      */
@@ -52,12 +53,14 @@ public class SelectStoreUI extends javax.swing.JFrame {
         this.totalRegisterCash = totalRegisterCash;
         confirmButton.setEnabled(Boolean.FALSE);
         newBalanceField.setEnabled(Boolean.FALSE);
-        cashBalanceLabel.setText("Cash Balance : " + totalRegisterCash);
+        
         logoutButton.setEnabled(Boolean.FALSE);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
         String plant = (String) jsonObject.get("plant");
+        currencyCode = (String) jsonObject.get("symbol");
+        cashBalanceLabel.setText("Cash Balance : " +currencyCode +" "+ totalRegisterCash);
         cardId = (String) jsonObject.get("cardId");
         welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
     }
@@ -357,7 +360,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         totalRegisterCash = Double.parseDouble(newBalanceField.getText());
-        cashBalanceLabel.setText("Cash Balance : " + totalRegisterCash);
+        cashBalanceLabel.setText("Cash Balance : " +currencyCode + " "+ totalRegisterCash);
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     /**

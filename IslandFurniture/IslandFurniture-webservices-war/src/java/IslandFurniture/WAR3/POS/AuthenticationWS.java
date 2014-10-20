@@ -52,7 +52,7 @@ public class AuthenticationWS {
         System.err.println(password);
         if(mabl.authenticate(username, password)){
             Staff staff = muabl.getStaff(username);
-            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName()).add("symbol", staff.getPlant().getCountry().getCurrency().getCurrencyCode())
                     .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
             return object.toString();
         }
@@ -67,7 +67,7 @@ public class AuthenticationWS {
         if (staff == null){
             return "Error";
         }else{
-            JsonObject object = Json.createObjectBuilder().add("name", staff.getName())
+            JsonObject object = Json.createObjectBuilder().add("name", staff.getName()).add("symbol", staff.getPlant().getCountry().getCurrency().getCurrencyCode())
                     .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
             return object.toString();
         }

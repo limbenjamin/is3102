@@ -45,6 +45,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private String customerCardId;
     private Double totalPayable;
     private Double totalRegisterCash;
+    private String currencyCode;
     
     /**
      * Creates new form PaymentUI
@@ -63,7 +64,6 @@ public class PaymentUI extends javax.swing.JFrame {
         this.oriTotal = grandTotal;
         this.customerCardId = customerCardId;
         this.totalRegisterCash = totalRegisterCash;
-        grandTotalLabel.setText("Grand Total : "+ grandTotal);
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
         cashButton.setSelected(Boolean.TRUE);
@@ -75,6 +75,12 @@ public class PaymentUI extends javax.swing.JFrame {
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         staffname = (String) jsonObject.get("name");
         plantname = (String) jsonObject.get("plant");
+        currencyCode = (String) jsonObject.get("symbol");
+        grandTotalLabel.setText("Grand Total : "+currencyCode+" "+ grandTotal);
+        voucherCredit.setText("Credit : "+currencyCode+" 0");
+        receiptCredit.setText("Credit : "+currencyCode+" 0");
+        changeDueLabel.setText("Change Due: "+currencyCode+" 0");
+        payableLabel.setText("Total Payable: "+currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
         welcomeLabel.setText("Welcome " + staffname + " of " + plantname + " store!");
     }
@@ -444,7 +450,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(new JFrame(), "Unable to apply voucher", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
                 voucherAmt += Double.parseDouble(value);
-                voucherCredit.setText("Credit : "+voucherAmt);
+                voucherCredit.setText("Credit : "+currencyCode+" "+voucherAmt);
                 voucherList.add(voucherField.getText());
                 voucherField.setText("");
             }
@@ -471,7 +477,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(new JFrame(), "Unable to apply receipt", "Error", JOptionPane.ERROR_MESSAGE);
             }else{
                 receiptAmt += Double.parseDouble(value);
-                receiptCredit.setText("Credit : "+receiptAmt);
+                receiptCredit.setText("Credit : "+currencyCode+" "+receiptAmt);
                 returnReceiptField.setEnabled(Boolean.FALSE);
                 addButton.setEnabled(Boolean.FALSE);
             }
@@ -553,9 +559,9 @@ public class PaymentUI extends javax.swing.JFrame {
                 payableAmt = 0.0;
             }
         }
-        grandTotalLabel.setText("Grand Total: "+grandTotalAmt);
-        changeDueLabel.setText("Change Due: "+Math.round(changeAmt * 100.0) / 100.0);
-        payableLabel.setText("Total Payable: "+Math.round(payableAmt * 100.0) / 100.0);
+        grandTotalLabel.setText("Grand Total: "+currencyCode+" "+grandTotalAmt);
+        changeDueLabel.setText("Change Due: "+currencyCode+" "+Math.round(changeAmt * 100.0) / 100.0);
+        payableLabel.setText("Total Payable: "+currencyCode+" "+Math.round(payableAmt * 100.0) / 100.0);
         if (payableAmt == 0.0){
             if (cashButton.isSelected() == true){
                 totalRegisterCash += totalPayable;
