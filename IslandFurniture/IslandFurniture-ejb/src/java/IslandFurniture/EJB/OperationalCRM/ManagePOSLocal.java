@@ -8,7 +8,10 @@ package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Transaction;
 import javax.ejb.Local;
 
 /**
@@ -24,12 +27,16 @@ public interface ManagePOSLocal {
     
     void useVoucher(String voucherId);
     
-    void linkReceipt(String receipt,FurnitureTransaction ft);
+    void linkReceipt(String id,Transaction t);
     
     Stock getStock(Long id);
     
     void persistFTD(FurnitureTransactionDetail ftd);
     
     void persistFT(FurnitureTransaction ft);
+    
+    void persistRTD(RetailItemTransactionDetail rtd);
+    
+    void persistRT(RetailItemTransaction rt);
     
 }
