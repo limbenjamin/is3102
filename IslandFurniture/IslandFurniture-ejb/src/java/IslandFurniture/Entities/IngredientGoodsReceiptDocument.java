@@ -6,11 +6,14 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -20,6 +23,9 @@ import javax.persistence.OneToOne;
 public class IngredientGoodsReceiptDocument extends Document implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @Temporal(TemporalType.DATE)
+    private Calendar receiptDate;
+    private Boolean posted;
 
     @ManyToOne
     private IngredientSupplier supplier;
@@ -29,6 +35,22 @@ public class IngredientGoodsReceiptDocument extends Document implements Serializ
 
     @OneToOne(mappedBy = "ingredGoodsReceiptDoc")
     private IngredientPurchaseOrder ingredientPurchaseOrder;
+
+    public Boolean isPosted() {
+        return posted;
+    }
+
+    public void setPosted(Boolean posted) {
+        this.posted = posted;
+    }
+    
+    public Calendar getReceiptDate() {
+        return receiptDate;
+    }
+
+    public void setReceiptDate(Calendar receiptDate) {
+        this.receiptDate = receiptDate;
+    }
 
     public IngredientSupplier getSupplier() {
         return supplier;
