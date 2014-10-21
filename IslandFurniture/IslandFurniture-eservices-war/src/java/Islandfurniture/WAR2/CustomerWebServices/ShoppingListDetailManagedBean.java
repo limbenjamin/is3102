@@ -91,7 +91,7 @@ public class ShoppingListDetailManagedBean {
         Iterator<ShoppingListDetail> iterator = shoppingListDetails.iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
-            subtotal = subtotal + current.getFurnitureModel().getPrice();
+            subtotal = subtotal + current.getFurnitureModel().getPrice() * current.getQty();
         }        
         return subtotal;
     }

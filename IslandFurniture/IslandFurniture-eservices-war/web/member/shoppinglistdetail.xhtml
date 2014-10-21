@@ -43,10 +43,10 @@
                                         <p>category: #{detail.furnitureModel.category}</p>
                                     </td>
                                     <td class="list_price">
-                                        <p>#{detail.furnitureModel.price}</p>
+                                        <p>$#{detail.furnitureModel.price}</p>
                                     </td>
                                     <td class="list_quantity">
-                                        <input class="form-control list_quantity_input" type="number" name="quantity" value="1"/>
+                                        <h:inputText id="quantity" value="#{detail.qty}" class="form-control list_quantity_input" p:required="true" p:type="number" p:min="1"></h:inputText>
                                     </td>
                                     <td>
                                         <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -64,8 +64,7 @@
                         </table> 
                     </div>
                     <div class="sub-total pull-right">
-                        <h4><strong>Subtotal (#{shoppingListDetailManagedBean.shoppingListDetails.size()} items) :</strong> 
-                            $#{shoppingListDetailManagedBean.subtotal}</h4>    
+                        <h4><strong>Shopping List Subtotal:</strong> $#{shoppingListDetailManagedBean.subtotal}</h4>    
                         <hr/>
                     </div>
                     </div>
