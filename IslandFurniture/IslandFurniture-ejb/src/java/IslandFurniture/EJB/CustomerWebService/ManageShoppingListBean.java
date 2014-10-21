@@ -34,20 +34,29 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     private Customer customer;
     
     @Override
+    public ShoppingList getShoppingList(Long id) {
+        return (ShoppingList) em.find(ShoppingList.class, id);
+    }    
+    
+    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);
         return (Customer) query.getSingleResult();
     }
-    
+
     @Override
-    public ShoppingList createShoppingList(String emailAddress, Store store, String name) {
+    public ShoppingList createShoppingList(String emailAddress, Long storeId, String name) {
         Customer customer = getCustomer(emailAddress);
         List<Customer> newList = new ArrayList();
-        newList.add(customer);        
+        newList.add(customer);     
+        List<ShoppingListDetail> newListDetails = new ArrayList();
+        Store store = (Store) em.find(Store.class, storeId);
         ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setShoppingListDetails(newListDetails);
         shoppingList.setStore(store);
         shoppingList.setName(name);
+        shoppingList.setTotalPrice(0.00);
         shoppingList.setCustomers(newList);
         em.persist(shoppingList);
         return shoppingList;
@@ -84,7 +93,9 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             listDetail.setFurnitureModel(furniture);
             listDetail.setQty(quantity);
             shoppingList.getShoppingListDetails().add(listDetail);
-
+            // update list total price
+            shoppingList.setTotalPrice(quantity * furniture.getPrice());
+            em.persist(shoppingList);
             em.persist(listDetail);
             em.flush();
         } else {

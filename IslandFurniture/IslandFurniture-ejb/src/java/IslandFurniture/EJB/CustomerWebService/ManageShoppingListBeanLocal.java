@@ -18,8 +18,10 @@ import java.util.List;
  * @author Zee
  */
 public interface ManageShoppingListBeanLocal {
+    
+    ShoppingList getShoppingList(Long id);
 
-    ShoppingList createShoppingList(String emailAddress, Store store, String name);
+    ShoppingList createShoppingList(String emailAddress, Long storeId, String name);
 
     void createShoppingListDetail(Long listId, Long stockId, int quantity) throws DuplicateEntryException;
 

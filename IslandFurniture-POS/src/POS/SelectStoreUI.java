@@ -38,6 +38,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
     private String currencyCode;
+    private String storeType;
     /**
      * Creates new form SelectStore
      */
@@ -45,15 +46,25 @@ public class SelectStoreUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    public SelectStoreUI(String staffJSON, Double totalRegisterCash) throws IOException, ParseException
+    public SelectStoreUI(String staffJSON, Double totalRegisterCash, String storeType) throws IOException, ParseException
     {
         this();
         
         this.staffJSON = staffJSON;
         this.totalRegisterCash = totalRegisterCash;
+        this.storeType = storeType;
+        if (storeType.equals("furniture")){
+            retailStoreButton.setVisible(Boolean.FALSE);
+            restaurantButton.setVisible(Boolean.FALSE);
+        }else if (storeType.equals("retail")){
+            furnitureStoreButton.setVisible(Boolean.FALSE);
+            restaurantButton.setVisible(Boolean.FALSE);
+        }else if (storeType.equals("restaurant")){
+            furnitureStoreButton.setVisible(Boolean.FALSE);
+            retailStoreButton.setVisible(Boolean.FALSE);
+        }
         confirmButton.setEnabled(Boolean.FALSE);
         newBalanceField.setEnabled(Boolean.FALSE);
-        
         logoutButton.setEnabled(Boolean.FALSE);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
@@ -88,7 +99,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         newBalanceField = new javax.swing.JTextField();
         confirmButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        readButton = new javax.swing.JButton();
+        verifyButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -156,11 +167,11 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         });
 
-        readButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        readButton.setText("Read");
-        readButton.addActionListener(new java.awt.event.ActionListener() {
+        verifyButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        verifyButton.setText("Verify");
+        verifyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readButtonActionPerformed(evt);
+                verifyButtonActionPerformed(evt);
             }
         });
 
@@ -183,7 +194,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(supervisorField)
                                         .addGap(18, 18, 18)
-                                        .addComponent(readButton))
+                                        .addComponent(verifyButton))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
@@ -226,7 +237,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(supervisorField)
-                    .addComponent(readButton))
+                    .addComponent(verifyButton))
                 .addGap(18, 18, 18)
                 .addComponent(cashBalanceLabel)
                 .addGap(18, 18, 18)
@@ -258,6 +269,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void furnitureStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_furnitureStoreButtonActionPerformed
+        storeType = "furniture";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("storetype");
@@ -267,7 +279,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String furniturelist = Connector.postForm(params, values, "stock/furniturelist");
             System.err.println(furniturelist);
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -276,12 +288,13 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }//GEN-LAST:event_furnitureStoreButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
+        LoginUI loginUI = new LoginUI(totalRegisterCash, storeType);
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void retailStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retailStoreButtonActionPerformed
+        storeType = "retail";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("storetype");
@@ -290,7 +303,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         values.add(cardId);
         try {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -299,6 +312,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }//GEN-LAST:event_retailStoreButtonActionPerformed
 
     private void restaurantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantButtonActionPerformed
+        storeType = "restaurant";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("restaurant");
@@ -312,7 +326,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_restaurantButtonActionPerformed
 
-    private void readButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readButtonActionPerformed
+    private void verifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyButtonActionPerformed
         try {
             TerminalFactory terminalFactory = TerminalFactory.getDefault();
             if (!terminalFactory.terminals().list().isEmpty()) {
@@ -338,7 +352,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                 Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             if(result.equals("OK")){
-                                readButton.setVisible(Boolean.FALSE);
+                                verifyButton.setVisible(Boolean.FALSE);
                                 supervisorField.setText("Supervisor : OK");
                                 confirmButton.setEnabled(Boolean.TRUE);
                                 newBalanceField.setEnabled(Boolean.TRUE);
@@ -356,7 +370,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
         }
-    }//GEN-LAST:event_readButtonActionPerformed
+    }//GEN-LAST:event_verifyButtonActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         totalRegisterCash = Double.parseDouble(newBalanceField.getText());
@@ -409,10 +423,10 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JTextField newBalanceField;
-    private javax.swing.JButton readButton;
     private javax.swing.JButton restaurantButton;
     private javax.swing.JButton retailStoreButton;
     private javax.swing.JLabel supervisorField;
+    private javax.swing.JButton verifyButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

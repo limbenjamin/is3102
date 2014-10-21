@@ -77,7 +77,7 @@ public class NFC implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.NFC[ id=" + id + " ]";
+        return "NFC[ id=" + id + " ]";
     }
     
 }

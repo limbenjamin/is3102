@@ -7,11 +7,14 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -23,6 +26,17 @@ public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String content;
+    private String name;
+    private String phoneNo;
+    private String email;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar submittedTime;
+    private Boolean completed;
+    
+    @ManyToOne
+    private CountryOffice countryOffice;
+    
     @ManyToOne
     private Customer member;
 
@@ -32,6 +46,62 @@ public class Feedback implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Calendar getSubmittedTime() {
+        return submittedTime;
+    }
+
+    public void setSubmittedTime(Calendar submittedTime) {
+        this.submittedTime = submittedTime;
+    }
+
+    public Boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     public Customer getMember() {
@@ -64,7 +134,7 @@ public class Feedback implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.GLOBALHQ.Feedback[ id=" + id + " ]";
+        return "Feedback[ id=" + id + " ]";
     }
     
 }

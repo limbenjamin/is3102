@@ -305,7 +305,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
             int deficit = 0;
             String endmonth = planTillMonthCursor.getMonth().toString();
-            while (QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor) != null) {
+            while (planTillMonthCursor != null) {
 
                 if (planTillMonthCursor.isLocked()) {
                     break;

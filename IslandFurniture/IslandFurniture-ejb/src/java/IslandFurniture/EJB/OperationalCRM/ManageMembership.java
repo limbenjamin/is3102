@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.MembershipTier;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +24,7 @@ public class ManageMembership implements ManageMembershipLocal {
     EntityManager em;
 
     Customer customer;
+    MembershipTier membershipTier;
 
     // Function: Create a New Customer
     @Override
@@ -61,4 +63,41 @@ public class ManageMembership implements ManageMembershipLocal {
         Query q = em.createQuery("SELECT * FROM Customer");
         return q.getResultList();
     }
+
+    // Function: Create Membership Tier
+    @Override
+    public void createMembershipTier(String title, Integer points) {
+        MembershipTier membershipTier = new MembershipTier();
+        membershipTier.setTitle(title);
+        membershipTier.setPoints(points);
+        em.persist(membershipTier);
+        em.flush();
+    }
+
+    // Function: Edit Membership Tier
+    @Override
+    public void editMembershipTier(MembershipTier updatedMembershipTier) {
+        membershipTier = (MembershipTier) em.find(MembershipTier.class, updatedMembershipTier.getId());
+        membershipTier.setTitle(updatedMembershipTier.getTitle());
+        membershipTier.setPoints(updatedMembershipTier.getPoints());
+        em.merge(membershipTier);
+        em.flush();
+    }
+
+    // Function: Delete Membership Tier
+    @Override
+    public void deleteMembershipTier(MembershipTier membershipTier) {
+        membershipTier = (MembershipTier) em.find(MembershipTier.class, membershipTier.getId());
+        em.remove(membershipTier);
+        em.flush();
+
+    }
+
+    //  Function: View list of Membership Tier
+    @Override
+    public List<MembershipTier> viewMembershipTier() {
+        Query q = em.createQuery("SELECT * FROM MembershipTier");
+        return q.getResultList();
+    }
+
 }

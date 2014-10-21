@@ -87,7 +87,7 @@ public class RecipeDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.RecipeDetail[ id=" + id + " ]";
+        return "RecipeDetail[ id=" + id + " ]";
     }
     
 }

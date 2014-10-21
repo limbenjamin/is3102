@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import static IslandFurniture.Entities.Staff.AESDecrypt;
@@ -27,11 +26,13 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Customer implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-        private CustomerSegment customerSegment;
+    @ManyToMany
+    private List<CustomerSegment> customerSegment;
     private String emailAddress;
     private String password;
     private String salt;
@@ -42,6 +43,8 @@ public class Customer implements Serializable {
     private Boolean active;
     private String forgottenPasswordCode;
     private String loyaltyCardId;
+    private Integer currentPoints;
+    private Integer cumulativePoints;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne
@@ -50,20 +53,37 @@ public class Customer implements Serializable {
     private Country country;
     @ManyToMany(mappedBy = "customers")
     private List<ShoppingList> shoppingLists;
-    @OneToMany(mappedBy="member")
+    @OneToMany(mappedBy = "member")
     private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "customer")
     private List<Redemption> redemptions;
+    @OneToMany(mappedBy = "customer")
+    private List<VirtualPlanningSpace> planningSpaces;
 
-    public CustomerSegment getCustomerSegment() {
+    public Integer getCurrentPoints() {
+        return currentPoints;
+    }
+
+    public void setCurrentPoints(Integer currentPoints) {
+        this.currentPoints = currentPoints;
+    }
+
+    public Integer getCumulativePoints() {
+        return cumulativePoints;
+    }
+
+    public void setCumulativePoints(Integer cumulativePoints) {
+        this.cumulativePoints = cumulativePoints;
+    }
+
+    public List<CustomerSegment> getCustomerSegment() {
         return customerSegment;
     }
 
-    public void setCustomerSegment(CustomerSegment customerSegment) {
+    public void setCustomerSegment(List<CustomerSegment> customerSegment) {
         this.customerSegment = customerSegment;
     }
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -210,8 +230,14 @@ public class Customer implements Serializable {
         this.loyaltyCardId = loyaltyCardId;
     }
 
-    
-    
+    public List<VirtualPlanningSpace> getPlanningSpaces() {
+        return planningSpaces;
+    }
+
+    public void setPlanningSpaces(List<VirtualPlanningSpace> planningSpaces) {
+        this.planningSpaces = planningSpaces;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -236,5 +262,5 @@ public class Customer implements Serializable {
     public String toString() {
         return "Customer[ id=" + id + " ]";
     }
-    
+
 }

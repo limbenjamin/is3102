@@ -87,7 +87,7 @@ public class MenuItemDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.MenuItemDetail[ id=" + id + " ]";
+        return "MenuItemDetail[ id=" + id + " ]";
     }
     
 }

@@ -44,6 +44,7 @@ public abstract class PromotionDetail implements Serializable {
     @ManyToOne
     protected MembershipTier membershiptier;
 
+    @OneToOne
     protected Plant applicablePlant;
 
     protected Integer usageCount = Integer.MAX_VALUE;

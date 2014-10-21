@@ -46,6 +46,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private Boolean isChecking = false;
     private Double totalRegisterCash;
     private String currencyCode;
+    private String storeType;
     
     
     private OutputStream partnerPoleDisplayOutputStream;
@@ -58,10 +59,11 @@ public class ScanItemsUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public ScanItemsUI(String staffJSON, String listJSON, Double totalRegisterCash) throws IOException, ParseException {
+    public ScanItemsUI(String staffJSON, String listJSON, Double totalRegisterCash, String storeType) throws IOException, ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
+        this.storeType = storeType;
         this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
@@ -301,7 +303,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -347,7 +349,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         }
         CheckoutUI checkoutUI;
         try {
-            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash);
+            checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash, storeType);
             checkoutUI.setVisible(true);
             this.setVisible(false);
         } catch (ParseException ex) {

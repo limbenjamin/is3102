@@ -4,7 +4,16 @@ import Helper.Connector;
 import Helper.NFCMethods;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,9 +31,13 @@ public class LoginUI extends javax.swing.JFrame {
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
     private List<Timer> timerList = new ArrayList();
+    private Double totalRegisterCash;
+    private String storeType;
             
-    public LoginUI() {
+    public LoginUI(Double totalRegisterCash, String storeType) {
         initComponents();
+        this.totalRegisterCash = totalRegisterCash;
+        this.storeType = storeType;
         try {
 
             TerminalFactory terminalFactory = TerminalFactory.getDefault();
@@ -270,6 +283,21 @@ public class LoginUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
 
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
+        URL url = getClass().getResource("../resources/config.xml");
+        try {
+            File f = new File(url.toURI());
+            FileOutputStream output = new FileOutputStream(f, false);
+            String s = "<root>\n<balance>" + totalRegisterCash + "\n<plant>" + storeType + "\n<root>";
+            output.write(s.getBytes());
+            output.close();
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         System.exit(0);
     }//GEN-LAST:event_jButtonExitActionPerformed
 
@@ -303,7 +331,28 @@ public class LoginUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                LoginUI loginUI = new LoginUI();
+                InputStream is = getClass().getResourceAsStream("../resources/config.xml");
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+                Double cash = 0.0;
+                String storeType = "None";
+                try{
+                    while ((line = br.readLine()) != null) 
+                    {
+                      System.err.println(line);
+                      if (line.contains("<balance>"))
+                          cash = Double.parseDouble(line.substring(9, line.length()));
+                      if (line.contains("<plant>"))
+                          storeType = line.substring(7, line.length());
+                    }
+                    br.close();
+                    isr.close();
+                    is.close();
+                }catch(Exception e){
+                    System.err.println(e);
+                }
+                LoginUI loginUI = new LoginUI(cash, storeType);
                 loginUI.setVisible(true);
             }
         });
@@ -321,7 +370,7 @@ public class LoginUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void SelectScreen(String result) throws IOException, ParseException{
-        SelectStoreUI store = new SelectStoreUI(result, 0.0);
+        SelectStoreUI store = new SelectStoreUI(result, totalRegisterCash, storeType);
         store.setVisible(true);
         this.setVisible(false);
     }

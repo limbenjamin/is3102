@@ -27,7 +27,7 @@ import javax.persistence.Query;
  * @author Zee
  */
 @Stateless
-public class ManagePurchaseOrder implements ManagePurchaseOrderLocal {
+public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurchaseOrderRemote {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

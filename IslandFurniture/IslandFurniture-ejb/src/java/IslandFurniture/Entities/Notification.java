@@ -125,7 +125,7 @@ public class Notification implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.INFRA.Notification[ id=" + id + " ]";
+        return "Notification[ id=" + id + " ]";
     }
     
 }

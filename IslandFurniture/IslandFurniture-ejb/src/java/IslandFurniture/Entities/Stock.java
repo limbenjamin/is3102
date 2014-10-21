@@ -36,12 +36,6 @@ public abstract class Stock implements Serializable {
     protected Long id;
     @Column(unique = true)
     protected String name;
-
-    @OneToMany(mappedBy = "stock")
-    protected List<StockUnit> stockUnit = new ArrayList();
-    
-    @OneToMany(mappedBy = "stock")
-    protected List<MonthlyStockSupplyReq> monthlyStockSupplyReqs = new ArrayList();
     
     @OneToMany(mappedBy = "stock")
     protected List<NFC> nfcList = new ArrayList();
@@ -60,22 +54,6 @@ public abstract class Stock implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<StockUnit> getStockUnit() {
-        return stockUnit;
-    }
-
-    public void setStockUnit(List<StockUnit> stockUnit) {
-        this.stockUnit = stockUnit;
-    }
-
-    public List<MonthlyStockSupplyReq> getMonthlyStockSupplyReqs() {
-        return monthlyStockSupplyReqs;
-    }
-
-    public void setMonthlyStockSupplyReqs(List<MonthlyStockSupplyReq> monthlyStockSupplyReqs) {
-        this.monthlyStockSupplyReqs = monthlyStockSupplyReqs;
     }
 
     public List<NFC> getNfcList() {
