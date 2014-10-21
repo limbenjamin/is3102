@@ -38,6 +38,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private CardTerminal acr122uCardTerminal = null;
     private Boolean isChecking = false;
     private String currencyCode;
+    private String storeType;
     /**
      * Creates new form SelectStore
      */
@@ -45,15 +46,25 @@ public class SelectStoreUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    public SelectStoreUI(String staffJSON, Double totalRegisterCash) throws IOException, ParseException
+    public SelectStoreUI(String staffJSON, Double totalRegisterCash, String storeType) throws IOException, ParseException
     {
         this();
         
         this.staffJSON = staffJSON;
         this.totalRegisterCash = totalRegisterCash;
+        this.storeType = storeType;
+        if (storeType.equals("furniture")){
+            retailStoreButton.setVisible(Boolean.FALSE);
+            restaurantButton.setVisible(Boolean.FALSE);
+        }else if (storeType.equals("retail")){
+            furnitureStoreButton.setVisible(Boolean.FALSE);
+            restaurantButton.setVisible(Boolean.FALSE);
+        }else if (storeType.equals("restaurant")){
+            furnitureStoreButton.setVisible(Boolean.FALSE);
+            retailStoreButton.setVisible(Boolean.FALSE);
+        }
         confirmButton.setEnabled(Boolean.FALSE);
         newBalanceField.setEnabled(Boolean.FALSE);
-        
         logoutButton.setEnabled(Boolean.FALSE);
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
@@ -258,6 +269,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void furnitureStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_furnitureStoreButtonActionPerformed
+        storeType = "furniture";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("storetype");
@@ -267,7 +279,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String furniturelist = Connector.postForm(params, values, "stock/furniturelist");
             System.err.println(furniturelist);
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -276,12 +288,13 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }//GEN-LAST:event_furnitureStoreButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        LoginUI loginUI = new LoginUI();
+        LoginUI loginUI = new LoginUI(totalRegisterCash, storeType);
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void retailStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retailStoreButtonActionPerformed
+        storeType = "retail";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("storetype");
@@ -290,7 +303,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         values.add(cardId);
         try {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -299,6 +312,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
     }//GEN-LAST:event_retailStoreButtonActionPerformed
 
     private void restaurantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurantButtonActionPerformed
+        storeType = "restaurant";
         List params = new ArrayList();
         List values = new ArrayList();
         params.add("restaurant");

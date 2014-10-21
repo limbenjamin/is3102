@@ -45,6 +45,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private Double grandTotal;
     private Double totalRegisterCash;
     private String currencyCode;
+    private String storeType;
     
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
@@ -59,12 +60,13 @@ public class CheckoutUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction, Double totalRegisterCash) throws ParseException {
+    public CheckoutUI(String staffJSON, String listJSON, List<List<String>> transaction, Double totalRegisterCash, String storeType) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.transaction = transaction;
         this.totalRegisterCash = totalRegisterCash;
+        this.storeType = storeType;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -291,7 +293,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -351,7 +353,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -428,7 +430,7 @@ public class CheckoutUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash);
+            payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash, storeType);
         } catch (ParseException ex) {
             Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
         }

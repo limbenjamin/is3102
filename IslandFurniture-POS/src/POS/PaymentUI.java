@@ -56,7 +56,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private Double totalPayable;
     private Double totalRegisterCash;
     private String currencyCode;
-    
+    private String storeType;
 
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
@@ -71,7 +71,7 @@ public class PaymentUI extends javax.swing.JFrame {
         initComponents();
     }
 
-    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, String customerCardId, Double grandTotal, Double totalRegisterCash) throws ParseException {
+    PaymentUI(String staffJSON, String listJSON, List<List<String>> transaction, String customerName, String customerCardId, Double grandTotal, Double totalRegisterCash, String storeType) throws ParseException {
         this();
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
@@ -81,6 +81,7 @@ public class PaymentUI extends javax.swing.JFrame {
         this.oriTotal = grandTotal;
         this.customerCardId = customerCardId;
         this.totalRegisterCash = totalRegisterCash;
+        this.storeType = storeType;
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
         cashButton.setSelected(Boolean.TRUE);
@@ -366,7 +367,7 @@ public class PaymentUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -381,7 +382,7 @@ public class PaymentUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash);
+            SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -535,7 +536,7 @@ public class PaymentUI extends javax.swing.JFrame {
             LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
         }
         try {
-            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash);
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -644,7 +645,10 @@ public class PaymentUI extends javax.swing.JFrame {
                 receipt += transaction.get(i).get(0)+"  ";
                 receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
                 Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
-                receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                if (transaction.get(i).get(5).equals(""))
+                    receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                else    
+                    receipt += transaction.get(i).get(5).substring(0, 15)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
             }
             receipt += "----------------------------------------------\n\r";
             receipt+= "Grand Total: " +currencyCode+" "+grandTotalAmt+ "\n\r";
@@ -662,7 +666,7 @@ public class PaymentUI extends javax.swing.JFrame {
             }
             receipt+= "Cashier : "+ staffname +"\n\r\n\r";
             if (customerName == null){
-                receipt+= "Thank you for shopping with us!";
+                receipt+= "Thank you for shopping with us 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0!";
             }else{
                 receipt+= customerName+", thank you for shopping with us!\n\r";
             }
@@ -671,6 +675,7 @@ public class PaymentUI extends javax.swing.JFrame {
             try
             {
                 JTextArea printing = new JTextArea();
+                printing.setSize(180, 300);
                 printing.setText(receipt);
                 Double margin = 20.0;
                 Integer lines = 8;
