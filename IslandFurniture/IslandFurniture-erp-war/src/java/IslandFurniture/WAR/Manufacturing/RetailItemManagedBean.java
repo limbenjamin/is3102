@@ -53,7 +53,6 @@ public class RetailItemManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = Util.getSession();
         retailItemList = stockManager.displayItemList();
         System.out.println("init:RetailItemManagedBean");
     }

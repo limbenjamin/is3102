@@ -7,9 +7,7 @@
 package IslandFurniture.WAR.Manufacturing;
 
 import IslandFurniture.Entities.FurnitureModel;
-import IslandFurniture.Entities.Material;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
-import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -21,7 +19,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,19 +32,7 @@ public class FurnitureManagedBean implements Serializable {
     private FurnitureModel furniture = null;
     private List<FurnitureModel> furnitureList = null;
     private List<FurnitureModel> filteredList = null;
-    private List<Material> BOMList = null;
-    private Long furnitureID = null;
 
-    public Long getFurnitureID() {
-        return furnitureID;
-    }
-
-    public void setFurnitureID(Long furnitureID) {
-        this.furnitureID = furnitureID;
-    }
-
-    public List<Material> getBOMList() {        return BOMList;    }
-    public void setBOMList(List<Material> BOMList) {        this.BOMList = BOMList;    }
     public FurnitureModel getFurniture() {        return furniture;    }
     public void setFurniture(FurnitureModel furniture) {        this.furniture = furniture;    }
     public List<FurnitureModel> getFurnitureList() {        return furnitureList;    }
@@ -61,7 +46,6 @@ public class FurnitureManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        HttpSession session = Util.getSession();
         furnitureList = stockManager.displayFurnitureList();
         System.out.println("init:FurnitureManagedBean");
     }
@@ -116,10 +100,8 @@ public class FurnitureManagedBean implements Serializable {
         }
         return "furniture";
     }
-
     public void bomActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", event.getComponent().getAttributes().get("fID"));
-        furnitureID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         FacesContext.getCurrentInstance().getExternalContext().redirect("bom.xhtml");
     }   
 }
