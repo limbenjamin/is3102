@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import static IslandFurniture.Entities.Staff.AESDecrypt;
@@ -27,11 +26,12 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Customer implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-        private CustomerSegment customerSegment;
+    private CustomerSegment customerSegment;
     private String emailAddress;
     private String password;
     private String salt;
@@ -52,10 +52,12 @@ public class Customer implements Serializable {
     private Country country;
     @ManyToMany(mappedBy = "customers")
     private List<ShoppingList> shoppingLists;
-    @OneToMany(mappedBy="member")
+    @OneToMany(mappedBy = "member")
     private List<Feedback> feedbacks;
     @OneToMany(mappedBy = "customer")
     private List<Redemption> redemptions;
+    @OneToMany(mappedBy = "customer")
+    private List<VirtualPlanningSpace> planningSpaces;
 
     public Integer getCurrentPoints() {
         return currentPoints;
@@ -72,7 +74,7 @@ public class Customer implements Serializable {
     public void setCumulativePoints(Integer cumulativePoints) {
         this.cumulativePoints = cumulativePoints;
     }
-    
+
     public CustomerSegment getCustomerSegment() {
         return customerSegment;
     }
@@ -80,8 +82,7 @@ public class Customer implements Serializable {
     public void setCustomerSegment(CustomerSegment customerSegment) {
         this.customerSegment = customerSegment;
     }
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -228,8 +229,14 @@ public class Customer implements Serializable {
         this.loyaltyCardId = loyaltyCardId;
     }
 
-    
-    
+    public List<VirtualPlanningSpace> getPlanningSpaces() {
+        return planningSpaces;
+    }
+
+    public void setPlanningSpaces(List<VirtualPlanningSpace> planningSpaces) {
+        this.planningSpaces = planningSpaces;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -254,5 +261,5 @@ public class Customer implements Serializable {
     public String toString() {
         return "Customer[ id=" + id + " ]";
     }
-    
+
 }
