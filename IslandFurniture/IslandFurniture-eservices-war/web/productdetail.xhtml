@@ -40,7 +40,11 @@
                             <!--/product-information-->
                             <div class="product-information">
                                 <h2>#{productDetailManagedBean.furniture.name}</h2>
-                                <h4>$#{productDetailManagedBean.furniture.price}</h4>
+                                <h4>#{productDetailManagedBean.co.country.currency.currencyCode}
+                                    <h:outputText value="#{productDetailManagedBean.furniture.price}">
+                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                    </h:outputText>                                   
+                                </h4>
                                 <span class="product-options">
                                     <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
                                     <a href="#"><i class="fa fa-eye"></i> View in Room Planner</a>
