@@ -206,42 +206,6 @@
                                 </div>
                             </div> 
                         </div> 
-                        <!-- Modal for Price List -->
-                        <div class="modal fade" id="priceList" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Edit Pricing</h4>
-                                    </div>
-                                    <h:form id="pricingForm" class="form-horizontal">
-                                        <h:inputHidden value="#{bOMManagedBean.furnitureID}" id="fID" /> 
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 col-md-offset-2 control-label">Global HQ (SGD): </label>
-                                                <div class="col-sm-5">
-                                                    <h:inputText id="price" class="form-control" pa:required="required" value="#{bOMManagedBean.furniture.price}"></h:inputText>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <hr></hr>
-                                        <ui:repeat value="#{bOMManagedBean.storeInCountry}" var="c">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 col-md-offset-2 control-label">#{c.name} (#{c.currency.currencyCode}): </label>
-                                                <div class="col-sm-6">
-                                                    <h:outputText id="price" class="form-control transparent-form" value="#{bOMManagedBean.outputPrice(c)}"></h:outputText>
-                                                </div>
-                                            </div>
-                                        </ui:repeat>  
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="#{bOMManagedBean.updatePrice}" value="Update" class="btn btn-success btn-round" > 
-                                            </h:commandButton>
-                                        </div> 
-                                    </h:form> 
-                                </div>
-                            </div>
-                        </div>  
                         <!-- Modal for Furniture Description -->
                         <div class="modal fade" id="furnitureDescription" aria-hidden="true">
                             <div class="modal-dialog">

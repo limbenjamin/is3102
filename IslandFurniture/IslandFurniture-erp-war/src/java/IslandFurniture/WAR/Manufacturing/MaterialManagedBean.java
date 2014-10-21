@@ -30,17 +30,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class MaterialManagedBean implements Serializable {
     private List<Material> materialList = null;
-    private int rowCount = 1;
-    private List<Material> filteredList = null;
     private Material material = null;
-
-    public List<Material> getFilteredList() {
-        return filteredList;
-    }
-
-    public void setFilteredList(List<Material> filteredList) {
-        this.filteredList = filteredList;
-    }
 
     public List<Material> getMaterialList() {
         return materialList;
@@ -50,13 +40,6 @@ public class MaterialManagedBean implements Serializable {
         this.materialList = materialList;
     }
 
-    public int getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
     @EJB
     private StockManagerLocal stockManager;
     
