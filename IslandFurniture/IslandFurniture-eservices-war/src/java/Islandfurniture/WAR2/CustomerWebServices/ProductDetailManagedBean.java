@@ -8,8 +8,11 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import java.util.List;
@@ -33,11 +36,34 @@ public class ProductDetailManagedBean {
     private Stock stock = null;
     private FurnitureModel furniture = null;
     private List<Store> localStores = null;
+    private String emailAddress;
+    private Customer customer;
+    private List<ShoppingList> shoppingLists;
+    private boolean loggedIn = false;
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
     @EJB
     private ManageCatalogueBeanLocal mcbl;
+    @EJB
+    private ManageMemberAuthenticationBeanLocal mmab;    
     
     @PostConstruct
     public void init() {
@@ -60,19 +86,24 @@ public class ProductDetailManagedBean {
         
         furniture = mcbl.getFurnitureModel(id);
         localStores = co.getStores();
+        loggedIn = checkLoggedIn();
+        
+        if (loggedIn) {
+            customer = mmab.getCustomer(emailAddress);
+            shoppingLists = customer.getShoppingLists();
+        }
+        
         System.out.println("Got furniture model " + furniture.getName());
     }    
     
-    /**public String displayProductDetails() {
-      System.out.println("displayProductDetails()");
-      HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();  
-      String coCode = (String) httpReq.getAttribute("coCode");
-      HttpSession session = Util.getSession();
-      id = (Long) session.getAttribute("id");        
-      //id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-      furniture = mcbl.getFurnitureModel(id);
-      return "/coCode" + "/productdetail";
-    }**/
+    public boolean checkLoggedIn() {
+        HttpSession session = Util.getSession();
+        emailAddress = (String) session.getAttribute("emailAddress");  
+        if (emailAddress == null)
+            return false;
+        else 
+            return true;
+    }
 
     public Long getId() {
         return id;
@@ -112,6 +143,38 @@ public class ProductDetailManagedBean {
 
     public void setLocalStores(List<Store> localStores) {
         this.localStores = localStores;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<ShoppingList> getShoppingLists() {
+        return shoppingLists;
+    }
+
+    public void setShoppingLists(List<ShoppingList> shoppingLists) {
+        this.shoppingLists = shoppingLists;
+    }
+
+    public ManageMemberAuthenticationBeanLocal getMmab() {
+        return mmab;
+    }
+
+    public void setMmab(ManageMemberAuthenticationBeanLocal mmab) {
+        this.mmab = mmab;
     }
     
 }
