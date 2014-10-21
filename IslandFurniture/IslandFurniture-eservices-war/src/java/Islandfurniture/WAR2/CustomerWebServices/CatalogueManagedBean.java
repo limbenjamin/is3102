@@ -41,6 +41,7 @@ public class CatalogueManagedBean implements Serializable{
     private Double price;
     private FurnitureCategory category;
     private FurnitureSubcategory subcategory;   
+    private CountryOffice co;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -51,7 +52,7 @@ public class CatalogueManagedBean implements Serializable{
     @PostConstruct
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        CountryOffice co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
+        co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         
         furnitureList = mcbl.getStoreFurniture(co);
         retailItemList = mcbl.getStoreRetailItems(co);
@@ -77,6 +78,14 @@ public class CatalogueManagedBean implements Serializable{
     public void setFurnitureList(List<FurnitureModel> furnitureList) {
         this.furnitureList = furnitureList;
     }
+    
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
+    }    
 
     public String getName() {
         return name;

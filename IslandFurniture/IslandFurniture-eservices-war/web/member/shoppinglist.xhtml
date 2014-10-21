@@ -54,7 +54,8 @@
                                     <tr>
                                         <th>List</th>
                                         <th>Store</th>
-                                        <th style="text-align:center;">Total Price</th>
+                                        <th style="text-align:center;">Total Price 
+                                            (#{shoppingListManagedBean.countryOffice.country.currency.currencyCode})</th>
                                         <th style="text-align:center;">Delete</th>
                                     </tr>
                                 </thead>
@@ -67,7 +68,11 @@
                                             </a>
                                         </td>
                                         <td>#{list.store.name}</td>
-                                        <td style="text-align:center;">$#{list.totalPrice}</td>
+                                        <td style="text-align:center;">
+                                            <h:outputText value="#{list.totalPrice}">
+                                                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                            </h:outputText>    
+                                        </td>
                                         <td style="text-align:center;"><i class="fa fa-trash-o"></i></td>
                                     </tr>
                                     </ui:repeat>
