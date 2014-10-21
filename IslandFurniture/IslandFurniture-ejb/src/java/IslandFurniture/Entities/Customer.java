@@ -31,7 +31,8 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private CustomerSegment customerSegment;
+    @ManyToMany
+    private List<CustomerSegment> customerSegment;
     private String emailAddress;
     private String password;
     private String salt;
@@ -75,11 +76,11 @@ public class Customer implements Serializable {
         this.cumulativePoints = cumulativePoints;
     }
 
-    public CustomerSegment getCustomerSegment() {
+    public List<CustomerSegment> getCustomerSegment() {
         return customerSegment;
     }
 
-    public void setCustomerSegment(CustomerSegment customerSegment) {
+    public void setCustomerSegment(List<CustomerSegment> customerSegment) {
         this.customerSegment = customerSegment;
     }
 

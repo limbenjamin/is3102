@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -30,7 +30,7 @@ public class CustomerSegment implements Serializable {
     @OneToOne
     private CountryOffice CountryOffice;
     
-    @OneToMany(mappedBy = "customerSegment")
+    @ManyToMany(mappedBy = "customerSegment")
     private List<Customer> customers;
 
     public CountryOffice getCountryOffice() {
