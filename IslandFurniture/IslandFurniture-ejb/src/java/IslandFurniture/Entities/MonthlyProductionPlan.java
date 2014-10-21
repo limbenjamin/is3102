@@ -31,7 +31,7 @@ import javax.persistence.OneToMany;
 @IdClass(MonthlyProductionPlanPK.class)
 @NamedQueries({
     @NamedQuery(name = "MonthlyProductionPlan.FindAllInPeriod", query = "select MPP from MonthlyProductionPlan MPP where MPP.month=:m and MPP.year=:y and MPP.manufacturingFacility=:mf"),
-    @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)=(:m+1)+:y*12 and MPP.manufacturingFacility=:mf"),
+    @NamedQuery(name = "MonthlyProductionPlan.Find", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)=(:m+1)+:y*12 and MPP.manufacturingFacility=:mf and mpp.locked=false"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntil", query = "select MPP from MonthlyProductionPlan MPP where MPP.furnitureModel=:fm and ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf"),
     @NamedQuery(name = "MonthlyProductionPlan.FindUntilAllModel", query = "select MPP from MonthlyProductionPlan MPP where ((MPP.month+1)+MPP.year*12)<=(:m+1)+:y*12 and MPP.locked=false and MPP.manufacturingFacility=:mf order by MPP.furnitureModel.name"),
     @NamedQuery(name = "MonthlyProductionPlan.FindAllOfMF", query = "select MPP from MonthlyProductionPlan MPP where MPP.manufacturingFacility=:mf and ((MPP.month+1)+MPP.year*12)>=(:m+1)+:y*12 and ((MPP.month+1)+MPP.year*12)<(:lm+1)+:ly*12 ORDER BY MPP.furnitureModel.name ASC, MPP.year*12+MPP.month ASC")

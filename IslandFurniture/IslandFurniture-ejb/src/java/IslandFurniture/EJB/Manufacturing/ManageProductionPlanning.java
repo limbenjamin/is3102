@@ -291,7 +291,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
 
         //Set to zero whole chain of related capacity . else available capacity reading will be wrong
         for (MonthlyProductionPlan planTillMonthCursor : (List<MonthlyProductionPlan>) q.getResultList()) {
-            while (QueryMethods.getPrevMonthlyProductionPlan(em, planTillMonthCursor) != null) {
+            while (planTillMonthCursor != null) {
 
                 if (planTillMonthCursor.isLocked()) {
                     break;
