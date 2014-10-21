@@ -49,9 +49,11 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     public ShoppingList createShoppingList(String emailAddress, Long storeId, String name) {
         Customer customer = getCustomer(emailAddress);
         List<Customer> newList = new ArrayList();
-        newList.add(customer);        
+        newList.add(customer);     
+        List<ShoppingListDetail> newListDetails = new ArrayList();
         Store store = (Store) em.find(Store.class, storeId);
         ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setShoppingListDetails(newListDetails);
         shoppingList.setStore(store);
         shoppingList.setName(name);
         shoppingList.setTotalPrice(0.00);
