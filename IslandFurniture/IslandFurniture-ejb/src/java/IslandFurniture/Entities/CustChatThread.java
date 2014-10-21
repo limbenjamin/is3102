@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -26,10 +27,15 @@ public class CustChatThread implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
+    
     @OneToOne
     private Customer customer;
+    
     @OneToMany(mappedBy = "thread")
     private List<CustChatMessage> messages;
+    
+    @ManyToOne
+    private CountryOffice countryOffice;
 
     public Long getId() {
         return id;
@@ -61,6 +67,14 @@ public class CustChatThread implements Serializable {
 
     public void setMessages(List<CustChatMessage> messages) {
         this.messages = messages;
+    }
+
+    public CountryOffice getCountryOffice() {
+        return countryOffice;
+    }
+
+    public void setCountryOffice(CountryOffice countryOffice) {
+        this.countryOffice = countryOffice;
     }
 
     @Override

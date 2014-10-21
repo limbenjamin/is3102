@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -21,24 +23,24 @@ import javax.persistence.TemporalType;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class Feedback implements Serializable {
+public class VirtualPlanningSpace implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String content;
     private String name;
-    private String phoneNo;
-    private String email;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar submittedTime;
-    private Boolean completed;
-    
+    @Temporal(TemporalType.DATE)
+    private Calendar creationDate;
+
     @ManyToOne
-    private CountryOffice countryOffice;
-    
-    @ManyToOne
-    private Customer member;
+    private Customer customer;
+
+    @OneToMany(mappedBy = "planningSpace")
+    private List<VirtualPlanningSpaceDetail> details;
+
+    @OneToOne
+    private Picture background;
 
     public Long getId() {
         return id;
@@ -46,14 +48,6 @@ public class Feedback implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getName() {
@@ -64,52 +58,36 @@ public class Feedback implements Serializable {
         this.name = name;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
+    public Calendar getCreationDate() {
+        return creationDate;
     }
 
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void setCreationDate(Calendar creationDate) {
+        this.creationDate = creationDate;
     }
 
-    public String getEmail() {
-        return email;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public Calendar getSubmittedTime() {
-        return submittedTime;
+    public List<VirtualPlanningSpaceDetail> getDetails() {
+        return details;
     }
 
-    public void setSubmittedTime(Calendar submittedTime) {
-        this.submittedTime = submittedTime;
+    public void setDetails(List<VirtualPlanningSpaceDetail> details) {
+        this.details = details;
     }
 
-    public Boolean isCompleted() {
-        return completed;
+    public Picture getBackground() {
+        return background;
     }
 
-    public void setCompleted(Boolean completed) {
-        this.completed = completed;
-    }
-
-    public CountryOffice getCountryOffice() {
-        return countryOffice;
-    }
-
-    public void setCountryOffice(CountryOffice countryOffice) {
-        this.countryOffice = countryOffice;
-    }
-
-    public Customer getMember() {
-        return member;
-    }
-
-    public void setMember(Customer member) {
-        this.member = member;
+    public void setBackground(Picture background) {
+        this.background = background;
     }
 
     @Override
@@ -122,10 +100,10 @@ public class Feedback implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Feedback)) {
+        if (!(object instanceof VirtualPlanningSpace)) {
             return false;
         }
-        Feedback other = (Feedback) object;
+        VirtualPlanningSpace other = (VirtualPlanningSpace) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -134,7 +112,7 @@ public class Feedback implements Serializable {
 
     @Override
     public String toString() {
-        return "Feedback[ id=" + id + " ]";
+        return "VirtualPlanningSpace[ id=" + id + " ]";
     }
-    
+
 }

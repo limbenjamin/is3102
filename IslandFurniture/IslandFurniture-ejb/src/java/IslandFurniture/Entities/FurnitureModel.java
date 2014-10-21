@@ -39,7 +39,7 @@ public class FurnitureModel extends Stock implements Serializable {
     private List<ProductionCapacity> productionCapacity;
     private Double price;
     private Long pointsWorth;
-    
+
     // Attributes for the website
     private FurnitureCategory category;
     private FurnitureSubcategory subcategory;
@@ -48,6 +48,10 @@ public class FurnitureModel extends Stock implements Serializable {
     private Picture thumbnail;
     @OneToMany
     private List<Picture> galleryPictures;
+
+    // Attributes for planning space
+    @OneToMany
+    private List<Picture> planningSprites;
 
     public FurnitureModel() {
 
@@ -133,6 +137,13 @@ public class FurnitureModel extends Stock implements Serializable {
         this.galleryPictures = galleryPictures;
     }
 
+    public List<Picture> getPlanningSprites() {
+        return planningSprites;
+    }
+
+    public void setPlanningSprites(List<Picture> planningSprites) {
+        this.planningSprites = planningSprites;
+    }
 
     @Override
     public int hashCode() {

@@ -53,7 +53,13 @@ public class CountryOffice extends Plant implements Serializable {
     @OneToMany(mappedBy = "countryOffice")
     private List<RedeemableItem> redeemableItems = new ArrayList();
     
-    // Web customisation attributes
+    // Customer engagement relationships
+    @OneToMany (mappedBy = "countryOffice")
+    private List<Feedback> feedbacks;
+    @OneToMany (mappedBy = "countryOffice")
+    private List<CustChatThread> custChatThreads;
+    
+    // Web customisation relationships
     @OneToMany(mappedBy = "countryOffice")
     private List<WebBanner> webBanners;
     @OneToMany
@@ -121,6 +127,22 @@ public class CountryOffice extends Plant implements Serializable {
 
     public void setRedeemableItems(List<RedeemableItem> redeemableItems) {
         this.redeemableItems = redeemableItems;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
+
+    public List<CustChatThread> getCustChatThreads() {
+        return custChatThreads;
+    }
+
+    public void setCustChatThreads(List<CustChatThread> custChatThreads) {
+        this.custChatThreads = custChatThreads;
     }
 
     public List<WebBanner> getWebBanners() {
