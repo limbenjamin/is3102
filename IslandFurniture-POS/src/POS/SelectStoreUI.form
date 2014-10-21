@@ -65,7 +65,7 @@
                                       <Group type="102" attributes="0">
                                           <Component id="supervisorField" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="readButton" min="-2" max="-2" attributes="0"/>
+                                          <Component id="verifyButton" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
@@ -122,7 +122,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="supervisorField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="readButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="verifyButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="cashBalanceLabel" min="-2" max="-2" attributes="0"/>
@@ -259,15 +259,15 @@
         </Component>
         <Component class="javax.swing.JSeparator" name="jSeparator1">
         </Component>
-        <Component class="javax.swing.JButton" name="readButton">
+        <Component class="javax.swing.JButton" name="verifyButton">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Read"/>
+            <Property name="text" type="java.lang.String" value="Verify"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="readButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="verifyButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

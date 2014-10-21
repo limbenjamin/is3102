@@ -99,7 +99,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         newBalanceField = new javax.swing.JTextField();
         confirmButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        readButton = new javax.swing.JButton();
+        verifyButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -167,11 +167,11 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         });
 
-        readButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        readButton.setText("Read");
-        readButton.addActionListener(new java.awt.event.ActionListener() {
+        verifyButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        verifyButton.setText("Verify");
+        verifyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readButtonActionPerformed(evt);
+                verifyButtonActionPerformed(evt);
             }
         });
 
@@ -194,7 +194,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(supervisorField)
                                         .addGap(18, 18, 18)
-                                        .addComponent(readButton))
+                                        .addComponent(verifyButton))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
@@ -237,7 +237,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(supervisorField)
-                    .addComponent(readButton))
+                    .addComponent(verifyButton))
                 .addGap(18, 18, 18)
                 .addComponent(cashBalanceLabel)
                 .addGap(18, 18, 18)
@@ -326,7 +326,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_restaurantButtonActionPerformed
 
-    private void readButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readButtonActionPerformed
+    private void verifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifyButtonActionPerformed
         try {
             TerminalFactory terminalFactory = TerminalFactory.getDefault();
             if (!terminalFactory.terminals().list().isEmpty()) {
@@ -352,7 +352,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                 Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             if(result.equals("OK")){
-                                readButton.setVisible(Boolean.FALSE);
+                                verifyButton.setVisible(Boolean.FALSE);
                                 supervisorField.setText("Supervisor : OK");
                                 confirmButton.setEnabled(Boolean.TRUE);
                                 newBalanceField.setEnabled(Boolean.TRUE);
@@ -370,7 +370,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
         }
-    }//GEN-LAST:event_readButtonActionPerformed
+    }//GEN-LAST:event_verifyButtonActionPerformed
 
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         totalRegisterCash = Double.parseDouble(newBalanceField.getText());
@@ -423,10 +423,10 @@ public class SelectStoreUI extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JTextField newBalanceField;
-    private javax.swing.JButton readButton;
     private javax.swing.JButton restaurantButton;
     private javax.swing.JButton retailStoreButton;
     private javax.swing.JLabel supervisorField;
+    private javax.swing.JButton verifyButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
