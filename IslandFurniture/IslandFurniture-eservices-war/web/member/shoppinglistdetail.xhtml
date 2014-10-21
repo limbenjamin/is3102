@@ -69,7 +69,11 @@
                         </table> 
                     </div>
                     <div class="sub-total pull-right">
-                        <h4><strong>Shopping List Subtotal:</strong> $#{shoppingListDetailManagedBean.subtotal}</h4>    
+                        <h4><strong>Subtotal: #{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode} </strong> 
+                            <h:outputText value="#{shoppingListDetailManagedBean.subtotal}">
+                                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                            </h:outputText>  
+                        </h4>    
                         <hr/>
                     </div>
                     </div>
