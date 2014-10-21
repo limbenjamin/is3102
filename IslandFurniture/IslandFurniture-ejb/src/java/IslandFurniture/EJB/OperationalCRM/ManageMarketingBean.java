@@ -92,8 +92,11 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
-            if (pd.getId() < 0) {
-                pd.setId(null);
+            if (pd.getId() != null) {
+
+                if (pd.getId() < 0) {
+                    pd.setId(null);
+                }
             }
 
             pd.setPromotionCampaign(pc);
@@ -197,7 +200,6 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return pd.getClass().getName();
     }
 
-
     @Override
     public void expand_promotion(PromotionDetail pd, PromotionCoupon pc) {
         if (pc.getOneTimeUsage() == true) {
@@ -218,18 +220,13 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return (em.find(PromotionCoupon.class, id));
     }
 
-    
-    
-    
-    
     //the no coupon version
     @Override
     public HashMap<String, Object> getDiscountedPrice(Stock s, Store ss, Customer c) {
         ArrayList<PromotionCoupon> n = new ArrayList<>();
         return (getDiscountedPrice(s, ss, c, n));
     }
-    
-    
+
     @Override
     public HashMap<String, Object> getDiscountedPrice(Stock s, Store ss, Customer c, List<PromotionCoupon> couponLists) {
         Query q = em.createQuery("select pcd from PromotionDetail pcd where (pcd.promotionCampaign.countryOffice is null or pcd.promotionCampaign.countryOffice=:co) and (pcd.membershiptier=:mt or pcd.membershiptier is null) and (pcd.applicablePlant is null or EXISTS(select s from Store s where s=:ss and (s.id=pcd.applicablePlant.id)))");
@@ -280,8 +277,6 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
     }
 
-
-
     @Override
     public double calcDiscount(Stock s, CountryOffice co, PromotionDetail pd) {
         Double op = this.getPrice(s, co);
@@ -311,7 +306,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             PromotionDetailByProductCategory pdbpc = (PromotionDetailByProductCategory) pd;
             if (s instanceof FurnitureModel) {
                 FurnitureModel fm = (FurnitureModel) s;
-                if (pdbpc.getCategory()==null ||fm.getCategory().equals(pdbpc.getCategory())) {
+                if (pdbpc.getCategory() == null || fm.getCategory().equals(pdbpc.getCategory())) {
                     if (pd.getPercentageDiscount() > 0) {
                         newprice = (1 - pd.getPercentageDiscount()) * op;
                     }
@@ -339,6 +334,5 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         return newprice;
 
     }
-
 
 }
