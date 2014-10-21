@@ -14,6 +14,7 @@ import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -41,6 +42,7 @@ public class ShoppingListDetailManagedBean {
     private String coDir;
     private CountryOffice countryOffice;    
     private List<Store> localStores;
+    private Double subtotal;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
@@ -77,11 +79,22 @@ public class ShoppingListDetailManagedBean {
                 }
                 shoppingList = mslbl.getShoppingList(listId);
                 shoppingListDetails = mslbl.getShoppingListDetails(listId);
+                subtotal = calculateSubTotal();
             } catch (Exception e){
             
             }
         }
     }    
+    
+    public Double calculateSubTotal() {
+        subtotal = 0.0;
+        Iterator<ShoppingListDetail> iterator = shoppingListDetails.iterator();
+        while (iterator.hasNext()) {
+            ShoppingListDetail current = iterator.next();
+            subtotal = subtotal + current.getFurnitureModel().getPrice();
+        }        
+        return subtotal;
+    }
 
     public Long getListId() {
         return listId;
@@ -161,6 +174,14 @@ public class ShoppingListDetailManagedBean {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(Double subtotal) {
+        this.subtotal = subtotal;
     }
     
 }
