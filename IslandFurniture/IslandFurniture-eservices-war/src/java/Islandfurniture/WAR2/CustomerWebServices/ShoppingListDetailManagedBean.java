@@ -57,7 +57,6 @@ public class ShoppingListDetailManagedBean {
         if(coDir !=null && !coDir.isEmpty()){
             coDir = "/"+ coDir;
         }
-        
         if (emailAddress == null) {
             try {
                 ec.redirect(ec.getRequestContextPath() + "/login.xhtml");
@@ -66,15 +65,21 @@ public class ShoppingListDetailManagedBean {
             }
         }   
         else {
-            listId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-            if (listId != null) {
-                System.out.println("list id is " + listId);
-                session.setAttribute("id", listId);
+            // get list id from url
+            try {
+                listId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
+                if (listId != null) {
+                    System.out.println("list id is " + listId);
+                    session.setAttribute("id", listId);
+                }
+                else {
+                    listId = (Long) session.getAttribute("id");
+                }
+                shoppingList = mslbl.getShoppingList(listId);
+                shoppingListDetails = mslbl.getShoppingListDetails(listId);
+            } catch (Exception e){
+            
             }
-            else {
-                listId = (Long) session.getAttribute("id");
-            }
-            customer = mslbl.getCustomer(emailAddress);
         }
     }    
 
