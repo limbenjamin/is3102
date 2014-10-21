@@ -46,6 +46,7 @@ public class ProductDetailManagedBean {
     private List<ShoppingList> shoppingLists;
     private boolean loggedIn = false;
     private String coDir;
+    private CountryOffice co;
 
     public Stock getStock() {
         return stock;
@@ -77,7 +78,7 @@ public class ProductDetailManagedBean {
     public void init() {
         HttpSession session = Util.getSession();
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        CountryOffice co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
+        co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         coDir = (String) httpReq.getAttribute("coCode");
         try{
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
@@ -136,6 +137,14 @@ public class ProductDetailManagedBean {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
     }
 
     public FurnitureModel getFurniture() {

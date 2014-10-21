@@ -26,7 +26,8 @@
                             <tr class="list_menu">
                                 <td class="image">Item</td>
                                 <td class="description"></td>
-                                <td class="price">Price</td>
+                                <td class="price">Price 
+                                    (#{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode})</td>
                                 <td class="quantity">Quantity</td>
                                 <td>Update</td>
                                 <td>Remove</td>
@@ -43,7 +44,11 @@
                                         <p>category: #{detail.furnitureModel.category}</p>
                                     </td>
                                     <td class="list_price">
-                                        <p>$#{detail.furnitureModel.price}</p>
+                                        <p>
+                                            <h:outputText value="#{detail.furnitureModel.price}">
+                                                <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                            </h:outputText>        
+                                        </p>
                                     </td>
                                     <td class="list_quantity">
                                         <h:inputText id="quantity" value="#{detail.qty}" class="form-control list_quantity_input" p:required="true" p:type="number" p:min="1"></h:inputText>

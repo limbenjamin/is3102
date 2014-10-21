@@ -55,6 +55,7 @@ public class ShoppingListDetailManagedBean {
         emailAddress = (String) session.getAttribute("emailAddress");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest httpReq = (HttpServletRequest) ec.getRequest();
+        countryOffice = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         coDir = (String) httpReq.getAttribute("coCode");
         if(coDir !=null && !coDir.isEmpty()){
             coDir = "/"+ coDir;
