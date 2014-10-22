@@ -25,20 +25,29 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Double totalRevenue;
 
     private Month month;
     private Integer week;
-    private Integer Year;
+    private Integer year;
 
     @OneToMany(mappedBy = "companyPeriodAnalysisReport")
     private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports;
 
-    public List<CountryPeriodAnalysisReport> getCountryPeriodAnalysisReports() {
-        return countryPeriodAnalysisReports;
+    public Long getId() {
+        return id;
     }
 
-    public void setCountryPeriodAnalysisReports(List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports) {
-        this.countryPeriodAnalysisReports = countryPeriodAnalysisReports;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
     }
 
     public Month getMonth() {
@@ -58,19 +67,19 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     }
 
     public Integer getYear() {
-        return Year;
+        return year;
     }
 
-    public void setYear(Integer Year) {
-        this.Year = Year;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
-    public Long getId() {
-        return id;
+    public List<CountryPeriodAnalysisReport> getCountryPeriodAnalysisReports() {
+        return countryPeriodAnalysisReports;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCountryPeriodAnalysisReports(List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports) {
+        this.countryPeriodAnalysisReports = countryPeriodAnalysisReports;
     }
 
     @Override
@@ -95,7 +104,7 @@ public class CompanyPeriodAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.CompanyPeriodAnalysisReport[ id=" + id + " ]";
+        return "CompanyPeriodAnalysisReport[ id=" + id + " ]";
     }
 
 }

@@ -5,7 +5,6 @@
  */
 package IslandFurniture.Entities;
 
-import IslandFurniture.Enums.Month;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -27,43 +26,21 @@ public class CampaignAnalysisReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Month month;
-    private Integer week;
-    private Integer Year;
-
     @OneToOne
     private PromotionCampaign promotionCampaign;
-    private double TotalRevenue;
-    
+    private Double totalRevenue;
+
     @ManyToMany
     private List<Customer> customers;
 
-    public Month getMonth() {
-        return month;
+    public Long getId() {
+        return id;
     }
 
-    public void setMonth(Month month) {
-        this.month = month;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Integer getWeek() {
-        return week;
-    }
-
-    public void setWeek(Integer week) {
-        this.week = week;
-    }
-
-    public Integer getYear() {
-        return Year;
-    }
-
-    public void setYear(Integer Year) {
-        this.Year = Year;
-    }
-
-    
-    
     public PromotionCampaign getPromotionCampaign() {
         return promotionCampaign;
     }
@@ -72,12 +49,12 @@ public class CampaignAnalysisReport implements Serializable {
         this.promotionCampaign = promotionCampaign;
     }
 
-    public double getTotalRevenue() {
-        return TotalRevenue;
+    public Double getTotalRevenue() {
+        return totalRevenue;
     }
 
-    public void setTotalRevenue(double TotalRevenue) {
-        this.TotalRevenue = TotalRevenue;
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
     }
 
     public List<Customer> getCustomers() {
@@ -86,14 +63,6 @@ public class CampaignAnalysisReport implements Serializable {
 
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override
@@ -118,7 +87,7 @@ public class CampaignAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.CampaignAnalysisReport[ id=" + id + " ]";
+        return "CampaignAnalysisReport[ id=" + id + " ]";
     }
 
 }

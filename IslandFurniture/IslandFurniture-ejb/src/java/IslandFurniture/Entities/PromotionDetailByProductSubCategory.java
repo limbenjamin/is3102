@@ -5,21 +5,16 @@
  */
 package IslandFurniture.Entities;
 
-import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 /**
  *
  * @author James
  */
 @Entity
-public class PromotionDetailByProductSubCategory extends PromotionDetail {
+public class PromotionDetailByProductSubCategory extends PromotionDetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private FurnitureSubcategory category;
@@ -32,10 +27,9 @@ public class PromotionDetailByProductSubCategory extends PromotionDetail {
         this.category = category;
     }
 
-
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.ProductPromotionDetail[ id=" + id+ " ]";
+        return "ProductPromotionDetail[ id=" + id + " ]";
     }
 
 }

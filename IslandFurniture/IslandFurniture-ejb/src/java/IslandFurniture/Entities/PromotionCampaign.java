@@ -5,6 +5,7 @@
  */
 package IslandFurniture.Entities;
 
+import IslandFurniture.Enums.CampaignGoal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +34,6 @@ public class PromotionCampaign implements Serializable {
     @ManyToOne
     private CountryOffice countryOffice;
 
-
     @OneToMany(mappedBy = "promotionCampaign")
     private List<PromotionDetail> promotionDetails = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class PromotionCampaign implements Serializable {
 
     private String remark;
 
-    private campaignGoal goal;
+    private CampaignGoal goal;
     @Temporal(TemporalType.DATE)
     private Calendar validUntil;
 
@@ -106,11 +106,11 @@ public class PromotionCampaign implements Serializable {
         this.remark = remark;
     }
 
-    public campaignGoal getGoal() {
+    public CampaignGoal getGoal() {
         return goal;
     }
 
-    public void setGoal(campaignGoal goal) {
+    public void setGoal(CampaignGoal goal) {
         this.goal = goal;
     }
 
@@ -120,16 +120,6 @@ public class PromotionCampaign implements Serializable {
 
     public void setUntil(Calendar until) {
         this.validUntil = until;
-    }
-
-    public enum campaignGoal {
-
-        PROSPECTING(0), SALES_BOOST(1), SEASONAL_PROMO(2), COMPETITION(3), NEW_PRODUCT_TESTING(4);
-        public int value;
-
-        private campaignGoal(int value) {
-            this.value = value;
-        }
     }
 
     public Long getId() {
@@ -147,8 +137,6 @@ public class PromotionCampaign implements Serializable {
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
     }
-
-
 
     public List<PromotionDetail> getPromotionDetails() {
         return promotionDetails;

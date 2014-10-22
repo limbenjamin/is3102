@@ -11,8 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  *
@@ -25,11 +25,12 @@ public class CountryPeriodAnalysisReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Double totalRevenue;
 
-    @OneToOne
+    @ManyToOne
     private CountryOffice countryOffice;
 
-    @OneToOne
+    @ManyToOne
     private CompanyPeriodAnalysisReport companyPeriodAnalysisReport;
 
     @OneToMany(mappedBy = "countryPeriodAnalysisReport")
@@ -38,31 +39,20 @@ public class CountryPeriodAnalysisReport implements Serializable {
     @OneToMany(mappedBy = "countryPeriodAnalysisReport")
     private List<CustomerPeriodAnalysisReport> customerPeriodAnalysisReport;
 
-    public List<CustomerPeriodAnalysisReport> getCustomerPeriodAnalysisReport() {
-        return customerPeriodAnalysisReport;
+    public Long getId() {
+        return id;
     }
 
-    public void setCustomerPeriodAnalysisReport(List<CustomerPeriodAnalysisReport> customerPeriodAnalysisReport) {
-        this.customerPeriodAnalysisReport = customerPeriodAnalysisReport;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    
-    
-    
-    public List<StorePeriodAnalysisReport> getStorePeriodAnalysisReports() {
-        return storePeriodAnalysisReports;
+    public Double getTotalRevenue() {
+        return totalRevenue;
     }
 
-    public void setStorePeriodAnalysisReports(List<StorePeriodAnalysisReport> storePeriodAnalysisReports) {
-        this.storePeriodAnalysisReports = storePeriodAnalysisReports;
-    }
-
-    public CompanyPeriodAnalysisReport getCompanyPeriodAnalysisReport() {
-        return companyPeriodAnalysisReport;
-    }
-
-    public void setCompanyPeriodAnalysisReport(CompanyPeriodAnalysisReport companyPeriodAnalysisReport) {
-        this.companyPeriodAnalysisReport = companyPeriodAnalysisReport;
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
     }
 
     public CountryOffice getCountryOffice() {
@@ -73,12 +63,28 @@ public class CountryPeriodAnalysisReport implements Serializable {
         this.countryOffice = countryOffice;
     }
 
-    public Long getId() {
-        return id;
+    public CompanyPeriodAnalysisReport getCompanyPeriodAnalysisReport() {
+        return companyPeriodAnalysisReport;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCompanyPeriodAnalysisReport(CompanyPeriodAnalysisReport companyPeriodAnalysisReport) {
+        this.companyPeriodAnalysisReport = companyPeriodAnalysisReport;
+    }
+
+    public List<StorePeriodAnalysisReport> getStorePeriodAnalysisReports() {
+        return storePeriodAnalysisReports;
+    }
+
+    public void setStorePeriodAnalysisReports(List<StorePeriodAnalysisReport> storePeriodAnalysisReports) {
+        this.storePeriodAnalysisReports = storePeriodAnalysisReports;
+    }
+
+    public List<CustomerPeriodAnalysisReport> getCustomerPeriodAnalysisReport() {
+        return customerPeriodAnalysisReport;
+    }
+
+    public void setCustomerPeriodAnalysisReport(List<CustomerPeriodAnalysisReport> customerPeriodAnalysisReport) {
+        this.customerPeriodAnalysisReport = customerPeriodAnalysisReport;
     }
 
     @Override
@@ -103,7 +109,7 @@ public class CountryPeriodAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.CountryPeriodAnalysisReport[ id=" + id + " ]";
+        return "CountryPeriodAnalysisReport[ id=" + id + " ]";
     }
 
 }
