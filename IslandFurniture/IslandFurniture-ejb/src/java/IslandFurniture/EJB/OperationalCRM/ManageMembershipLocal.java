@@ -8,11 +8,13 @@ package IslandFurniture.EJB.OperationalCRM;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageMembershipLocal {
 
     // Function: Create a New Customer

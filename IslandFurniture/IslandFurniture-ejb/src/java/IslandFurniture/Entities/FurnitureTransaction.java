@@ -9,7 +9,10 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PostPersist;
 
 /**
@@ -17,11 +20,20 @@ import javax.persistence.PostPersist;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findClaimingTrans",
+            query = "SELECT a FROM FurnitureTransaction a WHERE a.returnedItemTrans = :returnedTrans")
+})
 public class FurnitureTransaction extends Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @OneToMany(mappedBy = "furnitureTransaction", cascade={CascadeType.ALL})
+
+    @OneToMany(mappedBy = "furnitureTransaction", cascade = {CascadeType.ALL})
     private List<FurnitureTransactionDetail> furnitureTransactionDetails;
+
+    @OneToOne
+    private FurnitureTransaction returnedTrans;
 
     public List<FurnitureTransactionDetail> getFurnitureTransactionDetails() {
         return furnitureTransactionDetails;
@@ -29,6 +41,14 @@ public class FurnitureTransaction extends Transaction implements Serializable {
 
     public void setFurnitureTransactionDetails(List<FurnitureTransactionDetail> furnitureTransactionDetails) {
         this.furnitureTransactionDetails = furnitureTransactionDetails;
+    }
+
+    public FurnitureTransaction getReturnedTrans() {
+        return returnedTrans;
+    }
+
+    public void setReturnedTrans(FurnitureTransaction returnedTrans) {
+        this.returnedTrans = returnedTrans;
     }
 
     @Override
@@ -57,7 +77,6 @@ public class FurnitureTransaction extends Transaction implements Serializable {
     }
 
     // Entity Callbacks
-    
     @PostPersist
     public void postPersist() {
         System.out.println("Successfully persisted " + this);
