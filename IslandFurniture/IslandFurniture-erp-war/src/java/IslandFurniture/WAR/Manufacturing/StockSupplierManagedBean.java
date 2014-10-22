@@ -34,16 +34,7 @@ public class StockSupplierManagedBean implements Serializable {
     private List<StockSupplied> stockSuppliedList = null;
     private List<CountryOffice> countryList = null;
     private List<ManufacturingFacility> mfList = null;
-    private Long mfID = null;
     private List<Stock> stockList = null;
-
-    public Long getMfID() {
-        return mfID;
-    }
-
-    public void setMfID(Long mfID) {
-        this.mfID = mfID;
-    }
 
     public List<CountryOffice> getCountryList() {
         return countryList;

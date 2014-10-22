@@ -54,7 +54,7 @@ public interface StockManagerLocal {
     public String editBOMDetail(Long BOMDetailID, Integer quantity);
 
     public String deleteBOMDetail(Long BOMDetailID);
-
+    
     public String editFurnitureCategory(Long furnitureID, FurnitureCategory category);
 
     public String editFurnitureSubcategory(Long furnitureID, FurnitureSubcategory category);
