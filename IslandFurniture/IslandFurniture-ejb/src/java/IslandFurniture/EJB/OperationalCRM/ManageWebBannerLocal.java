@@ -8,11 +8,13 @@ package IslandFurniture.EJB.OperationalCRM;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.WebBanner;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageWebBannerLocal {
 
     // Function: Create Web Banner
