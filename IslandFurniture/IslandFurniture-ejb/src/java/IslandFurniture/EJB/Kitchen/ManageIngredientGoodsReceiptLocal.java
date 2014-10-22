@@ -14,11 +14,13 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageIngredientGoodsReceiptLocal {
 
     //  Function: To check if there is any Ingredient Goods Receipt Document Detail with same Ingredient
@@ -55,12 +57,12 @@ public interface ManageIngredientGoodsReceiptLocal {
     List<Ingredient> viewIngredient();
 
     //  Function: View list of Ingredient Goods Receipt Document
-    List<IngredientGoodsReceiptDocument> viewIngredientGooodsReceiptDocument(Store store);
+    List<IngredientGoodsReceiptDocument> viewIngredientGooodsReceiptDocument(Store store, boolean status);
 
     //  Function: View list of Ingredient Goods Receipt Document Detail
     List<IngredientGoodsReceiptDocumentDetail> viewIngredientGooodsReceiptDocumentDetail(IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument);
 
     //  Function: View list of Ingredient Purchase Order
-    List<IngredientPurchaseOrder> viewIngredientPurchaseOrder(Store store, Boolean status);
+    List<IngredientPurchaseOrder> viewIngredientPurchaseOrder(Store store);
     
 }

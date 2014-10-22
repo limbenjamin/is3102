@@ -11,6 +11,7 @@ import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.IngredientPurchaseOrder;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Enums.PurchaseOrderStatus;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -98,9 +99,10 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
 
     //  Function: View list of Ingredient Goods Receipt Document
     @Override
-    public List<IngredientGoodsReceiptDocument> viewIngredientGooodsReceiptDocument(Store store) {
-        Query q = em.createQuery("SELECT s FROM IngredientGoodsReceiptDocument s WHERE s.store.id=:storeId");
+    public List<IngredientGoodsReceiptDocument> viewIngredientGooodsReceiptDocument(Store store, boolean status) {
+        Query q = em.createQuery("SELECT s FROM IngredientGoodsReceiptDocument s WHERE s.store.id=:storeId AND s.posted=:status");
         q.setParameter("storeId", store.getId());
+        q.setParameter("status", status);
         return q.getResultList();
     }
 
@@ -160,13 +162,13 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
 
     //  Function: View list of Ingredient Purchase Order
     @Override
-    public List<IngredientPurchaseOrder> viewIngredientPurchaseOrder(Store store, Boolean status) {
+    public List<IngredientPurchaseOrder> viewIngredientPurchaseOrder(Store store) {
         Query q = em.createQuery("SELECT s FROM IngredientPurchaseOrder s WHERE s.store.id=:storeId AND s.status=:status");
         q.setParameter("storeId", store.getId());
-        q.setParameter("status", status);
+        q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         return q.getResultList();
     }
-
+    
     //  Function: View list of Ingredient
     @Override
     public List<Ingredient> viewIngredient() {
