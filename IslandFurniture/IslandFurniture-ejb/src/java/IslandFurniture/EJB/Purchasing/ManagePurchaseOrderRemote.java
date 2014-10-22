@@ -15,7 +15,6 @@ import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.List;
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 /**
