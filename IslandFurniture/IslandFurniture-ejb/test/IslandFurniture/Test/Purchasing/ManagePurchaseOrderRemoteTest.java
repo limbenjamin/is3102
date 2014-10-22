@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package IslandFurniture.EJB.Purchasing;
+package IslandFurniture.Test.Purchasing;
 
+import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderRemote;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
@@ -28,11 +29,11 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Benjamin
  */
-public class ManagePurchaseOrderTest {
+public class ManagePurchaseOrderRemoteTest {
 
     ManagePurchaseOrderRemote managePurchaseOrder = lookupManagePurchaseOrderRemote();
 
-    public ManagePurchaseOrderTest() {
+    public ManagePurchaseOrderRemoteTest() {
     }
 
     @BeforeClass
@@ -67,7 +68,7 @@ public class ManagePurchaseOrderTest {
     @Test
     public void testGetPurchaseOrder() throws Exception {
         System.out.println("getPurchaseOrder");
-        Long id = new Long(57351);
+        long id = 57351;
         ProcuredStockPurchaseOrder expResult = new ProcuredStockPurchaseOrder();
         expResult.setId(id);
         ProcuredStockPurchaseOrder result = managePurchaseOrder.getPurchaseOrder(id);

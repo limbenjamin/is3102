@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Customer E-Services</title>
@@ -22,7 +23,7 @@
         <script src="#{application.contextPath}/assets/plugins/threesixty.js"></script>          
     </h:head>
     <h:body>
-	<header id="header">		
+        <header id="header">		
             <div class="header-middle">
                 <div class="container">
                     <div class="row">
@@ -34,17 +35,29 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml"><i class="fa fa-user"></i> Account</a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i> Wish List</a></li>
-                                    <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
-                                    <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
+                                    <li><a>Welcome to #{templateManagedBean.co.country.name}!</a></li>
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
+                                            <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
+                                            <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
+                                            <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-	
+
             <div class="header-bottom">
                 <div class="container">
                     <div class="row">
@@ -59,95 +72,118 @@
                             </div>
                             <div class="mainmenu pull-left">
                                 <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="home.xhtml" class="active">Home</a></li>
-                                <li class="dropdown"><a href="#">Bedroom</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Beds &amp; Mattresses</a></li>
-                                        <li><a href="#">Tables</a></li>
-                                        <li><a href="#">Chairs &amp; Couches</a></li>
-                                        <li><a href="#">Boudoir</a></li>
-                                        <li><a href="#">Shelves</a></li>
-                                    </ul>
-                                </li>
-				<li class="dropdown"><a href="#">Living Room</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Sofas</a></li>
-                                        <li><a href="#">Tables</a></li>
-                                        <li><a href="#">Chairs &amp; Couches</a></li>
-                                        <li><a href="#">Storage</a></li>
-                                    </ul>
-                                </li>
-				<li class="dropdown"><a href="#">Kitchen</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Sofas</a></li>
-                                        <li><a href="#">Tables</a></li>
-                                        <li><a href="#">Chairs &amp; Couches</a></li>
-                                        <li><a href="#">Storage</a></li>
-                                    </ul>
-                                </li>
-				<li class="dropdown"><a href="#">Dining Room</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Cooking Facilities</a></li>
-                                        <li><a href="#">Tables</a></li>
-                                        <li><a href="#">Chairs</a></li>
-                                        <li><a href="#">Shelves</a></li>
-                                    </ul>
-                                </li>
-				<li class="dropdown"><a href="#">Study Room</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Shelves</a></li>
-                                        <li><a href="#">Desks</a></li>
-                                        <li><a href="#">Chairs</a></li>
-                                        <li><a href="#">Lighting</a></li>
-                                    </ul>
-                                </li>
-				<li class="dropdown"><a href="#">Children</a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="#">Sofas</a></li>
-                                        <li><a href="#">Tables</a></li>
-                                        <li><a href="#">Chairs &amp; Couches</a></li>
-                                        <li><a href="#">Toys</a></li>
-                                    </ul>
-                                </li>
-				<li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/all.xhtml">All Products</a></li>
+                                    <li><a href="home.xhtml" class="active">
+                                            <h:outputText id="navhome" value="#{bundle['nav.main']}" />
+                                        </a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.bedroom']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Beds &amp; Mattresses</a></li>
+                                            <li><a href="#">Tables</a></li>
+                                            <li><a href="#">Chairs &amp; Couches</a></li>
+                                            <li><a href="#">Boudoir</a></li>
+                                            <li><a href="#">Shelves</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.living']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Sofas</a></li>
+                                            <li><a href="#">Tables</a></li>
+                                            <li><a href="#">Chairs &amp; Couches</a></li>
+                                            <li><a href="#">Storage</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.kitchen']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Sofas</a></li>
+                                            <li><a href="#">Tables</a></li>
+                                            <li><a href="#">Chairs &amp; Couches</a></li>
+                                            <li><a href="#">Storage</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.dining']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Cooking Facilities</a></li>
+                                            <li><a href="#">Tables</a></li>
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Shelves</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.study']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Shelves</a></li>
+                                            <li><a href="#">Desks</a></li>
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Lighting</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.children']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="#">Sofas</a></li>
+                                            <li><a href="#">Tables</a></li>
+                                            <li><a href="#">Chairs &amp; Couches</a></li>
+                                            <li><a href="#">Toys</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}/#{request.getAttribute('coCode')}/all.xhtml">
+                                            <h:outputText value="#{bundle['nav.all']}" />
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
-                            </div>
-                            <!--<div class="col-sm-3">
-                                <h:form>
-                                    <div class="input-group pull-right" style="max-width: 200px;">
-                                        <select class="form-control">
-                                            <option>Singapore</option>
-                                            <option>Malaysia</option>
-                                        </select>                                        
-                                      <span class="input-group-btn">
-                                          <h:button value="Go!" class="btn btn-default"></h:button>
-                                      </span>
-                                    </div>
-                                </h:form> 
-                            </div> !-->
                         </div>
+                        <!--<div class="col-sm-3">
+                            <h:form>
+                                <div class="input-group pull-right" style="max-width: 200px;">
+                                    <select class="form-control">
+                                        <option>Singapore</option>
+                                        <option>Malaysia</option>
+                                    </select>                                        
+                                  <span class="input-group-btn">
+                                      <h:button value="Go!" class="btn btn-default"></h:button>
+                                  </span>
+                                </div>
+                            </h:form> 
+                        </div> !-->
                     </div>
-		</div>
-	</header>
-        <div class="container">
-            <div class="row">
-                <c:if test="${flash.message.severity == 'ERROR 2'}">
-                    <div class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
-                    </div>
-                </c:if>
-                <c:if test="${flash.message.severity == 'INFO 0'}">
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
-                    </div>
-                </c:if>
+                </div>
             </div>
+        </header>
+        <div class="container">
+            <p:outputPanel rendered="#{flash.message.severity == 'ERROR 2'}">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{flash.message.severity == 'INFO 0'}">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
         </div>    
         <ui:insert name="content" >Content</ui:insert>
-	<footer id="footer"><!--Footer-->		
+        <footer id="footer">		
             <div class="footer-content">
                 <div class="container">
                     <div class="row">
@@ -208,7 +244,6 @@
                     </div>
                 </div>
             </div>
-	</footer><!--/Footer-->        
+        </footer><!--/Footer-->        
     </h:body>
 </html>
-
