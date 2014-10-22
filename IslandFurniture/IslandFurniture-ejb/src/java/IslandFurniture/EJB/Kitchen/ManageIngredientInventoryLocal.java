@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Kitchen;
 
+import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientInventory;
 import IslandFurniture.Entities.Plant;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public interface ManageIngredientInventoryLocal {
 
     //  Function: To add Ingredient Inventory
-    void createIngredientInventory(Plant plant, Long ingredientId, Integer qty);
+    void createIngredientInventory(Plant plant, Long ingredientId, Integer qty, Integer threshold);
 
     //  Function: To delete Ingredient Inventory
     void deleteIngredientInventory(IngredientInventory ingredientInventory);
@@ -33,5 +33,8 @@ public interface ManageIngredientInventoryLocal {
 
     //  Function: To display list of IngredientInventory
     List<IngredientInventory> viewIngredientInventory(Plant plant);
-    
+
+    //  Function: To display list of IngredientInventory
+    List<Ingredient> viewIngredient(Plant plant);
+
 }

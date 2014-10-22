@@ -15,7 +15,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author Benjamin
+ * @author Kamilul Ashraf
  */
 @Stateless
 public class ManageMembership implements ManageMembershipLocal {
@@ -96,8 +96,24 @@ public class ManageMembership implements ManageMembershipLocal {
     //  Function: View list of Membership Tier
     @Override
     public List<MembershipTier> viewMembershipTier() {
-        Query q = em.createQuery("SELECT * FROM MembershipTier");
+        Query q = em.createQuery("SELECT s FROM MembershipTier s");
         return q.getResultList();
+    }
+
+    //  Function: To check if there is no Membership Tier with the Same Title
+    @Override
+    public boolean checkIfNoMembershipTierSameName(String title) {
+        Query q = em.createQuery("SELECT s FROM MembershipTier s WHERE s.title=:title");
+        q.setParameter("title", title);
+        return q.getResultList().isEmpty();
+    }
+    
+    //  Function: To check if there is no Customers in the Tier
+    @Override
+    public boolean checkIfNoCustomersInTheTier(MembershipTier mt) {
+        Query q = em.createQuery("SELECT s FROM Customer s WHERE s.membershipTier.id=:id");
+        q.setParameter("id", mt.getId());
+        return q.getResultList().isEmpty();
     }
 
 }
