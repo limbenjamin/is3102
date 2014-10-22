@@ -25,7 +25,7 @@ public interface ManageIngredientGoodsReceiptLocal {
     boolean checkIfNoIngredientGooodsReceiptDocumentDetailSameIngredient(IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument, Long id);
 
     // Function: Create Ingredient Goods Receipt Document
-    IngredientGoodsReceiptDocument createIngredientGoodsReceiptDocument(Staff staff, Calendar createTime);
+    IngredientGoodsReceiptDocument createIngredientGoodsReceiptDocument(Staff staff, Calendar createTime, Store store);
 
     // Function: Create Ingredient Goods Receipt Document Detail
     void createIngredientGoodsReceiptDocumentDetail(Staff staff, Calendar time, IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument, Ingredient ingredient, Integer qty);

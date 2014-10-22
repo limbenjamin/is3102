@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.Kitchen;
 
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.Store;
@@ -31,10 +32,11 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
 
 //  Function: To add Ingredient Inventory
     @Override
-    public void createIngredientInventory(Plant plant, Long ingredientId, Integer qty) {
+    public void createIngredientInventory(Plant plant, Long ingredientId, Integer qty, Integer threshold) {
         ingredientInventory = new IngredientInventory();
         ingredientInventory.setStore((Store) plant);
         ingredientInventory.setIngredient((Ingredient) em.find(Ingredient.class, ingredientId));
+        ingredientInventory.setThreshold(threshold);
         ingredientInventory.setQty(qty);
         em.persist(ingredientInventory);
         em.flush();
@@ -46,6 +48,7 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
         IngredientInventoryPK pk = new IngredientInventoryPK(ingredientInventoryUpdated.getStore().getId(), ingredientInventoryUpdated.getIngredient().getId());
         ingredientInventory = (IngredientInventory) em.find(IngredientInventory.class, pk);
         ingredientInventory.setQty(ingredientInventoryUpdated.getQty());
+        ingredientInventory.setThreshold(ingredientInventoryUpdated.getThreshold());
         em.merge(ingredientInventory);
         em.flush();
     }
@@ -67,6 +70,15 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
         return q.getResultList();
     }
 
+    //  Function: To display list of IngredientInventory
+    @Override
+    public List<Ingredient> viewIngredient(Plant plant) {
+        Store store = (Store) plant;
+        Query q = em.createQuery("SELECT s FROM Ingredient s WHERE s.countryOffice.id=:id");
+        q.setParameter("id", store.getCountryOffice().getId());
+        return q.getResultList();
+    }
+
 //  Function: To get Ingredient Inventory Entity
     @Override
     public IngredientInventory getIngredientInventory(Plant plant, Long ingredientId) {
@@ -74,7 +86,7 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
         ingredientInventory = (IngredientInventory) em.find(IngredientInventory.class, ingredientInventoryPK);
         return ingredientInventory;
     }
-    
+
 //  Function: To edit Ingredient Inventory quantity
     @Override
     public void editIngredientInventoryQty(IngredientInventory si, int qty) {
@@ -82,7 +94,7 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
         ingredientInventory = (IngredientInventory) em.find(IngredientInventory.class, ingredientInventoryPK);
         ingredientInventory.setQty(qty);
         em.merge(ingredientInventory);
-        em.flush(); 
+        em.flush();
     }
 
 }
