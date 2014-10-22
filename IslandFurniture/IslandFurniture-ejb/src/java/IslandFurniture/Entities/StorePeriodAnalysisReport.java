@@ -11,9 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
  *
@@ -21,19 +20,37 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class StorePeriodAnalysisReport implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @OneToOne
+    private Double totalRevenue;
+
+    @ManyToOne
     private Store store;
-    
-    @OneToOne
+
+    @ManyToOne
     private CountryPeriodAnalysisReport countryPeriodAnalysisReport;
 
     @OneToMany(mappedBy = "storePeriodAnalysisReport")
     private List<ProductAnalysisReport> productAnalysisReports;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
+    }
 
     public Store getStore() {
         return store;
@@ -58,28 +75,6 @@ public class StorePeriodAnalysisReport implements Serializable {
     public void setProductAnalysisReports(List<ProductAnalysisReport> productAnalysisReports) {
         this.productAnalysisReports = productAnalysisReports;
     }
-    
-    
-
-  
-
-    public List<ProductAnalysisReport> getStorePeriodAnalysisDetails() {
-        return productAnalysisReports;
-    }
-
-    public void setStorePeriodAnalysisDetails(List<ProductAnalysisReport> storePeriodAnalysisDetails) {
-        this.productAnalysisReports = storePeriodAnalysisDetails;
-    }
-    
-    
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public int hashCode() {
@@ -103,7 +98,7 @@ public class StorePeriodAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.StorePeriodAnalysisReport[ id=" + id + " ]";
+        return "StorePeriodAnalysisReport[ id=" + id + " ]";
     }
-    
+
 }

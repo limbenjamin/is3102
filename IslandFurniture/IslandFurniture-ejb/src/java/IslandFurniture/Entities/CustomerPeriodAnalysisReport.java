@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -23,38 +23,28 @@ public class CustomerPeriodAnalysisReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
+    private Double totalRevenue;
+
+    @ManyToOne
     private CountryPeriodAnalysisReport countryPeriodAnalysisReport;
 
-    @OneToOne
+    @ManyToOne
     private CustomerSegment customerSegment;
 
-    private Long qty;
-    private Double revenue;
-
-    public Long getQty() {
-        return qty;
+    public Long getId() {
+        return id;
     }
 
-    public void setQty(Long qty) {
-        this.qty = qty;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Double getRevenue() {
-        return revenue;
+    public Double getTotalRevenue() {
+        return totalRevenue;
     }
 
-    public void setRevenue(Double revenue) {
-        this.revenue = revenue;
-    }
-
-    
-    public CustomerSegment getCustomerSegment() {
-        return customerSegment;
-    }
-
-    public void setCustomerSegment(CustomerSegment customerSegment) {
-        this.customerSegment = customerSegment;
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
     }
 
     public CountryPeriodAnalysisReport getCountryPeriodAnalysisReport() {
@@ -65,12 +55,12 @@ public class CustomerPeriodAnalysisReport implements Serializable {
         this.countryPeriodAnalysisReport = countryPeriodAnalysisReport;
     }
 
-    public Long getId() {
-        return id;
+    public CustomerSegment getCustomerSegment() {
+        return customerSegment;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCustomerSegment(CustomerSegment customerSegment) {
+        this.customerSegment = customerSegment;
     }
 
     @Override
@@ -95,7 +85,7 @@ public class CustomerPeriodAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.StorePeriodAnalysisReport[ id=" + id + " ]";
+        return "StorePeriodAnalysisReport[ id=" + id + " ]";
     }
 
 }

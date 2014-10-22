@@ -37,4 +37,16 @@
             </redirect> 
         </navigation-case>        
     </navigation-rule>
+    <application>
+        <locale-config>
+            <default-locale>en_US</default-locale>
+            <supported-locale>en_SG</supported-locale>
+            <supported-locale>zh_CN</supported-locale>
+            <supported-locale>ms_MY</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>Islandfurniture.WAR2.Locale.Messages</base-name>
+            <var>bundle</var>
+        </resource-bundle>
+    </application>    
 </faces-config>
