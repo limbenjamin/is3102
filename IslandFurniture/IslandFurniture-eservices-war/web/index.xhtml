@@ -6,12 +6,26 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
     <ui:define name="content">
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">        
                     <h3>Select your region:</h3>
+                    <h:form>
+                         <h:selectOneMenu id="selectedLocale" value="#{indexManagedBean.selectedLocale}" >
+                             <f:selectItem id="item1" itemLabel="English (US)" itemValue="en_US" />
+                             <f:selectItem id="item2" itemLabel="English (Singapore)" itemValue="en_SG" />
+                             <f:selectItem id="item3" itemLabel="Chinese (China)" itemValue="zh_CN" />
+                             <f:selectItem id="item4" itemLabel="Malay (Malaysia)" itemValue="ms_MY" />
+                             <pf:ajax update="localizedString localizedCurrency" listener="#{indexManagedBean.selectedLocaleValueChangeListener}" />
+                         </h:selectOneMenu> 
+                        <br/><br/><br/>
+                        Localized String: <h:outputText id="localizedString" value="#{bundle['nav.main']}" />
+                        <br/><br/>             
+                        Localized Currency: <h:outputText id="localizedCurrency" value="#{indexManagedBean.localizedCurrencyFormat}" />
+                    </h:form>                    
                     <hr/>
                     <h:form>
                         <ui:repeat value="#{indexManagedBean.coList}" var="co">
