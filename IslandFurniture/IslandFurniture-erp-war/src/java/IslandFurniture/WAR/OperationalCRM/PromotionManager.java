@@ -16,6 +16,7 @@ import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Enums.CampaignGoal;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import IslandFurniture.StaticClasses.UtilityBeanLocal;
@@ -62,7 +63,7 @@ public class PromotionManager implements Serializable {
 
     public List<MembershipTier> membershipTiers;
 
-    public PromotionCampaign.campaignGoal[] campaignGoals;
+    public CampaignGoal[] campaignGoals;
 
     public List<PromotionCampaign> promotionCampaigns;
 
@@ -166,8 +167,8 @@ public class PromotionManager implements Serializable {
 
     }
 
-    public PromotionCampaign.campaignGoal[] getCampaignGoals() {
-        return PromotionCampaign.campaignGoal.values();
+    public CampaignGoal[] getCampaignGoals() {
+        return CampaignGoal.values();
     }
 
     public FurnitureCategory[] getFurnitureCategory() {

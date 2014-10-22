@@ -155,7 +155,7 @@ public abstract class PromotionDetail implements Serializable {
 
     @Override
     public String toString() {
-        return "FW.IslandFurniture.Entities.CountryOffice.PromotionDetail[ id=" + id + " ]";
+        return "PromotionDetail[ id=" + id + " ]";
     }
 
 }

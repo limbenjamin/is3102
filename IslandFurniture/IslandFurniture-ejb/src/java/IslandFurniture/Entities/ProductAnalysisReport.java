@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -18,20 +18,50 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class ProductAnalysisReport implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @OneToOne
+    private Long totalQty;
+    private Double totalRevenue;
+
+    @ManyToOne
     private Stock stock;
-    private Long qty;
-    private Double revenue;
-    
+
+    @ManyToOne
     private StorePeriodAnalysisReport storePeriodAnalysisReport;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(Long totalQty) {
+        this.totalQty = totalQty;
+    }
+
+    public Double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public void setTotalRevenue(Double totalRevenue) {
+        this.totalRevenue = totalRevenue;
+    }
 
     public Stock getStock() {
         return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     public StorePeriodAnalysisReport getStorePeriodAnalysisReport() {
@@ -40,36 +70,6 @@ public class ProductAnalysisReport implements Serializable {
 
     public void setStorePeriodAnalysisReport(StorePeriodAnalysisReport storePeriodAnalysisReport) {
         this.storePeriodAnalysisReport = storePeriodAnalysisReport;
-    }
-    
-
-    public void setStock(Stock stock) {
-        this.stock = stock;
-    }
-
-    public Long getQty() {
-        return qty;
-    }
-
-    public void setQty(Long qty) {
-        this.qty = qty;
-    }
-
-    public Double getRevenue() {
-        return revenue;
-    }
-
-    public void setRevenue(Double revenue) {
-        this.revenue = revenue;
-    }
-    
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ProductAnalysisReport implements Serializable {
 
     @Override
     public String toString() {
-        return "IslandFurniture.Entities.StorePeriodAnalysisDetail[ id=" + id + " ]";
+        return "StorePeriodAnalysisDetail[ id=" + id + " ]";
     }
-    
+
 }

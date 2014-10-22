@@ -6,7 +6,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.Picture;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.WebBanner;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -16,7 +16,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author Benjamin
+ * @author Kamilul Ashraf
  */
 @Stateless
 public class ManageWebBanner implements ManageWebBannerLocal {
@@ -28,17 +28,12 @@ public class ManageWebBanner implements ManageWebBannerLocal {
 
     // Function: Create Web Banner
     @Override
-    public void createWebBanner(CountryOffice countryOffice, String headerText, String subheaderText, String bodyText, String buttonText, String buttonUrl, Picture picture) {
+    public WebBanner createWebBanner(Plant plant) {
         WebBanner webBanner = new WebBanner();
-        webBanner.setCountryOffice(countryOffice);
-        webBanner.setHeaderText(headerText);
-        webBanner.setSubheaderText(subheaderText);
-        webBanner.setBodyText(bodyText);
-        webBanner.setButtonText(buttonText);
-        webBanner.setButtonUrl(buttonUrl);
-        webBanner.setPicture(picture);
+        webBanner.setCountryOffice((CountryOffice) plant);
         em.persist(webBanner);
         em.flush();
+        return webBanner;
     }
 
     // Function: Edit Web Banner
@@ -65,9 +60,16 @@ public class ManageWebBanner implements ManageWebBannerLocal {
 
     //  Function: View list of Web Banner
     @Override
-    public List<WebBanner> viewWebBanner(CountryOffice countryOffice) {
+    public List<WebBanner> viewWebBanner(Plant plant) {
         Query q = em.createQuery("SELECT s FROM WebBanner s WHERE s.countryOffice.id=:plantId");
-        q.setParameter("plantId", countryOffice.getId());
+        q.setParameter("plantId", plant.getId());
         return q.getResultList();
+    }
+
+    //  Function: Return Web Banner entity
+    @Override
+    public WebBanner getWebBanner(Long id) {
+        webBanner = (WebBanner) em.find(WebBanner.class, id);
+        return webBanner;
     }
 }

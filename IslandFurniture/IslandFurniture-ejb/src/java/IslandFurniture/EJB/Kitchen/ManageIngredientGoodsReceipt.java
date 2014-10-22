@@ -20,7 +20,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author Benjamin
+ * @author Kamilul Ashraf
  */
 @Stateless
 public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceiptLocal {
@@ -34,9 +34,9 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
 
     // Function: Create Ingredient Goods Receipt Document
     @Override
-    public IngredientGoodsReceiptDocument createIngredientGoodsReceiptDocument(Staff staff, Calendar createTime) {
+    public IngredientGoodsReceiptDocument createIngredientGoodsReceiptDocument(Staff staff, Calendar createTime, Store store) {
         IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument = new IngredientGoodsReceiptDocument();
-        // Need to setStore here
+        ingredientGoodsReceiptDocument.setStore(store);
         ingredientGoodsReceiptDocument.setCreatedBy(staff);
         ingredientGoodsReceiptDocument.setCreationTime(createTime);
         ingredientGoodsReceiptDocument.setLastModBy(staff);

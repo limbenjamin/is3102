@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="webbanner.xhtml">Web Banner</a></li>
+                            <li class="active"><strong>Web Banner ##{webBannerDetailManagedBean.id}</strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+
+                        <span class="pull-right"> 
+                            <a href="webbanner.xhtml">
+                                <button type="button" class="btn btn-sm btn-default pull-right">
+                                    <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
+                                </button>
+                            </a>                            
+                        </span>   
+
+                        <h4>Web Banner ##{webBannerDetailManagedBean.id}</h4><hr></hr>
+                    </div>
+
+                    <div class="col-md-10">                      
+                        <section name="Web Banner Document">
+                            <div class="panel-heading dashboard-title-panel">
+                                Web Banner Details
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover table-condensed">
+                                    <div class="modal-body">
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Header Text: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputText value="#{webBannerDetailManagedBean.headerText}" label="#{webBannerDetailManagedBean.webBanner.headerText}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Sub-header Text: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputText value="#{webBannerDetailManagedBean.subHeaderText}" label="#{webBannerDetailManagedBean.webBanner.subheaderText}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Body Text: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputText value="#{webBannerDetailManagedBean.bodyText}" label="#{webBannerDetailManagedBean.webBanner.bodyText}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Button Text: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputText value="#{webBannerDetailManagedBean.buttonText}" label="#{webBannerDetailManagedBean.webBanner.buttonText}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Button URL: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputText value="#{webBannerDetailManagedBean.buttonURL}" label="#{webBannerDetailManagedBean.webBanner.buttonUrl}" class="form-control" pt:required="true"></h:inputText>
+                                            </div>
+                                        </tr>
+                                        <tr>
+                                            <label class="col-sm-4 control-label">Picture: </label>
+                                            <div class="col-sm-8">
+                                                
+                                            </div>
+                                        </tr>
+                                    </div>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section name="Edit Web Banner Button">
+                            <h:form class="form-horizontal">
+                                <h:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update" class="btn btn-primary pull-right"> 
+                                    <f:attribute name="wb" value="#{webBannerDetailManagedBean.webBanner}" />
+                                </h:commandButton>
+                            </h:form>
+                        </section>
+                    </div>
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

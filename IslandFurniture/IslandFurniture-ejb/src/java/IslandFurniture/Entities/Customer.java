@@ -45,6 +45,7 @@ public class Customer implements Serializable {
     private String loyaltyCardId;
     private Integer currentPoints;
     private Integer cumulativePoints;
+    private Double lifetimeVal;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
     @ManyToOne
@@ -212,6 +213,14 @@ public class Customer implements Serializable {
 
     public void setForgottenPasswordCode(String forgottenPasswordCode) {
         this.forgottenPasswordCode = forgottenPasswordCode;
+    }
+
+    public Double getLifetimeVal() {
+        return lifetimeVal;
+    }
+
+    public void setLifetimeVal(Double lifetimeVal) {
+        this.lifetimeVal = lifetimeVal;
     }
 
     public Date getLastLogon() {

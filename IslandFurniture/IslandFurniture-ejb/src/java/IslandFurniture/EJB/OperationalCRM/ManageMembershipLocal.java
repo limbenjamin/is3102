@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageMembershipLocal {
 
     // Function: Create a New Customer
@@ -36,5 +37,11 @@ public interface ManageMembershipLocal {
 
     //  Function: View list of Membership Tier
     List<MembershipTier> viewMembershipTier();
+
+    //  Function: To check if there is no Membership Tier with the Same Title
+    boolean checkIfNoMembershipTierSameName(String title);
+
+    //  Function: To check if there is no Customers in the Tier
+    boolean checkIfNoCustomersInTheTier(MembershipTier mt);
     
 }
