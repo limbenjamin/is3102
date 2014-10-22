@@ -35,8 +35,8 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
+                                    <li><a>Welcome to #{templateManagedBean.co.country.name}!</a></li>
                                     <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml"><i class="fa fa-user"></i> Account</a></li>
-                                    <li><a href="#"><i class="fa fa-star"></i> Wish List</a></li>
                                     <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml"><i class="fa fa-shopping-cart"></i> Shopping List</a></li>
                                     <li><a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml"><i class="fa fa-lock"></i> Login</a></li>
                                 </ul>
@@ -64,7 +64,9 @@
                                             <h:outputText id="navhome" value="#{bundle['nav.main']}" />
                                         </a>
                                     </li>
-                                    <li class="dropdown"><a href="#">Bedroom</a>
+                                    <li class="dropdown"><a href="#">
+                                            <h:outputText value="#{bundle['nav.bedroom']}" />
+                                        </a>
                                         <ul role="menu" class="sub-menu">
                                             <li><a href="#">Beds &amp; Mattresses</a></li>
                                             <li><a href="#">Tables</a></li>
@@ -213,4 +215,3 @@
         </footer><!--/Footer-->        
     </h:body>
 </html>
-

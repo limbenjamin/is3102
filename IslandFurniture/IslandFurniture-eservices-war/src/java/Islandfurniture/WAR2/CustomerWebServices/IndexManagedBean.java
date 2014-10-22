@@ -37,18 +37,21 @@ public class IndexManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         this.coList = manageOrganizationalHierarchyBean.displayCountryOffice();
-         ctx.getViewRoot().setLocale(new Locale("en", "US"));
+         ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
     }
 
     public void fowardToLocalizedPage(ActionEvent event) throws IOException {
         String coCode = event.getComponent().getAttributes().get("coCode").toString();
-        
+        if (coCode.equals("cn")) {
+            ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
+            System.out.println("co code is " + coCode);
+        }    
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         System.out.println("Redirecting to localised page: " + ec.getRequestContextPath() + "/" + coCode + "/home.xhtml");
         ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/home.xhtml");
     }
     
-    public void selectedLocaleValueChangeListener() {
+    /**public void selectedLocaleValueChangeListener() {
         if(selectedLocale.equals("en_US")) ctx.getViewRoot().setLocale(new Locale("en", "US"));
         else if(selectedLocale.equals("en_SG")) ctx.getViewRoot().setLocale(new Locale("en", "SG"));
         else if(selectedLocale.equals("zh_CN")) ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
@@ -57,7 +60,7 @@ public class IndexManagedBean implements Serializable {
 
     public String getLocalizedCurrencyFormat() {
         return NumberFormat.getCurrencyInstance(ctx.getViewRoot().getLocale()).format(1000);     
-    }    
+    }**/    
     /**
      * Creates a new instance of IndexManagedBean
      */
