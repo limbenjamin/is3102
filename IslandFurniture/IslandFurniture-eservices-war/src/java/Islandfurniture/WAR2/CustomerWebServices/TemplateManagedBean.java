@@ -9,15 +9,18 @@ package Islandfurniture.WAR2.CustomerWebServices;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Enums.FurnitureSubcategory;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.inject.Named;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -32,6 +35,7 @@ public class TemplateManagedBean {
     private List<CountryOffice> coList;
     private String selectedLocale;
     private CountryOffice co;
+    private List<FurnitureSubcategory> subcategoryList;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -40,7 +44,9 @@ public class TemplateManagedBean {
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
-        setCountryLocale((String) httpReq.getAttribute("coCode"));         
+        setCountryLocale((String) httpReq.getAttribute("coCode"));      
+        // get furniture subcategory enum list
+        subcategoryList = new ArrayList<>(EnumSet.allOf(FurnitureSubcategory.class));
     } 
     
     public void setCountryLocale(String coCode) {
@@ -58,7 +64,7 @@ public class TemplateManagedBean {
     public String getLocalizedCurrencyFormat() {
         return NumberFormat.getCurrencyInstance(ctx.getViewRoot().getLocale()).format(1000);     
     }     
-
+    
     public List<CountryOffice> getCoList() {
         return coList;
     }
@@ -81,6 +87,14 @@ public class TemplateManagedBean {
 
     public void setCo(CountryOffice co) {
         this.co = co;
+    }
+
+    public List<FurnitureSubcategory> getSubcategoryList() {
+        return subcategoryList;
+    }
+
+    public void setSubcategoryList(List<FurnitureSubcategory> subcategoryList) {
+        this.subcategoryList = subcategoryList;
     }
     
 }
