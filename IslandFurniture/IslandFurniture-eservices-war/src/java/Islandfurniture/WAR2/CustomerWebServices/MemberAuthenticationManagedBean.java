@@ -44,7 +44,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
         }
 
         Customer customer = mmab.authenticate(emailAddress, password);
-        System.out.println(customer.getName());
+        //System.out.println(customer.getName());
         if (customer != null) {
             HttpSession session = Util.getSession();
             session.setAttribute("emailAddress", emailAddress);
