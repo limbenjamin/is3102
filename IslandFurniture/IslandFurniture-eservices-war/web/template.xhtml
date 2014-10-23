@@ -17,10 +17,7 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/responsive.css"></link>
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
-        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>  
-        <!-- extra plug-ins -->
-        <script src="#{application.contextPath}/assets/plugins/prism.js"></script>
-        <script src="#{application.contextPath}/assets/plugins/threesixty.js"></script>          
+        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>        
     </h:head>
     <h:body>
         <header id="header">		
@@ -38,29 +35,21 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
-                                    <p:outputPanel rendered="#{not empty emailAddress}">
-                                        <li>
-                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
-                                                <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
-                                                <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
-                                            </a>
-                                        </li>                                    
-                                        <li>
-                                            <p:commandLink action="#{memberAuthenticationManagedBean.logout}">Logout</p:commandLink>
-                                        </li>
-                                    </p:outputPanel>
-                                    <p:outputPanel rendered="#{empty emailAddress}">
-                                        <li>
-                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
-                                                <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
-                                            </a>
-                                        </li>
-                                    </p:outputPanel>
-                                    
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
+                                            <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
+                                            <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
+                                            <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -91,11 +80,13 @@
                                             <h:outputText value="#{bundle['nav.bedroom']}" />
                                         </a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="#">Beds &amp; Mattresses</a></li>
+                                            <li><a href="#">Bedding</a></li>
                                             <li><a href="#">Tables</a></li>
-                                            <li><a href="#">Chairs &amp; Couches</a></li>
-                                            <li><a href="#">Boudoir</a></li>
-                                            <li><a href="#">Shelves</a></li>
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Mirrors</a></li>
+                                            <li><a href="#">Lighting</a></li>
+                                            <li><a href="#">Wardrobe</a></li>
+                                            <li><a href="#">Textile</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
@@ -105,8 +96,8 @@
                                         <ul role="menu" class="sub-menu">
                                             <li><a href="#">Sofas</a></li>
                                             <li><a href="#">Tables</a></li>
-                                            <li><a href="#">Chairs &amp; Couches</a></li>
-                                            <li><a href="#">Storage</a></li>
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Lighting</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
@@ -114,10 +105,10 @@
                                             <h:outputText value="#{bundle['nav.kitchen']}" />
                                         </a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="#">Sofas</a></li>
+                                            <li><a href="#">Cooking</a></li>
+                                            <li><a href="#">Lighting</a></li>
                                             <li><a href="#">Tables</a></li>
-                                            <li><a href="#">Chairs &amp; Couches</a></li>
-                                            <li><a href="#">Storage</a></li>
+                                            <li><a href="#">Chairs</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
@@ -125,19 +116,27 @@
                                             <h:outputText value="#{bundle['nav.dining']}" />
                                         </a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="#">Cooking Facilities</a></li>
+                                            <li><a href="#">Lighting</a></li>
                                             <li><a href="#">Tables</a></li>
                                             <li><a href="#">Chairs</a></li>
-                                            <li><a href="#">Shelves</a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown">
                                         <a href="#">
-                                            <h:outputText value="#{bundle['nav.study']}" />
+                                            <h:outputText value="#{bundle['nav.bathroom']}" />
                                         </a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="#">Shelves</a></li>
+                                            <li><a href="#">Mirrors</a></li>
+                                            <li><a href="#">Lighting</a></li>
+                                        </ul>
+                                    </li>                                    
+                                    <li class="dropdown">
+                                        <a href="#">
+                                            <h:outputText value="#{bundle['nav.workspace']}" />
+                                        </a>
+                                        <ul role="menu" class="sub-menu">
                                             <li><a href="#">Desks</a></li>
+                                            <li><a href="#">Tables</a></li>
                                             <li><a href="#">Chairs</a></li>
                                             <li><a href="#">Lighting</a></li>
                                         </ul>
@@ -147,10 +146,11 @@
                                             <h:outputText value="#{bundle['nav.children']}" />
                                         </a>
                                         <ul role="menu" class="sub-menu">
-                                            <li><a href="#">Sofas</a></li>
+                                            <li><a href="#">Bedding</a></li>
                                             <li><a href="#">Tables</a></li>
-                                            <li><a href="#">Chairs &amp; Couches</a></li>
-                                            <li><a href="#">Toys</a></li>
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Textiles</a></li>
+                                            <li><a href="#">Wardrobe</a></li>
                                         </ul>
                                     </li>
                                     <li>
