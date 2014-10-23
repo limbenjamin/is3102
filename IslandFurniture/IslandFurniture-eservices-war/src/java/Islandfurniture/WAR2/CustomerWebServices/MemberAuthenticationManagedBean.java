@@ -88,6 +88,22 @@ public class MemberAuthenticationManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Created", ""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
     }
+    
+    public void logout() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        coDir = ec.getRequestParameterMap().get("coCode");
+        if (coDir == null || coDir.isEmpty()) {
+            coDir = "";
+        } else {
+            coDir = "/" + coDir;
+        }
+        HttpSession session = Util.getSession();
+        session.setAttribute("", emailAddress);
+        session.invalidate();
+        ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+    }
+    
+    
 
     public String getEmailAddress() {
         return emailAddress;
