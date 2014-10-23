@@ -17,7 +17,10 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/responsive.css"></link>
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
-        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>        
+        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>  
+        <!-- extra plug-ins -->
+        <script src="#{application.contextPath}/assets/plugins/prism.js"></script>
+        <script src="#{application.contextPath}/assets/plugins/threesixty.js"></script>          
     </h:head>
     <h:body>
         <header id="header">		
@@ -35,21 +38,29 @@
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
                                 <ul class="nav navbar-nav">
-                                    <li>
-                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
-                                            <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
-                                            <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
-                                            <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
-                                        </a>
-                                    </li>
+                                    <p:outputPanel rendered="#{not empty emailAddress}">
+                                        <li>
+                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
+                                                <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
+                                                <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
+                                            </a>
+                                        </li>                                    
+                                        <li>
+                                            <p:commandLink action="#{memberAuthenticationManagedBean.logout}">Logout</p:commandLink>
+                                        </li>
+                                    </p:outputPanel>
+                                    <p:outputPanel rendered="#{empty emailAddress}">
+                                        <li>
+                                            <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
+                                                <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
+                                            </a>
+                                        </li>
+                                    </p:outputPanel>
+                                    
                                 </ul>
                             </div>
                         </div>
