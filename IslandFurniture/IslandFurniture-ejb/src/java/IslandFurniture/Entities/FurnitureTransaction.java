@@ -23,7 +23,7 @@ import javax.persistence.PostPersist;
 @NamedQueries({
     @NamedQuery(
             name = "findClaimingTrans",
-            query = "SELECT a FROM FurnitureTransaction a WHERE a.returnedItemTrans = :returnedTrans")
+            query = "SELECT a FROM FurnitureTransaction a WHERE a.returnedTrans = :returnedTrans")
 })
 public class FurnitureTransaction extends Transaction implements Serializable {
 
