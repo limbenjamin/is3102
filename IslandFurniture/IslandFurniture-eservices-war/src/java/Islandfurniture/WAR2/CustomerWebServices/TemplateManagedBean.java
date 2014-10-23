@@ -44,6 +44,7 @@ public class TemplateManagedBean {
     } 
     
     public void setCountryLocale(String coCode) {
+        selectedLocale = coCode;
         if (coCode.equals("cn")) {
             ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
         }    
