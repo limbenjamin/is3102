@@ -90,13 +90,12 @@ public class MemberAuthenticationManagedBean implements Serializable {
     }
     
     public void logout() throws IOException {
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        coDir = ec.getRequestParameterMap().get("coCode");
-        if (coDir == null || coDir.isEmpty()) {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext(); 
+        /**if (coDir == null || coDir.isEmpty()) {
             coDir = "";
         } else {
             coDir = "/" + coDir;
-        }
+        }**/
         HttpSession session = Util.getSession();
         session.setAttribute("", emailAddress);
         session.invalidate();

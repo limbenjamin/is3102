@@ -47,7 +47,9 @@
                                             </a>
                                         </li>                                    
                                         <li>
-                                            <p:commandLink action="#{memberAuthenticationManagedBean.logout}">Logout</p:commandLink>
+                                            <h:form>
+                                            <h:commandLink action="#{memberAuthenticationManagedBean.logout}">Logout</h:commandLink>
+                                            </h:form>
                                         </li>
                                     </p:outputPanel>
                                     <p:outputPanel rendered="#{empty emailAddress}">
