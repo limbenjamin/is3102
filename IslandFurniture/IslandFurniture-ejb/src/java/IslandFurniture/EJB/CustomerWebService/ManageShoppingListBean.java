@@ -94,7 +94,8 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             listDetail.setQty(quantity);
             shoppingList.getShoppingListDetails().add(listDetail);
             // update list total price
-            shoppingList.setTotalPrice(quantity * furniture.getPrice());
+            Double currentPrice = shoppingList.getTotalPrice();
+            shoppingList.setTotalPrice(currentPrice + quantity * furniture.getPrice());
             em.persist(shoppingList);
             em.persist(listDetail);
             em.flush();

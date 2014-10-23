@@ -22,7 +22,7 @@
                         </div>                     
                         <div class="col-sm-4">
                             <section class="container-fluid">
-                                <img src="#{application.contextPath}/assets/images/home/product1.jpg" style="max-width:400px;" alt="" />
+                                <img src="#{application.contextPath}/assets/images/home/product11.JPG" style="max-width:400px;" alt="" />
                             </section>
                         </div>
 			<div class="col-sm-8">
@@ -32,16 +32,16 @@
                                 <h4>#{productDetailManagedBean.co.country.currency.currencyCode}
                                     <h:outputText value="#{productDetailManagedBean.furniture.price}">
                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                    </h:outputText>                                   
+                                    </h:outputText>
                                 </h4>
                                 <span class="product-options">
                                     <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
-                                    <a href="#"><i class="fa fa-eye"></i> View in Room Planner</a>
+                                    <a href="#"><i class="fa fa-eye"></i> View inside Room Planner</a>
                                 </span>
                                 <hr/>
                                 <div class="col-sm-8">
                                     <p><b>Category:</b> #{productDetailManagedBean.furniture.category}</p>
-                                    <p><b>Sub-Category:</b> #{productDetailManagedBean.furniture.subcategory}</p>                                    
+                                    <p><b>Sub-Category:</b> #{productDetailManagedBean.furniture.subcategory}</p>
                                     <p><b>Points worth:</b> #{productDetailManagedBean.furniture.pointsWorth}</p>
                                     <br/>
                                     <h:form id="addItemToList" rendered="#{productDetailManagedBean.loggedIn}" class="form-horizontal">
