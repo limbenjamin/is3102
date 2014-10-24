@@ -3,15 +3,17 @@
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+
     </context-param>
     <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+                <servlet-name>javax.ws.rs.core.Application</servlet-name>
         <load-on-startup>1</load-on-startup>
+
     </servlet>
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+                <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <url-pattern>/rest-api/*</url-pattern>
+
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -21,4 +23,6 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+
+    
 </web-app>
