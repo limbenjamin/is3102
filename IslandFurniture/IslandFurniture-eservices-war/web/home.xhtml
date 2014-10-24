@@ -14,25 +14,14 @@
                     <div class="col-sm-12">
                         <div id="slider-carousel" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
-                                <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
                                 <ui:repeat value="#{homeManagedBean.webBanners}" var="banner">
-                                    <li data-target="#slider-carousel" data-slide-to="#{homeManagedBean.webBanners.indexOf(banner)+1}"></li>
+                                    <li data-target="#slider-carousel" data-slide-to="#{homeManagedBean.webBanners.indexOf(banner)}" 
+                                        class="#{homeManagedBean.checkForActive(homeManagedBean.webBanners.indexOf(banner))}"></li>
                                 </ui:repeat>
                             </ol>
                             <div class="carousel-inner">
-                                <div class="item active">
-                                    <div class="col-sm-6">
-                                        <h1><span>MODULAR</span> SERIES</h1>
-                                        <h3>Modern shelves for modern homes</h3>
-                                        <p>Want flexible shelf units that cater to any room size and allow you to arrange them easily? Look no further!</p>
-                                        <button type="button" class="btn btn-default get">Get it now</button>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <img src="#{application.contextPath}/assets/images/home/shelves.jpg" class="slider-image img-responsive" alt="" />
-                                    </div>
-                                </div>
                                 <ui:repeat value="#{homeManagedBean.webBanners}" var="banner">
-                                <div class="item">
+                                <div class="item #{homeManagedBean.checkForActive(homeManagedBean.webBanners.indexOf(banner))}">
                                     <div class="col-sm-6">
                                         <h1>#{banner.headerText}</h1>
                                         <h3>#{banner.subheaderText}</h3>

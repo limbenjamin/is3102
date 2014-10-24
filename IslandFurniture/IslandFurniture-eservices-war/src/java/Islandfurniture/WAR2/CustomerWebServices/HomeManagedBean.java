@@ -40,6 +40,13 @@ public class HomeManagedBean {
         webBanners = co.getWebBanners();
         System.out.println("loaded " + co.getName() + " web banners");
     }    
+    
+    public String checkForActive(int index) {
+        if (index == 0)
+            return "active";
+        else
+            return "";
+    }
 
     public CountryOffice getCo() {
         return co;
