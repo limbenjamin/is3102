@@ -17,8 +17,33 @@
                               <li><a href="home.xhtml">Home</a></li>
                               <li class="active"><strong>All Products</strong></li>
                             </ol>                                         
-                        </div>                        
-                        <div class="col-sm-12">
+                        </div>     
+                    <div class="col-sm-3">
+                        <div class="left-sidebar">
+                            <div class="brands_products" style="margin-top: 20px;">
+                                <h2>Categories</h2>
+                                <div class="brands-name">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li><a href="bedroom.xhtml">
+                                                <h:outputText value="#{bundle['nav.bedroom']}" /></a></li>
+                                        <li><a href="living.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.living']}" /></a></li>
+                                        <li><a href="kitchen.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.kitchen']}" /></a></li>
+                                        <li><a href="dining.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.dining']}" /></a></li>
+                                        <li><a href="bathroom.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.bathroom']}" /></a></li>
+                                        <li><a href="workspace.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.workspace']}" /></a></li>
+                                        <li><a href="children.xhtml"> 
+                                                <h:outputText value="#{bundle['nav.children']}" /></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                        
+                        <div class="col-sm-9">
                             <div class="catalogue">
                                 <h2 class="title text-center">ALL FURNITURE</h2>
                                 <h:form>
@@ -30,13 +55,12 @@
                                                     <a href="productdetail.xhtml?id=#{furniture.id}">
                                                         <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
                                                     </a>
-                                                    <h2>#{catalogueManagedBean.co.country.currency.currencyCode}
+                                                    <h4>#{catalogueManagedBean.co.country.currency.currencyCode}
                                                     <h:outputText value="#{furniture.price}">
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                     </h:outputText>                                                    
-                                                    </h2>
-                                                    <a href="productdetail.xhtml?id=#{furniture.id}"><h4>#{furniture.name}</h4></a>
-                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-star"></i>Add to Wish List</a>
+                                                    </h4>
+                                                    <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
                                                 </div>
                                             </div>
                                         </div>
