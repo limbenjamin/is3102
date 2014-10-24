@@ -30,7 +30,9 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(IslandFurniture.WAR3.MOBILEAPP.CustomerService.class);
         resources.add(IslandFurniture.WAR3.POS.AuthenticationWS.class);
+        resources.add(IslandFurniture.WAR3.POS.RESTAPIFILTER.class);
         resources.add(IslandFurniture.WAR3.POS.StocklistWS.class);
     }
     
