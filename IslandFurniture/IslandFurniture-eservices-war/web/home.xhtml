@@ -105,6 +105,19 @@
                     <div class="col-sm-9 padding-right">
                         <div class="features_items"><!--features_items-->
                             <h2 class="title text-center">FEATURED FURNITURE</h2>
+                            <ui:repeat value="#{homeManagedBean.featuredProducts}" var="product">
+                            <div class="col-sm-4">
+                                <div class="product-image-wrapper">
+                                    <div class="single-products">
+                                        <div class="productinfo text-center">
+                                            <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
+                                            <h2>$116</h2>
+                                            <p>#{product.name}</p>
+                                        </div>									
+                                    </div>
+                                </div>
+                            </div>
+                            </ui:repeat>
                             <div class="col-sm-4">
                                 <div class="product-image-wrapper">
                                     <div class="single-products">

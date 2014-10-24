@@ -8,7 +8,11 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.WebBanner;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -28,6 +32,9 @@ public class HomeManagedBean {
     
     private CountryOffice co;
     private List<WebBanner> webBanners;
+    private List<Stock> featuredProducts;
+    private List<FurnitureModel> featuredFurniture;
+    private List<RetailItem> featuredRetailItems;
 
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -38,7 +45,30 @@ public class HomeManagedBean {
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         
         webBanners = co.getWebBanners();
+        featuredProducts = co.getFeaturedProducts();
+        getAllFeaturedFurniture();
+        getAllFeaturedRetailItems();
         System.out.println("loaded " + co.getName() + " web banners");
+    }    
+    
+    public void getAllFeaturedFurniture() {
+        Iterator<Stock> iterator = featuredProducts.iterator();
+        while (iterator.hasNext()) {
+            Stock stock = iterator.next();
+            if (stock instanceof FurnitureModel) {
+                featuredFurniture.add((FurnitureModel)stock);
+            }
+        }        
+    }
+    
+    public void getAllFeaturedRetailItems() {
+        Iterator<Stock> iterator = featuredProducts.iterator();
+        while (iterator.hasNext()) {
+            Stock stock = iterator.next();
+            if (stock instanceof RetailItem) {
+                featuredRetailItems.add((RetailItem)stock);
+            }
+        }        
     }    
     
     public String checkForActive(int index) {
@@ -62,5 +92,29 @@ public class HomeManagedBean {
 
     public void setWebBanners(List<WebBanner> webBanners) {
         this.webBanners = webBanners;
+    }
+
+    public List<Stock> getFeaturedProducts() {
+        return featuredProducts;
+    }
+
+    public void setFeaturedProducts(List<Stock> featuredProducts) {
+        this.featuredProducts = featuredProducts;
+    }
+
+    public List<FurnitureModel> getFeaturedFurniture() {
+        return featuredFurniture;
+    }
+
+    public void setFeaturedFurniture(List<FurnitureModel> featuredFurniture) {
+        this.featuredFurniture = featuredFurniture;
+    }
+
+    public List<RetailItem> getFeaturedRetailItems() {
+        return featuredRetailItems;
+    }
+
+    public void setFeaturedRetailItems(List<RetailItem> featuredRetailItems) {
+        this.featuredRetailItems = featuredRetailItems;
     }
 }
