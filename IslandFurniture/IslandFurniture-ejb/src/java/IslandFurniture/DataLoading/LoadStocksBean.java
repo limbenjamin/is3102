@@ -5,6 +5,7 @@
  */
 package IslandFurniture.DataLoading;
 
+import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.Entities.BOM;
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.CountryOffice;
@@ -24,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +39,9 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
+    
+    @EJB
+    StockManagerLocal sml;
 
     private FurnitureModel addFurnitureModel(String name, long points, String description, FurnitureCategory fCat, FurnitureSubcategory fsCat) {
         FurnitureModel furniture = QueryMethods.findFurnitureByName(em, name);
@@ -165,6 +170,8 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addFurnitureModel("Bathroom Rug E64", 30, "With this bathroom rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
                 this.addFurnitureModel("Kitchen Stool", 250, "A chair without a back, perfect for the lazy bones to correct their posture.", FurnitureCategory.KITCHEN, FurnitureSubcategory.CHAIRS);
 
+
+                
                 // Add BOM to FurnitureModel
                 List<FurnitureModel> fmList = em.createNamedQuery("getAllFurnitureModels").getResultList();
                 List<Material> materialList = em.createNamedQuery("Material.getMaterialList").getResultList();
@@ -322,6 +329,10 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                     }
                 }
             }
+            
+            sml.addNFCTagToStock("Swivel Chair", "04e48cea5d2b80");
+            sml.addNFCTagToStock("Coffee Table", "04e4a0ea5d2b80");
+            sml.addNFCTagToStock("Study Table - Dinosaur Edition", "04e100ea412b84");
 
             return true;
         } catch (Exception ex) {

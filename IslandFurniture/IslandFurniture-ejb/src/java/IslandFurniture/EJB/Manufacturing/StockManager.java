@@ -10,6 +10,7 @@ import IslandFurniture.Entities.BOM;
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.NFC;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.RetailItem;
@@ -31,6 +32,7 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -477,5 +479,16 @@ public class StockManager implements StockManagerLocal {
                 System.out.println("Selling price is $" + price);
                 return price;
         }
+    }
+    @Override
+    public void addNFCTagToStock(String stockName, String NFCTagId){
+        Query query = em.createQuery("SELECT s FROM Stock s WHERE s.name=:stockName");
+        query.setParameter("stockName", stockName);
+        Stock stock = (Stock) query.getSingleResult();
+        NFC nfc = new NFC();
+        nfc.setNfcId(NFCTagId);
+        nfc.setStock(stock);
+        em.persist(nfc);
+        stock.getNfcList().add(nfc);
     }
 }
