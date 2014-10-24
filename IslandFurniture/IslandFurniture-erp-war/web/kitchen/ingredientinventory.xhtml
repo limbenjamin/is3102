@@ -18,12 +18,6 @@
                         </ol>                        
                     </div>                     
                     <div class="col-md-10"> 
-                        <span class="pull-right">
-                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addIngredient">
-                                <i class="fa fa-fw fa-plus"></i> Add Ingredient to Ingredient Inventory
-                            </button>                              
-                        </span>   
-
                         <h4>Ingredient Inventory</h4><hr></hr>
                     </div>
 
@@ -41,7 +35,6 @@
                                             <th>Current Quantity</th>
                                             <th>Threshold Quantity</th>
                                             <th>Update</th>
-                                            <th>Delete</th>
                                         </tr>
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{ingredientInventoryManagedBean.ingredientInventoryList}" var="ss">
@@ -55,12 +48,6 @@
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
                                                     </td>
-                                                    <td>
-                                                        <h:commandButton action="ingredientinventory" actionListener="#{ingredientInventoryManagedBean.deleteIngredientInventory}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                            <f:attribute name="ingredientInventory" value="#{ss}" />
-                                                        </h:commandButton>
-                                                        <i class="fa fa-lg fa-trash-o icon-button"></i>
-                                                    </td>
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 
@@ -68,44 +55,7 @@
                                 </h:panelGroup>
                             </div>
                         </section>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="addIngredient" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Add Ingredient to Ingredient Inventory</h4>
-                                    </div>
-                                    <h:form class="form-horizontal">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Ingredient: </label>
-                                                <div class="col-sm-9">
-                                                    <h:selectOneMenu class="form-control needauto" value="#{ingredientInventoryManagedBean.ingredientId}" pt:required="true">
-                                                        <f:selectItem itemLabel="Select Ingredient"/>
-                                                        <f:selectItems value="#{ingredientInventoryManagedBean.ingredientList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                                    </h:selectOneMenu>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Threshold Quantity: </label>
-                                                <div class="col-sm-9">
-                                                    <h:inputText pt:type="number"  pt:required="true" class="form-control" value="#{ingredientInventoryManagedBean.thresholdQty}"></h:inputText>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton action="ingredientinventory" actionListener="#{ingredientInventoryManagedBean.addIngredientInventory}" value="Add Ingredient to ingredient Inventory" class="btn btn-success pull-right btn-round"> 
-                                                </h:commandButton>
-                                            </div>
-                                        </div>
-                                    </h:form>
-                                </div>
-                            </div>
-                        </div>
                     </div> 
-
                 </div>
             </ui:define>
         </ui:composition>
