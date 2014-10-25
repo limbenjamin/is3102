@@ -99,7 +99,7 @@ public class ShoppingListDetailManagedBean {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Your item has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);
-        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml?id=" + listId);
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
     }    
     
     public Double calculateSubTotal() {

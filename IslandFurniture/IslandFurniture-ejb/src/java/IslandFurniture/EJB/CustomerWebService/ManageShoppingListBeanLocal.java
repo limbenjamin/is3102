@@ -22,6 +22,8 @@ public interface ManageShoppingListBeanLocal {
     ShoppingList getShoppingList(Long id);
 
     ShoppingList createShoppingList(String emailAddress, Long storeId, String name);
+    
+    void updateListSubTotal(Long listId, Long detailId, int op, Double value);
 
     void createShoppingListDetail(Long listId, Long stockId, int quantity, Double discountedPrice) throws DuplicateEntryException;
 

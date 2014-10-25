@@ -71,6 +71,21 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
+    public void updateListSubTotal(Long listId, Long detailId, int op, Double value) {
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        ShoppingListDetail detail = (ShoppingListDetail) em.find(ShoppingListDetail.class, detailId);
+        Double currentPrice = shoppingList.getTotalPrice();
+        value = detail.getQty() * value;
+        if (op == 1) // add
+            shoppingList.setTotalPrice(currentPrice + value);
+        else if (op == 0) // subtract
+            shoppingList.setTotalPrice(currentPrice - value);
+        else { // replace totalprice with new value
+            shoppingList.setTotalPrice(value);
+        }
+    }
+    
+    @Override
     public void deleteShoppingList(Long listId, String emailAddress) {
         Customer customer = getCustomer(emailAddress);
         ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
@@ -112,7 +127,12 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void deleteShoppingListDetail(Long listId) {
-        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, listId));
+    public void deleteShoppingListDetail(Long detailId) {
+        ShoppingListDetail detail = (ShoppingListDetail) em.find(ShoppingListDetail.class, detailId);
+        ShoppingList list = detail.getShoppingList();
+        Double currentPrice = list.getTotalPrice();
+        list.setTotalPrice(currentPrice - detail.getQty() * detail.getFurnitureModel().getPrice());
+        em.persist(list);
+        em.remove(detail);
     }    
 }
