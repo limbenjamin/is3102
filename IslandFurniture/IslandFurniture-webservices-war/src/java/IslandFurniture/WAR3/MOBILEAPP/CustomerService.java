@@ -5,6 +5,7 @@
  */
 package IslandFurniture.WAR3.MOBILEAPP;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBean;
 import IslandFurniture.EJB.OperationalCRM.MobileAppServiceLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Store;
@@ -28,6 +29,9 @@ public class CustomerService {
 
     @EJB
     private MobileAppServiceLocal masl;
+    
+    @EJB
+    private ManageCatalogueBean mcb;
 
     @GET
     @Path("memberlogin")
@@ -61,7 +65,7 @@ public class CustomerService {
         JsonArrayBuilder jab = Json.createArrayBuilder();
 
         for (Store s : masl.getAllStores(CO)) {
-            jab.add(Json.createArrayBuilder().add(s.getName()).add(""));
+            jab.add(Json.createArrayBuilder().add(s.getName()).add(s.getLatitude()).add(s.getLongitude()).add(s.getAddress()).add(s.getCountryOffice().getId()));
         }
         object.add("Stores", jab);
 
@@ -88,5 +92,14 @@ public class CustomerService {
         return object.build().toString();
 
     }
+    
+    @GET
+    @Path("prepcatalogue")
+    public String getCatalogue(@QueryParam("CO") String CO)
+    {
+        return "";
+        //mcb.getStoreFurniture(CO);
+    }
+    
 
 }

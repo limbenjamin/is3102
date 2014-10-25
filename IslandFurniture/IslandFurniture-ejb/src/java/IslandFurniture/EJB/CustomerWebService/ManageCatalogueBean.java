@@ -47,6 +47,7 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
         while (iterator.hasNext()) {
             Stock stock = iterator.next().getStock();
             if (stock instanceof FurnitureModel) {
+                FurnitureModel f=(FurnitureModel)stock;
                 furnitureList.add((FurnitureModel)stock);
             }
         }
