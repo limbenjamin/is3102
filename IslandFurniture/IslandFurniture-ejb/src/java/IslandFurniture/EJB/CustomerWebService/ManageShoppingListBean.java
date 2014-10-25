@@ -39,6 +39,11 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
+    public ShoppingListDetail getShoppingListDetail(Long id) {
+        return (ShoppingListDetail) em.find(ShoppingListDetail.class, id);
+    }      
+    
+    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);
@@ -71,8 +76,23 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void deleteShoppingList(Long listId) {
-        em.remove((ShoppingList) em.find(ShoppingList.class, listId));
+    public void updateListSubTotal(Long listId, int op, Double value) {
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        Double currentPrice = shoppingList.getTotalPrice();
+        if (op == 1) // add
+            shoppingList.setTotalPrice(currentPrice + value);
+        else if (op == 0) // subtract
+            shoppingList.setTotalPrice(currentPrice - value);
+        else { // replace totalprice with new value
+            shoppingList.setTotalPrice(value);
+        }
+    }
+    
+    @Override
+    public void deleteShoppingList(Long listId, String emailAddress) {
+        Customer customer = getCustomer(emailAddress);
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        shoppingList.getCustomers().remove(customer);
     }    
     
     @Override
@@ -110,7 +130,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void deleteShoppingListDetail(Long listId) {
-        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, listId));
+    public void deleteShoppingListDetail(Long detailId) {
+        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, detailId));
     }    
 }

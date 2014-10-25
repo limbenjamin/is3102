@@ -449,6 +449,8 @@ public class PaymentUI extends javax.swing.JFrame {
             values.add(returnReceiptField.getText());             
             params.add("customerCardId");
             values.add(customerCardId);
+            params.add("storeType");
+            values.add(storeType);
             try {
                 Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {
@@ -666,7 +668,7 @@ public class PaymentUI extends javax.swing.JFrame {
             }
             receipt+= "Cashier : "+ staffname +"\n\r\n\r";
             if (customerName == null){
-                receipt+= "Thank you for shopping with us 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0!";
+                receipt+= "Thank you for shopping with us!";
             }else{
                 receipt+= customerName+", thank you for shopping with us!\n\r";
             }
@@ -682,7 +684,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 PrinterJob printerJob = PrinterJob.getPrinterJob();
                 PageFormat pageFormat = printerJob.defaultPage();
                 Paper paper = new Paper();
-                paper.setSize(180.0, (double) (paper.getHeight() + lines * 10.0));
+                paper.setSize(360.0, (double) (paper.getHeight() + lines * 10.0));
                 paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
                 pageFormat.setPaper(paper);
                 pageFormat.setOrientation(PageFormat.PORTRAIT);

@@ -25,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -86,6 +87,21 @@ public class ShoppingListManagedBean {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
         new FacesMessage(FacesMessage.SEVERITY_INFO, name + " has been sucessfully created", ""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
+    }
+    
+    public void deleteShoppingList(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+        mslbl.deleteShoppingList(new Long(ec.getRequestParameterMap().get("listid")), emailAddress);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your shopping list has been sucessfully removed", ""));
+        } catch(NumberFormatException ex) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "cannot get list id", "")); 
+        } finally {
+            shoppingLists = customer.getShoppingLists();
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
+        }
     }    
     
     public Double calculateSubTotal(ShoppingList list) {
