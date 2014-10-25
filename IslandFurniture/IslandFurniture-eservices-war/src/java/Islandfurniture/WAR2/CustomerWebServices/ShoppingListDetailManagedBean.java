@@ -20,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -89,6 +91,15 @@ public class ShoppingListDetailManagedBean {
             
             }
         }
+    }    
+    
+    public void deleteDetail(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        mslbl.deleteShoppingListDetail(new Long(ec.getRequestParameterMap().get("detailid")));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your item has been sucessfully removed", ""));
+        shoppingListDetails = mslbl.getShoppingListDetails(listId);
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml?id=" + listId);
     }    
     
     public Double calculateSubTotal() {

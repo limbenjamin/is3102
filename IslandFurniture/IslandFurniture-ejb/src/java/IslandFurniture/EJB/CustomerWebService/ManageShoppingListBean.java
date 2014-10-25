@@ -71,8 +71,10 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void deleteShoppingList(Long listId) {
-        em.remove((ShoppingList) em.find(ShoppingList.class, listId));
+    public void deleteShoppingList(Long listId, String emailAddress) {
+        Customer customer = getCustomer(emailAddress);
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        shoppingList.getCustomers().remove(customer);
     }    
     
     @Override

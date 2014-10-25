@@ -25,7 +25,7 @@ public interface ManageShoppingListBeanLocal {
 
     void createShoppingListDetail(Long listId, Long stockId, int quantity, Double discountedPrice) throws DuplicateEntryException;
 
-    void deleteShoppingList(Long listId);
+    void deleteShoppingList(Long listId, String emailAddress);
 
     void deleteShoppingListDetail(Long listId);
 
