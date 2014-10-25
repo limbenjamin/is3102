@@ -30,12 +30,12 @@
                             <div class="product-information">
                                 <h2>#{productDetailManagedBean.furniture.name}</h2>
                                 <h4>#{productDetailManagedBean.co.country.currency.currencyCode}
-                                    <h:outputText value="#{productDetailManagedBean.discountedPrice}">
+                                    <h:outputText value="#{productDetailManagedBean.discountedPrice}" id="discounted">
                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                     </h:outputText>
                                     <small style="text-decoration: line-through;">
-                                        #{productDetailManagedBean.co.country.currency.currencyCode}
-                                        <h:outputText value="#{productDetailManagedBean.furniture.price}">
+                                        <h:outputText value="#{productDetailManagedBean.co.country.currency.currencyCode} " rendered="#{productDetailManagedBean.furniture.price != discounted}"/>
+                                        <h:outputText value="#{productDetailManagedBean.furniture.price}" rendered="#{productDetailManagedBean.furniture.price != discounted}">
                                             <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                         </h:outputText>
                                     </small>
