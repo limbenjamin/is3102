@@ -322,5 +322,9 @@
                 </view-param>  
             </redirect> 
         </navigation-case>
+        <navigation-case>
+            <from-outcome>featuredproducts</from-outcome>
+            <to-view-id>/ocrm/featuredproducts.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

@@ -39,4 +39,7 @@ public interface ManageIngredientInventoryLocal {
     //  Function: To display list of IngredientInventory
     List<Ingredient> viewIngredient(Plant plant);
 
+    //  Function: To get Ingredient Entity
+    Ingredient getIngredient(Long ingredientId);
+    
 }

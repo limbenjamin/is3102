@@ -90,9 +90,11 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     @Override
     public void deleteIngredientGoodsReceiptDocument(IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument) {
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, ingredientGoodsReceiptDocument.getId());
-        ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, ingredientGoodsReceiptDocument.getIngredientPurchaseOrder());
-        ingredientPurchaseOrder.setIngredGoodsReceiptDoc(null);
-        em.merge(ingredientPurchaseOrder);
+        if (ingredientGoodsReceiptDocument.getIngredientPurchaseOrder() != null) {
+            ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, ingredientGoodsReceiptDocument.getIngredientPurchaseOrder());
+            ingredientPurchaseOrder.setIngredGoodsReceiptDoc(null);
+            em.merge(ingredientPurchaseOrder);
+        }
         em.remove(ingredientGoodsReceiptDocument);
         em.flush();
     }
@@ -168,14 +170,14 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         return q.getResultList();
     }
-    
+
     //  Function: View list of Ingredient
     @Override
     public List<Ingredient> viewIngredient() {
         Query q = em.createQuery("SELECT * FROM Ingredient");
         return q.getResultList();
     }
-    
+
     //  Function: Return IngredientGoodsReceiptDocument entity
     @Override
     public IngredientGoodsReceiptDocument getIngredientGoodsReceiptDocument(Long id) {

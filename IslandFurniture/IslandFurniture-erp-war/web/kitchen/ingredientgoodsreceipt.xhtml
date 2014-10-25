@@ -1,16 +1,119 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <!--Start Header-->
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong>Ingredient Goods Receipt</strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+                        <span class="pull-right">
+                            <h:form id="createGRD1"> 
+                                <h:commandButton  actionListener="#{ingredientGoodsReceiptManagedBean.createIngredientGoodsReceipt}" value="Create Ingredient Goods Receipt" class="btn btn-sm btn-success pull-right" />
+                            </h:form> 
+                        </span>   
+                        <h4>Ingredient Goods Receipt</h4><hr></hr>
+                    </div>
+                    <!--End Header-->
+                    <!--Start Body-->
+                    <div class="col-md-10">                      
+  
+
+                        <section name="Pending Goods Receipt Document">
+                            <div class="panel-heading dashboard-title-panel">
+                                Pending Ingredient Goods Receipt
+                            </div>
+                            <div class="list-group-item">
+                                <h:outputText rendered="#{empty ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPendingList}" value="There are no pending goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{not empty ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPendingList}">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Goods Receipt ID</th>
+                                            <th>Receipt Date</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        <h:form id="viewGRD" class="form-horizontal">
+                                            <ui:repeat value="#{ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPendingList}" var="GRD">
+                                                <tr>
+                                                    <td>#{GRD.id}</td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.receiptDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.store.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    <td> <h:commandButton action="ingredientgoodsreceiptdocument" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:param name="id" value="#{GRD.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
+                                                    <td><h:commandButton actionListener="#{ingredientGoodsReceiptManagedBean.deleteIngredientGoodsReceipt}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="grd" value="#{GRD}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-trash-o icon-button"></i></td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+
+                        <br/>
+
+                        <section name="Posted Goods Receipt Document">
+                            <div class="panel-heading dashboard-title-panel">
+                                Posted Ingredient Goods Receipt
+                            </div>
+                            <div class="list-group-item">
+                                <h:outputText rendered="#{empty ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPostedList}" value="There are no posted goods issued"/>
+                                <h:panelGroup layout="block" rendered="#{not empty ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPostedList}">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>Goods Receipt ID</th>
+                                            <th>Posting Date</th>
+                                            <th>Document Date</th>
+                                            <th>View</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{ingredientGoodsReceiptManagedBean.ingredientGoodsReceiptPostedList}" var="GRD">
+                                                <tr>
+                                                    <td>#{GRD.id}</td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.postingDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                        </h:outputText>
+                                                    </td>
+                                                    <td>
+                                                        <h:outputText value="#{GRD.receiptDate.time}" >
+                                                            <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{GRD.plant.timeZoneID}"  />
+                                                        </h:outputText></td>
+                                                    <td> <h:commandButton action="ingredientgoodsreceiptdocument" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:param name="id" value="#{GRD.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-file-o icon-button"></i></td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>
+<!--End Body-->

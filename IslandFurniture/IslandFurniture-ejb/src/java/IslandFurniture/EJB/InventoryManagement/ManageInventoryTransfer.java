@@ -5,8 +5,10 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.ExternalTransferOrderDetail;
+import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
@@ -18,7 +20,6 @@ import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
 import java.util.Calendar;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -221,7 +222,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     public List<Stock> viewStock() {
         Query q = em.createQuery("SELECT s " + "FROM Stock s");
         return q.getResultList();
-    }
+    }   
 
     @Override
     public List<StockUnit> viewStockUnitsOfAStock(Plant plant, Stock stock) {
@@ -478,4 +479,15 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(replenishmentTransferOrder);
         em.flush();
     }
+    
+//        @Override
+//    public List<FurnitureModel> viewFurnitureModel(CountryOffice countryOffice) {
+//        Query q1 = em.createQuery("SELECT f FROM FurnitureModel f");
+//        
+//        Query q2 = em.createQuery("SELECT s FROM stocksupplied s WHERE s.");
+//        
+//        q2.setParameter("countryOffice", countryOffice.getId());
+//        return q2.getResultList();
+//    }
+    
 }
