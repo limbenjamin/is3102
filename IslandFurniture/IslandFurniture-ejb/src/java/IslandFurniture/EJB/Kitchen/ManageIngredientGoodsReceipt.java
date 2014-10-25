@@ -29,9 +29,9 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     @PersistenceContext
     EntityManager em;
 
-    IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument;
-    IngredientGoodsReceiptDocumentDetail ingredientGoodsReceiptDocumentDetail;
-    IngredientPurchaseOrder ingredientPurchaseOrder;
+    private IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument;
+    private IngredientGoodsReceiptDocumentDetail ingredientGoodsReceiptDocumentDetail;
+    private IngredientPurchaseOrder ingredientPurchaseOrder;
 
     // Function: Create Ingredient Goods Receipt Document
     @Override

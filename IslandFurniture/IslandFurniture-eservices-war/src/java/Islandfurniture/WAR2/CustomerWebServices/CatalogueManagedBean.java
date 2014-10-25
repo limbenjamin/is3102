@@ -8,9 +8,13 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import java.io.IOException;
@@ -49,6 +53,9 @@ public class CatalogueManagedBean implements Serializable{
     @EJB
     private ManageCatalogueBeanLocal mcbl;
     
+    @EJB
+    private ManageMarketingBeanLocal mmbl;
+    
     @PostConstruct
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -70,6 +77,12 @@ public class CatalogueManagedBean implements Serializable{
       
       ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/productdetail.xhtml?id=" + furnitureId);
     }     
+    
+    public Double getDiscountedPrice(Stock s) {
+        Store st = new Store();
+        st.setCountryOffice(co);
+        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+    }
 
     public List<FurnitureModel> getFurnitureList() {
         return furnitureList;
