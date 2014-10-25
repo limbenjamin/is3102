@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
+import IslandFurniture.EJB.Kitchen.MenuManagerLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManagePOSLocal;
@@ -19,9 +20,12 @@ import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
@@ -60,9 +64,11 @@ public class StocklistWS {
     
     private List<FurnitureModel> furnitureList;
     private List<RetailItem> retailList;
+    private List<MenuItem> restaurantList;
     private FurnitureModel furnitureModel;
     private RetailItem retailItem;
     private JsonArrayBuilder builder;
+    private MenuItem menuItem;
     
     @EJB
     ManageUserAccountBeanLocal muabl;
@@ -80,6 +86,8 @@ public class StocklistWS {
     ManagePOSLocal mpl;
     @EJB
     ManageStorefrontInventoryLocal msfl;
+    @EJB
+    MenuManagerLocal mml;
     
     @POST
     @Path("furniturelist")
@@ -122,6 +130,29 @@ public class StocklistWS {
                 String price = String.valueOf(ssm.getPriceForStock(store.getCountryOffice(), retailItem));
                 //String category = String.valueOf(retailItem.);
                 builder.add(Json.createObjectBuilder().add("id", id).add("name", retailItem.getName())
+                        .add("price", price).build());
+            }
+        }
+        return builder.build().toString();
+    }
+    
+    @POST
+    @Path("restaurantlist")
+    public String getRestaurantList(@FormParam("cardId") String cardId) {
+        Staff staff = muabl.getStaffFromCardId(cardId);
+        if (staff == null){
+            return "Error";
+        }else{
+            Store store = (Store) staff.getPlant();
+            restaurantList = mml.getMenuItemList(store.getCountryOffice());
+            builder = Json.createArrayBuilder();
+            Iterator<MenuItem> iterator = restaurantList.iterator();
+            while(iterator.hasNext()){
+                menuItem = iterator.next();
+                String id = String.valueOf(menuItem.getId());
+                String price = String.valueOf(menuItem.getPrice());
+                //String category = String.valueOf(retailItem.);
+                builder.add(Json.createObjectBuilder().add("id", id).add("name", menuItem.getName())
                         .add("price", price).build());
             }
         }
@@ -232,7 +263,8 @@ public class StocklistWS {
                                     @FormParam("transaction") String transaction,
                                     @FormParam("voucher") String voucher,
                                     @FormParam("receipt") String receipt,
-                                    @FormParam("customerCardId") String customerCardId
+                                    @FormParam("customerCardId") String customerCardId,
+                                    @FormParam("storeType") String storeType
                                     ){
         Staff staff = muabl.getStaffFromCardId(cardId);
         Customer customer;
@@ -245,77 +277,111 @@ public class StocklistWS {
             Calendar now=Calendar.getInstance(tz);
             now.setTime(new Date());
             System.err.println(transaction);
-            FurnitureTransaction ft = new FurnitureTransaction();
-            ft.setCreatedBy(staff);
-            ft.setStore((Store) plant);
-            ft.setCreationTime(now);
-            ft.setTransTime(now);
-            RetailItemTransaction rt = new RetailItemTransaction();
-            rt.setCreatedBy(staff);
-            rt.setStore((Store) plant);
-            rt.setCreationTime(now);
-            rt.setTransTime(now);
-            if (!customerCardId.trim().isEmpty()){
-                customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
-                ft.setMember(customer);
-                rt.setMember(customer);
+            if (storeType.equals("restaurant")){
+                makeRestaurantTransaction(staff, plant, now, transaction, customerCardId);
             }
-            JsonReader reader = Json.createReader(new StringReader(transaction));
-            JsonArray arr = reader.readArray();
-            for (JsonValue jsonValue : arr) {
-                JsonObject jo = (JsonObject) jsonValue;
-                Long id = Long.parseLong(jo.getString("id"));
-                stock = mpl.getStock(id);
-                int qty = Integer.parseInt(jo.getString("qty"));
-                Double price = Double.parseDouble(jo.getString("price"));
-                System.err.println(id+"  "+qty);
-                if (stock instanceof FurnitureModel){
-                    mpl.persistFT(ft);
-                    FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
-                    ftd.setNumClaimed(0);
-                    ftd.setNumReturned(0);
-                    ftd.setQty(qty);
-                    ftd.setUnitPrice(price);
-                    FurnitureModel fm = (FurnitureModel) stock;
-                    ftd.setFurnitureModel(fm);
-                    Long points = fm.getPointsWorth();
-                    ftd.setUnitPoints(points);
-                    ftd.setFurnitureTransaction(ft);
-                    ft.getFurnitureTransactionDetails().add(ftd);
-                    mpl.persistFTD(ftd);
-                }else if (stock instanceof RetailItem){
-                    mpl.persistRT(rt);
-                    RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
-                    rtd.setQty(qty);
-                    rtd.setUnitPrice(price);
-                    RetailItem ri = (RetailItem) stock;
-                    rtd.setRetailItem(ri);
-                    Long points = ri.getPointsWorth();
-                    rtd.setUnitPoints(points);
-                    rtd.setRetailItemTransaction(rt);
-                    rt.getRetailItemTransactionDetails().add(rtd);
-                    mpl.persistRTD(rtd);
+            else{
+                FurnitureTransaction ft = new FurnitureTransaction();
+                ft.setCreatedBy(staff);
+                ft.setStore((Store) plant);
+                ft.setCreationTime(now);
+                ft.setTransTime(now);
+                RetailItemTransaction rt = new RetailItemTransaction();
+                rt.setCreatedBy(staff);
+                rt.setStore((Store) plant);
+                rt.setCreationTime(now);
+                rt.setTransTime(now);
+                if (!customerCardId.trim().isEmpty()){
+                    customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+                    ft.setMember(customer);
+                    rt.setMember(customer);
                 }
-                msfl.reduceStockfrontInventoryFromTransaction(plant, stock, qty);
-            }
-            String vouchers = voucher.substring(1, voucher.length()-1);
-            System.err.println(vouchers);
-            String[] voucherArr = vouchers.split(",");
-            for (String v : voucherArr){
-                if (!v.trim().isEmpty()){
-                    mpl.useVoucher(v.trim());
+                JsonReader reader = Json.createReader(new StringReader(transaction));
+                JsonArray arr = reader.readArray();
+                for (JsonValue jsonValue : arr) {
+                    JsonObject jo = (JsonObject) jsonValue;
+                    Long id = Long.parseLong(jo.getString("id"));
+                    stock = mpl.getStock(id);
+                    int qty = Integer.parseInt(jo.getString("qty"));
+                    Double price = Double.parseDouble(jo.getString("price"));
+                    System.err.println(id+"  "+qty);
+                    if (stock instanceof FurnitureModel){
+                        mpl.persistFT(ft);
+                        FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
+                        ftd.setNumClaimed(0);
+                        ftd.setNumReturned(0);
+                        ftd.setQty(qty);
+                        ftd.setUnitPrice(price);
+                        FurnitureModel fm = (FurnitureModel) stock;
+                        ftd.setFurnitureModel(fm);
+                        Long points = fm.getPointsWorth();
+                        ftd.setUnitPoints(points);
+                        ftd.setFurnitureTransaction(ft);
+                        ft.getFurnitureTransactionDetails().add(ftd);
+                        mpl.persistFTD(ftd);
+                    }else if (stock instanceof RetailItem){
+                        mpl.persistRT(rt);
+                        RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
+                        rtd.setQty(qty);
+                        rtd.setUnitPrice(price);
+                        RetailItem ri = (RetailItem) stock;
+                        rtd.setRetailItem(ri);
+                        Long points = ri.getPointsWorth();
+                        rtd.setUnitPoints(points);
+                        rtd.setRetailItemTransaction(rt);
+                        rt.getRetailItemTransactionDetails().add(rtd);
+                        mpl.persistRTD(rtd);
+                    }
+                    msfl.reduceStockfrontInventoryFromTransaction(plant, stock, qty);
                 }
-            }
-            if (!receipt.isEmpty()){
-                if (stock instanceof RetailItem){
-                    mpl.linkReceipt(receipt, (Transaction) rt);
-                }else if (stock instanceof FurnitureModel){
-                    mpl.linkReceipt(receipt, (Transaction) ft);
+                String vouchers = voucher.substring(1, voucher.length()-1);
+                System.err.println(vouchers);
+                String[] voucherArr = vouchers.split(",");
+                for (String v : voucherArr){
+                    if (!v.trim().isEmpty()){
+                        mpl.useVoucher(v.trim());
+                    }
                 }
+                if (!receipt.isEmpty()){
+                    if (stock instanceof RetailItem){
+                        mpl.linkReceipt(receipt, (Transaction) rt);
+                    }else if (stock instanceof FurnitureModel){
+                        mpl.linkReceipt(receipt, (Transaction) ft);
+                    }
+                }
+                //mmb.expand_promotion(null, null); TODO
             }
-            //mmb.expand_promotion(null, null); TODO
+            
         }
         return "1";
+    }
+
+    private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId) {
+        RestaurantTransaction rt = new  RestaurantTransaction();
+        rt.setCreatedBy(staff);
+        rt.setStore((Store) plant);
+        rt.setCreationTime(now);
+        rt.setTransTime(now);
+        JsonReader reader = Json.createReader(new StringReader(transaction));
+        JsonArray arr = reader.readArray();
+        for (JsonValue jsonValue : arr) {
+            JsonObject jo = (JsonObject) jsonValue;
+            Long id = Long.parseLong(jo.getString("id"));
+            menuItem = mml.getMenuItem(id);
+            int qty = Integer.parseInt(jo.getString("qty"));
+            Double price = Double.parseDouble(jo.getString("price"));
+            System.err.println(id+"  "+qty);
+            mpl.persistRST(rt);
+            RestaurantTransactionDetail rtd = new RestaurantTransactionDetail();
+            rtd.setQty(qty);
+            rtd.setUnitPrice(price);
+            rtd.setMenuItem(menuItem);
+            Long points = menuItem.getPointsWorth();
+            rtd.setUnitPoints(points);
+            rtd.setRestaurantTransaction(rt);
+            rt.getRestaurantTransactionDetails().add(rtd);
+            mpl.persistRSTD(rtd);
+            }
     }
     
 }

@@ -382,35 +382,35 @@ public class CheckoutUI extends javax.swing.JFrame {
                     Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-        for (int i=0;i<rows;i++){
-            params = new ArrayList();
-            values = new ArrayList();
-            params.add("cardId");
-            values.add(cardId.substring(0, 8));
-            params.add("customerCardId");
-            values.add(customerCardId);
-            params.add("coupon");
-            values.add(couponField.getText());
-            params.add("stock");
-            values.add(transaction.get(i).get(0));
-            params.add("stockCoupon");
-            values.add(jTable.getModel().getValueAt(i, 3));
-            
-            try {
-                String result = Connector.postForm(params, values, "stock/checkpromo");
-                JSONParser jsonParser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
-                String price = (String) jsonObject.get("price");
-                String promo = (String) jsonObject.get("promo");
-                transaction.get(i).add(5, promo);
-                transaction.get(i).set(2, price);
-                System.err.println(result);
-            } catch (Exception ex) {
-                Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+        if (storeType != "restaurant"){
+            for (int i=0;i<rows;i++){
+                params = new ArrayList();
+                values = new ArrayList();
+                params.add("cardId");
+                values.add(cardId.substring(0, 8));
+                params.add("customerCardId");
+                values.add(customerCardId);
+                params.add("coupon");
+                values.add(couponField.getText());
+                params.add("stock");
+                values.add(transaction.get(i).get(0));
+                params.add("stockCoupon");
+                values.add(jTable.getModel().getValueAt(i, 3));
+
+                try {
+                    String result = Connector.postForm(params, values, "stock/checkpromo");
+                    JSONParser jsonParser = new JSONParser();
+                    JSONObject jsonObject = (JSONObject) jsonParser.parse(result);
+                    String price = (String) jsonObject.get("price");
+                    String promo = (String) jsonObject.get("promo");
+                    transaction.get(i).add(5, promo);
+                    transaction.get(i).set(2, price);
+                    System.err.println(result);
+                } catch (Exception ex) {
+                    Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
-        for (int i=0;i<transaction.size();i++){
+            for (int i=0;i<transaction.size();i++){
             ((DefaultTableModel) jTable.getModel()).addRow(new Vector());
             jTable.getModel().setValueAt(transaction.get(i).get(0), i, 0);
             jTable.getModel().setValueAt(transaction.get(i).get(1), i, 1);
@@ -418,6 +418,11 @@ public class CheckoutUI extends javax.swing.JFrame {
             jTable.getModel().setValueAt(transaction.get(i).get(5), i, 3);
             jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
             jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
+            }
+        }else{
+            for (int i=0;i<transaction.size();i++){
+                transaction.get(i).add(5, "");
+            }
         }
         updateTotal();
         payButton.setVisible(Boolean.TRUE);

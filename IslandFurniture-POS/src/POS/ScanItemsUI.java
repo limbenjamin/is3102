@@ -47,6 +47,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private Double totalRegisterCash;
     private String currencyCode;
     private String storeType;
+    private Double currtotal;
     
     
     private OutputStream partnerPoleDisplayOutputStream;
@@ -355,7 +356,6 @@ public class ScanItemsUI extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }//GEN-LAST:event_nextButtonActionPerformed
 
     /**
@@ -406,6 +406,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 
             }
         }
+        currtotal = total;
         totalLabel.setText("Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
     }
     
