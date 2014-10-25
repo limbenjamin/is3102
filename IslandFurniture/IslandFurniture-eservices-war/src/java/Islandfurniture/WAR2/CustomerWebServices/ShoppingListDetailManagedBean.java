@@ -97,10 +97,11 @@ public class ShoppingListDetailManagedBean {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         Long detailId = Long.parseLong(ec.getRequestParameterMap().get("detailid"));
         ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
+        String furnitureName = detail.getFurnitureModel().getName();
         mslbl.updateListSubTotal(listId, 0, getDiscountedPrice(detail.getFurnitureModel()) * detail.getQty());
         mslbl.deleteShoppingListDetail(detailId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your item has been sucessfully removed", ""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, furnitureName + " has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
     }    
