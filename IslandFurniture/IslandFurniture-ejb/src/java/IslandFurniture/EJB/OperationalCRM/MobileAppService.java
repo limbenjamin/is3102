@@ -5,10 +5,14 @@
  */
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Store;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -46,6 +50,18 @@ public class MobileAppService implements MobileAppServiceLocal {
 
     public void persist(Object object) {
         em.persist(object);
+    }
+
+    public List<CountryOffice> getAllCO() {
+        return ((List<CountryOffice>) em.createQuery("select c from CountryOffice c where EXISTS(select s from Store s where s.countryOffice=c)").getResultList());
+
+    }
+
+    public List<Store> getAllStores(String code) {
+        Query q=em.createQuery("select s from Store s where s.country.code=:cd");
+        q.setParameter("cd", code);
+        return ((List<Store>) q.getResultList());
+
     }
 
 }

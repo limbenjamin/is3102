@@ -6,6 +6,9 @@
 
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Store;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -20,5 +23,9 @@ public interface MobileAppServiceLocal {
     public String getCustomerMemberTier(Long cust_id);
 
     public String getCustomerName(Long cust_id);
+
+    public List<CountryOffice> getAllCO();
+
+    public List<Store> getAllStores(String code);
     
 }

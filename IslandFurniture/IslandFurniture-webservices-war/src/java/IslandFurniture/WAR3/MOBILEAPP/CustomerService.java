@@ -6,14 +6,16 @@
 package IslandFurniture.WAR3.MOBILEAPP;
 
 import IslandFurniture.EJB.OperationalCRM.MobileAppServiceLocal;
+import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Store;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.json.*;
 
 /**
  *
@@ -30,7 +32,6 @@ public class CustomerService {
     @GET
     @Path("memberlogin")
     public String getCustomerInfo(@QueryParam("custid") String Cust_ID) {
-        
 
         if (Cust_ID == null) {
             return "";
@@ -42,10 +43,50 @@ public class CustomerService {
         object.add("point", masl.getCustomerCurrentPoint(custid));
         object.add("tier", masl.getCustomerMemberTier(custid));
         object.add("name", masl.getCustomerName(custid));
-        
+
         return object.build().toString();
     }
-    
-  
+
+    @GET
+    @Path("category")
+    public String getFurnitureCategory() {
+        return "";
+    }
+
+    @GET
+    @Path("allstores")
+    public String getallStores(@QueryParam("CO_CODE") String CO) {
+        JsonObjectBuilder object = Json.createObjectBuilder();
+
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+
+        for (Store s : masl.getAllStores(CO)) {
+            jab.add(Json.createArrayBuilder().add(s.getName()).add(""));
+        }
+        object.add("Stores", jab);
+
+        return object.build().toString();
+
+    }
+
+    @GET
+    @Path("allCO")
+    public String getAllCountryOffices() {
+
+        JsonObjectBuilder object = Json.createObjectBuilder();
+
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+
+        for (CountryOffice c : masl.getAllCO()) {
+
+            jab.add(Json.createArrayBuilder().add(c.getName()).add(c.getCountry().getCode()));
+
+        }
+
+        object.add("Country", jab);
+
+        return object.build().toString();
+
+    }
 
 }
