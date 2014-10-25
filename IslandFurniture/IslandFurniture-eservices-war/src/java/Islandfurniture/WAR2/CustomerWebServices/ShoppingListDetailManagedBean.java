@@ -95,7 +95,10 @@ public class ShoppingListDetailManagedBean {
     
     public void deleteDetail(ActionEvent event) throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        mslbl.deleteShoppingListDetail(new Long(ec.getRequestParameterMap().get("detailid")));
+        Long detailId = Long.parseLong(ec.getRequestParameterMap().get("detailid"));
+        ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
+        mslbl.updateListSubTotal(listId, 0, getDiscountedPrice(detail.getFurnitureModel()) * detail.getQty());
+        mslbl.deleteShoppingListDetail(detailId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Your item has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);

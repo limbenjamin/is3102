@@ -20,10 +20,12 @@ import java.util.List;
 public interface ManageShoppingListBeanLocal {
     
     ShoppingList getShoppingList(Long id);
+    
+    ShoppingListDetail getShoppingListDetail(Long id);
 
     ShoppingList createShoppingList(String emailAddress, Long storeId, String name);
     
-    void updateListSubTotal(Long listId, Long detailId, int op, Double value);
+    void updateListSubTotal(Long listId, int op, Double value);
 
     void createShoppingListDetail(Long listId, Long stockId, int quantity, Double discountedPrice) throws DuplicateEntryException;
 

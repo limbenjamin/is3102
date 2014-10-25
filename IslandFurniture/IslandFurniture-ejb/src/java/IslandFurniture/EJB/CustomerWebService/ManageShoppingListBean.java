@@ -39,6 +39,11 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
+    public ShoppingListDetail getShoppingListDetail(Long id) {
+        return (ShoppingListDetail) em.find(ShoppingListDetail.class, id);
+    }      
+    
+    @Override
     public Customer getCustomer(String emailAddress){
         Query query = em.createQuery("FROM Customer s where s.emailAddress=:emailAddress");
         query.setParameter("emailAddress", emailAddress);
@@ -71,11 +76,9 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void updateListSubTotal(Long listId, Long detailId, int op, Double value) {
+    public void updateListSubTotal(Long listId, int op, Double value) {
         ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
-        ShoppingListDetail detail = (ShoppingListDetail) em.find(ShoppingListDetail.class, detailId);
         Double currentPrice = shoppingList.getTotalPrice();
-        value = detail.getQty() * value;
         if (op == 1) // add
             shoppingList.setTotalPrice(currentPrice + value);
         else if (op == 0) // subtract
@@ -128,11 +131,6 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     
     @Override
     public void deleteShoppingListDetail(Long detailId) {
-        ShoppingListDetail detail = (ShoppingListDetail) em.find(ShoppingListDetail.class, detailId);
-        ShoppingList list = detail.getShoppingList();
-        Double currentPrice = list.getTotalPrice();
-        list.setTotalPrice(currentPrice - detail.getQty() * detail.getFurnitureModel().getPrice());
-        em.persist(list);
-        em.remove(detail);
+        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, detailId));
     }    
 }
