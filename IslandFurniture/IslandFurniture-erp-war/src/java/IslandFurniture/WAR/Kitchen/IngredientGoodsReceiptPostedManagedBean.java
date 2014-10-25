@@ -38,13 +38,9 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
+public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
 
-    private Long ingredientId;
-    private Integer quantity;
     private Long id;
-
-    private List<Ingredient> ingredientList;
     private List<IngredientGoodsReceiptDocumentDetail> ingredientGoodsReceiptDetailList;
 
     private String username;
@@ -77,24 +73,12 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
 
         try {
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-            session.setAttribute("ingredientgoodsreceiptdocumentid", id);
+            session.setAttribute("ingredientgoodsreceiptpostedid", id);
         } catch (Exception e) {
-            id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
+            id = (Long) session.getAttribute("ingredientgoodsreceiptpostedid");
         }
         ingredientGoodsReceipt = receiptBean.getIngredientGoodsReceiptDocument(id);
         ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
-        ingredientList = ingredientInventoryBean.viewIngredient(plant);
-
-        for (IngredientGoodsReceiptDocumentDetail ii : ingredientGoodsReceiptDetailList) {
-            Iterator<Ingredient> iterator = ingredientList.iterator();
-            while (iterator.hasNext()) {
-                Ingredient s = iterator.next();
-                if (ii.getIngredient().equals(s)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-        }
 
         // start: To display date properly
         if (ingredientGoodsReceipt.getReceiptDate() != null) {
@@ -103,75 +87,6 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
         // end: To display date properly
     }
 
-//  Function: To get current Time in Calendar type
-    Calendar getCalendar() {
-        Calendar cal = Calendar.getInstance();
-        Date date = new Date();
-        cal.setTime(date);
-        Calendar calDate = cal;
-        return calDate;
-    }
-
-//  Function: To create a Ingredient Goods Receipt Detail (Request)
-    public void addIngredientGoodsReceiptDocumentDetail(ActionEvent event) {
-        HttpSession session = Util.getSession();
-        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
-        ingredient = ingredientInventoryBean.getIngredient(ingredientId);
-        receiptBean.createIngredientGoodsReceiptDocumentDetail(staff, getCalendar(), ingredientGoodsReceipt, ingredient, quantity);
-        ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
-    }
-
-//  Function: To edit a Ingredient Goods Receipt (Request)    
-    public void editIngredientGoodsReceiptDocument(ActionEvent event) throws ParseException {
-        HttpSession session = Util.getSession();
-        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
-        dateType = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-        dateCal = Calendar.getInstance();
-        Date date = dateType;
-        dateCal.setTime(date);
-        receiptBean.editIngredientGoodsReceiptDocument(staff, dateCal, ingredientGoodsReceipt);
-    }
-
-//  Function: To edit a Ingredient Goods Receipt Detail (Request)    
-    public void editIngredientGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
-        HttpSession session = Util.getSession();
-        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
-        IngredientGoodsReceiptDocumentDetail grdd = (IngredientGoodsReceiptDocumentDetail) event.getComponent().getAttributes().get("tod");
-        receiptBean.editIngredientGoodsReceiptDocumentDetail(staff, getCalendar(), grdd);
-        ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
-    }
-
-//  Function: To delete a Ingredient Goods Receipt Detail (Request) 
-    public void deleteIngredientGoodsReceiptDocumentDetail(ActionEvent event) throws IOException {
-        HttpSession session = Util.getSession();
-        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
-        IngredientGoodsReceiptDocumentDetail ingredientGoodsReceiptDetail = (IngredientGoodsReceiptDocumentDetail) event.getComponent().getAttributes().get("tod");
-        receiptBean.deleteIngredientGoodsReceiptDocumentDetail(ingredientGoodsReceiptDetail);
-        ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
-    }
-
-//  Function: To post Ingredient Goods Receipt Document
-    public void postIngredientGoodsReceiptDocument(ActionEvent event) throws IOException {
-        HttpSession session = Util.getSession();
-        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
-        receiptBean.postIngredientGoodsReceiptDocument(staff, getCalendar(), ingredientGoodsReceipt);
-    }
-
-    public Long getIngredientId() {
-        return ingredientId;
-    }
-
-    public void setIngredientId(Long ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 
     public Long getId() {
         return id;
@@ -179,14 +94,6 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Ingredient> getIngredientList() {
-        return ingredientList;
-    }
-
-    public void setIngredientList(List<Ingredient> ingredientList) {
-        this.ingredientList = ingredientList;
     }
 
     public List<IngredientGoodsReceiptDocumentDetail> getIngredientGoodsReceiptDetailList() {

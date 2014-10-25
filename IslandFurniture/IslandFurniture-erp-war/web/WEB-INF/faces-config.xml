@@ -313,12 +313,22 @@
             <to-view-id>/kitchen/ingredientgoodsreceipt.xhtml</to-view-id>
         </navigation-case>   
         <navigation-case>
-            <from-outcome>ingredientgoodsreceiptdetail</from-outcome>
-            <to-view-id>/kitchen/ingredientgoodsreceiptdetail.xhtml</to-view-id>
+            <from-outcome>ingredientgoodsreceiptdocument</from-outcome>
+            <to-view-id>/kitchen/ingredientgoodsreceiptdocument.xhtml</to-view-id>
             <redirect include-view-params="true">  
                 <view-param>  
                     <name>id</name>  
-                    <value>#{ingredientGoodsReceiptDetailManagedBean.id}</value>
+                    <value>#{ingredientGoodsReceiptDocumentManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ingredientgoodsreceiptposted</from-outcome>
+            <to-view-id>/kitchen/ingredientgoodsreceiptposted.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{ingredientGoodsReceiptPostedManagedBean.id}</value>
                 </view-param>  
             </redirect> 
         </navigation-case>

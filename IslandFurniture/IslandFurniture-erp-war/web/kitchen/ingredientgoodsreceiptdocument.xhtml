@@ -24,7 +24,7 @@
                             <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addIngredient">
                                 <i class="fa fa-fw fa-plus"></i> Add Ingredient
                             </button>   
-                            <a href="inventorytransfer_external.xhtml">
+                            <a href="ingredientgoodsreceipt.xhtml">
                                 <button type="button" class="btn btn-sm btn-default pull-right">
                                     <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
                                 </button>
@@ -49,7 +49,7 @@
                                         <tr>
                                             <td><h:inputText id="date" value="#{ingredientGoodsReceiptDocumentManagedBean.dateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
                                             <td>
-                                                <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocumentDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
                                             </td>
@@ -78,20 +78,16 @@
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}" var="tod">
                                                 <tr>
-                                                    <td><h:selectOneMenu class="form-control needauto" value="#{tod.ingredient.id}">
-                                                            <f:selectItems value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                                        </h:selectOneMenu>
-                                                    </td>
+                                                    <td>#{tod.ingredient.name}</td>
                                                     <td><h:inputText value="#{tod.qty}" class="form-control"></h:inputText></td>
                                                     <td>
-                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocumentDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="tod" value="#{tod}" />
-                                                            <f:attribute name="ingredientId" value="#{tod.ingredient.id}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
                                                     </td>
                                                     <td>
-                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.deleteIngredientGoodsReceiptDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.deleteIngredientGoodsReceiptDocumentDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="tod" value="#{tod}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-trash-o icon-button"></i>
@@ -110,7 +106,7 @@
                             <h:panelGroup layout="block" rendered="#{not empty ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}">
                                 <h:form class="form-horizontal">
                                     <div class="form-group">
-                                        <h:commandButton action="inventorytransfer_externalposted.xhtml" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.updateIngredientGoodsReceiptToPosted}" value="Post Ingredient Goods Receipt Request" class="btn btn-primary pull-right btn-extra-right"> 
+                                        <h:commandButton action="ingredientgoodsreceiptposted" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.postIngredientGoodsReceiptDocument}" value="Post Ingredient Goods Receipt Request" class="btn btn-primary pull-right btn-extra-right"> 
                                             <f:param name="id" value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceipt.id}" />
                                         </h:commandButton>
                                     </div>
@@ -146,7 +142,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.addIngredientGoodsReceiptDetail}" value="Add Ingredient" class="btn btn-success pull-right btn-round"> 
+                                            <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.addIngredientGoodsReceiptDocumentDetail}" value="Add Ingredient" class="btn btn-success pull-right btn-round"> 
                                             </h:commandButton>
                                         </div>
                                     </h:form>
