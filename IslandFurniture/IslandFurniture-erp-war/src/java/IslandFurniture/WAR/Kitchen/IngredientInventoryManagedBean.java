@@ -61,23 +61,6 @@ public class IngredientInventoryManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
         ingredientInventoryList = ingredientInventoryBean.viewIngredientInventory(plant);
-        ingredientList = ingredientInventoryBean.viewIngredient(plant);
-//        for (Ingredient i : ingredientList) {
-//            for (IngredientInventory ii : ingredientInventoryList) {
-//                if (ii.getIngredient().getId().equals(i.getId())) {
-//                    ingredientList.remove(i);
-//                    break;
-//                }
-//            }
-//        }
-    }
-
-//  Function: To create a Ingredient Inventory
-    public void addIngredientInventory(ActionEvent event) throws IOException {
-        ingredientInventoryBean.createIngredientInventory(plant, ingredientId, currentQty, thresholdQty);
-        ingredientInventoryList = ingredientInventoryBean.viewIngredientInventory(plant);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Ingredient Inventory has sucessfully been created", ""));
     }
 
 //  Function: To edit a Ingredient Inventory
@@ -87,21 +70,6 @@ public class IngredientInventoryManagedBean implements Serializable {
         ingredientInventoryList = ingredientInventoryBean.viewIngredientInventory(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Ingredient Inventory has sucessfully been edited", ""));
-    }
-
-//  Function: To delete a Ingredient Inventory
-    public void deleteIngredientInventory(ActionEvent event) throws IOException {
-        IngredientInventory ii = (IngredientInventory) event.getComponent().getAttributes().get("ingredientInventory");
-        if (ii.getQty() != 0) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, ii.getIngredient().getName() + "'s current quantity has to be 0 to allow deletion. The Ingredient Inventory failed to delete.", ""));
-        } else {
-            ingredientInventoryBean.deleteIngredientInventory(ii);
-            ingredientInventoryList = ingredientInventoryBean.viewIngredientInventory(plant);
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, ii.getIngredient().getName() + " has sucessfully been deleted", ""));
-        }
-
     }
 
     public Long getIngredientId() {

@@ -51,6 +51,12 @@ public abstract class Plant implements Serializable {
     protected Long id;
     protected String name;
     protected String timeZoneID;
+    
+    // Added after System Analysis & Design Report submission. To be included
+    // in class diagram via report addendum
+    protected Double longitude;
+    protected Double latitude;
+    protected String address;
 
     @ManyToOne
     protected Country country;
@@ -107,6 +113,30 @@ public abstract class Plant implements Serializable {
 
     public void setTimeZoneID(String timeZoneID) {
         this.timeZoneID = timeZoneID;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Country getCountry() {

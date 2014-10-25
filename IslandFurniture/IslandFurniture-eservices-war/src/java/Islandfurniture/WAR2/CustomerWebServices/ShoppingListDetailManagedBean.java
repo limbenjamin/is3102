@@ -8,10 +8,12 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
 import java.util.Iterator;
@@ -48,6 +50,8 @@ public class ShoppingListDetailManagedBean {
     private ManageLocalizationBeanLocal manageLocalizationBean;    
     @EJB
     private ManageShoppingListBeanLocal mslbl;
+    @EJB
+    private ManageMarketingBeanLocal mmbl;
     
     @PostConstruct
     public void init(){
@@ -92,10 +96,17 @@ public class ShoppingListDetailManagedBean {
         Iterator<ShoppingListDetail> iterator = shoppingListDetails.iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
-            subtotal = subtotal + current.getFurnitureModel().getPrice() * current.getQty();
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel());
+            subtotal = subtotal + discountedPrice * current.getQty();
         }        
         return subtotal;
     }
+    
+    public Double getDiscountedPrice(Stock s) {
+        Store st = new Store();
+        st.setCountryOffice(countryOffice);
+        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+    }    
 
     public Long getListId() {
         return listId;

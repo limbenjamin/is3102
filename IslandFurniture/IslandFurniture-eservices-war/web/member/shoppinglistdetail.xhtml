@@ -14,7 +14,7 @@
                     <div class="col-md-12">
                         <ol class="breadcrumb">
                           <li><a href="index.xhtml">Home</a></li>
-                          <li><a href="shoppinglist.xhtml">Shopping List</a></li>
+                          <li><a href="shoppinglist.xhtml">Shopping Lists</a></li>
                           <li class="active"><strong>#{shoppingListDetailManagedBean.shoppingList.name}</strong></li>
                         </ol>                            
                         <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3><hr/>
@@ -45,9 +45,14 @@
                                     </td>
                                     <td class="list_price">
                                         <p>
-                                            <h:outputText value="#{detail.furnitureModel.price}">
+                                            <h:outputText value="#{shoppingListDetailManagedBean.getDiscountedPrice(detail.furnitureModel)}" id="discounted">
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                            </h:outputText>        
+                                            </h:outputText> 
+                                            <small>
+                                                <h:outputText value="#{detail.furnitureModel.price}" style="text-decoration: line-through;" rendered="#{detail.furnitureModel.price != discounted}">
+                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                </h:outputText>
+                                            </small>                                           
                                         </p>
                                     </td>
                                     <td class="list_quantity">

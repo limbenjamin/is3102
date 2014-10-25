@@ -83,7 +83,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void createShoppingListDetail(Long listId, Long stockId, int quantity) throws DuplicateEntryException {
+    public void createShoppingListDetail(Long listId, Long stockId, int quantity, Double discountedPrice) throws DuplicateEntryException {
         ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
         FurnitureModel furniture = (FurnitureModel) em.find(FurnitureModel.class, stockId);
 
@@ -95,7 +95,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             shoppingList.getShoppingListDetails().add(listDetail);
             // update list total price
             Double currentPrice = shoppingList.getTotalPrice();
-            shoppingList.setTotalPrice(currentPrice + quantity * furniture.getPrice());
+            shoppingList.setTotalPrice(currentPrice + quantity * discountedPrice);
             em.persist(shoppingList);
             em.persist(listDetail);
             em.flush();

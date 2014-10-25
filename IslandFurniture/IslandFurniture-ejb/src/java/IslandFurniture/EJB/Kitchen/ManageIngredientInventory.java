@@ -73,9 +73,9 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
     //  Function: To display list of IngredientInventory
     @Override
     public List<Ingredient> viewIngredient(Plant plant) {
-        Store store = (Store) plant;
+        CountryOffice countryOffice = (CountryOffice) plant;
         Query q = em.createQuery("SELECT s FROM Ingredient s WHERE s.countryOffice.id=:id");
-        q.setParameter("id", store.getCountryOffice().getId());
+        q.setParameter("id", countryOffice.getId());
         return q.getResultList();
     }
 

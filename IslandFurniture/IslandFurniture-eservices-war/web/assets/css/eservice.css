@@ -69,6 +69,8 @@ hr{
 text-decoration: line-through;
 }
 
+/************************* override some styles ***********************************/
+
 body {
   font-family: 'Open Sans', sans-serif;
   position: relative;

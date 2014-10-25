@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
@@ -47,6 +48,7 @@ public class ProductDetailManagedBean {
     private boolean loggedIn = false;
     private String coDir;
     private CountryOffice co;
+    private Double discountedPrice;
 
     public Stock getStock() {
         return stock;
@@ -73,6 +75,8 @@ public class ProductDetailManagedBean {
     private ManageMemberAuthenticationBeanLocal mmab;    
     @EJB
     private ManageShoppingListBeanLocal mslbl;    
+    @EJB
+    private ManageMarketingBeanLocal mmbl;    
     
     @PostConstruct
     public void init() {
@@ -94,6 +98,7 @@ public class ProductDetailManagedBean {
         }
         
         furniture = mcbl.getFurnitureModel(id);
+        discountedPrice = getDiscountedPrice(furniture);
         localStores = co.getStores();
         loggedIn = checkLoggedIn();
         
@@ -114,13 +119,19 @@ public class ProductDetailManagedBean {
             return true;
     }
     
+    public Double getDiscountedPrice(Stock s) {
+        Store st = new Store();
+        st.setCountryOffice(co);
+        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+    }    
+    
     public void addItemToShoppingList() throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();        
         Long listId = Long.parseLong(request.getParameter("addItemToList:listId"));
         Integer quantity = Integer.parseInt(request.getParameter("addItemToList:quantity"));
         try {
-            mslbl.createShoppingListDetail(listId, id, quantity);
+            mslbl.createShoppingListDetail(listId, id, quantity, discountedPrice);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, furniture.getName() + " has been sucessfully added", ""));
             ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
@@ -225,6 +236,14 @@ public class ProductDetailManagedBean {
 
     public void setMslbl(ManageShoppingListBeanLocal mslbl) {
         this.mslbl = mslbl;
+    }
+
+    public Double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(Double discountedPrice) {
+        this.discountedPrice = discountedPrice;
     }
     
 }
