@@ -8,6 +8,8 @@ package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Stock;
@@ -38,5 +40,9 @@ public interface ManagePOSLocal {
     void persistRTD(RetailItemTransactionDetail rtd);
     
     void persistRT(RetailItemTransaction rt);
+
+    void persistRST(RestaurantTransaction rt);
+
+    void persistRSTD(RestaurantTransactionDetail rtd);
     
 }

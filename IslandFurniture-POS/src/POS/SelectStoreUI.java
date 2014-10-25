@@ -315,12 +315,15 @@ public class SelectStoreUI extends javax.swing.JFrame {
         storeType = "restaurant";
         List params = new ArrayList();
         List values = new ArrayList();
-        params.add("restaurant");
-        values.add("furniture");
+        params.add("storetype");
+        values.add("restaurant");
         params.add("cardId");
         values.add(cardId);
         try {
-            String result = Connector.postForm(params, values, "stock/retaillist");
+            String restaurantlist = Connector.postForm(params, values, "stock/restaurantlist");
+            ScanItemsUI scanItem = new ScanItemsUI(staffJSON, restaurantlist, totalRegisterCash, storeType);
+            scanItem.setVisible(true);
+            this.setVisible(false);
         }catch (Exception ex) {
             Logger.getLogger(SelectStoreUI.class.getName()).log(Level.SEVERE, null, ex);
         }

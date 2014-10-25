@@ -449,6 +449,8 @@ public class PaymentUI extends javax.swing.JFrame {
             values.add(returnReceiptField.getText());             
             params.add("customerCardId");
             values.add(customerCardId);
+            params.add("storeType");
+            values.add(storeType);
             try {
                 Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {

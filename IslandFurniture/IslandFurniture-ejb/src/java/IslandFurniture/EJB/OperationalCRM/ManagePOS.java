@@ -10,6 +10,8 @@ import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Stock;
@@ -116,5 +118,13 @@ public class ManagePOS implements ManagePOSLocal {
     @Override
     public void persistRT(RetailItemTransaction rt){
         em.persist(rt);
+    }
+    @Override
+    public void persistRST(RestaurantTransaction rt){
+        em.persist(rt);
+    }
+    @Override
+    public void persistRSTD(RestaurantTransactionDetail rtd){
+        em.persist(rtd);
     }
 }
