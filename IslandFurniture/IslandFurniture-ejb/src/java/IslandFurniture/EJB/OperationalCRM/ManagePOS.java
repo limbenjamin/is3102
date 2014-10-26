@@ -6,6 +6,8 @@
 
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.RedeemableItem;
@@ -14,12 +16,14 @@ import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
+import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Transaction;
 import IslandFurniture.Entities.Voucher;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,6 +39,9 @@ public class ManagePOS implements ManagePOSLocal {
     @PersistenceContext
     EntityManager em;
 
+    @EJB
+    ManageMemberAuthenticationBeanLocal mmabl;
+    
     @Override
     public int getVoucher(String id){
         Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.id=:id AND r.claimed=FALSE");
@@ -126,5 +133,11 @@ public class ManagePOS implements ManagePOSLocal {
     @Override
     public void persistRSTD(RestaurantTransactionDetail rtd){
         em.persist(rtd);
+    }
+    
+    @Override
+    public List<ShoppingList> getShoppingListList(String customerCardId){
+        Customer c = mmabl.getCustomerFromLoyaltyCardId(customerCardId);
+        return c.getShoppingLists();
     }
 }

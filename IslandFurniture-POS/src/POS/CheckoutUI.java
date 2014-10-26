@@ -67,6 +67,9 @@ public class CheckoutUI extends javax.swing.JFrame {
         this.transaction = transaction;
         this.totalRegisterCash = totalRegisterCash;
         this.storeType = storeType;
+        if (storeType.equals("restaurant") || storeType.equals("retail")){
+            couponField.setEnabled(Boolean.FALSE);
+        }
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
