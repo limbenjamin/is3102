@@ -68,6 +68,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.storeType = storeType;
+        if (!storeType.equals("furniture")){
+            shoppingListButton.setVisible(Boolean.FALSE);
+        }
         this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);

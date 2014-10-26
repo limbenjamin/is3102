@@ -177,29 +177,26 @@ public class StocklistWS {
         }else{
             Customer c;
             if (customerCardId.equals("")){
-                Stock s = mpl.getStock(Long.parseLong(stock));
-                Store store = (Store) staff.getPlant();
-                CountryOffice co = store.getCountryOffice();
-                hash = mmb.getDiscountedPrice(s, store, new Customer());
+                c = new Customer();
             }
             else{
                 c = mmab.getCustomerFromLoyaltyCardId(customerCardId);
-                Stock s = mpl.getStock(Long.parseLong(stock));
-                Store store = (Store) staff.getPlant();
-                CountryOffice co = store.getCountryOffice();
-                if (coupon.equals("") && stockCoupon.equals("null")){
-                   hash = mmb.getDiscountedPrice(s, store, c);
-                }else{
-                    if (!coupon.equals("")){
-                        PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(coupon));
-                        couponList.add(pc);
-                    }
-                    if (!stockCoupon.equals("null")){
-                        PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(stockCoupon));
-                        couponList.add(pc);
-                    }
-                    hash = mmb.getDiscountedPrice(s, store, c, couponList);
+            }
+            Stock s = mpl.getStock(Long.parseLong(stock));
+            Store store = (Store) staff.getPlant();
+            CountryOffice co = store.getCountryOffice();
+            if (coupon.equals("") && stockCoupon.equals("null")){
+               hash = mmb.getDiscountedPrice(s, store, c);
+            }else{
+                if (!coupon.equals("")){
+                    PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(coupon));
+                    couponList.add(pc);
                 }
+                if (!stockCoupon.equals("null")){
+                    PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(stockCoupon));
+                    couponList.add(pc);
+                }
+                hash = mmb.getDiscountedPrice(s, store, c, couponList);
             }
             d_price = String.valueOf(hash.get("D_PRICE"));
             Successful_promotion = (PromotionDetail) hash.get("Successful_promotion");
@@ -304,7 +301,7 @@ public class StocklistWS {
                     stock = mpl.getStock(id);
                     int qty = Integer.parseInt(jo.getString("qty"));
                     Double price = Double.parseDouble(jo.getString("price"));
-                    System.err.println(id+"  "+qty);
+                    System.err.println(jo);
                     if (stock instanceof FurnitureModel){
                         mpl.persistFT(ft);
                         FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
@@ -319,6 +316,7 @@ public class StocklistWS {
                         ftd.setFurnitureTransaction(ft);
                         ft.getFurnitureTransactionDetails().add(ftd);
                         mpl.persistFTD(ftd);
+                        mpl.expendCoupon(jo.getString("disc"));
                     }else if (stock instanceof RetailItem){
                         mpl.persistRT(rt);
                         RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
@@ -343,13 +341,8 @@ public class StocklistWS {
                     }
                 }
                 if (!receipt.isEmpty()){
-                    if (stock instanceof RetailItem){
-                        mpl.linkReceipt(receipt, (Transaction) rt);
-                    }else if (stock instanceof FurnitureModel){
-                        mpl.linkReceipt(receipt, (Transaction) ft);
-                    }
+                    mpl.linkReceipt(receipt, ft);
                 }
-                //mmb.expand_promotion(null, null); TODO
             }
             
         }
