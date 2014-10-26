@@ -53,7 +53,10 @@
                                             <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.bodyText}" class="form-control"></h:inputText></td>
                                             <td><h:inputText value="#{webBannerDetailManagedBean.webBanner.buttonText}" class="form-control"></h:inputText></td>
                                             <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.buttonUrl}" class="form-control"></h:inputText></td>
-                                            <td></td>
+                                            <td><p:inputText value="#{webBannerDetailManagedBean.webBanner.picture}" >
+                                                    <p:fileUpload fileUploadListener="#{webBannerDetailManagedBean.handleFileUpload}"   
+                                                                  allowTypes="*.jpg;*.png;*.gif;"/>                       
+                                                </p:inputText></td>-->
 
                                         </tr>
                                     </table>
