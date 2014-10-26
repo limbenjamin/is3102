@@ -139,6 +139,7 @@ public class ProductDetailManagedBean {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, ex.getMessage(), "this item was already added previously"));
         } finally {
+            mslbl.updateListTotalPrice(listId);
             ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
         }
     }

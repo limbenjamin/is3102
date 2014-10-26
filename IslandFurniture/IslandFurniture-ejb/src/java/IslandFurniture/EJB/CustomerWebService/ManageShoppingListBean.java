@@ -122,9 +122,6 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             listDetail.setFurnitureModel(furniture);
             listDetail.setQty(quantity);
             shoppingList.getShoppingListDetails().add(listDetail);
-            // update list total price
-            Double currentPrice = shoppingList.getTotalPrice();
-            shoppingList.setTotalPrice(currentPrice + quantity * discountedPrice);
             em.persist(shoppingList);
             em.persist(listDetail);
             em.flush();
@@ -135,12 +132,9 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
                     em.persist(detail);
                 }
             }
-            // update list total price
-            Double currentPrice = shoppingList.getTotalPrice();
-            shoppingList.setTotalPrice(currentPrice + quantity * discountedPrice);
             em.persist(shoppingList);
             em.flush();            
-            throw new DuplicateEntryException(furniture.getName() + " already exists in this shopping list. We updated the quntity instead.");
+            throw new DuplicateEntryException(furniture.getName() + " already exists in this shopping list. We updated the quantity instead.");
         }
     }    
     
