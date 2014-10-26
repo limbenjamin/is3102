@@ -70,7 +70,7 @@
                                         </td>
                                         <td>#{list.store.name}</td>
                                         <td style="text-align:center;">
-                                            <h:outputText value="#{shoppingListManagedBean.calculateSubTotal(list)}">
+                                            <h:outputText value="#{list.totalPrice}">
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                             </h:outputText>    
                                         </td>
