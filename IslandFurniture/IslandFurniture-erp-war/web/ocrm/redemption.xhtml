@@ -1,16 +1,105 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong><a href="redemption.xhtml">Redemption</a></strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addRedemption">
+                                <i class="fa fa-fw fa-plus"></i> Add Redemption
+                            </button>                              
+                        </span>   
+
+                        <h4>Redemption</h4><hr></hr>
+                    </div>
+
+                    <div class="col-md-10">                      
+                        <section name="Table of Contents of the Redemption">
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Redemption
+                            </div>
+                            <div class="list-group-item">  
+                                <h:outputText rendered="#{empty redemptionManagedBean.redemptionList}" value="There are no store sections"/>
+                                <h:panelGroup layout="block" rendered="#{not empty redemptionManagedBean.redemptionList}">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Redemption ID</th>
+                                            <th>Customer ID</th>
+                                            <th>Customer Name</th>
+                                            <th>Redeemable Item ID</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{redemptionManagedBean.redemptionList}" var="ss">
+                                                <tr>
+                                                    <td>#{ss.id}</td>
+                                                    <td>#{ss.customer.id}</td>
+                                                    <td>#{ss.customer.name}</td>
+                                                    <td>#{ss.redeemableItem.id}</td>             
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addRedemption" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Redemption</h4>
+                                    </div>
+                                    <h:form id="createGRDD" class="form-horizontal">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Customer: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu class="form-control needauto" value="#{redemptionManagedBean.customerId}">
+                                                        <f:selectItem itemLabel="Select Customer" />
+                                                        <f:selectItems value="#{redemptionManagedBean.customerList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Redeemable Item: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu class="form-control needauto" value="#{redemptionManagedBean.redeemableItemId}">
+                                                        <f:selectItem itemLabel="Select Redeemable Item" />
+                                                        <f:selectItems value="#{redemptionManagedBean.redeemableItemList}" var="p" itemLabel="#{p.cashValue}" itemValue="#{p.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="redemption" actionListener="#{redemptionManagedBean.addRedemption}" value="Add Redemption" class="btn btn-success pull-right btn-round"> 
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>

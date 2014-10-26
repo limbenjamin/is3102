@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Voucher;
 import java.util.Calendar;
 import java.util.List;
@@ -29,6 +30,9 @@ public interface ManageRedeemableItemLocal {
 
     //  Function: View list of Redeemable Item
     List<Voucher> viewRedeemableItem(Plant plant);
+
+    //  Function: View list of Redeemable Item with Claimed:FALSE (for Redemption)
+    List<Voucher> viewRedeemableItemFromStore(Plant plant, Calendar calendar);
 
     //  Function: To check if there is no Membership Tier with the Same Title
     boolean checkIfNoRedeemableItemWithSameCashValueAndExpiryDate(Plant plant, int cashValue, Calendar expiryDate);

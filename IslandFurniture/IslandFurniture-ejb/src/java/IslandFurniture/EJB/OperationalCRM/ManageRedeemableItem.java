@@ -7,6 +7,7 @@ package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Voucher;
 import java.util.Calendar;
@@ -64,6 +65,16 @@ public class ManageRedeemableItem implements ManageRedeemableItemLocal {
         CountryOffice co = (CountryOffice) plant;
         Query q = em.createQuery("SELECT s FROM Voucher s WHERE s.countryOffice.id=:plantId");
         q.setParameter("plantId", co.getId());
+        return q.getResultList();
+    }
+    
+        //  Function: View list of Redeemable Item from Store
+    @Override
+    public List<Voucher> viewRedeemableItemFromStore(Plant plant, Calendar calendar) {
+        Store store = (Store) plant;
+        Query q = em.createQuery("SELECT s FROM Voucher s WHERE s.countryOffice.id=:plantId AND (s.expiryDate > :calendar OR s.expiryDate = :calendar)");
+        q.setParameter("plantId", store.getCountryOffice().getId());
+        q.setParameter("calendar", calendar);
         return q.getResultList();
     }
 

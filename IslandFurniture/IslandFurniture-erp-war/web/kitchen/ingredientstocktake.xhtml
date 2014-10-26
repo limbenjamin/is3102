@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong><a href="ingredientstocktake.xhtml">Ingredient Stock Take</a></strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+                        <h4>Ingredient Inventory Stock Take</h4><hr></hr>
+                    </div>
+
+                    <div class="col-md-10">                      
+                        <section name="Table of Contents of the Ingredient Inventory">
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Ingredient Inventory
+                            </div>
+                            <div class="list-group-item">  
+                                <h:outputText rendered="#{empty ingredientInventoryManagedBean.ingredientInventoryList}" value="There are no store sections"/>
+                                <h:panelGroup layout="block" rendered="#{not empty ingredientInventoryManagedBean.ingredientInventoryList}">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Ingredient</th>
+                                            <th>Current Quantity</th>
+                                            <th>Stock Take Quantity</th>
+                                            <th>Update</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{ingredientInventoryManagedBean.ingredientInventoryList}" var="ss">
+                                                <tr>
+                                                    <td><h:outputText value="#{ss.ingredient.name}"/></td>
+                                                    <td><h:outputText value="#{ss.qty}"/></td>
+                                                    <td><h:inputText value="#{ss.qty}" class="form-control"></h:inputText></td>
+                                                    <td>
+                                                        <h:commandButton action="ingredientstocktake" actionListener="#{ingredientInventoryManagedBean.editIngredientInventory}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="ingredientInventory" value="#{ss}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+                    </div> 
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
