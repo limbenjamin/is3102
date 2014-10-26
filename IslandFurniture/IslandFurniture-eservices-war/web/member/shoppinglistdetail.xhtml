@@ -16,8 +16,10 @@
                           <li><a href="index.xhtml">Home</a></li>
                           <li><a href="shoppinglist.xhtml">Shopping Lists</a></li>
                           <li class="active"><strong>#{shoppingListDetailManagedBean.shoppingList.name}</strong></li>
-                        </ol>                            
-                        <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3><hr/>
+                        </ol>
+                        <h5 class="pull-right">Store: #{shoppingListDetailManagedBean.shoppingList.store.name}</h5>                        
+                        <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3>
+                        <hr/>
                     </div> 
                     <div class="col-md-12">
                     <div class="table-responsive list_info">
@@ -42,7 +44,7 @@
                                     </td>
                                     <td class="list_description">
                                         <h4><a href="">#{detail.furnitureModel.name}</a></h4>
-                                        <p>category: #{detail.furnitureModel.category}</p>
+                                        <p><i class="fa fa-map-marker"></i> #{shoppingListDetailManagedBean.getLocation(detail.furnitureModel.id)}</p>
                                     </td>
                                     <td class="list_price">
                                         <p>
