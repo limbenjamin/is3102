@@ -33,7 +33,7 @@
 
                     <div class="col-md-10">
                         <section name="Web Banner Document">
-                            <h:form class="form-horizontal">
+                            <h:form class="form-horizontal" enctype="multipart/form-data">
                                 <div class="panel-heading dashboard-title-panel">
                                     Web Banner Details
                                 </div>
@@ -53,18 +53,18 @@
                                             <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.bodyText}" class="form-control"></h:inputText></td>
                                             <td><h:inputText value="#{webBannerDetailManagedBean.webBanner.buttonText}" class="form-control"></h:inputText></td>
                                             <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.buttonUrl}" class="form-control"></h:inputText></td>
-                                            <td><p:inputText value="#{webBannerDetailManagedBean.webBanner.picture}" >
-                                                    <p:fileUpload fileUploadListener="#{webBannerDetailManagedBean.handleFileUpload}"   
-                                                                  allowTypes="*.jpg;*.png;*.gif;"/>                       
-                                                </p:inputText></td>-->
-
+                                            <td><p:fileUpload fileUploadListener="#{webBannerDetailManagedBean.handleFileUpload}" /></td>
                                         </tr>
                                     </table>
                                 </div>
 
-                                <h:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update" class="btn btn-primary pull-right">                                       
+                                <p:graphicImage value="#{webBannerDetailManagedBean.webBanner.picture}">
+                                    <f:param name="id" value="#{item.imageId}" />
+                                </p:graphicImage>
+
+                                <p:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update"  ajax="false">                                       
                                     <f:attribute name="wb" value="#{webBannerDetailManagedBean.webBanner}" />
-                                </h:commandButton>
+                                </p:commandButton>
                             </h:form>
                         </section>
                     </div>

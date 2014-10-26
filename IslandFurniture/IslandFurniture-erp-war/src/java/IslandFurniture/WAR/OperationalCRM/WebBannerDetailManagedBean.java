@@ -7,6 +7,7 @@ package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageWebBannerLocal;
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.WebBanner;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -20,6 +21,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -36,6 +40,7 @@ public class WebBannerDetailManagedBean implements Serializable {
     private String buttonText;
     private String buttonURL;
     private byte[] photo;
+    private StreamedContent image;
 
     private WebBanner webBanner;
 
@@ -43,6 +48,8 @@ public class WebBannerDetailManagedBean implements Serializable {
     private ManageUserAccountBeanLocal staffBean;
     @EJB
     public ManageWebBannerLocal bannerBean;
+    @EJB
+    private Picture picture;
 
     @PostConstruct
     public void init() {
@@ -53,25 +60,27 @@ public class WebBannerDetailManagedBean implements Serializable {
         } catch (Exception e) {
             id = (Long) session.getAttribute("webbannerid");
         }
-
+        
         webBanner = bannerBean.getWebBanner(id);
+        photo = webBanner.getPicture().getContent();
     }
 
 //  Function: To edit a Web Banner
     public void editWebBanner(ActionEvent event) throws IOException {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("webbannerid");
-
-//        webBanner.setPicture(photo);
+        Picture picture = new Picture();
+        picture.setContent(photo);
+        webBanner.setPicture(picture);;
         bannerBean.editWebBanner(webBanner);
         webBanner = bannerBean.getWebBanner(id);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The Web Banner was successfully edited", ""));
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
-        byte[] photo = event.getFile().getContents();
-    // ...
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
+        UploadedFile file = event.getFile();     
+        photo = IOUtils.toByteArray(file.getInputstream());
     }
 
     public byte[] getPhoto() {
