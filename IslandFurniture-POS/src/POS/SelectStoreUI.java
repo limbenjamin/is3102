@@ -56,12 +56,15 @@ public class SelectStoreUI extends javax.swing.JFrame {
         if (storeType.equals("furniture")){
             retailStoreButton.setVisible(Boolean.FALSE);
             restaurantButton.setVisible(Boolean.FALSE);
+            furnitureStoreButton.setText("Start");
         }else if (storeType.equals("retail")){
             furnitureStoreButton.setVisible(Boolean.FALSE);
             restaurantButton.setVisible(Boolean.FALSE);
+            retailStoreButton.setText("Start");
         }else if (storeType.equals("restaurant")){
             furnitureStoreButton.setVisible(Boolean.FALSE);
             retailStoreButton.setVisible(Boolean.FALSE);
+            restaurantButton.setText("Start");
         }
         confirmButton.setEnabled(Boolean.FALSE);
         newBalanceField.setEnabled(Boolean.FALSE);

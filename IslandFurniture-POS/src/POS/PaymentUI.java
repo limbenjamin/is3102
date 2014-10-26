@@ -82,6 +82,10 @@ public class PaymentUI extends javax.swing.JFrame {
         this.customerCardId = customerCardId;
         this.totalRegisterCash = totalRegisterCash;
         this.storeType = storeType;
+        if (storeType.equals("restaurant") || storeType.equals("retail")){
+            returnReceiptField.setEnabled(Boolean.FALSE);
+            addButton.setEnabled(Boolean.FALSE);
+        }
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
         cashButton.setSelected(Boolean.TRUE);
