@@ -99,6 +99,15 @@ public class ShoppingListDetailManagedBean {
         }
     }
     
+    public void editListStore() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        mslbl.updateShoppingList(listId, shoppingList.getStore(), shoppingList.getName());
+        shoppingList = mslbl.getShoppingList(listId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your list has been sucessfully updated", ""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
+    }
+    
     public void editDetail(ActionEvent event) throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ShoppingListDetail detail = (ShoppingListDetail) event.getComponent().getAttributes().get("detailid");

@@ -17,7 +17,17 @@
                           <li><a href="shoppinglist.xhtml">Shopping Lists</a></li>
                           <li class="active"><strong>#{shoppingListDetailManagedBean.shoppingList.name}</strong></li>
                         </ol>
-                        <h5 class="pull-right">Store: #{shoppingListDetailManagedBean.shoppingList.store.name}</h5>                        
+                        <h:form id="editShoppingList">
+                            <div class="input-group pull-right" style="max-width: 250px;">
+                                <h:selectOneMenu id="storeId" class="form-control needauto" value="#{shoppingListDetailManagedBean.shoppingList.store.id}">
+                                    <f:selectItems value="#{shoppingListDetailManagedBean.countryOffice.stores}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                </h:selectOneMenu>
+                              <span class="input-group-btn">
+                                  <h:commandButton action="#{shoppingListDetailManagedBean.editListStore}" value="Save" class="btn btn-default" style="height:35px;">
+                                  </h:commandButton>
+                              </span>
+                            </div>
+                        </h:form>                      
                         <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3>
                         <hr/>
                     </div> 
