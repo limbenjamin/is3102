@@ -7,11 +7,15 @@
 package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.WebBanner;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -33,11 +37,14 @@ public class HomeManagedBean {
     private CountryOffice co;
     private List<WebBanner> webBanners;
     private List<Stock> featuredProducts;
-    private List<FurnitureModel> featuredFurniture;
+    private List<FurnitureModel> featuredFurniture = new ArrayList<>();
     private List<RetailItem> featuredRetailItems;
 
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
+    
+    @EJB
+    private ManageMarketingBeanLocal mmbl;    
     
     @PostConstruct
     public void init() {
@@ -56,6 +63,7 @@ public class HomeManagedBean {
         while (iterator.hasNext()) {
             Stock stock = iterator.next();
             if (stock instanceof FurnitureModel) {
+                System.out.println("it is furniture model");
                 featuredFurniture.add((FurnitureModel)stock);
             }
         }        
@@ -69,6 +77,12 @@ public class HomeManagedBean {
                 featuredRetailItems.add((RetailItem)stock);
             }
         }        
+    }
+    
+    public Double getDiscountedPrice(Stock s) {
+        Store st = new Store();
+        st.setCountryOffice(co);
+        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }    
     
     public String checkForActive(int index) {

@@ -31,7 +31,7 @@ public interface ManagePOSLocal {
     
     void useVoucher(String voucherId);
     
-    void linkReceipt(String id,Transaction t);
+    void linkReceipt(String id, FurnitureTransaction ft);
     
     Stock getStock(Long id);
     
@@ -48,5 +48,7 @@ public interface ManagePOSLocal {
     void persistRSTD(RestaurantTransactionDetail rtd);
 
     List<ShoppingList> getShoppingListList(String customerCardId);
+
+    void expendCoupon(String string);
     
 }

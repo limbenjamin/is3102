@@ -10,6 +10,9 @@ import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLoca
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.PromotionCampaign;
+import IslandFurniture.Entities.PromotionCoupon;
+import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.RestaurantTransaction;
@@ -41,6 +44,8 @@ public class ManagePOS implements ManagePOSLocal {
 
     @EJB
     ManageMemberAuthenticationBeanLocal mmabl;
+    @EJB
+    ManageMarketingBeanLocal mmbl;
     
     @Override
     public int getVoucher(String id){
@@ -87,13 +92,13 @@ public class ManagePOS implements ManagePOSLocal {
         return amount;
     }
     @Override
-    public void linkReceipt(String id,Transaction t){
+    public void linkReceipt(String id, FurnitureTransaction ft){
         Query query = em.createQuery("SELECT t FROM Transaction t WHERE t.id=:id");
         query.setParameter("id", Long.valueOf(id));
         int amount = 0;
         try{
-            Transaction tr = (Transaction) query.getSingleResult();
-            //TODO : link receipt
+            FurnitureTransaction tr = (FurnitureTransaction) query.getSingleResult();
+            ft.setReturnedTrans(tr);
         }catch(Exception e){
             System.err.print(e);
         }
@@ -139,5 +144,13 @@ public class ManagePOS implements ManagePOSLocal {
     public List<ShoppingList> getShoppingListList(String customerCardId){
         Customer c = mmabl.getCustomerFromLoyaltyCardId(customerCardId);
         return c.getShoppingLists();
+    }
+    
+    @Override
+    public void expendCoupon(String code){
+        PromotionCoupon pc = em.find(PromotionCoupon.class, Long.parseLong(code));
+        PromotionDetail pd = pc.getPromotionDetail();
+        mmbl.expand_promotion(pd, pc);
+        
     }
 }

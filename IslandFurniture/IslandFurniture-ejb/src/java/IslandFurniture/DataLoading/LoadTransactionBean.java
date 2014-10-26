@@ -57,7 +57,8 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         fTransDetail.setUnitPoints(furniture.getPointsWorth());
         fTransDetail.setFurnitureModel(furniture);
         fTransDetail.setQty(qty);
-
+        fTransDetail.setNumClaimed(0);
+        fTransDetail.setNumReturned(0);
         return fTransDetail;
     }
 
