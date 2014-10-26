@@ -6,20 +6,27 @@
 
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.PromotionCampaign;
+import IslandFurniture.Entities.PromotionCoupon;
+import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
+import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Transaction;
 import IslandFurniture.Entities.Voucher;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,6 +42,11 @@ public class ManagePOS implements ManagePOSLocal {
     @PersistenceContext
     EntityManager em;
 
+    @EJB
+    ManageMemberAuthenticationBeanLocal mmabl;
+    @EJB
+    ManageMarketingBeanLocal mmbl;
+    
     @Override
     public int getVoucher(String id){
         Query query = em.createQuery("SELECT r FROM Redemption r WHERE r.id=:id AND r.claimed=FALSE");
@@ -80,13 +92,13 @@ public class ManagePOS implements ManagePOSLocal {
         return amount;
     }
     @Override
-    public void linkReceipt(String id,Transaction t){
+    public void linkReceipt(String id, FurnitureTransaction ft){
         Query query = em.createQuery("SELECT t FROM Transaction t WHERE t.id=:id");
         query.setParameter("id", Long.valueOf(id));
         int amount = 0;
         try{
-            Transaction tr = (Transaction) query.getSingleResult();
-            //TODO : link receipt
+            FurnitureTransaction tr = (FurnitureTransaction) query.getSingleResult();
+            ft.setReturnedTrans(tr);
         }catch(Exception e){
             System.err.print(e);
         }
@@ -126,5 +138,19 @@ public class ManagePOS implements ManagePOSLocal {
     @Override
     public void persistRSTD(RestaurantTransactionDetail rtd){
         em.persist(rtd);
+    }
+    
+    @Override
+    public List<ShoppingList> getShoppingListList(String customerCardId){
+        Customer c = mmabl.getCustomerFromLoyaltyCardId(customerCardId);
+        return c.getShoppingLists();
+    }
+    
+    @Override
+    public void expendCoupon(String code){
+        PromotionCoupon pc = em.find(PromotionCoupon.class, Long.parseLong(code));
+        PromotionDetail pd = pc.getPromotionDetail();
+        mmbl.expand_promotion(pd, pc);
+        
     }
 }

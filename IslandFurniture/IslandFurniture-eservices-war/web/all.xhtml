@@ -45,20 +45,24 @@
                                 <h2>Categories (by Type)</h2>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="bedroom.xhtml">
-                                                <h:outputText value="#{bundle['nav.bedroom']}" /></a></li>
-                                        <li><a href="living.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.living']}" /></a></li>
-                                        <li><a href="kitchen.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.kitchen']}" /></a></li>
-                                        <li><a href="dining.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.dining']}" /></a></li>
-                                        <li><a href="bathroom.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.bathroom']}" /></a></li>
-                                        <li><a href="workspace.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.workspace']}" /></a></li>
-                                        <li><a href="children.xhtml"> 
-                                                <h:outputText value="#{bundle['nav.children']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.bedding']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.tables']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.chairs']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.mirrors']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.lighting']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.cooking']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.sofas']}" /></a></li>                                                
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.wardrobes']}" /></a></li>
+                                        <li><a href="#">
+                                                <h:outputText value="#{bundle['subnav.textile']}" /></a></li>
                                     </ul>
                                 </div>
                             </div>                            
@@ -82,9 +86,8 @@
                                                     </h:outputText></strong>
                                                     </h4>
                                                     <h5 style="text-decoration:line-through;"> 
-                                                        <h:outputText value="#{catalogueManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price != discounted}"/>
-                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price != discounted}">
-                                                            #{catalogueManagedBean.co.country.currency.currencyCode}
+                                                        <h:outputText value="#{catalogueManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price > catalogueManagedBean.getDiscountedPrice(furniture)}"/>
+                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price > catalogueManagedBean.getDiscountedPrice(furniture)}">
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                         </h:outputText>
                                                     </h5>

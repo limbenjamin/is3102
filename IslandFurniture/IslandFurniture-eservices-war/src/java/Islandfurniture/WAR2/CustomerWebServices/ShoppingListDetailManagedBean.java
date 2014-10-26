@@ -8,6 +8,7 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -15,6 +16,7 @@ import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.StorefrontInventory;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +56,8 @@ public class ShoppingListDetailManagedBean {
     private ManageShoppingListBeanLocal mslbl;
     @EJB
     private ManageMarketingBeanLocal mmbl;
+    @EJB
+    private ManageStorefrontInventoryLocal msfil;
     
     @PostConstruct
     public void init(){
@@ -85,26 +89,44 @@ public class ShoppingListDetailManagedBean {
                     listId = (Long) session.getAttribute("id");
                 }
                 shoppingList = mslbl.getShoppingList(listId);
-                shoppingListDetails = mslbl.getShoppingListDetails(listId);
-                subtotal = calculateSubTotal();
+                // update total price of the list
+                mslbl.updateListTotalPrice(listId);
+                subtotal = shoppingList.getTotalPrice();
+                shoppingListDetails = mslbl.getShoppingListDetails(listId);                
             } catch (Exception e){
             
             }
         }
-    }    
+    }
+    
+    public void editDetail(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ShoppingListDetail detail = (ShoppingListDetail) event.getComponent().getAttributes().get("detailid");
+        mslbl.updateShoppingListDetail(detail);
+        mslbl.updateListTotalPrice(listId);
+        shoppingListDetails = mslbl.getShoppingListDetails(listId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
+    }
     
     public void deleteDetail(ActionEvent event) throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         Long detailId = Long.parseLong(ec.getRequestParameterMap().get("detailid"));
         ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
         String furnitureName = detail.getFurnitureModel().getName();
-        mslbl.updateListSubTotal(listId, 0, getDiscountedPrice(detail.getFurnitureModel()) * detail.getQty());
         mslbl.deleteShoppingListDetail(detailId);
+        mslbl.updateListTotalPrice(listId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, furnitureName + " has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
-    }    
+    }
+    
+    public String getLocation(Long stockId) {
+        StorefrontInventory inventory = msfil.getStorefrontInventory(shoppingList.getStore(), stockId);
+        return inventory.getLocationInStore().getName();
+    }
     
     public Double calculateSubTotal() {
         subtotal = 0.0;
@@ -121,7 +143,7 @@ public class ShoppingListDetailManagedBean {
         Store st = new Store();
         st.setCountryOffice(countryOffice);
         return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
-    }    
+    }
 
     public Long getListId() {
         return listId;

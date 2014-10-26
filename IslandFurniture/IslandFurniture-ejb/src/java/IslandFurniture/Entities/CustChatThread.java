@@ -27,6 +27,8 @@ public class CustChatThread implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String title;
+    private Boolean isActive;
+    private Boolean hasUnread;
     
     @OneToOne
     private Customer customer;
@@ -76,6 +78,24 @@ public class CustChatThread implements Serializable {
     public void setCountryOffice(CountryOffice countryOffice) {
         this.countryOffice = countryOffice;
     }
+
+    public Boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public Boolean isHasUnread() {
+        return hasUnread;
+    }
+
+    public void setHasUnread(Boolean hasUnread) {
+        this.hasUnread = hasUnread;
+    }
+    
+    
 
     @Override
     public int hashCode() {

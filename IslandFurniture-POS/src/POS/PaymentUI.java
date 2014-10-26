@@ -82,6 +82,10 @@ public class PaymentUI extends javax.swing.JFrame {
         this.customerCardId = customerCardId;
         this.totalRegisterCash = totalRegisterCash;
         this.storeType = storeType;
+        if (storeType.equals("restaurant") || storeType.equals("retail")){
+            returnReceiptField.setEnabled(Boolean.FALSE);
+            addButton.setEnabled(Boolean.FALSE);
+        }
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
         cashButton.setSelected(Boolean.TRUE);
@@ -434,7 +438,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 obj.put("name", transaction.get(i).get(1));
                 obj.put("price", transaction.get(i).get(2));
                 obj.put("qty", transaction.get(i).get(3));
-                obj.put("disc", transaction.get(i).get(5));
+                obj.put("disc", transaction.get(i).get(6));
                 transactionList.add(obj);
             }
             List params = new ArrayList();
@@ -649,8 +653,15 @@ public class PaymentUI extends javax.swing.JFrame {
                 Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
                 if (transaction.get(i).get(5).equals(""))
                     receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
-                else    
-                    receipt += transaction.get(i).get(5).substring(0, 15)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                else{
+                    int k;
+                    if(transaction.get(i).get(5).length()>15){
+                        k = 15;
+                    }else{
+                        k = transaction.get(i).get(5).length();
+                    }
+                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                }
             }
             receipt += "----------------------------------------------\n\r";
             receipt+= "Grand Total: " +currencyCode+" "+grandTotalAmt+ "\n\r";

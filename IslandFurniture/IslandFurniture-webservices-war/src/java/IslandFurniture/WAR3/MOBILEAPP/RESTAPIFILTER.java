@@ -1,4 +1,4 @@
-package IslandFurniture.WAR3.POS;
+package IslandFurniture.WAR3.MOBILEAPP;
 import java.io.IOException;
 import java.util.logging.Logger;
 import javax.ws.rs.container.ContainerRequestContext;

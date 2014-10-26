@@ -67,6 +67,9 @@ public class CheckoutUI extends javax.swing.JFrame {
         this.transaction = transaction;
         this.totalRegisterCash = totalRegisterCash;
         this.storeType = storeType;
+        if (storeType.equals("restaurant") || storeType.equals("retail")){
+            couponField.setEnabled(Boolean.FALSE);
+        }
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         String name = (String) jsonObject.get("name");
@@ -404,6 +407,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                     String price = (String) jsonObject.get("price");
                     String promo = (String) jsonObject.get("promo");
                     transaction.get(i).add(5, promo);
+                    transaction.get(i).add(6, String.valueOf(jTable.getModel().getValueAt(i, 3)));
                     transaction.get(i).set(2, price);
                     System.err.println(result);
                 } catch (Exception ex) {

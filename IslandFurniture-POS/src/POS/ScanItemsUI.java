@@ -5,6 +5,7 @@
  */
 package POS;
 
+import Helper.Connector;
 import Helper.LCD;
 import Helper.NFCMethods;
 import gnu.io.SerialPort;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -48,7 +50,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private String currencyCode;
     private String storeType;
     private Double currtotal;
-    
+    private String customerCardId;
+    private String shoppingListJSON;
     
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
@@ -65,6 +68,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
         this.staffJSON = staffJSON;
         this.listJSON = listJSON;
         this.storeType = storeType;
+        if (!storeType.equals("furniture")){
+            shoppingListButton.setVisible(Boolean.FALSE);
+        }
         this.totalRegisterCash = totalRegisterCash;
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
@@ -171,6 +177,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel = new javax.swing.JLabel();
         nextButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
+        shoppingListButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
@@ -240,6 +247,14 @@ public class ScanItemsUI extends javax.swing.JFrame {
             }
         });
 
+        shoppingListButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        shoppingListButton.setText("List");
+        shoppingListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shoppingListButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -250,7 +265,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 356, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addComponent(shoppingListButton)
+                        .addGap(18, 18, 18)
                         .addComponent(resetButton)
                         .addGap(18, 18, 18)
                         .addComponent(reconcileButton))
@@ -268,7 +285,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(reconcileButton)
-                        .addComponent(resetButton))
+                        .addComponent(resetButton)
+                        .addComponent(shoppingListButton))
                     .addComponent(welcomeLabel))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
@@ -315,15 +333,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_reconcileButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        int row = jTable.getRowCount();
-        int col = jTable.getColumnCount();
-        changing = true;
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                jTable.setValueAt("", i, j);
-            }
-        }
-        changing = false;
+        reset();
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
@@ -357,6 +367,75 @@ public class ScanItemsUI extends javax.swing.JFrame {
             Logger.getLogger(ScanItemsUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void shoppingListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shoppingListButtonActionPerformed
+        try {
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+                if (acr122uCardTerminal != null) {
+                    try {
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            if (isChecking == false) {
+                                isChecking = true;
+                                NFCMethods nfc = new NFCMethods();
+                                customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
+                                List params = new ArrayList();
+                                List values = new ArrayList();
+                                params.add("cardId");
+                                values.add(cardId.substring(0, 8));
+                                params.add("customerCardId");
+                                values.add(customerCardId);
+                                shoppingListJSON = Connector.postForm(params, values, "shopping/list");
+                                System.err.println(shoppingListJSON);
+                                JSONArray array = (JSONArray) JSONValue.parse(shoppingListJSON);
+                                Object[] options = new Object[array.size()];
+                                Iterator i = array.iterator();
+                                int j=0;
+                                while (i.hasNext()) {
+                                    JSONObject jsonObject = (JSONObject) i.next();
+                                    String name = (String) jsonObject.get("name");
+                                    options[j] = name;
+                                    j++;
+                                }
+                                
+                                int selection = JOptionPane.showOptionDialog(null, "Select List to add", "Add List",
+                                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                                null, options, options[0]);
+                                reset();
+                                array = (JSONArray) JSONValue.parse(shoppingListJSON);
+                                JSONObject jsonObject = (JSONObject)array.get(selection);
+                                JSONArray array2 = (JSONArray) JSONValue.parse(String.valueOf(jsonObject.get("items")));
+                                System.err.println(array2);
+                                Iterator i2 = array2.iterator();
+                                int row = 0;
+                                while (i2.hasNext()) {
+                                    JSONObject jsonObject2 = (JSONObject) i2.next();
+                                    jTable.changeSelection(row+1, 0, false, false);
+                                    jTable.editCellAt(row+1, 0);
+                                    jTable.getModel().setValueAt(jsonObject2.get("model"), row, 0);
+                                    jTable.getModel().setValueAt(jsonObject2.get("qty"), row, 3);
+                                    row++;
+                                }
+                           }
+                        }
+                    } catch (CardException ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(LoginUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_shoppingListButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -410,6 +489,18 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel.setText("Total: " +currencyCode+" "+ Math.round(total * 100.0) / 100.0);
     }
     
+    public void reset(){
+        int row = jTable.getRowCount();
+        int col = jTable.getColumnCount();
+        changing = true;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                jTable.setValueAt("", i, j);
+            }
+        }
+        changing = false;
+    }
+    
     public Boolean consolidate(int numrows){
         //check if item already added, then add qty only
         Boolean duplicate = false;
@@ -453,6 +544,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private javax.swing.JButton nextButton;
     private javax.swing.JButton reconcileButton;
     private javax.swing.JButton resetButton;
+    private javax.swing.JButton shoppingListButton;
     private javax.swing.JLabel totalLabel;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables

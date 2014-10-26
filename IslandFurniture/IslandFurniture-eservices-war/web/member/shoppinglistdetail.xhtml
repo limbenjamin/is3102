@@ -16,8 +16,10 @@
                           <li><a href="index.xhtml">Home</a></li>
                           <li><a href="shoppinglist.xhtml">Shopping Lists</a></li>
                           <li class="active"><strong>#{shoppingListDetailManagedBean.shoppingList.name}</strong></li>
-                        </ol>                            
-                        <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3><hr/>
+                        </ol>
+                        <h5 class="pull-right">Store: #{shoppingListDetailManagedBean.shoppingList.store.name}</h5>                        
+                        <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3>
+                        <hr/>
                     </div> 
                     <div class="col-md-12">
                     <div class="table-responsive list_info">
@@ -42,7 +44,7 @@
                                     </td>
                                     <td class="list_description">
                                         <h4><a href="">#{detail.furnitureModel.name}</a></h4>
-                                        <p>category: #{detail.furnitureModel.category}</p>
+                                        <p><i class="fa fa-map-marker"></i> #{shoppingListDetailManagedBean.getLocation(detail.furnitureModel.id)}</p>
                                     </td>
                                     <td class="list_price">
                                         <p>
@@ -50,18 +52,20 @@
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                             </h:outputText> 
                                             <small>
-                                                <h:outputText value="#{detail.furnitureModel.price}" style="text-decoration: line-through;" rendered="#{detail.furnitureModel.price != discounted}">
+                                                <h:outputText value="#{detail.furnitureModel.price}" style="text-decoration: line-through;" 
+                                                    rendered="#{detail.furnitureModel.price > shoppingListDetailManagedBean.getDiscountedPrice(detail.furnitureModel)}">
                                                     <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                 </h:outputText>
-                                            </small>                                           
+                                            </small>
                                         </p>
                                     </td>
                                     <td class="list_quantity">
                                         <h:inputText id="quantity" value="#{detail.qty}" class="form-control list_quantity_input" p:required="true" p:type="number" p:min="1"></h:inputText>
                                     </td>
                                     <td>
-                                        <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
-                                        </h:commandButton>                                    
+                                        <h:commandButton actionListener="#{shoppingListDetailManagedBean.editDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                            <f:attribute name="detailid" value="#{detail}" />
+                                        </h:commandButton>
                                         <i class="fa fa-lg fa-save icon-button"></i>
                                     </td>
                                     <td>

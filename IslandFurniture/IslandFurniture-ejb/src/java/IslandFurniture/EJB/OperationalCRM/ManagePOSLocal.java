@@ -12,8 +12,10 @@ import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
+import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Transaction;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -29,7 +31,7 @@ public interface ManagePOSLocal {
     
     void useVoucher(String voucherId);
     
-    void linkReceipt(String id,Transaction t);
+    void linkReceipt(String id, FurnitureTransaction ft);
     
     Stock getStock(Long id);
     
@@ -44,5 +46,9 @@ public interface ManagePOSLocal {
     void persistRST(RestaurantTransaction rt);
 
     void persistRSTD(RestaurantTransactionDetail rtd);
+
+    List<ShoppingList> getShoppingListList(String customerCardId);
+
+    void expendCoupon(String string);
     
 }
