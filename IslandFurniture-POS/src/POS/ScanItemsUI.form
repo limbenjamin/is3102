@@ -55,7 +55,9 @@
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="welcomeLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="356" max="32767" attributes="0"/>
+                          <EmptySpace pref="239" max="32767" attributes="0"/>
+                          <Component id="shoppingListButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="resetButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Component id="reconcileButton" min="-2" max="-2" attributes="0"/>
@@ -79,6 +81,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="reconcileButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="resetButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="shoppingListButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="welcomeLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -202,6 +205,17 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="shoppingListButton">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="36" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="List"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shoppingListButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
