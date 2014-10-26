@@ -13,12 +13,14 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div id="slider-carousel" class="carousel slide" data-ride="carousel">
+                            <h:form rendered="#{homeManagedBean.webBanners.size() > 1}">
                             <ol class="carousel-indicators">
                                 <ui:repeat value="#{homeManagedBean.webBanners}" var="banner">
                                     <li data-target="#slider-carousel" data-slide-to="#{homeManagedBean.webBanners.indexOf(banner)}" 
                                         class="#{homeManagedBean.checkForActive(homeManagedBean.webBanners.indexOf(banner))}"></li>
                                 </ui:repeat>
                             </ol>
+                            </h:form>
                             <div class="carousel-inner">
                                 <ui:repeat value="#{homeManagedBean.webBanners}" var="banner">
                                 <div class="item #{homeManagedBean.checkForActive(homeManagedBean.webBanners.indexOf(banner))}">
@@ -36,7 +38,7 @@
                                 </div>                                
                                 </ui:repeat>
                             </div>
-                            <h:form rendered="#{homeManagedBean.webBanners.size() != 0}">
+                            <h:form rendered="#{homeManagedBean.webBanners.size() > 1}">
                             <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
                                 <i class="fa fa-angle-left"></i>
                             </a>
