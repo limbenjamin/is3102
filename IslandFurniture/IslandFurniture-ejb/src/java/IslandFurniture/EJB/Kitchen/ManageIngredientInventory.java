@@ -27,6 +27,7 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
     @PersistenceContext
     EntityManager em;
 
+    private Ingredient ingredient;
     private IngredientInventory ingredientInventory;
     private IngredientInventoryPK ingredientInventoryPK;
 
@@ -73,9 +74,9 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
     //  Function: To display list of IngredientInventory
     @Override
     public List<Ingredient> viewIngredient(Plant plant) {
-        CountryOffice countryOffice = (CountryOffice) plant;
+        Store store = (Store) plant;
         Query q = em.createQuery("SELECT s FROM Ingredient s WHERE s.countryOffice.id=:id");
-        q.setParameter("id", countryOffice.getId());
+        q.setParameter("id", store.getCountryOffice().getId());
         return q.getResultList();
     }
 
@@ -95,6 +96,13 @@ public class ManageIngredientInventory implements ManageIngredientInventoryLocal
         ingredientInventory.setQty(qty);
         em.merge(ingredientInventory);
         em.flush();
+    }
+    
+    //  Function: To get Ingredient Entity
+    @Override
+    public Ingredient getIngredient(Long ingredientId) {
+        ingredient = (Ingredient) em.find(Ingredient.class, ingredientId);
+        return ingredient;
     }
 
 }

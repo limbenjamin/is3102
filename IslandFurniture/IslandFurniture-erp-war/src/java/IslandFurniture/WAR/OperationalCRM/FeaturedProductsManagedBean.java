@@ -14,6 +14,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -58,6 +59,14 @@ public class FeaturedProductsManagedBean implements Serializable {
         plant = staff.getPlant();
         featuredProductsList = featuredBean.viewFeaturedProducts(plant);
         stockList = transferBean.viewStock();
+
+        Iterator<Stock> iterator = stockList.iterator();
+        while (iterator.hasNext()){
+            Stock s = iterator.next();
+            if (featuredProductsList.contains(s)) {
+                iterator.remove();
+            }
+        }
     }
 
 //  Function: To add a Featured Product

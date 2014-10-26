@@ -46,7 +46,7 @@
                                                 <tr>
                                                     <td><h:outputText value="#{ss.name}"/></td>
                                                     <td>
-                                                        <h:commandButton action="featuredProducts" actionListener="#{featuredProductsManagedBean.deleteFeaturedProduct}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                        <h:commandButton action="featuredproducts" actionListener="#{featuredProductsManagedBean.deleteFeaturedProduct}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                             <f:attribute name="stock" value="#{ss}" />
                                                         </h:commandButton>
                                                         <i class="fa fa-lg fa-trash-o icon-button"></i>
@@ -74,14 +74,14 @@
                                                 <div class="col-sm-9">
                                                     <h:selectOneMenu class="form-control needauto" value="#{featuredProductsManagedBean.stockId}" pt:required="true">
                                                         <f:selectItem itemLabel="Select Stock"/>
-                                                        <f:selectItems value="#{storefrontInventoryManagedBean.stockList}" var="l" itemLabel="#{l.name}" itemValue="#{l.id}" />
+                                                        <f:selectItems value="#{featuredProductsManagedBean.stockList}" var="l" itemLabel="#{l.name}" itemValue="#{l.id}" />
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="featuredProducts" actionListener="#{featuredProductsManagedBean.addFeaturedProduct}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
+                                            <h:commandButton action="featuredproducts" actionListener="#{featuredProductsManagedBean.addFeaturedProduct}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
                                             </h:commandButton>
                                         </div>
                                     </h:form>

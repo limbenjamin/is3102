@@ -8,6 +8,8 @@ package IslandFurniture.EJB.Kitchen;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
+import IslandFurniture.Entities.IngredientInventory;
+import IslandFurniture.Entities.IngredientInventoryPK;
 import IslandFurniture.Entities.IngredientPurchaseOrder;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
@@ -32,6 +34,7 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     private IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument;
     private IngredientGoodsReceiptDocumentDetail ingredientGoodsReceiptDocumentDetail;
     private IngredientPurchaseOrder ingredientPurchaseOrder;
+    private IngredientInventory ingredientInventory;
 
     // Function: Create Ingredient Goods Receipt Document
     @Override
@@ -55,7 +58,7 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, updatedIngredientGoodsReceiptDocument.getId());
         ingredientGoodsReceiptDocument.setLastModBy(staff);
         ingredientGoodsReceiptDocument.setLastModTime(time);
-        ingredientGoodsReceiptDocument.setReceiptDate(updatedIngredientGoodsReceiptDocument.getReceiptDate());
+        ingredientGoodsReceiptDocument.setReceiptDate(time);
         em.merge(ingredientGoodsReceiptDocument);
         em.flush();
     }
@@ -79,8 +82,16 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     @Override
     public void postIngredientGoodsReceiptDocument(Staff staff, Calendar time, IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument) {
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, ingredientGoodsReceiptDocument.getId());
+        for (IngredientGoodsReceiptDocumentDetail ii : ingredientGoodsReceiptDocument.getIngredGoodsReceiptDocumentDetails()) {
+            IngredientInventoryPK pk = new IngredientInventoryPK(ingredientGoodsReceiptDocument.getStore().getId(), ii.getIngredient().getId());
+            ingredientInventory = (IngredientInventory) em.find(IngredientInventory.class, pk);
+            ingredientInventory.setQty(ingredientInventory.getQty() + ii.getQty());
+            em.merge(ingredientInventory);
+        }
+
         ingredientGoodsReceiptDocument.setLastModBy(staff);
         ingredientGoodsReceiptDocument.setLastModTime(time);
+        ingredientGoodsReceiptDocument.setPostingDate(time);
         ingredientGoodsReceiptDocument.setPosted(true);
         em.merge(ingredientGoodsReceiptDocument);
         em.flush();
@@ -90,9 +101,11 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     @Override
     public void deleteIngredientGoodsReceiptDocument(IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument) {
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, ingredientGoodsReceiptDocument.getId());
-        ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, ingredientGoodsReceiptDocument.getIngredientPurchaseOrder());
-        ingredientPurchaseOrder.setIngredGoodsReceiptDoc(null);
-        em.merge(ingredientPurchaseOrder);
+        if (ingredientGoodsReceiptDocument.getIngredientPurchaseOrder() != null) {
+            ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, ingredientGoodsReceiptDocument.getIngredientPurchaseOrder());
+            ingredientPurchaseOrder.setIngredGoodsReceiptDoc(null);
+            em.merge(ingredientPurchaseOrder);
+        }
         em.remove(ingredientGoodsReceiptDocument);
         em.flush();
     }
@@ -124,15 +137,20 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     // Function: Edit Ingredient Goods Receipt Document Detail
     @Override
     public void editIngredientGoodsReceiptDocumentDetail(Staff staff, Calendar time, IngredientGoodsReceiptDocumentDetail updatedIngredientGoodsReceiptDocumentDetail) {
-        ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, ingredientGoodsReceiptDocumentDetail.getIngredGoodsReceiptDocument().getId());
+        ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, updatedIngredientGoodsReceiptDocumentDetail.getIngredGoodsReceiptDocument().getId());
         ingredientGoodsReceiptDocumentDetail = (IngredientGoodsReceiptDocumentDetail) em.find(IngredientGoodsReceiptDocumentDetail.class, updatedIngredientGoodsReceiptDocumentDetail.getId());
-        ingredientGoodsReceiptDocumentDetail.setIngredient(updatedIngredientGoodsReceiptDocumentDetail.getIngredient());
         ingredientGoodsReceiptDocumentDetail.setQty(updatedIngredientGoodsReceiptDocumentDetail.getQty());
-        em.merge(ingredientGoodsReceiptDocumentDetail);
+        ingredientGoodsReceiptDocumentDetail.setIngredient(updatedIngredientGoodsReceiptDocumentDetail.getIngredient());
+
+        System.out.println("The ingredient is " + updatedIngredientGoodsReceiptDocumentDetail.getIngredient().getName());
+
         ingredientGoodsReceiptDocument.setLastModBy(staff);
         ingredientGoodsReceiptDocument.setLastModTime(time);
+        em.merge(ingredientGoodsReceiptDocumentDetail);
         em.merge(ingredientGoodsReceiptDocument);
         em.flush();
+        em.refresh(ingredientGoodsReceiptDocument);
+        em.refresh(ingredientGoodsReceiptDocumentDetail);
     }
 
     // Function: Delete Ingredient Goods Receipt Document Detail
@@ -168,14 +186,14 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         q.setParameter("status", PurchaseOrderStatus.CONFIRMED);
         return q.getResultList();
     }
-    
+
     //  Function: View list of Ingredient
     @Override
     public List<Ingredient> viewIngredient() {
         Query q = em.createQuery("SELECT * FROM Ingredient");
         return q.getResultList();
     }
-    
+
     //  Function: Return IngredientGoodsReceiptDocument entity
     @Override
     public IngredientGoodsReceiptDocument getIngredientGoodsReceiptDocument(Long id) {

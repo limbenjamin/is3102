@@ -7,6 +7,7 @@ package IslandFurniture.DataLoading;
 
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBean;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
@@ -49,6 +50,8 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
 
     @EJB
     ManageMarketingBeanLocal mmb;
+    
+
 
     private MembershipTier addMembershipTier(String title) {
         MembershipTier tier = QueryMethods.findMembershipTierByTitle(em, title);

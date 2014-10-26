@@ -19,6 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -34,7 +35,8 @@ public class WebBannerDetailManagedBean implements Serializable {
     private String bodyText;
     private String buttonText;
     private String buttonURL;
-        
+    private byte[] photo;
+
     private WebBanner webBanner;
 
     @EJB
@@ -57,22 +59,27 @@ public class WebBannerDetailManagedBean implements Serializable {
 
 //  Function: To edit a Web Banner
     public void editWebBanner(ActionEvent event) throws IOException {
-//        HttpSession session = Util.getSession();
-//        id = (Long) session.getAttribute("webbannerid");
-//        WebBanner wb = (WebBanner) event.getComponent().getAttributes().get("wb");
-//        wb.setHeaderText(event.getComponent().getAttributes().get("headerText");
-//        wb.setSubheaderText(subHeaderText);
-//        wb.setBodyText(bodyText);
-//        wb.setButtonText(buttonText);
-//        wb.setButtonUrl(buttonURL);
-//        wb.setPicture(null);
-//       
-//        System.out.println("The header text is " + wb.getHeaderText());
-//        
-//        bannerBean.editWebBanner(wb);
-//        webBanner = bannerBean.getWebBanner(id);
-//        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-//                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Web Banner was successfully edited", ""));
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("webbannerid");
+
+//        webBanner.setPicture(photo);
+        bannerBean.editWebBanner(webBanner);
+        webBanner = bannerBean.getWebBanner(id);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "The Web Banner was successfully edited", ""));
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        byte[] photo = event.getFile().getContents();
+    // ...
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     public String getHeaderText() {
@@ -114,7 +121,7 @@ public class WebBannerDetailManagedBean implements Serializable {
     public void setButtonURL(String buttonURL) {
         this.buttonURL = buttonURL;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -146,5 +153,5 @@ public class WebBannerDetailManagedBean implements Serializable {
     public void setBannerBean(ManageWebBannerLocal bannerBean) {
         this.bannerBean = bannerBean;
     }
-    
+
 }
