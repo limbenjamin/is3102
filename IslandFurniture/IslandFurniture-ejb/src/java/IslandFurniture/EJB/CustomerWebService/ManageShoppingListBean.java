@@ -6,15 +6,20 @@
 
 package IslandFurniture.EJB.CustomerWebService;
 
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -32,6 +37,9 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     
     @Resource SessionContext ctx;
     private Customer customer;
+    
+    @EJB
+    private ManageMarketingBeanLocal mmbl;    
     
     @Override
     public ShoppingList getShoppingList(Long id) {
@@ -73,19 +81,20 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         shoppingList.setStore(store);
         shoppingList.setName(name);
         em.persist(shoppingList);
-    }    
+    }
     
     @Override
-    public void updateListSubTotal(Long listId, int op, Double value) {
+    public void updateListTotalPrice (Long listId) {
         ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
-        Double currentPrice = shoppingList.getTotalPrice();
-        if (op == 1) // add
-            shoppingList.setTotalPrice(currentPrice + value);
-        else if (op == 0) // subtract
-            shoppingList.setTotalPrice(currentPrice - value);
-        else { // replace totalprice with new value
-            shoppingList.setTotalPrice(value);
+        Double subtotal = 0.0;
+        Iterator<ShoppingListDetail> iterator = shoppingList.getShoppingListDetails().iterator();
+        while (iterator.hasNext()) {
+            ShoppingListDetail current = iterator.next();
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore());
+            subtotal = subtotal + discountedPrice * current.getQty();
         }
+        shoppingList.setTotalPrice(subtotal);
+        em.persist(shoppingList);
     }
     
     @Override
@@ -132,5 +141,9 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     @Override
     public void deleteShoppingListDetail(Long detailId) {
         em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, detailId));
+    }
+    
+    public Double getDiscountedPrice(Stock s, Store store) {
+        return (Double)mmbl.getDiscountedPrice(s, store, new Customer()).get("D_PRICE");
     }    
 }

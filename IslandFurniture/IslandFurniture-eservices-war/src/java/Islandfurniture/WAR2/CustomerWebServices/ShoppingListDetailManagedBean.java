@@ -91,15 +91,26 @@ public class ShoppingListDetailManagedBean {
             
             }
         }
-    }    
+    }
+    
+    public void editDetail(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ShoppingListDetail detail = (ShoppingListDetail) event.getComponent().getAttributes().get("detailid");
+        mslbl.updateShoppingListDetail(detail);
+        mslbl.updateListTotalPrice(listId);
+        shoppingListDetails = mslbl.getShoppingListDetails(listId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
+    }
     
     public void deleteDetail(ActionEvent event) throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         Long detailId = Long.parseLong(ec.getRequestParameterMap().get("detailid"));
         ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
         String furnitureName = detail.getFurnitureModel().getName();
-        mslbl.updateListSubTotal(listId, 0, getDiscountedPrice(detail.getFurnitureModel()) * detail.getQty());
         mslbl.deleteShoppingListDetail(detailId);
+        mslbl.updateListTotalPrice(listId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, furnitureName + " has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);

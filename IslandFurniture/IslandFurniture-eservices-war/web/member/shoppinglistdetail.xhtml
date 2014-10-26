@@ -60,8 +60,9 @@
                                         <h:inputText id="quantity" value="#{detail.qty}" class="form-control list_quantity_input" p:required="true" p:type="number" p:min="1"></h:inputText>
                                     </td>
                                     <td>
-                                        <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
-                                        </h:commandButton>                                    
+                                        <h:commandButton actionListener="#{shoppingListDetailManagedBean.editDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                            <f:attribute name="detailid" value="#{detail}" />
+                                        </h:commandButton>
                                         <i class="fa fa-lg fa-save icon-button"></i>
                                     </td>
                                     <td>
