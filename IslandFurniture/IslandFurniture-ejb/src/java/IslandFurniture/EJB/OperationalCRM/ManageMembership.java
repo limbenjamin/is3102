@@ -60,7 +60,7 @@ public class ManageMembership implements ManageMembershipLocal {
     // Function: View the All the Customers
     @Override
     public List<Customer> viewCustomers() {
-        Query q = em.createQuery("SELECT * FROM Customer");
+        Query q = em.createQuery("SELECT s FROM Customer s");
         return q.getResultList();
     }
 

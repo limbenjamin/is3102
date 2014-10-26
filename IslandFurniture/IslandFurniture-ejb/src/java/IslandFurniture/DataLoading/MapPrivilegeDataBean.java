@@ -44,13 +44,21 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 role = mrbl.getRoleFromName("IT (Store)");
                 mrbl.addPrivilegeToRole(role.getId(), "Manage Staff");
                 mrbl.addPrivilegeToRole(role.getId(), "View Audit Log");
+                
+                role = mrbl.getRoleFromName("Cust. Service (Store)");
+                mrbl.addPrivilegeToRole(role.getId(), "Store Inventory");
 
+                role = mrbl.getRoleFromName("Kitchen (Store)");
+                mrbl.addPrivilegeToRole(role.getId(), "Ingredient Management");
+                
                 role = mrbl.getRoleFromName("Warehouse (Store)");
                 mrbl.addPrivilegeToRole(role.getId(), "Goods Issued");
                 mrbl.addPrivilegeToRole(role.getId(), "Goods Receipt");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Monitoring");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Transfer");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
+                mrbl.addPrivilegeToRole(role.getId(), "External Inventory Transfer");
+                mrbl.addPrivilegeToRole(role.getId(), "Inventory Replenishment");
                 
                 role = mrbl.getRoleFromName("Management (Store)");
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
@@ -64,6 +72,9 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 role = mrbl.getRoleFromName("Sales Manager (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "Review Forecast");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Report");
+                
+                role = mrbl.getRoleFromName("Marketing (CO)");
+                mrbl.addPrivilegeToRole(role.getId(), "Promotion Manager");
                 
                 role = mrbl.getRoleFromName("Restaurant Planning (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "Ingredient");
@@ -80,10 +91,11 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Monitoring");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Transfer");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
+                mrbl.addPrivilegeToRole(role.getId(), "External Inventory Transfer");
                 
                 role = mrbl.getRoleFromName("Web Admin (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Monitoring");
-                
+                mrbl.addPrivilegeToRole(role.getId(), "Web Management");
                 
                 role = mrbl.getRoleFromName("Management (CO)");
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
@@ -103,6 +115,7 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Monitoring");
                 mrbl.addPrivilegeToRole(role.getId(), "Inventory Transfer");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
+                mrbl.addPrivilegeToRole(role.getId(), "External Inventory Transfer");
 
                 role = mrbl.getRoleFromName("Production Planning (Mfg)");
                 mrbl.addPrivilegeToRole(role.getId(), "Storage Location");
@@ -129,6 +142,7 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
                 mrbl.addPrivilegeToRole(role.getId(), "Retail Item");
                 mrbl.addPrivilegeToRole(role.getId(), "Stock Supply");
                 mrbl.addPrivilegeToRole(role.getId(), "Currency");
+                mrbl.addPrivilegeToRole(role.getId(), "Pricing Management");
                 
                 role = mrbl.getRoleFromName("Supply Chain (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Material");
@@ -138,6 +152,8 @@ public class MapPrivilegeDataBean implements MapPrivilegeDataBeanRemote {
 
                 role = mrbl.getRoleFromName("Management (HQ)");
                 mrbl.addPrivilegeToRole(role.getId(), "Broadcast");
+                mrbl.addPrivilegeToRole(role.getId(), "Member Management");
+                
                 
                 
             } catch (Exception ex) {

@@ -45,7 +45,8 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Review Forecast","Manage Production Status","Goods Issued","Goods Receipt",
         "Inventory Report","Inventory Monitoring","Inventory Transfer","Storage Location","Purchase Order",
         "Production Planner","Procured Stock Supplier","Stock Supply","Procurement Plan","View Audit Log",
-        "Ingredient","Dish","Menu","Currency",};
+        "Ingredient","Dish","Menu","Currency","Store Inventory","External Inventory Transfer","Inventory Replenishment",
+        "Promotion Manager","Pricing Management","Ingredient Management","Web Management","Member Management"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
@@ -53,7 +54,8 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Add and edit materials","Add and edit furnitures","Add and edit retail item","Create sales forecast","View all notifications",
         "Review sales forecast","Manage production status","Issue goods","Receive goods","View Inventory report","Monitor inventory","Transfer inventory","Manage Storage Locations",
         "Manage purchase orders","Do production planning","View supplier","View stock supply","Generate Procurement Plan","View Audit Log",
-        "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency",};
+        "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency","Manage Store Inventory","External Inventory Transfer",
+        "Replenish Inventory","Manage Promotions","Manage Prices","Manage Ingredients","Manage Web functions","Manage Membership"};
         
         
         String[][] arr = new String [][] { 
@@ -106,6 +108,23 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             { "Menu", "/kitchen/menuitem.xhtml", "fa-cube", "Restaurant Menu", "true","27"},
             { "Menu", "/kitchen/menuitemdetail.xhtml", "fa-dummy", "dummy", "false","0"},
             { "Currency", "/salesplanning/currency.xhtml", "fa-cube", "Currency", "true","28"},
+            {"Store Inventory", "/inventorymgt/storesection.xhtml", "fa-cube", "Store Section", "true","29"},
+            {"Store Inventory", "/inventorymgt/storefrontinventory.xhtml", "fa-cube", "Storefront Inventory", "true","30"},
+            {"External Inventory Transfer", "/inventorymgt/inventorytransfer_external.xhtml", "fa-cube", "External Inventory Transfer", "true","30"},
+            {"External Inventory Transfer", "/inventorymgt/inventorytransfer_externaldetail.xhtml", "fa-dummy", "dummy", "false","0"},    
+            {"External Inventory Transfer", "/inventorymgt/inventorytransfer_externalfulfilled.xhtml", "fa-dummy", "dummy", "false","0"},
+            {"External Inventory Transfer", "/inventorymgt/inventorytransfer_externalpending.xhtml", "fa-dummy", "dummy", "false","0"},    
+            {"External Inventory Transfer", "/inventorymgt/inventorytransfer_externalposted.xhtml", "fa-dummy", "dummy", "false","0"},
+            {"Inventory Replenishment", "/inventorymgt/inventorytransfer_replenish.xhtml", "fa-cube", "Inventory Replenishment", "true","31"},
+            {"Promotion Manager", "/ocrm/promotionmanager.xhtml", "fa-cube", "Promotion Manager", "true","32"},
+            {"Pricing Management", "/salesplanning/priceplanning.xhtml", "fa-cube", "Pricing and Point Mgmt", "true","33"},
+            {"Ingredient Management", "/kitchen/ingredientgoodsreceipt.xhtml", "fa-cube", "Ingredient Goods Receipt", "true","34"},
+            {"Ingredient Management", "/kitchen/ingredientgoodsreceiptdocument.xhtml", "fa-dummy", "dummy", "false","0"},
+            {"Ingredient Management", "/kitchen/ingredientinventory.xhtml", "fa-cube", "Ingredient Inventory", "true","35"},
+            {"Web Management", "/ocrm/featuredproducts.xhtml", "fa-cube", "Featured Poducts", "true","36"},
+            {"Web Management", "/ocrm/webbanner.xhtml", "fa-cube", "Web Banner", "true","37"},
+            {"Web Management", "/ocrm/webbannerdetail.xhtml", "fa-dummy", "dummy", "false","0"},
+            {"Member Management", "/ocrm/membershiptier.xhtml", "fa-cube", "Membership Tier", "true","38"},
         };
         
         for (int i=0; i<privileges.length; i++){
