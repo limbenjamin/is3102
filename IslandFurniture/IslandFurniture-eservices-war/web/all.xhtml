@@ -77,15 +77,17 @@
                                                         <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
                                                     </a>
                                                     <h4><strong>#{catalogueManagedBean.co.country.currency.currencyCode}
-                                                    <h:outputText value="#{catalogueManagedBean.getDiscountedPrice(furniture)}">
+                                                    <h:outputText value="#{catalogueManagedBean.getDiscountedPrice(furniture)}" id="discounted">
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                     </h:outputText></strong>
-                                                    </h4>                                                    
-                                                    <h4 style="text-decoration:line-through;">#{catalogueManagedBean.co.country.currency.currencyCode}
-                                                        <h:outputText value="#{furniture.price}">
-                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                                    </h:outputText>
                                                     </h4>
+                                                    <h5 style="text-decoration:line-through;"> 
+                                                        <h:outputText value="#{catalogueManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price != discounted}"/>
+                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price != discounted}">
+                                                            #{catalogueManagedBean.co.country.currency.currencyCode}
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                        </h:outputText>
+                                                    </h5>
                                                     <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
                                                 </div>
                                             </div>
