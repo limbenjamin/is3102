@@ -23,7 +23,7 @@ public interface ManageShoppingListBeanLocal {
 
     ShoppingList createShoppingList(String emailAddress, Long storeId, String name);
 
-    void createShoppingListDetail(Long listId, Long stockId, int quantity) throws DuplicateEntryException;
+    void createShoppingListDetail(Long listId, Long stockId, int quantity, Double discountedPrice) throws DuplicateEntryException;
 
     void deleteShoppingList(Long listId);
 
