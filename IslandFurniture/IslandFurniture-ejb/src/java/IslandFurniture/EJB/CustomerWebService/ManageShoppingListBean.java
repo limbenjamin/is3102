@@ -129,7 +129,18 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             em.persist(listDetail);
             em.flush();
         } else {
-            throw new DuplicateEntryException("Entry for " + furniture.getName() + " already exists in this shopping list!");
+            for (ShoppingListDetail detail : shoppingList.getShoppingListDetails()) {
+                if (detail.getFurnitureModel().equals(furniture)) {
+                    detail.setQty(detail.getQty()+quantity);
+                    em.persist(detail);
+                }
+            }
+            // update list total price
+            Double currentPrice = shoppingList.getTotalPrice();
+            shoppingList.setTotalPrice(currentPrice + quantity * discountedPrice);
+            em.persist(shoppingList);
+            em.flush();            
+            throw new DuplicateEntryException(furniture.getName() + " already exists in this shopping list. We updated the quntity instead.");
         }
     }    
     

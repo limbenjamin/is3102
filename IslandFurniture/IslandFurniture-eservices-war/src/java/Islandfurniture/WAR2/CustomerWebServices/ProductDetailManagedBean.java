@@ -134,11 +134,12 @@ public class ProductDetailManagedBean {
             mslbl.createShoppingListDetail(listId, id, quantity, discountedPrice);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, furniture.getName() + " has been sucessfully added", ""));
-            ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
+            
         } catch (DuplicateEntryException ex) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), "this item was already added previously"));     
-            ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/productdetail.xhtml?id=" + id);
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, ex.getMessage(), "this item was already added previously"));
+        } finally {
+            ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
         }
     }
 
