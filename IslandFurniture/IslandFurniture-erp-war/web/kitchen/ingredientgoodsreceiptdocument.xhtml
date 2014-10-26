@@ -1,16 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="ingredientgoodsreceipt.xhtml">Ingredient Goods Receipt</a></li>
+                            <li class="active"><strong>Ingredient Goods Receipt ##{ingredientGoodsReceiptDocumentManagedBean.id}</strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addIngredient">
+                                <i class="fa fa-fw fa-plus"></i> Add Ingredient
+                            </button>   
+                            <a href="ingredientgoodsreceipt.xhtml">
+                                <button type="button" class="btn btn-sm btn-default pull-right">
+                                    <i class="fa fa-fw fa-arrow-circle-o-left"></i> Back
+                                </button>
+                            </a>                            
+                        </span>   
+
+                        <h4>Ingredient Goods Receipt ##{ingredientGoodsReceiptDocumentManagedBean.id}</h4><hr></hr>
+                    </div>
+
+                    <div class="col-md-10">                      
+                        <section name="Ingredient Goods Receipt Document">
+                            <div class="panel-heading dashboard-title-panel">
+                                Ingredient Goods Receipt Document Details
+                            </div>
+                            <div class="list-group-item">
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Receipt Date</th>
+                                        <th>Update</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <tr>
+                                            <td><h:inputText id="date" value="#{ingredientGoodsReceiptDocumentManagedBean.dateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
+                                            <td>
+                                                <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                            </td>
+                                        </tr>
+                                    </h:form> 
+                                </table>    
+                            </div>
+                        </section>
+
+                        <br/>
+
+                        <section name="Table of Contents of the Ingredient Goods Receipt Document Details">
+                            <div class="panel-heading dashboard-title-panel">
+                                List of Ingredient Goods Receipt Document Details
+                            </div>
+                            <div class="list-group-item">  
+                                <h:outputText rendered="#{empty ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}" value="There are no external transfer order details"/>
+                                <h:panelGroup layout="block" rendered="#{not empty ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Ingredient</th>
+                                            <th>Quantity</th>
+                                            <th>Update</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                        <h:form class="form-horizontal">
+                                            <ui:repeat value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}" var="tod">
+                                                <tr>
+                                                    <td>#{tod.ingredient.name}</td>
+                                                    <td><h:inputText value="#{tod.qty}" class="form-control"></h:inputText></td>
+                                                    <td>
+                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocumentDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="tod" value="#{tod}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                                    </td>
+                                                    <td>
+                                                        <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.deleteIngredientGoodsReceiptDocumentDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="tod" value="#{tod}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </h:panelGroup>
+                            </div>
+                        </section>
+
+                        <br/>
+
+                        <section name="Post Ingredient Goods Receipt Request"> 
+                            <h:panelGroup layout="block" rendered="#{not empty ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceiptDetailList}">
+                                <h:form class="form-horizontal">
+                                    <div class="form-group">
+                                        <h:commandButton action="ingredientgoodsreceiptposted" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.postIngredientGoodsReceiptDocument}" value="Post Ingredient Goods Receipt Request" class="btn btn-primary pull-right btn-extra-right"> 
+                                            <f:param name="id" value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceipt.id}" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:form>
+                            </h:panelGroup>
+                        </section>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addIngredient" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Ingredient to Ingredient Goods Receipt</h4>
+                                    </div>
+                                    <h:form id="createGRDD" class="form-horizontal">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Ingredient: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu id="ingredientId" class="form-control needauto" value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientId}" pt:required="true">
+                                                        <f:selectItem itemLabel="Select Ingredient"/>
+                                                        <f:selectItems value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText id="ingredientQuantity" pt:type="number"  pt:required="true" class="form-control" value="#{ingredientGoodsReceiptDocumentManagedBean.quantity}"></h:inputText>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.addIngredientGoodsReceiptDocumentDetail}" value="Add Ingredient" class="btn btn-success pull-right btn-round"> 
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
 </html>

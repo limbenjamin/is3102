@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.Kitchen.ManageIngredientGoodsReceipt;
+import IslandFurniture.EJB.Kitchen.ManageIngredientGoodsReceiptLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
@@ -46,7 +46,7 @@ public class IngredientGoodsReceiptManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public ManageIngredientGoodsReceipt receiptBean;
+    public ManageIngredientGoodsReceiptLocal receiptBean;
 
     @PostConstruct
     public void init() {
@@ -58,10 +58,10 @@ public class IngredientGoodsReceiptManagedBean implements Serializable {
         ingredientGoodsReceiptPostedList = receiptBean.viewIngredientGooodsReceiptDocument((Store) plant, true);
     }
 
-//  Function: To create a External Tranfer Order
+//  Function: To create a Ingredient Goods Receipt
     public void createIngredientGoodsReceipt(ActionEvent event) throws IOException {
         ingredientGoodsReceipt = receiptBean.createIngredientGoodsReceiptDocument(staff, getCalendar(), (Store) plant);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externaldetail.xhtml?id=" + ingredientGoodsReceipt.getId().toString());
+        FacesContext.getCurrentInstance().getExternalContext().redirect("ingredientgoodsreceiptdocument.xhtml?id=" + ingredientGoodsReceipt.getId().toString());
     }
 
 //  Function: To delete a Ingredient Goods Receipt  
@@ -141,12 +141,12 @@ public class IngredientGoodsReceiptManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public ManageIngredientGoodsReceipt getReceiptBean() {
+    public ManageIngredientGoodsReceiptLocal getReceiptBean() {
         return receiptBean;
     }
 
-    public void setReceiptBean(ManageIngredientGoodsReceipt receiptBean) {
+    public void setReceiptBean(ManageIngredientGoodsReceiptLocal receiptBean) {
         this.receiptBean = receiptBean;
     }
-    
+
 }

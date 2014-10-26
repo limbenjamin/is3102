@@ -60,6 +60,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <h:form id="viewList">
                                     <ui:repeat value="#{shoppingListManagedBean.shoppingLists}" var="list">
                                     <tr>
                                         <td>
@@ -73,9 +74,15 @@
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                             </h:outputText>    
                                         </td>
-                                        <td style="text-align:center;"><i class="fa fa-trash-o"></i></td>
+                                        <td style="text-align:center;">
+                                            <h:commandButton actionListener="#{shoppingListManagedBean.deleteShoppingList}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                <f:param name="listid" value="#{list.id}" />
+                                            </h:commandButton>                                            
+                                            <i class="fa fa-trash-o icon-button"></i>
+                                        </td>
                                     </tr>
                                     </ui:repeat>
+                                    </h:form>
                                 </tbody>
                             </table>
                         </div>
