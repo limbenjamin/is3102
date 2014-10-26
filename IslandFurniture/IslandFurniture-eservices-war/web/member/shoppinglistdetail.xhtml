@@ -38,6 +38,7 @@
                             <tr class="list_menu">
                                 <td class="image">Item</td>
                                 <td class="description"></td>
+                                <td class="description">#{shoppingListDetailManagedBean.shoppingList.store.name} Store Section</td>
                                 <td class="price">Price 
                                     (#{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode})</td>
                                 <td class="quantity">Quantity</td>
@@ -54,8 +55,11 @@
                                     </td>
                                     <td class="list_description">
                                         <h4><a href="">#{detail.furnitureModel.name}</a></h4>
-                                        <p><i class="fa fa-map-marker"></i> #{shoppingListDetailManagedBean.getLocation(detail.furnitureModel.id)}</p>
+                                        <p>#{detail.furnitureModel.category}</p>
                                     </td>
+                                    <td class="list_description">
+                                        <p><i class="fa fa-map-marker"></i> #{shoppingListDetailManagedBean.getLocation(detail.furnitureModel.id)}</p>
+                                    </td>                                    
                                     <td class="list_price">
                                         <p>
                                             <h:outputText value="#{shoppingListDetailManagedBean.getDiscountedPrice(detail.furnitureModel)}" id="discounted">
