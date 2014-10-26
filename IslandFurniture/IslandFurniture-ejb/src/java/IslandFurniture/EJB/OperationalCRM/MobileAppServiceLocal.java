@@ -42,5 +42,7 @@ public interface MobileAppServiceLocal {
     public Store getStoreFromID(String ID);
 
     public FurnitureModel getfmFromID(String ID);
+
+   public FurnitureModel getFurnitureModelByNFCID(String NFC_ID) throws Exception;
     
 }

@@ -19,9 +19,12 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -198,16 +201,23 @@ public class CustomerService {
 
         object.add("name", sl.getName());
         object.add("totalprice", sl.getTotalPrice());
-        Double total=0.0;
+        Double total = 0.0;
         for (ShoppingListDetail sld : sl.getShoppingListDetails()) {
 
-            double price = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), new Customer()).get("D_PRICE")*sld.getQty();
-            total+=price;
-            jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("price", price).add("fid",sld.getFurnitureModel().getId()));
+            double price = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), new Customer()).get("D_PRICE") * sld.getQty();
+            total += price;
+            jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("price", price).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()));
         }
         object.add("details", jab);
         object.add("totalprice", total);
         return object.build().toString();
+    }
+
+    @GET
+    @Path("deleteitemfromshoplist")
+    public String deleteItem(@QueryParam("detailID") String DetailID) {
+        mslb.deleteShoppingListDetail(Long.parseLong(DetailID));
+        return "TRUE";
     }
 
     @GET
@@ -222,6 +232,21 @@ public class CustomerService {
         }
 
         return masl.getfmFromID(fm_id).getName() + " added to " + masl.getStoreFromID(store_id).getName() + " Shopping List";
+
+    }
+
+    @GET
+    @Path("additembynfc")
+    public String addItemByNFC(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("NFC_TAG") String NFC_TAG) {
+        FurnitureModel fm;
+        try {
+            fm = masl.getFurnitureModelByNFCID(NFC_TAG);
+        } catch (Exception ex) {
+            System.out.println("addItemByNFC(): "+ex.getMessage());
+            return "Invalid NFC Tag";
+        }
+        
+        return addItem(cust_id, store_id, fm.getId().toString(), 1);
 
     }
 

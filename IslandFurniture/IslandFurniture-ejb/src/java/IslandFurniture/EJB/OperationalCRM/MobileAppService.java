@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.NFC;
 import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.Store;
@@ -126,6 +127,22 @@ public class MobileAppService implements MobileAppServiceLocal {
         }
 
         return (ShoppingList) q.getResultList().get(0);
+    }
+
+    public FurnitureModel getFurnitureModelByNFCID(String NFC_ID) throws Exception {
+        System.out.println("NFC TAP:" + NFC_ID);
+        Query n = em.createQuery("select z from NFC z where z.nfcId=:n");
+        n.setParameter("n", NFC_ID);
+        
+        if (n.getResultList().isEmpty()){
+        throw new Exception("INVALID NFC");
+        }
+
+        Query q = em.createQuery("select fm from FurnitureModel fm where :nfc MEMBER OF fm.nfcList");
+        q.setParameter("nfc",(NFC) n.getResultList().get(0));
+
+        return (FurnitureModel) q.getResultList().get(0);
+
     }
 
 }
