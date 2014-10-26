@@ -6,7 +6,8 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.RedeemableItem;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Voucher;
 import java.util.Calendar;
 import java.util.List;
@@ -20,61 +21,69 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateless
-public class ManageRedeemableItem {
+public class ManageRedeemableItem implements ManageRedeemableItemLocal {
 
     @PersistenceContext
     EntityManager em;
 
     Voucher voucher;
 
-//    // Function: Create Redeemable Item
-//    @Override
-//    public void createRedeemableItem(CountryOffice countryOffice, int cashValue, Calendar expiryDate) {
-//        Voucher voucher = new Voucher();
-//        voucher.setCountryOffice(countryOffice);
-//        voucher.setCashValue(Integer.MIN_VALUE);
-//        voucher.setExpiryDate(null);
-//        
-//        
-//        
-//        redeemableItem.setCountryOffice(countryOffice);
-//        redeemableItem.setHeaderText(headerText);
-//        redeemableItem.setSubheaderText(subheaderText);
-//        redeemableItem.setBodyText(bodyText);
-//        redeemableItem.setButtonText(buttonText);
-//        redeemableItem.setButtonUrl(buttonUrl);
-//        redeemableItem.setPicture(picture);
-//        em.persist(redeemableItem);
-//        em.flush();
-//    }
-//
-//    // Function: Edit Redeemable Item
-//    @Override
-//    public void editRedeemableItem(RedeemableItem updatedRedeemableItem) {
-//        redeemableItem = (RedeemableItem) em.find(RedeemableItem.class, updatedRedeemableItem.getId());
-//        redeemableItem.setHeaderText(updatedRedeemableItem.getHeaderText());
-//        redeemableItem.setSubheaderText(updatedRedeemableItem.getSubheaderText());
-//        redeemableItem.setBodyText(updatedRedeemableItem.getBodyText());
-//        redeemableItem.setButtonText(updatedRedeemableItem.getButtonText());
-//        redeemableItem.setButtonUrl(updatedRedeemableItem.getButtonUrl());
-//        redeemableItem.setPicture(updatedRedeemableItem.getPicture());
-//        em.merge(redeemableItem);
-//        em.flush();
-//    }
-//
-//    // Function: Delete  Redeemable Item
-//    @Override
-//    public void deleteRedeemableItem(RedeemableItem redeemableItem) {
-//        redeemableItem = (RedeemableItem) em.find(RedeemableItem.class, redeemableItem.getId());
-//        em.remove(redeemableItem);
-//        em.flush();
-//    }
-//
-//    //  Function: View list of Redeemable Item
-//    @Override
-//    public List<RedeemableItem> viewRedeemableItem(CountryOffice countryOffice) {
-//        Query q = em.createQuery("SELECT s FROM RedeemableItem s WHERE s.countryOffice.id=:plantId");
-//        q.setParameter("plantId", countryOffice.getId());
-//        return q.getResultList();
-//    }
+    // Function: Create Redeemable Item
+    @Override
+    public void createRedeemableItem(Plant plant, int cashValue, Calendar expiryDate) {
+        CountryOffice co = (CountryOffice) plant;
+        Voucher voucher = new Voucher();
+        voucher.setCountryOffice(co);
+        voucher.setCashValue(cashValue);
+        voucher.setExpiryDate(expiryDate);
+        em.persist(voucher);
+        em.flush();
+    }
+
+    // Function: Edit Redeemable Item
+    @Override
+    public void editRedeemableItem(Voucher updatedVoucher) {
+        voucher = (Voucher) em.find(Voucher.class, updatedVoucher.getId());
+        voucher.setCashValue(updatedVoucher.getCashValue());
+        voucher.setExpiryDate(updatedVoucher.getExpiryDate());
+        em.merge(voucher);
+        em.flush();
+    }
+
+    // Function: Delete Redeemable Item
+    @Override
+    public void deleteRedeemableItem(Voucher voucher) {
+        voucher = (Voucher) em.find(Voucher.class, voucher.getId());
+        em.remove(voucher);
+        em.flush();
+    }
+
+    //  Function: View list of Redeemable Item
+    @Override
+    public List<Voucher> viewRedeemableItem(Plant plant) {
+        CountryOffice co = (CountryOffice) plant;
+        Query q = em.createQuery("SELECT s FROM Voucher s WHERE s.countryOffice.id=:plantId");
+        q.setParameter("plantId", co.getId());
+        return q.getResultList();
+    }
+
+    //  Function: To check if there is no Membership Tier with the Same Title
+    @Override
+    public boolean checkIfNoRedeemableItemWithSameCashValueAndExpiryDate(Plant plant, int cashValue, Calendar expiryDate) {
+        CountryOffice co = (CountryOffice) plant;
+        Query q = em.createQuery("SELECT s FROM Voucher s WHERE s.countryOffice.id=:plantId AND s.cashValue=:cashValue AND s.expiryDate=:expiryDate");
+        q.setParameter("plantId", co.getId());
+        q.setParameter("cashValue", cashValue);
+        q.setParameter("expiryDate", expiryDate);
+        return q.getResultList().isEmpty();
+    }
+    
+    //  Function: To check if there is no Redemption with the RedeemableItem
+    @Override
+    public boolean checkIfNoRedemptionWithRedeemableItem(Voucher voucher) {
+        Query q = em.createQuery("SELECT s FROM Redemption s WHERE s.redeemableItem.id=:id");
+        q.setParameter("id", voucher.getId());
+        return q.getResultList().isEmpty();
+    }
+
 }

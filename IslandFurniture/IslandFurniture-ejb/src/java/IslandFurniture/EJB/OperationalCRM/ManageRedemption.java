@@ -37,7 +37,6 @@ public class ManageRedemption implements ManageRedemptionLocal {
         Redemption redemption = new Redemption();
         redemption.setCustomer(customer);
         redemption.setRedeemableItem(redeemableItem);
-        // need to ask when is it true, when is it false?
         redemption.setClaimed(false);
         redemption.setCreatedBy(staff);
         redemption.setCreationTime(time);
@@ -48,7 +47,7 @@ public class ManageRedemption implements ManageRedemptionLocal {
     //  Function: View list of Redemption
     @Override
     public List<Redemption> viewRedemption() {
-        Query q = em.createQuery("SELECT * FROM Redemption");
+        Query q = em.createQuery("SELECT s FROM Redemption s");
         return q.getResultList();
     }
 }
