@@ -34,8 +34,8 @@
                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                     </h:outputText>
                                     <small style="text-decoration: line-through;">
-                                        <h:outputText value="#{productDetailManagedBean.co.country.currency.currencyCode} " rendered="#{productDetailManagedBean.furniture.price != discounted}"/>
-                                        <h:outputText value="#{productDetailManagedBean.furniture.price}" rendered="#{productDetailManagedBean.furniture.price != discounted}">
+                                        <h:outputText value="#{productDetailManagedBean.co.country.currency.currencyCode} " rendered="#{productDetailManagedBean.furniture.price > productDetailManagedBean.discountedPrice}"/>
+                                        <h:outputText value="#{productDetailManagedBean.furniture.price}" rendered="#{productDetailManagedBean.furniture.price > productDetailManagedBean.discountedPrice}">
                                             <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                         </h:outputText>
                                     </small>

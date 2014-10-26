@@ -50,10 +50,11 @@
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                             </h:outputText> 
                                             <small>
-                                                <h:outputText value="#{detail.furnitureModel.price}" style="text-decoration: line-through;" rendered="#{detail.furnitureModel.price != discounted}">
+                                                <h:outputText value="#{detail.furnitureModel.price}" style="text-decoration: line-through;" 
+                                                    rendered="#{detail.furnitureModel.price > shoppingListDetailManagedBean.getDiscountedPrice(detail.furnitureModel)}">
                                                     <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                 </h:outputText>
-                                            </small>                                           
+                                            </small>
                                         </p>
                                     </td>
                                     <td class="list_quantity">

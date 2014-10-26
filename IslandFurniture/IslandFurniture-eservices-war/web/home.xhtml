@@ -123,9 +123,10 @@
                                                     </h:outputText></strong>
                                                     </h4>
                                                     <h5 style="text-decoration:line-through;"> 
-                                                        <h:outputText value="#{homeManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price != discounted}"/>
-                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price != discounted}">
-                                                            #{catalogueManagedBean.co.country.currency.currencyCode}
+                                                        <h:outputText value="#{homeManagedBean.co.country.currency.currencyCode} " 
+                                                            rendered="#{furniture.price > homeManagedBean.getDiscountedPrice(furniture)}"/>
+                                                        <h:outputText value="#{furniture.price}" 
+                                                            rendered="#{furniture.price > homeManagedBean.getDiscountedPrice(furniture)}">
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                         </h:outputText>
                                                     </h5>

@@ -45,13 +45,16 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
 
         Iterator<StockSupplied> iterator = stockSupplied.iterator();
         while (iterator.hasNext()) {
-            Stock stock = iterator.next().getStock();
-            if (stock instanceof FurnitureModel) {
-                furnitureList.add((FurnitureModel)stock);
+            StockSupplied stock = iterator.next();
+            if (stock.getStock() instanceof FurnitureModel) {
+                FurnitureModel furniture = (FurnitureModel)stock.getStock();
+                furniture.setPrice(stock.getPrice());
+                em.merge(furniture);
+                furnitureList.add(furniture);
             }
-        }
+        } 
         return furnitureList;
-    }    
+    }
     
     // get a list of furniture of a particular category sold in a store
     @Override
