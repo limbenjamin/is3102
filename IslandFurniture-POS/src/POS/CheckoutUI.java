@@ -407,6 +407,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                     String price = (String) jsonObject.get("price");
                     String promo = (String) jsonObject.get("promo");
                     transaction.get(i).add(5, promo);
+                    transaction.get(i).add(6, String.valueOf(jTable.getModel().getValueAt(i, 3)));
                     transaction.get(i).set(2, price);
                     System.err.println(result);
                 } catch (Exception ex) {
