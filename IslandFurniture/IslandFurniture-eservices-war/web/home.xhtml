@@ -109,123 +109,32 @@
                     <div class="col-sm-9 padding-right">
                         <div class="features_items"><!--features_items-->
                             <h2 class="title text-center">FEATURED FURNITURE</h2>
-                            <ui:repeat value="#{homeManagedBean.featuredProducts}" var="product">
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
-                                            <h2>$116</h2>
-                                            <p>#{product.name}</p>
-                                        </div>									
+                            <ui:repeat value="#{homeManagedBean.featuredFurniture}" var="furniture">
+                                <div class="col-sm-4">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                    <a href="productdetail.xhtml?id=#{furniture.id}">
+                                                        <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
+                                                    </a>
+                                                    <h4><strong>#{homeManagedBean.co.country.currency.currencyCode}
+                                                    <h:outputText value="#{homeManagedBean.getDiscountedPrice(furniture)}" id="discounted">
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                    </h:outputText></strong>
+                                                    </h4>
+                                                    <h5 style="text-decoration:line-through;"> 
+                                                        <h:outputText value="#{homeManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price != discounted}"/>
+                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price != discounted}">
+                                                            #{catalogueManagedBean.co.country.currency.currencyCode}
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                        </h:outputText>
+                                                    </h5>
+                                                    <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
+                                            </div>									
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             </ui:repeat>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
-                                            <h2>$116</h2>
-                                            <p>Midnight Single Bed</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                        <div class="choose">
-                                            <ul class="nav nav-pills nav-justified">
-                                                <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                            </ul>
-                                        </div>										
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product2.jpg" alt="" />
-                                            <h2>$196</h2>
-                                            <p>Oakenshield Double Bed</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product3.jpg" alt="" />
-                                            <h2>$216</h2>
-                                            <p>Vernice Style Double Bed</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product4.jpg" alt="" />
-                                            <h2>$137</h2>
-                                            <p>Loft Sofa</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                        <img src="#{application.contextPath}/assets/images/home/sale.png" class="new" alt="" />
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product5.jpg" alt="" />
-                                            <h2>$56</h2>
-                                            <p>Ramsay Comfy Chair</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                        <img src="#{application.contextPath}/assets/images/home/sale.png" class="new" alt="" />
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="product-image-wrapper">
-                                    <div class="single-products">
-                                        <div class="productinfo text-center">
-                                            <img src="#{application.contextPath}/assets/images/home/product6.jpg" alt="" />
-                                            <h2>$103</h2>
-                                            <p>Swedish Mina Sofa</p>
-                                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to Shopping List</a>
-                                        </div>
-                                    </div>
-                                    <div class="choose">
-                                        <ul class="nav nav-pills nav-justified">
-                                            <li><a href="#"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div><!--features_items-->
                     </div>
                 </div>
