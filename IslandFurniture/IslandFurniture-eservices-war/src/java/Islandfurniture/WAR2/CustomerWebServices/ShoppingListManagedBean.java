@@ -73,6 +73,10 @@ public class ShoppingListManagedBean {
         else {
             customer = mslbl.getCustomer(emailAddress);
             shoppingLists = customer.getShoppingLists();
+            // update total price of each list
+            for (ShoppingList list : shoppingLists) {
+                mslbl.updateListTotalPrice(list.getId());
+            }
             countryOffice = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
             localStores = countryOffice.getStores();
         }

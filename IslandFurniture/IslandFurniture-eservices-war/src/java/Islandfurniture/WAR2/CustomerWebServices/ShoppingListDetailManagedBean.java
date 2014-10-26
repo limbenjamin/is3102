@@ -85,8 +85,10 @@ public class ShoppingListDetailManagedBean {
                     listId = (Long) session.getAttribute("id");
                 }
                 shoppingList = mslbl.getShoppingList(listId);
-                shoppingListDetails = mslbl.getShoppingListDetails(listId);
-                subtotal = calculateSubTotal();
+                // update total price of the list
+                mslbl.updateListTotalPrice(listId);
+                subtotal = shoppingList.getTotalPrice();
+                shoppingListDetails = mslbl.getShoppingListDetails(listId);                
             } catch (Exception e){
             
             }
