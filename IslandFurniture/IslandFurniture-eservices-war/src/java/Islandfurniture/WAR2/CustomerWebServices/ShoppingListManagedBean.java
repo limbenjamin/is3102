@@ -16,6 +16,7 @@ import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -72,12 +73,16 @@ public class ShoppingListManagedBean {
         }   
         else {
             customer = mslbl.getCustomer(emailAddress);
-            shoppingLists = customer.getShoppingLists();
-            // update total price of each list
-            for (ShoppingList list : shoppingLists) {
-                mslbl.updateListTotalPrice(list.getId());
-            }
             countryOffice = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
+            shoppingLists = new ArrayList<>();
+            List<ShoppingList> allLists = customer.getShoppingLists();
+            // show only lists specific to the site's country and update total price of each list
+            for (ShoppingList list : allLists) {
+                if (list.getStore().getCountryOffice().equals(countryOffice)) {
+                    mslbl.updateListTotalPrice(list.getId());
+                    shoppingLists.add(list);
+                }
+            }
             localStores = countryOffice.getStores();
         }
     }
