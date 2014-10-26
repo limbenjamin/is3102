@@ -25,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -72,6 +73,10 @@ public class ShoppingListManagedBean {
         else {
             customer = mslbl.getCustomer(emailAddress);
             shoppingLists = customer.getShoppingLists();
+            // update total price of each list
+            for (ShoppingList list : shoppingLists) {
+                mslbl.updateListTotalPrice(list.getId());
+            }
             countryOffice = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
             localStores = countryOffice.getStores();
         }
@@ -86,6 +91,38 @@ public class ShoppingListManagedBean {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
         new FacesMessage(FacesMessage.SEVERITY_INFO, name + " has been sucessfully created", ""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
+    }
+    
+    public void deleteShoppingList(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+        mslbl.deleteShoppingList(new Long(ec.getRequestParameterMap().get("listid")), emailAddress);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your shopping list has been sucessfully removed", ""));
+        } catch(NumberFormatException ex) {
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "cannot get list id", "")); 
+        } finally {
+            shoppingLists = customer.getShoppingLists();
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
+        }
+    }    
+    
+    public Double calculateSubTotal(ShoppingList list) {
+        Double subtotal = 0.0;
+        Iterator<ShoppingListDetail> iterator = list.getShoppingListDetails().iterator();
+        while (iterator.hasNext()) {
+            ShoppingListDetail current = iterator.next();
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel());
+            subtotal = subtotal + discountedPrice * current.getQty();
+        }        
+        return subtotal;
+    }  
+    
+    public Double getDiscountedPrice(Stock s) {
+        Store st = new Store();
+        st.setCountryOffice(countryOffice);
+        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }    
     
     public Double calculateSubTotal(ShoppingList list) {

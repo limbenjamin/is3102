@@ -20,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -83,12 +85,38 @@ public class ShoppingListDetailManagedBean {
                     listId = (Long) session.getAttribute("id");
                 }
                 shoppingList = mslbl.getShoppingList(listId);
-                shoppingListDetails = mslbl.getShoppingListDetails(listId);
-                subtotal = calculateSubTotal();
+                // update total price of the list
+                mslbl.updateListTotalPrice(listId);
+                subtotal = shoppingList.getTotalPrice();
+                shoppingListDetails = mslbl.getShoppingListDetails(listId);                
             } catch (Exception e){
             
             }
         }
+    }
+    
+    public void editDetail(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ShoppingListDetail detail = (ShoppingListDetail) event.getComponent().getAttributes().get("detailid");
+        mslbl.updateShoppingListDetail(detail);
+        mslbl.updateListTotalPrice(listId);
+        shoppingListDetails = mslbl.getShoppingListDetails(listId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
+    }
+    
+    public void deleteDetail(ActionEvent event) throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        Long detailId = Long.parseLong(ec.getRequestParameterMap().get("detailid"));
+        ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
+        String furnitureName = detail.getFurnitureModel().getName();
+        mslbl.deleteShoppingListDetail(detailId);
+        mslbl.updateListTotalPrice(listId);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, furnitureName + " has been sucessfully removed", ""));
+        shoppingListDetails = mslbl.getShoppingListDetails(listId);
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
     }    
     
     public Double calculateSubTotal() {

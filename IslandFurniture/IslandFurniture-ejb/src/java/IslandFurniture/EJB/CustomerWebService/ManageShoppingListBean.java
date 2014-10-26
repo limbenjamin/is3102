@@ -6,15 +6,20 @@
 
 package IslandFurniture.EJB.CustomerWebService;
 
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -33,10 +38,18 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     @Resource SessionContext ctx;
     private Customer customer;
     
+    @EJB
+    private ManageMarketingBeanLocal mmbl;    
+    
     @Override
     public ShoppingList getShoppingList(Long id) {
         return (ShoppingList) em.find(ShoppingList.class, id);
     }    
+    
+    @Override
+    public ShoppingListDetail getShoppingListDetail(Long id) {
+        return (ShoppingListDetail) em.find(ShoppingListDetail.class, id);
+    }      
     
     @Override
     public Customer getCustomer(String emailAddress){
@@ -68,11 +81,27 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         shoppingList.setStore(store);
         shoppingList.setName(name);
         em.persist(shoppingList);
-    }    
+    }
     
     @Override
-    public void deleteShoppingList(Long listId) {
-        em.remove((ShoppingList) em.find(ShoppingList.class, listId));
+    public void updateListTotalPrice (Long listId) {
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        Double subtotal = 0.0;
+        Iterator<ShoppingListDetail> iterator = shoppingList.getShoppingListDetails().iterator();
+        while (iterator.hasNext()) {
+            ShoppingListDetail current = iterator.next();
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore());
+            subtotal = subtotal + discountedPrice * current.getQty();
+        }
+        shoppingList.setTotalPrice(subtotal);
+        em.persist(shoppingList);
+    }
+    
+    @Override
+    public void deleteShoppingList(Long listId, String emailAddress) {
+        Customer customer = getCustomer(emailAddress);
+        ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
+        shoppingList.getCustomers().remove(customer);
     }    
     
     @Override
@@ -93,14 +122,19 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
             listDetail.setFurnitureModel(furniture);
             listDetail.setQty(quantity);
             shoppingList.getShoppingListDetails().add(listDetail);
-            // update list total price
-            Double currentPrice = shoppingList.getTotalPrice();
-            shoppingList.setTotalPrice(currentPrice + quantity * discountedPrice);
             em.persist(shoppingList);
             em.persist(listDetail);
             em.flush();
         } else {
-            throw new DuplicateEntryException("Entry for " + furniture.getName() + " already exists in this shopping list!");
+            for (ShoppingListDetail detail : shoppingList.getShoppingListDetails()) {
+                if (detail.getFurnitureModel().equals(furniture)) {
+                    detail.setQty(detail.getQty()+quantity);
+                    em.persist(detail);
+                }
+            }
+            em.persist(shoppingList);
+            em.flush();            
+            throw new DuplicateEntryException(furniture.getName() + " already exists in this shopping list. We updated the quantity instead.");
         }
     }    
     
@@ -110,7 +144,11 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }    
     
     @Override
-    public void deleteShoppingListDetail(Long listId) {
-        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, listId));
+    public void deleteShoppingListDetail(Long detailId) {
+        em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, detailId));
+    }
+    
+    public Double getDiscountedPrice(Stock s, Store store) {
+        return (Double)mmbl.getDiscountedPrice(s, store, new Customer()).get("D_PRICE");
     }    
 }
