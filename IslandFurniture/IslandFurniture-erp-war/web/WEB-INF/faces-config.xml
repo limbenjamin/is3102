@@ -223,6 +223,10 @@
             <to-view-id>/kitchen/menuitemdetail.xhtml</to-view-id>
         </navigation-case>  
         <navigation-case>
+            <from-outcome>ingredientstocktake</from-outcome>
+            <to-view-id>/kitchen/ingredientstocktake.xhtml</to-view-id>
+        </navigation-case> 
+        <navigation-case>
             <from-outcome>inventorytransfer_replenish</from-outcome>
             <to-view-id>/inventorymgt/inventorytransfer_replenish.xhtml</to-view-id>
         </navigation-case> 
@@ -336,5 +340,16 @@
             <from-outcome>featuredproducts</from-outcome>
             <to-view-id>/ocrm/featuredproducts.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>redemption</from-outcome>
+            <to-view-id>/ocrm/redemption.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>redeemableitem</from-outcome>
+            <to-view-id>/ocrm/redeemableitem.xhtml</to-view-id>
+        </navigation-case>
+        
+        
     </navigation-rule>
 </faces-config>
