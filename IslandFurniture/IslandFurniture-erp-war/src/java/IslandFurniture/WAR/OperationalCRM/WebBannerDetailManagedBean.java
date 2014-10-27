@@ -7,10 +7,17 @@ package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageWebBannerLocal;
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.WebBanner;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -18,8 +25,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -36,6 +49,7 @@ public class WebBannerDetailManagedBean implements Serializable {
     private String buttonText;
     private String buttonURL;
     private byte[] photo;
+    private StreamedContent image;
 
     private WebBanner webBanner;
 
@@ -55,31 +69,63 @@ public class WebBannerDetailManagedBean implements Serializable {
         }
 
         webBanner = bannerBean.getWebBanner(id);
+        if (photo != null) {
+            photo = webBanner.getPicture().getContent();
+
+//            InputStream in = new ByteArrayInputStream(photo);
+//            BufferedImage bImageFromConvert = null;
+//            try {
+//                bImageFromConvert = ImageIO.read(in);
+//            } catch (IOException ex) {
+//                Logger.getLogger(WebBannerDetailManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//            try {
+//                ImageIO.write(bImageFromConvert, "jpg", new File(
+//                        "../image.jpg"));
+//            } catch (IOException ex) {
+//                Logger.getLogger(WebBannerDetailManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+
+        }
+
     }
 
 //  Function: To edit a Web Banner
     public void editWebBanner(ActionEvent event) throws IOException {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("webbannerid");
-
-//        webBanner.setPicture(photo);
+        Picture picture = new Picture();
+        picture.setContent(photo);
+        webBanner.setPicture(picture);;
         bannerBean.editWebBanner(webBanner);
         webBanner = bannerBean.getWebBanner(id);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The Web Banner was successfully edited", ""));
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
-        byte[] photo = event.getFile().getContents();
-    // ...
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
+        UploadedFile file = event.getFile();
+        photo = IOUtils.toByteArray(file.getInputstream());
     }
 
-    public byte[] getPhoto() {
-        return photo;
+    public StreamedContent getImage() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+//        if(context == null) {return null;}
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            return new DefaultStreamedContent(new ByteArrayInputStream(webBanner.getPicture().getContent()));
+        }
     }
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getHeaderText() {
@@ -122,12 +168,12 @@ public class WebBannerDetailManagedBean implements Serializable {
         this.buttonURL = buttonURL;
     }
 
-    public Long getId() {
-        return id;
+    public byte[] getPhoto() {
+        return photo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     public WebBanner getWebBanner() {
