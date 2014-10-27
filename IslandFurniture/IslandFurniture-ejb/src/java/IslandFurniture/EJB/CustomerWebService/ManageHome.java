@@ -6,17 +6,30 @@
 
 package IslandFurniture.EJB.CustomerWebService;
 
-import javax.ejb.Stateless;
+import IslandFurniture.Entities.Picture;
+import IslandFurniture.Entities.WebBanner;
 import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
  * @author Zee
  */
 @Stateless
-@LocalBean
-public class ManageHome {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+public class ManageHome implements ManageHomeLocal {
+    
+    @PersistenceContext
+    EntityManager em;
+    
+    @Override
+    public WebBanner getWebBanner(Long id) {
+        return (WebBanner) em.find(WebBanner.class, id);
+    }
+    
+    @Override
+    public Picture getPicture(Long id) {
+        return (Picture) em.find(Picture.class, id);
+    }    
 }

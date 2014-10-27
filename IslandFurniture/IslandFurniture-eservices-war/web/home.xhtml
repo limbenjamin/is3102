@@ -6,7 +6,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
     <ui:define name="content">
         <section id="slider"><!--slider-->
             <div class="container">
@@ -33,9 +34,11 @@
                                         </a>
                                     </div>
                                     <div class="col-sm-6">
-                                        <img src="#{application.contextPath}/assets/images/home/friedrice.jpg" class="slider-image img-responsive" alt="" />
+                                        <pf:graphicImage value="#{homeManagedBean.image}" styleClass="slider-image img-responsive">
+                                            <f:param name="pictureId" value="#{banner.picture.id}" />
+                                        </pf:graphicImage>
                                     </div>
-                                </div>                                
+                                </div>
                                 </ui:repeat>
                             </div>
                             <h:form rendered="#{homeManagedBean.webBanners.size() > 1}">

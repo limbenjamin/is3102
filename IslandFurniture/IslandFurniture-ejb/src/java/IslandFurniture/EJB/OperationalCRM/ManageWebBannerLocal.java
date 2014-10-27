@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.WebBanner;
 import java.util.List;
@@ -31,5 +32,8 @@ public interface ManageWebBannerLocal {
 
     //  Function: Return Web Banner entity
     WebBanner getWebBanner(Long id);
+
+     //  Function: Return Picture entity
+    Picture getPicture(Long id);
 
 }
