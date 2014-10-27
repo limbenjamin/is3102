@@ -73,6 +73,14 @@ public class MobileAppService implements MobileAppServiceLocal {
 
     }
 
+    public Customer getcustomerFromid(String id) {
+        Query q = em.createQuery("select co from Customer co where co.id=:con");
+        q.setParameter("con", Long.parseLong(id));
+
+        return ((Customer) q.getResultList().get(0));
+
+    }
+
     public CountryOffice getCOFromName(String co) {
         Query q = em.createQuery("select co from CountryOffice co where co.name=:con");
         q.setParameter("con", co);
@@ -133,13 +141,13 @@ public class MobileAppService implements MobileAppServiceLocal {
         System.out.println("NFC TAP:" + NFC_ID);
         Query n = em.createQuery("select z from NFC z where z.nfcId=:n");
         n.setParameter("n", NFC_ID);
-        
-        if (n.getResultList().isEmpty()){
-        throw new Exception("INVALID NFC");
+
+        if (n.getResultList().isEmpty()) {
+            throw new Exception("INVALID NFC");
         }
 
         Query q = em.createQuery("select fm from FurnitureModel fm where :nfc MEMBER OF fm.nfcList");
-        q.setParameter("nfc",(NFC) n.getResultList().get(0));
+        q.setParameter("nfc", (NFC) n.getResultList().get(0));
 
         return (FurnitureModel) q.getResultList().get(0);
 

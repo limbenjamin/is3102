@@ -351,6 +351,8 @@ public class SelectStoreUI extends javax.swing.JFrame {
                             List values = new ArrayList();
                             params.add("cardId");
                             values.add(id);
+                            params.add("amt");
+                            values.add(totalRegisterCash);
                             String result = "";
                             try {
                                 result = Connector.postForm(params, values, "auth/supervisornfc");
