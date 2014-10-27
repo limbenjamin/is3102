@@ -18,9 +18,13 @@ import javax.ejb.Local;
 @Local
 public interface CustomerCommunicationBeanLocal {
     
-    public List<CustChatThread> getActiveThreadFromCountry(CountryOffice co);
+    List<CustChatThread> getActiveThreadFromCountry(CountryOffice co);
     
-    public Long createAnonymousThread(CountryOffice co);
+    Long createAnonymousThread(CountryOffice co);
     
-    public void postMessage(Long threadId, String content, Boolean isStaff);
+    void postMessage(Long threadId, String content, Boolean isStaff);
+    
+    CustChatThread getThread(Long threadId);
+    
+    void endAnonymousThread(Long threadId);
 }
