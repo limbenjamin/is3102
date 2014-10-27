@@ -460,6 +460,94 @@ public class PaymentUI extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+            if (cashButton.isSelected() == true){
+                totalRegisterCash += totalPayable;
+            }
+            finishButton.setEnabled(Boolean.TRUE);
+            cashCreditField.setEnabled(Boolean.FALSE);
+            payButton.setEnabled(Boolean.FALSE);
+            backButton.setEnabled(false);           
+            cashButton.setEnabled(Boolean.FALSE);
+            creditCardButton.setEnabled(Boolean.FALSE);
+            try{
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.write(new String("Total: " + totalPayable).getBytes());
+                partnerPoleDisplayOutputStream.write(newLine);
+                partnerPoleDisplayOutputStream.write(carriageReturn);
+                partnerPoleDisplayOutputStream.write(new String("Change: "+currencyCode+" "+Math.round(changeAmt * 100.0) / 100.0).getBytes());
+            }catch(Exception ex){
+                System.err.println("Unable to write to Partner Pole Display");
+            }
+            String receipt = "Island Furniture\n\r";
+            receipt += plantname + " Store\n\r";
+            receipt += new Date() + " \n\r";
+            receipt += "\n\r\n\r";
+            receipt += "Transactions\n\r";
+            receipt += "----------------------------------------------\n\r";//46 chars
+            for (int i=0;i<transaction.size();i++){
+                System.err.println(transaction.get(i).get(0));
+                System.err.println(transaction.get(i).get(1));
+                System.err.println(transaction.get(i).get(2));
+                System.err.println(transaction.get(i).get(3));
+                System.err.println(transaction.get(i).get(4));
+                System.err.println(transaction.get(i).get(5));
+                receipt += transaction.get(i).get(0)+"  ";
+                receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
+                Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
+                if (transaction.get(i).get(5).equals(""))
+                    receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                else{
+                    int k;
+                    if(transaction.get(i).get(5).length()>15){
+                        k = 15;
+                    }else{
+                        k = transaction.get(i).get(5).length();
+                    }
+                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                }
+            }
+            receipt += "----------------------------------------------\n\r";
+            receipt+= "Grand Total: " +currencyCode+" "+Math.round(grandTotalAmt * 100.0) / 100.0 + "\n\r";
+            Double d = voucherAmt + receiptAmt;
+            receipt+= "Discounts: " +currencyCode+" "+ Math.round(d * 100.0) / 100.0 + "\n\r";
+            receipt+= "Amount Payable: " +currencyCode+" "+ Math.round(totalPayable * 100.0) / 100.0 + "\n\r\n\r";
+            
+            if (cashButton.isSelected() == true){
+                receipt+= "Payment Mode: Cash\n\r";
+                receipt+= "Cash Amount: " +currencyCode+" "+ Math.round(cashAmt * 100.0) / 100.0 + "\n\r";
+                receipt+= "Change: " +currencyCode+" " + Math.round(changeAmt * 100.0) / 100.0 + "\n\r";
+            }else{
+                receipt+= "Payment Mode : Credit Card\n\r";
+            }
+            receipt+= "Cashier : "+ staffname +"\n\r\n\r";
+            if (customerName == null){
+                receipt+= "Thank you for shopping with us!";
+            }else{
+                receipt+= customerName+", thank you for shopping with us!\n\r";
+            }
+            
+            
+            try
+            {
+                JTextArea printing = new JTextArea();
+                printing.setSize(180, 300);
+                printing.setText(receipt);
+                Double margin = 20.0;
+                Integer lines = 8;
+                PrinterJob printerJob = PrinterJob.getPrinterJob();
+                PageFormat pageFormat = printerJob.defaultPage();
+                Paper paper = new Paper();
+                paper.setSize(360.0, (double) (paper.getHeight() + lines * 10.0));
+                paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
+                pageFormat.setPaper(paper);
+                pageFormat.setOrientation(PageFormat.PORTRAIT);
+                printerJob.setPrintable(printing.getPrintable(null, null), pageFormat);
+                printerJob.print();
+            }
+            catch(PrinterException ex)
+            {
+                JOptionPane.showMessageDialog(null, "Unable to print to Partner Thermal Printer: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_payButtonActionPerformed
 
@@ -598,6 +686,7 @@ public class PaymentUI extends javax.swing.JFrame {
         if (grandTotalAmt < voucherAmt+receiptAmt){
             changeAmt = 0.0;
             payableAmt = 0.0;
+            totalPayable = 0.0;
         }
         else{
             if (cashButton.isSelected() == true){
@@ -616,97 +705,6 @@ public class PaymentUI extends javax.swing.JFrame {
         grandTotalLabel.setText("Grand Total: "+currencyCode+" "+grandTotalAmt);
         changeDueLabel.setText("Change Due: "+currencyCode+" "+Math.round(changeAmt * 100.0) / 100.0);
         payableLabel.setText("Total Payable: "+currencyCode+" "+Math.round(payableAmt * 100.0) / 100.0);
-        if (payableAmt == 0.0){
-            if (cashButton.isSelected() == true){
-                totalRegisterCash += totalPayable;
-            }
-            finishButton.setEnabled(Boolean.TRUE);
-            cashCreditField.setEnabled(Boolean.FALSE);
-            payButton.setEnabled(Boolean.FALSE);
-            backButton.setEnabled(false);           
-            cashButton.setEnabled(Boolean.FALSE);
-            creditCardButton.setEnabled(Boolean.FALSE);
-            try{
-                partnerPoleDisplayOutputStream.write(clear);
-                partnerPoleDisplayOutputStream.write(new String("Total: " + totalPayable).getBytes());
-                partnerPoleDisplayOutputStream.write(newLine);
-                partnerPoleDisplayOutputStream.write(carriageReturn);
-                partnerPoleDisplayOutputStream.write(new String("Change: "+currencyCode+" "+Math.round(changeAmt * 100.0) / 100.0).getBytes());
-            }catch(Exception ex){
-                System.err.println("Unable to write to Partner Pole Display");
-            }
-            String receipt = "Island Furniture\n\r";
-            receipt += plantname + " Store\n\r";
-            receipt += new Date() + " \n\r";
-            receipt += "\n\r\n\r";
-            receipt += "Transactions\n\r";
-            receipt += "----------------------------------------------\n\r";//46 chars
-            for (int i=0;i<transaction.size();i++){
-                System.err.println(transaction.get(i).get(0));
-                System.err.println(transaction.get(i).get(1));
-                System.err.println(transaction.get(i).get(2));
-                System.err.println(transaction.get(i).get(3));
-                System.err.println(transaction.get(i).get(4));
-                System.err.println(transaction.get(i).get(5));
-                receipt += transaction.get(i).get(0)+"  ";
-                receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
-                Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
-                if (transaction.get(i).get(5).equals(""))
-                    receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
-                else{
-                    int k;
-                    if(transaction.get(i).get(5).length()>15){
-                        k = 15;
-                    }else{
-                        k = transaction.get(i).get(5).length();
-                    }
-                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
-                }
-            }
-            receipt += "----------------------------------------------\n\r";
-            receipt+= "Grand Total: " +currencyCode+" "+grandTotalAmt+ "\n\r";
-            Double d = voucherAmt + receiptAmt;
-            receipt+= "Discounts: " +currencyCode+" "+ d + "\n\r";
-            receipt+= "Amount Payable: " +currencyCode+" "+ totalPayable+ "\n\r\n\r";
-            
-            if (cashButton.isSelected() == true){
-                receipt+= "Payment Mode: Cash\n\r";
-                receipt+= "Cash Amount: " +currencyCode+" "+ cashAmt + "\n\r";
-                d = Math.round(changeAmt * 100.0) / 100.0;
-                receipt+= "Change: " +currencyCode+" " + d + "\n\r";
-            }else{
-                receipt+= "Payment Mode : Credit Card\n\r";
-            }
-            receipt+= "Cashier : "+ staffname +"\n\r\n\r";
-            if (customerName == null){
-                receipt+= "Thank you for shopping with us!";
-            }else{
-                receipt+= customerName+", thank you for shopping with us!\n\r";
-            }
-            
-            
-            try
-            {
-                JTextArea printing = new JTextArea();
-                printing.setSize(180, 300);
-                printing.setText(receipt);
-                Double margin = 20.0;
-                Integer lines = 8;
-                PrinterJob printerJob = PrinterJob.getPrinterJob();
-                PageFormat pageFormat = printerJob.defaultPage();
-                Paper paper = new Paper();
-                paper.setSize(360.0, (double) (paper.getHeight() + lines * 10.0));
-                paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
-                pageFormat.setPaper(paper);
-                pageFormat.setOrientation(PageFormat.PORTRAIT);
-                printerJob.setPrintable(printing.getPrintable(null, null), pageFormat);
-                printerJob.print();
-            }
-            catch(PrinterException ex)
-            {
-                JOptionPane.showMessageDialog(null, "Unable to print to Partner Thermal Printer: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
     }
     
     
