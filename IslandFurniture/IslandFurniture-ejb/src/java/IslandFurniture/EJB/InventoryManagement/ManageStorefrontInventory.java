@@ -53,17 +53,18 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
 
 //  Function: To edit Storefront Inventory
     @Override
-    public void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated) {
-        StoreSection storeSection = (StoreSection) em.find(StoreSection.class, storefrontInventoryUpdated.getLocationInStore().getId());
-        StorefrontInventoryPK pk = new StorefrontInventoryPK(storefrontInventoryUpdated.getStore().getId(), storefrontInventoryUpdated.getStock().getId());
+    public void editStorefrontInventory(StorefrontInventory updatedStorefrontInventory, Long storeSectionId, int rep, int max) {
+        StoreSection storeSection = (StoreSection) em.find(StoreSection.class, storeSectionId);
+        StorefrontInventoryPK pk = new StorefrontInventoryPK(updatedStorefrontInventory.getStore().getId(), updatedStorefrontInventory.getStock().getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, pk);
-        
-        System.out.println("3. SI is: " + storefrontInventory.getLocationInStore());
-        storefrontInventory.setRepQty(storefrontInventoryUpdated.getRepQty());
-        storefrontInventory.setMaxQty(storefrontInventoryUpdated.getMaxQty());
+
+        System.out.println("3. SI is: " + storeSection);
+        storefrontInventory.setRepQty(rep);
+        storefrontInventory.setMaxQty(max);
         storefrontInventory.setLocationInStore(storeSection);
         em.merge(storefrontInventory);
         em.flush();
+        em.refresh(storefrontInventory);
     }
 
 //  Function: To delete Storefront Inventory
@@ -90,7 +91,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         return storefrontInventory;
     }
-    
+
 //  Function: To edit Storefront Inventory quantity
     @Override
     public void editStorefrontInventoryQty(StorefrontInventory si, int qty) {
@@ -98,7 +99,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         storefrontInventory.setQty(qty);
         em.merge(storefrontInventory);
-        em.flush(); 
+        em.flush();
     }
 
     //  Function: To reduce Storefront Inventory from Transaction
@@ -114,6 +115,9 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         // End: Reduce Qty from Transaction : Current - Qty 
 
         // Start: If curr < replenishment, then create Replenishment Transfer Order
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+
         if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
             if (transferBean.checkIfReplenishmentTransferOrderforStockDoNotExists(plant, stock)) {
                 replenishmentTransferOrder = new ReplenishmentTransferOrder();

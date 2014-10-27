@@ -27,7 +27,7 @@ public interface ManageInventoryTransferLocal {
     //  Function: To create a External Transfer Order (Status: Requested)
     ExternalTransferOrder createExternalTransferOrder(Plant plant);
 
-     //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
+    //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
     ExternalTransferOrder createExternalTransferOrderFromManufacturing(Plant fulfillingPlant, Plant requestingPlant);
 
     //  Function: To create a Replenishment Transfer Order (Status: Requested)
@@ -84,6 +84,9 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To display list of Replenishment Transfer Order (Requested)
     List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequested(Plant plant);
+
+    //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPostedFromRequesting(Plant plant);
 
     //  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock
     List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequestedForAParticularStock(Plant plant, Stock stock);

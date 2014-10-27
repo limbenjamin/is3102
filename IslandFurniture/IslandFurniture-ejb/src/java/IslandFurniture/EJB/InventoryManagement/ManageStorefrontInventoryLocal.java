@@ -9,11 +9,13 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorefrontInventory;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStorefrontInventoryLocal {
 
     //  Function: To add Storefront Inventory
@@ -23,7 +25,7 @@ public interface ManageStorefrontInventoryLocal {
     void deleteStorefrontInventory(StorefrontInventory storefrontInventory);
 
     //  Function: To edit Storefront Inventory
-    void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated);
+    void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated, Long storeSectionId, int rep, int max);
 
     //  Function: To display list of StorefrontInventory
     List<StorefrontInventory> viewStorefrontInventory(Plant plant);

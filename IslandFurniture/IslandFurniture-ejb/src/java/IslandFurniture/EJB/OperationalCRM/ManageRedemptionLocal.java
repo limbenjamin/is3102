@@ -10,11 +10,13 @@ import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Staff;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageRedemptionLocal {
 
     // Function: Create Redemption

@@ -48,6 +48,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     private List<ExternalTransferOrder> externalTransferOrderListRequestPostedList;
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledPendingList;
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedList;
+    private List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedListFromRequesting;
 
     private ExternalTransferOrder externalTransferOrder;
 
@@ -74,6 +75,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         externalTransferOrderListRequestPostedList = transferBean.viewExternalTransferOrderRequestedPosted(plant);
         externalTransferOrderListFulfilledPendingList = transferBean.viewExternalTransferOrderFulfilledPending(plant);
         externalTransferOrderListFulfilledPostedList = transferBean.viewExternalTransferOrderFulfilledPosted(plant);
+        externalTransferOrderListFulfilledPostedListFromRequesting = transferBean.viewExternalTransferOrderFulfilledPostedFromRequesting(plant);
     }
 
 //  Function: To create a External Tranfer Order
@@ -174,6 +176,14 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         this.externalTransferOrderListFulfilledPostedList = externalTransferOrderListFulfilledPostedList;
     }
 
+    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledPostedListFromRequesting() {
+        return externalTransferOrderListFulfilledPostedListFromRequesting;
+    }
+
+    public void setExternalTransferOrderListFulfilledPostedListFromRequesting(List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedListFromRequesting) {
+        this.externalTransferOrderListFulfilledPostedListFromRequesting = externalTransferOrderListFulfilledPostedListFromRequesting;
+    }
+
     public ExternalTransferOrder getExternalTransferOrder() {
         return externalTransferOrder;
     }
@@ -229,5 +239,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     public void setStorageBean(ManageStorageLocationLocal storageBean) {
         this.storageBean = storageBean;
     }
+
+   
 
 }

@@ -294,7 +294,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     //  Function: To check Replenishment Transfer Order (Requested) already exists  
     @Override
     public boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock) {
-        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2)");
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE (s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2))");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
@@ -395,6 +395,15 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPosted(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.FULFILLED);
+        return q.getResultList();
+    }
+    
+        //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPostedFromRequesting(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();

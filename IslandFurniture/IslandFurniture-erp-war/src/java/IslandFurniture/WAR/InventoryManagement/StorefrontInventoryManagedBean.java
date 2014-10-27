@@ -101,7 +101,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
     public void editStorefrontInventory(ActionEvent event) throws IOException {
         StorefrontInventory si = (StorefrontInventory) event.getComponent().getAttributes().get("storefrontInventory");
         
-        System.out.println("1. SI is: " + si.getLocationInStore());
+        System.out.println("1. SI is: " + si.getLocationInStore().getId());
         if (si.getRepQty() > si.getMaxQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be lesser than Maximum Quantity. Editing of Storefront Inventory was unsuccessful.", ""));
@@ -111,8 +111,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be minimally 50% or lesser than the Maximum Quantity. <br/> The suggested Replenishment Quantity with Maximum Quantity of " + si.getMaxQty() + " should be " + Math.floor((double) si.getMaxQty() * .5) + " or lesser. <br/> Editing of Storefront Inventory was unsuccessful.", ""));
         } else {
             System.out.println("2. It came here!");
-            storefrontInventoryBean.editStorefrontInventory(si);
-            storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+            storefrontInventoryBean.editStorefrontInventory(si, si.getLocationInStore().getId(), si.getRepQty(), si.getMaxQty());
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Storefront Inventory has sucessfully been edited", ""));
         }

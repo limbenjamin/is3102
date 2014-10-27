@@ -10,11 +10,13 @@ import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Enums.StorageAreaType;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStorageLocationLocal {
 
     //  Function: To check if there is any Storage Area with same name - to not allow duplicates
