@@ -31,7 +31,7 @@
                             </div>
                             <div class="list-group-item">
                                 <h:outputText rendered="#{empty webBannerManagedBean.webBannerList}" value="There are no web banners"/>
-                                <h:panelGroup layout="block" rendered="#{not empty webBannerManagedBean.webBannerList}">
+                                <h:panelGroup rendered="#{not empty webBannerManagedBean.webBannerList}">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>Web Banner ID</th>
@@ -41,16 +41,19 @@
                                         </tr>
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{webBannerManagedBean.webBannerList}" var="wb">
-                                                <td>#{wb.id}</td>
-                                                <td>#{wb.headerText}</td>
-                                                <td><h:commandButton action="webbannerdetail" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:param name="id" value="#{wb.id}" />
-                                                    </h:commandButton>
-                                                    <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
-                                                <td><h:commandButton action="webbanner" actionListener="#{webBannerManagedBean.deleteWebBanner}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                        <f:attribute name="wb" value="#{wb}" />
-                                                    </h:commandButton>
-                                                    <i class="fa fa-lg fa-trash-o icon-button"></i></td>
+                                                <tr>
+                                                    <td>#{wb.id}</td>
+                                                    <td>#{wb.headerText}</td>
+                                                    <td><h:commandButton action="webbannerdetail" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:param name="id" value="#{wb.id}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i></td>
+                                                    <td><h:commandButton action="webbanner" actionListener="#{webBannerManagedBean.deleteWebBanner}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <f:attribute name="wb" value="#{wb}" />
+                                                        </h:commandButton>
+                                                        <i class="fa fa-lg fa-trash-o icon-button"></i>
+                                                    </td>
+                                                </tr>
                                             </ui:repeat>
                                         </h:form> 
                                     </table>
