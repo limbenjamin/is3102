@@ -6,6 +6,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.WebBanner;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ManageWebBanner implements ManageWebBannerLocal {
     EntityManager em;
 
     WebBanner webBanner;
+    Picture picture;
 
     // Function: Create Web Banner
     @Override
@@ -71,5 +73,12 @@ public class ManageWebBanner implements ManageWebBannerLocal {
     public WebBanner getWebBanner(Long id) {
         webBanner = (WebBanner) em.find(WebBanner.class, id);
         return webBanner;
+    }
+
+    //  Function: Return Picture entity
+    @Override
+    public Picture getPicture(Long id) {
+        picture = (Picture) em.find(Picture.class, id);
+        return picture;
     }
 }

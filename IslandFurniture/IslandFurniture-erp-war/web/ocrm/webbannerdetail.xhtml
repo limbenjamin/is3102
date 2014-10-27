@@ -58,8 +58,13 @@
                                     </table>
                                 </div>
 
-                                <p:graphicImage value="#{webBannerDetailManagedBean.webBanner.picture}">
-                                    <f:param name="id" value="#{item.imageId}" />
+                                <h5>#{webBannerDetailManagedBean.webBanner.picture.id}</h5>
+                                
+                                <h:graphicImage url="../image.jpg" />
+                                
+                                
+                                <p:graphicImage value="#{webBannerDetailManagedBean.image}">
+                                    <f:param name="pictureId" value="#{webBannerDetailManagedBean.webBanner.picture.id}" />
                                 </p:graphicImage>
 
                                 <p:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update"  ajax="false">                                       
