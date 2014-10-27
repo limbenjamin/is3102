@@ -13,16 +13,49 @@
                 <h5>Chat with Staff</h5>
                 <hr></hr>                        
                   <section class="panel">
-                        
+                    <h:form id="newMessage">
+                        <c:forEach items="${chatManagedBean.listCCM}" var="message">
+                          <c:set var="uname" value="${message.staff}"/>
+                          <c:if test="${uname == null}">
+                              <div class="list-group-item own-message">
+                                  <h5>#{message.content} </h5>  
+                                  <small>
+                                      <h:outputText value="#{message.msgTime.time}">
+                                          <f:convertDateTime dateStyle="full" timeZone="#{chatManagedBean.timezone}" type="both" />
+                                      </h:outputText>
+                                  </small>
+                              </div>
+                          </c:if>
+                          <c:if test="${uname != null}">
+                              <div class="list-group-item">
+                                  <h5><strong>  Staff : </strong> #{message.content} </h5>  
+                                  <small>                                                
+                                      <h:outputText value="#{message.msgTime.time}">
+                                          <f:convertDateTime dateStyle="full" timeZone="#{chatManagedBean.timezone}" type="both" />
+                                      </h:outputText>
+                                  </small>
+                              </div>
+                          </c:if>
+                      </c:forEach>
+                        <p:poll interval="3" listener="#{chatManagedBean.pullMessage}" update="newMessage" />
+                    </h:form>
                       <div class="panel-footer">
-                        
+                        <h:form id="AddMessageForm" class="form-horizontal">
+                            <div class="form-group">
+                                 <div class="col-sm-10">
+                                    <h:inputText id="content" class="form-control"></h:inputText>
+                                 </div>
+                                 <div class="col-sm-2">
+                                     <h:commandButton actionListener="#{chatManagedBean.sendMessage}" value="Send" class="btn btn-success"></h:commandButton>
+                                 </div>                                        
+                            </div>
+                        </h:form>
 
                         <h:form id="StartChatForm" class="form-horizontal">
                             <div class="form-group">
                                  <div class="col-sm-2">
-                                     <h:commandButton value="Submit" action="#{chatManagedBean.startChatSession}">
-                                        <f:ajax execute="@form"/>
-                                     </h:commandButton>
+                                     <h:commandButton value="Start Chat" actionListener="#{chatManagedBean.startChatSession}"></h:commandButton>
+                                     <h:commandButton value="End Chat" actionListener="#{chatManagedBean.endChatSession}"></h:commandButton>
                                  </div>                                        
                             </div>
                         </h:form>
