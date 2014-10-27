@@ -6,6 +6,7 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageHomeLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
@@ -53,6 +54,8 @@ public class HomeManagedBean {
     private ManageHomeLocal homeBean;
     @EJB
     private ManageMarketingBeanLocal mmbl;    
+    @EJB
+    private ManageCatalogueBeanLocal mcbl;    
     
     @PostConstruct
     public void init() {
@@ -60,33 +63,10 @@ public class HomeManagedBean {
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         
         webBanners = co.getWebBanners();
-        featuredProducts = co.getFeaturedProducts();
-        getAllFeaturedFurniture();
-        getAllFeaturedRetailItems();
+        featuredFurniture = mcbl.getCountryFeaturedFurniture(co);
         System.out.println("loaded " + co.getName() + " web banners");
     }    
-    
-    public void getAllFeaturedFurniture() {
-        Iterator<Stock> iterator = featuredProducts.iterator();
-        while (iterator.hasNext()) {
-            Stock stock = iterator.next();
-            if (stock instanceof FurnitureModel) {
-                System.out.println("it is furniture model");
-                featuredFurniture.add((FurnitureModel)stock);
-            }
-        }        
-    }
-    
-    public void getAllFeaturedRetailItems() {
-        Iterator<Stock> iterator = featuredProducts.iterator();
-        while (iterator.hasNext()) {
-            Stock stock = iterator.next();
-            if (stock instanceof RetailItem) {
-                featuredRetailItems.add((RetailItem)stock);
-            }
-        }        
-    }
-    
+
     public Double getDiscountedPrice(Stock s) {
         Store st = new Store();
         st.setCountryOffice(co);

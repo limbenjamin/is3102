@@ -56,6 +56,47 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
         return furnitureList;
     }
     
+    @Override
+    public List<FurnitureModel> getCountryFeaturedFurniture(CountryOffice co) {
+        List<Stock> featuredProducts = co.getFeaturedProducts();
+        List<FurnitureModel> furnitureList = new ArrayList<>();
+        
+        Iterator<Stock> iterator = featuredProducts.iterator();
+        while (iterator.hasNext()) {
+            Stock stock = iterator.next();
+            if (stock instanceof FurnitureModel) {
+                Query q = em.createQuery("SELECT s.price FROM StockSupplied s WHERE s.countryOffice=:co AND s.stock=:stock");
+                q.setParameter("stock", stock);
+                q.setParameter("co", co);
+                FurnitureModel furniture = (FurnitureModel)stock;
+                furniture.setPrice((Double)q.getSingleResult());
+                em.merge(furniture);
+                furnitureList.add(furniture);
+            }
+        } 
+        return furnitureList; 
+    }
+    
+    @Override
+    public List<RetailItem> getCountryFeaturedRetail(CountryOffice co) {
+        List<Stock> featuredProducts = co.getFeaturedProducts();
+        List<RetailItem> retailList = new ArrayList<>();
+        Iterator<Stock> iterator = featuredProducts.iterator();
+        while (iterator.hasNext()) {
+            Stock stock = iterator.next();
+            if (stock instanceof RetailItem) {
+                Query q = em.createQuery("SELECT s.price FROM StockSupplied s WHERE s.countryOffice=:co AND s.stock=:stock");
+                q.setParameter("stock", stock);
+                q.setParameter("co", co);
+                RetailItem retail = (RetailItem)stock;
+                retail.setPrice((Double)q.getSingleResult());
+                em.merge(retail);
+                retailList.add(retail);
+            }
+        } 
+        return retailList;         
+    }
+    
     // get a list of furniture of a particular category sold in a store
     @Override
     public List<FurnitureModel> getStoreFurnitureByCategory(CountryOffice co, FurnitureCategory category) {
