@@ -8,7 +8,9 @@ package IslandFurniture.WAR.OperationalCRM;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageFeaturedProductsLocal;
+import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -35,6 +37,7 @@ public class FeaturedProductsManagedBean implements Serializable {
 
     private List<Stock> featuredProductsList;
     private List<Stock> stockList;
+    private List<Stock> tempList;
     private Long stockId;
     
     private String username;
@@ -58,7 +61,11 @@ public class FeaturedProductsManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
         featuredProductsList = featuredBean.viewFeaturedProducts(plant);
-        stockList = transferBean.viewStock();
+        tempList = transferBean.viewStock();
+        for(Stock s : tempList) {
+            if(s instanceof FurnitureModel || s instanceof RetailItem)
+                stockList.add(s);
+        }
 
         Iterator<Stock> iterator = stockList.iterator();
         while (iterator.hasNext()){

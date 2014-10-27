@@ -70,9 +70,9 @@
                                         </td>
                                         <td>#{list.store.name}</td>
                                         <td style="text-align:center;">
-                                            <h:outputText value="#{shoppingListManagedBean.calculateSubTotal(list)}">
+                                            <h:outputText value="#{list.totalPrice}">
                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                            </h:outputText>    
+                                            </h:outputText>
                                         </td>
                                         <td style="text-align:center;">
                                             <h:commandButton actionListener="#{shoppingListManagedBean.deleteShoppingList}" class="btn btn-sm transparent-button" style="outline:0;"> 

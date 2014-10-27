@@ -18,7 +18,7 @@
                             <li class="active"><strong>Web Banner ##{webBannerDetailManagedBean.id}</strong></li>
                         </ol>                        
                     </div>                     
-                    <div class="col-md-10"> 
+                    <div class="col-md-12"> 
 
                         <span class="pull-right"> 
                             <a href="webbanner.xhtml">
@@ -28,47 +28,69 @@
                             </a>                            
                         </span>   
 
-                        <h4>Web Banner ##{webBannerDetailManagedBean.id}</h4><hr></hr>
+                        <h4>Edit Web Banner ##{webBannerDetailManagedBean.id}</h4><hr></hr>
                     </div>
 
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <section name="Web Banner Document">
                             <h:form class="form-horizontal" enctype="multipart/form-data">
-                                <div class="panel-heading dashboard-title-panel">
-                                    Web Banner Details
-                                </div>
-                                <div class="list-group-item">
-                                    <table class="table table-hover table-condensed">
-                                        <tr>
-                                            <th>Header Text</th>
-                                            <th>Sub-header Text</th>
-                                            <th>Body Text</th>
-                                            <th>Button Text</th>
-                                            <th>Button URL</th>
-                                            <th>Picture</th>
-                                        </tr>
-                                        <tr>
-                                            <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.headerText}" class="form-control"></h:inputText></td>
-                                            <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.subheaderText}" class="form-control"></h:inputText></td>
-                                            <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.bodyText}" class="form-control"></h:inputText></td>
-                                            <td><h:inputText value="#{webBannerDetailManagedBean.webBanner.buttonText}" class="form-control"></h:inputText></td>
-                                            <td><h:inputText  value="#{webBannerDetailManagedBean.webBanner.buttonUrl}" class="form-control"></h:inputText></td>
-                                            <td><p:fileUpload fileUploadListener="#{webBannerDetailManagedBean.handleFileUpload}" /></td>
-                                        </tr>
-                                    </table>
-                                </div>
-
-                                <h5>#{webBannerDetailManagedBean.webBanner.picture.id}</h5>
-
-                                <p:graphicImage value="#{pictureManagedBean.image}" width="250">
-                                    <f:param name="pictureId" value="#{webBannerDetailManagedBean.webBanner.picture.id}" />
-                                </p:graphicImage>
-
-                                <p:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update"  ajax="false">                                       
-                                    <f:attribute name="wb" value="#{webBannerDetailManagedBean.webBanner}" />
-                                </p:commandButton>
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Header Text: </label>
+                                    <div class="col-sm-9 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText  value="#{webBannerDetailManagedBean.webBanner.headerText}" class="form-control"></h:inputText>
+                                    </div>
+                                  </div>  
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Sub-Header Text: </label>
+                                    <div class="col-sm-9 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText  value="#{webBannerDetailManagedBean.webBanner.subheaderText}" class="form-control"></h:inputText>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Body Text: </label>
+                                    <div class="col-sm-9 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText  value="#{webBannerDetailManagedBean.webBanner.bodyText}" class="form-control"></h:inputText>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Button Text: </label>
+                                    <div class="col-sm-9 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText value="#{webBannerDetailManagedBean.webBanner.buttonText}" class="form-control"></h:inputText>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Button URL: </label>
+                                    <div class="col-sm-9 inner-addon right-addon">
+                                      <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                      <h:inputText  value="#{webBannerDetailManagedBean.webBanner.buttonUrl}" class="form-control"></h:inputText>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="col-sm-3 control-label">Banner Image: </label>
+                                    <div class="col-sm-9">
+                                      <p:fileUpload fileUploadListener="#{webBannerDetailManagedBean.handleFileUpload}" />
+                                    </div>
+                                  </div>
+                                    <span class="pull-right">
+                                        <p:commandButton actionListener="#{webBannerDetailManagedBean.editWebBanner}" value="Update Banner"  
+                                          styleClass="btn btn-round btn-success"  ajax="false">                                       
+                                            <f:attribute name="wb" value="#{webBannerDetailManagedBean.webBanner}" />
+                                        </p:commandButton>
+                                    </span>
                             </h:form>
                         </section>
+                    </div>
+                    <div class="col-md-4">
+                        <h:form class="form-horizontal">
+                            <h4>Current Image:</h4>
+                            <p:graphicImage value="#{pictureManagedBean.image}" width="250">
+                                <f:param name="pictureId" value="#{webBannerDetailManagedBean.webBanner.picture.id}" />
+                            </p:graphicImage>
+                        </h:form>
                     </div>
                 </div>
             </ui:define>

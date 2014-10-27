@@ -19,6 +19,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -104,7 +105,14 @@ public class ProductDetailManagedBean {
         
         if (loggedIn) {
             customer = mmab.getCustomer(emailAddress);
-            shoppingLists = customer.getShoppingLists();
+            shoppingLists = new ArrayList<>();
+            List<ShoppingList> allLists = customer.getShoppingLists();
+            // show only lists specific to the site's country in the site
+            for (ShoppingList list : allLists) {
+                if (list.getStore().getCountryOffice().equals(co)) {
+                    shoppingLists.add(list);
+                }
+            }
         }
         
         System.out.println("Got furniture model " + furniture.getName());
