@@ -13,6 +13,7 @@ import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.ShoppingList;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Transaction;
 import java.util.List;
@@ -50,5 +51,7 @@ public interface ManagePOSLocal {
     List<ShoppingList> getShoppingListList(String customerCardId);
 
     void expendCoupon(String string);
+
+    void createReconciliationRecord(Staff staff, Double totalRegisterCash);
     
 }

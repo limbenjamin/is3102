@@ -13,6 +13,7 @@ import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.PromotionCampaign;
 import IslandFurniture.Entities.PromotionCoupon;
 import IslandFurniture.Entities.PromotionDetail;
+import IslandFurniture.Entities.ReconciliationRecord;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.RestaurantTransaction;
@@ -20,6 +21,7 @@ import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.ShoppingList;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Transaction;
 import IslandFurniture.Entities.Voucher;
@@ -98,6 +100,12 @@ public class ManagePOS implements ManagePOSLocal {
         int amount = 0;
         try{
             FurnitureTransaction tr = (FurnitureTransaction) query.getSingleResult();
+            List<FurnitureTransactionDetail> ftdList = tr.getFurnitureTransactionDetails();
+            Iterator<FurnitureTransactionDetail> iterator = ftdList.iterator();
+            while(iterator.hasNext()){
+                FurnitureTransactionDetail ftd = iterator.next();
+                ftd.setNumClaimed(ftd.getNumReturned());
+            }
             ft.setReturnedTrans(tr);
         }catch(Exception e){
             System.err.print(e);
@@ -152,5 +160,13 @@ public class ManagePOS implements ManagePOSLocal {
         PromotionDetail pd = pc.getPromotionDetail();
         mmbl.expand_promotion(pd, pc);
         
+    }
+    
+    @Override
+    public void createReconciliationRecord(Staff staff, Double totalRegisterCash){
+        ReconciliationRecord r = new ReconciliationRecord();
+        r.setBalance(totalRegisterCash);
+        r.setSupvr(staff);
+        em.persist(r);
     }
 }
