@@ -275,7 +275,7 @@ public class StocklistWS {
             now.setTime(new Date());
             System.err.println(transaction);
             if (storeType.equals("restaurant")){
-                makeRestaurantTransaction(staff, plant, now, transaction, customerCardId);
+                makeRestaurantTransaction(staff, plant, now, transaction, customerCardId, voucher);
             }
             else{
                 FurnitureTransaction ft = new FurnitureTransaction();
@@ -350,7 +350,7 @@ public class StocklistWS {
         return "1";
     }
 
-    private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId) {
+    private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId, String voucher) {
         RestaurantTransaction rt = new  RestaurantTransaction();
         rt.setCreatedBy(staff);
         rt.setStore((Store) plant);
@@ -376,6 +376,14 @@ public class StocklistWS {
             rt.getRestaurantTransactionDetails().add(rtd);
             mpl.persistRSTD(rtd);
             }
+        String vouchers = voucher.substring(1, voucher.length()-1);
+        System.err.println(vouchers);
+        String[] voucherArr = vouchers.split(",");
+        for (String v : voucherArr){
+            if (!v.trim().isEmpty()){
+                mpl.useVoucher(v.trim());
+            }
+        }
     }
     
 }

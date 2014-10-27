@@ -438,6 +438,10 @@ public class PaymentUI extends javax.swing.JFrame {
                 obj.put("name", transaction.get(i).get(1));
                 obj.put("price", transaction.get(i).get(2));
                 obj.put("qty", transaction.get(i).get(3));
+                System.err.println(transaction.get(i).size());
+                if (transaction.get(i).size() == 6){
+                    transaction.get(i).add(6, "null");
+                }
                 obj.put("disc", transaction.get(i).get(6));
                 transactionList.add(obj);
             }

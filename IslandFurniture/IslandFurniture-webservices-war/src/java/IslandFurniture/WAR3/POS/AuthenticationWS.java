@@ -9,6 +9,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManagePOSLocal;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
 import javax.ejb.EJB;
@@ -38,6 +39,8 @@ public class AuthenticationWS {
     ManageUserAccountBeanLocal muabl;
     @EJB
     ManageRolesBeanLocal mrbl;
+    @EJB
+    ManagePOSLocal mpl;
 
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -88,7 +91,9 @@ public class AuthenticationWS {
 
     @POST
     @Path("supervisornfc")
-    public String supervisorNFC(@FormParam("cardId") String cardId) {
+    public String supervisorNFC(@FormParam("cardId") String cardId,
+                                @FormParam("amt") Double totalRegisterCash
+                                                                    ) {
         System.err.println(cardId);
         Staff staff = muabl.getStaffFromCardId(cardId);
         if (staff == null) {
@@ -98,6 +103,7 @@ public class AuthenticationWS {
         if (!staff.getRoles().contains(role)) { //staff is not a cashier supervisor
             return "Error";
         } else {
+            mpl.createReconciliationRecord(staff, totalRegisterCash);
             return "OK";
         }
     }
