@@ -35,6 +35,8 @@ public abstract class Transaction extends Document implements Serializable {
     protected Store store;
     @Temporal(TemporalType.TIMESTAMP)
     protected Calendar transTime;
+    protected Double grandTotal;
+    protected Double voucherTotal;
 
     @ManyToOne
     protected Customer member;
@@ -54,6 +56,22 @@ public abstract class Transaction extends Document implements Serializable {
 
     public void setTransTime(Calendar transTime) {
         this.transTime = transTime;
+    }
+
+    public Double getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(Double grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+
+    public Double getVoucherTotal() {
+        return voucherTotal;
+    }
+
+    public void setVoucherTotal(Double voucherTotal) {
+        this.voucherTotal = voucherTotal;
     }
 
     public Customer getMember() {

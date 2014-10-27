@@ -28,12 +28,21 @@ import javax.persistence.PostPersist;
 public class FurnitureTransaction extends Transaction implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private Double returnedCreditsUsed;
 
     @OneToMany(mappedBy = "furnitureTransaction", cascade = {CascadeType.ALL})
     private List<FurnitureTransactionDetail> furnitureTransactionDetails;
 
     @OneToOne
     private FurnitureTransaction returnedTrans;
+
+    public Double getReturnedCreditsUsed() {
+        return returnedCreditsUsed;
+    }
+
+    public void setReturnedCreditsUsed(Double returnedCreditsUsed) {
+        this.returnedCreditsUsed = returnedCreditsUsed;
+    }
 
     public List<FurnitureTransactionDetail> getFurnitureTransactionDetails() {
         return furnitureTransactionDetails;
