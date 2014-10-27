@@ -7,6 +7,7 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.ShoppingList;
@@ -44,5 +45,7 @@ public interface MobileAppServiceLocal {
     public FurnitureModel getfmFromID(String ID);
 
    public FurnitureModel getFurnitureModelByNFCID(String NFC_ID) throws Exception;
+
+    public Customer getcustomerFromid(String id);
     
 }

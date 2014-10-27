@@ -13,6 +13,7 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Picture;
+import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Store;
@@ -23,8 +24,6 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -200,16 +199,24 @@ public class CustomerService {
         JsonArrayBuilder jab = Json.createArrayBuilder();
 
         object.add("name", sl.getName());
-        object.add("totalprice", sl.getTotalPrice());
         Double total = 0.0;
         for (ShoppingListDetail sld : sl.getShoppingListDetails()) {
 
-            double price = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), new Customer()).get("D_PRICE") * sld.getQty();
-            total += price;
-            jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("price", price).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()));
+            double price = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("D_PRICE");
+            double oprice = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("O_PRICE");
+
+            total += price * sld.getQty();
+            if (mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).keySet().contains("Successful_promotion")) {
+                PromotionDetail pd = (PromotionDetail) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("Successful_promotion");
+                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", pd.getPromotionCampaign().getTitle()));
+            } else {
+                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", ""));
+            }
+
         }
+
         object.add("details", jab);
-        object.add("totalprice", total);
+        object.add("totalprice", Math.floor(total * 100) / 100.0);
         return object.build().toString();
     }
 
@@ -225,7 +232,7 @@ public class CustomerService {
     public String addItem(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("fm_id") String fm_id, @QueryParam("qty") Integer qty) {
         ShoppingList sl = (masl.getShoppingList(cust_id, store_id));
 
-        double price = (double) mmb.getDiscountedPrice(masl.getfmFromID(fm_id), masl.getStoreFromID(store_id), new Customer()).get("D_PRICE");
+        double price = (double) mmb.getDiscountedPrice(masl.getfmFromID(fm_id), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("D_PRICE");
         try {
             mslb.createShoppingListDetail(sl.getId(), Long.parseLong(fm_id), qty, price);
         } catch (DuplicateEntryException ex) {
@@ -242,10 +249,10 @@ public class CustomerService {
         try {
             fm = masl.getFurnitureModelByNFCID(NFC_TAG);
         } catch (Exception ex) {
-            System.out.println("addItemByNFC(): "+ex.getMessage());
+            System.out.println("addItemByNFC(): " + ex.getMessage());
             return "Invalid NFC Tag";
         }
-        
+
         return addItem(cust_id, store_id, fm.getId().toString(), 1);
 
     }

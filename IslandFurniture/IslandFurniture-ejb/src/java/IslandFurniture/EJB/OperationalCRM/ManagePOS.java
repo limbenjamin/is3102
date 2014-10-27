@@ -98,6 +98,12 @@ public class ManagePOS implements ManagePOSLocal {
         int amount = 0;
         try{
             FurnitureTransaction tr = (FurnitureTransaction) query.getSingleResult();
+            List<FurnitureTransactionDetail> ftdList = tr.getFurnitureTransactionDetails();
+            Iterator<FurnitureTransactionDetail> iterator = ftdList.iterator();
+            while(iterator.hasNext()){
+                FurnitureTransactionDetail ftd = iterator.next();
+                ftd.setNumClaimed(ftd.getNumReturned());
+            }
             ft.setReturnedTrans(tr);
         }catch(Exception e){
             System.err.print(e);
