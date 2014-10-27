@@ -95,9 +95,11 @@ public class WebBannerDetailManagedBean implements Serializable {
     public void editWebBanner(ActionEvent event) throws IOException {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("webbannerid");
-        Picture picture = new Picture();
-        picture.setContent(photo);
-        webBanner.setPicture(picture);;
+        if (photo != null) {
+            Picture picture = new Picture();
+            picture.setContent(photo);
+            webBanner.setPicture(picture);
+        }
         bannerBean.editWebBanner(webBanner);
         webBanner = bannerBean.getWebBanner(id);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
