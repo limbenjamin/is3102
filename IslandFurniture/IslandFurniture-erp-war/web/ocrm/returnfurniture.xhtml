@@ -1,0 +1,85 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="transId" value="#{furnitureReturnManagedBean.transId}"/>
+        </f:metadata>
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Furniture Return</strong></li>
+            </ol>  
+        </div> 
+        <div class="col-md-10">
+            <span class="pull-right">
+                <p:outputPanel rendered="#{furnitureReturnManagedBean.furnTrans != null}" >
+                    <a href="furniturereturn.xhtml">
+                        <button type="button" class="btn btn-sm btn-default">
+                            <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                        </button> 
+                    </a>
+                </p:outputPanel>
+            </span>                          
+            <h4>Process Return of Furniture</h4><hr></hr>
+        </div>
+
+        <h:form  rendered="#{furnitureReturnManagedBean.furnTrans == null}" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="max-width:120px;">Enter Receipt Number: </label>            
+                <div class="col-sm-2" style="max-width:120px;">
+                    <p:inputText value="#{furnitureReturnManagedBean.transId}" />
+                    <p:commandButton action="returnfurniture.xhtml?faces-redirect=true&includeViewParams=true" value="Retrieve Transaction"/>
+                </div>
+            </div>
+        </h:form>
+        <p:outputPanel rendered="#{furnitureReturnManagedBean.furnTrans != null}">
+            Receipt Number: #{furnitureReturnManagedBean.furnTrans.id} <br/>
+            Transaction Time: 
+            <h:outputText value="#{furnitureReturnManagedBean.furnTrans.transTime}">
+                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss z" timeZone="#{furnitureReturnManagedBean.furnTrans.store.timeZoneID}" />
+            </h:outputText>
+            <br/>
+            Store: #{furnitureReturnManagedBean.furnTrans.store.name} (#{furnitureReturnManagedBean.furnTrans.store.countryOffice.name}) <br/>
+            Customer: #{furnitureReturnManagedBean.furnTrans.member.name} (ID: #{furnitureReturnManagedBean.furnTrans.member.id}) <br/>
+            Claiming for Returned Transaction: #{furnitureReturnManagedBean.furnTrans.returnedTrans} <br/>
+            Processed by: #{furnitureReturnManagedBean.furnTrans.createdBy.name} (#{furnitureReturnManagedBean.furnTrans.createdBy.username}) <br/>
+            Total Amount: #{furnitureReturnManagedBean.furnTrans.store.country.currency.currencyCode} #{furnitureReturnManagedBean.transTotal} <br/>
+
+            <p:dataTable value="#{furnitureReturnManagedBean.furnTrans.furnitureTransactionDetails}" var="detail">
+                <p:column>
+                    <f:facet name="header">Product ID</f:facet>
+                    <h:outputText value="#{detail.furnitureModel.id}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Product Name</f:facet>
+                    <h:outputText value="#{detail.furnitureModel.name}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Quantity</f:facet>
+                    <h:outputText value="#{detail.qty}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Unit Price</f:facet>
+                    <h:outputText value=" #{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.unitPrice}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Subtotal</f:facet>
+                    <h:outputText value=" #{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.subtotal}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Returned</f:facet>
+                    <h:outputText value=" #{detail.numReturned}" />
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Claimed</f:facet>
+                    <h:outputText value=" #{detail.numClaimed}" />
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+
