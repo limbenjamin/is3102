@@ -54,11 +54,14 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
 //  Function: To edit Storefront Inventory
     @Override
     public void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated) {
+        StoreSection storeSection = (StoreSection) em.find(StoreSection.class, storefrontInventoryUpdated.getLocationInStore().getId());
         StorefrontInventoryPK pk = new StorefrontInventoryPK(storefrontInventoryUpdated.getStore().getId(), storefrontInventoryUpdated.getStock().getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, pk);
+        
+        System.out.println("3. SI is: " + storefrontInventory.getLocationInStore());
         storefrontInventory.setRepQty(storefrontInventoryUpdated.getRepQty());
         storefrontInventory.setMaxQty(storefrontInventoryUpdated.getMaxQty());
-        storefrontInventory.setLocationInStore((StoreSection) em.find(StoreSection.class, storefrontInventoryUpdated.getLocationInStore().getId()));
+        storefrontInventory.setLocationInStore(storeSection);
         em.merge(storefrontInventory);
         em.flush();
     }
