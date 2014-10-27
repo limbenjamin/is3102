@@ -56,7 +56,7 @@ public class WebBannerDetailManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public ManageWebBannerLocal bannerBean;
+    private ManageWebBannerLocal bannerBean;
 
     @PostConstruct
     public void init() {
