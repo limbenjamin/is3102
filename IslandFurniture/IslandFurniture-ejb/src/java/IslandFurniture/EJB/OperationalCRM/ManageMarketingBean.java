@@ -295,10 +295,10 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             PromotionDetailByProduct pdd = (PromotionDetailByProduct) pd;
             if (pdd.getStock().equals(s)) {
                 if (pdd.getPercentageDiscount() > 0) {
-                    newprice = (1 - pdd.getPercentageDiscount()) * op;
+                    newprice = (1 - pd.getPercentageDiscount()) * op;
                 }
                 if (pdd.getAbsoluteDiscount() > 0) {
-                    newprice = op - pdd.getAbsoluteDiscount();
+                    newprice = op - pd.getAbsoluteDiscount();
                 }
 
             }
