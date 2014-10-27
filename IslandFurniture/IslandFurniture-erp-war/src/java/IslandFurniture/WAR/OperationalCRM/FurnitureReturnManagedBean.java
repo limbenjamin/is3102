@@ -37,11 +37,7 @@ public class FurnitureReturnManagedBean implements Serializable{
             furnTrans = furnitureReturnBean.findTransaction(transId);
         }
     }
-
-    public double getTransTotal() {
-        return furnitureReturnBean.calcTransTotal(furnTrans);
-    }
-
+    
     /**
      * Creates a new instance of FurnitureReturnManagedBean
      */

@@ -8,7 +8,6 @@ package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Kitchen.IngredientProcurementManagerLocal;
-import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.IngredientPurchaseOrder;
 import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.Staff;
@@ -55,7 +54,7 @@ public class IngredientPOManagedBean implements Serializable{
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public IngredientProcurementManagerLocal ipml;
+    private IngredientProcurementManagerLocal ipml;
     
     @PostConstruct
     public void init() {

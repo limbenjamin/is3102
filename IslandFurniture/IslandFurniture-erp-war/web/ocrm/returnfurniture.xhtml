@@ -46,7 +46,7 @@
                 Customer: #{furnitureReturnManagedBean.furnTrans.member.name} (ID: #{furnitureReturnManagedBean.furnTrans.member.id}) <br/>
                 Claiming for Returned Transaction: #{furnitureReturnManagedBean.furnTrans.returnedTrans} <br/>
                 Processed by: #{furnitureReturnManagedBean.furnTrans.createdBy.name} (#{furnitureReturnManagedBean.furnTrans.createdBy.username}) <br/>
-                Total Amount: #{furnitureReturnManagedBean.furnTrans.store.country.currency.currencyCode} #{furnitureReturnManagedBean.transTotal} <br/>
+                Total Amount: #{furnitureReturnManagedBean.furnTrans.store.country.currency.currencyCode} #{furnitureReturnManagedBean.furnTrans.grandTotal} <br/>
 
                 <p:dataTable value="#{furnitureReturnManagedBean.furnTrans.furnitureTransactionDetails}" var="detail">
                     <p:column>
@@ -63,19 +63,19 @@
                     </p:column>
                     <p:column>
                         <f:facet name="header">Unit Price</f:facet>
-                        <h:outputText value=" #{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.unitPrice}" />
+                        <h:outputText value="#{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.unitPrice}">
+                            <!--<f:convertNumber currencyCode="#{detail.furnitureTransaction.store.country.currency.currencyCode}" type="currency" />-->
+                        </h:outputText>
                     </p:column>
                     <p:column>
                         <f:facet name="header">Subtotal</f:facet>
-                        <h:outputText value=" #{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.subtotal}" />
+                        <h:outputText value="#{detail.furnitureTransaction.store.country.currency.currencyCode} #{detail.unitPrice}">
+                            <!--<f:convertNumber minFractionDigits="2" maxFractionDigits="2" currencyCode="#{detail.furnitureTransaction.store.country.currency.currencyCode}" type="currency" />-->
+                        </h:outputText>
                     </p:column>
                     <p:column>
-                        <f:facet name="header">Returned</f:facet>
-                        <h:outputText value=" #{detail.numReturned}" />
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">Claimed</f:facet>
-                        <h:outputText value=" #{detail.numClaimed}" />
+                        <f:facet name="header">Returned / Claimed</f:facet>
+                        <h:outputText value="#{detail.numReturned} / #{detail.numClaimed}" />
                     </p:column>
                 </p:dataTable>
             </p:outputPanel>

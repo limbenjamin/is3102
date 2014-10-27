@@ -38,14 +38,17 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
     private EntityManager em;
 
     private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails, Calendar transTime) {
+        Double total = 0.0;
         FurnitureTransaction fTrans = new FurnitureTransaction();
         fTrans.setStore(store);
         fTrans.setTransTime(transTime);
         for (FurnitureTransactionDetail eachDetail : fTransDetails) {
             eachDetail.setUnitPrice(store.getCountryOffice().findStockSupplied(eachDetail.getFurnitureModel()).getPrice());
             eachDetail.setFurnitureTransaction(fTrans);
+            total += eachDetail.getSubtotal();
         }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
+        fTrans.setGrandTotal(total);
 
         em.persist(fTrans);
 
@@ -63,14 +66,17 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
     }
 
     private RetailItemTransaction addRetailItemTransaction(Store store, List<RetailItemTransactionDetail> riTransDetails, Calendar transTime) {
+        Double total = 0.0;
         RetailItemTransaction riTrans = new RetailItemTransaction();
         riTrans.setStore(store);
         riTrans.setTransTime(transTime);
         for (RetailItemTransactionDetail eachDetail : riTransDetails) {
             eachDetail.setUnitPrice(store.getCountryOffice().findStockSupplied(eachDetail.getRetailItem()).getPrice());
             eachDetail.setRetailItemTransaction(riTrans);
+            total += eachDetail.getSubtotal();
         }
         riTrans.setRetailItemTransactionDetails(riTransDetails);
+        riTrans.setGrandTotal(total);
 
         em.persist(riTrans);
 
@@ -87,13 +93,16 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
     }
 
     private RestaurantTransaction addRestaurantTransaction(Store store, List<RestaurantTransactionDetail> restTransDetails, Calendar transTime) {
+        Double total = 0.0;
         RestaurantTransaction restTrans = new RestaurantTransaction();
         restTrans.setStore(store);
         restTrans.setTransTime(transTime);
         for (RestaurantTransactionDetail eachDetail : restTransDetails) {
             eachDetail.setRestaurantTransaction(restTrans);
+            total += eachDetail.getSubtotal();
         }
         restTrans.setRestaurantTransactionDetails(restTransDetails);
+        restTrans.setGrandTotal(total);
 
         em.persist(restTrans);
 
