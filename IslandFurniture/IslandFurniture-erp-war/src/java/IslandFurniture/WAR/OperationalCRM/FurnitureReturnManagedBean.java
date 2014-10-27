@@ -7,6 +7,7 @@ package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.OperationalCRM.FurnitureReturnBeanLocal;
 import IslandFurniture.Entities.FurnitureTransaction;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -19,7 +20,7 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
-public class FurnitureReturnManagedBean {
+public class FurnitureReturnManagedBean implements Serializable{
 
     @EJB
     private FurnitureReturnBeanLocal furnitureReturnBean;
@@ -29,9 +30,10 @@ public class FurnitureReturnManagedBean {
 
     @PostConstruct
     public void init() {
-        transId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("transId"));
+        String transIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("transId");
 
-        if (transId != null) {
+        if (transIdParam != null) {
+            transId = Long.parseLong(transIdParam);
             furnTrans = furnitureReturnBean.findTransaction(transId);
         }
     }
