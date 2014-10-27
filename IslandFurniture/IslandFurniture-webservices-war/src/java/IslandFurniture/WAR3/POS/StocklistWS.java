@@ -316,7 +316,8 @@ public class StocklistWS {
                         ftd.setFurnitureTransaction(ft);
                         ft.getFurnitureTransactionDetails().add(ftd);
                         mpl.persistFTD(ftd);
-                        mpl.expendCoupon(jo.getString("disc"));
+                        if(!jo.getString("disc").equals("null"))
+                            mpl.expendCoupon(jo.getString("disc"));
                     }else if (stock instanceof RetailItem){
                         mpl.persistRT(rt);
                         RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
