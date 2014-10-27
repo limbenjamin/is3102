@@ -459,6 +459,12 @@ public class PaymentUI extends javax.swing.JFrame {
             values.add(customerCardId);
             params.add("storeType");
             values.add(storeType);
+            params.add("grandTotal");
+            values.add(grandTotalAmt);
+            params.add("voucherAmt");
+            values.add(voucherAmt);
+            params.add("receiptAmt");
+            values.add(receiptAmt);
             try {
                 Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {

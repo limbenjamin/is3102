@@ -261,7 +261,10 @@ public class StocklistWS {
                                     @FormParam("voucher") String voucher,
                                     @FormParam("receipt") String receipt,
                                     @FormParam("customerCardId") String customerCardId,
-                                    @FormParam("storeType") String storeType
+                                    @FormParam("storeType") String storeType,
+                                    @FormParam("grandTotal") Double grandTotalAmt,
+                                    @FormParam("voucherAmt") Double voucherAmt,
+                                    @FormParam("receiptAmt") Double receiptAmt
                                     ){
         Staff staff = muabl.getStaffFromCardId(cardId);
         Customer customer;
@@ -275,7 +278,7 @@ public class StocklistWS {
             now.setTime(new Date());
             System.err.println(transaction);
             if (storeType.equals("restaurant")){
-                makeRestaurantTransaction(staff, plant, now, transaction, customerCardId, voucher);
+                makeRestaurantTransaction(staff, plant, now, transaction, customerCardId, voucher, grandTotalAmt, voucherAmt);
             }
             else{
                 FurnitureTransaction ft = new FurnitureTransaction();
@@ -283,11 +286,16 @@ public class StocklistWS {
                 ft.setStore((Store) plant);
                 ft.setCreationTime(now);
                 ft.setTransTime(now);
+                ft.setGrandTotal(grandTotalAmt);
+                ft.setVoucherTotal(voucherAmt);
+                ft.setReturnedCreditsUsed(receiptAmt);
                 RetailItemTransaction rt = new RetailItemTransaction();
                 rt.setCreatedBy(staff);
                 rt.setStore((Store) plant);
                 rt.setCreationTime(now);
                 rt.setTransTime(now);
+                rt.setGrandTotal(grandTotalAmt);
+                rt.setVoucherTotal(voucherAmt);
                 if (!customerCardId.trim().isEmpty()){
                     customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
                     ft.setMember(customer);
@@ -350,12 +358,14 @@ public class StocklistWS {
         return "1";
     }
 
-    private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId, String voucher) {
+    private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId, String voucher, Double grandTotalAmt, Double voucherAmt) {
         RestaurantTransaction rt = new  RestaurantTransaction();
         rt.setCreatedBy(staff);
         rt.setStore((Store) plant);
         rt.setCreationTime(now);
         rt.setTransTime(now);
+        rt.setGrandTotal(grandTotalAmt);
+        rt.setVoucherTotal(voucherAmt);
         JsonReader reader = Json.createReader(new StringReader(transaction));
         JsonArray arr = reader.readArray();
         for (JsonValue jsonValue : arr) {
