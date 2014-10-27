@@ -287,7 +287,7 @@ public class LoginUI extends javax.swing.JFrame {
         try {
             File f = new File(url.toURI());
             FileOutputStream output = new FileOutputStream(f, false);
-            String s = "<root>\n<balance>" + totalRegisterCash + "\n<plant>" + storeType + "\n<root>";
+            String s = "<root>\n<balance>" + totalRegisterCash + "</balance>\n<plant>" + storeType + "</plant>\n<root>";
             output.write(s.getBytes());
             output.close();
         } catch (URISyntaxException ex) {
@@ -332,6 +332,7 @@ public class LoginUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 InputStream is = getClass().getResourceAsStream("../resources/config.xml");
+                System.err.println(getClass().getResource("../resources/config.xml"));
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
                 String line;
@@ -342,9 +343,9 @@ public class LoginUI extends javax.swing.JFrame {
                     {
                       System.err.println(line);
                       if (line.contains("<balance>"))
-                          cash = Double.parseDouble(line.substring(9, line.length()));
+                          cash = Double.parseDouble(line.substring(9, line.length()-10));
                       if (line.contains("<plant>"))
-                          storeType = line.substring(7, line.length());
+                          storeType = line.substring(7, line.length()-8);
                     }
                     br.close();
                     isr.close();

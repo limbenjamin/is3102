@@ -38,13 +38,13 @@ public interface ManagePOSLocal {
     
     void persistFTD(FurnitureTransactionDetail ftd);
     
-    void persistFT(FurnitureTransaction ft);
+    Long persistFT(FurnitureTransaction ft);
     
     void persistRTD(RetailItemTransactionDetail rtd);
     
-    void persistRT(RetailItemTransaction rt);
+    Long persistRT(RetailItemTransaction rt);
 
-    void persistRST(RestaurantTransaction rt);
+    Long persistRST(RestaurantTransaction rt);
 
     void persistRSTD(RestaurantTransactionDetail rtd);
 

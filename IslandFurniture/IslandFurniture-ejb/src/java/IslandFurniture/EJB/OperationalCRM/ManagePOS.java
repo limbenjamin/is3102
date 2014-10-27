@@ -128,20 +128,26 @@ public class ManagePOS implements ManagePOSLocal {
         em.persist(ftd);
     }
     @Override
-    public void persistFT(FurnitureTransaction ft){
+    public Long persistFT(FurnitureTransaction ft){
         em.persist(ft);
+        em.flush();
+        return ft.getId();
     }
     @Override
     public void persistRTD(RetailItemTransactionDetail rtd){
         em.persist(rtd);
     }
     @Override
-    public void persistRT(RetailItemTransaction rt){
+    public Long persistRT(RetailItemTransaction rt){
         em.persist(rt);
+        em.flush();
+        return rt.getId();
     }
     @Override
-    public void persistRST(RestaurantTransaction rt){
+    public Long persistRST(RestaurantTransaction rt){
         em.persist(rt);
+        em.flush();
+        return rt.getId();
     }
     @Override
     public void persistRSTD(RestaurantTransactionDetail rtd){

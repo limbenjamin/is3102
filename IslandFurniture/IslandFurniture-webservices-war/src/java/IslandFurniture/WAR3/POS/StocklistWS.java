@@ -69,6 +69,7 @@ public class StocklistWS {
     private RetailItem retailItem;
     private JsonArrayBuilder builder;
     private MenuItem menuItem;
+    private Long transactionId;
     
     @EJB
     ManageUserAccountBeanLocal muabl;
@@ -311,7 +312,7 @@ public class StocklistWS {
                     Double price = Double.parseDouble(jo.getString("price"));
                     System.err.println(jo);
                     if (stock instanceof FurnitureModel){
-                        mpl.persistFT(ft);
+                        transactionId = mpl.persistFT(ft);
                         FurnitureTransactionDetail ftd = new FurnitureTransactionDetail();
                         ftd.setNumClaimed(0);
                         ftd.setNumReturned(0);
@@ -327,7 +328,7 @@ public class StocklistWS {
                         if(!jo.getString("disc").equals("null"))
                             mpl.expendCoupon(jo.getString("disc"));
                     }else if (stock instanceof RetailItem){
-                        mpl.persistRT(rt);
+                        transactionId = mpl.persistRT(rt);
                         RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
                         rtd.setQty(qty);
                         rtd.setUnitPrice(price);
@@ -355,7 +356,7 @@ public class StocklistWS {
             }
             
         }
-        return "1";
+        return String.valueOf(transactionId);
     }
 
     private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId, String voucher, Double grandTotalAmt, Double voucherAmt) {
@@ -375,7 +376,7 @@ public class StocklistWS {
             int qty = Integer.parseInt(jo.getString("qty"));
             Double price = Double.parseDouble(jo.getString("price"));
             System.err.println(id+"  "+qty);
-            mpl.persistRST(rt);
+            transactionId = mpl.persistRST(rt);
             RestaurantTransactionDetail rtd = new RestaurantTransactionDetail();
             rtd.setQty(qty);
             rtd.setUnitPrice(price);
