@@ -6,7 +6,6 @@
 package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.FurnitureTransaction;
-import IslandFurniture.Entities.FurnitureTransactionDetail;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,16 +23,6 @@ public class FurnitureReturnBean implements FurnitureReturnBeanLocal {
     @Override
     public FurnitureTransaction findTransaction(long transId) {
         return em.find(FurnitureTransaction.class, transId);
-    }
-
-    @Override
-    public Double calcTransTotal(FurnitureTransaction furnTrans) {
-        Double total = 0.0;
-
-        for (FurnitureTransactionDetail detail : furnTrans.getFurnitureTransactionDetails()) {
-            total += detail.getSubtotal();
-        }
-        return Math.floor(total);
     }
 
 }

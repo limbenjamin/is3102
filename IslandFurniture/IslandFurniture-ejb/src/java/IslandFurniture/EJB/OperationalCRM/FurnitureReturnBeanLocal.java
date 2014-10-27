@@ -17,7 +17,5 @@ import javax.ejb.Local;
 public interface FurnitureReturnBeanLocal {
 
     FurnitureTransaction findTransaction(long transId);
-
-    Double calcTransTotal(FurnitureTransaction furnTrans);
     
 }
