@@ -44,6 +44,7 @@ public class ChatManagedBean {
     private String coDir;
     private CountryOffice co;
     private Long threadId;
+    private String timezone;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
@@ -62,6 +63,7 @@ public class ChatManagedBean {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         coDir = (String) httpReq.getAttribute("coCode");
+        timezone = co.getTimeZoneID();
         if(coDir !=null && !coDir.isEmpty()){
             coDir = "/"+ coDir;
         }
@@ -83,12 +85,29 @@ public class ChatManagedBean {
         }
     }
     
-    public void sendMessage(String content){
+    public void endChatSession(){
         if(customer == null){
+            
+            ccb.endAnonymousThread(threadId);
+        }else{
+
+        }
+    }
+    
+    public void sendMessage(){
+        if(customer == null){
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String content = request.getParameter("AddMessageForm:content");
             ccb.postMessage(threadId, content, Boolean.FALSE);
         }else{
    
         }
+    }
+    
+    public void pullMessage() {
+        HttpSession session = Util.getSession();
+        cct = ccb.getThread(threadId);
+        listCCM = cct.getMessages();
     }
 
     public CustChatMessage getCcm() {
@@ -193,6 +212,14 @@ public class ChatManagedBean {
 
     public void setCcb(CustomerCommunicationBeanLocal ccb) {
         this.ccb = ccb;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
     
     

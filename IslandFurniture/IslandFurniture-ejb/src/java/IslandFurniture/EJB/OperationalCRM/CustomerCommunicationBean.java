@@ -10,6 +10,7 @@ import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatMessage;
 import IslandFurniture.Entities.CustChatThread;
+import IslandFurniture.Entities.Staff;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -48,9 +49,30 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
         return cct.getId();
     }
     
+    public void endAnonymousThread(Long threadId){
+        cct = em.find(CustChatThread.class, threadId);
+        cct.setIsActive(Boolean.FALSE);
+    }
+    
     @Override
     public void postMessage(Long threadId, String content, Boolean isStaff){
+        cct = em.find(CustChatThread.class, threadId);
+        ccm = new CustChatMessage();
+        ccm.setContent(content);
+        ccm.setThread(cct);
+        em.persist(ccm);
+        cct.getMessages().add(ccm);
+        if (isStaff.equals(Boolean.TRUE)){
+            ccm.setStaff(em.find(Staff.class, 2074));
+        }else{
+            cct.setHasUnread(Boolean.TRUE);
+        }
         
+    }
+    
+    @Override
+    public CustChatThread getThread(Long threadId){
+        return em.find(CustChatThread.class, threadId);
     }
     
 }
