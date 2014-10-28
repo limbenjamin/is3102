@@ -117,15 +117,28 @@ public class CustomerAccountManagedBean implements Serializable{
       }
     }
     
-    public void removeAccount() throws IOException{
+    public void removeAccount() throws WrongPasswordException, IOException{
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        mmab.removeCustomerAccount(emailAddress);
-        HttpSession session = Util.getSession();
-        session.setAttribute("", emailAddress);
-        session.invalidate();        
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been removed. Goodbye!",""));
-          ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String existingPassword = request.getParameter("removeCustomerAccount:password");
+        // check if password is correct
+          hashedPassword = customer.getPassword();
+          hashedOldPassword = SHA1Hash(customer.getSalt()+ existingPassword);
+          if (!hashedOldPassword.equals(hashedPassword)){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "entered invalid password",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+          else {
+            // remove customer account and logout
+            mmab.removeCustomerAccount(emailAddress);
+            HttpSession session = Util.getSession();
+            session.setAttribute("", emailAddress);
+            session.invalidate();        
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been removed. Goodbye!",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+          }
     }
 
     public String getName() {

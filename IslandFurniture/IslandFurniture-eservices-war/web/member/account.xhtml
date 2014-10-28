@@ -156,8 +156,14 @@
                       <h:form id="removeCustomerAccount" class="form-horizontal">
                           <div class="modal-body">
                               <h5>In accordance with Singapore's Personal Data Protection Act (PDPA), all your account details and personal data will be removed
-                                  from Island Furniture's database upon termination of your account.</h5><br/>
-                              <h5>We hope to see you again!</h5>
+                                  from Island Furniture's database upon termination of your account.</h5>
+                              <h5>Please enter your password to continue.</h5><br/>
+                              <div class="form-group">
+                                <label class="col-sm-2">Enter Password: </label>
+                                <div class="col-sm-6">
+                                    <h:inputSecret id="password" class="form-control"></h:inputSecret>
+                                </div>
+                              </div>                              
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
