@@ -8,87 +8,102 @@
 <h:body>
     <ui:composition template="../template.xhtml">
         <ui:define name="content">
-            <section>
+            <section style="min-height: 550px;">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
                             <ol class="breadcrumb">
                               <li><a href="index.xhtml">Home</a></li>
-                              <li class="active"><strong>Account</strong></li>
-                            </ol>                                         
+                              <li class="active"><strong>My Account</strong></li>
+                            </ol>
                         </div>
-                        <div class="col-md-6">
-                            <h4>Your Account</h4>
-                            <hr></hr>
-                            <form class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Your User ID <br/>(Email Address): </label>
-                                <div class="col-sm-9"><h5>#{customerAccountManagedBean.customer.emailAddress}</h5></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Last login: </label>
-                                <div class="col-sm-9">
-                                    <h5>
-                                        <h:outputText value="#{customerAccountManagedBean.customer.lastLogon}">
-                                            <f:convertDateTime pattern="EEE, MMM d, yyyy z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
-                                        </h:outputText>
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Membership Tier: </label>
-                                <div class="col-sm-9">
-                                    <h5>
-                                        <h:outputText value="#{customerAccountManagedBean.customer.membershipTier.title}"></h:outputText>
-                                        <h:outputText rendered="#{empty customerAccountManagedBean.customer.membershipTier.title}" value="Basic"></h:outputText>
-                                    </h5>
-                                </div>
-                            </div>
-                            <h:panelGroup layout="block" rendered="#{not empty customerAccountManagedBean.customer.loyaltyCardId}" class="form-group">
-                                    <label class="col-sm-3 control-label">Loyalty Card ID: </label>
-                                    <div class="col-sm-9">
-                                        <h5>
-                                            <h:outputText value="#{customerAccountManagedBean.customer.loyaltyCardId}"></h:outputText>
-                                        </h5>
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                                <li class="active"><a href="#info" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Account Info</a></li>
+                                <li><a href="#settings" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Settings</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="info">
+                                    <div class="col-md-6">
+                                        <br/>
+                                        <h4>Membership Info</h4>
+                                        <br/>
+                                        <form class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Your User ID <br/>(Email Address): </label>
+                                            <div class="col-sm-9"><h5>#{customerAccountManagedBean.customer.emailAddress}</h5></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Last login: </label>
+                                            <div class="col-sm-9">
+                                                <h5>
+                                                    <h:outputText value="#{customerAccountManagedBean.customer.lastLogon}">
+                                                        <f:convertDateTime pattern="EEE, MMM d, yyyy z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                                    </h:outputText>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Membership Tier: </label>
+                                            <div class="col-sm-9">
+                                                <h5>
+                                                    <h:outputText value="#{customerAccountManagedBean.customer.membershipTier.title}"></h:outputText>
+                                                    <h:outputText rendered="#{empty customerAccountManagedBean.customer.membershipTier.title}" value="Basic"></h:outputText>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        <h:panelGroup layout="block" rendered="#{not empty customerAccountManagedBean.customer.loyaltyCardId}" class="form-group">
+                                                <label class="col-sm-3 control-label">Loyalty Card ID: </label>
+                                                <div class="col-sm-9">
+                                                    <h5>
+                                                        <h:outputText value="#{customerAccountManagedBean.customer.loyaltyCardId}"></h:outputText>
+                                                    </h5>
+                                                </div>
+                                        </h:panelGroup>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Points Balance: </label>
+                                            <div class="col-sm-9">
+                                                <h5>
+                                                    <h:outputText value="#{customerAccountManagedBean.customer.currentPoints}"></h:outputText>
+                                                    <h:outputText rendered="#{empty customerAccountManagedBean.customer.currentPoints}" value="0"></h:outputText>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                        </form>
+                                        <br/>
                                     </div>
-                            </h:panelGroup>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Points Balance: </label>
-                                <div class="col-sm-9">
-                                    <h5>
-                                        <h:outputText value="#{customerAccountManagedBean.customer.currentPoints}"></h:outputText>
-                                        <h:outputText rendered="#{empty customerAccountManagedBean.customer.currentPoints}" value="0"></h:outputText>
-                                    </h5>
+                                    <div class="col-md-6">
+                                        <br/>
+                                        <h4>Update Your Details</h4>
+                                        <br/>
+                                        <h:form id="particularsForm" class="form-horizontal">
+                                          <div class="form-group">
+                                            <label class="col-sm-2 control-label">Name: </label>
+                                            <div class="col-sm-10 inner-addon right-addon">
+                                              <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                              <h:inputText id="name" value="#{customerAccountManagedBean.customer.name}" 
+                                                 class="form-control transparent-form"></h:inputText>
+                                            </div>
+                                          </div>                                
+                                          <div class="form-group">
+                                            <label class="col-sm-2 control-label">Mobile: </label>
+                                            <div class="col-sm-10 inner-addon right-addon">
+                                              <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                              <h:inputText id="phoneNo" value="#{customerAccountManagedBean.customer.phoneNo}" 
+                                                class="form-control transparent-form"></h:inputText>
+                                            </div>
+                                          </div>
+                                          <span class="pull-right">
+                                            <h:commandButton action="#{customerAccountManagedBean.modifyPersonalParticulars}" value="Update" class="btn btn-round btn-success btn-block"></h:commandButton>
+                                            </span>
+                                        </h:form>                                
+                                    </div>
+                                </div>
+                                <div class="tab-pane active" id="settings">
+                                    
                                 </div>
                             </div>
-                            </form>
-                            <br/>
                         </div>
-                        <div class="col-md-6">
-                            <h4>Update Your Details</h4>                                
-                            <hr></hr>                                
-                            <h:form id="particularsForm" class="form-horizontal">
-                              <div class="form-group">
-                                <label class="col-sm-2 control-label">Name: </label>
-                                <div class="col-sm-10 inner-addon right-addon">
-                                  <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                  <h:inputText id="name" value="#{customerAccountManagedBean.customer.name}" 
-                                     class="form-control transparent-form"></h:inputText>
-                                </div>
-                              </div>                                
-                              <div class="form-group">
-                                <label class="col-sm-2 control-label">Mobile: </label>
-                                <div class="col-sm-10 inner-addon right-addon">
-                                  <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                  <h:inputText id="phoneNo" value="#{customerAccountManagedBean.customer.phoneNo}" 
-                                    class="form-control transparent-form"></h:inputText>
-                                </div>
-                              </div>
-                              <span class="pull-right">
-                                <h:commandButton action="#{customerAccountManagedBean.modifyPersonalParticulars}" value="Update" class="btn btn-round btn-success btn-block"></h:commandButton>
-                                </span>
-                            </h:form>                                
-                        </div>                    
                     </div>
                 </div>
             </section>
