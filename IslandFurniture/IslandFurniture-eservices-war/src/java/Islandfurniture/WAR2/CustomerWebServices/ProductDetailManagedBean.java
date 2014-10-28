@@ -102,7 +102,10 @@ public class ProductDetailManagedBean {
         }
         
         furniture = mcbl.getFurnitureModel(id);
-        discountedPrice = getDiscountedPrice(furniture);
+        if (furniture != null) {
+            discountedPrice = getDiscountedPrice(furniture);
+            System.out.println("Got furniture model " + furniture.getName());            
+        }
         localStores = co.getStores();
         loggedIn = checkLoggedIn();
         
@@ -117,9 +120,7 @@ public class ProductDetailManagedBean {
                 }
             }
         }
-        
-        System.out.println("Got furniture model " + furniture.getName());
-    }    
+    }
     
     public boolean checkLoggedIn() {
         HttpSession session = Util.getSession();
@@ -131,9 +132,9 @@ public class ProductDetailManagedBean {
     }
     
     public Double getDiscountedPrice(Stock s) {
-        Store st = new Store();
-        st.setCountryOffice(co);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+            Store st = new Store();
+            st.setCountryOffice(co);
+            return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }    
     
     public void addItemToShoppingList() throws IOException {
@@ -157,6 +158,11 @@ public class ProductDetailManagedBean {
     
     public String getStockAvailability (Store store) {
         return inventoryBean.viewStorefrontInventoryStockLevelPerPlant(store, furniture);
+    }
+    
+    public void redirectPage() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/home.xhtml");        
     }
 
     public Long getId() {

@@ -11,9 +11,19 @@
     <ui:define name="content">       
 	<section>
 	<div class="container">           
-            <div class="row">               
+            <div class="row">
+                <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture}" style="height:410px;">
+                    <div class="col-md-12">
+                        <h2>Looks like this product does not exist!</h2>
+                        <hr/>
+                        <h4>Check out what we're selling instead!</h4>
+                            <a href="all.xhtml" class="btn btn-default btn-round">
+                                <i class="fa fa-info-circle"></i> All Products
+                            </a>
+                    </div>
+                </h:panelGroup>
                 <!--product-details-->
-                <div class="product-details">
+                <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.furniture}" styleClass="product-details">
                         <div class="col-md-12">
                             <ol class="breadcrumb">
                               <li><a href="home.xhtml">Home</a></li>
@@ -148,7 +158,7 @@
                                 </div>
                             </div>
 			</div>
-                    </div>
+                    </h:panelGroup>
                     <br/><br/>
                     <!--
                     <div class="recommended_items">
