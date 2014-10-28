@@ -35,8 +35,11 @@ public interface ManageStorefrontInventoryLocal {
 
     //  Function: To reduce Storefront Inventory from Transaction
     void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty);
-    
+
     //  Function: To edit Storefront Inventory quantity
     void editStorefrontInventoryQty(StorefrontInventory si, int qty);
+
+    //  Function: To the Stock Level of a Stock stored in a Plant
+    String viewStorefrontInventoryStockLevelPerPlant(Plant plant, Stock stock);
 
 }
