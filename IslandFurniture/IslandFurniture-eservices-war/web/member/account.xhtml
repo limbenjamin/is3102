@@ -19,15 +19,11 @@
                         </div>
                         <div class="col-md-6">
                             <h4>Your Account</h4>
-                            <hr></hr>                             
+                            <hr></hr>
                             <form class="form-horizontal">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Your User ID <br/>(Email Address): </label>
                                 <div class="col-sm-9"><h5>#{customerAccountManagedBean.customer.emailAddress}</h5></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Membership Tier: </label>
-                                <div class="col-sm-9"><h5>#{customerAccountManagedBean.customer.membershipTier.title}</h5></div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Last login: </label>
@@ -38,7 +34,33 @@
                                         </h:outputText>
                                     </h5>
                                 </div>
-                            </div>                                
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Membership Tier: </label>
+                                <div class="col-sm-9">
+                                    <h5>
+                                        <h:outputText value="#{customerAccountManagedBean.customer.membershipTier.title}"></h:outputText>
+                                        <h:outputText rendered="#{empty customerAccountManagedBean.customer.membershipTier.title}" value="Basic"></h:outputText>
+                                    </h5>
+                                </div>
+                            </div>
+                            <h:panelGroup layout="block" rendered="#{not empty customerAccountManagedBean.customer.loyaltyCardId}" class="form-group">
+                                    <label class="col-sm-3 control-label">Loyalty Card ID: </label>
+                                    <div class="col-sm-9">
+                                        <h5>
+                                            <h:outputText value="#{customerAccountManagedBean.customer.loyaltyCardId}"></h:outputText>
+                                        </h5>
+                                    </div>
+                            </h:panelGroup>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Points Balance: </label>
+                                <div class="col-sm-9">
+                                    <h5>
+                                        <h:outputText value="#{customerAccountManagedBean.customer.currentPoints}"></h:outputText>
+                                        <h:outputText rendered="#{empty customerAccountManagedBean.customer.currentPoints}" value="0"></h:outputText>
+                                    </h5>
+                                </div>
+                            </div>
                             </form>
                             <br/>
                         </div>
