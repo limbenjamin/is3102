@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.Util;
 
 import IslandFurniture.EJB.OperationalCRM.ManageWebBannerLocal;
 import IslandFurniture.Entities.Picture;
-import IslandFurniture.Entities.WebBanner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -17,7 +15,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
-import javax.inject.Named;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -28,10 +25,10 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean
 @ApplicationScoped
 public class PictureManagedBean implements Serializable {
-    
+
     @EJB
     private ManageWebBannerLocal bannerBean;
-    
+
     public StreamedContent getImage() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -40,8 +37,12 @@ public class PictureManagedBean implements Serializable {
         } else {
             String pictureId = context.getExternalContext().getRequestParameterMap().get("pictureId");
             System.out.println(pictureId);
-            Picture picture = bannerBean.getPicture(Long.valueOf(pictureId)); 
-            return new DefaultStreamedContent(new ByteArrayInputStream(picture.getContent()));
+            Picture picture = bannerBean.getPicture(Long.valueOf(pictureId));
+            if (picture != null) {
+                return new DefaultStreamedContent(new ByteArrayInputStream(picture.getContent()));
+            } else {
+                return new DefaultStreamedContent();
+            }
         }
-    }    
+    }
 }
