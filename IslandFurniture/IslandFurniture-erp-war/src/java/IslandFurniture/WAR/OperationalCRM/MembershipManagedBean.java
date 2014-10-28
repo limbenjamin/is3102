@@ -15,8 +15,10 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 /**
  *
@@ -33,34 +35,32 @@ public class MembershipManagedBean implements Serializable {
     private String phoneNo;
     private String address;
     private String dateOfBirth;
+    private Customer customer;
 
     @EJB
     public ManageMembershipLocal membershipBean;
 
     @PostConstruct
     public void init() {
+        System.err.println("init:MembershipManagedBean");
         customerList = membershipBean.viewCustomers();
     }
 
-//  Function: To create a Customer
-    public void addCustomer(ActionEvent event) throws IOException {
-//        if (storeSectionBean.checkIfNoStoreSectionWithSameNameAndLevel(plant, name, level)) {
-            membershipBean.createCustomerAccount(emailAddress, null, name, phoneNo, address, dateOfBirth);
-            customerList = membershipBean.viewCustomers();
-
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Customer has sucessfully been created", ""));
-//        } else {
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-//                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Store Section with that name and level. Creation of Store Section was unsuccessful.", ""));
-//        }
-    }
-
-//  Function: To edit a Customer
-    public void editCustomer(ActionEvent event) throws IOException {
-        Customer customer = (Customer) event.getComponent().getAttributes().get("customer");
-        membershipBean.editCustomerAccount(customer);
-        customerList = membershipBean.viewCustomers();
+//  Function: To edit a Customer 
+    public void editCustomer(ActionEvent event) throws IOException { 
+        System.out.println("MembershipManagedBean.editCustomer()");
+        membershipBean.editCustomerAccount(customer);         
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Account details of " + customer.getName() + " has been successfully updated", ""));
+        ec.redirect("membership.xhtml"); 
+    } 
+    
+    // Function: To view the member details of a selected customer
+    public void viewCustomer(AjaxBehaviorEvent event) {
+        System.out.println("MembershipManagedBean.viewCustomer()");
+        Long customerID = (Long) event.getComponent().getAttributes().get("customerID");
+        this.customer = membershipBean.getCustomer(customerID);
     }
 
     public List<Customer> getCustomerList() {
@@ -117,5 +117,13 @@ public class MembershipManagedBean implements Serializable {
 
     public void setMembershipBean(ManageMembershipLocal membershipBean) {
         this.membershipBean = membershipBean;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
