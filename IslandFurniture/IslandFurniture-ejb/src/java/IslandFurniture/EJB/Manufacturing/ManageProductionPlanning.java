@@ -494,7 +494,7 @@ public class ManageProductionPlanning implements ManageProductionPlanningLocal {
         for (Plant p : orders.keySet()) {
 
             Query ll = em.createQuery("Select eto from ExternalTransferOrder eto where eto.remark=:r");
-            ll.setParameter("r", "WPP:" + wpp.getId() + " Plant:" + p.getName());
+            ll.setParameter("r", "Plant:" + p.getName() + wpp.getMonthlyProductionPlan().getMonth() + wpp.getWeekNo());
 
             ExternalTransferOrder eto = null;
             if (ll.getResultList().size() == 0) {

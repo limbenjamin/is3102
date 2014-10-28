@@ -16,6 +16,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -62,6 +63,7 @@ public class FeaturedProductsManagedBean implements Serializable {
         plant = staff.getPlant();
         featuredProductsList = featuredBean.viewFeaturedProducts(plant);
         tempList = transferBean.viewStock();
+        stockList = new ArrayList<>();
         for(Stock s : tempList) {
             if(s instanceof FurnitureModel || s instanceof RetailItem)
                 stockList.add(s);

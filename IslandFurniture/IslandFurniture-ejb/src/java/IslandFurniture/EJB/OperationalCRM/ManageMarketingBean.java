@@ -74,7 +74,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     }
 
     @Override
-    public void CommitNewCampaign(PromotionCampaign pc) throws Exception {
+    public PromotionCampaign CommitNewCampaign(PromotionCampaign pc) throws Exception {
 
         //clear the persistence cache and sync
         //JPA delete query
@@ -150,7 +150,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         //Clean up
         Query l = em.createQuery("select pd from PromotionDetail pd where pd.promotionCampaign is null");
         if (l.getResultList().isEmpty()) {
-            return;
+            return pc;
         }
         for (PromotionDetail pd : (List<PromotionDetail>) l.getResultList()) {
             try {
@@ -158,6 +158,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             } catch (Exception ex) {
             }
         }
+        
+        return pc;
 
     }
 
