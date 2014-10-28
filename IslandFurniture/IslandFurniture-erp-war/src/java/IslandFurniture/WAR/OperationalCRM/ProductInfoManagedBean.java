@@ -6,20 +6,30 @@
 package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ProductInfoBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.NumberConverter;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -29,6 +39,11 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class ProductInfoManagedBean implements Serializable {
+    @EJB
+    private ManageStorefrontInventoryLocal manageStorefrontInventory;
+
+    @EJB
+    private ManageMarketingBeanLocal manageMarketingBean;
 
     @EJB
     private ProductInfoBeanLocal productInfoBean;
@@ -42,7 +57,12 @@ public class ProductInfoManagedBean implements Serializable {
     private Stock product;
     private FurnitureModel furniture;
     private RetailItem retailItem;
+    private Map<Store, Map<String, Object>> priceMap;
+
     private Staff staff;
+    private CountryOffice co;
+
+    private NumberConverter converter = new NumberConverter();
 
     @PostConstruct
     public void init() {
@@ -51,31 +71,58 @@ public class ProductInfoManagedBean implements Serializable {
         String stockIdParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stockId");
         String stockNameParam = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("stockName");
 
-        if (stockIdParam != null) {
-            stockId = Long.parseLong(stockIdParam);
-            product = productInfoBean.findProductById(stockId);
-            if (product != null) {
-                if(product instanceof FurnitureModel){
-                    furniture = (FurnitureModel) product;
-                } else if(product instanceof RetailItem){
-                    retailItem = (RetailItem) product;
-                } else{
-                    product = null;
+        if (staff.getPlant() != null && (staff.getPlant() instanceof Store || staff.getPlant() instanceof CountryOffice)) {
+            if (stockIdParam != null) {
+                if (staff.getPlant() instanceof Store) {
+                    co = ((Store) staff.getPlant()).getCountryOffice();
+                } else {
+                    co = (CountryOffice) staff.getPlant();
+                }
+
+                stockId = Long.parseLong(stockIdParam);
+                product = productInfoBean.findProductById(stockId, co);
+                if (product != null) {
+                    if (product instanceof FurnitureModel) {
+                        furniture = (FurnitureModel) product;
+                    } else if (product instanceof RetailItem) {
+                        retailItem = (RetailItem) product;
+                    } else {
+                        product = null;
+                    }
+
+                    // Find StockSupplied to grab price in CountryOffice
+                    // Set Number Converter to display currency
+                    converter = new NumberConverter();
+                    converter.setCurrencyCode(co.getCountry().getCurrency().getCurrencyCode());
+                    converter.setType("currency");
+                    
+                    // Load price and promotion content for product
+                    priceMap = new HashMap();
+                    for(Store store: co.getStores()){
+                        priceMap.put(store, manageMarketingBean.getDiscountedPrice(product, store, null));
+                    }
+                    
+                }
+            } else if (stockNameParam != null) {
+                stockName = stockNameParam;
+                productList = productInfoBean.searchProductByName(stockName);
+                if (productList == null || productList.isEmpty()) {
+                    productList = null;
                 }
             }
-        } else if (stockNameParam != null) {
-            stockName = stockNameParam;
-            productList = productInfoBean.searchProductByName(stockName);
-            if (productList == null || productList.isEmpty()) {
-                productList = null;
+        } else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("../dash.xhtml");
+            } catch (IOException ex) {
+
             }
         }
     }
 
     public void searchProductById() {
-        if (productInfoBean.findProductById(stockId) == null) {
+        if (productInfoBean.findProductById(stockId, co) == null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "No such product ID exists", ""));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "No such product ID exists in " + co + " Country Office", ""));
         }
     }
 
@@ -87,6 +134,35 @@ public class ProductInfoManagedBean implements Serializable {
         }
     }
 
+    public Double findPrice(Store store) {
+        return (Double) priceMap.get(store).get("O_PRICE");
+    }
+
+    public Double findDiscPrice(Store store) {
+        return (Double) priceMap.get(store).get("D_PRICE");
+    }
+
+    public String findPromo(Store store) {
+        PromotionDetail promoUsed = (PromotionDetail) priceMap.get(store).get("Successful_promotion");
+        if (promoUsed == null) {
+            return "-None-";
+        } else {
+            return promoUsed.getPromotionCampaign().getTitle();
+        }
+    }
+    
+    public Integer findWarehouseStockLvl(Store store){
+        return manageStorefrontInventory.viewStockUnitStockQty(store, product);
+    }
+    
+    public Integer findStorefrontStockLvl(Store store){
+        return manageStorefrontInventory.viewStorefrontInventoryStockQty(store, product);
+    }
+
+    public String findStockLocation(Store store){
+        StoreSection section = store.findStorefrontInventory(product).getLocationInStore();
+        return section.getName() + " (Lvl " + section.getStoreLevel() + ")";
+    }
     /**
      * Creates a new instance of ProductInfoManagedBean
      */
@@ -147,6 +223,22 @@ public class ProductInfoManagedBean implements Serializable {
 
     public void setRetailItem(RetailItem retailItem) {
         this.retailItem = retailItem;
+    }
+
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
+    }
+
+    public NumberConverter getConverter() {
+        return converter;
+    }
+
+    public void setConverter(NumberConverter converter) {
+        this.converter = converter;
     }
 
 }

@@ -6,6 +6,7 @@
 
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Stock;
 import java.util.List;
 import javax.ejb.Local;
@@ -19,6 +20,6 @@ public interface ProductInfoBeanLocal {
 
     List<Stock> searchProductByName(String stockName);
 
-    Stock findProductById(long stockId);
+    Stock findProductById(long stockId, CountryOffice co);
     
 }
