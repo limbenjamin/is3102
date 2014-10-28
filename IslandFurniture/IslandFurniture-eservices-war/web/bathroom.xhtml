@@ -24,10 +24,11 @@
                                 <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.mirrors']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.lighting']}" /></a></li>
+                                        <ui:repeat value="#{catalogueManagedBean.filteredSubs('BATHROOM')}" var="sub">
+                                            <li><a href="bathroom.xhtml?sub=#{sub}">#{sub}</a></li>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <li><a href="bathroom.xhtml">Display all</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -37,7 +38,7 @@
                             <div class="catalogue">
                                 <h2 class="title text-center">BATHROOM FURNITURE</h2>
                                 <h:form>
-                                <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
+                                <ui:repeat value="#{catalogueManagedBean.filteredCategory('BATHROOM')}" var="furniture">
                                     <div class="col-sm-4">
                                         <div class="product-image-wrapper">
                                             <div class="single-products">

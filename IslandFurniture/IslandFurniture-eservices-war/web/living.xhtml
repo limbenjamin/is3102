@@ -24,14 +24,11 @@
                                 <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.sofas']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.tables']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.chairs']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.lighting']}" /></a></li>
+                                        <ui:repeat value="#{catalogueManagedBean.filteredSubs('LIVING_ROOM')}" var="sub">
+                                            <li><a href="living.xhtml?sub=#{sub}">#{sub}</a></li>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <li><a href="living.xhtml">Display all</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -41,7 +38,7 @@
                             <div class="catalogue">
                                 <h2 class="title text-center">LIVING ROOM FURNITURE</h2>
                                 <h:form>
-                                <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
+                                <ui:repeat value="#{catalogueManagedBean.filteredCategory('LIVING_ROOM')}" var="furniture">
                                     <div class="col-sm-4">
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
