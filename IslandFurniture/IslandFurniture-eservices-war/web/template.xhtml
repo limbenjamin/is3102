@@ -17,7 +17,13 @@
         <link rel="stylesheet" href="#{application.contextPath}/assets/css/responsive.css"></link>
         <!-- core scripts -->
         <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>
-        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>         
+        <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
+        <!-- For Captcha purpose -->
+        <style type="text/css">
+            .ui-messages-warn{
+                display:none;
+            }
+        </style>
     </h:head>
     <h:body>
         <header id="header">		
@@ -221,7 +227,7 @@
                                 <h2>Service</h2>
                                 <ul class="nav nav-pills nav-stacked">
                                     <li><a href="#">Online Help</a></li>
-                                    <li><a href="#">Contact Us</a></li>
+                                    <li><a href="#{application.contextPath}/#{request.getAttribute('coCode')}/contactus.xhtml">Contact Us</a></li>
                                     <li><a href="#">Order Status</a></li>
                                     <li><a href="#">Change Location</a></li>
                                     <li><a href="#">FAQ’s</a></li>
