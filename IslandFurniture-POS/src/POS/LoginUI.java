@@ -283,7 +283,7 @@ public class LoginUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
 
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        URL url = getClass().getResource("../resources/config.xml");
+        URL url = this.getClass().getResource("/resources/config.xml");
         try {
             File f = new File(url.toURI());
             FileOutputStream output = new FileOutputStream(f, false);
@@ -331,10 +331,7 @@ public class LoginUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InputStream is = getClass().getResourceAsStream("../resources/config.xml");
-                System.err.println(getClass().getResource("../resources/config.xml"));
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
+                BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/resources/config.xml")));
                 String line;
                 Double cash = 0.0;
                 String storeType = "None";
@@ -348,8 +345,6 @@ public class LoginUI extends javax.swing.JFrame {
                           storeType = line.substring(7, line.length()-8);
                     }
                     br.close();
-                    isr.close();
-                    is.close();
                 }catch(Exception e){
                     System.err.println(e);
                 }
