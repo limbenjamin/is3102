@@ -94,7 +94,26 @@ public class CatalogueManagedBean implements Serializable{
       ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
       
       ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/productdetail.xhtml?id=" + furnitureId);
-    }     
+    }
+    
+    public List<FurnitureModel> filteredCategory(String category) {
+        List<FurnitureModel> categoryList = new ArrayList<>();
+        for (FurnitureModel furniture : furnitureList) {
+            if (furniture.getCategory().toString().equals(category))
+                categoryList.add(furniture);
+        }
+        return categoryList;
+    }
+    
+    public List<FurnitureSubcategory> filteredSubs(String category) {
+        List<FurnitureSubcategory> subList = new ArrayList<>();
+        List<FurnitureModel> tempFurnitureList = mcbl.getStoreFurniture(co);
+        for (FurnitureModel furniture : tempFurnitureList) {
+            if (furniture.getCategory().toString().equals(category) && !subList.contains(furniture.getSubcategory()))
+                subList.add(furniture.getSubcategory());
+        }
+        return subList;
+    }    
     
     public Double getDiscountedPrice(Stock s) {
         Store st = new Store();
