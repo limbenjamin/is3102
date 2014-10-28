@@ -25,8 +25,8 @@ public class FurnitureTransactionDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer qty;
-    private Integer numReturned;
-    private Integer numClaimed;
+    private Integer numReturned = 0;
+    private Integer numClaimed = 0;
     private Double unitPrice;
     private Long unitPoints;
 
