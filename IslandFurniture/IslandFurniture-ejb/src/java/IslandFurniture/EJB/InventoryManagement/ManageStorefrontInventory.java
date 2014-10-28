@@ -142,7 +142,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         q.setParameter("stockId", stock.getId());
         storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
 
-        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE AND s.goodsIssuedDocument=NULL");
         t.setParameter("plantId", plant.getId());
         t.setParameter("stockId", stock.getId());
         List<StockUnit> stockUnitList = t.getResultList();
@@ -174,7 +174,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
     //  Function: To return the Qty of StockUnit
     @Override
     public Integer viewStockUnitStockQty(Plant plant, Stock stock) {
-        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE AND s.goodsIssuedDocument=NULL");
         t.setParameter("plantId", plant.getId());
         t.setParameter("stockId", stock.getId());
         List<StockUnit> stockUnitList = t.getResultList();
