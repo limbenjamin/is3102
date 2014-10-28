@@ -236,12 +236,12 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                     for (FurnitureModel eachFm : furnitureModels) {
                         if (rand.nextBoolean()) {
-                            this.addStockSupplied(eachFm, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                            this.addStockSupplied(eachFm, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                         }
                     }
                     for (RetailItem eachRi : retailItems) {
                         if (rand.nextBoolean()) {
-                            this.addStockSupplied(eachRi, eachCo, mfs.get(rand.nextInt(mfs.size())), (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                            this.addStockSupplied(eachRi, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                         }
                     }
 
@@ -300,19 +300,19 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                 co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Singapore");
                 javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                 for (RetailItem ri : retailItems) {
-                    this.addStockSupplied(ri, co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                 }
 
                 co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Malaysia");
                 javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                 for (RetailItem ri : retailItems) {
-                    this.addStockSupplied(ri, co, mf, (rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()));
+                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
                 }
             }
 

@@ -69,10 +69,10 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
 //  Function: To create a Goods Receipt Document    
     @Override
-    public GoodsReceiptDocument createGoodsReceiptDocument(Plant plant) {
+    public GoodsReceiptDocument createGoodsReceiptDocument(Plant plant, Calendar cal) {
         goodsReceiptDocument = new GoodsReceiptDocument();
         goodsReceiptDocument.setPlant(plant);
-        goodsReceiptDocument.setPostingDate(null);
+        goodsReceiptDocument.setReceiptDate(cal);
         goodsReceiptDocument.setConfirm(false);
         em.persist(goodsReceiptDocument);
         em.flush();

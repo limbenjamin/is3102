@@ -6,21 +6,26 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
+import IslandFurniture.Entities.RetailItem;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.StorefrontInventory;
-import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import static java.util.Spliterators.iterator;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -50,6 +55,7 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
     private List<StockUnit> stockUnitList;
     private List<ReplenishmentTransferOrder> replenishmentTransferOrderListRequestList;
     private List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList;
+    private List<StockUnit> stockUnitListOfTheStockOnly;
 
     private StockUnit stockUnitOld;
 
@@ -73,19 +79,23 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-//        storageAreaList = storageBean.viewStorageArea(plant);
-        stockList = storefrontInventoryBean.viewStorefrontInventory(plant);
         replenishmentTransferOrderListRequestList = transferBean.viewReplenishmentTransferOrderRequested(plant);
         replenishmentTransferOrderListFulfilledList = transferBean.viewReplenishmentTransferOrderFulfilled(plant);
+        stockList = storefrontInventoryBean.viewStorefrontInventory(plant);
+        storageBinList = storageBean.viewStorageBinsAtStorageOnly(plant);
+        Iterator<StorefrontInventory> iterator = stockList.iterator();
+        while (iterator.hasNext()) {
+            StorefrontInventory s = iterator.next();
+            for (ReplenishmentTransferOrder i : replenishmentTransferOrderListRequestList) {
+                if (i.getStock().equals(s.getStock())) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 
-////  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
-//    public void onStorageAreaChange() {
-//        if (storageAreaId != null) {
-//            storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
-//        }
-//    }
-//  Function: To create a Replenishment Tranfer Order
+    //  Function: To create a Replenishment Tranfer Order
     public void createReplenishmentTransferOrder(ActionEvent event) throws IOException {
         if (!replenishmentTransferOrderListRequestList.isEmpty()) {
             for (ReplenishmentTransferOrder r : replenishmentTransferOrderListRequestList) {
@@ -111,12 +121,9 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
 
 //  Function: To update a Replenishment Transfer Order  
     public void updateReplenishmentTransferOrder(ActionEvent event) throws IOException {
-        ReplenishmentTransferOrder rto = transferBean.getReplenishmentTransferOrder(rtoId);
-        StorefrontInventory si = storefrontInventoryBean.getStorefrontInventory(plant, rto.getStock().getId());
         stockUnit = transferBean.getStockUnit(stockUnitId);
-        
-        System.out.println("RI stock is " + rto.getQty());
-        System.out.println("StorefrontInventory QTY is " + si.getQty());
+        ReplenishmentTransferOrder rto = transferBean.updateReplenishmentTransferOrder(plant, stockUnit.getStock());
+        StorefrontInventory si = storefrontInventoryBean.getStorefrontInventory(plant, rto.getStock().getId());
 
         if (transferBean.getStockUnit(stockUnitId).getQty() < rto.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -136,46 +143,42 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         // End
     }
 
-    public StockUnit getStockUnit() {
-        return stockUnit;
-    }
-
-    public void setStockUnit(StockUnit stockUnit) {
-        this.stockUnit = stockUnit;
-    }
-
-    public void createReplenishmentTransferOrderforPOS(ActionEvent event) throws IOException {
-        transferBean.createReplenishmentTransferOrder(plant, transferBean.getStock(stockId), quantity);
-    }
-
-    public StockUnit getStockUnitOld() {
-        return stockUnitOld;
-    }
-
-    public void setStockUnitOld(StockUnit stockUnitOld) {
-        this.stockUnitOld = stockUnitOld;
-    }
-
-//  Function: To display Storage Bins of the particular Stock only -- For AJAX    
+    //  Function: To display Stock Unit of the particular Stock only -- For AJAX    
     public void onStockChange() {
-        if (rtoId != null) {
-            storageBinList = storageBean.viewStorageBinsOfAStock(plant, transferBean.getReplenishmentTransferOrder(rtoId).getStock().getId());
+        if (stockId != null) {
+            storageBinList = storageBean.viewStorageBinsAtStorageOnlyForAStock(transferBean.getStock(stockId), plant);
         }
     }
 
-//  Function: To display Stock Unit of the particular Stock only -- For AJAX    
+    //  Function: To display Stock Unit of the particular Stock only -- For AJAX    
     public void onStorageBinChange() {
         if (storageBinId != null) {
-            stockUnitList = transferBean.viewStockUnitByStockId(transferBean.getReplenishmentTransferOrder(rtoId).getStock().getId(), storageBinId);
+            stockUnitListOfTheStockOnly = transferBean.viewStockUnitByStockId(stockId, storageBinId);
         }
     }
 
-    public Long getRtoId() {
-        return rtoId;
+    public List<StockUnit> getStockUnitListOfTheStockOnly() {
+        return stockUnitListOfTheStockOnly;
     }
 
-    public void setRtoId(Long rtoId) {
-        this.rtoId = rtoId;
+    public void setStockUnitListOfTheStockOnly(List<StockUnit> stockUnitListOfTheStockOnly) {
+        this.stockUnitListOfTheStockOnly = stockUnitListOfTheStockOnly;
+    }
+
+    public Long getStorageBinId() {
+        return storageBinId;
+    }
+
+    public void setStorageBinId(Long storageBinId) {
+        this.storageBinId = storageBinId;
+    }
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
     }
 
     public Long getStockUnitId() {
@@ -186,20 +189,20 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         this.stockUnitId = stockUnitId;
     }
 
-    public List<StockUnit> getStockUnitList() {
-        return stockUnitList;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setStockUnitList(List<StockUnit> stockUnitList) {
-        this.stockUnitList = stockUnitList;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public Long getStorageBinId() {
-        return storageBinId;
+    public Long getRtoId() {
+        return rtoId;
     }
 
-    public void setStorageBinId(Long storageBinId) {
-        this.storageBinId = storageBinId;
+    public void setRtoId(Long rtoId) {
+        this.rtoId = rtoId;
     }
 
     public List<StorageBin> getStorageBinList() {
@@ -218,22 +221,6 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         this.storageAreaList = storageAreaList;
     }
 
-    public Long getStockId() {
-        return stockId;
-    }
-
-    public void setStockId(Long stockId) {
-        this.stockId = stockId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
     public List<StorefrontInventory> getStockList() {
         return stockList;
     }
@@ -242,12 +229,12 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         this.stockList = stockList;
     }
 
-    public ManageStorefrontInventoryLocal getStorefrontInventoryBean() {
-        return storefrontInventoryBean;
+    public List<StockUnit> getStockUnitList() {
+        return stockUnitList;
     }
 
-    public void setStorefrontInventoryBean(ManageStorefrontInventoryLocal storefrontInventoryBean) {
-        this.storefrontInventoryBean = storefrontInventoryBean;
+    public void setStockUnitList(List<StockUnit> stockUnitList) {
+        this.stockUnitList = stockUnitList;
     }
 
     public List<ReplenishmentTransferOrder> getReplenishmentTransferOrderListRequestList() {
@@ -264,6 +251,14 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
 
     public void setReplenishmentTransferOrderListFulfilledList(List<ReplenishmentTransferOrder> replenishmentTransferOrderListFulfilledList) {
         this.replenishmentTransferOrderListFulfilledList = replenishmentTransferOrderListFulfilledList;
+    }
+
+    public StockUnit getStockUnitOld() {
+        return stockUnitOld;
+    }
+
+    public void setStockUnitOld(StockUnit stockUnitOld) {
+        this.stockUnitOld = stockUnitOld;
     }
 
     public String getUsername() {
@@ -290,6 +285,14 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
         this.plant = plant;
     }
 
+    public StockUnit getStockUnit() {
+        return stockUnit;
+    }
+
+    public void setStockUnit(StockUnit stockUnit) {
+        this.stockUnit = stockUnit;
+    }
+
     public ManageUserAccountBeanLocal getStaffBean() {
         return staffBean;
     }
@@ -312,6 +315,14 @@ public class InventoryTransferReplenishManagedBean implements Serializable {
 
     public void setStorageBean(ManageStorageLocationLocal storageBean) {
         this.storageBean = storageBean;
+    }
+
+    public ManageStorefrontInventoryLocal getStorefrontInventoryBean() {
+        return storefrontInventoryBean;
+    }
+
+    public void setStorefrontInventoryBean(ManageStorefrontInventoryLocal storefrontInventoryBean) {
+        this.storefrontInventoryBean = storefrontInventoryBean;
     }
 
 }

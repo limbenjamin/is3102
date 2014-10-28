@@ -43,5 +43,8 @@ public interface ManageMembershipLocal {
 
     //  Function: To check if there is no Customers in the Tier
     boolean checkIfNoCustomersInTheTier(MembershipTier mt);
+
+    // Function: To get Customer with customerID
+    public Customer getCustomer(Long customerID);
     
 }

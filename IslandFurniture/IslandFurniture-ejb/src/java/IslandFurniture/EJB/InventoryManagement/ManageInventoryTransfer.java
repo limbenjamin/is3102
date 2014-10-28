@@ -215,7 +215,6 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         q.setParameter("id", id);
         q.setParameter("storageBinId", storageBinId);
         return q.getResultList();
-
     }
 
     @Override
@@ -239,6 +238,16 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
         return q.getResultList();
+    }
+    
+    //  Function: To display list of Replenishment Transfer Order (Requested)    
+    @Override
+    public ReplenishmentTransferOrder updateReplenishmentTransferOrder(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("status", TransferOrderStatus.REQUESTED);
+        return (ReplenishmentTransferOrder) q.getSingleResult();
     }
 
 //  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock  
@@ -294,7 +303,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     //  Function: To check Replenishment Transfer Order (Requested) already exists  
     @Override
     public boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock) {
-        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2)");
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE (s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2))");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
@@ -304,10 +313,11 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
 
 //  Function: To create a External Transfer Order (Status: Requested)
     @Override
-    public ExternalTransferOrder createExternalTransferOrder(Plant plant) {
+    public ExternalTransferOrder createExternalTransferOrder(Plant plant, Calendar cal) {
         externalTransferOrder = new ExternalTransferOrder();
         externalTransferOrder.setRequestingPlant(plant);
         externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
+        externalTransferOrder.setTransferDate(cal);
         em.persist(externalTransferOrder);
         em.flush();
         em.refresh(externalTransferOrder);
@@ -384,9 +394,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
 //  Function: To display list of External Transfer Order (Fulfilled) Pending   
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPending(Plant plant) {
-        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.country.id=:countryId AND s.status=:status AND s.requestingPlant.id!=:plantId");
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
-        q.setParameter("countryId", plant.getCountry().getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
         return q.getResultList();
     }
@@ -395,6 +404,15 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPosted(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId AND s.status=:status");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("status", TransferOrderStatus.FULFILLED);
+        return q.getResultList();
+    }
+    
+        //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    @Override
+    public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPostedFromRequesting(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
         q.setParameter("plantId", plant.getId());
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();
@@ -445,9 +463,10 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
 
 //  Function: To edit External Transfer Order  
     @Override
-    public void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal) {
+    public void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal, Plant plant) {
         externalTransferOrder = (ExternalTransferOrder) em.find(ExternalTransferOrder.class, externalTransferOrder.getId());
         externalTransferOrder.setTransferDate(cal);
+        externalTransferOrder.setFulfillingPlant(plant);
         em.merge(externalTransferOrder);
         em.flush();
     }
@@ -479,6 +498,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         em.merge(replenishmentTransferOrder);
         em.flush();
     }
+    
+    
     
 //        @Override
 //    public List<FurnitureModel> viewFurnitureModel(CountryOffice countryOffice) {

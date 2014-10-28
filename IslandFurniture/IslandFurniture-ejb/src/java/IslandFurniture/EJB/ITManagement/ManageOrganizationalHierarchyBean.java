@@ -12,6 +12,7 @@ import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.QueryMethods;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
@@ -168,6 +169,38 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
     public List<Plant> displayPlant() {
         Query q = em.createQuery("SELECT p " + "FROM Plant p");
         return q.getResultList();
+    }
+
+    @Override
+    public List<Plant> displayPlantbyInstanceOf(Plant plant) {
+        if (plant instanceof Store) {
+            // show all the stores in the country office
+            Store store = (Store) plant;
+            Query q = em.createQuery("SELECT s FROM Store s WHERE s.countryOffice.id=:countryOfficeId");
+            q.setParameter("countryOfficeId", store.getCountryOffice().getId());
+            Query r = em.createQuery("SELECT r FROM CountryOffice r WHERE r.id=:countryOfficeId");
+            r.setParameter("countryOfficeId", store.getCountryOffice().getId());
+            List<Plant> plantList = q.getResultList();
+            plantList.addAll(r.getResultList());
+            return plantList;
+        } else if (plant instanceof ManufacturingFacility) {
+            Query r = em.createQuery("SELECT m FROM CountryOffice m");
+            Query m = em.createQuery("SELECT m FROM ManufacturingFacility m");
+            List<Plant> plantList = r.getResultList();
+            plantList.addAll(m.getResultList());
+            return plantList;
+        } else {
+            // should show other country offices, the stores in the country, and all the manufacturing facilities
+            CountryOffice co = (CountryOffice) plant;
+            Query c = em.createQuery("SELECT t FROM Store t WHERE t.countryOffice.id=:countryOfficeId");
+            c.setParameter("countryOfficeId", co.getId());
+            Query y = em.createQuery("SELECT r FROM CountryOffice r");
+            Query m = em.createQuery("SELECT m FROM ManufacturingFacility m");
+            List<Plant> plantList = c.getResultList();
+            plantList.addAll(y.getResultList());
+            plantList.addAll(m.getResultList());
+            return plantList;
+        }
     }
 
     //  Function: To return a Plant based on PlantId

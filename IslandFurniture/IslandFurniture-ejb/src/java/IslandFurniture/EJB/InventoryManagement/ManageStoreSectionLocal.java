@@ -6,14 +6,15 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StoreSection;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStoreSectionLocal {
 
     //  Function: To add Store Section
