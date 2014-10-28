@@ -42,4 +42,10 @@ public interface ManageStorefrontInventoryLocal {
     //  Function: To the Stock Level of a Stock stored in a Plant
     String viewStorefrontInventoryStockLevelPerPlant(Plant plant, Stock stock);
 
+    //  Function: To return the Qty of StorefrontInventory
+    Integer viewStorefrontInventoryStockQty(Plant plant, Stock stock);
+
+    //  Function: To return the Qty of StockUnit
+    Integer viewStockUnitStockQty(Plant plant, Stock stock);
+
 }

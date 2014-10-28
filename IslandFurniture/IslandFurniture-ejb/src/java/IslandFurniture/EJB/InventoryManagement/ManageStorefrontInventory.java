@@ -159,6 +159,31 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         } else {
             return "Stock Available";
         }
+    }
+    
+    //  Function: To return the Qty of StorefrontInventory
+    @Override
+    public Integer viewStorefrontInventoryStockQty(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
+        return storefrontInventory.getQty(); 
+    }
+    
+    //  Function: To return the Qty of StockUnit
+    @Override
+    public Integer viewStockUnitStockQty(Plant plant, Stock stock) {
+        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=FALSE AND s.goodsIssuedDocument=NULL");
+        t.setParameter("plantId", plant.getId());
+        t.setParameter("stockId", stock.getId());
+        List<StockUnit> stockUnitList = t.getResultList();
+
+        Integer stockUnitQty = 0;
+        for (StockUnit s : stockUnitList) {
+            stockUnitQty = stockUnitQty + s.getQty().intValue();
+        }
         
+        return stockUnitQty;
     }
 }
