@@ -26,7 +26,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
     private Long id;
     private String confirmPassword = null;
     private String coDir;
-
+    
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
 
@@ -175,5 +175,15 @@ public class MemberAuthenticationManagedBean implements Serializable {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+    public String getCoDir() {
+        return coDir;
+    }
+
+    public void setCoDir(String coDir) {
+        this.coDir = coDir;
+    }
+    
+    
 
 }
