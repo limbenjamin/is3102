@@ -8,13 +8,20 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.PromotionDetail;
+import IslandFurniture.Entities.PromotionDetailByProduct;
+import IslandFurniture.Entities.PromotionDetailByProductCategory;
+import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
 import static IslandFurniture.Entities.Staff.SHA1Hash;
 import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
 import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -44,11 +51,17 @@ public class CustomerAccountManagedBean implements Serializable{
     private String hashedOldPassword = null;
     private String coDir;
     private CountryOffice co;
+    private List<PromotionDetail> perks;
+    private List<PromotionDetailByProduct> pdpPerks;
+    private List<PromotionDetailByProductCategory> pdpcPerks;
+    private List<PromotionDetailByProductSubCategory> pdpscPerks;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
     @EJB
-    private ManageLocalizationBeanLocal manageLocalizationBean;    
+    private ManageLocalizationBeanLocal manageLocalizationBean;
+    @EJB
+    private ManagePerksBeanLocal perksBean;
     
     @PostConstruct
     public void init(){
@@ -70,10 +83,21 @@ public class CustomerAccountManagedBean implements Serializable{
         }   
         else {
             customer = mmab.getCustomer(emailAddress);
+            pdpcPerks = perksBean.getPDPC(customer);
+            pdpPerks = perksBean.getPDP(customer);
+            pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
+    }
+    
+    public double getPercentageDiscount(Long id) {
+        return perksBean.getPerk(id).getPercentageDiscount();
+    }
+    
+    public double getAbsoluteDiscount(Long id) {
+        return perksBean.getPerk(id).getAbsoluteDiscount();
     }
     
     public void modifyPersonalParticulars() throws IOException{
@@ -225,5 +249,37 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setCo(CountryOffice co) {
         this.co = co;
+    }
+
+    public List<PromotionDetail> getPerks() {
+        return perks;
+    }
+
+    public void setPerks(List<PromotionDetail> perks) {
+        this.perks = perks;
+    }
+
+    public List<PromotionDetailByProduct> getPdpPerks() {
+        return pdpPerks;
+    }
+
+    public void setPdpPerks(List<PromotionDetailByProduct> pdpPerks) {
+        this.pdpPerks = pdpPerks;
+    }
+
+    public List<PromotionDetailByProductCategory> getPdpcPerks() {
+        return pdpcPerks;
+    }
+
+    public void setPdpcPerks(List<PromotionDetailByProductCategory> pdpcPerks) {
+        this.pdpcPerks = pdpcPerks;
+    }
+
+    public List<PromotionDetailByProductSubCategory> getPdpscPerks() {
+        return pdpscPerks;
+    }
+
+    public void setPdpscPerks(List<PromotionDetailByProductSubCategory> pdpscPerks) {
+        this.pdpscPerks = pdpscPerks;
     }
 }

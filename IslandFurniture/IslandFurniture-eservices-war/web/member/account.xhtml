@@ -20,6 +20,7 @@
                         <div class="col-md-12">
                             <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                                 <li class="active"><a href="#info" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Account Info</a></li>
+                                <li><a href="#perks" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Perks &amp; Promotions</a></li>
                                 <li><a href="#settings" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Settings</a></li>
                             </ul>
                             <div class="tab-content">
@@ -97,6 +98,24 @@
                                             <h:commandButton action="#{customerAccountManagedBean.modifyPersonalParticulars}" value="Update" class="btn btn-round btn-success btn-theme"></h:commandButton>
                                             </span>
                                         </h:form>                                
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="perks">
+                                    <div class="col-md-6">
+                                        <br/>
+                                        <h4>Your Perks and Privileges</h4>
+                                        <br/>
+                                        <ul>
+                                            <ui:repeat value="#{customerAccountManagedBean.pdpPerks}" var="pdp">
+                                                <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdp.id) * 100}% discount for all #{pdp.applicablePlant.name} #{pdp.stock.name} items</li>
+                                            </ui:repeat>
+                                            <ui:repeat value="#{customerAccountManagedBean.pdpcPerks}" var="pdpc">
+                                                <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdpc.id) * 100}% discount for all #{pdpc.applicablePlant.name} #{pdpc.category} items</li>
+                                            </ui:repeat>
+                                            <ui:repeat value="#{customerAccountManagedBean.pdpscPerks}" var="pdpsc">
+                                                <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdpsc.id) * 100}% discount for all #{pdpsc.applicablePlant.name} #{pdpsc.category} items</li>
+                                            </ui:repeat>                                            
+                                        </ul>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="settings">
