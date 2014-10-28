@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -77,7 +78,9 @@ public class ProductDetailManagedBean {
     @EJB
     private ManageShoppingListBeanLocal mslbl;    
     @EJB
-    private ManageMarketingBeanLocal mmbl;    
+    private ManageMarketingBeanLocal mmbl;
+    @EJB
+    private ManageStorefrontInventoryLocal inventoryBean;
     
     @PostConstruct
     public void init() {
@@ -150,6 +153,10 @@ public class ProductDetailManagedBean {
             mslbl.updateListTotalPrice(listId);
             ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
         }
+    }
+    
+    public String getStockAvailability (Store store) {
+        return inventoryBean.viewStorefrontInventoryStockLevelPerPlant(store, furniture);
     }
 
     public Long getId() {
