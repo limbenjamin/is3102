@@ -63,10 +63,10 @@
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
                                                     <a href="productdetail.xhtml?id=#{furniture.id}">
-                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.id}">
+                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
                                                             <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
                                                         </pf:graphicImage>
-                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.id}">
+                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
                                                             <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
                                                         </h:panelGroup>
                                                     </a>
