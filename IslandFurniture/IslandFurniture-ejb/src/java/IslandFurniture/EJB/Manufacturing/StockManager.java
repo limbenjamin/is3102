@@ -11,6 +11,7 @@ import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.NFC;
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
 import IslandFurniture.Entities.RetailItem;
@@ -491,4 +492,20 @@ public class StockManager implements StockManagerLocal {
         em.persist(nfc);
         stock.getNfcList().add(nfc);
     }
+    
+    @Override
+    public void editThumbnail(Long fID, byte[] content) {
+        FurnitureModel fm;
+        Picture picture;
+        try {
+            System.out.println("StockManager.editThumbnail()");
+            fm = em.find(FurnitureModel.class, fID);
+            picture = new Picture();
+            picture.setContent(content); 
+            fm.setThumbnail(picture);
+            em.persist(picture);
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        }
+    } 
 }
