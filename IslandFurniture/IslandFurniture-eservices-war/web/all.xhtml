@@ -21,10 +21,15 @@
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <div class="brands_products" style="margin-top: 20px;">
-                                <h2>Categories (by Type)</h2>
+                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li><a href="#">
+                                        <ui:repeat value="#{catalogueManagedBean.subcategories}" var="sub">
+                                            <li><a href="all.xhtml?sub=#{sub}">#{sub}</a></li>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <li><a href="all.xhtml">Display all</a></li>
+                                        <!--<li><a href="#">
                                                 <h:outputText value="#{bundle['subnav.bedding']}" /></a></li>
                                         <li><a href="#">
                                                 <h:outputText value="#{bundle['subnav.tables']}" /></a></li>
@@ -37,14 +42,14 @@
                                         <li><a href="#">
                                                 <h:outputText value="#{bundle['subnav.cooking']}" /></a></li>
                                         <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.sofas']}" /></a></li>                                                
+                                                <h:outputText value="#{bundle['subnav.sofas']}" /></a></li>
                                         <li><a href="#">
                                                 <h:outputText value="#{bundle['subnav.wardrobes']}" /></a></li>
                                         <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.textile']}" /></a></li>
+                                                <h:outputText value="#{bundle['subnav.textile']}" /></a></li>-->
                                     </ul>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>                        
                         <div class="col-sm-9">
