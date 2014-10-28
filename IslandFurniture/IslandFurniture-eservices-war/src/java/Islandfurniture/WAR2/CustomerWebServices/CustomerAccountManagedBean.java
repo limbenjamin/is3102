@@ -6,7 +6,9 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import java.io.IOException;
 import java.io.Serializable;
@@ -38,9 +40,12 @@ public class CustomerAccountManagedBean implements Serializable{
     private String confirmNewPassword = null;
     private String hashedOldPassword = null;
     private String coDir;
+    private CountryOffice co;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
+    @EJB
+    private ManageLocalizationBeanLocal manageLocalizationBean;    
     
     @PostConstruct
     public void init(){
@@ -64,6 +69,7 @@ public class CustomerAccountManagedBean implements Serializable{
             customer = mmab.getCustomer(emailAddress);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }    
     
@@ -159,5 +165,12 @@ public class CustomerAccountManagedBean implements Serializable{
     public void setMmab(ManageMemberAuthenticationBeanLocal mmab) {
         this.mmab = mmab;
     }
-    
+
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
+    }
 }

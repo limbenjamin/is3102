@@ -31,7 +31,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Last login: </label>
-                                <div class="col-sm-9"><h5>#{customerAccountManagedBean.customer.lastLogon}</h5></div>
+                                <div class="col-sm-9">
+                                    <h5>
+                                        <h:outputText value="#{customerAccountManagedBean.customer.lastLogon}">
+                                            <f:convertDateTime pattern="EEE, MMM d, yyyy z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                        </h:outputText>
+                                    </h5>
+                                </div>
                             </div>                                
                             </form>
                             <br/>
