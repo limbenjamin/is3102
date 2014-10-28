@@ -47,14 +47,22 @@ public class ManageMembership implements ManageMembershipLocal {
     // Function: Edit a Customer
     @Override
     public void editCustomerAccount(Customer customerUpdated) {
+        System.out.println("ManageMembership.editCustomerAccount()");
         customer = (Customer) em.find(Customer.class, customerUpdated.getId());
         customer.setEmailAddress(customerUpdated.getEmailAddress());
         customer.setName(customerUpdated.getName());
         customer.setPhoneNo(customerUpdated.getPhoneNo());
         customer.setAddress(customerUpdated.getAddress());
         customer.setDateOfBirth(customerUpdated.getDateOfBirth());
+        customer.setLoyaltyCardId(customerUpdated.getLoyaltyCardId());
         em.merge(customer);
         em.flush();
+    }
+    
+    // Function: Get Customer
+    @Override
+    public Customer getCustomer(Long customerID) {
+        return em.find(Customer.class, customerID);
     }
 
     // Function: View the All the Customers
