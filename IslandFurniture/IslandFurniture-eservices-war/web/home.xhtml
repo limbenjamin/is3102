@@ -118,13 +118,14 @@
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                     <a href="productdetail.xhtml?id=#{furniture.id}">
-                                                        <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
+                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
+                                                            <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
+                                                        </pf:graphicImage>
+                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
+                                                            <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                                        </h:panelGroup>
                                                     </a>
-                                                    <h4><strong>#{homeManagedBean.co.country.currency.currencyCode}
-                                                    <h:outputText value="#{homeManagedBean.getDiscountedPrice(furniture)}" id="discounted">
-                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                                    </h:outputText></strong>
-                                                    </h4>
+                                                    <div style="min-height:16px;">
                                                     <h5 style="text-decoration:line-through;">
                                                         <h:outputText value="#{homeManagedBean.co.country.currency.currencyCode} " 
                                                             rendered="#{furniture.price > homeManagedBean.getDiscountedPrice(furniture)}"/>
@@ -133,6 +134,12 @@
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                         </h:outputText>
                                                     </h5>
+                                                    </div>
+                                                    <h4><strong>#{homeManagedBean.co.country.currency.currencyCode}
+                                                    <h:outputText value="#{homeManagedBean.getDiscountedPrice(furniture)}" id="discounted">
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                    </h:outputText></strong>
+                                                    </h4>
                                                     <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
                                             </div>									
                                         </div>

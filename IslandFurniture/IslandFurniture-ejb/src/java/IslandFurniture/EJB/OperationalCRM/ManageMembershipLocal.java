@@ -46,5 +46,8 @@ public interface ManageMembershipLocal {
 
     // Function: To get Customer with customerID
     public Customer getCustomer(Long customerID);
-    
+
+    // Function: Edit a Customer's Points after Redemption
+    void editCustomerAccountPoints(Customer customerUpdated, int points);
+
 }

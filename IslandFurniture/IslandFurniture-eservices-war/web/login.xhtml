@@ -6,6 +6,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:pr="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:define name="content">
         <section>
@@ -82,6 +84,11 @@
                                     <label class="col-xs-3 control-label">Date of Birth: </label>
                                     <div class="col-xs-9">
                                         <h:inputText p:type="date" id="dateOfBirth" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-9">
+                                        <h:selectBooleanCheckbox p:required=""></h:selectBooleanCheckbox> I agree to the <a href="./pdpa.xhtml"><u>Personal Data Protection Policy</u></a>
                                     </div>
                                 </div>
                                 <div class="form-group">

@@ -4,7 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:pf="http://primefaces.org/ui">
 <h:body>
     <ui:composition template="../template.xhtml">
         <ui:define name="content">
@@ -51,10 +52,17 @@
                                 <ui:repeat value="#{shoppingListDetailManagedBean.shoppingListDetails}" var="detail">
                                 <tr>
                                     <td class="list_product">
-                                        <a href=""><img src="#{application.contextPath}/assets/images/home/product3.jpg" alt="" /></a>
+                                        <a href="../productdetail.xhtml?id=#{detail.furnitureModel.id}">
+                                            <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty detail.furnitureModel.thumbnail.content}">
+                                                <f:param name="pictureId" value="#{detail.furnitureModel.thumbnail.id}" />
+                                            </pf:graphicImage>
+                                            <h:panelGroup layout="block" rendered="#{empty detail.furnitureModel.thumbnail.content}">
+                                                <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                            </h:panelGroup>
+                                        </a>
                                     </td>
                                     <td class="list_description">
-                                        <h4><a href="">#{detail.furnitureModel.name}</a></h4>
+                                        <h4><a href="../productdetail.xhtml?id=#{detail.furnitureModel.id}">#{detail.furnitureModel.name}</a></h4>
                                         <p>#{detail.furnitureModel.category}</p>
                                     </td>
                                     <td class="list_description">

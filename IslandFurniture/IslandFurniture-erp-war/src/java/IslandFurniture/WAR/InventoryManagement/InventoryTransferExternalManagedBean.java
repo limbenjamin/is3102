@@ -43,6 +43,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     private Long storageBinId;
     private Long stockId;
     private Integer quantity;
+    private String plantType;
 
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
@@ -74,14 +75,46 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
         externalTransferOrderListRequestPendingList = transferBean.viewExternalTransferOrderRequestedPending(plant);
+        changePlantName(externalTransferOrderListRequestPendingList);
         externalTransferOrderListRequestPostedList = transferBean.viewExternalTransferOrderRequestedPosted(plant);
+        changePlantName(externalTransferOrderListRequestPostedList);
         externalTransferOrderListFulfilledPendingList = transferBean.viewExternalTransferOrderFulfilledPending(plant);
+        changePlantName(externalTransferOrderListFulfilledPendingList);
         externalTransferOrderListFulfilledPostedList = transferBean.viewExternalTransferOrderFulfilledPosted(plant);
+        changePlantName(externalTransferOrderListFulfilledPostedList);
         externalTransferOrderListFulfilledPostedListFromRequesting = transferBean.viewExternalTransferOrderFulfilledPostedFromRequesting(plant);
+        changePlantName(externalTransferOrderListFulfilledPostedListFromRequesting);
     }
 
+    void changePlantName(List<ExternalTransferOrder> list) {
+        for (ExternalTransferOrder e : list) {
+            plantType = e.getFulfillingPlant().getClass().getSimpleName();
+            if (plantType.equals("ManufacturingFacility")) {
+                plantType = "MFG";
+            } else if (plantType.equals("CountryOffice")) {
+                plantType = "CO";
+            } else if (plantType.equals("GlobalHQ")) {
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+            }
+
+            e.getFulfillingPlant().setName(e.getFulfillingPlant().getName() + " " + plantType);
+
+            plantType = e.getRequestingPlant().getClass().getSimpleName();
+            if (plantType.equals("ManufacturingFacility")) {
+                plantType = "MFG";
+            } else if (plantType.equals("CountryOffice")) {
+                plantType = "CO";
+            } else if (plantType.equals("GlobalHQ")) {
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+            }
+
+            e.getRequestingPlant().setName(e.getRequestingPlant().getName() + " " + plantType);
+        }
+    }
+
+
 //  Function: To create a External Tranfer Order
-    public void createExternalTransferOrder(ActionEvent event) throws IOException {
+public void createExternalTransferOrder(ActionEvent event) throws IOException {
         externalTransferOrder = transferBean.createExternalTransferOrder(plant, getCalendar());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externaldetail.xhtml?id=" + externalTransferOrder.getId().toString());
     }
