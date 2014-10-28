@@ -16,11 +16,13 @@ import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.Stock;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageGoodsReceiptLocal {
 
     //  Function: To create a Goods Receipt Document
