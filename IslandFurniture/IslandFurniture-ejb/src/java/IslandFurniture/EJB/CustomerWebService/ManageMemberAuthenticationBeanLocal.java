@@ -33,4 +33,6 @@ public interface ManageMemberAuthenticationBeanLocal {
     void setCustomerMembershipTier(Customer customer, String membershipTier);
     
     void changePassword(String emailAddress, String newPassword);
+    
+    void removeCustomerAccount(String emailAddress);
 }

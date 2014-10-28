@@ -115,7 +115,18 @@ public class CustomerAccountManagedBean implements Serializable{
           ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
       }
-    }    
+    }
+    
+    public void removeAccount() throws IOException{
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        mmab.removeCustomerAccount(emailAddress);
+        HttpSession session = Util.getSession();
+        session.setAttribute("", emailAddress);
+        session.invalidate();        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been removed. Goodbye!",""));
+          ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+    }
 
     public String getName() {
         return name;
