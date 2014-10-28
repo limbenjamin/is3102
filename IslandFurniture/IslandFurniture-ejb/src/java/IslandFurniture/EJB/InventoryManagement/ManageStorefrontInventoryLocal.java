@@ -9,11 +9,13 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorefrontInventory;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStorefrontInventoryLocal {
 
     //  Function: To add Storefront Inventory
@@ -23,7 +25,7 @@ public interface ManageStorefrontInventoryLocal {
     void deleteStorefrontInventory(StorefrontInventory storefrontInventory);
 
     //  Function: To edit Storefront Inventory
-    void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated);
+    void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated, Long storeSectionId, int rep, int max);
 
     //  Function: To display list of StorefrontInventory
     List<StorefrontInventory> viewStorefrontInventory(Plant plant);
@@ -33,8 +35,17 @@ public interface ManageStorefrontInventoryLocal {
 
     //  Function: To reduce Storefront Inventory from Transaction
     void reduceStockfrontInventoryFromTransaction(Plant plant, Stock stock, int qty);
-    
+
     //  Function: To edit Storefront Inventory quantity
     void editStorefrontInventoryQty(StorefrontInventory si, int qty);
+
+    //  Function: To the Stock Level of a Stock stored in a Plant
+    String viewStorefrontInventoryStockLevelPerPlant(Plant plant, Stock stock);
+
+    //  Function: To return the Qty of StorefrontInventory
+    Integer viewStorefrontInventoryStockQty(Plant plant, Stock stock);
+
+    //  Function: To return the Qty of StockUnit
+    Integer viewStockUnitStockQty(Plant plant, Stock stock);
 
 }

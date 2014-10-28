@@ -11,12 +11,17 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageStoreSectionLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
+import IslandFurniture.Entities.FurnitureModel;
+import IslandFurniture.Entities.ReplenishmentTransferOrder;
+import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,6 +45,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
 
     private List<StoreSection> storeSectionList;
     private List<StorefrontInventory> storefrontInventoryList;
+    private List<Stock> tempList;
     private List<Stock> stockList;
 
     private String username;
@@ -66,18 +72,24 @@ public class StorefrontInventoryManagedBean implements Serializable {
         plant = staff.getPlant();
         storeSectionList = storeSectionBean.viewStoreSectionList(plant);
         storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
-        stockList = transferBean.viewStock();
-//        for (Stock s : transferBean.viewStock()) {
-//            if (!(s instanceof Material)) {
-//                stockList.add(s);
-//            }
-//            for (StorefrontInventory i : storefrontInventoryList) {
-//                if (stockList.contains(i.getStock())) {
-//                    stockList.remove(i.getStock());
-//                    break;
-//                }
-//            }
-//        }
+        tempList = transferBean.viewStock();
+        stockList = new ArrayList<>();
+        for (Stock s : tempList) {
+            if (s instanceof FurnitureModel || s instanceof RetailItem) {
+                stockList.add(s);
+            }
+        }
+
+        Iterator<Stock> iterator = stockList.iterator();
+        while (iterator.hasNext()) {
+            Stock s = iterator.next();
+            for (StorefrontInventory i : storefrontInventoryList) {
+                if (i.getStock().equals(s)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 
 //  Function: To create a Storefront Inventory
@@ -100,8 +112,8 @@ public class StorefrontInventoryManagedBean implements Serializable {
 //  Function: To edit a Storefront Inventory
     public void editStorefrontInventory(ActionEvent event) throws IOException {
         StorefrontInventory si = (StorefrontInventory) event.getComponent().getAttributes().get("storefrontInventory");
-        
-        System.out.println("1. SI is: " + si.getLocationInStore());
+
+        System.out.println("1. SI is: " + si.getLocationInStore().getId());
         if (si.getRepQty() > si.getMaxQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be lesser than Maximum Quantity. Editing of Storefront Inventory was unsuccessful.", ""));
@@ -110,9 +122,8 @@ public class StorefrontInventoryManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Replenishment Quantity should be minimally 50% or lesser than the Maximum Quantity. <br/> The suggested Replenishment Quantity with Maximum Quantity of " + si.getMaxQty() + " should be " + Math.floor((double) si.getMaxQty() * .5) + " or lesser. <br/> Editing of Storefront Inventory was unsuccessful.", ""));
         } else {
-            System.out.println("2. It came here!");
-            storefrontInventoryBean.editStorefrontInventory(si);
-            storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+            System.out.println("2. It came here!" + si.getLocationInStore().getId());
+            storefrontInventoryBean.editStorefrontInventory(si, si.getLocationInStore().getId(), si.getRepQty(), si.getMaxQty());
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Storefront Inventory has sucessfully been edited", ""));
         }
@@ -121,8 +132,24 @@ public class StorefrontInventoryManagedBean implements Serializable {
 //  Function: To delete a Storefront Inventory
     public void deleteStorefrontInventory(ActionEvent event) throws IOException {
         StorefrontInventory si = (StorefrontInventory) event.getComponent().getAttributes().get("storefrontInventory");
-        storefrontInventoryBean.deleteStorefrontInventory(si);
+        if (si.getQty() != 0) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Current Quantity has to be 0 to allow deletion. Deletion of Storefront Inventory was unsuccessful.", ""));
+        } else {
+            storefrontInventoryBean.deleteStorefrontInventory(si);
         storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
+        }
+        
+        
+        
+    }
+
+    public List<Stock> getTempList() {
+        return tempList;
+    }
+
+    public void setTempList(List<Stock> tempList) {
+        this.tempList = tempList;
     }
 
     public int getMaxQty() {

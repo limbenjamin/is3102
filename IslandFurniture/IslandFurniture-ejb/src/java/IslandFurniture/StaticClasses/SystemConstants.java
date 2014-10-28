@@ -22,4 +22,6 @@ public class SystemConstants {
     // Default weight multiplier given to sales figure of previous y-o-y month
     public static final double FORECAST_DEFAULT_WEIGHT = 1.25;
 
+    // Number of days before returning of furniture is invalid
+    public static final int FURNITURE_RETURN_CUTOFF = 30;
 }

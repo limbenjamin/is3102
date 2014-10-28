@@ -6,15 +6,18 @@
 package IslandFurniture.EJB.InventoryManagement;
 
 import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Enums.StorageAreaType;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageStorageLocationLocal {
 
     //  Function: To check if there is any Storage Area with same name - to not allow duplicates
@@ -62,6 +65,9 @@ public interface ManageStorageLocationLocal {
     //  Function: To view Storage Bins in Shipping Area only
     List<StorageBin> viewStorageBinsAtShippingOnly(Plant plant);
 
+    //  Function: To view Storage Bins in Storage Area only    
+    List<StorageBin> viewStorageBinsAtStorageOnly(Plant plant);
+
     //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStorageArea(Long id);
 
@@ -70,5 +76,8 @@ public interface ManageStorageLocationLocal {
 
     //  Function: To view Storage Bins in a particular Stock - For AJAX purposes
     List<StorageBin> viewStorageBinsOfAStock(Plant plant, Long stockId);
-    
+
+    //  Function: To view Storage Bins of a Particular Stock in storage  
+    List<StorageBin> viewStorageBinsAtStorageOnlyForAStock(Stock stock, Plant plant);
+
 }

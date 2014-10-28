@@ -1,0 +1,172 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="transId" value="#{furnitureReturnManagedBean.transId}"/>
+        </f:metadata>
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Furniture Return</strong></li>
+            </ol>  
+        </div> 
+        <div class="col-md-10">
+            <span class="pull-right">
+                <p:outputPanel rendered="#{furnitureReturnManagedBean.furnTrans != null}" >
+                    <h:form>
+                        <h:commandButton rendered="#{furnitureReturnManagedBean.returning == false and furnitureReturnManagedBean.issueing == false}" action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{furnitureReturnManagedBean.processReturn}" value="Return Furniture" class="btn btn-sm btn-success pull-right" />
+                        <h:commandButton rendered="#{furnitureReturnManagedBean.validForClaim == true}" action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{furnitureReturnManagedBean.processIssue}" value="Issue Furniture" class="btn btn-sm btn-success pull-right" />
+                        <h:commandLink rendered="#{furnitureReturnManagedBean.returning == true or furnitureReturnManagedBean.issueing == true}" action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button> 
+                        </h:commandLink>
+                        <h:commandLink rendered="#{furnitureReturnManagedBean.returning == false and furnitureReturnManagedBean.issueing == false}" action="furniturereturn.xhtml">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button> 
+                        </h:commandLink>
+                    </h:form>
+                </p:outputPanel>
+            </span>                          
+            <h4>Process Return of Furniture</h4><hr></hr>
+            <br/>
+            <h:form rendered="#{furnitureReturnManagedBean.furnTrans == null}" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Enter Receipt Number: </label>            
+                    <div class="col-sm-2">
+                        <p:inputText value="#{furnitureReturnManagedBean.transId}" />
+                    </div>
+                    <div class="col-sm-2">
+                        <h:commandButton action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{furnitureReturnManagedBean.checkTrans}" value="Retrieve Transaction" class="btn btn-primary" />
+                    </div>
+                </div>
+            </h:form>
+            <h:form rendered="#{furnitureReturnManagedBean.furnTrans != null}" class="form-horizontal">
+                <div>
+                    <label class="col-sm-2 control-label">Receipt Number: </label>
+                    <div class="col-sm-10"><h5>#{furnitureReturnManagedBean.furnTrans.id}</h5></div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Transaction Time: </label>
+                    <div class="col-sm-10"><h5>
+                            <h:outputText value="#{furnitureReturnManagedBean.furnTrans.transTime.time}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss z" timeZone="#{furnitureReturnManagedBean.furnTrans.store.timeZoneID}" />
+                            </h:outputText></h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Store: </label>
+                    <div class="col-sm-10"><h5>#{furnitureReturnManagedBean.furnTrans.store.name} (#{furnitureReturnManagedBean.furnTrans.store.countryOffice.name})</h5></div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Customer: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.member != null}" value="#{furnitureReturnManagedBean.furnTrans.member.name} (ID: #{furnitureReturnManagedBean.furnTrans.member.id})" />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.member == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Returned Receipt ID: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.returnedTrans != null}" value="#{furnitureReturnManagedBean.furnTrans.returnedTrans.id}" />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.returnedTrans == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Returned Receipt Credits Used: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.returnedTrans != null}" value="#{furnitureReturnManagedBean.furnTrans.returnedCreditsUsed}" converter="#{furnitureReturnManagedBean.converter}" />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.returnedTrans == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Created by: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.createdBy != null}" value="#{furnitureReturnManagedBean.furnTrans.createdBy.name} (#{furnitureReturnManagedBean.furnTrans.createdBy.username})" />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.createdBy == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Last Modified by: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.lastModBy != null}" value="#{furnitureReturnManagedBean.furnTrans.lastModBy.name} (#{furnitureReturnManagedBean.furnTrans.lastModBy.username}) on " />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.lastModBy != null}" value="#{furnitureReturnManagedBean.furnTrans.lastModTime.time}" >
+                                <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss z" timeZone="#{furnitureReturnManagedBean.staff.plant.timeZoneID}" />
+                            </h:outputText>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.lastModBy == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Voucher Amount Used: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.voucherTotal != null}" value="#{furnitureReturnManagedBean.furnTrans.voucherTotal}" converter="#{furnitureReturnManagedBean.converter}" />
+                            <h:outputText rendered="#{furnitureReturnManagedBean.furnTrans.voucherTotal == null}" value="-NONE-" />
+                        </h5>
+                    </div>
+                </div>
+                <div>
+                    <label class="col-sm-2 control-label">Total Amount: </label>
+                    <div class="col-sm-10">
+                        <h5>
+                            <h:outputText value="#{furnitureReturnManagedBean.furnTrans.grandTotal}" converter="#{furnitureReturnManagedBean.converter}" />
+                        </h5>
+                    </div>
+                </div>
+                <br/>
+
+                <p:dataTable value="#{furnitureReturnManagedBean.furnTrans.furnitureTransactionDetails}" var="detail">
+                    <p:column>
+                        <f:facet name="header">Product ID</f:facet>
+                        <h:outputText value="#{detail.furnitureModel.id}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Product Name</f:facet>
+                        <h:outputText value="#{detail.furnitureModel.name}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Quantity</f:facet>
+                        <h:outputText value="#{detail.qty}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Unit Price</f:facet>
+                        <h:outputText value="#{detail.unitPrice}" converter="#{furnitureReturnManagedBean.converter}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Subtotal</f:facet>
+                        <h:outputText value="#{detail.subtotal}" converter="#{furnitureReturnManagedBean.converter}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">Returned / Claimed</f:facet>
+                        <h:outputText rendered="#{furnitureReturnManagedBean.returning == false}" value="#{detail.numReturned}" />
+                        <h:inputText rendered="#{furnitureReturnManagedBean.returning == true}" value="#{detail.numReturned}" size="3"/>
+                        <h:outputText value=" / " />
+                        <h:outputText rendered="#{furnitureReturnManagedBean.issueing == false}" value="#{detail.numClaimed}" />
+                        <h:inputText rendered="#{furnitureReturnManagedBean.issueing == true}" value="#{detail.numClaimed}" size="3"/>
+                    </p:column>
+                </p:dataTable>
+                <p:outputPanel rendered="#{furnitureReturnManagedBean.returning == true}" styleClass="form-group">
+                    <h:commandButton action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{furnitureReturnManagedBean.saveReturns}" value="Confirm Returned Quantities" class="btn btn-primary pull-right btn-extra-right" /> 
+                </p:outputPanel>
+                <p:outputPanel rendered="#{furnitureReturnManagedBean.issueing == true}" styleClass="form-group">
+                    <h:commandButton action="furniturereturn.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{furnitureReturnManagedBean.saveClaims}" value="Confirm Claimed Quantities" class="btn btn-primary pull-right btn-extra-right" /> 
+                </p:outputPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -19,6 +19,8 @@ import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -48,6 +50,7 @@ public class InventoryTransferExternalManagedBean implements Serializable {
     private List<ExternalTransferOrder> externalTransferOrderListRequestPostedList;
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledPendingList;
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedList;
+    private List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedListFromRequesting;
 
     private ExternalTransferOrder externalTransferOrder;
 
@@ -74,24 +77,36 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         externalTransferOrderListRequestPostedList = transferBean.viewExternalTransferOrderRequestedPosted(plant);
         externalTransferOrderListFulfilledPendingList = transferBean.viewExternalTransferOrderFulfilledPending(plant);
         externalTransferOrderListFulfilledPostedList = transferBean.viewExternalTransferOrderFulfilledPosted(plant);
+        externalTransferOrderListFulfilledPostedListFromRequesting = transferBean.viewExternalTransferOrderFulfilledPostedFromRequesting(plant);
     }
 
 //  Function: To create a External Tranfer Order
     public void createExternalTransferOrder(ActionEvent event) throws IOException {
-        externalTransferOrder = transferBean.createExternalTransferOrder(plant);
+        externalTransferOrder = transferBean.createExternalTransferOrder(plant, getCalendar());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externaldetail.xhtml?id=" + externalTransferOrder.getId().toString());
     }
 
 //  Function: To delete a External Transfer Order  
     public void deleteExternalTransferOrder(ActionEvent event) throws IOException {
         ExternalTransferOrder to = (ExternalTransferOrder) event.getComponent().getAttributes().get("to");
-        for (ExternalTransferOrderDetail g : transferBean.viewExternalTransferOrderDetail(to.getId())) {
-            transferBean.deleteExternaTransferOrderDetail(g);
+        if (!transferBean.viewExternalTransferOrderDetail(to.getId()).isEmpty()) {
+            for (ExternalTransferOrderDetail g : transferBean.viewExternalTransferOrderDetail(to.getId())) {
+                transferBean.deleteExternaTransferOrderDetail(g);
+            }
         }
         transferBean.deleteExternaTransferOrder(to.getId());
         externalTransferOrderListRequestPendingList = transferBean.viewExternalTransferOrderRequestedPending(plant);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The External Transfer Order was successfully deleted", ""));
+    }
+
+    //  Function: To get current Time in Calendar type
+    Calendar getCalendar() {
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        Calendar calDate = cal;
+        return calDate;
     }
 
     public Long getStorageAreaId() {
@@ -172,6 +187,14 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 
     public void setExternalTransferOrderListFulfilledPostedList(List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedList) {
         this.externalTransferOrderListFulfilledPostedList = externalTransferOrderListFulfilledPostedList;
+    }
+
+    public List<ExternalTransferOrder> getExternalTransferOrderListFulfilledPostedListFromRequesting() {
+        return externalTransferOrderListFulfilledPostedListFromRequesting;
+    }
+
+    public void setExternalTransferOrderListFulfilledPostedListFromRequesting(List<ExternalTransferOrder> externalTransferOrderListFulfilledPostedListFromRequesting) {
+        this.externalTransferOrderListFulfilledPostedListFromRequesting = externalTransferOrderListFulfilledPostedListFromRequesting;
     }
 
     public ExternalTransferOrder getExternalTransferOrder() {

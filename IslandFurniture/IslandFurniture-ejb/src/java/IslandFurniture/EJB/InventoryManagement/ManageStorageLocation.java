@@ -181,6 +181,25 @@ public class ManageStorageLocation implements ManageStorageLocationLocal {
         return q.getResultList();
     }
 
+    //  Function: To view Storage Bins in Storage Area only    
+    @Override
+    public List<StorageBin> viewStorageBinsAtStorageOnly(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE s.storageArea.plant.id=:plantId AND s.storageArea.type=:type");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("type", StorageAreaType.STORAGE);
+        return q.getResultList();
+    }
+    
+        //  Function: To view Storage Bins of a Particular Stock in storage  
+    @Override
+    public List<StorageBin> viewStorageBinsAtStorageOnlyForAStock(Stock stock, Plant plant) {
+        Query q = em.createQuery("SELECT s FROM StorageBin s WHERE (s.storageArea.plant.id=:plantId AND s.storageArea.type=:type AND s.stockUnits.stock.id=:stockId)");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        q.setParameter("type", StorageAreaType.STORAGE);
+        return q.getResultList();
+    }
+
 //  Function: To view Storage Bins in a particular Storage Area - For AJAX purposes
     @Override
     public List<StorageBin> viewStorageBinsOfAStorageArea(Long id) {

@@ -139,4 +139,19 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer = getCustomer(emailAddress);
         customer.setPassword(newPassword);
     }
+    
+    @Override
+    public void removeCustomerAccount(String emailAddress) {
+        customer = getCustomer(emailAddress);
+        customer.setActive(Boolean.FALSE);
+        customer.setEmailAddress(null);
+        customer.setPassword("");
+        customer.setName("");
+        customer.setDateOfBirth("");
+        customer.setAddress("");
+        customer.setPhoneNo("");
+        customer.setLastLogon(null);
+        customer.setMembershipTier(null);
+        customer.setLoyaltyCardId(null);
+    }
 }

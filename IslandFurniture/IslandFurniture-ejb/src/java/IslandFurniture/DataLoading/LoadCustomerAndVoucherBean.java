@@ -7,8 +7,6 @@ package IslandFurniture.DataLoading;
 
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
-import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
-import IslandFurniture.EJB.OperationalCRM.ManageMarketingBean;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.Entities.CountryOffice;
@@ -53,12 +51,13 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
     
 
 
-    private MembershipTier addMembershipTier(String title) {
+    private MembershipTier addMembershipTier(String title, int reqPoints) {
         MembershipTier tier = QueryMethods.findMembershipTierByTitle(em, title);
 
         if (tier == null) {
             tier = new MembershipTier();
             tier.setTitle(title);
+            tier.setPoints(reqPoints);
             em.persist(tier);
         }
 
@@ -69,9 +68,9 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
     @TransactionAttribute(REQUIRED)
     public boolean loadSampleData(){
         // Create Membership Tiers
-        MembershipTier bronze = this.addMembershipTier("Bronze");
-        MembershipTier silver = this.addMembershipTier("Silver");
-        MembershipTier Gold = this.addMembershipTier("Gold");
+        MembershipTier bronze = this.addMembershipTier("Bronze", 1000);
+        MembershipTier silver = this.addMembershipTier("Silver", 6000);
+        MembershipTier Gold = this.addMembershipTier("Gold", 20000);
 
         // Load Promotion for bronze membershiptier
         PromotionCampaign pc = new PromotionCampaign();

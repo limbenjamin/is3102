@@ -71,15 +71,10 @@ public class MembershipTierManagedBean implements Serializable {
 //  Function: To edit a Membership Tier
     public void editMembershipTier(ActionEvent event) throws IOException {
         MembershipTier ss = (MembershipTier) event.getComponent().getAttributes().get("membershipTier");
-        if (membershipBean.checkIfNoMembershipTierSameName(ss.getTitle())) {
             membershipBean.editMembershipTier(ss);
             membershipTierList = membershipBean.viewMembershipTier();
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been created", ""));
-        } else {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Membership Tier with that title. Editing of Membership Tier was unsuccessful.", ""));
-        }
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been edited", ""));
     }
 
 //  Function: To delete a Membership Tier

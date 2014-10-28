@@ -48,7 +48,9 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
-        fTrans.setGrandTotal(total);
+        fTrans.setGrandTotal(Math.floor(total*100)/100);
+        fTrans.setVoucherTotal(0.0);
+        fTrans.setReturnedCreditsUsed(0.0);
 
         em.persist(fTrans);
 
@@ -76,7 +78,8 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         riTrans.setRetailItemTransactionDetails(riTransDetails);
-        riTrans.setGrandTotal(total);
+        riTrans.setGrandTotal(Math.floor(total*100)/100);
+        riTrans.setVoucherTotal(0.0);
 
         em.persist(riTrans);
 
@@ -102,7 +105,8 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         restTrans.setRestaurantTransactionDetails(restTransDetails);
-        restTrans.setGrandTotal(total);
+        restTrans.setGrandTotal(Math.floor(total*100)/100);
+        restTrans.setVoucherTotal(0.0);
 
         em.persist(restTrans);
 

@@ -25,9 +25,9 @@ public interface ManageInventoryTransferLocal {
     void confirmStockUnitMovement(Long stockUnitId);
 
     //  Function: To create a External Transfer Order (Status: Requested)
-    ExternalTransferOrder createExternalTransferOrder(Plant plant);
+    ExternalTransferOrder createExternalTransferOrder(Plant plant, Calendar cal);
 
-     //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
+    //  Function: To create a External Transfer Order (Status: Requested) from Manufacturing
     ExternalTransferOrder createExternalTransferOrderFromManufacturing(Plant fulfillingPlant, Plant requestingPlant);
 
     //  Function: To create a Replenishment Transfer Order (Status: Requested)
@@ -85,6 +85,9 @@ public interface ManageInventoryTransferLocal {
     //  Function: To display list of Replenishment Transfer Order (Requested)
     List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequested(Plant plant);
 
+    //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+    List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPostedFromRequesting(Plant plant);
+
     //  Function: To display list of Replenishment Transfer Order (Requested) -- For a particular Stock
     List<ReplenishmentTransferOrder> viewReplenishmentTransferOrderRequestedForAParticularStock(Plant plant, Stock stock);
 
@@ -129,7 +132,7 @@ public interface ManageInventoryTransferLocal {
     void deleteExternaTransferOrderDetail(ExternalTransferOrderDetail externalTransferOrderDetail);
 
     //  Function: To edit External Transfer Order  
-    void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal);
+    void editExternalTransferOrder(ExternalTransferOrder externalTransferOrder, Calendar cal, Plant plant);
 
     //  Function: To edit External Transfer Order Request to Posted  
     void editExternalTransferOrderStatusToRequestPosted(ExternalTransferOrder externalTransferOrder);
@@ -145,5 +148,8 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To check Replenishment Transfer Order (Requested) already exists  
     boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock);
+
+    //  Function: To display list of Replenishment Transfer Order (Requested)    
+    ReplenishmentTransferOrder updateReplenishmentTransferOrder(Plant plant, Stock stock);
 
 }

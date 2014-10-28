@@ -8,11 +8,13 @@ package IslandFurniture.EJB.InventoryManagement;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.Stock;
+import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -53,17 +55,18 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
 
 //  Function: To edit Storefront Inventory
     @Override
-    public void editStorefrontInventory(StorefrontInventory storefrontInventoryUpdated) {
-        StoreSection storeSection = (StoreSection) em.find(StoreSection.class, storefrontInventoryUpdated.getLocationInStore().getId());
-        StorefrontInventoryPK pk = new StorefrontInventoryPK(storefrontInventoryUpdated.getStore().getId(), storefrontInventoryUpdated.getStock().getId());
+    public void editStorefrontInventory(StorefrontInventory updatedStorefrontInventory, Long storeSectionId, int rep, int max) {
+        StoreSection storeSection = (StoreSection) em.find(StoreSection.class, storeSectionId);
+        StorefrontInventoryPK pk = new StorefrontInventoryPK(updatedStorefrontInventory.getStore().getId(), updatedStorefrontInventory.getStock().getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, pk);
-        
-        System.out.println("3. SI is: " + storefrontInventory.getLocationInStore());
-        storefrontInventory.setRepQty(storefrontInventoryUpdated.getRepQty());
-        storefrontInventory.setMaxQty(storefrontInventoryUpdated.getMaxQty());
+
+        System.out.println("3. SI is: " + storeSection);
+        storefrontInventory.setRepQty(rep);
+        storefrontInventory.setMaxQty(max);
         storefrontInventory.setLocationInStore(storeSection);
         em.merge(storefrontInventory);
         em.flush();
+        em.refresh(storefrontInventory);
     }
 
 //  Function: To delete Storefront Inventory
@@ -90,7 +93,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         return storefrontInventory;
     }
-    
+
 //  Function: To edit Storefront Inventory quantity
     @Override
     public void editStorefrontInventoryQty(StorefrontInventory si, int qty) {
@@ -98,7 +101,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
         storefrontInventory.setQty(qty);
         em.merge(storefrontInventory);
-        em.flush(); 
+        em.flush();
     }
 
     //  Function: To reduce Storefront Inventory from Transaction
@@ -114,6 +117,9 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         // End: Reduce Qty from Transaction : Current - Qty 
 
         // Start: If curr < replenishment, then create Replenishment Transfer Order
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+
         if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
             if (transferBean.checkIfReplenishmentTransferOrderforStockDoNotExists(plant, stock)) {
                 replenishmentTransferOrder = new ReplenishmentTransferOrder();
@@ -126,5 +132,58 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
             }
         }
         // End: If curr < replenishment, then create Replenishment Transfer Order 
+    }
+
+    //  Function: To the Stock Level of a Stock stored in a Plant
+    @Override
+    public String viewStorefrontInventoryStockLevelPerPlant(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
+
+        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE AND s.goodsIssuedDocument=NULL");
+        t.setParameter("plantId", plant.getId());
+        t.setParameter("stockId", stock.getId());
+        List<StockUnit> stockUnitList = t.getResultList();
+
+        Integer stockUnitQty = 0;
+        for (StockUnit s : stockUnitList) {
+            stockUnitQty = stockUnitQty + s.getQty().intValue();
+        }
+        
+        if (stockUnitQty + storefrontInventory.getQty() == 0) {
+            return "Out of Stock";
+        } else if (stockUnitQty + storefrontInventory.getQty() < storefrontInventory.getRepQty()){
+            return "Selling Fast";
+        } else {
+            return "Stock Available";
+        }
+    }
+    
+    //  Function: To return the Qty of StorefrontInventory
+    @Override
+    public Integer viewStorefrontInventoryStockQty(Plant plant, Stock stock) {
+        Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId AND s.stock.id=:stockId");
+        q.setParameter("plantId", plant.getId());
+        q.setParameter("stockId", stock.getId());
+        storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
+        return storefrontInventory.getQty(); 
+    }
+    
+    //  Function: To return the Qty of StockUnit
+    @Override
+    public Integer viewStockUnitStockQty(Plant plant, Stock stock) {
+        Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE AND s.goodsIssuedDocument=NULL");
+        t.setParameter("plantId", plant.getId());
+        t.setParameter("stockId", stock.getId());
+        List<StockUnit> stockUnitList = t.getResultList();
+
+        Integer stockUnitQty = 0;
+        for (StockUnit s : stockUnitList) {
+            stockUnitQty = stockUnitQty + s.getQty().intValue();
+        }
+        
+        return stockUnitQty;
     }
 }
