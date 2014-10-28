@@ -57,11 +57,14 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     private List<StorageArea> storageAreaList;
     private List<Stock> stockList;
     private List<ExternalTransferOrderDetail> externalTransferOrderDetailList;
+    private List<Plant> plantList;
 
     private String username;
     private String externalDateString;
     private String plantType;
     private String dateString;
+    private String plantTypeRequest;
+    private String plantTypeFulfill;
     private Date dateType;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private Calendar postingDate;
@@ -109,6 +112,53 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
             dateString = df.format(externalTransferOrder.getTransferDate().getTime());
         }
         // end: To display date properly
+        // start: To display plant list properly
+        plantList = orgBean.displayPlantbyInstanceOf(plant);
+        for (Plant g : plantList) {
+
+            plantType = g.getClass().getSimpleName();
+            if (plantType.equals("ManufacturingFacility")) {
+                plantType = "MFG";
+            } else if (plantType.equals("CountryOffice")) {
+                plantType = "CO";
+            } else if (plantType.equals("GlobalHQ")) {
+                plantType = ""; //no need cos global HQ global HQ looks ugly
+            }
+
+            g.setName(g.getName() + " " + plantType);
+        }
+        // end: To display plant list properly
+        // start: To display fulfilled plant properly
+        if (externalTransferOrder.getFulfillingPlant() != null) {
+            plantId = externalTransferOrder.getFulfillingPlant().getId();
+        }
+        // end: To display fulfilled plant properly
+        // start: To display plant name properly
+        
+        if (externalTransferOrder.getRequestingPlant() != null && externalTransferOrder.getFulfillingPlant() != null) {
+            String plantType2 = externalTransferOrder.getRequestingPlant().getClass().getSimpleName();
+        if (plantType2.equals("ManufacturingFacility")) {
+            plantType2 = "MFG";
+        } else if (plantType2.equals("CountryOffice")) {
+            plantType2 = "CO";
+        } else if (plantType2.equals("GlobalHQ")) {
+            plantType2 = ""; //no need cos global HQ global HQ looks ugly
+        }
+        plantTypeRequest = externalTransferOrder.getRequestingPlant().getName() + " (" + plantType2 + ")";
+
+        String plantType3 = externalTransferOrder.getFulfillingPlant().getClass().getSimpleName();
+        if (plantType3.equals("ManufacturingFacility")) {
+            plantType3 = "MFG";
+        } else if (plantType3.equals("CountryOffice")) {
+            plantType3 = "CO";
+        } else if (plantType3.equals("GlobalHQ")) {
+            plantType3 = ""; //no need cos global HQ global HQ looks ugly
+        }
+        plantTypeFulfill = externalTransferOrder.getFulfillingPlant().getName() + " (" + plantType3 + ")";
+        // end: To display plant name properly
+        }
+
+        
     }
 
 //  Function: To create a External Transfer Order Detail (Request)
@@ -137,7 +187,10 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         dateCal = Calendar.getInstance();
         Date date = dateType;
         dateCal.setTime(date);
-        transferBean.editExternalTransferOrder(externalTransferOrder, dateCal);
+
+        System.out.println("Plant id is" + plantId);
+
+        transferBean.editExternalTransferOrder(externalTransferOrder, dateCal, orgBean.getPlantById(plantId));
     }
 
 //  Function: To edit a External Transfer Order Detail (Request)    
@@ -215,7 +268,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
                 }
                 // End
             }
-            
+
             transferBean.editExternalTransferOrderStatusToRequestFulfilled(externalTransferOrder, plant);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Issued Document was successfully created for External Transfer Order #" + externalTransferOrder.getId(), ""));
@@ -227,6 +280,30 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is no such stock", ""));
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externalpending.xhtml?id=" + externalTransferOrder.getId().toString());
         }
+    }
+
+    public String getPlantTypeRequest() {
+        return plantTypeRequest;
+    }
+
+    public void setPlantTypeRequest(String plantTypeRequest) {
+        this.plantTypeRequest = plantTypeRequest;
+    }
+
+    public String getPlantTypeFulfill() {
+        return plantTypeFulfill;
+    }
+
+    public void setPlantTypeFulfill(String plantTypeFulfill) {
+        this.plantTypeFulfill = plantTypeFulfill;
+    }   
+    
+    public List<Plant> getPlantList() {
+        return plantList;
+    }
+
+    public void setPlantList(List<Plant> plantList) {
+        this.plantList = plantList;
     }
 
     public StockUnit getStockUnitOld() {

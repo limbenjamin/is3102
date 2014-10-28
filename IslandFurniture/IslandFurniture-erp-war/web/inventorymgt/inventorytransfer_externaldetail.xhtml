@@ -43,12 +43,19 @@
                                 <table class="table table-hover table-condensed">
                                     <tr>
                                         <th>Requesting Plant</th>
+                                        <th>Fulfilling Plant</th>
                                         <th>Date</th>
                                         <th>Update</th>
                                     </tr>
                                     <h:form class="form-horizontal">
                                         <tr>
                                             <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.name}" /></td>
+                                            <td>
+                                                <h:selectOneMenu id="stockId" class="form-control needauto" value="#{inventoryTransferExternalDetailManagedBean.plantId}">
+                                                    <f:selectItem itemLabel="Select Plant" />
+                                                    <f:selectItems value="#{inventoryTransferExternalDetailManagedBean.plantList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                                </h:selectOneMenu>
+                                            </td>
                                             <td><h:inputText id="date" value="#{inventoryTransferExternalDetailManagedBean.dateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
                                             <td>
                                                 <h:commandButton action="inventorytransfer_externaldetail" actionListener="#{inventoryTransferExternalDetailManagedBean.editExternalTransferOrder}" class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -60,6 +67,7 @@
                                 </table>    
                             </div>
                         </section>
+
 
                         <br/>
 

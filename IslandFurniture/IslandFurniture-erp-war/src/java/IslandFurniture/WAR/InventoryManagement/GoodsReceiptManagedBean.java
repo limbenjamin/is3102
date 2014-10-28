@@ -73,7 +73,7 @@ public class GoodsReceiptManagedBean implements Serializable {
 
 //  Function: To create new Goods Receipt Document
     public String addGoodsReceiptDocument() {
-        goodsReceiptDocument = receiptBean.createGoodsReceiptDocument(plant);
+        goodsReceiptDocument = receiptBean.createGoodsReceiptDocument(plant, getCalendar());
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsReceiptDocument.getId());
         return "goodsreceiptdocument";
     }
@@ -136,6 +136,15 @@ public class GoodsReceiptManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "The Goods Receipt Document was successfully deleted", ""));
 
         return "goodsreceipt";
+    }
+
+    //  Function: To get current Time in Calendar type
+    Calendar getCalendar() {
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        Calendar calDate = cal;
+        return calDate;
     }
 
     public Long getPlantId() {
@@ -267,4 +276,3 @@ public class GoodsReceiptManagedBean implements Serializable {
     }
 
 }
-

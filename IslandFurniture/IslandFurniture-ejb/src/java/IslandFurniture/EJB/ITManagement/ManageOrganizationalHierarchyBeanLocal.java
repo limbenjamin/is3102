@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.ITManagement;
 
 import IslandFurniture.Entities.Country;
@@ -51,18 +50,20 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     Plant findPlantByName(Country country, String plantName);
 
     List<Country> getCountries();
-    
+
     List<Plant> displayPlant();
-    
+
     GlobalHQ addGlobalHQ(String name, Country country, String tz);
-    
+
     Country addCountry(String countryName);
-    
+
     List<CountryOffice> getCountryOffices();
-    
+
     CountryOffice findCountryOfficeByName(String countryOfficeName);
-    
+
     Plant findPlantByNameOnly(String plantName);
-    
+
     Plant getPlantById(Long plantId);
+
+    List<Plant> displayPlantbyInstanceOf(Plant plant);
 }

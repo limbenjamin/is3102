@@ -24,7 +24,7 @@ import java.util.List;
 public interface ManageGoodsReceiptLocal {
 
     //  Function: To create a Goods Receipt Document
-    GoodsReceiptDocument createGoodsReceiptDocument(Plant plant);
+    GoodsReceiptDocument createGoodsReceiptDocument(Plant plant, Calendar cal);
 
     //  Function: To create Goods Receipt Document Detail
     void createGoodsReceiptDocumentDetail(Long grdId, Long stockId, Integer quantity);
