@@ -88,11 +88,17 @@ public class ShoppingListDetailManagedBean {
                 else {
                     listId = (Long) session.getAttribute("id");
                 }
+                
                 shoppingList = mslbl.getShoppingList(listId);
-                // update total price of the list
-                mslbl.updateListTotalPrice(listId);
-                subtotal = shoppingList.getTotalPrice();
-                shoppingListDetails = mslbl.getShoppingListDetails(listId);                
+                if (shoppingList.getStore().getCountryOffice().equals(countryOffice)) {
+                    // update total price of the list
+                    mslbl.updateListTotalPrice(listId);
+                    subtotal = shoppingList.getTotalPrice();
+                    shoppingListDetails = mslbl.getShoppingListDetails(listId);
+                }
+                else {
+                    shoppingList = new ShoppingList();
+                }
             } catch (Exception e){
             
             }

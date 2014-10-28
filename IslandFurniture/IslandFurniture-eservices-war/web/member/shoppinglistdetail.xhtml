@@ -11,7 +11,17 @@
         <ui:define name="content">
         <section>
             <div class="container">
-                <div class="row">
+                <h:panelGroup layout="block" rendered="#{empty shoppingListDetailManagedBean.shoppingList.id}" style="height:410px;" styleClass="row">
+                    <div class="col-md-12">
+                        <h2>This shopping list does not exist in this country's site!</h2>
+                        <hr/>
+                        <h4>Create a new shopping list instead!</h4>
+                            <a href="shoppinglist.xhtml" class="btn btn-default btn-round">
+                                <i class="fa fa-shopping-cart"></i> My Shopping Lists
+                            </a>
+                    </div>
+                </h:panelGroup>                
+                <h:panelGroup layout="block" rendered="#{not empty shoppingListDetailManagedBean.shoppingList.id}" styleClass="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb">
                           <li><a href="index.xhtml">Home</a></li>
@@ -111,7 +121,7 @@
                         <hr/>
                     </div>
                     </div>
-                </div>
+                </h:panelGroup>
             </div>
         </section>
             </ui:define>
