@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="logo pull-left">
-                                <a href="#{application.contextPath}/index.xhtml">
+                                <a href="#{application.contextPath}/#{request.getAttribute('coCode')}/home.xhtml">
                                     <img src="#{application.contextPath}/assets/images/logo/logo_#{templateManagedBean.selectedLocale}.png" alt="" 
                                          style="max-width: 300px;"/>
                                 </a>
@@ -34,8 +34,13 @@
                         </div>
                         <div class="col-sm-8">
                             <div class="shop-menu pull-right">
-                                <ul class="nav navbar-nav">
+                                <ul class="nav navbar-nav">                                    
                                     <p:outputPanel rendered="#{not empty emailAddress}">
+                                        <li>
+                                            <a href="#{application.contextPath}/index.xhtml">
+                                                <i class="fa fa-globe"></i> <h:outputText value="#{bundle['member.country']}" />
+                                            </a>
+                                        </li>                                        
                                         <li>
                                             <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
                                                 <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
@@ -54,12 +59,16 @@
                                     </p:outputPanel>
                                     <p:outputPanel rendered="#{empty emailAddress}">
                                         <li>
+                                            <a href="#{application.contextPath}/index.xhtml">
+                                                <i class="fa fa-globe"></i> <h:outputText value="#{bundle['member.country']}" />
+                                            </a>
+                                        </li>                                        
+                                        <li>
                                             <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
                                                 <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
                                             </a>
                                         </li>
-                                    </p:outputPanel>
-                                    
+                                    </p:outputPanel>                                    
                                 </ul>
                             </div>
                         </div>

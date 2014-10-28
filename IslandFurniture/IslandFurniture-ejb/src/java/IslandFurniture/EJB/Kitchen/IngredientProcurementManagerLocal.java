@@ -16,11 +16,13 @@ import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author Zee
  */
+@Local
 public interface IngredientProcurementManagerLocal {
 
     IngredientPurchaseOrder createIngredPurchaseOrder(PurchaseOrderStatus status, IngredientSupplier supplier, Store store, Plant shipsTo, Calendar orderDate);

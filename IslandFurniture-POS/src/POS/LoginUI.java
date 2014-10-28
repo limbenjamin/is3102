@@ -283,11 +283,11 @@ public class LoginUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jUsernameFieldUsernameActionPerformed
 
     private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        URL url = getClass().getResource("../resources/config.xml");
+        URL url = this.getClass().getResource("/resources/config.xml");
         try {
             File f = new File(url.toURI());
             FileOutputStream output = new FileOutputStream(f, false);
-            String s = "<root>\n<balance>" + totalRegisterCash + "\n<plant>" + storeType + "\n<root>";
+            String s = "<root>\n<balance>" + totalRegisterCash + "</balance>\n<plant>" + storeType + "</plant>\n<root>";
             output.write(s.getBytes());
             output.close();
         } catch (URISyntaxException ex) {
@@ -331,9 +331,7 @@ public class LoginUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InputStream is = getClass().getResourceAsStream("../resources/config.xml");
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr);
+                BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/resources/config.xml")));
                 String line;
                 Double cash = 0.0;
                 String storeType = "None";
@@ -342,13 +340,11 @@ public class LoginUI extends javax.swing.JFrame {
                     {
                       System.err.println(line);
                       if (line.contains("<balance>"))
-                          cash = Double.parseDouble(line.substring(9, line.length()));
+                          cash = Double.parseDouble(line.substring(9, line.length()-10));
                       if (line.contains("<plant>"))
-                          storeType = line.substring(7, line.length());
+                          storeType = line.substring(7, line.length()-8);
                     }
                     br.close();
-                    isr.close();
-                    is.close();
                 }catch(Exception e){
                     System.err.println(e);
                 }

@@ -15,6 +15,7 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -57,6 +58,8 @@ public class PaymentUI extends javax.swing.JFrame {
     private Double totalRegisterCash;
     private String currencyCode;
     private String storeType;
+    private String transactionId;
+    private DecimalFormat df;
 
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
@@ -86,6 +89,7 @@ public class PaymentUI extends javax.swing.JFrame {
             returnReceiptField.setEnabled(Boolean.FALSE);
             addButton.setEnabled(Boolean.FALSE);
         }
+        df = new DecimalFormat("#0.00"); 
         finishButton.setEnabled(Boolean.FALSE);
         cashCreditField.setEnabled(Boolean.FALSE);
         cashButton.setSelected(Boolean.TRUE);
@@ -466,7 +470,7 @@ public class PaymentUI extends javax.swing.JFrame {
             params.add("receiptAmt");
             values.add(receiptAmt);
             try {
-                Connector.postForm(params, values, "stock/maketransaction");   
+                transactionId = Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -484,7 +488,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 partnerPoleDisplayOutputStream.write(new String("Total: " + totalPayable).getBytes());
                 partnerPoleDisplayOutputStream.write(newLine);
                 partnerPoleDisplayOutputStream.write(carriageReturn);
-                partnerPoleDisplayOutputStream.write(new String("Change: "+currencyCode+" "+Math.round(changeAmt * 100.0) / 100.0).getBytes());
+                partnerPoleDisplayOutputStream.write(new String("Change: "+currencyCode+" "+df.format(Math.round(changeAmt * 100.0) / 100.0)).getBytes());
             }catch(Exception ex){
                 System.err.println("Unable to write to Partner Pole Display");
             }
@@ -503,9 +507,10 @@ public class PaymentUI extends javax.swing.JFrame {
                 System.err.println(transaction.get(i).get(5));
                 receipt += transaction.get(i).get(0)+"  ";
                 receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
-                Double roundedamt = Math.round(Double.parseDouble(transaction.get(i).get(4))* 100.0)/100.0;
+                Double totalUnroundedAmt = Double.parseDouble(transaction.get(i).get(2)) * Double.parseDouble(transaction.get(i).get(3));
+                Double roundedamt = Math.round(totalUnroundedAmt* 100.0)/100.0;
                 if (transaction.get(i).get(5).equals(""))
-                    receipt += "                    "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                    receipt += "                    "+ currencyCode + " " + df.format(roundedamt) + "\n\r\n\r";
                 else{
                     int k;
                     if(transaction.get(i).get(5).length()>15){
@@ -513,28 +518,29 @@ public class PaymentUI extends javax.swing.JFrame {
                     }else{
                         k = transaction.get(i).get(5).length();
                     }
-                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + roundedamt + "\n\r\n\r";
+                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + df.format(roundedamt) + "\n\r\n\r";
                 }
             }
             receipt += "----------------------------------------------\n\r";
-            receipt+= "Grand Total: " +currencyCode+" "+Math.round(grandTotalAmt * 100.0) / 100.0 + "\n\r";
+            receipt+= "Grand Total: " +currencyCode+" "+df.format(Math.round(grandTotalAmt * 100.0) / 100.0) + "\n\r";
             Double d = voucherAmt + receiptAmt;
-            receipt+= "Discounts: " +currencyCode+" "+ Math.round(d * 100.0) / 100.0 + "\n\r";
-            receipt+= "Amount Payable: " +currencyCode+" "+ Math.round(totalPayable * 100.0) / 100.0 + "\n\r\n\r";
+            receipt+= "Discounts: " +currencyCode+" "+ df.format(Math.round(d * 100.0) / 100.0) + "\n\r";
+            receipt+= "Amount Payable: " +currencyCode+" "+ df.format(Math.round(totalPayable * 100.0) / 100.0) + "\n\r\n\r";
             
             if (cashButton.isSelected() == true){
                 receipt+= "Payment Mode: Cash\n\r";
-                receipt+= "Cash Amount: " +currencyCode+" "+ Math.round(cashAmt * 100.0) / 100.0 + "\n\r";
-                receipt+= "Change: " +currencyCode+" " + Math.round(changeAmt * 100.0) / 100.0 + "\n\r";
+                receipt+= "Cash Amount: " +currencyCode+" "+ df.format(Math.round(cashAmt * 100.0) / 100.0) + "\n\r";
+                receipt+= "Change: " +currencyCode+" " + df.format(Math.round(changeAmt * 100.0) / 100.0) + "\n\r";
             }else{
                 receipt+= "Payment Mode : Credit Card\n\r";
             }
             receipt+= "Cashier : "+ staffname +"\n\r\n\r";
             if (customerName == null){
-                receipt+= "Thank you for shopping with us!";
+                receipt+= "Thank you for shopping with us!\n\r";
             }else{
                 receipt+= customerName+", thank you for shopping with us!\n\r";
             }
+            receipt += "Transaction Id: "+transactionId;
             
             
             try
