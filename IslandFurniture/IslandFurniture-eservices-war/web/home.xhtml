@@ -61,7 +61,7 @@
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <div class="brands_products" style="margin-top: 20px;">
-                                <h2>Categories (by Room)</h2>
+                                <h4 style="padding-left: 25px;"><strong>CATEGORIES (BY ROOM)</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
                                         <li><a href="bedroom.xhtml">
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="brands_products" style="margin-top: 20px;">
-                                <h2>Categories (by Type)</h2>
+                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">
                                         <li><a href="#">
@@ -125,7 +125,7 @@
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                     </h:outputText></strong>
                                                     </h4>
-                                                    <h5 style="text-decoration:line-through;"> 
+                                                    <h5 style="text-decoration:line-through;">
                                                         <h:outputText value="#{homeManagedBean.co.country.currency.currencyCode} " 
                                                             rendered="#{furniture.price > homeManagedBean.getDiscountedPrice(furniture)}"/>
                                                         <h:outputText value="#{furniture.price}" 
