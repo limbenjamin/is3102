@@ -9,8 +9,12 @@ package IslandFurniture.EJB.Kitchen;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientInventory;
+import IslandFurniture.Entities.IngredientInventoryPK;
 import IslandFurniture.Entities.Recipe;
 import IslandFurniture.Entities.RecipeDetail;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.QueryMethods.getDishByCountryOfficeAndName;
 import static IslandFurniture.StaticClasses.QueryMethods.getDishListByCountryOffice;
 import static IslandFurniture.StaticClasses.QueryMethods.getIngredientByCountryOfficeAndName;
@@ -44,7 +48,9 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
     public String addIngredient(String ingredientName, CountryOffice co) {
         Ingredient ing;
         String msg = null;
-        List<Ingredient> ingredientList;
+        IngredientInventory inventory;
+        List<Store> storeList;
+        List<IngredientInventory> ingredientInventoryList;
         try {
             System.out.println("KitchenStockManager.addIngredient()");
             ing = getIngredientByCountryOfficeAndName(em, co, ingredientName);
@@ -55,6 +61,19 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
                 ing = new Ingredient();
                 ing.setName(ingredientName);
                 ing.setCountryOffice(co);
+                storeList = co.getStores();
+                for(Store s : storeList) {
+                    inventory = new IngredientInventory();
+                    inventory.setIngredient(ing);
+                    inventory.setStore(s);
+                    inventory.setQty(0);
+                    inventory.setThreshold(0);
+                    em.persist(inventory);
+                    
+                    if(s.getIngredInvents() == null) 
+                        s.setIngredInvents(new ArrayList<>());
+                    s.getIngredInvents().add(inventory);
+                }
                 em.persist(ing); 
             }
             return msg;
@@ -78,19 +97,42 @@ public class KitchenStockManager implements KitchenStockManagerLocal {
     public String deleteIngredient(Long ingredientID, CountryOffice co) {
         Ingredient ing;
         List<Dish> dishList;
+        List<IngredientInventory> ingredientInvList;
+        List<Store> storeList = new ArrayList<>();
+        String returnMsg = "";
         try {
             System.out.println("KitchenStockManager.deleteIngredient()");
             dishList = getDishListByCountryOffice(em, co);
             ing = em.find(Ingredient.class, ingredientID);
-//            for(int i=0; i<dishList.size(); i++) {
-//                for(int j=0; j<dishList.get(i).getRecipe().size(); j++) {
-//                    if(dishList.get(i).getRecipe().get(j).equals(ing)) {
-//                        System.out.println("Invalid delete. Ingredient exists in a dish");
-//                        return "Invalid deletion because Ingredient \"" + ing.getName() + "\" used for dish preparation";
-//                    }
-//                }
-//            }
-            ing = em.find(Ingredient.class, ingredientID);
+            for(Dish d : dishList) {
+                for(RecipeDetail rd : d.getRecipe().getRecipeDetails()) {
+                    if(rd.getIngredient().equals(ing)) {
+                        System.out.println("Invald deletion. Ingredient already used in a dish");
+                        return "Invalid deletion because Ingredient \"" + ing.getName() + "\" already used in a dish";
+                    }
+                }
+            }
+            System.out.println("Ingredient not used in any dishes.");
+            ingredientInvList = QueryMethods.findIngredientInventoryByIngredient(em, ing);
+            System.out.println("1: IngredientInventory size " + ingredientInvList.size());
+            for(IngredientInventory iInv : ingredientInvList) {
+                if(iInv.getQty() != null && iInv.getQty() > 0) 
+                    storeList.add(iInv.getStore());
+            }
+            if(storeList.size() > 1) {
+                System.err.println("Invalid deletion. Ingredient has existing quantities in stores");
+                returnMsg = "Invalid deletion because Ingredient \"" + ing.getName() + "\" has existing quantities in following Stores: <br />";
+                for(Store s : storeList)
+                    returnMsg += s.getName() + "<br />"; 
+                return returnMsg;
+            } else if(storeList.size() == 1) {
+                System.err.println("Invalid deletion. Ingredient has existing quantities in stores");
+                return "Invalid deletion because Ingredient \"" + ing.getName() + "\" has existing quantities in Store: <br />" + storeList.get(0).getName();
+            } else {
+                System.out.println("Ingredient is not in any ingredient inventory. Carry on removing all ingredient inventory now");
+                for(IngredientInventory iInv : ingredientInvList)
+                    em.remove(iInv);
+            }
             em.remove(ing);
             return null;
         } catch(Exception ex) {
