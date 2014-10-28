@@ -24,7 +24,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageMarketingBeanLocal {
 
-    public void CommitNewCampaign(PromotionCampaign pc) throws Exception;
+    public PromotionCampaign CommitNewCampaign(PromotionCampaign pc) throws Exception;
 
     public List<PromotionCampaign> getCampaigns(CountryOffice co);
 

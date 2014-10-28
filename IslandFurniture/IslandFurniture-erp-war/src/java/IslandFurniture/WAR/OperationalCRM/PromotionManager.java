@@ -273,6 +273,17 @@ public class PromotionManager implements Serializable {
                 currentEdit.getPromotionDetails().add(pdbpsc);
                 success_msg = "Campaign: " + currentEdit.getTitle() + " New Promotion By Product SubCategory";
                 break;
+            case "Save":
+                try {
+                    //i hope this works :X
+                    currentEdit=mbean.CommitNewCampaign(currentEdit);
+                    setPromotionCampaigns(mbean.getCampaigns(ubean.getCountryOffice(currentUser.getPlant())));
+                    success_msg = "Saved!";
+
+                } catch (Exception ex) {
+                    error_msg = "ERORR: " + ex.getMessage();
+                }
+                break;
             default:
                 try {
                     mbean.CommitNewCampaign(currentEdit);

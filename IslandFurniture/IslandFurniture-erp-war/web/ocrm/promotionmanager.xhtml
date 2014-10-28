@@ -174,7 +174,7 @@
 
                                 <p:column headerText="Applicable Stores" id="updatecol4">
                                     <p:selectOneMenu value="#{row.applicablePlant}" converter="omnifaces.SelectItemsConverter">
-                                         <f:selectItem itemLabel="ALL STORES" itemValue="${null}"/>
+                                        <f:selectItem itemLabel="ALL STORES" itemValue="${null}"/>
                                         <f:selectItems  value="${marketing.listOfStores}" var="member" itemLabel="#{member.name}" itemValue="#{member}"></f:selectItems>
                                     </p:selectOneMenu>
                                 </p:column>
@@ -271,6 +271,7 @@
                                 <p:menuitem ajax="false" icon="ui-icon-document-b" value="New By Products Category"  actionListener="${marketing.newpromodetail}"/>
                                 <p:menuitem ajax="false" icon="ui-icon-document-b" value="New By Products Sub Category"  actionListener="${marketing.newpromodetail}"/>
                                 <p:separator />
+                                <p:menuitem icon="ui-icon-close" value="Save" ajax="false" update="@([id$=panel]),@([id$=msg])" actionListener="${marketing.newpromodetail}"/>
                                 <p:menuitem icon="ui-icon-close" value="Save and Quit" ajax="true" update="@([id$=panel]),@([id$=msg])" actionListener="${marketing.newpromodetail}"/>
                             </p:splitButton>
 
@@ -281,7 +282,7 @@
                             ** Non-Perishable Coupon will make all issued Coupon Disappear<br/>
                             *** Put 2147483647 for promotion for promotion that will never expire !
                             <br/> If you want to do a promotion on all product, select by productcategory then select All categories !
-                            
+
                         </p:fieldset>
                     </h:form>
 
