@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li class="active"><strong><a href="feedback.xhtml">Customer Feedback</a></strong></li>
+                        </ol>                        
+                    </div>                     
+                    <div class="col-md-10"> 
+                        <h4>Customer Feedback</h4><hr></hr>
+                    </div>
+
+                    <div class="col-md-10">                      
+                        <section name="Customer Feedback for #{feedbackManagedBean.plant.name}">
+                            <div class="panel-heading dashboard-title-panel">
+                                Customer Feedback for #{feedbackManagedBean.plant.name}
+                            </div>
+                            <div class="list-group-item">
+                                <p:dataTable var="feedback" value="#{feedbackManagedBean.feedbackList}" style="text-align: center"
+                                 emptyMessage="No feedback">
+                                    <p:column headerText="Time">
+                                        <h:outputText value="#{feedback.submittedTime.time}" />
+                                    </p:column>
+                                    <p:column headerText="Content">
+                                        <h:outputText value="#{feedback.content}" />
+                                    </p:column>
+                                    <p:column headerText="Name">
+                                        <h:outputText value="#{feedback.name}" />
+                                    </p:column>
+                                    <p:column headerText="Email">
+                                        <h:outputText value="#{feedback.email}" />
+                                    </p:column>
+                                    <p:column headerText="Phone No.">
+                                        <h:outputText value="#{feedback.phoneNo}" />
+                                    </p:column>
+                                    <p:column headerText="Customer">
+                                        <h:outputText value="#{feedback.member.membershipTier.title}" />
+                                    </p:column>
+
+                                                           
+
+                                 </p:dataTable>
+                            </div>
+                        </section>
+
+                        
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -84,7 +84,7 @@ public class CustomerAccountManagedBean implements Serializable{
         phoneNo = request.getParameter("particularsForm:phoneNo");
         name = request.getParameter("particularsForm:name");
         mmab.modifyPersonalParticulars(emailAddress, phoneNo, name);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
     }
@@ -96,7 +96,7 @@ public class CustomerAccountManagedBean implements Serializable{
       newPassword = request.getParameter("passwordForm:newPassword");
       confirmNewPassword = request.getParameter("passwordForm:confirmNewPassword");
       if (!newPassword.equals(confirmNewPassword)){
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
             new FacesMessage(FacesMessage.SEVERITY_ERROR, "New passwords are not the same",""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
       }
@@ -104,13 +104,13 @@ public class CustomerAccountManagedBean implements Serializable{
           hashedPassword = customer.getPassword();
           hashedOldPassword = SHA1Hash(customer.getSalt()+ oldPassword);
           if (!hashedOldPassword.equals(hashedPassword)){
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Old password is wrong",""));
             ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
           else {
           mmab.changePassword(emailAddress, newPassword);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been successfully changed",""));
           ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
@@ -125,7 +125,7 @@ public class CustomerAccountManagedBean implements Serializable{
           hashedPassword = customer.getPassword();
           hashedOldPassword = SHA1Hash(customer.getSalt()+ existingPassword);
           if (!hashedOldPassword.equals(hashedPassword)){
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "entered invalid password",""));
             ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
@@ -134,9 +134,7 @@ public class CustomerAccountManagedBean implements Serializable{
             mmab.removeCustomerAccount(emailAddress);
             HttpSession session = Util.getSession();
             session.setAttribute("", emailAddress);
-            session.invalidate();        
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been removed. Goodbye!",""));
+            session.invalidate();
             ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
           }
     }

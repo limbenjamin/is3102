@@ -18,100 +18,102 @@
                         </ol>                        
                     </div>                     
                     <div class="col-md-10"> 
-
-                        <span class="pull-right">
-                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addStock">
-                                <i class="fa fa-fw fa-plus"></i> Add Customer
-                            </button>                              
-                        </span>   
-
                         <h4>Membership</h4><hr></hr>
                     </div>
 
                     <div class="col-md-10">                      
                         <section name="Table of Contents of the Membership">
                             <div class="panel-heading dashboard-title-panel">
-                                List of Customers
+                                View Customers Details
                             </div>
                             <div class="list-group-item">  
-                                <h:outputText rendered="#{empty membershipManagedBean.customerList}" value="There are no store sections"/>
-                                <h:panelGroup layout="block" rendered="#{not empty membershipManagedBean.customerList}">
-                                    <table class="table table-hover table-condensed">
-                                        <tr>
-                                            <th>Section Name</th>
-                                            <th>Store Level</th>
-                                            <th>Description</th>
-                                            <th>Update</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                        <h:form class="form-horizontal">
-                                            <ui:repeat value="#{membershipManagedBean.customerList}" var="ss">
-                                                <tr>
-                                                    <td><h:inputText value="#{ss.name}" class="form-control" pt:required="true"></h:inputText></td>
-                                                    <td><h:inputText value="#{ss.storeLevel}" class="form-control" pt:required="true" pt:type="number"></h:inputText></td>
-                                                    <td><h:inputText value="#{ss.description}" class="form-control" pt:required="true"></h:inputText></td>
-                                                    <td>
-                                                        <h:commandButton action="storesection" actionListener="#{membershipManagedBean.editMember}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                            <f:attribute name="membership" value="#{ss}" />
+                                <table class="table table-hover table-condensed">
+                                    <tr>
+                                        <th>Member ID</th>
+                                        <th>Member Name</th>
+                                        <th width="100px">Details</th>
+                                    </tr>
+                                    <h:form class="form-horizontal">
+                                        <ui:repeat value="#{membershipManagedBean.customerList}" var="c">
+                                            <tr>
+                                                <td>
+                                                    <h:outputText value="#{c.id}"></h:outputText>
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{c.name}"></h:outputText>
+                                                </td>
+                                                <td width="100px">
+                                                    <a data-toggle="modal" data-target="#viewCustomer">
+                                                        <h:commandButton value="..." class="btn btn-xs" style="outline:0;"> 
+                                                            <f:ajax listener="#{membershipManagedBean.viewCustomer}" render=":viewCustomerForm:content" />
+                                                            <f:attribute name="customerID" value="#{c.id}" />
                                                         </h:commandButton>
-                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
-                                                    </td>
-                                                    <td>
-                                                        <h:commandButton action="storesection" actionListener="#{membershipManagedBean.deleteMember}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                            <f:attribute name="membership" value="#{ss}" />
-                                                        </h:commandButton>
-                                                        <i class="fa fa-lg fa-trash-o icon-button"></i>
-                                                    </td>
-                                                </tr>
-                                            </ui:repeat>
-                                        </h:form> 
-                                    </table>
-                                </h:panelGroup>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </h:form> 
+                                </table>
                             </div>
                         </section>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="addStock" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">Add Membership</h4>
-                                    </div>
-                                    <h:form id="createGRDD" class="form-horizontal">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Section Name: </label>
-                                                <div class="col-sm-9">
-                                                    <h:inputText pt:required="true" class="form-control" value="#{membershipManagedBean.name}"></h:inputText>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Store Level: </label>
-                                                <div class="col-sm-9">
-                                                    <h:inputText pt:type="number"  pt:required="true" class="form-control" value="#{membershipManagedBean.level}"></h:inputText>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label">Description: </label>
-                                                <div class="col-sm-9">
-                                                    <h:inputText pt:required="true" class="form-control" value="#{membershipManagedBean.description}"></h:inputText>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                            <h:commandButton action="storesection" actionListener="#{membershipManagedBean.addMember}" value="Add Membership" class="btn btn-success pull-right btn-round"> 
-                                            </h:commandButton>
-                                        </div>
-                                    </h:form>
-                                </div>
-                            </div>
-                        </div> 
                     </div>
                 </div>
+                <!-- Modal for View Customer-->
+                <div class="modal fade" id="viewCustomer" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content"> 
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Edit Member Details</h4>
+                            </div>
+                            <h:form id="viewCustomerForm" class="form-horizontal">
+                                <h:panelGroup id="content" class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Member Name: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.name}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Email Address: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.emailAddress}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Phone Number: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.phoneNo}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Address: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.address}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Date of Birth: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.dateOfBirth}"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Loyalty Card ID: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText class="form-control" value="#{membershipManagedBean.customer.loyaltyCardId}"></h:inputText>
+                                        </div>
+                                    </div>
+                                </h:panelGroup> 
+                                <div class="modal-footer">  
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton actionListener="#{membershipManagedBean.editCustomer}" value="Update" class="btn btn-success btn-round" > 
+                                    </h:commandButton>
+                                </div> 
+                            </h:form> 
+                        </div>
+                    </div> 
+                </div> 
             </ui:define>
         </ui:composition>
     </h:body>

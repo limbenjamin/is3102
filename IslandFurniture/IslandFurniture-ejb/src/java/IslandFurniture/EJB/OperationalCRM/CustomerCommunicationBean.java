@@ -10,8 +10,13 @@ import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatMessage;
 import IslandFurniture.Entities.CustChatThread;
+import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Feedback;
 import IslandFurniture.Entities.Staff;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +36,7 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
     private CustChatThread cct;
     private List<CustChatThread> activeCCT;
     private List<CustChatMessage> listCCM;
+    private Feedback feedback;
     
     @Override
     public List<CustChatThread> getActiveThreadFromCountry(CountryOffice co){
@@ -74,5 +80,45 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
     public CustChatThread getThread(Long threadId){
         return em.find(CustChatThread.class, threadId);
     }
+    @Override
+    public void createAnonymousFeedback(String name, String emailAddress, String phoneNo, String content, CountryOffice co){
+        feedback = new Feedback();
+        feedback.setName(name);
+        feedback.setEmail(emailAddress);
+        feedback.setPhoneNo(phoneNo);
+        feedback.setContent(content);
+        feedback.setCountryOffice(co);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        System.err.println("herehere "+co.getName());
+        cal.setTimeZone(TimeZone.getTimeZone(co.getTimeZoneID()));
+        feedback.setSubmittedTime(cal);
+        em.persist(feedback);
+    }
+    
+    
+    @Override
+    public void createFeedback(Customer customer, String content, CountryOffice co){
+        feedback = new Feedback();
+        feedback.setMember(customer);
+        feedback.setName(customer.getName());
+        feedback.setEmail(customer.getEmailAddress());
+        feedback.setPhoneNo(customer.getPhoneNo());
+        feedback.setContent(content);
+        feedback.setCountryOffice(co);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.setTimeZone(TimeZone.getTimeZone(co.getTimeZoneID()));
+        feedback.setSubmittedTime(cal);
+        em.persist(feedback);
+    }
+    
+    @Override
+    public List<Feedback> getAllFeedbackForCO(CountryOffice co){
+        Query query = em.createQuery("SELECT c FROM Feedback c WHERE c.countryOffice=:co");
+        query.setParameter("co", co);
+        return query.getResultList();
+    }
+    
     
 }
