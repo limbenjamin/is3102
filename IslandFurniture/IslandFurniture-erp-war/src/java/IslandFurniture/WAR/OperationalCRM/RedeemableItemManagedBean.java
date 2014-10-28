@@ -40,7 +40,8 @@ public class RedeemableItemManagedBean implements Serializable {
     private String username;
     private Staff staff;
     private Plant plant;
-
+    
+    private int pointsReq;
     private int cashValue;
     private Date expiryDateType;
     private Calendar expiryDateCal;
@@ -68,7 +69,7 @@ public class RedeemableItemManagedBean implements Serializable {
         expiryDateCal.setTime(date);
 
         if (itemBean.checkIfNoRedeemableItemWithSameCashValueAndExpiryDate(plant, cashValue, expiryDateCal)) {
-            itemBean.createRedeemableItem(plant, cashValue, expiryDateCal);
+            itemBean.createRedeemableItem(plant, cashValue, expiryDateCal, pointsReq);
             redeemableItemList = itemBean.viewRedeemableItem(plant);
 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -108,6 +109,14 @@ public class RedeemableItemManagedBean implements Serializable {
         }
     }
 
+    public int getPointsReq() {
+        return pointsReq;
+    }
+
+    public void setPointsReq(int pointsReq) {
+        this.pointsReq = pointsReq;
+    }
+    
     public List<Voucher> getRedeemableItemList() {
         return redeemableItemList;
     }

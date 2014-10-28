@@ -114,6 +114,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         // end: To display date properly
         // start: To display plant list properly
         plantList = orgBean.displayPlantbyInstanceOf(plant);
+        plantList.remove(plant);
         for (Plant g : plantList) {
 
             plantType = g.getClass().getSimpleName();

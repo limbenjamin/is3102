@@ -59,6 +59,16 @@ public class ManageMembership implements ManageMembershipLocal {
         em.flush();
     }
     
+     // Function: Edit a Customer's Points after Redemption
+    @Override
+    public void editCustomerAccountPoints(Customer customerUpdated, int points) {
+        System.out.println("ManageMembership.editCustomerAccount()");
+        customer = (Customer) em.find(Customer.class, customerUpdated.getId());
+        customer.setCurrentPoints(points);
+        em.merge(customer);
+        em.flush();
+    }
+    
     // Function: Get Customer
     @Override
     public Customer getCustomer(Long customerID) {
