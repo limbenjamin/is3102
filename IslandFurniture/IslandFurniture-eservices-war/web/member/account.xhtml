@@ -99,8 +99,36 @@
                                         </h:form>                                
                                     </div>
                                 </div>
-                                <div class="tab-pane active" id="settings">
-                                    
+                                <div class="tab-pane" id="settings">
+                                    <div class="col-md-6">
+                                        <br/>
+                                        <h4>Change Password</h4>
+                                        <br/>
+                                        <h:form id="passwordForm" class="form-horizontal">
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">Old Password: </label>
+                                            <div class="col-sm-8">
+                                              <h:inputSecret id="oldPassword" class="form-control"></h:inputSecret>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">New Password: </label>
+                                            <div class="col-sm-8">
+                                                <h:inputSecret id="newPassword" class="form-control"></h:inputSecret>
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">Confirm New Password: </label>
+                                            <div class="col-sm-8">
+                                              <h:inputSecret id="confirmNewPassword" class="form-control"></h:inputSecret>
+                                            </div>
+                                          </div>
+                                          <span class="pull-right">
+                                              <h:commandButton actionListener="#{personalParticularsManagedBean.changePassword}" value="Change password" 
+                                                class="btn btn-round btn-success btn-block"></h:commandButton>
+                                            </span>
+                                        </h:form>                                
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
