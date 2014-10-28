@@ -12,12 +12,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findIngredientInventoryByIngredient",
+            query = "SELECT a FROM IngredientInventory a WHERE a.ingredient = :ingredient")
+    
+})
 @IdClass(IngredientInventoryPK.class)
 public class IngredientInventory implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -30,6 +38,10 @@ public class IngredientInventory implements Serializable {
 
     private Integer qty;
     private Integer threshold;
+    
+    public IngredientInventory() {
+        
+    }
 
     public Store getStore() {
         return store;

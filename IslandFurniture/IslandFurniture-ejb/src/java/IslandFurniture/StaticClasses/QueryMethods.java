@@ -13,6 +13,7 @@ import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientInventory;
 import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
@@ -149,6 +150,17 @@ public class QueryMethods {
 
         try {
             return (Ingredient) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
+    public static List<IngredientInventory> findIngredientInventoryByIngredient(EntityManager em, Ingredient ingredient) {
+        Query q = em.createNamedQuery("findIngredientInventoryByIngredient");
+        q.setParameter("ingredient", ingredient);
+
+        try {
+            return (List<IngredientInventory>) q.getResultList();
         } catch (NoResultException nrex) {
             return null;
         }
