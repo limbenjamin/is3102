@@ -40,7 +40,7 @@
                                             <a href="#{application.contextPath}/index.xhtml">
                                                 <i class="fa fa-globe"></i> <h:outputText value="#{bundle['member.country']}" />
                                             </a>
-                                        </li>                                        
+                                        </li>
                                         <li>
                                             <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/account.xhtml">
                                                 <i class="fa fa-user"></i> <h:outputText value="#{bundle['member.account']}" />
@@ -50,7 +50,7 @@
                                             <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/member/shoppinglist.xhtml">
                                                 <i class="fa fa-shopping-cart"></i> <h:outputText value="#{bundle['member.list']}" />
                                             </a>
-                                        </li>                                    
+                                        </li>
                                         <li>
                                             <h:form>
                                             <h:commandLink action="#{memberAuthenticationManagedBean.logout}">Logout</h:commandLink>
@@ -62,7 +62,7 @@
                                             <a href="#{application.contextPath}/index.xhtml">
                                                 <i class="fa fa-globe"></i> <h:outputText value="#{bundle['member.country']}" />
                                             </a>
-                                        </li>                                        
+                                        </li>
                                         <li>
                                             <a href="#{application.contextPath}#{(request.getAttribute('coCode')!= null)?'/':''}#{request.getAttribute('coCode')}/login.xhtml">
                                                 <i class="fa fa-lock"></i> <h:outputText value="#{bundle['member.login']}" />
