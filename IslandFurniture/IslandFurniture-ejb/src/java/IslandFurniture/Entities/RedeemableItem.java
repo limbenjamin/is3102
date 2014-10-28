@@ -26,6 +26,8 @@ public abstract class RedeemableItem implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
+    protected Integer pointsReq;
+    
     @ManyToOne
     protected CountryOffice countryOffice;
 
@@ -35,6 +37,14 @@ public abstract class RedeemableItem implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getPointsReq() {
+        return pointsReq;
+    }
+
+    public void setPointsReq(Integer pointsReq) {
+        this.pointsReq = pointsReq;
     }
 
     public CountryOffice getCountryOffice() {

@@ -11,7 +11,6 @@ import IslandFurniture.Entities.Picture;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -39,7 +38,11 @@ public class PictureManagedBean {
             String pictureId = context.getExternalContext().getRequestParameterMap().get("pictureId");
             System.out.println(pictureId);
             Picture picture = bannerBean.getPicture(Long.valueOf(pictureId)); 
-            return new DefaultStreamedContent(new ByteArrayInputStream(picture.getContent()));
+            if (picture != null) {
+                return new DefaultStreamedContent(new ByteArrayInputStream(picture.getContent()));
+            } else {
+                return new DefaultStreamedContent();
+            }
         }
     } 
 }
