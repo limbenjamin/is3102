@@ -10,6 +10,9 @@ import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import static IslandFurniture.Entities.Staff.SHA1Hash;
+import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
+import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -71,7 +74,7 @@ public class CustomerAccountManagedBean implements Serializable{
             name = customer.getName();
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
-    }    
+    }
     
     public void modifyPersonalParticulars() throws IOException{
         HttpSession session = Util.getSession();
@@ -84,6 +87,34 @@ public class CustomerAccountManagedBean implements Serializable{
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+    }
+    
+    public void changePassword() throws NewPasswordsNotTheSameException, WrongPasswordException, IOException {
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      oldPassword = request.getParameter("passwordForm:oldPassword");
+      newPassword = request.getParameter("passwordForm:newPassword");
+      confirmNewPassword = request.getParameter("passwordForm:confirmNewPassword");
+      if (!newPassword.equals(confirmNewPassword)){
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "New passwords are not the same",""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+      }
+      else {
+          hashedPassword = customer.getPassword();
+          hashedOldPassword = SHA1Hash(customer.getSalt()+ oldPassword);
+          if (!hashedOldPassword.equals(hashedPassword)){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Old password is wrong",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+          else {
+          mmab.changePassword(emailAddress, newPassword);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been successfully changed",""));
+          ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+      }
     }    
 
     public String getName() {

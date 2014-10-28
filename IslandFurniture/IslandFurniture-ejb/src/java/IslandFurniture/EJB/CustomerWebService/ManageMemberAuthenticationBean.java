@@ -133,4 +133,10 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         MembershipTier m = (MembershipTier) query.getSingleResult();
         customer.setMembershipTier(m);
     }
+    
+    @Override
+    public void changePassword(String emailAddress, String newPassword){
+        customer = getCustomer(emailAddress);
+        customer.setPassword(newPassword);
+    }
 }

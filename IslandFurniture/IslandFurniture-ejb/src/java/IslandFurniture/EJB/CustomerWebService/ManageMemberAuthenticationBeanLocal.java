@@ -31,4 +31,6 @@ public interface ManageMemberAuthenticationBeanLocal {
     void setCustomerLoyaltyCardId(Customer customer, String loyaltyCardId);
     
     void setCustomerMembershipTier(Customer customer, String membershipTier);
+    
+    void changePassword(String emailAddress, String newPassword);
 }
