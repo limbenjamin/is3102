@@ -5,13 +5,11 @@
  */
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
-import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
-import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.BOMDetail;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Material;
+import IslandFurniture.Entities.Picture;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -31,6 +29,9 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -53,6 +54,7 @@ public class BOMManagedBean implements Serializable {
     private List<FurnitureSubcategory> subcategoryList;
     private List<BOMDetail> bomList = null;
     private List<Material> materialList;
+    private byte[] photo;
 
     public List<FurnitureSubcategory> getSubcategoryList() {
         return subcategoryList;
@@ -134,6 +136,14 @@ public class BOMManagedBean implements Serializable {
         this.descriptionTooLong = descriptionTooLong;
     }
 
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
@@ -151,10 +161,12 @@ public class BOMManagedBean implements Serializable {
                 this.uneditable = this.furniture.getBom().isUneditable();
                 this.subcategoryList = new ArrayList<>(EnumSet.allOf(FurnitureSubcategory.class));
                 this.categoryList = new ArrayList<>(EnumSet.allOf(FurnitureCategory.class));
+                if(this.furniture.getThumbnail() != null)
+                    this.photo = this.furniture.getThumbnail().getContent();
                 if (this.furniture.getFurnitureDescription() == null) {
-                    this.descriptionTooLong = false;
-                } else {
-                    this.descriptionTooLong = this.furniture.getFurnitureDescription().length() > 20;
+                    this.descriptionTooLong = false; 
+                } else { 
+                    this.descriptionTooLong = this.furniture.getFurnitureDescription().length() > 25;
                 }
                 if (uneditable) {
                     System.out.println("Furniture's BOM cannot be edited");
@@ -163,7 +175,7 @@ public class BOMManagedBean implements Serializable {
                 }
                 System.out.println("BOMDetailList has " + this.bomList.size() + " items");
                 this.listSize = this.bomList.size();
-            }
+            } 
         } catch (IOException ex) {
 
         }
@@ -290,10 +302,22 @@ public class BOMManagedBean implements Serializable {
         System.out.println("BOMManagedBean.truncateDescription()");
         if(this.furniture.getFurnitureDescription() == null)
             return "";
-        else if (this.furniture.getFurnitureDescription().length() > 20) {
-            return this.furniture.getFurnitureDescription().substring(0, 20) + " ...";
+        else if (this.descriptionTooLong) {
+            return this.furniture.getFurnitureDescription().substring(0, 22) + " ..."; 
         } else {
             return this.furniture.getFurnitureDescription();
         }
     }
+
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
+        System.out.println("BOMManagedBean.handleFileUpload()");
+        UploadedFile file = event.getFile();
+        this.photo = IOUtils.toByteArray(file.getInputstream());
+        stockManager.editThumbnail(furnitureID, photo);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Furniture Thumbnail has been successfully updated", ""));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("bom.xhtml");
+    } 
 }

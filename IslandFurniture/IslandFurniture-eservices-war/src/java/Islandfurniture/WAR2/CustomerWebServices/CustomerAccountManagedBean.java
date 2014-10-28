@@ -6,8 +6,13 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import static IslandFurniture.Entities.Staff.SHA1Hash;
+import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
+import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -38,9 +43,12 @@ public class CustomerAccountManagedBean implements Serializable{
     private String confirmNewPassword = null;
     private String hashedOldPassword = null;
     private String coDir;
+    private CountryOffice co;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
+    @EJB
+    private ManageLocalizationBeanLocal manageLocalizationBean;    
     
     @PostConstruct
     public void init(){
@@ -64,8 +72,9 @@ public class CustomerAccountManagedBean implements Serializable{
             customer = mmab.getCustomer(emailAddress);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
-    }    
+    }
     
     public void modifyPersonalParticulars() throws IOException{
         HttpSession session = Util.getSession();
@@ -78,7 +87,59 @@ public class CustomerAccountManagedBean implements Serializable{
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
-    }    
+    }
+    
+    public void changePassword() throws NewPasswordsNotTheSameException, WrongPasswordException, IOException {
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      oldPassword = request.getParameter("passwordForm:oldPassword");
+      newPassword = request.getParameter("passwordForm:newPassword");
+      confirmNewPassword = request.getParameter("passwordForm:confirmNewPassword");
+      if (!newPassword.equals(confirmNewPassword)){
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "New passwords are not the same",""));
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+      }
+      else {
+          hashedPassword = customer.getPassword();
+          hashedOldPassword = SHA1Hash(customer.getSalt()+ oldPassword);
+          if (!hashedOldPassword.equals(hashedPassword)){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Old password is wrong",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+          else {
+          mmab.changePassword(emailAddress, newPassword);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been successfully changed",""));
+          ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+      }
+    }
+    
+    public void removeAccount() throws WrongPasswordException, IOException{
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String existingPassword = request.getParameter("removeCustomerAccount:password");
+        // check if password is correct
+          hashedPassword = customer.getPassword();
+          hashedOldPassword = SHA1Hash(customer.getSalt()+ existingPassword);
+          if (!hashedOldPassword.equals(hashedPassword)){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "entered invalid password",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+          }
+          else {
+            // remove customer account and logout
+            mmab.removeCustomerAccount(emailAddress);
+            HttpSession session = Util.getSession();
+            session.setAttribute("", emailAddress);
+            session.invalidate();        
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been removed. Goodbye!",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+          }
+    }
 
     public String getName() {
         return name;
@@ -159,5 +220,12 @@ public class CustomerAccountManagedBean implements Serializable{
     public void setMmab(ManageMemberAuthenticationBeanLocal mmab) {
         this.mmab = mmab;
     }
-    
+
+    public CountryOffice getCo() {
+        return co;
+    }
+
+    public void setCo(CountryOffice co) {
+        this.co = co;
+    }
 }

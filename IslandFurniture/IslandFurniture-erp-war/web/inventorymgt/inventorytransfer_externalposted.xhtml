@@ -44,8 +44,8 @@
                                             <tr>
                                                 <tr>
                                                     <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.id}"></h:outputText></td>
-                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.name}"></h:outputText></td>
-                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.fulfillingPlant.name}"></h:outputText></td>
+                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.plantTypeRequest}"></h:outputText></td>
+                                                    <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.plantTypeFulfill}"></h:outputText></td>
                                                     <td><h:outputText value="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.transferDate.time}" >
                                                             <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{inventoryTransferExternalDetailManagedBean.externalTransferOrder.requestingPlant.timeZoneID}"  />
                                                         </h:outputText></td>

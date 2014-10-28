@@ -64,5 +64,7 @@ public interface StockManagerLocal {
     public Stock getStock(Long id);
     
     void addNFCTagToStock(String stockName, String NFCTagId);
+
+    public void editThumbnail(Long fID, byte[] content);
     
 }
