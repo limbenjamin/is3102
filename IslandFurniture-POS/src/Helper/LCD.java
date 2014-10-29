@@ -20,50 +20,11 @@ import javax.swing.JOptionPane;
  */
 public class LCD {
     
-    private static String partnerPoleDisplayCOMPort = "COM4";
+    private static String partnerPoleDisplayCOMPort = "COM7";
     
-    public static void initPartnerPoleDisplay(OutputStream partnerPoleDisplayOutputStream, SerialPort serialPort)
-    {
-        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
-        
-        while (commPortList.hasMoreElements()) 
-        {
-            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
-            
-            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
-                    commPort.getName().equals(partnerPoleDisplayCOMPort))
-            {
-                try
-                {
-                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
-                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
-                }
-                catch(PortInUseException ex)
-                {
-                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                catch(IOException ex)
-                {
-                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
+    public static String getPort() {
+        return partnerPoleDisplayCOMPort;
     }
     
-    public static void closePartnerPoleDisplay(OutputStream partnerPoleDisplayOutputStream, SerialPort serialPort){
-        if(serialPort != null)
-        {
-            try
-            {
-                byte[] clear = {0x0C};
-                partnerPoleDisplayOutputStream.write(clear);
-                partnerPoleDisplayOutputStream.close();
-                serialPort.close();
-            }
-            catch(IOException ex)
-            {
-                ex.printStackTrace();
-            }
-        }       
-    }
+    
 }
