@@ -6,9 +6,9 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
-import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.EJB.Manufacturing.StockManagerLocal;
-import IslandFurniture.WAR.CommonInfrastructure.Util;
+import IslandFurniture.Entities.Picture;
+import IslandFurniture.Entities.RetailItem;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -17,10 +17,14 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -34,6 +38,8 @@ public class RetailItemManagedBean implements Serializable {
     
     private List<RetailItem> retailItemList;
     private RetailItem retailItem;
+    private byte[] photo;
+    private Long itemID;
 
     public RetailItem getRetailItem() {
         return retailItem;
@@ -50,16 +56,36 @@ public class RetailItemManagedBean implements Serializable {
     public void setRetailItemList(List<RetailItem> retailItemList) {
         this.retailItemList = retailItemList;
     }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public Long getItemID() {
+        return itemID;
+    }
+
+    public void setItemID(Long itemID) {
+        this.itemID = itemID;
+    }
     
     @PostConstruct
     public void init() {
         retailItemList = stockManager.displayItemList();
         System.out.println("init:RetailItemManagedBean");
     }
-    public String editRetailItem(ActionEvent event) throws IOException {
+    public void editRetailItem(ActionEvent event) throws IOException {
         System.out.println("RetailItemManagedBean.editRetailItem()");
-        retailItem = (RetailItem) event.getComponent().getAttributes().get("toEdit");
-        String msg = stockManager.editRetailItem(retailItem.getId(), retailItem.getName(), retailItem.getPrice());
+        if(photo != null) {
+            Picture picture = new Picture();
+            picture.setContent(photo);
+            retailItem.setThumbnail(picture);
+        }
+        String msg = stockManager.editRetailItem(retailItem);
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 
@@ -67,7 +93,8 @@ public class RetailItemManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Retail Item \"" + retailItem.getName() + "\" has been successfully updated", ""));    
         }
-        return "retailitem";
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("retailitem.xhtml"); 
     }
     public String deleteRetailItem() {
         System.out.println("RetailItemManagedBean.deleteRetailItem()");
@@ -99,4 +126,14 @@ public class RetailItemManagedBean implements Serializable {
         }        
         return "retailitem";
     }
+    public void viewRetailItem(AjaxBehaviorEvent event) {
+        System.out.println("RetailItemManagedBean.viewRetailItem()");
+        itemID = (Long) event.getComponent().getAttributes().get("itemID");
+        retailItem = (RetailItem) stockManager.getStock(itemID);
+    }
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
+        System.out.println("RetailItemManagedBean.handleFileUpload()");
+        UploadedFile file = event.getFile();
+        this.photo = IOUtils.toByteArray(file.getInputstream());
+    } 
 }

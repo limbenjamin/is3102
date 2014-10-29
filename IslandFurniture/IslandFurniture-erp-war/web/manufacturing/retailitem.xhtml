@@ -38,31 +38,28 @@
                                         <table class="table table-hover">
                                             <tr>
                                                 <th>Retail Item</th>
-                                                <th>Price ($SGD)</th>
-                                                <th>Update</th>
+                                                <th>Details</th>
                                                 <th>Delete</th>
                                             </tr>
                                             <h:form id="editRetailItemForm" class="form-horizontal">
                                                 <ui:repeat value="#{retailItemManagedBean.retailItemList}" var="item">
-                                                    <tr>
+                                                    <tr> 
                                                         <td>
                                                             <div class="inner-addon left-addon">
-                                                                <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                                <h:inputText id="itemName" value="#{item.name}" class="form-control transparent-form" pt:required="required"></h:inputText>
+                                                                <h:outputText id="itemName" value="#{item.name}" class="form-control transparent-form"></h:outputText>
                                                             </div>
+                                                        </td> 
+                                                        <td>
+                                                            <a data-toggle="modal" data-target="#viewRetailItem">
+                                                                <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                                    <f:ajax listener="#{retailItemManagedBean.viewRetailItem}" render=":viewRetailItemForm:content" />
+                                                                    <f:attribute name="itemID" value="#{item.id}" />
+                                                                </h:commandButton>
+                                                                <i class="fa fa-lg fa-search-plus icon-button"></i>
+                                                            </a>
                                                         </td>
                                                         <td>
-                                                            <div class="inner-addon left-addon" style="max-width: 80px;"> 
-                                                                <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>  
-                                                                <h:inputText id="itemPrice" value="#{item.price}" class="form-control transparent-form"></h:inputText>
-                                                            </div>
-                                                        </td>
-                                                        <td><h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                                <f:attribute name="toEdit" value="#{item}" />
-                                                            </h:commandButton>
-                                                            <i class="fa fa-lg fa-save icon-button"></i>
-                                                        </td>
-                                                        <td><h:commandButton action="#{retailItemManagedBean.deleteRetailItem}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                            <h:commandButton action="#{retailItemManagedBean.deleteRetailItem}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                                 <f:param name="itemID" value="#{item.id}" />
                                                             </h:commandButton> 
                                                             <i class="fa fa-lg fa-trash-o icon-button"></i>       
@@ -76,7 +73,7 @@
                             </div>
                         </div>            
                     </div>   
-                    <!-- Modal for storage area -->
+                    <!-- Modal for New Item -->
                     <div class="modal fade" id="newItem" aria-hidden="true" name="createStorageArea">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -108,7 +105,52 @@
                         </div>
                     </div>  
                 </div>
-
+                <!-- Modal for View Retail Item -->
+                <div class="modal fade" id="viewRetailItem" aria-hidden="true">
+                    <div class="modal-dialog" style="width: 800px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">View and Edit Retail Item Details</h4>
+                            </div>
+                            <h:form id="viewRetailItemForm" class="form-horizontal" enctype="multipart/form-data">
+                                <h:panelGroup id="content" class="modal-body">
+                                    <div class="form-group"> 
+                                        <label class="col-sm-2 control-label">Name: </label>
+                                        <div class="col-sm-9">
+                                            <h:inputText value="#{retailItemManagedBean.retailItem.name}" class="form-control" pt:required="required"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Description: </label>
+                                        <div class="col-sm-9">
+                                            <h:inputTextarea value="#{retailItemManagedBean.retailItem.riDescription}" class="form-control" pt:required="required"></h:inputTextarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Thumbnail: </label>
+                                        <div class="col-sm-9">
+                                            <p:graphicImage value="#{pictureManagedBean.image}" width="80">
+                                                <f:param name="pictureId" value="#{retailItemManagedBean.retailItem.thumbnail.id}" />
+                                            </p:graphicImage>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-9 col-sm-offset-2">
+                                            <p:fileUpload fileUploadListener="#{retailItemManagedBean.handleFileUpload}" />
+                                        </div>
+                                    </div>  
+                                </h:panelGroup> 
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton actionListener="#{retailItemManagedBean.editRetailItem}" value="Update"  
+                                                     class="btn btn-round btn-success">
+                                    </h:commandButton>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div> 
             </ui:define>
         </ui:composition>
     </h:body>
