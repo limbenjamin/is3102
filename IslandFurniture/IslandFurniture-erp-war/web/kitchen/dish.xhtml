@@ -33,18 +33,19 @@
                                             <p:column headerText="Dish Item" sortBy="#{dish.name}">
                                                 <h:inputText value="#{dish.name}" id="ingredientName" class="form-control transparent-form"></h:inputText>
                                             </p:column> 
-                                            <p:column headerText="Details" style="text-align: center">
-                                                <h:commandButton actionListener="#{dishManagedBean.recipeActionListener}" value="View" class="btn btn-success btn-xs">
+                                            <p:column headerText="Details" style="text-align: center; width: 100px;">
+                                                <h:commandButton actionListener="#{dishManagedBean.recipeActionListener}" class="btn btn-success btn-xs transparent-button">
                                                     <f:attribute name="dishID" value="#{dish.id}" />
                                                 </h:commandButton>
+                                                <i class="fa fa-search-plus icon-button"></i>
                                             </p:column>
-                                            <p:column headerText="Update" style="text-align: center;">
+                                            <p:column headerText="Update" style="text-align: center; width: 100px;">
                                                 <h:commandButton actionListener="#{dishManagedBean.editDish}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{dish}" />
                                                 </h:commandButton> 
                                                 <i class="fa fa-lg fa-save icon-button"></i>
                                             </p:column>
-                                            <p:column headerText="Delete" style="text-align: center;">
+                                            <p:column headerText="Delete" style="text-align: center; width: 100px;">
                                                 <h:commandButton actionListener="#{dishManagedBean.deleteDish}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toDelete" value="#{dish}" />
                                                 </h:commandButton>

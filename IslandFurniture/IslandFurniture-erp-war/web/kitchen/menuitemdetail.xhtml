@@ -48,13 +48,13 @@
                                 <div class="col-sm-7">
                                     <h:inputText id="price" value="#{menuItemDetailManagedBean.menuItem.price}" class="form-control" style="max-width:100px;"></h:inputText>
                                 </div>  
-                            </div>   
-                            <div class="form-group col-md-3">
-                                <label class="col-sm-8 control-label">Ala Carte Item ?: </label>
+                            </div>
+                            <h:panelGroup class="form-group col-md-3" rendered="#{menuItemDetailManagedBean.displayAlaCarte()}">
+                                <label class="col-sm-8 control-label">Ala Carte Item ?: </label> 
                                 <div class="col-sm-4">
                                     <h:selectBooleanCheckbox value="#{menuItemDetailManagedBean.alacarte}" id="alaCarte" class="form-control" />
                                 </div>
-                            </div> 
+                            </h:panelGroup> 
                             <div class="form-group col-md-2">
                                 <h:commandButton action="menuitemdetail.xhtml" actionListener="#{menuItemDetailManagedBean.editMenuItemAttribute}" value="Update" class="btn btn-success btn-xs pull-right"> 
                                     <f:attribute name="toUpdate" value="#{menuItemDetailManagedBean.menuItem}" />

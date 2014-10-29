@@ -44,13 +44,13 @@
                                             <p:column headerText="Quantity">
                                                 <h:inputText value="#{recipe.quantity}" id="ingredientQuantity" pt:type="number" class="form-control transparent-form"></h:inputText>
                                             </p:column>
-                                            <p:column headerText="Update">
+                                            <p:column headerText="Update" style="text-align: center; width: 100px;">
                                                 <h:commandButton actionListener="#{recipeManagedBean.editRecipeDetail}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{recipe}" /> 
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>   
                                             </p:column>
-                                            <p:column headerText="Delete">
+                                            <p:column headerText="Delete" style="text-align: center; width: 100px;">
                                                 <h:commandButton action="#{recipeManagedBean.deleteRecipeDetail()}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="recipeDetailID" value="#{recipe.id}" />
                                                 </h:commandButton>

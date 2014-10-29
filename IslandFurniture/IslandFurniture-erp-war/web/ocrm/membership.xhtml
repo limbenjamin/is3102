@@ -42,12 +42,13 @@
                                                 <td>
                                                     <h:outputText value="#{c.name}"></h:outputText>
                                                 </td>
-                                                <td width="100px">
+                                                <td width="100px"> 
                                                     <a data-toggle="modal" data-target="#viewCustomer">
-                                                        <h:commandButton value="..." class="btn btn-xs" style="outline:0;"> 
+                                                        <h:commandButton class="btn btn-sm transparent-button" style="outline:0; text-align: center"> 
                                                             <f:ajax listener="#{membershipManagedBean.viewCustomer}" render=":viewCustomerForm:content" />
                                                             <f:attribute name="customerID" value="#{c.id}" />
                                                         </h:commandButton>
+                                                        <i class="fa fa-search-plus icon-button"></i> 
                                                     </a>
                                                 </td>
                                             </tr>

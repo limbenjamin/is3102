@@ -33,16 +33,16 @@
                                 <section class="panel"> 
                                     <h:form class="form-horizontal" id="ingredientForm">
                                         <p:dataTable value="#{ingredientManagedBean.ingredientList}" var="i" id="ingredientTable">
-                                            <p:column headerText="Ingredient" sortBy="#{i.name}">
+                                            <p:column headerText="Ingredient" sortBy="#{i.name}"> 
                                                 <h:inputText value="#{i.name}" id="ingredientName" class="form-control transparent-form"></h:inputText>
                                             </p:column>
-                                            <p:column headerText="Update" style="text-align: center;">
+                                            <p:column headerText="Update" style="text-align: center; width: 100px;">
                                                 <h:commandButton actionListener="#{ingredientManagedBean.editIngredient}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{i}" />
                                                 </h:commandButton> 
                                                 <i class="fa fa-lg fa-save icon-button"></i>
                                             </p:column>
-                                            <p:column headerText="Delete" style="text-align: center;">
+                                            <p:column headerText="Delete" style="text-align: center; width: 100px;">
                                                 <h:commandButton actionListener="#{ingredientManagedBean.deleteIngredient}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toDelete" value="#{i}" />
                                                 </h:commandButton>
