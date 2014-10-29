@@ -69,7 +69,7 @@
                             <h:form id="viewCustomerForm" class="form-horizontal">
                                 <h:panelGroup id="content" class="modal-body">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">Member Name: </label>
+                                        <label class="col-sm-3 control-label">Name: </label>
                                         <div class="col-sm-8">
                                             <h:inputText class="form-control" value="#{membershipManagedBean.customer.name}"></h:inputText>
                                         </div>
@@ -102,6 +102,24 @@
                                         <label class="col-sm-3 control-label">Loyalty Card ID: </label>
                                         <div class="col-sm-8">
                                             <h:inputText class="form-control" value="#{membershipManagedBean.customer.loyaltyCardId}"></h:inputText>
+                                        </div>
+                                    </div><hr></hr>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Member Tier: </label>
+                                        <div class="col-sm-8">
+                                            <h:outputText class="form-control transparent-form" value="#{membershipManagedBean.customer.membershipTier.title}"></h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Loyalty Points: </label>
+                                        <div class="col-sm-8">
+                                            <h:outputText class="form-control transparent-form" value="#{membershipManagedBean.customer.currentPoints}"></h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Lifetime Points: </label>
+                                        <div class="col-sm-8">
+                                            <h:outputText class="form-control transparent-form" value="#{membershipManagedBean.customer.cumulativePoints}"></h:outputText>
                                         </div>
                                     </div>
                                 </h:panelGroup> 
