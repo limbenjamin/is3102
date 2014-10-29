@@ -8,11 +8,14 @@ package POS;
 import Helper.Connector;
 import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -54,6 +57,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private String shoppingListJSON;
     
     private OutputStream partnerPoleDisplayOutputStream;
+    private String partnerPoleDisplayCOMPort;
     SerialPort serialPort;
     byte[] clear = {0x0C};
     byte[] newLine = {0x0A};
@@ -85,7 +89,8 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.changeSelection(0, 0, false, false);
         jTable.editCellAt(0, 0);
         jTable.getEditorComponent().requestFocusInWindow();
-        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        partnerPoleDisplayCOMPort = LCD.getPort();
+        initPartnerPoleDisplay();
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (changing.equals(false)) {
@@ -123,13 +128,17 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                     {
                                         partnerPoleDisplayOutputStream.write(clear);
                                         String s = (String) jsonObject.get("name");
-                                        partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        if(s.length() >= 18)
+                                            partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        else
+                                            partnerPoleDisplayOutputStream.write(s.getBytes());
                                         partnerPoleDisplayOutputStream.write(newLine);
                                         partnerPoleDisplayOutputStream.write(carriageReturn);
                                         s = (String) jsonObject.get("price");
                                         partnerPoleDisplayOutputStream.write(s.getBytes());
                                     }catch(Exception ex){
                                         System.err.println("Unable to write to Partner Pole Display");
+                                        ex.printStackTrace();
                                     }
                                 }
                         }
@@ -319,7 +328,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -356,7 +365,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         }
         System.err.println(transaction);
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         CheckoutUI checkoutUI;
         try {
@@ -536,7 +545,51 @@ public class ScanItemsUI extends javax.swing.JFrame {
         return duplicate;
     }
     
-
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+    
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
