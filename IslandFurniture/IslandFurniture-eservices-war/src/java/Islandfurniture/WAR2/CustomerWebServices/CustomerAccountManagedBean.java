@@ -83,9 +83,9 @@ public class CustomerAccountManagedBean implements Serializable{
         }   
         else {
             customer = mmab.getCustomer(emailAddress);
-            //pdpcPerks = perksBean.getPDPC(customer);
-            //pdpPerks = perksBean.getPDP(customer);
-            //pdpscPerks = perksBean.getPDPSC(customer);
+            pdpcPerks = perksBean.getPDPC(customer);
+            pdpPerks = perksBean.getPDP(customer);
+            pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
