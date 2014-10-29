@@ -9,6 +9,7 @@ package Islandfurniture.WAR2.CustomerWebServices;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageHomeLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -31,6 +32,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -47,6 +49,8 @@ public class HomeManagedBean {
     private List<Stock> featuredProducts;
     private List<FurnitureModel> featuredFurniture = new ArrayList<>();
     private List<RetailItem> featuredRetailItems;
+    private Customer customer;
+    private String emailAddress;    
 
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -55,7 +59,9 @@ public class HomeManagedBean {
     @EJB
     private ManageMarketingBeanLocal mmbl;    
     @EJB
-    private ManageCatalogueBeanLocal mcbl;    
+    private ManageCatalogueBeanLocal mcbl;
+    @EJB
+    private ManageMemberAuthenticationBeanLocal mmab;    
     
     @PostConstruct
     public void init() {
@@ -64,14 +70,30 @@ public class HomeManagedBean {
         
         webBanners = co.getWebBanners();
         featuredFurniture = mcbl.getCountryFeaturedFurniture(co);
+        
+        boolean loggedIn = checkLoggedIn();
+        if (loggedIn)
+            customer = mmab.getCustomer(emailAddress);        
         System.out.println("loaded " + co.getName() + " web banners");
+    }
+    
+    public boolean checkLoggedIn() {
+        HttpSession session = Util.getSession();
+        emailAddress = (String) session.getAttribute("emailAddress");  
+        if (emailAddress == null)
+            return false;
+        else 
+            return true;
     }    
 
     public Double getDiscountedPrice(Stock s) {
         Store st = new Store();
         st.setCountryOffice(co);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
-    }    
+        if (customer != null)
+            return (Double)mmbl.getDiscountedPrice(s, st, customer).get("D_PRICE");
+        else
+            return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+    }
     
     public String checkForActive(int index) {
         if (index == 0)
