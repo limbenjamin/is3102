@@ -114,19 +114,24 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         em.merge(storefrontInventory);
         em.flush();
         em.refresh(storefrontInventory);
+        
+        System.out.println("1. ");
         // End: Reduce Qty from Transaction : Current - Qty 
 
         // Start: If curr < replenishment, then create Replenishment Transfer Order
         storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
         storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
 
+        System.out.println("2.");
+        
         if (storefrontInventory.getQty() < storefrontInventory.getRepQty()) {
+            System.out.println("3. ");
             if (transferBean.checkIfReplenishmentTransferOrderforStockDoNotExists(plant, stock)) {
                 replenishmentTransferOrder = new ReplenishmentTransferOrder();
                 replenishmentTransferOrder.setRequestingPlant(plant);
                 replenishmentTransferOrder.setStock(stock);
                 replenishmentTransferOrder.setQty(storefrontInventory.getMaxQty() - storefrontInventory.getQty());
-                replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED_PENDING);
+                replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
                 em.persist(replenishmentTransferOrder);
                 em.flush();
             }
