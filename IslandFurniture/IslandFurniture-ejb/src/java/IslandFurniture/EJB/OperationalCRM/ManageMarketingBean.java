@@ -158,7 +158,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             } catch (Exception ex) {
             }
         }
-        
+
         return pc;
 
     }
@@ -232,7 +232,11 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     @Override
     public HashMap<String, Object> getDiscountedPrice(Stock s, Store ss, Customer c, List<PromotionCoupon> couponLists) {
         Query q = em.createQuery("select pcd from PromotionDetail pcd where (pcd.promotionCampaign.countryOffice is null or pcd.promotionCampaign.countryOffice=:co) and (pcd.membershiptier=:mt or pcd.membershiptier is null) and (pcd.applicablePlant is null or EXISTS(select s from Store s where s=:ss and (s.id=pcd.applicablePlant.id)))");
-        q.setParameter("mt", c.getMembershipTier());
+        if (c == null) {
+            q.setParameter("mt", null);
+        } else {
+            q.setParameter("mt", c.getMembershipTier());
+        }
         q.setParameter("ss", ss);
         q.setParameter("co", ss.getCountryOffice());
         double minprice = this.getPrice(s, ss.getCountryOffice());

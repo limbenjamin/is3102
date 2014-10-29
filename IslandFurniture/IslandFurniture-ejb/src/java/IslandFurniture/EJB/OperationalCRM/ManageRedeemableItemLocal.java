@@ -20,7 +20,7 @@ import javax.ejb.Local;
 public interface ManageRedeemableItemLocal {
 
     // Function: Create Redeemable Item
-    void createRedeemableItem(Plant plant, int cashValue, Calendar expiryDate);
+    void createRedeemableItem(Plant plant, int cashValue, Calendar expiryDate, int pointsReq);
 
     // Function: Delete Redeemable Item
     void deleteRedeemableItem(Voucher voucher);
@@ -39,4 +39,8 @@ public interface ManageRedeemableItemLocal {
 
     //  Function: To check if there is no Redemption with the RedeemableItem
     boolean checkIfNoRedemptionWithRedeemableItem(Voucher voucher);
+
+    // Function: To get RedeemableItem
+    RedeemableItem getRedeemableItem(Long id);
+
 }

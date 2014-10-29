@@ -15,11 +15,13 @@ import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageBin;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author KamilulAshraf
  */
+@Local
 public interface ManageInventoryTransferLocal {
 
     void confirmStockUnitMovement(Long stockUnitId);
@@ -151,5 +153,11 @@ public interface ManageInventoryTransferLocal {
 
     //  Function: To display list of Replenishment Transfer Order (Requested)    
     ReplenishmentTransferOrder updateReplenishmentTransferOrder(Plant plant, Stock stock);
+
+    //  Function: To display list of External Transfer Order for Plant  
+    List<ExternalTransferOrder> viewAllExternalTransferOrderRequesting(Plant plant);
+
+    //  Function: To display list of External Transfer Order for Plant  
+    List<ExternalTransferOrder> viewAllExternalTransferOrderFulFilling(Plant plant);
 
 }

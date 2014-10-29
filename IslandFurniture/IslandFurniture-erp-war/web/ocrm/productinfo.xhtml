@@ -1,0 +1,165 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="stockId" value="#{productInfoManagedBean.stockId}"/>
+            <f:viewParam name="stockName" value="#{productInfoManagedBean.stockName}"/>
+        </f:metadata>
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Product Information</strong></li>
+            </ol>  
+        </div> 
+        <div class="col-md-10">
+            <span class="pull-right">
+                <p:outputPanel rendered="#{productInfoManagedBean.product != null or productInfoManagedBean.productList != null or not empty productInfoManagedBean.productList}" >
+                    <h:form>
+                        <h:commandLink action="productinfo.xhtml">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button> 
+                        </h:commandLink>
+                    </h:form>
+                </p:outputPanel>
+            </span>                          
+            <h4>Product Information</h4><hr></hr>
+            <br/>
+            <h:form rendered="#{productInfoManagedBean.product == null}" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Search Product by ID: </label>            
+                    <div class="col-sm-2">
+                        <p:inputText value="#{productInfoManagedBean.stockId}" />
+                    </div>
+                    <div class="col-sm-2">
+                        <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductById}" value="Search" class="btn btn-primary" />
+                    </div>
+                </div>
+            </h:form>
+            <h:form rendered="#{productInfoManagedBean.product == null}" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Search Product by ID: </label>            
+                    <div class="col-sm-2">
+                        <p:inputText value="#{productInfoManagedBean.stockName}" />
+                    </div>
+                    <div class="col-sm-2">
+                        <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductByName}" value="Search" class="btn btn-primary" />
+                    </div>
+                </div>
+            </h:form>
+            <h:form rendered="#{productInfoManagedBean.productList != null}" class="form-horizontal">
+                <div class="form-group">
+                    <p:dataTable value="#{productInfoManagedBean.productList}" var="product">
+                        <p:column>
+                            <f:facet name="header">Product ID</f:facet>
+                            <h:outputText value="#{product.id}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Product Name</f:facet>
+                            <h:outputText value="#{product.name}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Product Type</f:facet>
+                            <h:outputText value="#{product.class.simpleName}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Select</f:facet>
+                            <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.setStockId(product.id)}" value="Select" class="btn btn-primary" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+            <p:outputPanel rendered="#{productInfoManagedBean.product != null}" styleClass="form-horizontal">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Product ID: </label>
+                        <div class="col-sm-10">#{productInfoManagedBean.product.id}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Name: </label>
+                        <div class="col-sm-10">#{productInfoManagedBean.product.name}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Product Type: </label>
+                        <div class="col-sm-10">#{productInfoManagedBean.product.class.simpleName}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Description: </label>
+                        <div class="col-sm-10">
+                            <h:outputText rendered="#{productInfoManagedBean.furniture != null}" value="#{productInfoManagedBean.furniture.furnitureDescription}" />
+                            <h:outputText rendered="#{productInfoManagedBean.retailItem != null}" value="#{productInfoManagedBean.retailItem.riDescription}" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Points Worth: </label>
+                        <div class="col-sm-10">
+                            <h:outputText rendered="#{productInfoManagedBean.furniture != null}" value="#{productInfoManagedBean.furniture.pointsWorth}" />
+                            <h:outputText rendered="#{productInfoManagedBean.retailItem != null}" value="#{productInfoManagedBean.retailItem.pointsWorth}" />
+                        </div>
+                    </div>
+                    <p:outputPanel rendered="#{productInfoManagedBean.furniture != null}" styleClass="form-group">
+                        <label class="col-sm-2 control-label">Category: </label>
+                        <div class="col-sm-10">
+                            <h:outputText value="#{productInfoManagedBean.furniture.category}" />
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel rendered="#{productInfoManagedBean.furniture != null}" styleClass="form-group">
+                        <label class="col-sm-2 control-label">Subcategory: </label>
+                        <div class="col-sm-10">
+                            <h:outputText value="#{productInfoManagedBean.furniture.subcategory}" />
+                        </div>
+                    </p:outputPanel>
+                    <br/>
+                    <h4>Status of Product in Stores of #{productInfoManagedBean.co.name} Country Office</h4>
+                    <hr/>
+                    <p:dataTable value="#{productInfoManagedBean.co.stores}" var="store">
+                        <p:column>
+                            <f:facet name="header">Store</f:facet>
+                            <h:outputText value="#{store.name}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Stock Level<br/>
+                                (Storefront/Warehouse)
+                            </f:facet>
+                            <h:outputText value="#{productInfoManagedBean.findStorefrontStockLvl(store)} / #{productInfoManagedBean.findWarehouseStockLvl(store)}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Location</f:facet>
+                            <h:outputText value="#{productInfoManagedBean.findStockLocation(store)}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                Price<br/>
+                                (Normal/Promo)
+                            </f:facet>
+                            <p:row>
+                                <h:outputText value="#{productInfoManagedBean.findPrice(store)}" converter="#{productInfoManagedBean.converter}" /> / 
+                                <h:outputText value="#{productInfoManagedBean.findDiscPrice(store)}" converter="#{productInfoManagedBean.converter}" />
+                            </p:row>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Promo Campaign</f:facet>
+                            <h:outputText value="#{productInfoManagedBean.findPromo(store)}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                <div class="col-md-4">
+                    <h:form class="form-horizontal">
+                        <h4>Product Thumbnail:</h4>
+                        <p:graphicImage rendered="#{productInfoManagedBean.furniture != null}" value="#{pictureManagedBean.image}" width="250">
+                            <f:param name="pictureId" value="#{productInfoManagedBean.furniture.thumbnail.id}" />
+                        </p:graphicImage>
+                        <p:graphicImage rendered="#{productInfoManagedBean.retailItem != null}" value="#{pictureManagedBean.image}" width="250">
+                            <f:param name="pictureId" value="#{productInfoManagedBean.retailItem.thumbnail.id}" />
+                        </p:graphicImage>
+                    </h:form>
+                </div>
+            </p:outputPanel>
+        </div>
+    </ui:define>
+</ui:composition>

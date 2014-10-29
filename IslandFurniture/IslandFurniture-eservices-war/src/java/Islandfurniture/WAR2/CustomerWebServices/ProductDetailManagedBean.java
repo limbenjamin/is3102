@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -77,7 +78,9 @@ public class ProductDetailManagedBean {
     @EJB
     private ManageShoppingListBeanLocal mslbl;    
     @EJB
-    private ManageMarketingBeanLocal mmbl;    
+    private ManageMarketingBeanLocal mmbl;
+    @EJB
+    private ManageStorefrontInventoryLocal inventoryBean;
     
     @PostConstruct
     public void init() {
@@ -99,7 +102,10 @@ public class ProductDetailManagedBean {
         }
         
         furniture = mcbl.getFurnitureModel(id);
-        discountedPrice = getDiscountedPrice(furniture);
+        if (furniture != null) {
+            discountedPrice = getDiscountedPrice(furniture);
+            System.out.println("Got furniture model " + furniture.getName());            
+        }
         localStores = co.getStores();
         loggedIn = checkLoggedIn();
         
@@ -114,9 +120,7 @@ public class ProductDetailManagedBean {
                 }
             }
         }
-        
-        System.out.println("Got furniture model " + furniture.getName());
-    }    
+    }
     
     public boolean checkLoggedIn() {
         HttpSession session = Util.getSession();
@@ -128,9 +132,9 @@ public class ProductDetailManagedBean {
     }
     
     public Double getDiscountedPrice(Stock s) {
-        Store st = new Store();
-        st.setCountryOffice(co);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+            Store st = new Store();
+            st.setCountryOffice(co);
+            return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }    
     
     public void addItemToShoppingList() throws IOException {
@@ -150,6 +154,15 @@ public class ProductDetailManagedBean {
             mslbl.updateListTotalPrice(listId);
             ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
         }
+    }
+    
+    public String getStockAvailability (Store store) {
+        return inventoryBean.viewStorefrontInventoryStockLevelPerPlant(store, furniture);
+    }
+    
+    public void redirectPage() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/home.xhtml");        
     }
 
     public Long getId() {

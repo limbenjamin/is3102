@@ -303,11 +303,10 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
     //  Function: To check Replenishment Transfer Order (Requested) already exists  
     @Override
     public boolean checkIfReplenishmentTransferOrderforStockDoNotExists(Plant plant, Stock stock) {
-        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE (s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND (s.status=:status OR s.status=:status2))");
+        Query q = em.createQuery("SELECT s FROM ReplenishmentTransferOrder s WHERE (s.requestingPlant.id=:plantId AND s.stock.id=:stockId AND s.status=:status)");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
         q.setParameter("status", TransferOrderStatus.REQUESTED);
-        q.setParameter("status2", TransferOrderStatus.REQUESTED_PENDING);
         return q.getResultList().isEmpty();
     }
 
@@ -320,7 +319,6 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         externalTransferOrder.setTransferDate(cal);
         em.persist(externalTransferOrder);
         em.flush();
-        em.refresh(externalTransferOrder);
         return externalTransferOrder;
     }
 
@@ -497,6 +495,22 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         replenishmentTransferOrder.setStatus(TransferOrderStatus.FULFILLED);
         em.merge(replenishmentTransferOrder);
         em.flush();
+    }
+    
+       //  Function: To display list of External Transfer Order for Plant  
+    @Override
+    public List<ExternalTransferOrder> viewAllExternalTransferOrderRequesting(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+    
+       //  Function: To display list of External Transfer Order for Plant  
+    @Override
+    public List<ExternalTransferOrder> viewAllExternalTransferOrderFulFilling(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
     }
     
     

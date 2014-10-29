@@ -31,4 +31,13 @@
         <local>IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal</local>
         <ejb-link>IslandFurniture-ejb.jar#ManageLocalizationBean</ejb-link>
     </ejb-local-ref>
+    <context-param>
+        <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+        <param-value>6Lc9x_wSAAAAAJ1KTrNGJRZoYkDisfjqf6bXNrCn</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+        <param-value>6Lc9x_wSAAAAAJ4EHpgDQedfQYlwFT1iC2MPdH28</param-value>
+    </context-param>
 </web-app>

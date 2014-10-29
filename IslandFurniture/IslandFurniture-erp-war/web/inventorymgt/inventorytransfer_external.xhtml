@@ -60,7 +60,7 @@
                                                                 <h:outputText value="#{list.id}"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{list.fulfillingPlant.name}"></h:outputText>
+                                                                <h:outputText value="#{list.fulfillingPlant.name} (#{list.fulfillingPlant.class.simpleName})"></h:outputText>
                                                             </td>
                                                             <td>
                                                                 <h:outputText value="#{list.transferDate.time}" >
@@ -107,7 +107,7 @@
                                                                 <h:outputText value="#{list.id}"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{list.fulfillingPlant.name}"></h:outputText>
+                                                                <h:outputText value="#{list.fulfillingPlant.name} (#{list.fulfillingPlant.class.simpleName})"></h:outputText>
                                                             </td>
                                                             <td>
                                                                 <h:outputText value="#{list.transferDate.time}" >
@@ -148,7 +148,7 @@
                                                                 <h:outputText value="#{list.id}"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{list.fulfillingPlant.name}"></h:outputText>
+                                                                <h:outputText value="#{list.fulfillingPlant.name} (#{list.fulfillingPlant.class.simpleName})"></h:outputText>
                                                             </td>
                                                             <td>
                                                                 <h:outputText value="#{list.transferDate.time}" >
@@ -188,7 +188,7 @@
                                                     <ui:repeat value="#{inventoryTransferExternalManagedBean.externalTransferOrderListFulfilledPendingList}" var="list">
                                                         <tr>
                                                             <td><h:outputText value="#{list.id}"></h:outputText></td>
-                                                            <td><h:outputText value="#{list.requestingPlant.name}"></h:outputText></td>
+                                                            <td><h:outputText value="#{list.requestingPlant.name} (#{list.requestingPlant.class.simpleName})"></h:outputText></td>
                                                             <td>
                                                                 <h:outputText value="#{list.transferDate.time}" >
                                                                     <f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{list.requestingPlant.timeZoneID}"  />
@@ -230,10 +230,10 @@
                                                                 <h:outputText value="#{list.id}"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{list.requestingPlant.name}"></h:outputText>
+                                                                <h:outputText value="#{list.requestingPlant.name} (#{list.requestingPlant.class.simpleName})"></h:outputText>
                                                             </td>
                                                             <td>
-                                                                <h:outputText value="#{list.fulfillingPlant.name}"></h:outputText>
+                                                                <h:outputText value="#{list.fulfillingPlant.name} (#{list.fulfillingPlant.class.simpleName})"></h:outputText>
                                                             </td>
                                                             <td>
                                                                 <h:outputText value="#{list.transferDate.time}" >

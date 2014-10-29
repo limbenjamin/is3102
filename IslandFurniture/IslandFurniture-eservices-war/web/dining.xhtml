@@ -6,7 +6,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
     <ui:define name="content">
             <section>
                 <div class="container">
@@ -20,15 +21,14 @@
                     <div class="col-sm-3">
                         <div class="left-sidebar">
                             <div class="brands_products" style="margin-top: 20px;">
-                                <h2>Sub - Categories</h2>
+                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
                                 <div class="brands-name">
                                     <ul class="nav nav-pills nav-stacked">                                      
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.lighting']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.tables']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.chairs']}" /></a></li>
+                                        <ui:repeat value="#{catalogueManagedBean.filteredSubs('DINING')}" var="sub">
+                                            <li><a href="dining.xhtml?sub=#{sub}">#{sub}</a></li>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <li><a href="dining.xhtml">Display all</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -38,13 +38,18 @@
                             <div class="catalogue">
                                 <h2 class="title text-center">DINING ROOM FURNITURE</h2>
                                 <h:form>
-                                <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
+                                <ui:repeat value="#{catalogueManagedBean.filteredCategory('DINING')}" var="furniture">
                                     <div class="col-sm-4">
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
                                                     <a href="productdetail.xhtml?id=#{furniture.id}">
-                                                        <img src="#{application.contextPath}/assets/images/home/product1.jpg" alt="" />
+                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
+                                                            <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
+                                                        </pf:graphicImage>
+                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
+                                                            <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                                        </h:panelGroup>
                                                     </a>
                                                     <h4>#{catalogueManagedBean.co.country.currency.currencyCode}
                                                     <h:outputText value="#{furniture.price}">
@@ -58,7 +63,7 @@
                                     </div>
                                 </ui:repeat>
                                 </h:form>
-                            </div>	
+                            </div>
                         </div>
                         <br/><br/>                      
                     </div>

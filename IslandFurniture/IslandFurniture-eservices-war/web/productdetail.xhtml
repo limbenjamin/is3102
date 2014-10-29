@@ -6,23 +6,39 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
     <ui:define name="content">       
 	<section>
 	<div class="container">           
-            <div class="row">               
+            <div class="row">
+                <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture}" style="height:410px;">
+                    <div class="col-md-12">
+                        <h2>Looks like this product does not exist!</h2>
+                        <hr/>
+                        <h4>Check out what we're selling instead!</h4>
+                            <a href="all.xhtml" class="btn btn-default btn-round">
+                                <i class="fa fa-info-circle"></i> All Products
+                            </a>
+                    </div>
+                </h:panelGroup>
                 <!--product-details-->
-                <div class="product-details">
+                <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.furniture}" styleClass="product-details">
                         <div class="col-md-12">
                             <ol class="breadcrumb">
                               <li><a href="home.xhtml">Home</a></li>
-                              <li><a href="all.xhtml">All Furniture</a></li>
+                              <li><a href="all.xhtml">All Products</a></li>
                               <li class="active"><strong>#{productDetailManagedBean.furniture.name}</strong></li>
                             </ol>
                         </div>                     
                         <div class="col-sm-4">
                             <section class="container-fluid">
-                                <img src="#{application.contextPath}/assets/images/home/product11.JPG" style="max-width:400px;" alt="" />
+                                <pf:graphicImage value="#{pictureManagedBean.image}" style="max-width: 360px" rendered="#{not empty productDetailManagedBean.furniture.thumbnail.content}">
+                                    <f:param name="pictureId" value="#{productDetailManagedBean.furniture.thumbnail.id}" />
+                                </pf:graphicImage>
+                                <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture.thumbnail.content}">
+                                    <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                </h:panelGroup>
                             </section>
                         </div>
 			<div class="col-sm-8">
@@ -40,10 +56,10 @@
                                         </h:outputText>
                                     </small>
                                 </h4>
-                                <span class="product-options">
+                                <!--<span class="product-options">
                                     <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
                                     <a href="#"><i class="fa fa-eye"></i> View inside Room Planner</a>
-                                </span>
+                                </span>-->
                                 <hr/>
                                 <div class="col-sm-8">
                                     <p><b>Category:</b> #{productDetailManagedBean.furniture.category}</p>
@@ -68,9 +84,9 @@
                                         </div>
                                         <div class="form-group">
                                           <div class="col-sm-12">
-                                              <h:commandButton action="#{productDetailManagedBean.addItemToShoppingList}" value="Add to Shopping List" class="btn btn-round btn-success" />
+                                              <h:commandButton action="#{productDetailManagedBean.addItemToShoppingList}" value="Add to Shopping List" class="btn btn-round btn-success btn-theme" />
                                           </div>
-                                        </div>                                        
+                                        </div> 
 	                            </h:form>
                                     <h:form rendered="#{not productDetailManagedBean.loggedIn}">
                                         <a href="login.xhtml" class="btn btn-default btn-round trigger">
@@ -83,7 +99,7 @@
                                     <p><strong>Product Availability</strong>:</p><br/>                                    
                                     <ui:repeat value="#{productDetailManagedBean.localStores}" var="store">
                                         <strong>#{store.name}</strong>
-                                        <span class="available">AVAILABLE</span><br/>
+                                        <span class="available">#{productDetailManagedBean.getStockAvailability(store)}</span><br/>
                                     </ui:repeat>
                                     <br/><br/>
                                 </div>
@@ -142,9 +158,10 @@
                                 </div>
                             </div>
 			</div>
-                    </div>
+                    </h:panelGroup>
                     <br/><br/>
-                    <div class="recommended_items"><!--recommended_items-->
+                    <!--
+                    <div class="recommended_items">
                         <h2>RECOMMENDED (7)</h2>
                         <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
                             <div class="carousel-inner">
@@ -243,7 +260,7 @@
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         </div>
-                    </div><!--/recommended_items-->
+                    </div>!-->
                 </div>
             </div>
 	</section>        

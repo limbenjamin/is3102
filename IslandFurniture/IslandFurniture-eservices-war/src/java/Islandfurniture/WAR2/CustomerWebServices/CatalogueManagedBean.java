@@ -19,6 +19,7 @@ import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -38,13 +39,14 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class CatalogueManagedBean implements Serializable{
 
-    private List<FurnitureModel> furnitureList;
+    private List<FurnitureModel> furnitureList = new ArrayList<>();
     private List<RetailItem> retailItemList;
     private String name;
     private String furnitureDescription;
     private Double price;
     private FurnitureCategory category;
-    private FurnitureSubcategory subcategory;   
+    private FurnitureSubcategory subcategory;
+    private List<FurnitureSubcategory> subcategories = new ArrayList<>();
     private CountryOffice co;
     
     @EJB
@@ -61,8 +63,24 @@ public class CatalogueManagedBean implements Serializable{
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         
-        furnitureList = mcbl.getStoreFurniture(co);
-        retailItemList = mcbl.getStoreRetailItems(co);
+        List<FurnitureModel> tempFurnitureList = mcbl.getStoreFurniture(co);
+        //retailItemList = mcbl.getStoreRetailItems(co);
+        
+        for (FurnitureModel furniture : tempFurnitureList) {
+            if (!subcategories.contains(furniture.getSubcategory()))
+                subcategories.add(furniture.getSubcategory());
+        }
+        
+        String sub = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("sub");
+        if (sub != null) {
+            for (FurnitureModel furniture : tempFurnitureList) {
+                if (furniture.getSubcategory().toString().equals(sub))
+                    furnitureList.add(furniture);
+            }            
+        } else {
+            furnitureList = tempFurnitureList;
+        }
+        
         System.out.println("loaded " + co.getName() + " furniture models and retail items");
     }
     
@@ -76,7 +94,26 @@ public class CatalogueManagedBean implements Serializable{
       ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
       
       ec.redirect(ec.getRequestContextPath() + "/" + coCode + "/productdetail.xhtml?id=" + furnitureId);
-    }     
+    }
+    
+    public List<FurnitureModel> filteredCategory(String category) {
+        List<FurnitureModel> categoryList = new ArrayList<>();
+        for (FurnitureModel furniture : furnitureList) {
+            if (furniture.getCategory().toString().equals(category))
+                categoryList.add(furniture);
+        }
+        return categoryList;
+    }
+    
+    public List<FurnitureSubcategory> filteredSubs(String category) {
+        List<FurnitureSubcategory> subList = new ArrayList<>();
+        List<FurnitureModel> tempFurnitureList = mcbl.getStoreFurniture(co);
+        for (FurnitureModel furniture : tempFurnitureList) {
+            if (furniture.getCategory().toString().equals(category) && !subList.contains(furniture.getSubcategory()))
+                subList.add(furniture.getSubcategory());
+        }
+        return subList;
+    }    
     
     public Double getDiscountedPrice(Stock s) {
         Store st = new Store();
@@ -154,6 +191,14 @@ public class CatalogueManagedBean implements Serializable{
 
     public void setRetailItemList(List<RetailItem> retailItemList) {
         this.retailItemList = retailItemList;
+    }
+
+    public List<FurnitureSubcategory> getSubcategories() {
+        return subcategories;
+    }
+
+    public void setSubcategories(List<FurnitureSubcategory> subcategories) {
+        this.subcategories = subcategories;
     }
     
 }

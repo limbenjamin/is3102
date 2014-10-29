@@ -28,15 +28,17 @@ public class ManageRedeemableItem implements ManageRedeemableItemLocal {
     EntityManager em;
 
     Voucher voucher;
+    RedeemableItem redeemableItem;
 
     // Function: Create Redeemable Item
     @Override
-    public void createRedeemableItem(Plant plant, int cashValue, Calendar expiryDate) {
+    public void createRedeemableItem(Plant plant, int cashValue, Calendar expiryDate, int pointsReq) {
         CountryOffice co = (CountryOffice) plant;
         Voucher voucher = new Voucher();
         voucher.setCountryOffice(co);
         voucher.setCashValue(cashValue);
         voucher.setExpiryDate(expiryDate);
+        voucher.setPointsReq(pointsReq);
         em.persist(voucher);
         em.flush();
     }
@@ -95,6 +97,14 @@ public class ManageRedeemableItem implements ManageRedeemableItemLocal {
         Query q = em.createQuery("SELECT s FROM Redemption s WHERE s.redeemableItem.id=:id");
         q.setParameter("id", voucher.getId());
         return q.getResultList().isEmpty();
+    }
+    
+    // Function: To get RedeemableItem
+       @Override
+    public RedeemableItem getRedeemableItem(Long id) {
+        redeemableItem = (RedeemableItem) em.find(RedeemableItem.class, id);
+        return redeemableItem;
+    
     }
 
 }

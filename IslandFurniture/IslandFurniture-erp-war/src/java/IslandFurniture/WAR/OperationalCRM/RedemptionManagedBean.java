@@ -12,6 +12,7 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.OperationalCRM.ManageRedemptionLocal;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Voucher;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
@@ -51,6 +52,8 @@ public class RedemptionManagedBean implements Serializable {
     private int cashValue;
     private Date redemptionDateType;
     private Calendar redemptionDateCal;
+    private Customer customer;
+    private RedeemableItem redeemableItem;
 
     @EJB
     private ManageUserAccountBeanLocal staffBean;
@@ -74,13 +77,18 @@ public class RedemptionManagedBean implements Serializable {
 
 //  Function: To create a Redemption
     public void addRedemption(ActionEvent event) throws IOException, ParseException {
-        redemptionBean.createRedemption(staff, getCalendar(), customerId, redeemableItemId);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Redemption has sucessfully been created", ""));
-//        } else {
-//            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-//                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Redemption with the same Cash Value and Expiry Date. Creation of Redemption was unsuccessful.", ""));
-//        }
+        customer = membershipBean.getCustomer(customerId);
+        redeemableItem = itemBean.getRedeemableItem(redeemableItemId);
+        if (customer.getCurrentPoints().intValue() == redeemableItem.getPointsReq()
+                || customer.getCurrentPoints() > redeemableItem.getPointsReq()) {
+            redemptionBean.createRedemption(staff, getCalendar(), customerId, redeemableItemId);           
+            membershipBean.editCustomerAccountPoints(customer, (customer.getCurrentPoints() - redeemableItem.getPointsReq()));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Redemption has sucessfully been created", ""));
+        } else {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Customer's current points (" + customer.getCurrentPoints().intValue() + " points) is not enough to redeem the item (" + redeemableItem.getPointsReq() + " points). Redemption failed", ""));
+        }
     }
 
     //  Function: To get current Time in Calendar type
@@ -92,6 +100,22 @@ public class RedemptionManagedBean implements Serializable {
         return calDate;
     }
 
+    public RedeemableItem getRedeemableItem() {
+        return redeemableItem;
+    }
+
+    public void setRedeemableItem(RedeemableItem redeemableItem) {
+        this.redeemableItem = redeemableItem;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+    
     public List<Redemption> getRedemptionList() {
         return redemptionList;
     }

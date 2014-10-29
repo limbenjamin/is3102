@@ -8,6 +8,8 @@ package IslandFurniture.EJB.OperationalCRM;
 
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatThread;
+import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Feedback;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -27,4 +29,10 @@ public interface CustomerCommunicationBeanLocal {
     CustChatThread getThread(Long threadId);
     
     void endAnonymousThread(Long threadId);
+    
+    void createAnonymousFeedback(String name, String emailAddress, String phoneNo, String content, CountryOffice co);
+    
+    void createFeedback(Customer customer, String content, CountryOffice co);
+    
+    List<Feedback> getAllFeedbackForCO(CountryOffice co);
 }
