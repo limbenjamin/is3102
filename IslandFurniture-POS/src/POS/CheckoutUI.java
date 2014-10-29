@@ -49,6 +49,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
+    private String partnerPoleDisplayCOMPort;
     byte[] clear = {0x0C};
     byte[] newLine = {0x0A};
     byte[] carriageReturn = {0x0D};
@@ -90,7 +91,8 @@ public class CheckoutUI extends javax.swing.JFrame {
             jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
             jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
         }
-        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        partnerPoleDisplayCOMPort = LCD.getPort();
+        initPartnerPoleDisplay();
     }
 
     /**
@@ -293,7 +295,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -353,7 +355,7 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -436,7 +438,7 @@ public class CheckoutUI extends javax.swing.JFrame {
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         PaymentUI payment = null;
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash, storeType);
@@ -516,6 +518,51 @@ public class CheckoutUI extends javax.swing.JFrame {
         }catch(Exception ex){
             System.err.println("Unable to write to Partner Pole Display");
         }
+    }
+    
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+    
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -123,7 +123,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             {"Ingredient Management", "/kitchen/ingredientgoodsreceipt.xhtml", "fa-cube", "Ingredient Goods Receipt", "true","34"},
             {"Ingredient Management", "/kitchen/ingredientgoodsreceiptdocument.xhtml", "fa-dummy", "dummy", "false","0"},
             {"Ingredient Management", "/kitchen/ingredientinventory.xhtml", "fa-cube", "Ingredient Inventory", "true","35"},
-            {"Web Management", "/ocrm/featuredproducts.xhtml", "fa-cube", "Featured Poducts", "true","36"},
+            {"Web Management", "/ocrm/featuredproducts.xhtml", "fa-cube", "Featured Products", "true","36"},
             {"Web Management", "/ocrm/webbanner.xhtml", "fa-cube", "Web Banner", "true","37"},
             {"Web Management", "/ocrm/webbannerdetail.xhtml", "fa-dummy", "dummy", "false","0"},
             {"Member Management", "/ocrm/membershiptier.xhtml", "fa-cube", "Membership Tier", "true","38"},

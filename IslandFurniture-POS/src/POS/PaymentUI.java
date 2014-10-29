@@ -8,6 +8,8 @@ package POS;
 
 import Helper.Connector;
 import Helper.LCD;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
@@ -18,6 +20,7 @@ import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +66,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
+    private String partnerPoleDisplayCOMPort;
     byte[] clear = {0x0C};
     byte[] newLine = {0x0A};
     byte[] carriageReturn = {0x0D};
@@ -109,7 +113,8 @@ public class PaymentUI extends javax.swing.JFrame {
         payableLabel.setText("Total Payable: "+currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
         welcomeLabel.setText("Welcome " + staffname + " of " + plantname + " store!");
-        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        partnerPoleDisplayCOMPort = LCD.getPort();
+        initPartnerPoleDisplay();
     }
 
     /**
@@ -372,7 +377,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -387,7 +392,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -643,7 +648,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -723,7 +728,50 @@ public class PaymentUI extends javax.swing.JFrame {
         payableLabel.setText("Total Payable: "+currencyCode+" "+Math.round(payableAmt * 100.0) / 100.0);
     }
     
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
     
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
