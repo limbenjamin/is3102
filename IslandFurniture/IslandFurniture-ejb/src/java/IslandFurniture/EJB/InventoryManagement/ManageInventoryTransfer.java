@@ -319,7 +319,6 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         externalTransferOrder.setTransferDate(cal);
         em.persist(externalTransferOrder);
         em.flush();
-        em.refresh(externalTransferOrder);
         return externalTransferOrder;
     }
 
@@ -496,6 +495,22 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
         replenishmentTransferOrder.setStatus(TransferOrderStatus.FULFILLED);
         em.merge(replenishmentTransferOrder);
         em.flush();
+    }
+    
+       //  Function: To display list of External Transfer Order for Plant  
+    @Override
+    public List<ExternalTransferOrder> viewAllExternalTransferOrderRequesting(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
+    }
+    
+       //  Function: To display list of External Transfer Order for Plant  
+    @Override
+    public List<ExternalTransferOrder> viewAllExternalTransferOrderFulFilling(Plant plant) {
+        Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId");
+        q.setParameter("plantId", plant.getId());
+        return q.getResultList();
     }
     
     

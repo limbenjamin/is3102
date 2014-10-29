@@ -154,4 +154,10 @@ public interface ManageInventoryTransferLocal {
     //  Function: To display list of Replenishment Transfer Order (Requested)    
     ReplenishmentTransferOrder updateReplenishmentTransferOrder(Plant plant, Stock stock);
 
+    //  Function: To display list of External Transfer Order for Plant  
+    List<ExternalTransferOrder> viewAllExternalTransferOrderRequesting(Plant plant);
+
+    //  Function: To display list of External Transfer Order for Plant  
+    List<ExternalTransferOrder> viewAllExternalTransferOrderFulFilling(Plant plant);
+
 }

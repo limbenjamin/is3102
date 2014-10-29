@@ -135,31 +135,32 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         }
         // end: To display fulfilled plant properly
         // start: To display plant name properly
-        
-        if (externalTransferOrder.getRequestingPlant() != null && externalTransferOrder.getFulfillingPlant() != null) {
+
+        if (externalTransferOrder.getRequestingPlant() != null) {
             String plantType2 = externalTransferOrder.getRequestingPlant().getClass().getSimpleName();
-        if (plantType2.equals("ManufacturingFacility")) {
-            plantType2 = "MFG";
-        } else if (plantType2.equals("CountryOffice")) {
-            plantType2 = "CO";
-        } else if (plantType2.equals("GlobalHQ")) {
-            plantType2 = ""; //no need cos global HQ global HQ looks ugly
+            if (plantType2.equals("ManufacturingFacility")) {
+                plantType2 = "MFG";
+            } else if (plantType2.equals("CountryOffice")) {
+                plantType2 = "CO";
+            } else if (plantType2.equals("GlobalHQ")) {
+                plantType2 = ""; //no need cos global HQ global HQ looks ugly
+            }
+            plantTypeRequest = externalTransferOrder.getRequestingPlant().getName() + " (" + plantType2 + ")";
         }
-        plantTypeRequest = externalTransferOrder.getRequestingPlant().getName() + " (" + plantType2 + ")";
 
-        String plantType3 = externalTransferOrder.getFulfillingPlant().getClass().getSimpleName();
-        if (plantType3.equals("ManufacturingFacility")) {
-            plantType3 = "MFG";
-        } else if (plantType3.equals("CountryOffice")) {
-            plantType3 = "CO";
-        } else if (plantType3.equals("GlobalHQ")) {
-            plantType3 = ""; //no need cos global HQ global HQ looks ugly
+        if (externalTransferOrder.getFulfillingPlant() != null) {
+            String plantType3 = externalTransferOrder.getFulfillingPlant().getClass().getSimpleName();
+            if (plantType3.equals("ManufacturingFacility")) {
+                plantType3 = "MFG";
+            } else if (plantType3.equals("CountryOffice")) {
+                plantType3 = "CO";
+            } else if (plantType3.equals("GlobalHQ")) {
+                plantType3 = ""; //no need cos global HQ global HQ looks ugly
+            }
+            plantTypeFulfill = externalTransferOrder.getFulfillingPlant().getName() + " (" + plantType3 + ")";
         }
-        plantTypeFulfill = externalTransferOrder.getFulfillingPlant().getName() + " (" + plantType3 + ")";
+
         // end: To display plant name properly
-        }
-
-        
     }
 
 //  Function: To create a External Transfer Order Detail (Request)
@@ -297,8 +298,8 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
 
     public void setPlantTypeFulfill(String plantTypeFulfill) {
         this.plantTypeFulfill = plantTypeFulfill;
-    }   
-    
+    }
+
     public List<Plant> getPlantList() {
         return plantList;
     }

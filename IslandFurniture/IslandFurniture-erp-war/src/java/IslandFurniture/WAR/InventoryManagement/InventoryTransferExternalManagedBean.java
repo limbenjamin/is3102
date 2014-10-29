@@ -47,6 +47,8 @@ public class InventoryTransferExternalManagedBean implements Serializable {
 
     private List<StorageBin> storageBinList;
     private List<StockUnit> stockUnitList;
+    private List<ExternalTransferOrder> allETORequest;
+    private List<ExternalTransferOrder> allETOFulfill;
     private List<ExternalTransferOrder> externalTransferOrderListRequestPendingList;
     private List<ExternalTransferOrder> externalTransferOrderListRequestPostedList;
     private List<ExternalTransferOrder> externalTransferOrderListFulfilledPendingList;
@@ -74,47 +76,58 @@ public class InventoryTransferExternalManagedBean implements Serializable {
         plant = staff.getPlant();
         storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
         stockUnitList = transferBean.viewStockUnitDistinctName(plant);
+//        allETORequest = transferBean.viewAllExternalTransferOrderRequesting(plant);
+//        changePlantNameRequest(allETORequest);
+//        allETOFulfill = transferBean.viewAllExternalTransferOrderFulFilling(plant);;
         externalTransferOrderListRequestPendingList = transferBean.viewExternalTransferOrderRequestedPending(plant);
-        changePlantName(externalTransferOrderListRequestPendingList);
+//        changePlantNameFulfill(externalTransferOrderListRequestPendingList);
         externalTransferOrderListRequestPostedList = transferBean.viewExternalTransferOrderRequestedPosted(plant);
-        changePlantName(externalTransferOrderListRequestPostedList);
+//        changePlantNameFulfill(externalTransferOrderListRequestPostedList);
         externalTransferOrderListFulfilledPendingList = transferBean.viewExternalTransferOrderFulfilledPending(plant);
-        changePlantName(externalTransferOrderListFulfilledPendingList);
+//        changePlantNameRequest(externalTransferOrderListFulfilledPendingList);
         externalTransferOrderListFulfilledPostedList = transferBean.viewExternalTransferOrderFulfilledPosted(plant);
-        changePlantName(externalTransferOrderListFulfilledPostedList);
+//        changePlantNameRequest(externalTransferOrderListFulfilledPostedList);
         externalTransferOrderListFulfilledPostedListFromRequesting = transferBean.viewExternalTransferOrderFulfilledPostedFromRequesting(plant);
-        changePlantName(externalTransferOrderListFulfilledPostedListFromRequesting);
+//        changePlantNameFulfill(externalTransferOrderListFulfilledPostedListFromRequesting);
     }
 
-    void changePlantName(List<ExternalTransferOrder> list) {
+    void changePlantNameRequest(List<ExternalTransferOrder> list) {
         for (ExternalTransferOrder e : list) {
-            plantType = e.getFulfillingPlant().getClass().getSimpleName();
-            if (plantType.equals("ManufacturingFacility")) {
-                plantType = "MFG";
-            } else if (plantType.equals("CountryOffice")) {
-                plantType = "CO";
-            } else if (plantType.equals("GlobalHQ")) {
-                plantType = ""; //no need cos global HQ global HQ looks ugly
+
+            if (e.getRequestingPlant() != null) {
+                plantType = e.getRequestingPlant().getClass().getSimpleName();
+                if (plantType.equals("ManufacturingFacility")) {
+                    plantType = "MFG";
+                } else if (plantType.equals("CountryOffice")) {
+                    plantType = "CO";
+                } else if (plantType.equals("GlobalHQ")) {
+                    plantType = ""; //no need cos global HQ global HQ looks ugly
+                }
+
+                e.getRequestingPlant().setName(e.getRequestingPlant().getName() + " " + plantType);
             }
+        }
+    }
+    
+       void changePlantNameFulfill(List<ExternalTransferOrder> list) {
+        for (ExternalTransferOrder e : list) {
+            if (e.getFulfillingPlant() != null) {
+                plantType = e.getFulfillingPlant().getClass().getSimpleName();
+                if (plantType.equals("ManufacturingFacility")) {
+                    plantType = "MFG";
+                } else if (plantType.equals("CountryOffice")) {
+                    plantType = "CO";
+                } else if (plantType.equals("GlobalHQ")) {
+                    plantType = ""; //no need cos global HQ global HQ looks ugly
+                }
 
-            e.getFulfillingPlant().setName(e.getFulfillingPlant().getName() + " " + plantType);
-
-            plantType = e.getRequestingPlant().getClass().getSimpleName();
-            if (plantType.equals("ManufacturingFacility")) {
-                plantType = "MFG";
-            } else if (plantType.equals("CountryOffice")) {
-                plantType = "CO";
-            } else if (plantType.equals("GlobalHQ")) {
-                plantType = ""; //no need cos global HQ global HQ looks ugly
+                e.getFulfillingPlant().setName(e.getFulfillingPlant().getName() + " " + plantType);
             }
-
-            e.getRequestingPlant().setName(e.getRequestingPlant().getName() + " " + plantType);
         }
     }
 
-
 //  Function: To create a External Tranfer Order
-public void createExternalTransferOrder(ActionEvent event) throws IOException {
+    public void createExternalTransferOrder(ActionEvent event) throws IOException {
         externalTransferOrder = transferBean.createExternalTransferOrder(plant, getCalendar());
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_externaldetail.xhtml?id=" + externalTransferOrder.getId().toString());
     }
@@ -140,6 +153,30 @@ public void createExternalTransferOrder(ActionEvent event) throws IOException {
         cal.setTime(date);
         Calendar calDate = cal;
         return calDate;
+    }
+
+    public List<ExternalTransferOrder> getAllETORequest() {
+        return allETORequest;
+    }
+
+    public void setAllETORequest(List<ExternalTransferOrder> allETORequest) {
+        this.allETORequest = allETORequest;
+    }
+
+    public List<ExternalTransferOrder> getAllETOFulfill() {
+        return allETOFulfill;
+    }
+
+    public void setAllETOFulfill(List<ExternalTransferOrder> allETOFulfill) {
+        this.allETOFulfill = allETOFulfill;
+    }
+
+    public String getPlantType() {
+        return plantType;
+    }
+
+    public void setPlantType(String plantType) {
+        this.plantType = plantType;
     }
 
     public Long getStorageAreaId() {
