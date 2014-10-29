@@ -29,6 +29,7 @@ import javax.persistence.PostPersist;
 public class RetailItem extends ProcuredStock implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    // No longer used
     private Double price;
     private String riDescription;
     private Long pointsWorth;

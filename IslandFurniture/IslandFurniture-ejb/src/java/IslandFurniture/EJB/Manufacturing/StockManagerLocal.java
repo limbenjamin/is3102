@@ -35,7 +35,7 @@ public interface StockManagerLocal {
 
     public List<RetailItem> displayItemList();
 
-    public String editRetailItem(Long itemID, String itemName, Double itemPrice);
+    public String editRetailItem(RetailItem updatedItem);
 
     public String deleteRetailItem(Long itemID);
 
