@@ -314,6 +314,7 @@ public class StocklistWS {
                     rt.setMember(customer);
                 }
                 long totalPoints = 0;
+                List<String> couponExpendedList = new ArrayList();
                 JsonReader reader = Json.createReader(new StringReader(transaction));
                 JsonArray arr = reader.readArray();
                 for (JsonValue jsonValue : arr) {
@@ -338,8 +339,11 @@ public class StocklistWS {
                         ftd.setFurnitureTransaction(ft);
                         ft.getFurnitureTransactionDetails().add(ftd);
                         mpl.persistFTD(ftd);
-                        if(!jo.getString("disc").equals("null"))
-                            mpl.expendCoupon(jo.getString("disc"));
+                        if(!(jo.getString("disc").equals("null")||jo.getString("disc").equals("")))
+                            if (!couponExpendedList.contains(jo.getString("disc"))){
+                                mpl.expendCoupon(jo.getString("disc"));
+                                couponExpendedList.add(jo.getString("disc"));
+                            }
                         if (!receipt.isEmpty()){
                             mpl.linkReceipt(receipt, ft);
                         }

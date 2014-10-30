@@ -138,7 +138,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                         partnerPoleDisplayOutputStream.write(s.getBytes());
                                     }catch(Exception ex){
                                         System.err.println("Unable to write to Partner Pole Display");
-                                        ex.printStackTrace();
+                                        //ex.printStackTrace();
                                     }
                                 }
                         }
