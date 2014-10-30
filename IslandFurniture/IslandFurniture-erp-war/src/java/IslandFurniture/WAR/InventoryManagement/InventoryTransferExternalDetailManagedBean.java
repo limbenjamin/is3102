@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -96,7 +97,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
+
         stockList = transferBean.viewStock();
         try {
             id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
@@ -106,6 +107,27 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         }
         externalTransferOrder = transferBean.getExternalTransferOrder(id);
         externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
+        storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
+//        Iterator<StorageBin> iterator = storageBinList.iterator();
+//        while (iterator.hasNext()) {
+//            StorageBin s = iterator.next();
+//            System.out.println("1.");
+//            // doesn't workm after here
+//            for (StockUnit u : s.getStockUnits()) {
+//                System.out.println("2.");
+//                for (ExternalTransferOrderDetail e : externalTransferOrderDetailList) {
+//                    System.out.println("3.");
+//                    if (e.getStock().equals(u.getStock())) {
+//                        System.out.println("4.");
+//                        if (e.getQty() < u.getQty()) {
+//                            System.out.println("5.");
+//                            iterator.remove();
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         // start: To display date properly
         if (externalTransferOrder.getTransferDate() != null) {
