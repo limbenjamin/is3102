@@ -114,7 +114,8 @@ public class MobileAppService implements MobileAppServiceLocal {
     }
 
     public Picture getPicture(String picID) {
-        Query q = em.createQuery("select p from Picture p where EXISTS (select fm from FurnitureModel fm where fm.thumbnail.id=p.id)");
+        Query q = em.createQuery("select p from Picture p where EXISTS (select fm from FurnitureModel fm where fm.thumbnail.id=p.id AND fm.id=:p)");
+        q.setParameter("p", Long.parseLong(picID));
         if (q.getResultList().isEmpty()) {
             return null;
         }

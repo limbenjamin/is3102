@@ -111,7 +111,7 @@
                                                 <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdp.id) * 100}% discount for all #{pdp.applicablePlant.name} #{pdp.stock.name} items</li>
                                                 </h:panelGroup>
                                                 <h:panelGroup rendered="#{pdp.absoluteDiscount != 0}">
-                                                <li><i class="fa fa-check-square"></i> $#{customerAccountManagedBean.getAbsoluteDiscount(pdp.id) * 100} discount for all #{pdp.applicablePlant.name} #{pdp.stock.name} items</li>
+                                                <li><i class="fa fa-check-square"></i> $#{customerAccountManagedBean.getAbsoluteDiscount(pdp.id)} discount for all #{pdp.applicablePlant.name} #{pdp.stock.name} items</li>
                                                 </h:panelGroup>
                                             </ui:repeat>
                                             <ui:repeat value="#{customerAccountManagedBean.pdpcPerks}" var="pdpc">
@@ -119,13 +119,16 @@
                                                 <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdpc.id) * 100}% discount for all #{pdpc.applicablePlant.name} #{pdpc.category} items</li>
                                                 </h:panelGroup>
                                                 <h:panelGroup rendered="#{pdpc.absoluteDiscount != 0}">
-                                                <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getAbsoluteDiscount(pdpc.id) * 100}% discount for all #{pdpc.applicablePlant.name} #{pdpc.category} items</li>
+                                                <li><i class="fa fa-check-square"></i> $#{customerAccountManagedBean.getAbsoluteDiscount(pdpc.id)} discount for all #{pdpc.applicablePlant.name} #{pdpc.category} items</li>
                                                 </h:panelGroup>                                                
                                             </ui:repeat>
                                             <ui:repeat value="#{customerAccountManagedBean.pdpscPerks}" var="pdpsc">
                                                 <h:panelGroup rendered="#{pdpsc.percentageDiscount != 0}">
                                                 <li><i class="fa fa-check-square"></i> #{customerAccountManagedBean.getPercentageDiscount(pdpsc.id) * 100}% discount for all #{pdpsc.applicablePlant.name} #{pdpsc.category} items</li>
                                                 </h:panelGroup>
+                                                <h:panelGroup rendered="#{pdpsc.absoluteDiscount != 0}">
+                                                <li><i class="fa fa-check-square"></i> $#{customerAccountManagedBean.getPercentageDiscount(pdpsc.id)} discount for all #{pdpsc.applicablePlant.name} #{pdpsc.category} items</li>
+                                                </h:panelGroup>                                                
                                             </ui:repeat>                                            
                                         </ul>
                                     </div>
