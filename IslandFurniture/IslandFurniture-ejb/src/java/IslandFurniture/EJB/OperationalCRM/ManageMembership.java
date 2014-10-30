@@ -40,6 +40,8 @@ public class ManageMembership implements ManageMembershipLocal {
         customer.setPhoneNo(phoneNo);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
+        customer.setCumulativePoints(0);
+        customer.setCurrentPoints(0);
         em.persist(customer);
         em.flush();
     }
