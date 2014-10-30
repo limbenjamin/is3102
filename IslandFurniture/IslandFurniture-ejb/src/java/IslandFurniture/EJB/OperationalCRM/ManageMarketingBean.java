@@ -20,6 +20,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.SendEmailByPost;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -105,22 +107,22 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             if (pd.getPromotionCoupons().size() > 0) {
 
                 if (pd.getPromotionCoupons().get(0).getOneTimeUsage() == false) {
-
-                    PromotionCoupon new_pc = pd.getPromotionCoupons().get(0);
-                    new_pc.setPromotionDetail(pd);
-                    new_pc.setId(null);
-                    pd.getPromotionCoupons().clear();
-                    pd.getPromotionCoupons().add(new_pc);
-                    Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
-                    l.setParameter("pd", pd);
-                    l.executeUpdate();
-                    pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
+                    if (pd.getPromotionCoupons().get(0).getId() < 0) {
+                        PromotionCoupon new_pc = pd.getPromotionCoupons().get(0);
+                        new_pc.setPromotionDetail(pd);
+                        new_pc.setId(null);
+                        pd.getPromotionCoupons().clear();
+                        pd.getPromotionCoupons().add(new_pc);
+                        Query l = em.createQuery("DELETE FROM PromotionCoupon pc where pc.promotionDetail=:pd");
+                        l.setParameter("pd", pd);
+                        l.executeUpdate();
+                        pd.getPromotionCoupons().get(0).setPromotionDetail(pd);
 //                    em.merge(pd.getPromotionCoupons().get(0));
-
+                    }
                 } else {
 
                     for (int i = 0; i < pd.getPromotionCoupons().size(); i++) {
-                        if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false) {
+                        if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false && pd.getPromotionCoupons().get(i).getId()>0) {
                             pd.getPromotionCoupons().get(i).setPromotionDetail(null);
                             pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(i));
                         }
@@ -129,16 +131,19 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                     if (pd.getPromotionCoupons().size() > pd.getUsageCount().intValue()) {
                         throw new Exception("You cannot set usagelimit to be less than the current available no of coupons !");
                     }
-                    pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0)); //just a signal
 
-                    for (int i = pd.getPromotionCoupons().size() + 1; i <= pd.getUsageCount().intValue(); i++) {
-                        System.out.println("Creating new Coupons No:" + i);
-                        PromotionCoupon new_pc = new PromotionCoupon();
-                        new_pc.setOneTimeUsage(true);
-                        new_pc.setPromotionDetail(pd);
-                        pd.getPromotionCoupons().add(new_pc);
+                    if (pd.getPromotionCoupons().get(0).getId() < 0) {
+                        pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(0)); //just a signal
+
+                        for (int i = pd.getPromotionCoupons().size() + 1; i <= pd.getUsageCount().intValue(); i++) {
+                            System.out.println("Creating new Coupons No:" + i);
+                            PromotionCoupon new_pc = new PromotionCoupon();
+                            new_pc.setOneTimeUsage(true);
+                            new_pc.setPromotionDetail(pd);
+                            pd.getPromotionCoupons().add(new_pc);
 //                        em.merge(new_pc);
 
+                        }
                     }
                 }
 
@@ -146,6 +151,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         }
 
         em.merge(pc);
+
+        try {
+            em.flush();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
 
         //Clean up
         Query l = em.createQuery("select pd from PromotionDetail pd where pd.promotionCampaign is null");
@@ -341,4 +352,100 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
     }
 
+    @Override
+    public String encodeCouponID(Long l) {
+
+        if (l == null) {
+            return null;
+        }
+
+        RC4 cipher = new RC4("ISLANDFURNITURE_81273798".getBytes());
+        Base64 b64 = new Base64();
+
+        Double dl = Math.log(l);
+        String encrypted = b64.encodeToString(cipher.encrypt(ByteBuffer.allocate(Float.BYTES).putFloat(dl.floatValue()).array()));
+        encrypted = encrypted.replaceAll("\\/", "@");
+        encrypted = encrypted.replaceAll("\\+", "!");
+        encrypted = encrypted.replaceAll("=", "%");
+
+        System.out.println("encrypted=" + encrypted);
+        System.out.println("Decrypted=" + decodeCouponID(encrypted));
+        return (encrypted);
+
+    }
+
+    @Override
+    public Long decodeCouponID(String s) {
+
+        if (s == null) {
+            return null;
+        }
+        System.out.println("Attempting to decrypt:" + s);
+        RC4 cipher = new RC4("ISLANDFURNITURE_81273798".getBytes());
+        Base64 b64 = new Base64();
+        s = s.replaceAll("@", "/");
+        s = s.replaceAll("!", "+");
+        s = s.replaceAll("%", "=");
+
+        byte[] todecrypt = b64.decode(s);
+        ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
+        buffer.put(cipher.decrypt(todecrypt)).flip();
+        Float result = buffer.getFloat();
+        Double dresult = Math.exp(result);
+        result = dresult.floatValue();
+        Long result_ID = result.longValue();
+        System.out.println("Decrypted:" + result_ID);
+        return result_ID;
+
+    }
+
+    public class RC4 {
+
+        private final byte[] S = new byte[256];
+        private final byte[] T = new byte[256];
+        private final int keylen;
+
+        public RC4(final byte[] key) {
+            if (key.length < 1 || key.length > 256) {
+                throw new IllegalArgumentException(
+                        "key must be between 1 and 256 bytes");
+            } else {
+                keylen = key.length;
+                for (int i = 0; i < 256; i++) {
+                    S[i] = (byte) i;
+                    T[i] = key[i % keylen];
+                }
+                int j = 0;
+                byte tmp;
+                for (int i = 0; i < 256; i++) {
+                    j = (j + S[i] + T[i]) & 0xFF;
+                    tmp = S[j];
+                    S[j] = S[i];
+                    S[i] = tmp;
+                }
+            }
+        }
+
+        public byte[] encrypt(final byte[] plaintext) {
+            final byte[] ciphertext = new byte[plaintext.length];
+            int i = 0, j = 0, k, t;
+            byte tmp;
+            for (int counter = 0; counter < plaintext.length; counter++) {
+                i = (i + 1) & 0xFF;
+                j = (j + S[i]) & 0xFF;
+                tmp = S[j];
+                S[j] = S[i];
+                S[i] = tmp;
+                t = (S[i] + S[j]) & 0xFF;
+                k = S[t];
+                ciphertext[counter] = (byte) (plaintext[counter] ^ k);
+            }
+
+            return ciphertext;
+        }
+
+        public byte[] decrypt(final byte[] ciphertext) {
+            return encrypt(ciphertext);
+        }
+    }
 }
