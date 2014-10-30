@@ -72,6 +72,8 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setPhoneNo(phoneNo);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
+        customer.setCumulativePoints(0);
+        customer.setCurrentPoints(0);
         em.persist(customer);
         em.flush();
         try {
@@ -95,6 +97,8 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setPhoneNo(phoneNo);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
+        customer.setCumulativePoints(0);
+        customer.setCurrentPoints(0);
         em.persist(customer);
         em.flush();
         return customer.getId();

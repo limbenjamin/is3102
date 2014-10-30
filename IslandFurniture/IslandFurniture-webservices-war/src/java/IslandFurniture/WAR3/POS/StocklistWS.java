@@ -267,8 +267,19 @@ public class StocklistWS {
                                     @FormParam("voucherAmt") Double voucherAmt,
                                     @FormParam("receiptAmt") Double receiptAmt
                                     ){
+        System.err.println("--------------------------------");
+        System.err.println(cardId);
+        System.err.println(transaction);
+        System.err.println(voucher);
+        System.err.println(receipt);
+        System.err.println(customerCardId);
+        System.err.println(storeType);
+        System.err.println(grandTotalAmt);
+        System.err.println(voucherAmt);
+        System.err.println(receiptAmt);
+        System.err.println("--------------------------------");
         Staff staff = muabl.getStaffFromCardId(cardId);
-        Customer customer;
+        Customer customer = null;
         Stock stock = null;
         if (staff == null){
             return "Error";
@@ -276,7 +287,7 @@ public class StocklistWS {
             Plant plant = staff.getPlant();
             TimeZone tz = TimeZone.getTimeZone(plant.getTimeZoneID());
             Calendar now=Calendar.getInstance(tz);
-            now.setTime(new Date());
+            now.setTime(new Date());           
             System.err.println(transaction);
             if (storeType.equals("restaurant")){
                 makeRestaurantTransaction(staff, plant, now, transaction, customerCardId, voucher, grandTotalAmt, voucherAmt);
@@ -302,6 +313,7 @@ public class StocklistWS {
                     ft.setMember(customer);
                     rt.setMember(customer);
                 }
+                long totalPoints = 0;
                 JsonReader reader = Json.createReader(new StringReader(transaction));
                 JsonArray arr = reader.readArray();
                 for (JsonValue jsonValue : arr) {
@@ -321,12 +333,16 @@ public class StocklistWS {
                         FurnitureModel fm = (FurnitureModel) stock;
                         ftd.setFurnitureModel(fm);
                         Long points = fm.getPointsWorth();
+                        totalPoints += points;
                         ftd.setUnitPoints(points);
                         ftd.setFurnitureTransaction(ft);
                         ft.getFurnitureTransactionDetails().add(ftd);
                         mpl.persistFTD(ftd);
                         if(!jo.getString("disc").equals("null"))
                             mpl.expendCoupon(jo.getString("disc"));
+                        if (!receipt.isEmpty()){
+                            mpl.linkReceipt(receipt, ft);
+                        }
                     }else if (stock instanceof RetailItem){
                         transactionId = mpl.persistRT(rt);
                         RetailItemTransactionDetail rtd = new RetailItemTransactionDetail();
@@ -335,12 +351,17 @@ public class StocklistWS {
                         RetailItem ri = (RetailItem) stock;
                         rtd.setRetailItem(ri);
                         Long points = ri.getPointsWorth();
+                        totalPoints += points;
                         rtd.setUnitPoints(points);
                         rtd.setRetailItemTransaction(rt);
                         rt.getRetailItemTransactionDetails().add(rtd);
                         mpl.persistRTD(rtd);
                     }
                     msfl.reduceStockfrontInventoryFromTransaction(plant, stock, qty);
+                }
+                if (!customerCardId.trim().isEmpty()){
+                    customer.setCumulativePoints(customer.getCumulativePoints()+ (int) totalPoints);
+                    customer.setCurrentPoints(customer.getCurrentPoints()+ (int) totalPoints);
                 }
                 String vouchers = voucher.substring(1, voucher.length()-1);
                 System.err.println(vouchers);
@@ -349,9 +370,6 @@ public class StocklistWS {
                     if (!v.trim().isEmpty()){
                         mpl.useVoucher(v.trim());
                     }
-                }
-                if (!receipt.isEmpty()){
-                    mpl.linkReceipt(receipt, ft);
                 }
             }
             
@@ -367,6 +385,12 @@ public class StocklistWS {
         rt.setTransTime(now);
         rt.setGrandTotal(grandTotalAmt);
         rt.setVoucherTotal(voucherAmt);
+        Customer customer = null;
+        long totalPoints = 0;
+        if (!customerCardId.trim().isEmpty()){
+                customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+                rt.setMember(customer);
+            }
         JsonReader reader = Json.createReader(new StringReader(transaction));
         JsonArray arr = reader.readArray();
         for (JsonValue jsonValue : arr) {
@@ -382,11 +406,16 @@ public class StocklistWS {
             rtd.setUnitPrice(price);
             rtd.setMenuItem(menuItem);
             Long points = menuItem.getPointsWorth();
+            totalPoints += points;
             rtd.setUnitPoints(points);
             rtd.setRestaurantTransaction(rt);
             rt.getRestaurantTransactionDetails().add(rtd);
             mpl.persistRSTD(rtd);
             }
+        if (!customerCardId.trim().isEmpty()){
+            customer.setCumulativePoints(customer.getCumulativePoints()+ (int) totalPoints);
+            customer.setCurrentPoints(customer.getCurrentPoints()+ (int) totalPoints);
+        }
         String vouchers = voucher.substring(1, voucher.length()-1);
         System.err.println(vouchers);
         String[] voucherArr = vouchers.split(",");
