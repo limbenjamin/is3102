@@ -76,7 +76,6 @@ public class SelectStoreUI extends javax.swing.JFrame {
         currencyCode = (String) jsonObject.get("symbol");
         cashBalanceLabel.setText("Cash Balance : " +currencyCode +" "+ totalRegisterCash);
         cardId = (String) jsonObject.get("cardId");
-        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
     }
 
     /**
@@ -108,6 +107,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
         furnitureStoreButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        furnitureStoreButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cube.png"))); // NOI18N
         furnitureStoreButton.setText("Furniture Store");
         furnitureStoreButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,6 +116,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         });
 
         retailStoreButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        retailStoreButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cube.png"))); // NOI18N
         retailStoreButton.setText("Retail Store");
         retailStoreButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,6 +125,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         });
 
         restaurantButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        restaurantButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/cube.png"))); // NOI18N
         restaurantButton.setText("Restaurant");
         restaurantButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,10 +137,12 @@ public class SelectStoreUI extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(44, 62, 50));
         jLabel1.setText("Select Type of Store:");
 
-        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        welcomeLabel.setText("Welcome");
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/islandfurniture.png"))); // NOI18N
+        welcomeLabel.setText("Island Furniture");
 
         logoutButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/sign-out.png"))); // NOI18N
         logoutButton.setText("Logout");
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,6 +167,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         newBalanceField.setPreferredSize(new java.awt.Dimension(200, 50));
 
         confirmButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        confirmButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/check.png"))); // NOI18N
         confirmButton.setText("Confirm");
         confirmButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -171,6 +176,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         });
 
         verifyButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        verifyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/edit.png"))); // NOI18N
         verifyButton.setText("Verify");
         verifyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,7 +223,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
                                 .addComponent(restaurantButton))
                             .addComponent(jLabel1)
                             .addComponent(cashBalanceLabel))
-                        .addGap(0, 15, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

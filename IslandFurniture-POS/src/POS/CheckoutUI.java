@@ -80,7 +80,6 @@ public class CheckoutUI extends javax.swing.JFrame {
         grandTotalLabel.setText("Grand Total: " +currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
         System.err.println(listJSON);
-        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         payButton.setVisible(Boolean.FALSE);
         reconcileButton.setEnabled(Boolean.FALSE);
@@ -123,6 +122,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
         reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/money.png"))); // NOI18N
         reconcileButton.setText("Reconcile");
         reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,13 +130,15 @@ public class CheckoutUI extends javax.swing.JFrame {
             }
         });
 
-        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        welcomeLabel.setText("welcome xxxxxxxxxxxxxxxxxxxx of xxxxxxxxxxx store");
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/islandfurniture.png"))); // NOI18N
+        welcomeLabel.setText("Island Furniture");
 
         memberLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         memberLabel.setText("Member:");
 
         readCardButton.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        readCardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/credit-card.png"))); // NOI18N
         readCardButton.setText("Read Card");
         readCardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -186,6 +188,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
 
         backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mail-reply.png"))); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -194,6 +197,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         });
 
         payButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        payButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/dollar.png"))); // NOI18N
         payButton.setText("Pay");
         payButton.setPreferredSize(new java.awt.Dimension(200, 53));
         payButton.addActionListener(new java.awt.event.ActionListener() {
@@ -206,6 +210,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         grandTotalLabel.setText("Grand Total : 0");
 
         calculateButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        calculateButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/calculator.png"))); // NOI18N
         calculateButton.setText("Calculate");
         calculateButton.setPreferredSize(new java.awt.Dimension(200, 53));
         calculateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -226,7 +231,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(welcomeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 362, Short.MAX_VALUE)
                                 .addComponent(backButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(reconcileButton))
@@ -243,8 +248,8 @@ public class CheckoutUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(grandTotalLabel)
-                .addGap(18, 18, 18)
-                .addComponent(calculateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(calculateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -266,7 +271,7 @@ public class CheckoutUI extends javax.swing.JFrame {
                         .addComponent(couponField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(grandTotalLabel)
