@@ -11,11 +11,20 @@ import Helper.LCD;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
@@ -27,10 +36,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -557,25 +573,29 @@ public class PaymentUI extends javax.swing.JFrame {
                 receipt+= customerName+", thank you for shopping with us!\n\r";
                 receipt+= "Current Points: " + points + "\n\r";
             }
-            receipt += "Transaction Id: "+transactionId;
+            receipt += "Transaction Id: "+transactionId + "\n\r";
             
             
             try
             {
-                JTextArea printing = new JTextArea();
+                JTextPane printing = new JTextPane();
                 printing.setSize(180, 300);
                 printing.setText(receipt);
-                Font font = new Font("Courier New",Font.PLAIN, 6);
+                Font font = new Font("Tahoma",Font.PLAIN, 7);
                 printing.setFont(font);
                 Double margin = 20.0;
                 Integer lines = 8;
                 PrinterJob printerJob = PrinterJob.getPrinterJob();
                 PageFormat pageFormat = printerJob.defaultPage();
                 Paper paper = new Paper();
-                paper.setSize(360.0, (double) (paper.getHeight() + lines * 10.0));
+                paper.setSize(180.0, (double) (paper.getHeight() + lines * 10.0));
                 paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
                 pageFormat.setPaper(paper);
                 pageFormat.setOrientation(PageFormat.PORTRAIT);
+                ByteArrayOutputStream out = QRCode.from(String.valueOf(transactionId)).to(ImageType.PNG).stream();
+                ImageIcon icon = new ImageIcon( out.toByteArray() );
+                printing.insertIcon(icon);
+                printing.insertIcon(icon);
                 printerJob.setPrintable(printing.getPrintable(null, null), pageFormat);
                 printerJob.print();
             }
