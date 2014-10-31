@@ -13,6 +13,7 @@ import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -415,7 +416,9 @@ public class CheckoutUI extends javax.swing.JFrame {
                         else
                             transaction.get(i).add(6, String.valueOf(jTable.getModel().getValueAt(i, 3)));
                     }
-                    transaction.get(i).set(2, price);
+                    Double priceDouble = Double.parseDouble(price);
+                    DecimalFormat df = new DecimalFormat("#0.00"); 
+                    transaction.get(i).set(2, df.format(Math.round(priceDouble * 100.0) / 100.0));
                     System.err.println(result);
                 } catch (Exception ex) {
                     Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);

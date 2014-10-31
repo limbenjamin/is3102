@@ -11,6 +11,7 @@ import Helper.LCD;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import java.awt.Font;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
@@ -63,7 +64,8 @@ public class PaymentUI extends javax.swing.JFrame {
     private String storeType;
     private String transactionId;
     private DecimalFormat df;
-
+    private String result;
+    
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
     private String partnerPoleDisplayCOMPort;
@@ -475,7 +477,7 @@ public class PaymentUI extends javax.swing.JFrame {
             params.add("receiptAmt");
             values.add(receiptAmt);
             try {
-                transactionId = Connector.postForm(params, values, "stock/maketransaction");   
+                result = Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -540,10 +542,20 @@ public class PaymentUI extends javax.swing.JFrame {
                 receipt+= "Payment Mode : Credit Card\n\r";
             }
             receipt+= "Cashier : "+ staffname +"\n\r\n\r";
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = (JSONObject) jsonParser.parse(result);
+            } catch (ParseException ex) {
+                Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            transactionId = String.valueOf( jsonObject.get("transactionId"));
+            String points = String.valueOf( jsonObject.get("points"));
             if (customerName == null){
                 receipt+= "Thank you for shopping with us!\n\r";
             }else{
                 receipt+= customerName+", thank you for shopping with us!\n\r";
+                receipt+= "Current Points: " + points + "\n\r";
             }
             receipt += "Transaction Id: "+transactionId;
             
@@ -553,6 +565,8 @@ public class PaymentUI extends javax.swing.JFrame {
                 JTextArea printing = new JTextArea();
                 printing.setSize(180, 300);
                 printing.setText(receipt);
+                Font font = new Font("Courier New",Font.PLAIN, 6);
+                printing.setFont(font);
                 Double margin = 20.0;
                 Integer lines = 8;
                 PrinterJob printerJob = PrinterJob.getPrinterJob();

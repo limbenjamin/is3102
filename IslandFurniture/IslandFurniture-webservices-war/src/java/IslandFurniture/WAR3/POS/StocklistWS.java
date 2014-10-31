@@ -190,11 +190,13 @@ public class StocklistWS {
                hash = mmb.getDiscountedPrice(s, store, c);
             }else{
                 if (!coupon.equals("")){
-                    PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(coupon));
+                    Long couponId = mmb.decodeCouponID(coupon);
+                    PromotionCoupon pc = mmb.getCouponFromID(couponId);
                     couponList.add(pc);
                 }
                 if (!stockCoupon.equals("null")){
-                    PromotionCoupon pc = mmb.getCouponFromID(Long.valueOf(stockCoupon));
+                    Long couponId = mmb.decodeCouponID(stockCoupon);
+                    PromotionCoupon pc = mmb.getCouponFromID(couponId);
                     couponList.add(pc);
                 }
                 hash = mmb.getDiscountedPrice(s, store, c, couponList);
@@ -289,6 +291,9 @@ public class StocklistWS {
             Calendar now=Calendar.getInstance(tz);
             now.setTime(new Date());           
             System.err.println(transaction);
+            if (!customerCardId.trim().isEmpty()){
+                    customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
+                }
             if (storeType.equals("restaurant")){
                 makeRestaurantTransaction(staff, plant, now, transaction, customerCardId, voucher, grandTotalAmt, voucherAmt);
             }
@@ -309,7 +314,6 @@ public class StocklistWS {
                 rt.setGrandTotal(grandTotalAmt);
                 rt.setVoucherTotal(voucherAmt);
                 if (!customerCardId.trim().isEmpty()){
-                    customer = mmab.getCustomerFromLoyaltyCardId(customerCardId);
                     ft.setMember(customer);
                     rt.setMember(customer);
                 }
@@ -341,8 +345,9 @@ public class StocklistWS {
                         mpl.persistFTD(ftd);
                         if(!(jo.getString("disc").equals("null")||jo.getString("disc").equals("")))
                             if (!couponExpendedList.contains(jo.getString("disc"))){
-                                mpl.expendCoupon(jo.getString("disc"));
-                                couponExpendedList.add(jo.getString("disc"));
+                                String couponId = String.valueOf(mmb.decodeCouponID(jo.getString("disc")));
+                                mpl.expendCoupon(couponId);
+                                couponExpendedList.add(couponId);
                             }
                         if (!receipt.isEmpty()){
                             mpl.linkReceipt(receipt, ft);
@@ -378,7 +383,12 @@ public class StocklistWS {
             }
             
         }
-        return String.valueOf(transactionId);
+        JsonObject object;
+        if(customer != null)
+            object = Json.createObjectBuilder().add("transactionId", transactionId).add("points",customer.getCurrentPoints() ).build();
+        else
+            object = Json.createObjectBuilder().add("transactionId", transactionId).add("points","null" ).build();
+        return object.toString();
     }
 
     private void makeRestaurantTransaction(Staff staff, Plant plant, Calendar now, String transaction, String customerCardId, String voucher, Double grandTotalAmt, Double voucherAmt) {
