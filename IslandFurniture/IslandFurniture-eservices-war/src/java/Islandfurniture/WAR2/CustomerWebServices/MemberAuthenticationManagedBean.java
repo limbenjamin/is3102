@@ -4,12 +4,20 @@ import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLoca
 import IslandFurniture.Entities.Customer;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -26,10 +34,20 @@ public class MemberAuthenticationManagedBean implements Serializable {
     private Long id;
     private String confirmPassword = null;
     private String coDir;
+    private String code;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
-
+    
+    @PostConstruct
+    public void init(){
+        HttpSession session = Util.getSession();
+        HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        coDir = (String) httpReq.getAttribute("coCode");
+        code = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("code");
+    }
+    
+    
     public void login() throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) ec.getRequest();
@@ -83,7 +101,16 @@ public class MemberAuthenticationManagedBean implements Serializable {
         address = request.getParameter("registerForm:address");
         phoneNo = request.getParameter("registerForm:phoneNo");
         dateOfBirth = request.getParameter("registerForm:dateOfBirth");
-        id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, dateOfBirth);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = null;
+        try {
+            date = sdf.parse(dateOfBirth);
+        } catch (ParseException ex) {
+            Logger.getLogger(MemberAuthenticationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Format formatter = new SimpleDateFormat("dd-mm-YYYY");
+        String s = formatter.format(date);
+        id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, s);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Created", ""));
         ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
@@ -102,7 +129,71 @@ public class MemberAuthenticationManagedBean implements Serializable {
         ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
     }
     
+    public void forgotPassword() throws IOException{
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        emailAddress = request.getParameter("forgotPasswordForm:emailAddress");
+        dateOfBirth = request.getParameter("forgotPasswordForm:dateOfBirth");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = null;
+        try {
+            date = sdf.parse(dateOfBirth);
+        } catch (ParseException ex) {
+            Logger.getLogger(MemberAuthenticationManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Format formatter = new SimpleDateFormat("dd-mm-YYYY");
+        String s = formatter.format(date);
+        coDir = ec.getRequestParameterMap().get("coCode");
+        if (coDir == null || coDir.isEmpty()) {
+            coDir = "";
+        } else {
+            coDir = "/" + coDir;
+        }
+        boolean result = mmab.forgotPassword(emailAddress, s);
+        if (result) {
+             FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "An email has been sent to your account with further instructions",""));
+             ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+        }else{
+             FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, unable to reset password",""));
+             ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+        }
+
+        
+    }
     
+     public void resetPassword() throws IOException{
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        code = request.getParameter("resetPasswordForm:code"); 
+        password = request.getParameter("resetPasswordForm:password");
+        confirmPassword = request.getParameter("resetPasswordForm:confirmPassword");
+        coDir = ec.getRequestParameterMap().get("coCode");
+        if (coDir == null || coDir.isEmpty()) {
+            coDir = "";
+        } else {
+            coDir = "/" + coDir;
+        }
+        System.err.println(code+"A"+password);
+        if (password.equals(confirmPassword)){
+            
+            boolean result = mmab.resetPassword(code,password);
+            if (result) {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+	                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Password Reset successful",""));
+                ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
+            }else{
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, unable to reset password",""));
+                ec.redirect(ec.getRequestContextPath() + coDir + "/resetpassword.xhtml?code="+code);
+            }
+        }else{
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, passwords not the same",""));
+            ec.redirect(ec.getRequestContextPath() + coDir + "/resetpassword.xhtml?code="+code);
+        }
+     }
 
     public String getEmailAddress() {
         return emailAddress;
@@ -182,6 +273,14 @@ public class MemberAuthenticationManagedBean implements Serializable {
 
     public void setCoDir(String coDir) {
         this.coDir = coDir;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
     
     

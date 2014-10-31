@@ -35,4 +35,8 @@ public interface ManageMemberAuthenticationBeanLocal {
     void changePassword(String emailAddress, String newPassword);
     
     void removeCustomerAccount(String emailAddress);
+    
+    boolean forgotPassword(String emailAddress, String dateOfBirth);
+
+    boolean resetPassword(String code, String password);
 }
