@@ -17,23 +17,32 @@
                               <li><a href="home.xhtml">Home</a></li>
                               <li class="active"><strong>Children Furniture</strong></li>
                             </ol>                                         
-                        </div>    
-                    <div class="col-sm-3">
-                        <div class="left-sidebar">
-                            <div class="brands_products" style="margin-top: 20px;">
-                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
-                                <div class="brands-name">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <ui:repeat value="#{catalogueManagedBean.filteredSubs('CHILDREN')}" var="sub">
-                                            <li><a href="children.xhtml?sub=#{sub}">#{sub}</a></li>
-                                        </ui:repeat>
-                                        <hr/>
-                                        <li><a href="children.xhtml">Display all</a></li>
-                                    </ul>
+                        </div>
+                    </div>
+                    <h:panelGroup layout="block" rendered="#{empty catalogueManagedBean.filteredSubs('CHILDREN')}" style="height:350px;" styleClass="row">
+                        <div class="col-sm-12">
+                        <br/>
+                        <h3>There are no children furniture at the moment.</h3>
+                        <h4>Check back another time!</h4>
+                        </div>
+                    </h:panelGroup>                        
+                    <h:panelGroup layout="block" rendered="#{not empty catalogueManagedBean.filteredSubs('CHILDREN')}" styleClass="row">
+                        <div class="col-sm-3">
+                            <div class="left-sidebar">
+                                <div class="brands_products" style="margin-top: 20px;">
+                                    <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
+                                    <div class="brands-name">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <ui:repeat value="#{catalogueManagedBean.filteredSubs('CHILDREN')}" var="sub">
+                                                <li><a href="children.xhtml?sub=#{sub}">#{sub}</a></li>
+                                            </ui:repeat>
+                                            <hr/>
+                                            <li><a href="children.xhtml">Display all</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>                        
                         <div class="col-sm-9">
                             <div class="catalogue">
                                 <h2 class="title text-center">CHILDREN FURNITURE</h2>
@@ -65,9 +74,9 @@
                                 </h:form>
                             </div>	
                         </div>
-                        <br/><br/>                      
+                        <br/><br/>
+                        </h:panelGroup>
                     </div>
-                </div>
             </section>
     </ui:define>
 </ui:composition>

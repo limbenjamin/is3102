@@ -159,7 +159,6 @@ public class ShoppingListDetailManagedBean {
             Double discountedPrice = getDiscountedPrice(current.getFurnitureModel());
             subtotal = subtotal + discountedPrice * current.getQty();
         }
-        shoppingList.setTotalPrice(subtotal);
         return subtotal;
     }
     
