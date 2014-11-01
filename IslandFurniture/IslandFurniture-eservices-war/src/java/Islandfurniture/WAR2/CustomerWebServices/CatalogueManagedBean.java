@@ -8,6 +8,7 @@ package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -48,6 +49,8 @@ public class CatalogueManagedBean implements Serializable{
     private FurnitureSubcategory subcategory;
     private List<FurnitureSubcategory> subcategories = new ArrayList<>();
     private CountryOffice co;
+    private Customer customer;
+    private String emailAddress;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -57,6 +60,9 @@ public class CatalogueManagedBean implements Serializable{
     
     @EJB
     private ManageMarketingBeanLocal mmbl;
+    
+    @EJB
+    private ManageMemberAuthenticationBeanLocal mmab;    
     
     @PostConstruct
     public void init() {
@@ -81,8 +87,21 @@ public class CatalogueManagedBean implements Serializable{
             furnitureList = tempFurnitureList;
         }
         
+        boolean loggedIn = checkLoggedIn();
+        if (loggedIn)
+            customer = mmab.getCustomer(emailAddress);
+        
         System.out.println("loaded " + co.getName() + " furniture models and retail items");
     }
+    
+    public boolean checkLoggedIn() {
+        HttpSession session = Util.getSession();
+        emailAddress = (String) session.getAttribute("emailAddress");  
+        if (emailAddress == null)
+            return false;
+        else 
+            return true;
+    }    
     
     public void displayProductDetails(ActionEvent event) throws IOException {
       System.out.println("displayProductDetails()");
@@ -118,7 +137,10 @@ public class CatalogueManagedBean implements Serializable{
     public Double getDiscountedPrice(Stock s) {
         Store st = new Store();
         st.setCountryOffice(co);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+        if (customer != null)
+            return (Double)mmbl.getDiscountedPrice(s, st, customer).get("D_PRICE");
+        else
+            return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }
 
     public List<FurnitureModel> getFurnitureList() {

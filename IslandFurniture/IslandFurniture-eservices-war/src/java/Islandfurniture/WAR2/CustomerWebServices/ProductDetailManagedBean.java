@@ -100,15 +100,8 @@ public class ProductDetailManagedBean {
         }catch (Exception e){
             
         }
-        
-        furniture = mcbl.getFurnitureModel(id);
-        if (furniture != null) {
-            discountedPrice = getDiscountedPrice(furniture);
-            System.out.println("Got furniture model " + furniture.getName());            
-        }
         localStores = co.getStores();
-        loggedIn = checkLoggedIn();
-        
+        loggedIn = checkLoggedIn();        
         if (loggedIn) {
             customer = mmab.getCustomer(emailAddress);
             shoppingLists = new ArrayList<>();
@@ -119,6 +112,12 @@ public class ProductDetailManagedBean {
                     shoppingLists.add(list);
                 }
             }
+        }        
+        
+        furniture = mcbl.getFurnitureModel(id);
+        if (furniture != null) {
+            discountedPrice = getDiscountedPrice(furniture);
+            System.out.println("Got furniture model " + furniture.getName());            
         }
     }
     
@@ -134,7 +133,10 @@ public class ProductDetailManagedBean {
     public Double getDiscountedPrice(Stock s) {
             Store st = new Store();
             st.setCountryOffice(co);
-            return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+            if (customer != null)
+                return (Double)mmbl.getDiscountedPrice(s, st, customer).get("D_PRICE");
+            else
+                return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
     }    
     
     public void addItemToShoppingList() throws IOException {
