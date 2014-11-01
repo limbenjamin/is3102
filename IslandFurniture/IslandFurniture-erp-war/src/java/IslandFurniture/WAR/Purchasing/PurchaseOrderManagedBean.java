@@ -89,7 +89,7 @@ public class PurchaseOrderManagedBean implements Serializable {
         }
     }
 
-    public void addPurchaseOrder() throws ParseException {
+    public void addPurchaseOrder() throws ParseException, Exception {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         supplierId = Long.parseLong(request.getParameter("createPurchaseOrder:supplierId"));
         supplier = sml.getSupplier(supplierId);

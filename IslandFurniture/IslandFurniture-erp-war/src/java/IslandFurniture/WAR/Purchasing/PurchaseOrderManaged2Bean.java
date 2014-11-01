@@ -113,7 +113,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         }
     }
 
-    public void addStock() throws ParseException {
+    public void addStock() throws ParseException, Exception {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         procuredStockId = Long.parseLong(request.getParameter("createPODetail:procuredStockId"));
         numberOfLots = Integer.parseInt(request.getParameter("createPODetail:numberOfLots"));

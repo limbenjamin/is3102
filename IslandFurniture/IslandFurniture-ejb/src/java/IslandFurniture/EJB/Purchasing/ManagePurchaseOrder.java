@@ -40,7 +40,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
     }
     
     @Override
-    public ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) {
+    public ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) throws Exception {
+        if (status == null){
+            throw new Exception();
+        }
         ProcuredStockPurchaseOrder purchaseOrder = new ProcuredStockPurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -53,14 +56,16 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
     }
 
     @Override
-    public void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException {
+    public ProcuredStockPurchaseOrderDetail createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException, Exception {
+        if (numberOfLots == 0)
+            throw new Exception();
         ProcuredStockPurchaseOrder purchaseOrder = (ProcuredStockPurchaseOrder) em.find(ProcuredStockPurchaseOrder.class, poId);
         ProcuredStock procuredStock = (ProcuredStock) em.find(ProcuredStock.class, stockId);
         ManufacturingFacility mf = purchaseOrder.getManufacturingFacility();
         Integer totalQuantity = getLotSize(procuredStock, mf) * numberOfLots;
-
+        ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
         if (!purchaseOrder.hasProcuredStock(procuredStock)) {
-            ProcuredStockPurchaseOrderDetail purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
+            purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
             purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
             purchaseOrderDetail.setProcuredStock(procuredStock);
             purchaseOrderDetail.setNumberOfLots(numberOfLots);
@@ -72,7 +77,7 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
         } else {
             throw new DuplicateEntryException("Entry for " + procuredStock.getName() + " already exists in this Purchase Order!");
         }
-
+        return purchaseOrderDetail;
     }
 
     @Override

@@ -6,7 +6,7 @@
 
 package IslandFurniture.WAR.SalesPlanning;
 
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
@@ -40,7 +40,7 @@ public class CurrencyManagedBean implements Serializable {
     @EJB
     private CurrencyManagerLocal currencyManager;
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal mohBean;
+    private ManageOrganizationalHierarchyBeanRemote mohBean;
     
     private String currencyParser;
     private List<Currency> currencyList;

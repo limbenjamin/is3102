@@ -40,7 +40,7 @@ import javax.persistence.Query;
  * @author a0101774
  */
 @Stateful
-public class StockManager implements StockManagerLocal {
+public class StockManager implements StockManagerLocal,StockManagerRemote {
 
     @PersistenceContext
     EntityManager em;

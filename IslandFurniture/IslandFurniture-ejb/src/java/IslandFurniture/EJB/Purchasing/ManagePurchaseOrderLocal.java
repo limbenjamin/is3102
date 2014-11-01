@@ -24,9 +24,9 @@ import javax.ejb.Local;
 @Local
 public interface ManagePurchaseOrderLocal {
 
-    ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
+    ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) throws Exception;
 
-    void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException;
+    ProcuredStockPurchaseOrderDetail createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException, Exception;
 
     void deletePurchaseOrder(Long poId);
 

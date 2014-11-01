@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.OperationalCRM.CustomerCommunicationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Feedback;
@@ -36,7 +36,7 @@ public class FeedbackManagedBean {
     private Feedback feedback;
     
     @EJB
-    ManageOrganizationalHierarchyBeanLocal mohBean;
+    ManageOrganizationalHierarchyBeanRemote mohBean;
     @EJB
     ManageUserAccountBeanLocal staffBean;
     @EJB
@@ -91,11 +91,11 @@ public class FeedbackManagedBean {
         this.feedback = feedback;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
+    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
         this.mohBean = mohBean;
     }
 

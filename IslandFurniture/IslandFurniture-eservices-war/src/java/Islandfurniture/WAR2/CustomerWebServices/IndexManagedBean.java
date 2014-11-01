@@ -5,7 +5,7 @@
  */
 package Islandfurniture.WAR2.CustomerWebServices;
 
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.Entities.CountryOffice;
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,7 +29,7 @@ import javax.faces.view.ViewScoped;
 public class IndexManagedBean implements Serializable {
 
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal manageOrganizationalHierarchyBean;
+    private ManageOrganizationalHierarchyBeanRemote manageOrganizationalHierarchyBean;
     private FacesContext ctx = FacesContext.getCurrentInstance(); 
     private List<CountryOffice> coList;
     private String selectedLocale;

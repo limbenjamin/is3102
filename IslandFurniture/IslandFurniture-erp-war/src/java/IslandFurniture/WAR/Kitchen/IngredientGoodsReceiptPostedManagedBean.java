@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.Kitchen.ManageIngredientGoodsReceiptLocal;
 import IslandFurniture.EJB.Kitchen.ManageIngredientInventoryLocal;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
@@ -62,7 +62,7 @@ public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
     @EJB
     public ManageIngredientInventoryLocal ingredientInventoryBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal orgBean;
+    private ManageOrganizationalHierarchyBeanRemote orgBean;
 
     @PostConstruct
     public void init() {
@@ -200,11 +200,11 @@ public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
         this.ingredientInventoryBean = ingredientInventoryBean;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
+    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
         this.orgBean = orgBean;
     }
 
