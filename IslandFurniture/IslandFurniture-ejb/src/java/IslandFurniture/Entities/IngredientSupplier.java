@@ -40,6 +40,10 @@ public class IngredientSupplier extends Supplier implements Serializable {
     
     @ManyToOne
     private CountryOffice co;
+    
+    public IngredientSupplier() {
+        
+    }
 
     public IngredientContract getIngredContract() {
         return ingredContract;

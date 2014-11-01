@@ -25,7 +25,7 @@ import javax.persistence.NamedQuery;
             name = "getIngredientList",
             query = "SELECT a.ingredient FROM IngredientContractDetail a WHERE a.ingredContract.ingredSupplier = :supplier AND a.ingredContract.ingredSupplier.co = :co"),
     @NamedQuery(
-            name = "getIngredientContractDetailByIngredAndCo",
+            name = "getICDByIngredAndCo",
             query = "SELECT a FROM IngredientContractDetail a WHERE a.ingredient = :ingredient AND a.ingredContract.ingredSupplier.co = :co")    
 })
 public class IngredientContractDetail implements Serializable {
@@ -42,6 +42,10 @@ public class IngredientContractDetail implements Serializable {
     
     @ManyToOne
     private Ingredient ingredient;
+    
+    public IngredientContractDetail() {
+        
+    }
 
     public Long getId() {
         return id;

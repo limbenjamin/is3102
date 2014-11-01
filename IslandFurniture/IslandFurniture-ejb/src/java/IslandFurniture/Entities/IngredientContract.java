@@ -41,6 +41,10 @@ public class IngredientContract implements Serializable {
     
     @OneToMany(mappedBy="ingredContract", cascade={CascadeType.PERSIST})
     private List<IngredientContractDetail> ingredContractDetails = new ArrayList();
+    
+    public IngredientContract() {
+        
+    }
 
     public Long getId() {
         return id;

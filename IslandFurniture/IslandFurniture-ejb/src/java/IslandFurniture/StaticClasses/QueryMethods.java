@@ -13,6 +13,7 @@ import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientContractDetail;
 import IslandFurniture.Entities.IngredientInventory;
 import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.ManufacturingFacility;
@@ -358,6 +359,18 @@ public class QueryMethods {
 
         try {
             return (List<ProcuredStockContractDetail>) q.getResultList();
+        } catch (NoResultException NRE) {
+            return null;
+        }
+    }
+
+    public static IngredientContractDetail getICDByIngredAndCo(EntityManager em, Ingredient ingredient, CountryOffice co) {
+        Query q = em.createNamedQuery("getICDByIngredAndCo", IngredientContractDetail.class);
+        q.setParameter("ingredient", ingredient);
+        q.setParameter("co", co);
+
+        try {
+            return (IngredientContractDetail) q.getSingleResult();
         } catch (NoResultException NRE) {
             return null;
         }

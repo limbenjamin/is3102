@@ -121,7 +121,7 @@ public class SupplierManager implements SupplierManagerLocal, SupplierManagerRem
         List<ProcuredStockPurchaseOrder> poList;
         try {
             System.out.println("SupplierManager.deleteSupplier()");
-            poList = em.createNamedQuery("getAllPurchaseOrders", ProcuredStockPurchaseOrder.class).getResultList();
+            poList = em.createNamedQuery("getPurchaseOrdersDistinctSupplier", ProcuredStockPurchaseOrder.class).getResultList();
             for(int i=0; i<poList.size(); i++) {
                 if(poList.get(i).getSupplier().getId().equals(id)) {
                     supplier = poList.get(i).getSupplier();
@@ -131,16 +131,12 @@ public class SupplierManager implements SupplierManagerLocal, SupplierManagerRem
             if(supplier != null) {
                 System.out.println("Existing purchase order linked to Supplier. Unable to delete");
                 return "Invalid deletion due to existing purchase order linked to Supplier \"" + supplier.getName() + "\"";
-            }
-            else { 
+            } else { 
                 supplier = em.find(ProcuredStockSupplier.class, id);
                 for(int i=0; i<supplier.getProcuredStockContract().getProcuredStockContractDetails().size(); i++) 
                     em.remove(supplier.getProcuredStockContract().getProcuredStockContractDetails().get(i));
-                System.out.println("Removed PCD"); 
                 em.remove(supplier.getProcuredStockContract());
-                System.out.println("Removed PC");
                 em.remove(supplier);
-                System.out.println("Removed supplier");
                 em.flush();
                 return null;
             }

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:body>
+        <ui:composition template="../template.xhtml"> 
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><a href="../dash.xhtml">Home</a></li>
+                            <li><a href="ingredientsupplier.xhtml">Suppliers</a></li>
+                            <li class="active"><strong>#{ingredientContractManagedBean.supplier.name} Ingredient Contract</strong></li>
+                        </ol>                        
+                    </div>                    
+                    <div class="col-md-12">                        
+                        <span class="pull-right">
+                            <a href="ingredientsupplier.xhtml">
+                            <button type="button" class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                            </button>
+                            </a>                            
+                            <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newICD">
+                                <i class="fa fa-fw fa-plus"></i>New Ingredient Contract Detail
+                            </button>                            
+                        </span>
+                        <h4><strong>#{ingredientContractManagedBean.supplier.name}</strong>
+                         | Procurement Contract</h4><hr></hr>   
+                    </div>
+                    <div class="col-md-12">
+                        <div class="tab-content">
+                            <div class="tab-pane active">                        
+                                <section class="panel">
+                                    <h:form id="deletePCDForm" class="form-horizontal">
+                                        <p:dataTable value="#{ingredientContractManagedBean.icList}" var="ic" id="icList"> 
+                                            <p:column headerText="Ingredient" sortBy="#{ic.ingredient.name}">
+                                                <h:outputText id="ingredient" value="#{ic.ingredient.name}" class="transparent-form"></h:outputText>
+                                            </p:column> 
+                                            <p:column headerText="Lot Price" >
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="lotPrice" value="#{ic.lotPrice}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </p:column>
+                                            <p:column headerText="Lot Size" >
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="size" value="#{ic.lotSize}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </p:column>
+                                            <p:column headerText="Lead Time(Days)">
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                    <h:inputText id="leadTime" value="#{ic.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </p:column>
+                                            <p:column headerText="Update" style="text-align: center; width: 8%;">
+                                                <h:commandButton actionListener="#{ingredientContractManagedBean.editIngredientContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{ic}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>                                  
+                                            </p:column>
+                                            <p:column headerText="Delete" style="text-align: center; width: 8%;">
+                                                <h:commandButton action="#{ingredientContractManagedBean.deleteIngredientContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="icdID" value="#{ic.id}" />
+                                                </h:commandButton>     
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form> 
+                                </section>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            <!-- Modal for New Ingredient Contract Detail  -->
+            <div class="modal fade" id="newICD" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create New Ingredient Contract Detail</h4>
+                  </div>
+                    <h:form id="addICD" class="form-horizontal">
+                        <h:inputHidden id="supplierID" value="#{ingredientContractManagedBean.supplierID}"></h:inputHidden>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Ingredient: </label>
+                            <div class="col-sm-8">
+                                <h:selectOneMenu id="ingredientID" class="form-control needauto" value="Select Ingredient" pt:required="required">
+                                    <f:selectItem itemLabel="Select Ingredient" noSelectionOption="true" />
+                                    <f:selectItems value="#{ingredientContractManagedBean.ingredientList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lot Price: </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="lotPrice" class="form-control" pt:required="required"></h:inputText>
+                            </div> 
+                        </div> 
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lot Size: </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lead Time(days): </label>
+                            <div class="col-sm-8">
+                                <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                        <h:commandButton action="#{ingredientContractManagedBean.addIngredientContractDetail}" class="btn btn-success btn-round" value="Add Detail"></h:commandButton>
+                    </div>
+                    </h:form> 
+                </div>
+              </div>
+            </div>  
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

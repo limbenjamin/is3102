@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -17,6 +19,11 @@ import javax.persistence.OneToOne;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "getIngredientSuppliersPO",
+            query = "SELECT DISTINCT a.ingredSupplier FROM IngredientPurchaseOrder a")
+})
 public class IngredientPurchaseOrder extends PurchaseOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;

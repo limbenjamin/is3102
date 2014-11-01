@@ -20,7 +20,10 @@ import javax.persistence.OneToOne;
 @NamedQueries({
     @NamedQuery(
             name = "getAllPurchaseOrders",
-            query = "SELECT a FROM ProcuredStockPurchaseOrder a")
+            query = "SELECT a FROM ProcuredStockPurchaseOrder a"),
+    @NamedQuery(
+            name = "getPurchaseOrdersDistinctSupplier",
+            query = "SELECT DISTINCT a.supplier FROM ProcuredStockPurchaseOrder a")
 })
 public class ProcuredStockPurchaseOrder extends PurchaseOrder implements Serializable {
 
