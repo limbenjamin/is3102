@@ -68,7 +68,7 @@ public class HomeManagedBean {
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
-        
+        mcbl.updateStockSuppliedFurniturePrice(co);
         webBanners = co.getWebBanners();
         featuredFurniture = mcbl.getCountryFeaturedFurniture(co);
         

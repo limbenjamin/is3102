@@ -58,6 +58,38 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
     }
     
     @Override
+    public void updateStockSuppliedFurniturePrice(CountryOffice co) {
+        Query q = em.createQuery("SELECT s FROM StockSupplied s WHERE s.countryOffice=:co");
+        q.setParameter("co", co);
+        List<StockSupplied> tempList = (List<StockSupplied>) q.getResultList();
+        Iterator<StockSupplied> iterator = tempList.iterator();
+        while (iterator.hasNext()) {
+            StockSupplied stockSupplied = iterator.next();
+            if (stockSupplied.getStock() instanceof FurnitureModel) {
+                FurnitureModel furniture = (FurnitureModel)stockSupplied.getStock();
+                furniture.setPrice(stockSupplied.getPrice());
+                em.merge(furniture);
+            }
+        }
+    }
+    
+    @Override
+    public void updateStockSuppliedRetailItemPrice(CountryOffice co) {
+        Query q = em.createQuery("SELECT s FROM StockSupplied s WHERE s.countryOffice=:co");
+        q.setParameter("co", co);
+        List<StockSupplied> tempList = (List<StockSupplied>) q.getResultList();
+        Iterator<StockSupplied> iterator = tempList.iterator();
+        while (iterator.hasNext()) {
+            StockSupplied stockSupplied = iterator.next();
+            if (stockSupplied.getStock() instanceof RetailItem) {
+                RetailItem item = (RetailItem)stockSupplied.getStock();
+                item.setPrice(stockSupplied.getPrice());
+                em.merge(item);
+            }
+        }
+    }    
+    
+    @Override
     public List<FurnitureModel> getCountryFeaturedFurniture(CountryOffice co) {
         List<Stock> featuredProducts = co.getFeaturedProducts();
         List<FurnitureModel> furnitureList = new ArrayList<>();        
@@ -65,16 +97,7 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
         while (iterator.hasNext()) {
             Stock stock = iterator.next();
             if (stock instanceof FurnitureModel) {
-                Query q = em.createQuery("SELECT s.price FROM StockSupplied s WHERE s.countryOffice=:co AND s.stock=:stock");
-                q.setParameter("stock", stock);
-                q.setParameter("co", co);
                 FurnitureModel furniture = (FurnitureModel)stock;
-                try {
-                    furniture.setPrice((Double)q.getSingleResult());
-                } catch (NoResultException ec){
-                    furniture.setPrice(null);
-                }
-                em.merge(furniture);
                 furnitureList.add(furniture);
             }
         }
