@@ -101,8 +101,14 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Loyalty Card ID: </label>
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-5">
                                             <h:inputText class="form-control" value="#{membershipManagedBean.customer.loyaltyCardId}"></h:inputText>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <h:commandButton value="Scan" class="btn btn-success btn-round" >
+                                                <f:ajax listener="#{membershipManagedBean.scanNFC}" render=":viewCustomerForm:content" />
+                                                <f:attribute name="customerID" value="#{membershipManagedBean.customer.id}" />
+                                            </h:commandButton>    
                                         </div>
                                     </div><hr></hr>
                                     <div class="form-group">
