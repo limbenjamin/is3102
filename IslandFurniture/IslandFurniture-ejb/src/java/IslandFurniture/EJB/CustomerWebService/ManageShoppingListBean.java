@@ -84,13 +84,13 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     }
     
     @Override
-    public void updateListTotalPrice (Long listId) {
+    public void updateListTotalPrice (Long listId, Customer customer) {
         ShoppingList shoppingList = (ShoppingList) em.find(ShoppingList.class, listId);
         Double subtotal = 0.0;
         Iterator<ShoppingListDetail> iterator = shoppingList.getShoppingListDetails().iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
-            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore());
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore(), customer);
             subtotal = subtotal + discountedPrice * current.getQty();
         }
         shoppingList.setTotalPrice(subtotal);
@@ -148,7 +148,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         em.remove((ShoppingListDetail) em.find(ShoppingListDetail.class, detailId));
     }
     
-    public Double getDiscountedPrice(Stock s, Store store) {
-        return (Double)mmbl.getDiscountedPrice(s, store, new Customer()).get("D_PRICE");
+    public Double getDiscountedPrice(Stock s, Store store, Customer customer) {
+        return (Double)mmbl.getDiscountedPrice(s, store, customer).get("D_PRICE");
     }    
 }

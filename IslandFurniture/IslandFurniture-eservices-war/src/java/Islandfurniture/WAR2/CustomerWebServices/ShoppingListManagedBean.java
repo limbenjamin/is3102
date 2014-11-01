@@ -79,7 +79,7 @@ public class ShoppingListManagedBean {
             // show only lists specific to the site's country and update total price of each list
             for (ShoppingList list : allLists) {
                 if (list.getStore().getCountryOffice().equals(countryOffice)) {
-                    mslbl.updateListTotalPrice(list.getId());
+                    mslbl.updateListTotalPrice(list.getId(), customer);
                     shoppingLists.add(list);
                 }
             }            
@@ -118,16 +118,14 @@ public class ShoppingListManagedBean {
         Iterator<ShoppingListDetail> iterator = list.getShoppingListDetails().iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
-            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel());
+            Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), list.getStore());
             subtotal = subtotal + discountedPrice * current.getQty();
         }        
         return subtotal;
     }  
     
-    public Double getDiscountedPrice(Stock s) {
-        Store st = new Store();
-        st.setCountryOffice(countryOffice);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+    public Double getDiscountedPrice(Stock s, Store store) {
+        return (Double)mmbl.getDiscountedPrice(s, store, customer).get("D_PRICE");
     }    
 
     public String getEmailAddress() {
