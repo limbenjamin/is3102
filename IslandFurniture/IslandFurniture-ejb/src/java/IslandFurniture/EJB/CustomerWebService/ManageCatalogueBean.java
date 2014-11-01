@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -59,8 +60,7 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
     @Override
     public List<FurnitureModel> getCountryFeaturedFurniture(CountryOffice co) {
         List<Stock> featuredProducts = co.getFeaturedProducts();
-        List<FurnitureModel> furnitureList = new ArrayList<>();
-        
+        List<FurnitureModel> furnitureList = new ArrayList<>();        
         Iterator<Stock> iterator = featuredProducts.iterator();
         while (iterator.hasNext()) {
             Stock stock = iterator.next();
@@ -69,11 +69,15 @@ public class ManageCatalogueBean implements ManageCatalogueBeanLocal {
                 q.setParameter("stock", stock);
                 q.setParameter("co", co);
                 FurnitureModel furniture = (FurnitureModel)stock;
-                furniture.setPrice((Double)q.getSingleResult());
+                try {
+                    furniture.setPrice((Double)q.getSingleResult());
+                } catch (NoResultException ec){
+                    furniture.setPrice(null);
+                }
                 em.merge(furniture);
                 furnitureList.add(furniture);
             }
-        } 
+        }
         return furnitureList; 
     }
     
