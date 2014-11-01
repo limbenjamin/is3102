@@ -878,31 +878,6 @@ h2.title {
   margin-top: 10px;
 }
 
-.available {
-    font-size: 12px;
-    color: #fff;
-    background-color: #2c3e50;
-    padding: 5px;
-    margin-left: 10px;
-}
-
-.selling-fast {
-    font-size: 12px;
-    color: #fff;    
-    background-color: #FE980F;
-    padding: 5px;
-    margin-left: 10px;    
-}
-
-.sold-out {
-    font-size: 12px;
-    color: #fff;    
-    font-weight: bold;
-    background-color: #d43f3a;
-    padding: 5px;
-    margin-left: 10px;    
-}
-
 .view-product {
   position: relative;
 }
@@ -1159,6 +1134,48 @@ h2.title {
 .sub-total {
     padding: 10px;
     color: #2c3e50;
+}
+
+/**************************** STOCK AVAILABILITY COLORS *******************************/
+
+.Available {
+    font-size: 12px;
+    color: #fff;
+    background-color: #1aae88;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.Available span {
+    color: #1aae88;
+    font-weight: bold;
+}
+
+.Fast {
+    font-size: 12px;
+    color: #fff;    
+    background-color: #FE980F;
+    padding: 5px;
+    margin-left: 10px;    
+}
+
+.Fast span {
+    color: #FE980F;
+    font-weight: bold;
+}
+
+.Out {
+    font-size: 12px;
+    color: #fff;    
+    font-weight: bold;
+    background-color: #d43f3a;
+    padding: 5px;
+    margin-left: 10px;    
+}
+
+.Out span {
+    color: #d43f3a;
+    font-weight: bold;
 }
 
 /**************************** LOGIN AND SIGN UP FORM *******************************/

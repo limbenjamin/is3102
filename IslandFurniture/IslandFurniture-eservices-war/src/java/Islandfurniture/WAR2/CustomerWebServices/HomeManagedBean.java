@@ -50,7 +50,7 @@ public class HomeManagedBean {
     private List<FurnitureModel> featuredFurniture = new ArrayList<>();
     private List<RetailItem> featuredRetailItems;
     private Customer customer;
-    private String emailAddress;    
+    private String emailAddress = null;    
 
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;

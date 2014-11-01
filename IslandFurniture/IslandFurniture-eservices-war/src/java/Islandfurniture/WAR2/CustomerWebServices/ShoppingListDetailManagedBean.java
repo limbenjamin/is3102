@@ -12,6 +12,7 @@ import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Stock;
@@ -58,6 +59,8 @@ public class ShoppingListDetailManagedBean {
     private ManageMarketingBeanLocal mmbl;
     @EJB
     private ManageStorefrontInventoryLocal msfil;
+    @EJB
+    private ManageStorefrontInventoryLocal inventoryBean;    
     
     @PostConstruct
     public void init(){
@@ -141,6 +144,10 @@ public class ShoppingListDetailManagedBean {
     public String getLocation(Long stockId) {
         StorefrontInventory inventory = msfil.getStorefrontInventory(shoppingList.getStore(), stockId);
         return inventory.getLocationInStore().getName();
+    }
+    
+    public String getStockAvailability (FurnitureModel furniture) {
+        return inventoryBean.viewStorefrontInventoryStockLevelPerPlant(shoppingList.getStore(), furniture);
     }
     
     public Double calculateSubTotal() {
