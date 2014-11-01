@@ -18,22 +18,31 @@
                               <li class="active"><strong>Workspace Furniture</strong></li>
                             </ol>                                         
                         </div>
-                    <div class="col-sm-3">
-                        <div class="left-sidebar">
-                            <div class="brands_products" style="margin-top: 20px;">
-                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
-                                <div class="brands-name">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <ui:repeat value="#{catalogueManagedBean.filteredSubs('WORKSPACE')}" var="sub">
-                                            <li><a href="workspace.xhtml?sub=#{sub}">#{sub}</a></li>
-                                        </ui:repeat>
-                                        <hr/>
-                                        <li><a href="workspace.xhtml">Display all</a></li>                                        
-                                    </ul>
+                    </div>
+                    <h:panelGroup layout="block" rendered="#{empty catalogueManagedBean.filteredSubs('WORKSPACE')}" style="height:350px;" styleClass="row">
+                        <div class="col-sm-12">
+                        <br/>
+                        <h3>There are no workspace furniture at the moment.</h3>
+                        <h4>Check back another time!</h4>
+                        </div>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" rendered="#{not empty catalogueManagedBean.filteredSubs('WORKSPACE')}" styleClass="row">
+                        <div class="col-sm-3">
+                            <div class="left-sidebar">
+                                <div class="brands_products" style="margin-top: 20px;">
+                                    <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
+                                    <div class="brands-name">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <ui:repeat value="#{catalogueManagedBean.filteredSubs('WORKSPACE')}" var="sub">
+                                                <li><a href="workspace.xhtml?sub=#{sub}">#{sub}</a></li>
+                                            </ui:repeat>
+                                            <hr/>
+                                            <li><a href="workspace.xhtml">Display all</a></li>                                        
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>                        
+                        </div>                        
                         <div class="col-sm-9">
                             <div class="catalogue">
                                 <h2 class="title text-center">WORKSPACE FURNITURE</h2>
@@ -65,8 +74,8 @@
                                 </h:form>
                             </div>	
                         </div>
-                        <br/><br/>                      
-                    </div>
+                        <br/><br/>
+                    </h:panelGroup>
                 </div>
             </section>
     </ui:define>
