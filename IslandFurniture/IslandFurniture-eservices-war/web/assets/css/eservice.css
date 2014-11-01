@@ -1138,7 +1138,7 @@ h2.title {
 
 /**************************** STOCK AVAILABILITY COLORS *******************************/
 
-.Available {
+.AvailableTag {
     font-size: 12px;
     color: #fff;
     background-color: #1aae88;
@@ -1151,7 +1151,7 @@ h2.title {
     font-weight: bold;
 }
 
-.Fast {
+.FastTag {
     font-size: 12px;
     color: #fff;    
     background-color: #FE980F;
@@ -1164,7 +1164,7 @@ h2.title {
     font-weight: bold;
 }
 
-.Out {
+.StockTag {
     font-size: 12px;
     color: #fff;    
     font-weight: bold;
