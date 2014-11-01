@@ -17,6 +17,7 @@ import IslandFurniture.Entities.Supplier;
 import IslandFurniture.EJB.Purchasing.ManagePurchaseOrderLocal;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.ProcuredStock;
+import IslandFurniture.Exceptions.InvalidStatusException;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -111,7 +112,7 @@ public class PurchaseOrderDeliveredManagedBean {
     }
     
      // pay purchase order
-    public String payPurchaseOrder() throws ParseException {
+    public String payPurchaseOrder() throws ParseException, InvalidStatusException {
         status = PurchaseOrderStatus.getPurchaseOrderStatus(3);
         
         mpol.updatePurchaseOrder(purchaseOrderId, status, Calendar.getInstance());

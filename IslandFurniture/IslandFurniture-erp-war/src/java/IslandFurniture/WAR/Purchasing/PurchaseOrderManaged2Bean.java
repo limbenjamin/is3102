@@ -18,6 +18,8 @@ import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.InvalidStatusException;
+import IslandFurniture.Exceptions.NoLotsException;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -131,7 +133,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     }
     
     // confirm purchase order
-    public String confirmPurchaseOrder() throws ParseException {
+    public String confirmPurchaseOrder() throws ParseException, InvalidStatusException {
         status = PurchaseOrderStatus.getPurchaseOrderStatus(1);
         
         mpol.updatePurchaseOrder(purchaseOrderId, status, Calendar.getInstance());
@@ -147,7 +149,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
         return mpol.getLotSize(stock, mf);
     }
     
-    public String editStock(ActionEvent event) throws IOException {
+    public String editStock(ActionEvent event) throws IOException, NoLotsException {
         ProcuredStockPurchaseOrderDetail pod = (ProcuredStockPurchaseOrderDetail) event.getComponent().getAttributes().get("PODid");
         System.out.println("Purchase Order Detail Id is: " + pod.getId().toString());
         

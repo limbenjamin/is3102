@@ -20,10 +20,13 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Supplier;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.InvalidStatusException;
+import IslandFurniture.Exceptions.NoLotsException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJBException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -70,11 +73,11 @@ public class ManagePurchaseOrderRemoteTest {
         StockManagerRemote stockManagerRemote = lookupStockManagerRemote();
         SupplierManagerRemote supplierManagerRemote = lookupSupplierManagerRemote();
         
-        mf = manageOrganizationalHierarchyBeanRemote.displayManufacturingFacility().get(0);
+        mf = (ManufacturingFacility) manageOrganizationalHierarchyBeanRemote.getPlantById(Long.parseLong("412")); //Tuas MF
         mf2 = manageOrganizationalHierarchyBeanRemote.displayManufacturingFacility().get(1);
         co = manageOrganizationalHierarchyBeanRemote.displayCountryOffice().get(0);
         store = manageOrganizationalHierarchyBeanRemote.displayStore().get(0);
-        stock = stockManagerRemote.displayFurnitureList().get(0);
+        stock = stockManagerRemote.getStock(Long.parseLong("432")); //flathead screw
         stock2 = stockManagerRemote.displayFurnitureList().get(1);
         supplier = supplierManagerRemote.displaySupplierList().get(0);
     }
@@ -101,14 +104,14 @@ public class ManagePurchaseOrderRemoteTest {
         try{
             ProcuredStockPurchaseOrder result = managePurchaseOrder.createNewPurchaseOrder(null, (ProcuredStockSupplier) supplier, mf, store, calendar);
             fail("Exception Not Thrown");
-        }catch (Exception ex){
+        }catch (InvalidStatusException ex){
         }
         System.out.println("Case 3");
         po2 = managePurchaseOrder.createNewPurchaseOrder(PurchaseOrderStatus.PAID, (ProcuredStockSupplier) supplier, mf, co, calendar);
         assertNotNull(po2);
     }
     
-    /*@Test
+    @Test
     public void test02CreateNewPurchaseOrderDetail() throws Exception {
         System.out.println("createNewPurchaseOrderDetail");
         pod = managePurchaseOrder.createNewPurchaseOrderDetail(po.getId(), stock.getId(), 10);
@@ -123,9 +126,9 @@ public class ManagePurchaseOrderRemoteTest {
         try{
             ProcuredStockPurchaseOrderDetail result = managePurchaseOrder.createNewPurchaseOrderDetail(po.getId(), stock.getId(), 0);
             fail("Exception Not Thrown");
-        }catch (Exception ex){
+        }catch (NoLotsException ex){
         }
-    }*/
+    }
 
     @Test
     public void test03GetPurchaseOrder() throws Exception {
@@ -151,6 +154,7 @@ public class ManagePurchaseOrderRemoteTest {
         try{
             managePurchaseOrder.updatePurchaseOrder(po.getId(), PurchaseOrderStatus.CONFIRMED, cal);
         }catch (Exception ex){
+            ex.printStackTrace();
             fail("Exception Thrown");
         }
         System.out.println("Case 2");
@@ -166,12 +170,34 @@ public class ManagePurchaseOrderRemoteTest {
         }catch (Exception ex){
         }
      }
-    /*
+    
      @Test
      public void test05UpdatePurchaseOrderDetail() throws Exception {
         System.out.println("updatePurchaseOrderDetail");
-        managePurchaseOrder.updatePurchaseOrderDetail(pod);
-     }*/
+        ProcuredStockPurchaseOrderDetail pod2 = new ProcuredStockPurchaseOrderDetail();
+        pod2.setProcuredStock((ProcuredStock) stock);
+        pod2.setPurchaseOrder(po);
+        pod2.setNumberOfLots(20);
+        try{
+            managePurchaseOrder.updatePurchaseOrderDetail(pod2);
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        pod2.setNumberOfLots(0);
+        try{
+            managePurchaseOrder.updatePurchaseOrderDetail(pod2);
+            fail("Exception Not Thrown");
+        }catch (NoLotsException ex){
+        }
+        System.out.println("Case 3");
+        pod2.setNumberOfLots(30);
+        try{
+            managePurchaseOrder.updatePurchaseOrderDetail(pod2);
+        }catch (NoLotsException ex){
+            fail("Exception Thrown");
+        }
+     }
 
      @Test
      public void test06ViewPurchaseOrderDetails() throws Exception {
@@ -208,32 +234,48 @@ public class ManagePurchaseOrderRemoteTest {
         }
      }
 
-/*     @Test
+    @Test
      public void test08GetLotSize() throws Exception {
-     System.out.println("getLotSize");
-     ProcuredStock stock = null;
-     ManufacturingFacility mf = null;
-     EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-     ManagePurchaseOrderLocal instance = (ManagePurchaseOrderLocal)container.getContext().lookup("java:global/classes/ManagePurchaseOrder");
-     Integer expResult = null;
-     Integer result = instance.getLotSize(stock, mf);
-     assertEquals(expResult, result);
-     container.close();
-     // TODO review the generated test code and remove the default call to fail.
-     fail("The test case is a prototype.");
-     }*/
+        System.out.println("getLotSize");
+        int result = managePurchaseOrder.getLotSize((ProcuredStock) stock, mf);
+        assertNotNull(result);
+        System.out.println("Case 2");
+        try{
+            managePurchaseOrder.getLotSize((ProcuredStock) stock, mf2);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+        }
+        System.out.println("Case 3");
+        try{
+            managePurchaseOrder.getLotSize(null, mf);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+        }
+     }
 
-     /*@Test
+     @Test
      public void test09DeletePurchaseOrderDetail() throws Exception {
-     System.out.println("deletePurchaseOrderDetail");
-     Long podId = null;
-     EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-     ManagePurchaseOrderLocal instance = (ManagePurchaseOrderLocal)container.getContext().lookup("java:global/classes/ManagePurchaseOrder");
-     instance.deletePurchaseOrderDetail(podId);
-     container.close();
-     // TODO review the generated test code and remove the default call to fail.
-     fail("The test case is a prototype.");
-     }*/
+        System.out.println("deletePurchaseOrderDetail");
+        try{
+            managePurchaseOrder.deletePurchaseOrderDetail(pod.getId());
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            managePurchaseOrder.deletePurchaseOrderDetail(Long.parseLong("1"));
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+        System.out.println("Case 3");
+        try{
+            managePurchaseOrder.deletePurchaseOrderDetail(null);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+     }
      
      @Test
      public void test10DeletePurchaseOrder() throws Exception {
