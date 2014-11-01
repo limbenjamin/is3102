@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="col-sm-9 padding-right">
-                        <div class="features_items"><!--features_items-->
+                        <h:panelGroup layout="block" rendered="#{not empty homeManagedBean.featuredFurniture}" styleClass="features_items"><!--features_items-->
                             <h2 class="title text-center">FEATURED FURNITURE</h2>
                             <ui:repeat value="#{homeManagedBean.featuredFurniture}" var="furniture">
                                 <div class="col-sm-4">
@@ -146,7 +146,7 @@
                                     </div>
                                 </div>
                             </ui:repeat>
-                        </div><!--features_items-->
+                        </h:panelGroup><!--features_items-->
                     </div>
                 </div>
             </div>

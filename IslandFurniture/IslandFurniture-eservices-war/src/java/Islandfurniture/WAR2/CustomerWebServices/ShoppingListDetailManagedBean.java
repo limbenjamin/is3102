@@ -7,6 +7,7 @@
 package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
@@ -52,15 +53,15 @@ public class ShoppingListDetailManagedBean {
     private Double subtotal;
     
     @EJB
-    private ManageLocalizationBeanLocal manageLocalizationBean;    
+    private ManageLocalizationBeanLocal manageLocalizationBean;
+    @EJB
+    private ManageMemberAuthenticationBeanLocal mmab;    
     @EJB
     private ManageShoppingListBeanLocal mslbl;
     @EJB
     private ManageMarketingBeanLocal mmbl;
     @EJB
-    private ManageStorefrontInventoryLocal msfil;
-    @EJB
-    private ManageStorefrontInventoryLocal inventoryBean;    
+    private ManageStorefrontInventoryLocal inventoryBean;
     
     @PostConstruct
     public void init(){
@@ -81,6 +82,7 @@ public class ShoppingListDetailManagedBean {
             }
         }   
         else {
+            customer = mmab.getCustomer(emailAddress);
             // get list id from url
             try {
                 listId = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
@@ -95,8 +97,7 @@ public class ShoppingListDetailManagedBean {
                 shoppingList = mslbl.getShoppingList(listId);
                 if (shoppingList.getStore().getCountryOffice().equals(countryOffice)) {
                     // update total price of the list
-                    mslbl.updateListTotalPrice(listId);
-                    subtotal = shoppingList.getTotalPrice();
+                    mslbl.updateListTotalPrice(listId, customer);
                     shoppingListDetails = mslbl.getShoppingListDetails(listId);
                 }
                 else {
@@ -121,7 +122,7 @@ public class ShoppingListDetailManagedBean {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ShoppingListDetail detail = (ShoppingListDetail) event.getComponent().getAttributes().get("detailid");
         mslbl.updateShoppingListDetail(detail);
-        mslbl.updateListTotalPrice(listId);
+        mslbl.updateListTotalPrice(listId, customer);
         shoppingListDetails = mslbl.getShoppingListDetails(listId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Successful!", ""));
@@ -134,7 +135,7 @@ public class ShoppingListDetailManagedBean {
         ShoppingListDetail detail = mslbl.getShoppingListDetail(detailId);
         String furnitureName = detail.getFurnitureModel().getName();
         mslbl.deleteShoppingListDetail(detailId);
-        mslbl.updateListTotalPrice(listId);
+        mslbl.updateListTotalPrice(listId, customer);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, furnitureName + " has been sucessfully removed", ""));
         shoppingListDetails = mslbl.getShoppingListDetails(listId);
@@ -142,7 +143,7 @@ public class ShoppingListDetailManagedBean {
     }
     
     public String getLocation(Long stockId) {
-        StorefrontInventory inventory = msfil.getStorefrontInventory(shoppingList.getStore(), stockId);
+        StorefrontInventory inventory = inventoryBean.getStorefrontInventory(shoppingList.getStore(), stockId);
         return inventory.getLocationInStore().getName();
     }
     
@@ -157,14 +158,12 @@ public class ShoppingListDetailManagedBean {
             ShoppingListDetail current = iterator.next();
             Double discountedPrice = getDiscountedPrice(current.getFurnitureModel());
             subtotal = subtotal + discountedPrice * current.getQty();
-        }        
+        }
         return subtotal;
     }
     
     public Double getDiscountedPrice(Stock s) {
-        Store st = new Store();
-        st.setCountryOffice(countryOffice);
-        return (Double)mmbl.getDiscountedPrice(s, st, new Customer()).get("D_PRICE");
+        return (Double)mmbl.getDiscountedPrice(s, shoppingList.getStore(), customer).get("D_PRICE");
     }
 
     public Long getListId() {

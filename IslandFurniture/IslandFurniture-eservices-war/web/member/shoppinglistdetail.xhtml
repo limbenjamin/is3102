@@ -116,7 +116,7 @@
                     </div>
                     <div class="sub-total pull-right">
                         <h4><strong>Subtotal: #{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode} </strong> 
-                            <h:outputText value="#{shoppingListDetailManagedBean.subtotal}">
+                            <h:outputText value="#{shoppingListDetailManagedBean.calculateSubTotal()}">
                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                             </h:outputText>  
                         </h4>    
