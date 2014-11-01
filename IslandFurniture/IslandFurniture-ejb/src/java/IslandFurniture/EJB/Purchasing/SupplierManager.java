@@ -38,7 +38,7 @@ import javax.persistence.Query;
  * @author a0101774
  */
 @Stateful
-public class SupplierManager implements SupplierManagerLocal {
+public class SupplierManager implements SupplierManagerLocal, SupplierManagerRemote {
 
     @PersistenceContext 
     EntityManager em;

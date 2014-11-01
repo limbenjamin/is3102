@@ -8,7 +8,7 @@ package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.Entities.Country;
@@ -58,7 +58,7 @@ public class StaffManagedBean  implements Serializable  {
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal mohBean;
+    private ManageOrganizationalHierarchyBeanRemote mohBean;
     @EJB
     private ManageUserAccountBeanLocal muab;
     @EJB
@@ -231,11 +231,11 @@ public class StaffManagedBean  implements Serializable  {
         this.plantList = plantList;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
+    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
         this.mohBean = mohBean;
     }
 

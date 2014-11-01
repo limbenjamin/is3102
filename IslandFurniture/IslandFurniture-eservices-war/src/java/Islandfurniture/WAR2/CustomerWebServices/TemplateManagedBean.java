@@ -7,7 +7,7 @@
 package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Enums.FurnitureSubcategory;
 import java.text.NumberFormat;

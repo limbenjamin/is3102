@@ -10,7 +10,7 @@ import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Store;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -55,7 +55,7 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     private String timezone;
     
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal mohBean;
+    private ManageOrganizationalHierarchyBeanRemote mohBean;
     
     @PostConstruct
     public void init(){
@@ -212,11 +212,11 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         this.coList = coList;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
+    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
         this.mohBean = mohBean;
     }
 

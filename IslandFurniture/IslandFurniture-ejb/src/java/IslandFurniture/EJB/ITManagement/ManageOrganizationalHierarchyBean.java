@@ -25,7 +25,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHierarchyBeanLocal {
+public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHierarchyBeanLocal, ManageOrganizationalHierarchyBeanRemote {
 
     @PersistenceContext
     private EntityManager em;

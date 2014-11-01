@@ -1,7 +1,7 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.Plant;
@@ -94,7 +94,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal orgBean;
+    private ManageOrganizationalHierarchyBeanRemote orgBean;
 
     @PostConstruct
     public void init() {
@@ -595,11 +595,11 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
+    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
         this.orgBean = orgBean;
     }
 

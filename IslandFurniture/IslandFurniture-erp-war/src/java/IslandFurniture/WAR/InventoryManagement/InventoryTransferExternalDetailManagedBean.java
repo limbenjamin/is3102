@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
@@ -87,7 +87,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     @EJB
     public ManageStorageLocationLocal storageBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanLocal orgBean;
+    private ManageOrganizationalHierarchyBeanRemote orgBean;
     @EJB
     public ManageGoodsIssuedLocal issuedBean;
 
@@ -418,11 +418,11 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         this.df = df;
     }
 
-    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
+    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
         this.orgBean = orgBean;
     }
 

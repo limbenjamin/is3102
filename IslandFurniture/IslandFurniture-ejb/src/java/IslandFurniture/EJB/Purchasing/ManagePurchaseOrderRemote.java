@@ -13,6 +13,8 @@ import IslandFurniture.Entities.ProcuredStockPurchaseOrderDetail;
 import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.InvalidStatusException;
+import IslandFurniture.Exceptions.NoLotsException;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Remote;
@@ -24,17 +26,17 @@ import javax.ejb.Remote;
 @Remote
 public interface ManagePurchaseOrderRemote {
 
-    ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate);
+    ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate)  throws InvalidStatusException;
 
-    void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException;
+    ProcuredStockPurchaseOrderDetail createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException, Exception;
 
     void deletePurchaseOrder(Long poId);
 
     void deletePurchaseOrderDetail(Long podId);
 
-    void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate);
+    void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) throws InvalidStatusException;
 
-    void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod);
+    void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod) throws NoLotsException;
 
     ProcuredStockPurchaseOrder getPurchaseOrder(Long id);
 

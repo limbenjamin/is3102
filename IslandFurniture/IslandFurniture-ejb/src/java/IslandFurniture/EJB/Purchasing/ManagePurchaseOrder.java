@@ -5,6 +5,8 @@
  */
 package IslandFurniture.EJB.Purchasing;
 
+import IslandFurniture.Exceptions.NoLotsException;
+import IslandFurniture.Exceptions.InvalidStatusException;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ProcuredStock;
@@ -40,7 +42,10 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
     }
     
     @Override
-    public ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) {
+    public ProcuredStockPurchaseOrder createNewPurchaseOrder(PurchaseOrderStatus status, ProcuredStockSupplier supplier, ManufacturingFacility mf, Plant shipsTo, Calendar orderDate) throws InvalidStatusException {
+        if (status == null){
+            throw new InvalidStatusException();
+        }
         ProcuredStockPurchaseOrder purchaseOrder = new ProcuredStockPurchaseOrder();
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -53,14 +58,16 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
     }
 
     @Override
-    public void createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException {
+    public ProcuredStockPurchaseOrderDetail createNewPurchaseOrderDetail(Long poId, Long stockId, int numberOfLots) throws DuplicateEntryException, NoLotsException {
+        if (numberOfLots == 0)
+            throw new NoLotsException();
         ProcuredStockPurchaseOrder purchaseOrder = (ProcuredStockPurchaseOrder) em.find(ProcuredStockPurchaseOrder.class, poId);
         ProcuredStock procuredStock = (ProcuredStock) em.find(ProcuredStock.class, stockId);
         ManufacturingFacility mf = purchaseOrder.getManufacturingFacility();
         Integer totalQuantity = getLotSize(procuredStock, mf) * numberOfLots;
-
+        ProcuredStockPurchaseOrderDetail purchaseOrderDetail;
         if (!purchaseOrder.hasProcuredStock(procuredStock)) {
-            ProcuredStockPurchaseOrderDetail purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
+            purchaseOrderDetail = new ProcuredStockPurchaseOrderDetail();
             purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
             purchaseOrderDetail.setProcuredStock(procuredStock);
             purchaseOrderDetail.setNumberOfLots(numberOfLots);
@@ -72,11 +79,14 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
         } else {
             throw new DuplicateEntryException("Entry for " + procuredStock.getName() + " already exists in this Purchase Order!");
         }
-
+        return purchaseOrderDetail;
     }
 
     @Override
-    public void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) {
+    public void updatePurchaseOrder(Long poId, PurchaseOrderStatus status, Calendar orderDate) throws InvalidStatusException {
+        if (status == null){
+            throw new InvalidStatusException();
+        }
         ProcuredStockPurchaseOrder purchaseOrder = (ProcuredStockPurchaseOrder) em.find(ProcuredStockPurchaseOrder.class, poId);
         purchaseOrder.setOrderDate(orderDate);
         purchaseOrder.setStatus(status);
@@ -84,7 +94,9 @@ public class ManagePurchaseOrder implements ManagePurchaseOrderLocal,ManagePurch
     }
 
     @Override
-    public void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod) {
+    public void updatePurchaseOrderDetail(ProcuredStockPurchaseOrderDetail pod) throws NoLotsException{
+        if (pod.getNumberOfLots() == 0)
+            throw new NoLotsException();
         ProcuredStock procuredStock = pod.getProcuredStock();
         ManufacturingFacility mf = pod.getPurchaseOrder().getManufacturingFacility();
         Integer totalQuantity = getLotSize(procuredStock, mf) * pod.getNumberOfLots();
