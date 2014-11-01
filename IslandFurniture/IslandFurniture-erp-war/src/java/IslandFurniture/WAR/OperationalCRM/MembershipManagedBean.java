@@ -13,9 +13,12 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import IslandFurniture.WAR.Util.NFCMethods;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -26,6 +29,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
 
 /**
  *
@@ -89,6 +95,41 @@ public class MembershipManagedBean implements Serializable {
         System.out.println("MembershipManagedBean.viewCustomer()");
         Long customerID = (Long) event.getComponent().getAttributes().get("customerID");
         this.customer = membershipBean.getCustomer(customerID);
+    }
+    
+    public void scanNFC(AjaxBehaviorEvent event){
+        String customerCardId = "";
+        CardTerminal acr122uCardTerminal = null;
+        Long customerID = (Long) event.getComponent().getAttributes().get("customerID");
+        System.err.println(customerID);
+        this.customer = membershipBean.getCustomer(customerID);
+        try {
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+                if (acr122uCardTerminal != null) {
+                    try {
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            NFCMethods nfc = new NFCMethods();
+                            customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
+                            this.customer.setLoyaltyCardId(customerCardId);
+                        }
+                    } catch (CardException ex) {
+                        Logger.getLogger(MembershipManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MembershipManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
     }
 
     public List<Customer> getCustomerList() {
