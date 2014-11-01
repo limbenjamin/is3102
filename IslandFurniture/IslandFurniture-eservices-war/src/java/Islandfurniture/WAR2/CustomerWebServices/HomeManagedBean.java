@@ -50,7 +50,8 @@ public class HomeManagedBean {
     private List<FurnitureModel> featuredFurniture = new ArrayList<>();
     private List<RetailItem> featuredRetailItems;
     private Customer customer;
-    private String emailAddress;    
+    private String emailAddress = null;
+    private boolean loggedIn = false;
 
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
@@ -67,23 +68,27 @@ public class HomeManagedBean {
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
-        
+        mcbl.updateStockSuppliedFurniturePrice(co);
         webBanners = co.getWebBanners();
         featuredFurniture = mcbl.getCountryFeaturedFurniture(co);
         
-        boolean loggedIn = checkLoggedIn();
+        loggedIn = checkLoggedIn();
         if (loggedIn)
             customer = mmab.getCustomer(emailAddress);        
         System.out.println("loaded " + co.getName() + " web banners");
     }
     
     public boolean checkLoggedIn() {
-        HttpSession session = Util.getSession();
-        emailAddress = (String) session.getAttribute("emailAddress");  
-        if (emailAddress == null)
+        HttpSession session = Util.getSession();  
+        if (session == null)
             return false;
-        else 
-            return true;
+        else {
+            emailAddress = (String) session.getAttribute("emailAddress");            
+            if (emailAddress == null)
+                return false;
+            else 
+                return true;
+        }
     }    
 
     public Double getDiscountedPrice(Stock s) {

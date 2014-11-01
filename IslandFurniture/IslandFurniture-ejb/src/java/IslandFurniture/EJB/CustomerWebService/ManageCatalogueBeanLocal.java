@@ -21,6 +21,10 @@ import javax.ejb.Local;
 public interface ManageCatalogueBeanLocal {
     
     List<FurnitureModel> getAllFurniture();
+    
+    void updateStockSuppliedFurniturePrice(CountryOffice co);
+    
+    void updateStockSuppliedRetailItemPrice(CountryOffice co);
 
     // get a list of furniture sold in a store
     List<FurnitureModel> getStoreFurniture(CountryOffice co);

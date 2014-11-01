@@ -73,7 +73,9 @@
                                     </td>
                                     <td class="list_description">
                                         <h4><a href="../productdetail.xhtml?id=#{detail.furnitureModel.id}">#{detail.furnitureModel.name}</a></h4>
-                                        <p>#{detail.furnitureModel.category}</p>
+                                        <p class="#{shoppingListDetailManagedBean.getStockAvailability(detail.furnitureModel)}">
+                                            <span>#{shoppingListDetailManagedBean.getStockAvailability(detail.furnitureModel)}</span>
+                                        </p>
                                     </td>
                                     <td class="list_description">
                                         <p><i class="fa fa-map-marker"></i> #{shoppingListDetailManagedBean.getLocation(detail.furnitureModel.id)}</p>
