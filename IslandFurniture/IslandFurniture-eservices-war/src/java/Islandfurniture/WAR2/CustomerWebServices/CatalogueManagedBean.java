@@ -95,12 +95,16 @@ public class CatalogueManagedBean implements Serializable{
     }
     
     public boolean checkLoggedIn() {
-        HttpSession session = Util.getSession();
-        emailAddress = (String) session.getAttribute("emailAddress");  
-        if (emailAddress == null)
+        HttpSession session = Util.getSession();  
+        if (session == null)
             return false;
-        else 
-            return true;
+        else {
+            emailAddress = (String) session.getAttribute("emailAddress");            
+            if (emailAddress == null)
+                return false;
+            else 
+                return true;
+        }
     }    
     
     public void displayProductDetails(ActionEvent event) throws IOException {
