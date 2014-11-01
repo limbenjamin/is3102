@@ -40,9 +40,10 @@
                                                 <h:outputText value="#{menuItem.menuType}" ></h:outputText>
                                             </p:column>
                                             <p:column headerText="Details" style="text-align: center; width: 8%;">
-                                                <h:commandButton actionListener="#{menuItemManagedBean.menuItemDetailActionListener}" value="View" class="btn btn-success btn-xs">
+                                                <h:commandButton actionListener="#{menuItemManagedBean.menuItemDetailActionListener}" class="btn btn-success btn-xs transparent-button">
                                                     <f:attribute name="menuItemID" value="#{menuItem.id}" />
                                                 </h:commandButton>
+                                                <i class="fa fa-search-plus icon-button"></i>
                                             </p:column> 
                                             <p:column headerText="Update" style="text-align: center; width: 8%;">
                                                 <h:commandButton actionListener="#{menuItemManagedBean.editMenuItem}" class="btn btn-sm transparent-button" style="outline:0;">

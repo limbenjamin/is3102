@@ -72,6 +72,8 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setPhoneNo(phoneNo);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
+        customer.setCumulativePoints(0);
+        customer.setCurrentPoints(0);
         em.persist(customer);
         em.flush();
         try {
@@ -95,9 +97,48 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setPhoneNo(phoneNo);
         customer.setAddress(address);
         customer.setDateOfBirth(dateOfBirth);
+        customer.setCumulativePoints(0);
+        customer.setCurrentPoints(0);
         em.persist(customer);
         em.flush();
         return customer.getId();
+    }
+    
+    @Override
+    public boolean forgotPassword(String emailAddress, String dateOfBirth) {
+        Customer customer;
+        try{
+            Query query = em.createQuery("SELECT c FROM Customer c WHERE c.emailAddress=:email");
+            query.setParameter("email", emailAddress);
+            customer = (Customer) query.getSingleResult();
+        }catch(NoResultException | NonUniqueResultException nre){
+            return false;
+        }
+        if (!customer.getDateOfBirth().equals(dateOfBirth)){
+            return false;
+        }
+        String forgottenPasswordCode = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
+        customer.setForgottenPasswordCode(forgottenPasswordCode);
+        try {
+            SendEmailByPost.sendEmail("techsupport", emailAddress, "Password Reset Request", "Click this link to reset your password: https://localhost/cws/sg/resetpassword.xhtml?code="+forgottenPasswordCode);
+        } catch (Exception ex) {
+            Logger.getLogger(ManageMemberAuthenticationBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+    
+    public boolean resetPassword(String code, String password){
+        Query query = em.createQuery("SELECT c FROM Customer c WHERE c.forgottenPasswordCode=:code");
+        query.setParameter("code", code);
+        Customer customer;
+        try{
+            customer = (Customer) query.getSingleResult();
+        }catch(NoResultException | NonUniqueResultException nre){
+            return false;
+        }
+        customer.setPassword(password);
+        customer.setForgottenPasswordCode(null);
+        return true;
     }
     
     @Override

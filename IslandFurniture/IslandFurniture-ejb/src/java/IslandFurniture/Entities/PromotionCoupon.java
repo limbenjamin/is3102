@@ -6,11 +6,13 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.Random;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 
 /**
  *
@@ -79,5 +81,6 @@ public class PromotionCoupon implements Serializable {
     public String toString() {
         return "IslandFurniture.Entities.PromotionCoupon[ id=" + id + " ]";
     }
+    
     
 }

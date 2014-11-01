@@ -8,25 +8,45 @@ package POS;
 
 import Helper.Connector;
 import Helper.LCD;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.standard.MediaPrintableArea;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -60,9 +80,11 @@ public class PaymentUI extends javax.swing.JFrame {
     private String storeType;
     private String transactionId;
     private DecimalFormat df;
-
+    private String result;
+    
     private OutputStream partnerPoleDisplayOutputStream;
     SerialPort serialPort;
+    private String partnerPoleDisplayCOMPort;
     byte[] clear = {0x0C};
     byte[] newLine = {0x0A};
     byte[] carriageReturn = {0x0D};
@@ -108,8 +130,8 @@ public class PaymentUI extends javax.swing.JFrame {
         changeDueLabel.setText("Change Due: "+currencyCode+" 0");
         payableLabel.setText("Total Payable: "+currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
-        welcomeLabel.setText("Welcome " + staffname + " of " + plantname + " store!");
-        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        partnerPoleDisplayCOMPort = LCD.getPort();
+        initPartnerPoleDisplay();
     }
 
     /**
@@ -148,7 +170,8 @@ public class PaymentUI extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
         welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        welcomeLabel.setText("welcome xxxxxxxxxxxxxxxxxxxx of xxxxxxxxxxx store");
+        welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/islandfurniture.png"))); // NOI18N
+        welcomeLabel.setText("Island Furniture");
 
         voucherLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         voucherLabel.setText("Voucher:");
@@ -161,6 +184,7 @@ public class PaymentUI extends javax.swing.JFrame {
         voucherField.setPreferredSize(new java.awt.Dimension(400, 50));
 
         cashButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        cashButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/money.png"))); // NOI18N
         cashButton.setText("Cash");
         cashButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,6 +197,7 @@ public class PaymentUI extends javax.swing.JFrame {
         cashCreditField.setPreferredSize(new java.awt.Dimension(400, 50));
 
         creditCardButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        creditCardButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/credit-card.png"))); // NOI18N
         creditCardButton.setText("Credit Card");
         creditCardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +215,7 @@ public class PaymentUI extends javax.swing.JFrame {
         changeDueLabel.setText("Change due : 0");
 
         payButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        payButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/dollar.png"))); // NOI18N
         payButton.setText("Pay");
         payButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,6 +227,7 @@ public class PaymentUI extends javax.swing.JFrame {
         payableLabel.setText("Total Payable : 0");
 
         verifyVoucherButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        verifyVoucherButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/check.png"))); // NOI18N
         verifyVoucherButton.setText("Verify");
         verifyVoucherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +236,7 @@ public class PaymentUI extends javax.swing.JFrame {
         });
 
         addButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        addButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/plus.png"))); // NOI18N
         addButton.setText("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -223,6 +251,7 @@ public class PaymentUI extends javax.swing.JFrame {
         receiptCredit.setText("Credit : 0");
 
         doneButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        doneButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mail-forward.png"))); // NOI18N
         doneButton.setText("Done");
         doneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -231,6 +260,7 @@ public class PaymentUI extends javax.swing.JFrame {
         });
 
         backButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mail-reply.png"))); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -239,6 +269,7 @@ public class PaymentUI extends javax.swing.JFrame {
         });
 
         reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/money.png"))); // NOI18N
         reconcileButton.setText("Reconcile");
         reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,6 +278,7 @@ public class PaymentUI extends javax.swing.JFrame {
         });
 
         finishButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        finishButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mail-forward.png"))); // NOI18N
         finishButton.setText("Finish");
         finishButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -280,19 +312,21 @@ public class PaymentUI extends javax.swing.JFrame {
                                         .addComponent(voucherLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(voucherField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(verifyVoucherButton)
                                         .addGap(18, 18, 18)
-                                        .addComponent(voucherCredit))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(verifyVoucherButton)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(voucherCredit))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(receiptCredit))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(receiptCredit))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(157, 157, 157)
-                                        .addComponent(doneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGap(173, 173, 173)
+                                        .addComponent(doneButton))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cashButton)
                                 .addGap(18, 18, 18)
@@ -372,7 +406,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -387,7 +421,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -470,7 +504,7 @@ public class PaymentUI extends javax.swing.JFrame {
             params.add("receiptAmt");
             values.add(receiptAmt);
             try {
-                transactionId = Connector.postForm(params, values, "stock/maketransaction");   
+                result = Connector.postForm(params, values, "stock/maketransaction");   
             } catch (Exception ex) {
                 Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -535,28 +569,44 @@ public class PaymentUI extends javax.swing.JFrame {
                 receipt+= "Payment Mode : Credit Card\n\r";
             }
             receipt+= "Cashier : "+ staffname +"\n\r\n\r";
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = (JSONObject) jsonParser.parse(result);
+            } catch (ParseException ex) {
+                Logger.getLogger(PaymentUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            transactionId = String.valueOf( jsonObject.get("transactionId"));
+            String points = String.valueOf( jsonObject.get("points"));
             if (customerName == null){
                 receipt+= "Thank you for shopping with us!\n\r";
             }else{
                 receipt+= customerName+", thank you for shopping with us!\n\r";
+                receipt+= "Current Points: " + points + "\n\r";
             }
-            receipt += "Transaction Id: "+transactionId;
+            receipt += "Transaction Id: "+transactionId + "\n\r";
             
             
             try
             {
-                JTextArea printing = new JTextArea();
+                JTextPane printing = new JTextPane();
                 printing.setSize(180, 300);
                 printing.setText(receipt);
+                Font font = new Font("Tahoma",Font.PLAIN, 7);
+                printing.setFont(font);
                 Double margin = 20.0;
                 Integer lines = 8;
                 PrinterJob printerJob = PrinterJob.getPrinterJob();
                 PageFormat pageFormat = printerJob.defaultPage();
                 Paper paper = new Paper();
-                paper.setSize(360.0, (double) (paper.getHeight() + lines * 10.0));
+                paper.setSize(180.0, (double) (paper.getHeight() + lines * 10.0));
                 paper.setImageableArea(margin, margin, paper.getWidth() - margin * 2, paper.getHeight() - margin * 2);
                 pageFormat.setPaper(paper);
                 pageFormat.setOrientation(PageFormat.PORTRAIT);
+                ByteArrayOutputStream out = QRCode.from(String.valueOf(transactionId)).to(ImageType.PNG).stream();
+                ImageIcon icon = new ImageIcon( out.toByteArray() );
+                printing.insertIcon(icon);
+                printing.insertIcon(icon);
                 printerJob.setPrintable(printing.getPrintable(null, null), pageFormat);
                 printerJob.print();
             }
@@ -643,7 +693,7 @@ public class PaymentUI extends javax.swing.JFrame {
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -723,7 +773,50 @@ public class PaymentUI extends javax.swing.JFrame {
         payableLabel.setText("Total Payable: "+currencyCode+" "+Math.round(payableAmt * 100.0) / 100.0);
     }
     
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
     
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

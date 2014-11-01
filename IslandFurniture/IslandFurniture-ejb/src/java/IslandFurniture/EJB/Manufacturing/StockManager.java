@@ -380,13 +380,17 @@ public class StockManager implements StockManagerLocal {
         
     }
     @Override
-    public String editRetailItem(Long itemID, String itemName, Double itemPrice) {
+    public String editRetailItem(RetailItem updatedItem) {
         RetailItem item;
         try {
             System.out.println("StockManager.editRetailItem()");
-            item = em.find(RetailItem.class, itemID);
-            item.setName(itemName);
-            item.setPrice(itemPrice);
+            item = em.find(RetailItem.class, updatedItem.getId());
+            item.setName(updatedItem.getName());
+            item.setPrice(updatedItem.getPrice());
+            item.setRiDescription(updatedItem.getRiDescription());
+            item.setThumbnail(updatedItem.getThumbnail());
+            em.merge(item);
+            em.flush();
             return null;
         } catch(Exception ex) {
             System.out.println("Something went wrong");

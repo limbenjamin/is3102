@@ -225,5 +225,8 @@ public class MenuItemDetailManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("menuItemID", menuItemID);
         return "menuitemdetail"; 
     }
+    public boolean displayAlaCarte() {
+        return menuItem.getMenuItemDetails().size() < 2; 
+    }
     
 }

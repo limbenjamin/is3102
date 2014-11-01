@@ -8,11 +8,14 @@ package POS;
 import Helper.Connector;
 import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -54,6 +57,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
     private String shoppingListJSON;
     
     private OutputStream partnerPoleDisplayOutputStream;
+    private String partnerPoleDisplayCOMPort;
     SerialPort serialPort;
     byte[] clear = {0x0C};
     byte[] newLine = {0x0A};
@@ -80,12 +84,12 @@ public class ScanItemsUI extends javax.swing.JFrame {
         currencyCode = (String) jsonObject.get("symbol");
         totalLabel.setText("Total: " +currencyCode+" 0");
         System.err.println(listJSON);
-        welcomeLabel.setText("Welcome " + name + " of " + plant + " store!");
         jTable.setRowHeight(50);
         jTable.changeSelection(0, 0, false, false);
         jTable.editCellAt(0, 0);
         jTable.getEditorComponent().requestFocusInWindow();
-        LCD.initPartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+        partnerPoleDisplayCOMPort = LCD.getPort();
+        initPartnerPoleDisplay();
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (changing.equals(false)) {
@@ -123,13 +127,17 @@ public class ScanItemsUI extends javax.swing.JFrame {
                                     {
                                         partnerPoleDisplayOutputStream.write(clear);
                                         String s = (String) jsonObject.get("name");
-                                        partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        if(s.length() >= 18)
+                                            partnerPoleDisplayOutputStream.write(new String(s.substring(0, 18)).getBytes());
+                                        else
+                                            partnerPoleDisplayOutputStream.write(s.getBytes());
                                         partnerPoleDisplayOutputStream.write(newLine);
                                         partnerPoleDisplayOutputStream.write(carriageReturn);
                                         s = (String) jsonObject.get("price");
                                         partnerPoleDisplayOutputStream.write(s.getBytes());
                                     }catch(Exception ex){
                                         System.err.println("Unable to write to Partner Pole Display");
+                                        //ex.printStackTrace();
                                     }
                                 }
                         }
@@ -182,8 +190,9 @@ public class ScanItemsUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1366, 720));
 
-        welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        welcomeLabel.setText("welcome xxxxxxxxxxxxxxxxxxxx of xxxxxxxxxxx store");
+        welcomeLabel.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/islandfurniture.png"))); // NOI18N
+        welcomeLabel.setText("Island Furniture");
 
         jTable.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -221,6 +230,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         }
 
         reconcileButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        reconcileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/money.png"))); // NOI18N
         reconcileButton.setText("Reconcile");
         reconcileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,6 +242,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         totalLabel.setText("Total: 0");
 
         nextButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        nextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/mail-forward.png"))); // NOI18N
         nextButton.setText("Next");
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,6 +251,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         });
 
         resetButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        resetButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/trash.png"))); // NOI18N
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,6 +260,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         });
 
         shoppingListButton.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        shoppingListButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/list.png"))); // NOI18N
         shoppingListButton.setText("List");
         shoppingListButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -265,7 +278,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(welcomeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 239, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(shoppingListButton)
                         .addGap(18, 18, 18)
                         .addComponent(resetButton)
@@ -289,7 +302,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
                         .addComponent(shoppingListButton))
                     .addComponent(welcomeLabel))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
@@ -319,7 +332,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -356,7 +369,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         }
         System.err.println(transaction);
         if(serialPort != null){
-            LCD.closePartnerPoleDisplay(partnerPoleDisplayOutputStream, serialPort);
+            closePartnerPoleDisplay();
         }
         CheckoutUI checkoutUI;
         try {
@@ -536,7 +549,51 @@ public class ScanItemsUI extends javax.swing.JFrame {
         return duplicate;
     }
     
-
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+    
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

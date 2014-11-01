@@ -5,8 +5,14 @@
  */
 package IslandFurniture.WAR.OperationalCRM;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Plant;
+import IslandFurniture.Entities.Staff;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -19,6 +25,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -36,14 +43,35 @@ public class MembershipManagedBean implements Serializable {
     private String address;
     private String dateOfBirth;
     private Customer customer;
+    private String username;
+    private Staff staff;
+    private Plant plant;
+    private Store store;
 
     @EJB
     public ManageMembershipLocal membershipBean;
+    @EJB
+    private ManageUserAccountBeanLocal staffBean;
 
     @PostConstruct
     public void init() {
         System.err.println("init:MembershipManagedBean");
-        customerList = membershipBean.viewCustomers();
+        HttpSession session = Util.getSession();
+        username = (String) session.getAttribute("username");
+        staff = staffBean.getStaff(username);
+        plant = staff.getPlant();
+
+        if (plant instanceof Store) {
+            this.store = (Store) plant;
+            customerList = membershipBean.viewCustomers();
+        } else {
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect(ec.getRequestContextPath());
+            } catch (IOException ex) {
+
+            }
+        }
     }
 
 //  Function: To edit a Customer 
@@ -125,5 +153,37 @@ public class MembershipManagedBean implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

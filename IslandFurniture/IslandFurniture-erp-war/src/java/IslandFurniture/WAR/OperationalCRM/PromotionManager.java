@@ -276,7 +276,7 @@ public class PromotionManager implements Serializable {
             case "Save":
                 try {
                     //i hope this works :X
-                    currentEdit=mbean.CommitNewCampaign(currentEdit);
+                    currentEdit = mbean.CommitNewCampaign(currentEdit);
                     setPromotionCampaigns(mbean.getCampaigns(ubean.getCountryOffice(currentUser.getPlant())));
                     success_msg = "Saved!";
 
@@ -414,13 +414,13 @@ public class PromotionManager implements Serializable {
             success_msg = "Set: No Coupon !";
             return;
 
-        } else if (som.getValue().equals("Coupon")) {
+        } else if (som.getValue().equals("Coupon") && !evalcouponstatus(target).equals("Coupon")) {
             PromotionCoupon pc = new PromotionCoupon();
             pc.setId(-1L);
             target.getPromotionCoupons().add(0, pc);
             success_msg = "Using Coupon ! remember to set limited Quantity";
             return;
-        } else {
+        } else if(!evalcouponstatus(target).equals("Non-Perishable Coupon")) {
             PromotionCoupon pc = new PromotionCoupon();
             pc.setId(-1L);
             pc.setOneTimeUsage(false);
@@ -469,6 +469,11 @@ public class PromotionManager implements Serializable {
 
     public double calcDiscount(Stock s, PromotionDetail pd) {
         return Math.round(mbean.calcDiscount(s, ubean.getCountryOffice(currentUser.getPlant()), pd) * 100) / 100.0;
+    }
+
+    public String getCouponID(PromotionCoupon pc) {
+            return (mbean.encodeCouponID(pc.getId()));
+
     }
 
 }

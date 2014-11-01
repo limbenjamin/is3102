@@ -93,7 +93,7 @@
                               <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="cashBalanceLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="15" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -143,6 +143,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="1"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/cube.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Furniture Store"/>
           </Properties>
           <Events>
@@ -154,6 +157,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="1"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/cube.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Retail Store"/>
           </Properties>
           <Events>
@@ -164,6 +170,9 @@
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="1"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/cube.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Restaurant"/>
           </Properties>
@@ -185,15 +194,21 @@
         <Component class="javax.swing.JLabel" name="welcomeLabel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="36" style="0"/>
+              <Font name="Tahoma" size="48" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Welcome"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/islandfurniture.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Island Furniture"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="logoutButton">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="1"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/sign-out.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Logout"/>
           </Properties>
@@ -251,6 +266,9 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="0"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/check.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Confirm"/>
           </Properties>
           <Events>
@@ -263,6 +281,9 @@
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="36" style="0"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/resources/edit.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Verify"/>
           </Properties>

@@ -200,9 +200,12 @@
 
                                 <p:column headerText="Usage Limit">
                                     <p:inputText value="${row.usageCount}" style="width:50px;"/>
-                                    <p:dialog header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200">
-                                        <p:dataTable value="#{row.promotionCoupons}" var="coupon" rendered="${marketing.currentEdit!=null}" style="width:400px">
+                                    <p:dialog header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200" minWidth="600">
+                                        <p:dataTable value="#{row.promotionCoupons}" var="coupon" rendered="${marketing.currentEdit!=null}" style="width:600px">
                                             <p:column headerText="CouponID" style="width:200px">
+                                                <h:outputText value="${marketing.getCouponID(coupon)}"/>
+                                            </p:column>
+                                            <p:column headerText="ID" style="width:200px">
                                                 <h:outputText value="${coupon.id}"/>
                                             </p:column>
                                             <p:column headerText="Persihable?" style="width:200px">
@@ -222,7 +225,7 @@
                                         <f:selectItem  itemLabel="Non-Perishable Coupon" itemValue="Non-Perishable Coupon"/>                                            
                                     </p:selectOneMenu>
                                     <br/>
-                                    <p:commandLink value="[Show Coupons]" onclick="PF('Coupons_${row.id}').show();" rendered="${row.promotionCoupons.size()>0}">
+                                    <p:commandLink value="[Show Coupons]" onclick="PF('Coupons_${row.id}').show();" rendered="${row.promotionCoupons.size()>0 and row.promotionCoupons.get(0).getId()!=-1}">
                                     </p:commandLink>
 
 
