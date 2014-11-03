@@ -8,6 +8,15 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core" >
 <ui:define name="content">
+    <h:outputScript>
+        $(window).unload(function () {
+            $.ajax({
+            type: 'GET',
+            async: false,
+            url: 'https://localhost/ws/rest/cws/endchat/${chatManagedBean.threadId}'
+            });
+        });
+    </h:outputScript>    
         <div class="row">            
             <div class="col-md-8">  
                 <h5>Chat with Staff</h5>
@@ -51,13 +60,8 @@
                             </div>
                         </h:form>
 
-                        <h:form id="StartChatForm" class="form-horizontal">
-                            <div class="form-group">
-                                 <div class="col-sm-2">
-                                     <h:commandButton value="Start Chat" actionListener="#{chatManagedBean.startChatSession}"></h:commandButton>
-                                     <h:commandButton value="End Chat" actionListener="#{chatManagedBean.endChatSession}"></h:commandButton>
-                                 </div>                                        
-                            </div>
+                        <h:form id="endChatForm" style="display:none">
+                            <h:commandButton id="endChat" value="End" actionListener="#{chatManagedBean.endChatSession}" />
                         </h:form>
 
                       </div>

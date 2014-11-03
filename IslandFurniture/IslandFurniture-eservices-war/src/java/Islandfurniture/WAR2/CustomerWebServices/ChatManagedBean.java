@@ -14,11 +14,13 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatMessage;
 import IslandFurniture.Entities.CustChatThread;
 import IslandFurniture.Entities.Customer;
+import java.io.IOException;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -74,11 +76,12 @@ public class ChatManagedBean {
         else {
             customer = mslbl.getCustomer(emailAddress);
         }
+        startChatSession();
     }
     
     public void startChatSession(){
         if(customer == null){
-            
+            System.err.println("chat session started");
             threadId = ccb.createAnonymousThread(co);
         }else{
 
@@ -87,8 +90,9 @@ public class ChatManagedBean {
     
     public void endChatSession(){
         if(customer == null){
-            
+            System.err.println("chat session ended");
             ccb.endAnonymousThread(threadId);
+
         }else{
 
         }
