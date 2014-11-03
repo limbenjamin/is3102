@@ -307,7 +307,7 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
 
     @Override
     public List<CountryOffice> getCountryOffices() {
-        Query q = em.createNamedQuery("getAllCountryOffice");
+        Query q = em.createQuery("SELECT c " + "FROM CountryOffice c");
         return q.getResultList();
     }
 

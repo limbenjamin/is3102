@@ -15,7 +15,9 @@ import org.junit.runners.Suite;
  * @author Benjamin
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({IslandFurniture.Test.Purchasing.ManagePurchaseOrderRemoteTest.class})
+@Suite.SuiteClasses({IslandFurniture.Test.Purchasing.ManagePurchaseOrderRemoteTest.class,
+                    IslandFurniture.Test.ITManagement.ManageOrganizationalHierarchyBeanRemoteTest.class
+                    })
 
 public class TestSuite {
     @BeforeClass
