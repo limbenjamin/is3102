@@ -345,6 +345,24 @@ input[type="checkbox"] {
     text-align: right;
 }
 
+.true-solid-icon {
+    -webkit-border-radius:12px;
+    -moz-border-radius:12px;
+    border-radius:12px;
+    border:12px solid #2ecc71;
+    width:12px;
+    height:12px;
+}
+
+.false-solid-icon {
+    -webkit-border-radius:12px;
+    -moz-border-radius:12px;
+    border-radius:12px;
+    border:12px solid #e67e22;
+    width:12px;
+    height:12px;
+}
+
 /************************* PrimeFaces Datepicker Override ***********************************/
 
 .ui-datepicker-calendar .ui-state-default {

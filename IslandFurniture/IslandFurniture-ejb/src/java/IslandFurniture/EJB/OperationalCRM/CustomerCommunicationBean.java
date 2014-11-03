@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -40,8 +41,9 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
     
     @Override
     public List<CustChatThread> getActiveThreadFromCountry(CountryOffice co){
-        Query query = em.createQuery("SELECT c FROM CustChatThread c WHERE c.isActive=:True AND c.countryOffice=:co");
+        Query query = em.createQuery("SELECT c FROM CustChatThread c WHERE c.isActive=:true AND c.countryOffice=:co");
         query.setParameter("co", co);
+        query.setParameter("true", Boolean.TRUE);
         return query.getResultList();
     }
     
@@ -49,19 +51,50 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
     public Long createAnonymousThread(CountryOffice co){
         cct = new CustChatThread();
         cct.setCountryOffice(co);
-        cct.setTitle("Anonymous customer");
         cct.setIsActive(Boolean.TRUE);
+        cct.setHasUnread(Boolean.FALSE);
         em.persist(cct);
+        em.flush();
+        cct.setTitle("Customer #"+cct.getId());
         return cct.getId();
     }
     
-    public void endAnonymousThread(Long threadId){
+    @Override
+    public void readThread(CustChatThread cct){
+        cct.setHasUnread(Boolean.FALSE);
+    }
+    
+    @Override
+    public Long getCustomerThread(CountryOffice co, Customer customer){
+        Query query = em.createQuery("SELECT c FROM CustChatThread c WHERE c.customer=:customer");
+        query.setParameter("customer", customer);
+        try{
+            cct =  (CustChatThread) query.getSingleResult();
+            //customer might have changed country
+            cct.setCountryOffice(co);
+            cct.setIsActive(Boolean.TRUE);
+            cct.setHasUnread(Boolean.FALSE);
+        }catch(NoResultException nre){
+            //customer has no thread, create one for him
+            cct = new CustChatThread();
+            cct.setCountryOffice(co);
+            cct.setTitle(customer.getName());
+            cct.setIsActive(Boolean.TRUE);
+            cct.setHasUnread(Boolean.FALSE);
+            cct.setCustomer(customer);
+            em.persist(cct);
+        }
+        return cct.getId();
+    }
+    
+    @Override
+    public void endThread(Long threadId){
         cct = em.find(CustChatThread.class, threadId);
         cct.setIsActive(Boolean.FALSE);
     }
     
     @Override
-    public void postMessage(Long threadId, String content, Boolean isStaff){
+    public void postMessage(Long threadId, String content, Boolean isStaff, Staff staff){
         cct = em.find(CustChatThread.class, threadId);
         ccm = new CustChatMessage();
         ccm.setContent(content);
@@ -69,12 +102,14 @@ public class CustomerCommunicationBean implements CustomerCommunicationBeanLocal
         em.persist(ccm);
         cct.getMessages().add(ccm);
         if (isStaff.equals(Boolean.TRUE)){
-            ccm.setStaff(em.find(Staff.class, 2074));
+            ccm.setStaff(staff);
+            cct.setHasUnread(Boolean.FALSE);
         }else{
             cct.setHasUnread(Boolean.TRUE);
         }
         
     }
+    
     
     @Override
     public CustChatThread getThread(Long threadId){

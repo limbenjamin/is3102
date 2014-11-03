@@ -28,7 +28,7 @@ public class CustomerWS {
     @Path("endchat/{threadId}")
     public String getShoppingList(@PathParam("threadId") Long threadId) {
         System.err.println("chat session ended");
-        ccb.endAnonymousThread(threadId);
+        ccb.endThread(threadId);
         return "true";
     }
 }

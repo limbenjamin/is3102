@@ -349,6 +349,20 @@
             <from-outcome>redeemableitem</from-outcome>
             <to-view-id>/ocrm/redeemableitem.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>customerchat</from-outcome>
+            <to-view-id>/ocrm/customerchat.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>customerchat2</from-outcome>
+            <to-view-id>/ocrm/customerchat2.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{customerChatManaged2Bean.id}</value>
+                </view-param>  
+            </redirect> 
+        </navigation-case>
         
         
     </navigation-rule>

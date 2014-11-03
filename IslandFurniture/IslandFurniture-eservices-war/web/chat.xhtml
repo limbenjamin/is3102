@@ -11,15 +11,15 @@
     <h:outputScript>
         $(window).unload(function () {
             $.ajax({
-            type: 'GET',
-            async: false,
-            url: 'https://localhost/ws/rest/cws/endchat/${chatManagedBean.threadId}'
+                type: 'GET',
+                async: false,
+                url: 'https://localhost/ws/rest/cws/endchat/${chatManagedBean.threadId}'
             });
         });
     </h:outputScript>    
         <div class="row">            
-            <div class="col-md-8">  
-                <h5>Chat with Staff</h5>
+            <div class="col-md-8 col-md-offset-2">  
+                <h3>Chat with a Staff</h3>
                 <hr></hr>                        
                   <section class="panel">
                     <h:form id="newMessage">
@@ -27,7 +27,7 @@
                           <c:set var="uname" value="${message.staff}"/>
                           <c:if test="${uname == null}">
                               <div class="list-group-item own-message">
-                                  <h5>#{message.content} </h5>  
+                                  <h5>  Customer : #{message.content} </h5>  
                                   <small>
                                       <h:outputText value="#{message.msgTime.time}">
                                           <f:convertDateTime dateStyle="full" timeZone="#{chatManagedBean.timezone}" type="both" />
@@ -46,22 +46,20 @@
                               </div>
                           </c:if>
                       </c:forEach>
-                        <p:poll interval="3" listener="#{chatManagedBean.pullMessage}" update="newMessage" />
+                        <p:poll interval="1" listener="#{chatManagedBean.pullMessage}" update="newMessage" />
                     </h:form>
                       <div class="panel-footer">
                         <h:form id="AddMessageForm" class="form-horizontal">
                             <div class="form-group">
                                  <div class="col-sm-10">
-                                    <h:inputText id="content" class="form-control"></h:inputText>
+                                    <h:inputText id="content" value="#{chatManagedBean.currMsg}" class="form-control"/>
                                  </div>
                                  <div class="col-sm-2">
-                                     <h:commandButton actionListener="#{chatManagedBean.sendMessage}" value="Send" class="btn btn-success"></h:commandButton>
+                                     <h:commandButton action="#{chatManagedBean.sendMessage}" value="Send" class="btn btn-success">
+                                         <f:ajax execute="@form" render="@form" />
+                                     </h:commandButton>
                                  </div>                                        
                             </div>
-                        </h:form>
-
-                        <h:form id="endChatForm" style="display:none">
-                            <h:commandButton id="endChat" value="End" actionListener="#{chatManagedBean.endChatSession}" />
                         </h:form>
 
                       </div>

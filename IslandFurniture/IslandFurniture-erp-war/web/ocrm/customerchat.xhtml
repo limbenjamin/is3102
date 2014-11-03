@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <ol class="breadcrumb">
+                                  <li><a href="../dash.xhtml">Home</a></li>
+                                  <li class="active"><strong>Customer Chat</strong></li>
+                                </ol>  
+                                <h4>Customer Chat</h4>                                
+                                <hr></hr>                                
+                            </div>                                                   
+                            <div class="col-sm-8">                                               
+                              <section class="panel">
+                                <div class="panel-heading dashboard-title-panel">
+                                    Customer Chat for #{customerChatManagedBean.plant.name} Country Office
+                                </div>
+                            <h:form id="poll">
+                                <div id="allThreads"> 
+                                <ui:repeat value="#{customerChatManagedBean.threadList}" var="thread">
+                                    <div class="list-group-item">
+                                        <h:form>
+                                        <h5>
+                                            <h4><strong>
+                                                    <a href="#{application.contextPath}/ocrm/customerchat2.xhtml?id=#{thread.id}">#{thread.title}</a>
+                                            </strong></h4>
+                                        </h5>
+                                        </h:form>
+                                        <span class="pull-right #{thread.isHasUnread()}-solid-icon"></span>
+                                        <br />
+                                    </div>
+                                </ui:repeat>
+                                </div>    
+                                <p:poll interval="1" listener="#{customerChatManagedBean.refreshActiveThreads}" update="poll" />
+                            </h:form>
+                              </section>
+                            </div>
+                        
+                        </div>                
+                </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
+

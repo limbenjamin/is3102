@@ -47,6 +47,7 @@ public class ChatManagedBean {
     private CountryOffice co;
     private Long threadId;
     private String timezone;
+    private String currMsg;
     
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;    
@@ -76,6 +77,7 @@ public class ChatManagedBean {
         else {
             customer = mslbl.getCustomer(emailAddress);
         }
+        currMsg = "";
         startChatSession();
     }
     
@@ -84,28 +86,21 @@ public class ChatManagedBean {
             System.err.println("chat session started");
             threadId = ccb.createAnonymousThread(co);
         }else{
-
+            threadId = ccb.getCustomerThread(co,customer);
+            cct = ccb.getThread(threadId);
         }
     }
     
     public void endChatSession(){
-        if(customer == null){
-            System.err.println("chat session ended");
-            ccb.endAnonymousThread(threadId);
-
-        }else{
-
-        }
+        System.err.println("chat session ended");
+        ccb.endThread(threadId);
     }
     
     public void sendMessage(){
-        if(customer == null){
-            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            String content = request.getParameter("AddMessageForm:content");
-            ccb.postMessage(threadId, content, Boolean.FALSE);
-        }else{
-   
-        }
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String content = request.getParameter("AddMessageForm:content");
+        currMsg = "";
+        ccb.postMessage(threadId, content, Boolean.FALSE, null);
     }
     
     public void pullMessage() {
@@ -224,6 +219,14 @@ public class ChatManagedBean {
 
     public void setTimezone(String timezone) {
         this.timezone = timezone;
+    }
+
+    public String getCurrMsg() {
+        return currMsg;
+    }
+
+    public void setCurrMsg(String currMsg) {
+        this.currMsg = currMsg;
     }
     
     

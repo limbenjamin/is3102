@@ -10,6 +10,7 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatThread;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.Feedback;
+import IslandFurniture.Entities.Staff;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -24,15 +25,19 @@ public interface CustomerCommunicationBeanLocal {
     
     Long createAnonymousThread(CountryOffice co);
     
-    void postMessage(Long threadId, String content, Boolean isStaff);
+    Long getCustomerThread(CountryOffice co, Customer customer);
+    
+    void postMessage(Long threadId, String content, Boolean isStaff, Staff staff);
     
     CustChatThread getThread(Long threadId);
     
-    void endAnonymousThread(Long threadId);
+    void endThread(Long threadId);
     
     void createAnonymousFeedback(String name, String emailAddress, String phoneNo, String content, CountryOffice co);
     
     void createFeedback(Customer customer, String content, CountryOffice co);
     
     List<Feedback> getAllFeedbackForCO(CountryOffice co);
+    
+    void readThread(CustChatThread cct);
 }
