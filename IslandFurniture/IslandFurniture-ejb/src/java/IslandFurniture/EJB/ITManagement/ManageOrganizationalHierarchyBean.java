@@ -103,6 +103,12 @@ public class ManageOrganizationalHierarchyBean implements ManageOrganizationalHi
             System.out.println("Invalid Store ID");
         }
     }
+    
+    @Override
+    public void deleteGlobalHQ(Long id) {
+        GlobalHQ hq = em.find(GlobalHQ.class, id);
+        em.remove(hq);
+    }
 
     @Override
     public List<Store> displayStore() {

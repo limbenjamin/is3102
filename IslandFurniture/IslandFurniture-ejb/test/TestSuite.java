@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.Test.Purchasing;
+
 
 import org.junit.*;
 import org.junit.runner.RunWith;

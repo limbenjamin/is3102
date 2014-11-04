@@ -66,4 +66,6 @@ public interface ManageOrganizationalHierarchyBeanLocal {
     Plant getPlantById(Long plantId);
 
     List<Plant> displayPlantbyInstanceOf(Plant plant);
+    
+    void deleteGlobalHQ(Long id);
 }

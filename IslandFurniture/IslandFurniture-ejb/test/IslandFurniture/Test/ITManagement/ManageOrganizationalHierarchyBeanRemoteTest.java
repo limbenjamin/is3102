@@ -47,6 +47,9 @@ public class ManageOrganizationalHierarchyBeanRemoteTest {
     static CountryOffice countryOffice;
     static CountryOffice countryOffice2;
     static Country singapore;
+    static GlobalHQ hq;
+    static ManufacturingFacility mf;
+    static Store store;
     
     public ManageOrganizationalHierarchyBeanRemoteTest(){
         
@@ -62,8 +65,6 @@ public class ManageOrganizationalHierarchyBeanRemoteTest {
 
     @AfterClass
     public static void tearDownClass() {
-        ManageOrganizationalHierarchyBeanRemote staticManageOrganizationalHierarchyBeanRemote = lookupManageOrganizationalHierarchyBeanRemote();
-        staticManageOrganizationalHierarchyBeanRemote.deleteCountryOffice(countryOffice.getId());
     }
 
     @Before
@@ -158,207 +159,250 @@ public class ManageOrganizationalHierarchyBeanRemoteTest {
         assertNull(co);
         
     }
-
-    /*
-    @Test
-    public void testAddManufacturingFacility() {
-        System.out.println("addManufacturingFacility");
-        String mfName = "";
-        String tz = "";
-        CountryOffice co = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        ManufacturingFacility expResult = null;
-        ManufacturingFacility result = instance.addManufacturingFacility(mfName, tz, co);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testAddStore() {
-        System.out.println("addStore");
-        String storeName = "";
-        String tz = "";
-        CountryOffice co = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        Store expResult = null;
-        Store result = instance.addStore(storeName, tz, co);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDeleteCountryOffice() {
-        System.out.println("deleteCountryOffice");
-        Long coId = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        instance.deleteCountryOffice(coId);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDeleteManufacturingFacility() {
-        System.out.println("deleteManufacturingFacility");
-        Long mfId = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        instance.deleteManufacturingFacility(mfId);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDeleteStore() {
-        System.out.println("deleteStore");
-        Long storeId = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        instance.deleteStore(storeId);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDisplayCountryOffice() {
-        System.out.println("displayCountryOffice");
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        List<CountryOffice> expResult = null;
-        List<CountryOffice> result = instance.displayCountryOffice();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDisplayManufacturingFacility() {
-        System.out.println("displayManufacturingFacility");
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        List<ManufacturingFacility> expResult = null;
-        List<ManufacturingFacility> result = instance.displayManufacturingFacility();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testDisplayStore() {
-        System.out.println("displayStore");
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        List<Store> expResult = null;
-        List<Store> result = instance.displayStore();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testEditManufacturingFacility() {
-        System.out.println("editManufacturingFacility");
-        Long mfId = null;
-        String name = "";
-        String tz = "";
-        CountryOffice co = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        instance.editManufacturingFacility(mfId, name, tz, co);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testEditStore() {
-        System.out.println("editStore");
-        Long storeId = null;
-        String name = "";
-        String tz = "";
-        CountryOffice co = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        instance.editStore(storeId, name, tz, co);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
     
-
     @Test
-    public void testFindPlantByName() {
-        System.out.println("findPlantByName");
-        Country country = null;
-        String plantName = "";
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        Plant expResult = null;
-        Plant result = instance.findPlantByName(country, plantName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    
-
-    @Test
-    public void testDisplayPlant() {
-        System.out.println("displayPlant");
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        List<Plant> expResult = null;
-        List<Plant> result = instance.displayPlant();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testAddGlobalHQ() {
+    public void test08AddGlobalHQ() {
         System.out.println("addGlobalHQ");
-        String name = "";
-        Country country = null;
-        String tz = "";
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        GlobalHQ expResult = null;
-        GlobalHQ result = instance.addGlobalHQ(name, country, tz);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    
-
-    
-
-    @Test
-    public void testFindPlantByNameOnly() {
-        System.out.println("findPlantByNameOnly");
-        String plantName = "";
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        Plant expResult = null;
-        Plant result = instance.findPlantByNameOnly(plantName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        hq = manageOrganizationalHierarchyBeanRemote.addGlobalHQ("New HQ", country, "GMT");
+        assertNotNull(hq);
+        System.out.println("Case 2");
+        GlobalHQ result = manageOrganizationalHierarchyBeanRemote.addGlobalHQ("New HQ", country, "GMT");
+        assertNull(result);
+        System.out.println("Case 3");
+        result = manageOrganizationalHierarchyBeanRemote.addGlobalHQ("Global HQ", singapore, "GMT");
+        assertNull(result);
     }
 
     @Test
-    public void testGetPlantById() {
+    public void test09AddManufacturingFacility() {
+        System.out.println("addManufacturingFacility");
+        mf = manageOrganizationalHierarchyBeanRemote.addManufacturingFacility("New MF", "GMT", countryOffice);
+        assertNotNull(mf);
+        System.out.println("Case 2");
+        ManufacturingFacility result;
+        try{
+            result = manageOrganizationalHierarchyBeanRemote.addManufacturingFacility("Tuas", "GMT", countryOffice2);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+        System.out.println("Case 3");
+        try{
+            result = manageOrganizationalHierarchyBeanRemote.addManufacturingFacility("New MF", "GMT", countryOffice);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+    }
+    
+    @Test
+    public void test10EditManufacturingFacility() {
+        System.out.println("editManufacturingFacility");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editManufacturingFacility(mf.getId(), "New name2", "GMT", countryOffice);
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editManufacturingFacility(mf.getId(), "New name2", "EST", countryOffice);
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editManufacturingFacility(null, "New name2", "EST", countryOffice);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+    }
+    
+    @Test
+    public void test11DisplayManufacturingFacility() {
+        System.out.println("displayManufacturingFacility");
+        List<ManufacturingFacility> mfList = manageOrganizationalHierarchyBeanRemote.displayManufacturingFacility();
+        assertNotNull(mfList);
+    }
+    
+
+    @Test
+    public void test12AddStore() {
+        System.out.println("addStore");
+        store = manageOrganizationalHierarchyBeanRemote.addStore("New Store", "GMT", countryOffice);
+        assertNotNull(store);
+        Store result;
+        System.out.println("Case 2");
+        try{
+            result = manageOrganizationalHierarchyBeanRemote.addStore("New Store", "GMT", countryOffice);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+        
+    }
+    
+    @Test
+    public void test13EditStore() {
+        System.out.println("editStore");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editStore(store.getId(), "New name3", "GMT", countryOffice);
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editStore(store.getId(), "New name3", "EST", countryOffice);
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.editStore(null, "New name3", "EST", countryOffice);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+    }
+    
+    @Test
+    public void test14DisplayStore() {
+        System.out.println("displayStore");
+        List<Store> storeList = manageOrganizationalHierarchyBeanRemote.displayStore();
+        assertNotNull(storeList);
+    }
+    
+    @Test
+    public void test15FindPlantByName() {
+        System.out.println("findPlantByName");
+        Plant result = manageOrganizationalHierarchyBeanRemote.findPlantByName(singapore, "Alexandra");
+        assertNotNull(result);
+        System.out.println("Case 2");
+        result = manageOrganizationalHierarchyBeanRemote.findPlantByName(country, "New name3");
+        assertNotNull(result);
+        System.out.println("Case 3");
+        result = manageOrganizationalHierarchyBeanRemote.findPlantByName(country, "Non existent");
+        assertNull(result);
+    }
+    
+    @Test
+    public void test16GetPlantById() {
         System.out.println("getPlantById");
-        Long plantId = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        Plant expResult = null;
-        Plant result = instance.getPlantById(plantId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Plant result = manageOrganizationalHierarchyBeanRemote.getPlantById(store.getId());
+        assertNotNull(result);
+        System.out.println("Case 2");
+        result = manageOrganizationalHierarchyBeanRemote.getPlantById(mf.getId());
+        assertNotNull(result);
+        System.out.println("Case 3");
+        result = manageOrganizationalHierarchyBeanRemote.getPlantById(Long.parseLong("1"));
+        assertNull(result);
+        
+    }
+    
+    @Test
+    public void test17DeleteStore() {
+        System.out.println("deleteStore");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteStore(store.getId());
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteStore(store.getId());
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteStore(null);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+    }
+    
+    @Test
+    public void test18DeleteManufacturingFacility() {
+        System.out.println("deleteManufacturingFacility");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteManufacturingFacility(mf.getId());
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteManufacturingFacility(mf.getId());
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteManufacturingFacility(null);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
     }
 
     @Test
-    public void testDisplayPlantbyInstanceOf() {
-        System.out.println("displayPlantbyInstanceOf");
-        Plant plant = null;
-        ManageOrganizationalHierarchyBeanRemote instance = new ManageOrganizationalHierarchyBeanRemoteImpl();
-        List<Plant> expResult = null;
-        List<Plant> result = instance.displayPlantbyInstanceOf(plant);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void test19DeleteCountryOffice() {
+        System.out.println("deleteCountryOffice");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteCountryOffice(countryOffice.getId());
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 2");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteCountryOffice(countryOffice2.getId());
+             fail("Exception Not Thrown");
+        }catch (Exception ex){
+           
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteCountryOffice(null);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
     }
-    */
+
+    @Test
+    public void test20DisplayCountryOffice() {
+        System.out.println("displayCountryOffice");
+        List<CountryOffice> coList =  manageOrganizationalHierarchyBeanRemote.displayCountryOffice();
+        assertNotNull(coList);
+    }
+    
+
+    @Test
+    public void test21DisplayPlant() {
+        System.out.println("displayPlant");
+        List<Plant> plantList = manageOrganizationalHierarchyBeanRemote.displayPlant();
+        assertNotNull(plantList);
+    }
+    
+    @Test
+    public void test22DeleteGlobalHQ() {
+        System.out.println("deleteGlobalHQ");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteGlobalHQ(hq.getId());
+            
+        }catch (Exception ex){
+            fail("Exception Thrown");
+        }
+        System.out.println("Case 3");
+        try{
+            manageOrganizationalHierarchyBeanRemote.deleteGlobalHQ(null);
+            fail("Exception Not Thrown");
+        }catch (Exception ex){
+            
+        }
+    }
+ 
     
     private static ManageOrganizationalHierarchyBeanRemote lookupManageOrganizationalHierarchyBeanRemote() {
         try {
