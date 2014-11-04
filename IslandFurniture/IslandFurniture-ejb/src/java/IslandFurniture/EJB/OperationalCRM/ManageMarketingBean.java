@@ -281,8 +281,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
         }
 
-        returnobj.put("O_PRICE", this.getPrice(s, ss.getCountryOffice()));
-        returnobj.put("D_PRICE", minprice);
+        returnobj.put("O_PRICE", Math.round(this.getPrice(s, ss.getCountryOffice())*100.0)/100.0);
+        returnobj.put("D_PRICE", Math.round(minprice*100.0)/100.0);
         if (effective_coupon != null) {
             returnobj.put("USED_COUPON", effective_coupon);
         }

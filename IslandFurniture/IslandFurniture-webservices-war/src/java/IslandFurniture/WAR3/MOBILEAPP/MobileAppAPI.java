@@ -20,10 +20,10 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.FurnitureCategory;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.io.ByteArrayOutputStream;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -48,7 +48,7 @@ import javax.ws.rs.core.UriInfo;
 @Named(value = "customerService")
 @Stateless
 @Path("cs")
-public class CustomerService {
+public class MobileAppAPI {
 
     @Context
     ServletContext context;
@@ -192,9 +192,9 @@ public class CustomerService {
 
     @GET
     @Path("shoplist")
-    public String getShopList(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id) {
+    public String getShopList(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("sl_name") String sl_name) {
 
-        ShoppingList sl = (masl.getShoppingList(cust_id, store_id));
+        ShoppingList sl = (masl.getShoppingList(cust_id, store_id, sl_name));
         JsonObjectBuilder object = Json.createObjectBuilder();
         JsonArrayBuilder jab = Json.createArrayBuilder();
 
@@ -229,8 +229,8 @@ public class CustomerService {
 
     @GET
     @Path("additemtoshoplist")
-    public String addItem(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("fm_id") String fm_id, @QueryParam("qty") Integer qty) {
-        ShoppingList sl = (masl.getShoppingList(cust_id, store_id));
+    public String addItem(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("fm_id") String fm_id, @QueryParam("qty") Integer qty, @QueryParam("sl_name") String sl_name) {
+        ShoppingList sl = (masl.getShoppingList(cust_id, store_id, sl_name));
 
         double price = (double) mmb.getDiscountedPrice(masl.getfmFromID(fm_id), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("D_PRICE");
         try {
@@ -243,8 +243,26 @@ public class CustomerService {
     }
 
     @GET
+    @Path("getShoppingList")
+    public String getShoppingList(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id) {
+
+        JsonObjectBuilder object = Json.createObjectBuilder();
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        List<ShoppingList> sl=masl.getShoppingList(cust_id, store_id);
+        
+        for (ShoppingList s: sl)
+        {
+            jab.add(Json.createObjectBuilder().add("ID", s.getId()).add("name", s.getName()).add("total_price", s.getTotalPrice()).add("count", s.getShoppingListDetails().size()));
+        }
+
+        object.add("ShoppingLists", jab);
+        
+        return object.build().toString();
+    }
+
+    @GET
     @Path("additembynfc")
-    public String addItemByNFC(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("NFC_TAG") String NFC_TAG) {
+    public String addItemByNFC(@QueryParam("cust_id") String cust_id, @QueryParam("store_id") String store_id, @QueryParam("NFC_TAG") String NFC_TAG, @QueryParam("sl_name") String sl_name) {
         FurnitureModel fm;
         try {
             fm = masl.getFurnitureModelByNFCID(NFC_TAG);
@@ -253,8 +271,18 @@ public class CustomerService {
             return "Invalid NFC Tag";
         }
 
-        return addItem(cust_id, store_id, fm.getId().toString(), 1);
+        return addItem(cust_id, store_id, fm.getId().toString(), 1, sl_name);
 
+    }
+    
+    
+    @GET
+    @Path("deleteshoplist")
+    public Boolean deleteShopList(@QueryParam("sID") String shoplistID)
+    {
+        masl.DeleteShopList(Long.parseLong(shoplistID));
+        
+        return true;
     }
 
 }

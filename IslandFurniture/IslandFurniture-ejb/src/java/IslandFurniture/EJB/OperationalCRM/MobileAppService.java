@@ -124,15 +124,28 @@ public class MobileAppService implements MobileAppServiceLocal {
 
     }
 
-    public ShoppingList getShoppingList(String Cust_id, String StoreID) {
-        Query q = em.createQuery("select sl from ShoppingList sl where sl.name='MOBILE_APP' and :cust MEMBER OF sl.customers and sl.store=:st");
+    public List<ShoppingList> getShoppingList(String Cust_id, String StoreID) {
+        Query q = em.createQuery("select sl from ShoppingList sl where :cust MEMBER OF sl.customers and sl.store=:st");
         Customer c = (Customer) em.find(Customer.class, Long.parseLong(Cust_id));
         Store st = (Store) em.find(Store.class, Long.parseLong(StoreID));
         q.setParameter("cust", c);
         q.setParameter("st", st);
 
+        return ((List<ShoppingList>) q.getResultList());
+
+    }
+
+    public ShoppingList getShoppingList(String Cust_id, String StoreID, String searchtext) {
+        Query q = em.createQuery("select sl from ShoppingList sl where sl.name LIKE :TXT and :cust MEMBER OF sl.customers and sl.store=:st");
+        Customer c = (Customer) em.find(Customer.class, Long.parseLong(Cust_id));
+        Store st = (Store) em.find(Store.class, Long.parseLong(StoreID));
+        q.setParameter("cust", c);
+        q.setParameter("st", st);
+        q.setParameter("TXT", searchtext);
+
         if (q.getResultList().isEmpty()) {
-            return (mslb.createShoppingList(c.getEmailAddress(), Long.parseLong(StoreID), "MOBILE_APP"));
+            System.out.println("getShoppingList(): Creating Default Shopping list for cust: " + Cust_id);
+            return (mslb.createShoppingList(c.getEmailAddress(), Long.parseLong(StoreID), searchtext));
         }
 
         return (ShoppingList) q.getResultList().get(0);
@@ -152,6 +165,14 @@ public class MobileAppService implements MobileAppServiceLocal {
 
         return (FurnitureModel) q.getResultList().get(0);
 
+    }
+
+    public void DeleteShopList(Long ID) {
+        try {
+            ShoppingList sl = em.find(ShoppingList.class, ID);
+            em.remove(sl);
+        } catch (Exception ex) {
+        }
     }
 
 }
