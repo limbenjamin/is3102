@@ -10,6 +10,7 @@ import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Url;
+import IslandFurniture.Exceptions.NullException;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
@@ -24,7 +25,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
+public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal, ManagePrivilegesBeanRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -38,7 +39,10 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
     private Url url;
     
     @Override
-    public void createPrivilege(String name, String description, List<Url> urlList) {
+    public void createPrivilege(String name, String description, List<Url> urlList) throws NullException {
+        if (name == null){
+            throw new NullException();
+        }
         privilege = new Privilege();
         privilege.setName(name);
         privilege.setDescription(description);
@@ -80,6 +84,9 @@ public class ManagePrivilegesBean implements ManagePrivilegesBeanLocal {
     
     @Override
     public Url createUrl(String link, String icon, String menuItemName, boolean visible, Integer weight){
+        if(link == null){
+            return null;
+        }
         url = new Url();
         url.setIcon(icon);
         url.setLink(link);

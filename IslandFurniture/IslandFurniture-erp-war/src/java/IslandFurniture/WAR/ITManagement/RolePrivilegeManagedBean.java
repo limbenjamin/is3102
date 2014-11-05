@@ -10,6 +10,7 @@ import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
+import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.Serializable;
 import java.util.List;
@@ -59,7 +60,7 @@ public class RolePrivilegeManagedBean  implements Serializable  {
         return "roleprivilege";
     }
     
-    public String addRole(){
+    public String addRole() throws DuplicateEntryException{
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         roleName = request.getParameter("roleForm:roleName");
         mrbl.createRole(roleName);

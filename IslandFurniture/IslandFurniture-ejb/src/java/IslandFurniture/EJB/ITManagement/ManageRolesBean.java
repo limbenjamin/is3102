@@ -9,12 +9,14 @@ package IslandFurniture.EJB.ITManagement;
 import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -23,7 +25,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageRolesBean implements ManageRolesBeanLocal {
+public class ManageRolesBean implements ManageRolesBeanLocal, ManageRolesBeanRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -37,10 +39,18 @@ public class ManageRolesBean implements ManageRolesBeanLocal {
     private List<Staff> staffList;
     
     @Override
-    public void createRole(String name) {
-        role = new Role();
-        role.setName(name);
-        em.persist(role);
+    public void createRole(String name) throws DuplicateEntryException  {
+        Query query = em.createQuery("FROM Role r where r.name=:name");
+        query.setParameter("name", name);
+        try{
+            Role r = (Role) query.getSingleResult();
+            throw new DuplicateEntryException();
+        }catch(NoResultException nre){
+            role = new Role();
+            role.setName(name);
+            em.persist(role);
+        }
+        
     }
     
     @Override

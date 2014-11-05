@@ -10,21 +10,29 @@ import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.List;
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Benjamin
  */
-@Local
-public interface ManageRolesBeanLocal {
-    
-    void createRole(String name) throws DuplicateEntryException;
-    void removeRole(Long id);
-    List<Role> displayRole();
-    List<Privilege> getPrivileges(Long roleId);
+@Remote
+public interface ManageRolesBeanRemote {
+
     void addPrivilegeToRole(Long roleId, String privilegeName);
-    void removePrivilegeFromRole(Long roleId, Long privilegeId);
+
+    void createRole(String name) throws DuplicateEntryException;
+
+    List<Role> displayRole();
+
+    List<Privilege> getPrivileges(Long roleId);
+
     Role getRole(Long roleId);
+
     Role getRoleFromName(String roleName);
+
+    void removePrivilegeFromRole(Long roleId, Long privilegeId);
+
+    void removeRole(Long id);
+    
 }
