@@ -38,7 +38,6 @@ public interface MobileAppServiceLocal {
 
     public CountryOffice getCOFromID(String ID);
 
-    public ShoppingList getShoppingList(String Cust_id, String StoreID);
 
     public Store getStoreFromID(String ID);
 
@@ -47,5 +46,11 @@ public interface MobileAppServiceLocal {
    public FurnitureModel getFurnitureModelByNFCID(String NFC_ID) throws Exception;
 
     public Customer getcustomerFromid(String id);
+
+    public ShoppingList getShoppingList(String Cust_id, String StoreID, String searchtext);
+
+    public List<ShoppingList> getShoppingList(String Cust_id, String StoreID);
+
+    public void DeleteShopList(Long ID);
     
 }
