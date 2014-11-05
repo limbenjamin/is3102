@@ -22,7 +22,7 @@ import IslandFurniture.Entities.Todo;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Exceptions.InvalidCountryException;
 import IslandFurniture.Exceptions.InvalidPlantException;
-import IslandFurniture.ITManagementModule.ManageStaffAccountRemote;
+import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanRemote;
 import IslandFurniture.StaticClasses.QueryMethods;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateless
-public class ManageStaffAccountsBean implements ManageStaffAccountRemote, ManageStaffAccountsBeanLocal{
+public class ManageStaffAccountsBean implements ManageStaffAccountsBeanRemote, ManageStaffAccountsBeanLocal{
     
     @PersistenceContext
     EntityManager em;

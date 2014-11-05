@@ -25,7 +25,7 @@ import javax.persistence.Query;
  */
 @Stateless
 @LocalBean
-public class ManageSystemAuditLogBean implements ManageSystemAuditLogBeanLocal {
+public class ManageSystemAuditLogBean implements ManageSystemAuditLogBeanLocal, ManageSystemAuditLogBeanRemote {
 
     @PersistenceContext
     private EntityManager em;

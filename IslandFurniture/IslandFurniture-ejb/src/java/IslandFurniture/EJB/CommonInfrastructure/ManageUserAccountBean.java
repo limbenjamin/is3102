@@ -21,7 +21,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageUserAccountBean implements ManageUserAccountBeanLocal{
+public class ManageUserAccountBean implements ManageUserAccountBeanLocal, ManageUserAccountBeanRemote{
     
     @PersistenceContext
     EntityManager em;
