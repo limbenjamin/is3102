@@ -10,7 +10,9 @@ import IslandFurniture.Enums.FurnitureSubcategory;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -51,6 +53,7 @@ public class FurnitureModel extends Stock implements Serializable {
 
     // Attributes for planning space
     @OneToMany
+    @JoinColumn(nullable = true)
     private List<Picture> planningSprites;
 
     public FurnitureModel() {
