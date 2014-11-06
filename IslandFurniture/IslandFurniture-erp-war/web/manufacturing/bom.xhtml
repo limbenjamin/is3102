@@ -93,7 +93,16 @@
                                     <p:fileUpload fileUploadListener="#{bOMManagedBean.handleFileUpload}" />
                                   </div>
                                 </div> 
-                            </h:form>
+                            </h:form> 
+                            <div class="form-group row">
+                                <h:form class="form-horizontal">
+                                    <div class="col-sm-9 pull-right">
+                                        <h:commandButton value="See More" actionListener="#{bOMManagedBean.photoActionListener}" class="btn btn-sm btn-default" style="outline:0px; text-align: center;"> 
+                                            <f:attribute name="fID" value="#{bOMManagedBean.furnitureID}" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:form>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-10"><hr></hr> 

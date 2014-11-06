@@ -66,5 +66,13 @@ public interface StockManagerLocal {
     void addNFCTagToStock(String stockName, String NFCTagId);
 
     public void editThumbnail(Long fID, byte[] content);
+
+    public String addGalleryImage(Long fID, byte[] content, String description);
+
+    public void deleteGalleryImage(Long fID, Long pictureID);
+
+    public String addSpriteImage(Long fID, byte[] content, String description);
+
+    public String deleteSpriteImage(Long fID);
     
 }
