@@ -6,6 +6,7 @@
 package IslandFurniture.WAR3.MOBILEAPP;
 
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.MobileAppServiceLocal;
@@ -33,6 +34,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.json.*;
 import javax.servlet.ServletContext;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 ;
@@ -64,6 +67,9 @@ public class MobileAppAPI {
 
     @EJB
     private ManageShoppingListBeanLocal mslb;
+
+    @EJB
+    private ManageMemberAuthenticationBeanLocal mmab;
 
     @GET
     @Path("memberlogin")
@@ -216,7 +222,9 @@ public class MobileAppAPI {
         }
 
         object.add("details", jab);
+        object.add("store", sl.getStore().getId());
         object.add("totalprice", Math.floor(total * 100) / 100.0);
+        object.add("shoplistid", sl.getId());
         return object.build().toString();
     }
 
@@ -248,15 +256,14 @@ public class MobileAppAPI {
 
         JsonObjectBuilder object = Json.createObjectBuilder();
         JsonArrayBuilder jab = Json.createArrayBuilder();
-        List<ShoppingList> sl=masl.getShoppingList(cust_id, store_id);
-        
-        for (ShoppingList s: sl)
-        {
+        List<ShoppingList> sl = masl.getShoppingList(cust_id, store_id);
+
+        for (ShoppingList s : sl) {
             jab.add(Json.createObjectBuilder().add("ID", s.getId()).add("name", s.getName()).add("total_price", s.getTotalPrice()).add("count", s.getShoppingListDetails().size()));
         }
 
         object.add("ShoppingLists", jab);
-        
+
         return object.build().toString();
     }
 
@@ -274,15 +281,33 @@ public class MobileAppAPI {
         return addItem(cust_id, store_id, fm.getId().toString(), 1, sl_name);
 
     }
-    
-    
+
     @GET
     @Path("deleteshoplist")
-    public Boolean deleteShopList(@QueryParam("sID") String shoplistID)
-    {
+    public Boolean deleteShopList(@QueryParam("sID") String shoplistID) {
         masl.DeleteShopList(Long.parseLong(shoplistID));
-        
+
         return true;
+    }
+
+    @GET
+    @Path("moveshoplist")
+    public Boolean ShiftShopList(@QueryParam("sLID") String shoplistID, @QueryParam("stID") String destinationID) {
+
+        masl.ShiftShopList(Long.parseLong(shoplistID), Long.parseLong(destinationID));
+        return true;
+    }
+
+    @POST
+    @Path("register")
+    public String getRegister(@FormParam("email") String email, @FormParam("password") String password, @FormParam("password2") String password2, @FormParam("name") String name, @FormParam("address") String address, @FormParam("phone") String phone, @FormParam("dob") String dob) {
+
+        try {
+            mmab.createCustomerAccount(email, password, name, phone, address, name);
+        } catch (Exception ex) {
+            return (ex.getMessage());
+        }
+        return "Successfully Created !";
     }
 
 }

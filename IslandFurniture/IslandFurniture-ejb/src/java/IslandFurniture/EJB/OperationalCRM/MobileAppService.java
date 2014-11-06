@@ -5,6 +5,7 @@
  */
 package IslandFurniture.EJB.OperationalCRM;
 
+import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
@@ -32,6 +33,8 @@ public class MobileAppService implements MobileAppServiceLocal {
 
     @EJB
     private ManageShoppingListBeanLocal mslb;
+
+
 
     public String getCustomerName(Long cust_id) {
         Customer c = (Customer) em.find(Customer.class, cust_id);
@@ -173,6 +176,16 @@ public class MobileAppService implements MobileAppServiceLocal {
             em.remove(sl);
         } catch (Exception ex) {
         }
+    }
+
+    public void ShiftShopList(Long ListID, Long StoreID) {
+
+        ShoppingList sl = em.find(ShoppingList.class, ListID);
+        Store destination = em.find(Store.class, StoreID);
+        sl.setStore(destination);
+        System.out.println(sl + " SHIFTED TO" + destination);
+        em.merge(sl);
+
     }
 
 }
