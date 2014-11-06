@@ -63,7 +63,7 @@ public class Staff implements Serializable {
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="staff")
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="staff",fetch=FetchType.EAGER)
     private List<Todo> todoList;
     @ManyToMany(fetch=FetchType.EAGER)
     private List<MessageThread> inbox;
@@ -73,7 +73,7 @@ public class Staff implements Serializable {
     private List<Role> roles;
     @OneToOne(cascade={CascadeType.ALL})
     private Preference preference;
-    @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL})
+    @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
     private List<Notification> notifications;
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Announcement> announcements;
