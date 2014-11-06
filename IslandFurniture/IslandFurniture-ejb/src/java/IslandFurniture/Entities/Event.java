@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ public class Event implements Serializable {
     private String description;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Calendar eventTime;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private Staff creator;
     @ManyToOne
     private Plant plant;

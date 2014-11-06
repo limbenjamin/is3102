@@ -28,7 +28,7 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private List<Staff> staffs;
     @ManyToMany(mappedBy="roles", fetch = FetchType.EAGER)
     private List<Privilege> privileges;

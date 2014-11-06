@@ -12,14 +12,14 @@ import IslandFurniture.Exceptions.NullException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Benjamin
  */
-@Local
-public interface ManageAnnouncementsBeanLocal {
+@Remote
+public interface ManageAnnouncementsBeanRemote {
 
     Long addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate) throws InvalidDateException;
 
