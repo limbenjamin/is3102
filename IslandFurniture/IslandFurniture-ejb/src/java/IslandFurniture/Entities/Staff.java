@@ -65,7 +65,7 @@ public class Staff implements Serializable {
     private Date lastLogon;
     @OneToMany(cascade={CascadeType.ALL},mappedBy="staff")
     private List<Todo> todoList;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private List<MessageThread> inbox;
     @ManyToOne(fetch=FetchType.EAGER)
     private Plant plant;
