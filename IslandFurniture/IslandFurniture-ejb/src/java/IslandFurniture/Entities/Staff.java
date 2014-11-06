@@ -28,6 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -74,7 +75,7 @@ public class Staff implements Serializable {
     private Preference preference;
     @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL})
     private List<Notification> notifications;
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Announcement> announcements;
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
     private List<Event> events;
