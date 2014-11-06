@@ -67,7 +67,7 @@ public class Staff implements Serializable {
     private List<Todo> todoList;
     @ManyToMany
     private List<MessageThread> inbox;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private Plant plant;
     @ManyToMany(mappedBy="staffs")
     private List<Role> roles;
@@ -77,7 +77,7 @@ public class Staff implements Serializable {
     private List<Notification> notifications;
     @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Announcement> announcements;
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Event> events;
     private String cardId;
     
