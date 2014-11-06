@@ -46,8 +46,8 @@ public class FurnitureManagedBean implements Serializable {
     
     @PostConstruct
     public void init() {
-        furnitureList = stockManager.displayFurnitureList();
         System.out.println("init:FurnitureManagedBean");
+        furnitureList = stockManager.displayFurnitureList();
     }
     public String addFurnitureModel() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();

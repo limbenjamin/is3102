@@ -31,7 +31,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageMessagesBean implements ManageMessagesBeanLocal {
+public class ManageMessagesBean implements ManageMessagesBeanLocal, ManageMessagesBeanRemote  {
     
     @PersistenceContext
     EntityManager em;
@@ -55,6 +55,7 @@ public class ManageMessagesBean implements ManageMessagesBeanLocal {
     public void createNewThread(String title, String recipients){
         messageThread = new MessageThread();
         messageThread.setTitle(title);
+        System.err.println(recipients);
         StringTokenizer stringTokenizer = new StringTokenizer(recipients,",");
         listStaff = new ArrayList();
         hashStaff = new HashSet();

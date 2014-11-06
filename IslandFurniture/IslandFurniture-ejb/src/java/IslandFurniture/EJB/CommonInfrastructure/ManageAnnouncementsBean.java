@@ -9,6 +9,8 @@ package IslandFurniture.EJB.CommonInfrastructure;
 import IslandFurniture.Entities.Announcement;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Exceptions.InvalidDateException;
+import IslandFurniture.Exceptions.NullException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,7 @@ import javax.persistence.TemporalType;
  * @author Benjamin
  */
 @Stateful
-public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
+public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal, ManageAnnouncementsBeanRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -42,7 +44,10 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     private ManageUserAccountBeanLocal staffbean;
     
     @Override
-    public Long addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate){
+    public Long addAnnouncement(String username, String title, String content, Calendar activeDate, Calendar expireDate) throws InvalidDateException{
+        if (activeDate.after(expireDate)){
+            throw new InvalidDateException();
+        }
         staff = staffbean.getStaff(username);
         announcement = new Announcement();
         announcement.setTitle(title);
@@ -59,7 +64,10 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     }
     
     @Override
-    public void editAnnouncement(Long id, String title, String content, Calendar activeDate, Calendar expireDate){
+    public void editAnnouncement(Long id, String title, String content, Calendar activeDate, Calendar expireDate) throws InvalidDateException{
+        if (activeDate.after(expireDate)){
+            throw new InvalidDateException();
+        }
         announcement = em.find(Announcement.class, id);
         announcement.setTitle(title);
         announcement.setContent(content);
@@ -69,8 +77,12 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal {
     }
     
     @Override
-    public void deleteAnnouncement(Long id){
+    public void deleteAnnouncement(Long id) throws NullException{
         announcement = em.find(Announcement.class, id);
+        System.err.println("herehere "+announcement);
+        if (announcement == null){
+            throw new NullException();
+        }
         announcementList = announcement.getCreator().getAnnouncements();
         announcementList.remove(announcement);
         em.merge(announcement.getCreator());

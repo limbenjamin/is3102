@@ -25,7 +25,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageEventsBean implements ManageEventsBeanLocal {
+public class ManageEventsBean implements ManageEventsBeanLocal,ManageEventsBeanRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -68,10 +68,15 @@ public class ManageEventsBean implements ManageEventsBeanLocal {
     @Override
     public void deleteEvent(Long id){
         event = em.find(Event.class, id);
-        eventList = event.getCreator().getEvents();
-        eventList.remove(event);
-        em.merge(event.getCreator());
+        try{
+            eventList = event.getCreator().getEvents();
+            eventList.remove(event);
+            em.merge(event.getCreator());
+        }catch(Exception e){
+            
+        }
         em.remove(event);
+        em.flush();
      
     }
     

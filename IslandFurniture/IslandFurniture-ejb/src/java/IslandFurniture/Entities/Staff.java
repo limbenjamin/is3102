@@ -28,6 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,21 +63,21 @@ public class Staff implements Serializable {
     private String forgottenPasswordCode;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date lastLogon;
-    @OneToMany(cascade={CascadeType.ALL},mappedBy="staff")
+    @OneToMany(cascade={CascadeType.ALL},mappedBy="staff",fetch=FetchType.EAGER)
     private List<Todo> todoList;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private List<MessageThread> inbox;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     private Plant plant;
     @ManyToMany(mappedBy="staffs")
     private List<Role> roles;
     @OneToOne(cascade={CascadeType.ALL})
     private Preference preference;
-    @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL})
+    @OneToMany(mappedBy = "staff", cascade={CascadeType.ALL}, fetch=FetchType.EAGER)
     private List<Notification> notifications;
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Announcement> announcements;
-    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator")
+    @OneToMany(cascade={CascadeType.ALL}, mappedBy="creator", fetch=FetchType.EAGER)
     private List<Event> events;
     private String cardId;
     

@@ -13,14 +13,14 @@ import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Exceptions.NullException;
 import java.util.List;
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author Benjamin
  */
-@Local
-public interface ManageNotificationsBeanLocal {
+@Remote
+public interface ManageNotificationsBeanRemote {
 
     void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff)throws NullException;
 

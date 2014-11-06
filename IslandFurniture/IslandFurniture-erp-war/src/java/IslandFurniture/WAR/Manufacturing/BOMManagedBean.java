@@ -320,4 +320,10 @@ public class BOMManagedBean implements Serializable {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect("bom.xhtml");
     } 
+    
+    public void photoActionListener(ActionEvent event) throws IOException {
+        System.out.println("BOMManagedBean.photoActionListener()");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", event.getComponent().getAttributes().get("fID"));
+        FacesContext.getCurrentInstance().getExternalContext().redirect("furniturephoto.xhtml");
+    }
 }

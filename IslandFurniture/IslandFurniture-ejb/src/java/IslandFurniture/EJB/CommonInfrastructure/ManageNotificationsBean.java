@@ -11,12 +11,15 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Exceptions.NullException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateful;
@@ -29,7 +32,7 @@ import javax.persistence.Query;
  * @author Benjamin
  */
 @Stateful
-public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
+public class ManageNotificationsBean implements ManageNotificationsBeanLocal, ManageNotificationsBeanRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -45,7 +48,10 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
     private HashSet<Staff> staffHash;
     
     @Override
-    public void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff){
+    public void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff) throws NullException{
+        if (staff == null){
+            throw new NullException();
+        }
         notification = new Notification();
         notification.setTitle(title);
         notification.setContent(content);
@@ -53,7 +59,6 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         notification.setLinkText(linkText);
         Calendar now=Calendar.getInstance();
         now.setTime(new Date());
-        Plant plant = staff.getPlant();
         notification.setTime(now);
         notification.setIsread(false);
         notification.setStaff(staff);
@@ -79,7 +84,11 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         Iterator<Staff> iterator2 = staffHash.iterator();
         while (iterator2.hasNext()) {
             staff = iterator2.next();
-            createNewNotificationForStaff(title, content, link, linkText, staff);
+            try {
+                createNewNotificationForStaff(title, content, link, linkText, staff);
+            } catch (NullException ex) {
+                Logger.getLogger(ManageNotificationsBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -101,7 +110,11 @@ public class ManageNotificationsBean implements ManageNotificationsBeanLocal {
         while (iterator2.hasNext()) {
             staff = iterator2.next();
             if (staff.getPlant().equals(plant)){
-                createNewNotificationForStaff(title, content, link, linkText, staff);
+                try {
+                    createNewNotificationForStaff(title, content, link, linkText, staff);
+                } catch (NullException ex) {
+                    Logger.getLogger(ManageNotificationsBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

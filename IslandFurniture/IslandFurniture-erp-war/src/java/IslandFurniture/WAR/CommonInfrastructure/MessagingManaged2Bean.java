@@ -11,6 +11,7 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Message;
 import IslandFurniture.Entities.MessageThread;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Exceptions.NullException;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +76,7 @@ public class MessagingManaged2Bean implements Serializable {
         return "messaging2";
     }
 
-    public String addMessage() {
+    public String addMessage() throws NullException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("threadid");
