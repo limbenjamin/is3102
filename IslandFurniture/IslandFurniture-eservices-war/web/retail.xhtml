@@ -16,76 +16,42 @@
                         <div class="col-md-12">
                             <ol class="breadcrumb">
                               <li><a href="home.xhtml">Home</a></li>
-                              <li class="active"><strong>All Furniture</strong></li>
+                              <li class="active"><strong>Retail Items</strong></li>
                             </ol>                                         
-                        </div>     
-                    <div class="col-sm-3">
-                        <div class="left-sidebar">
-                            <div class="brands_products" style="margin-top: 20px;">
-                                <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
-                                <div class="brands-name">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <ui:repeat value="#{catalogueManagedBean.subcategories}" var="sub">
-                                            <li><a href="all.xhtml?sub=#{sub}">#{sub}</a></li>
-                                        </ui:repeat>
-                                        <hr/>
-                                        <li><a href="all.xhtml">Display all</a></li>
-                                        <!--<li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.bedding']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.tables']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.chairs']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.mirrors']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.lighting']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.cooking']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.sofas']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.wardrobes']}" /></a></li>
-                                        <li><a href="#">
-                                                <h:outputText value="#{bundle['subnav.textile']}" /></a></li>-->
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
-                    </div>                        
-                        <div class="col-sm-9">
+                        <div class="col-sm-12">
                             <div class="catalogue">
-                                <h2 class="title text-center">ALL FURNITURE</h2>
+                                <h2 class="title text-center">RETAIL ITEMS</h2>
                                 <h:form>
-                                <ui:repeat value="#{catalogueManagedBean.furnitureList}" var="furniture">
-                                    <div class="col-sm-4">
+                                    <ui:repeat value="#{retailManagedBean.retailList}" var="retail">
+                                    <div class="col-sm-3">
                                         <div class="product-image-wrapper">
                                             <div class="single-products">
                                                 <div class="productinfo text-center">
-                                                    <a href="productdetail.xhtml?id=#{furniture.id}">
-                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
-                                                            <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
+                                                    <a href="retaildetail.xhtml?id=#{retail.id}">
+                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty retail.thumbnail.content}">
+                                                            <f:param name="pictureId" value="#{retail.thumbnail.id}" />
                                                         </pf:graphicImage>
-                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
+                                                        <h:panelGroup layout="block" rendered="#{empty retail.thumbnail.content}">
                                                             <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
                                                         </h:panelGroup>
                                                     </a>
                                                     <div style="min-height:16px;">
                                                     <h5 style="text-decoration:line-through;"> 
-                                                        <h:outputText value="#{catalogueManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price > catalogueManagedBean.getDiscountedPrice(furniture)}"/>
-                                                        <h:outputText value="#{furniture.price}" rendered="#{furniture.price > catalogueManagedBean.getDiscountedPrice(furniture)}">
+                                                        <h:outputText value="#{retailManagedBean.co.country.currency.currencyCode} " rendered="#{retail.price > retailManagedBean.getDiscountedPrice(retail)}"/>
+                                                        <h:outputText value="#{retail.price}" rendered="#{retail.price > retailManagedBean.getDiscountedPrice(retail)}">
                                                         <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                         </h:outputText>
                                                     </h5>
                                                     </div>
                                                     <h4>
-                                                        <strong>#{catalogueManagedBean.co.country.currency.currencyCode}
-                                                            <h:outputText value="#{catalogueManagedBean.getDiscountedPrice(furniture)}" id="discounted">
+                                                        <strong>#{retailManagedBean.co.country.currency.currencyCode}
+                                                            <h:outputText value="#{retailManagedBean.getDiscountedPrice(retail)}" id="discounted">
                                                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                                                             </h:outputText>
                                                         </strong>
                                                     </h4>
-                                                    <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
+                                                    <a href="retaildetail.xhtml?id=#{retail.id}"><h5>#{retail.name}</h5></a>
                                                 </div>
                                             </div>
                                         </div>

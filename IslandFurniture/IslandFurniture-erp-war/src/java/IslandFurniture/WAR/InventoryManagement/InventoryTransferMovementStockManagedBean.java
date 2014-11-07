@@ -27,6 +27,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -88,6 +89,12 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         stockUnitMovementList = transferBean.viewStockUnitMovement(plant, stock);
         storageAreaList = storageBean.viewStorageArea(plant);
     }
+    
+    // Function: To view the stock unit details
+    public void viewStockUnit(AjaxBehaviorEvent event) {
+        Long stockUnitId = (Long) event.getComponent().getAttributes().get("stockUnitId");
+        this.stockUnit = transferBean.getStockUnit(stockUnitId);
+    }
 
 //  Function: Boolean for rendering the Batch Number Field - To not allow editing after Batch Number has been set    
     public boolean ifBatchNoEmpty(String batchNo) {
@@ -99,9 +106,10 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
     }
 
 //  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
-    public void onStorageAreaChange() {
+    public void onStorageAreaChange(StorageBin storageBin) {
         if (storageAreaId != null) {
             storageBinList = storageBean.viewStorageBinsOfAStorageArea(storageAreaId);
+            storageBinList.remove(storageBin);
         }
     }
 
@@ -121,26 +129,30 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
-
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNo", event.getComponent().getAttributes().get("batchNo"));
+        
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockUnit = transferBean.getStockUnit(stockUnitId);
         stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = storageBean.getStorageBin(storageBinId);
+        String batchNo = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNo");
+
+        if (this.stockUnit.getBatchNo() == null) {
+            transferBean.updateBatchNumber(stockUnitId, batchNo);
+            System.out.println("It updated the batch number! " + batchNo);
+        } else {
+            batchNo = this.stockUnit.getBatchNo();
+            System.out.println("It re-used the batchNo " + batchNo);
+        }
 
         if (stockUnitQuantity > stockUnit.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
-        } else if (stockUnit.getBatchNo() == null) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The Stock Unit's batch number is empty. Please update it. Moving of stock was unsuccessful.", ""));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
-
         } else {
-            transferBean.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+            transferBean.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, batchNo, stockUnitQuantity, stockUnit.getLocation(), storageBin);
             transferBean.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementstock.xhtml");
         }

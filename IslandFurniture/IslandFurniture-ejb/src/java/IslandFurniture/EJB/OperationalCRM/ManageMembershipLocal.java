@@ -46,8 +46,17 @@ public interface ManageMembershipLocal {
 
     // Function: To get Customer with customerID
     public Customer getCustomer(Long customerID);
+    
+     //  Function: Get Customer from Card
+    public Customer getCustomerByCard(String cardID);
 
     // Function: Edit a Customer's Points after Redemption
     void editCustomerAccountPoints(Customer customerUpdated, int points);
-
+    
+    // Function: To check if the member is eligible for promotion, and if yes, promote
+    String checkMembershipUpgrade (Long customerID, Long transactionID);
+    
+    // Function: To check if the member is eligible for promotion, and if yes, promote [AT POS]
+    void checkMembershipUpgradeATPOS(Long customerID, Long transactionID);
+    
 }

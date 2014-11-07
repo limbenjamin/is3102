@@ -34,7 +34,7 @@ public class SendSMSBean {
                 System.err.println("cmdString1: " + cmdString1);
                 System.err.println("cmdString2: " + cmdString2);
 
-                CommPortIdentifier commPortIdentifier = CommPortIdentifier.getPortIdentifier("COM7");
+                CommPortIdentifier commPortIdentifier = CommPortIdentifier.getPortIdentifier("COM3");
                 SerialPort serialPort = (SerialPort)commPortIdentifier.open("SMS", 2000);
                 serialPort.setSerialPortParams(115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
                 OutputStream outputStream = serialPort.getOutputStream();                    
