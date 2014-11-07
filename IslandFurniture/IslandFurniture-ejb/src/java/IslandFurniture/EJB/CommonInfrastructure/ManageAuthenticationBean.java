@@ -8,8 +8,7 @@ package IslandFurniture.EJB.CommonInfrastructure;
 
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.LogEntry;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
-import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
 import java.util.logging.Level;

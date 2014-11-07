@@ -10,17 +10,14 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
@@ -41,7 +38,6 @@ public class IndexManagedBean implements Serializable {
     public void init() {
         this.coList = manageOrganizationalHierarchyBean.displayCountryOffice();
         this.storeList = manageOrganizationalHierarchyBean.displayStore();
-        //ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
     }
 
     public void fowardToLocalizedPage(ActionEvent event) throws IOException {

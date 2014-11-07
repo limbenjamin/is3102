@@ -8,7 +8,7 @@ package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
 import java.util.logging.Level;

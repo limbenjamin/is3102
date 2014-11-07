@@ -11,7 +11,7 @@ import IslandFurniture.WAR.Exceptions.WrongPasswordException;
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.Entities.Staff;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
