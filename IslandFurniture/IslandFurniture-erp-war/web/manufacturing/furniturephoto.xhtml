@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:body>
+        <ui:composition template="../template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h:form>
+                            <ol class="breadcrumb">
+                                <li><a href="../dash.xhtml">Home</a></li>
+                                <li><a href="furniture.xhtml">Furniture</a></li>
+                                <li>
+                                    <h:commandLink value="#{furniturePhotoManagedBean.furniture.name}" actionListener="#{furniturePhotoManagedBean.bomActionListener}">
+                                        <f:attribute name="fID" value="#{furniturePhotoManagedBean.furnitureID}" />
+                                    </h:commandLink>
+                                </li>
+                                <li class="active"><strong>Images</strong></li> 
+                            </ol>   
+                        </h:form>
+                    </div>                    
+                    <div class="col-md-11">
+                        <span class="pull-right">
+                            <h:form>
+                                <h:commandLink actionListener="#{furniturePhotoManagedBean.bomActionListener}">
+                                    <f:attribute name="fID" value="#{furniturePhotoManagedBean.furnitureID}" />
+                                    <button type="button" class="btn btn-sm btn-default">
+                                        <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                                    </button> 
+                                </h:commandLink>
+                            </h:form>
+                        </span>                          
+                        <h4><strong>#{furniturePhotoManagedBean.furniture.name}</strong></h4><hr></hr>
+                    </div>
+                </div> 
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="col-sm-5">
+                            <h5><strong>Photo Gallery</strong></h5> 
+                            <h:form class="row" id="photoForm">
+                                <h:panelGroup id="galleryList">
+                                    <ui:repeat value="#{furniturePhotoManagedBean.galleryList}" var="image">
+                                        <div class="thumbnail col-sm-4"> 
+                                            <p:graphicImage value="#{pictureManagedBean.image}">
+                                                <f:param name="pictureId" value="#{image.id}" />
+                                            </p:graphicImage> 
+                                            <h5><strong>#{image.description}</strong></h5>   
+                                            <h:commandButton value="&times;" class="transparent-button top-right">
+                                                <f:ajax render=":photoForm:galleryList" listener="#{furniturePhotoManagedBean.deleteGalleryImage}" />
+                                                <f:attribute name="imageID" value="#{image.id}" />
+                                            </h:commandButton>
+                                        </div>
+                                    </ui:repeat> 
+                                </h:panelGroup>
+                                <div class="thumbnail">
+                                    <a data-toggle="modal" data-target="#newImage">
+                                        <button class="btn btn-default">Something for now</button>
+                                    </a>
+                                </div>
+                            </h:form> 
+                        </div>
+                        <div class="col-sm-6 col-sm-offset-1"> 
+                            <h5><strong>Photo Sprite</strong></h5> 
+                            <p>Rename image files from 1-36</p>
+                            <div >
+                                <p:imageSwitch effect="wipe" widgetVar="switcher" slideshowAuto="false" speed="250" styleClass="col-sm-offset-3">
+                                    <ui:repeat value="#{furniturePhotoManagedBean.spriteList}" var="sprite">
+                                        <p:graphicImage value="#{pictureManagedBean.image}" width="200px"> 
+                                            <f:param name="pictureId" value="#{sprite.id}" />
+                                            </p:graphicImage>
+                                    </ui:repeat> 
+                                </p:imageSwitch>
+                                <div class="pull-right">
+                                    <p:commandButton type="button" onclick="PF('switcher').previous();" value="&lsaquo;" styleClass="btn btn-default btn-xs"/>
+                                    <p:commandButton type="button" onclick="PF('switcher').next();" value="&rsaquo;" styleClass="btn btn-default btn-xs"/>             
+                                </div>
+                            </div>
+                            <div >
+                                <h:form class="form-group" enctype="multipart/form-data">
+                                    <p:fileUpload fileUploadListener="#{furniturePhotoManagedBean.handleMultipleFileUpload}" multiple="true" styleClass="col-sm-12" />
+                                    <h:commandButton class="btn btn-success btn-sm pull-right" value="Submit" action="#{furniturePhotoManagedBean.addSpriteImage}">
+                                    </h:commandButton>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal for New Gallery Image -->
+                <div class="modal fade" id="newImage" aria-hidden="true">
+                    <div class="modal-dialog" style="width: 600px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Add New Gallery Image </h4>
+                            </div>
+                            <h:form id="addImageForm" class="form-horizontal" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Image Title: </label>
+                                        <div class="col-sm-10">
+                                            <h:inputText id="imageTitle" class="form-control" pa:required="required"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Image: </label> 
+                                        <div class="col-sm-10"> 
+                                            <p:fileUpload fileUploadListener="#{furniturePhotoManagedBean.handleFileUpload}" required="true" />
+                                        </div>
+                                    </div> 
+                                </div> 
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton actionListener="#{furniturePhotoManagedBean.addGalleryImage}" value="Add Gallery Image" class="btn btn-success btn-round"> 
+                                        <f:attribute name="fID" value="#{furniturePhotoManagedBean.furnitureID}" />
+                                    </h:commandButton>
+                                </div> 
+                            </h:form> 
+                        </div>
+                    </div> 
+                </div> 
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
