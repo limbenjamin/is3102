@@ -84,12 +84,12 @@ public class ManageMembership implements ManageMembershipLocal {
         Customer customer = (Customer) em.find(Customer.class, customerID);
         Transaction transaction = (Transaction) em.find(Transaction.class, transactionID);
 
-        if (!transaction.equals(null)) {
-            String newTier = "";
+        if ((transaction!=null)) {
+            String newTier = " ";
             Integer totalPoints = 0;
             Integer points = 0;
 
-            if (transaction.getMember().equals(null)) {
+            if (transaction.getMember()==null) {
                 transaction.setMember(customer);
                 
                 if (transaction instanceof FurnitureTransaction) {
@@ -112,13 +112,14 @@ public class ManageMembership implements ManageMembershipLocal {
                 return "exist";
             }
 
+            Integer oldPoints=customer.getCumulativePoints();
             totalPoints = points + customer.getCumulativePoints();
             customer.setCumulativePoints(totalPoints);
             customer.setCurrentPoints(points + customer.getCurrentPoints());
             List<MembershipTier> membershipTierList = viewMembershipTier();
             membershipTierList.sort(null);
             for (MembershipTier membershipTier : membershipTierList) {
-                if (totalPoints > membershipTier.getPoints() || totalPoints == membershipTier.getPoints()) {
+                if (totalPoints >= membershipTier.getPoints() && oldPoints<membershipTier.getPoints()) {
                     customer.setMembershipTier(membershipTier);
                     newTier = membershipTier.getTitle();
                 }

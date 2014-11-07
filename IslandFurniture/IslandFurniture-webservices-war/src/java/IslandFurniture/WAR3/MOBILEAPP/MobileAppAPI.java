@@ -332,8 +332,18 @@ public class MobileAppAPI {
     @Path("promote")
     @Produces(MediaType.APPLICATION_JSON)
     public String PromoteMember(@QueryParam("cust_id") Long custID, @QueryParam("transc_id") Long Transc_ID) {
-        String status = cmu.checkMembershipUpgrade(custID, Transc_ID);
+        String status="";
+        try{
+         status = cmu.checkMembershipUpgrade(custID, Transc_ID);
+                System.out.println("PromoteMember(): "+ status);
 
+        }catch(Exception ex){
+                System.out.println("PromoteMember(): "+ex.getMessage());
+
+            return (Json.createObjectBuilder().add("success", false).add("error", "ERROR"+ex.getMessage()).build().toString());
+        }
+        
+        
         if (status.equals("fail")) {
             return (Json.createObjectBuilder().add("success", false).add("error", "Invalid ID").build().toString());
         }
@@ -341,6 +351,7 @@ public class MobileAppAPI {
         if (status.equals("exist")) {
             return (Json.createObjectBuilder().add("success", false).add("error", "Already Used !").build().toString());
         }
+        
 
         return (Json.createObjectBuilder().add("success", true).add("added", status.split(",")[0]).add("current", status.split(",")[1]).add("promote", status.split(",")[2]).build().toString());
 
