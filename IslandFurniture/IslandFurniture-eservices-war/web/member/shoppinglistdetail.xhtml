@@ -6,9 +6,18 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:pf="http://primefaces.org/ui">
-<h:body>
+<h:body>    
     <ui:composition template="../template.xhtml">
         <ui:define name="content">
+        <div id="fb-root"></div>
+        <h:outputScript>
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0]; 
+          if (d.getElementById(id)) return; 
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.0";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</h:outputScript>
         <section>
             <div class="container">
                 <h:panelGroup layout="block" rendered="#{empty shoppingListDetailManagedBean.shoppingList.id}" style="height:410px;" styleClass="row">
@@ -121,6 +130,7 @@
                             </h:outputText>  
                         </h4>    
                         <hr/>
+                        <div class="fb-share-button" data-href="#{application.contextPath}/#{shoppingListDetailManagedBean.coDir}/member/shoppinglistdetail.xhtml" data-layout="button_count"></div>
                     </div>
                     </div>
                 </h:panelGroup>

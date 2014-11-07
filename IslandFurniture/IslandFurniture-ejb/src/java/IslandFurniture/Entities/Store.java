@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,7 +38,7 @@ public class Store extends Plant implements Serializable {
     @OneToMany(mappedBy = "store")
     private List<MonthlyMenuItemSalesForecast> monthlyMenuItemSalesForecasts = new ArrayList();
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", fetch=FetchType.EAGER)
     private List<StoreSection> storeSections = new ArrayList();
     
     @OneToMany (mappedBy = "store")
