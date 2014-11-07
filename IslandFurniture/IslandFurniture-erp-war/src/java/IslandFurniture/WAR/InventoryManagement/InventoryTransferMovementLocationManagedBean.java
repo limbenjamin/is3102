@@ -6,14 +6,14 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
-import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
-import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,6 +26,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -89,6 +90,12 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         stockUnitList = transferBean.viewStockUnitByStorageBin(plant, storageBin);
         stockUnitMovementList = transferBean.viewStockUnitMovementbyStorageBin(storageBin);
     }
+    
+    // Function: To view the stock unit details
+    public void viewStockUnit(AjaxBehaviorEvent event) {
+        Long stockUnitId = (Long) event.getComponent().getAttributes().get("stockUnitId");
+        this.stockUnit = transferBean.getStockUnit(stockUnitId);
+    }
 
 //  Function: Boolean for rendering the Batch Number Field - To not allow editing after Batch Number has been set    
     public boolean ifBatchNoEmpty(String batchNo) {
@@ -121,7 +128,7 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         batchNumber = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNumber");
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
-        transferBean.updateBatchNumber(stockUnitId, batchNumber);
+        
         stockUnitList = transferBean.viewStockUnitByStorageBin(plant, storageBin);
         FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
     }
@@ -132,26 +139,28 @@ public class InventoryTransferMovementLocationManagedBean implements Serializabl
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitId", event.getComponent().getAttributes().get("stockUnitId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNo", event.getComponent().getAttributes().get("batchNo"));
 
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockUnit = transferBean.getStockUnit(stockUnitId);  
         stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");
         storageBinId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("storageBinId");
         storageBin = storageBean.getStorageBin(storageBinId);
+        String batchNo = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("batchNo");
+
+        if (this.stockUnit.getBatchNo() == null) {
+            transferBean.updateBatchNumber(stockUnitId, stockUnit.getBatchNo());
+        } else {
+            batchNo = this.stockUnit.getBatchNo();
+        }
 
         if (stockUnitQuantity > stockUnit.getQty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "The quantity indicated has to be lesser than or equal to the current Stock Unit's quantity. Moving of stock was unsuccessful.", ""));
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
-        } else if (stockUnit.getBatchNo() == null) {
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "The Stock Unit's batch number is empty. Please update it. Moving of stock was unsuccessful.", ""));
-             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
-            FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");
-        
         } else {
-            transferBean.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, stockUnit.getBatchNo(), stockUnitQuantity, stockUnit.getLocation(), storageBin);
+            transferBean.createStockUnitMovement1(stockUnit.getStock(), stockUnitId, batchNo, stockUnitQuantity, stockUnit.getLocation(), storageBin);
             transferBean.editStockUnitQuantity(stockUnitId, stockUnit.getQty() - stockUnitQuantity);
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", stockUnit.getLocation().getId());
             FacesContext.getCurrentInstance().getExternalContext().redirect("inventorytransfer_movementlocation.xhtml");

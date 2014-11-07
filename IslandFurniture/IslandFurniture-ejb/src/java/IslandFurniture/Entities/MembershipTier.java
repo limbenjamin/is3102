@@ -26,7 +26,7 @@ import javax.persistence.OneToMany;
             name = "findMembershipTierByTitle",
             query = "SELECT a FROM MembershipTier a WHERE a.title = :title")
 })
-public class MembershipTier implements Serializable {
+public class MembershipTier implements Serializable, Comparable<MembershipTier> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,7 +45,7 @@ public class MembershipTier implements Serializable {
     public void setPoints(Integer points) {
         this.points = points;
     }
-    
+
     public String getTitle() {
         return title;
     }
@@ -96,6 +96,20 @@ public class MembershipTier implements Serializable {
         //Dont change this. i need this. JAMES
         return "[MembershipTier]" + id;
 
+    }
+
+    // Implement Comparable
+    @Override
+    public int compareTo(MembershipTier other) {
+        if (this.points > other.getPoints()) {
+            return 1;
+        }
+        
+        if (this.points < other.getPoints()) {
+            return -1;
+        }
+
+        return 0;
     }
 
 }

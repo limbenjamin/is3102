@@ -11,12 +11,7 @@
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
                 <div class="row">
-                    <div class="col-md-8">
-                        <h:form> 
-                            <button type="button" class="btn btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newGRDD">
-                                <i class="fa fa-fw fa-plus"></i>Select Stock Unit
-                            </button>  
-                        </h:form>    
+                    <div class="col-md-8">    
                         <h4>Goods Issued Document: #{goodsIssuedDocumentCommitManagedBean.stock.name}</h4><hr></hr>
                         <section name="Storage Location of Stock">
                             <div class="panel-heading dashboard-title-panel">
@@ -28,8 +23,11 @@
                                         <th>Stock Unit Number</th>
                                         <th>Storage Area</th>
                                         <th>Storage Bin</th>
-                                        <th>Quantity</th>
                                         <th>Batch Number</th>
+                                        <th>Quantity</th>
+                                        <th>Issued Quantity</th>
+                                        <th width="100px"></th>
+                                        
 
                                     </tr>
                                     <h:form class="form-horizontal">
@@ -38,9 +36,14 @@
                                                 <td>#{s.id}</td>
                                                 <td>#{s.location.storageArea.name}</td>
                                                 <td>#{s.location.name}</td>
-                                                <td>#{s.qty}</td>
                                                 <td>#{s.batchNo}</td>
-
+                                                <td>#{s.qty}</td>
+                                                <td><h:inputText id="stockQuantity" class="form-control" value="#{s.qty}" pt:required="true" pt:type="number"></h:inputText></td>
+                                                <td><h:commandButton actionListener="#{goodsIssuedDocumentCommitManagedBean.addStockUnitPendingAtGoodsIssuedDocument}"  class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:attribute name="GRDid" value="#{goodsIssuedDocumentCommitManagedBean.goodsIssuedDocumentId}" />
+                                                    <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                    <f:attribute name="stockUnitQuantity" value="#{s.qty}" />
+                                                </h:commandButton><i class="fa fa-lg fa-save icon-button"></i></td>
                                             </tr>
                                         </ui:repeat>
                                     </h:form> 
