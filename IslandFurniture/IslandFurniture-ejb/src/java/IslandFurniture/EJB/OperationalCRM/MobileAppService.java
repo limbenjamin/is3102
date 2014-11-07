@@ -191,5 +191,7 @@ public class MobileAppService implements MobileAppServiceLocal {
         em.merge(sl);
 
     }
+    
+
 
 }

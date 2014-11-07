@@ -5,15 +5,19 @@
  */
 package IslandFurniture.Entities;
 
+import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.Enums.MmsfStatus;
 import IslandFurniture.Enums.Month;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -22,7 +26,18 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @IdClass(MonthlyMenuItemSalesForecastPK.class)
-public class MonthlyMenuItemSalesForecast implements Serializable {
+@NamedQueries({
+    @NamedQuery(
+            name = "getMmsfByStore",
+            query = "SELECT a FROM MonthlyMenuItemSalesForecast a WHERE a.store=:store"),
+    @NamedQuery(
+            name = "getMmsfByStoreMi",
+            query = "SELECT a FROM MonthlyMenuItemSalesForecast a WHERE "
+            + "a.store = :store AND a.menuItem = :menuItem AND "
+            + "a.year*12 + a.month >= :startYr*12 + :startMth AND "
+            + "a.year*12 + a.month <= :endYr*12 + :endMth"),
+})
+public class MonthlyMenuItemSalesForecast implements Serializable, Comparable<MonthlyMenuItemSalesForecast> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -139,6 +154,41 @@ public class MonthlyMenuItemSalesForecast implements Serializable {
     @Override
     public String toString() {
         return "MonthlyMenuItemSalesForecast[ id=" + this.month + ", " + this.year + ", " + this.store + this.menuItem + " ]";
+    }
+
+    // Implements Comparable
+    @Override
+    public int compareTo(MonthlyMenuItemSalesForecast other) {
+        if (this.store.getId() > other.store.getId()) {
+            return 1;
+        }
+        if (this.store.getId() < other.store.getId()) {
+            return -1;
+        }
+        if (this.year * 12 + this.month.value > other.year * 12 + other.month.value) {
+            return 1;
+        }
+        if (this.year * 12 + this.month.value < other.year * 12 + other.month.value) {
+            return -1;
+        }
+        if (this.menuItem.getId() > other.menuItem.getId()) {
+            return 1;
+        }
+        if (this.menuItem.getId() < other.menuItem.getId()) {
+            return -1;
+        }
+        return 0;
+
+    }
+
+    // Extra Methods
+    public static List<Couple<String, String>> getLabels() {
+        List<Couple<String, String>> labels = new ArrayList();
+        labels.add(new Couple("qtyForecasted", "Quantity Forecasted"));
+        labels.add(new Couple("qtySold", "Quantity Sold"));
+        labels.add(new Couple("status", "Status"));
+
+        return labels;
     }
 
 }
