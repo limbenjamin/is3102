@@ -41,6 +41,7 @@ public class CustomerAccountManagedBean implements Serializable{
 
     private String name = null;
     private String phoneNo = null;
+    private String address = null;
     private String emailAddress = null;
     private Customer customer;
     private String hashedPassword = null;
@@ -106,7 +107,8 @@ public class CustomerAccountManagedBean implements Serializable{
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         phoneNo = request.getParameter("particularsForm:phoneNo");
         name = request.getParameter("particularsForm:name");
-        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name);
+        address = request.getParameter("particularsForm:address");
+        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name, address);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
@@ -280,5 +282,13 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setPdpscPerks(List<PromotionDetailByProductSubCategory> pdpscPerks) {
         this.pdpscPerks = pdpscPerks;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

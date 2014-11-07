@@ -70,6 +70,15 @@ public class HomeManagedBean {
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         mcbl.updateStockSuppliedFurniturePrice(co);
         webBanners = co.getWebBanners();
+        if (webBanners != null && webBanners.isEmpty()) {
+            WebBanner defaultBanner = new WebBanner();
+            defaultBanner.setHeaderText("Welcome to Island Furniture @ " + co.getName());
+            defaultBanner.setSubheaderText("We wish you a happy shopping experience!");
+            defaultBanner.setBodyText("Sign up as a member today and get connected to our latest happenings!");
+            defaultBanner.setButtonText("Sign Up Now");
+            defaultBanner.setButtonUrl("login.xhtml");
+            webBanners.add(defaultBanner);
+        }
         featuredFurniture = mcbl.getCountryFeaturedFurniture(co);
         
         loggedIn = checkLoggedIn();
