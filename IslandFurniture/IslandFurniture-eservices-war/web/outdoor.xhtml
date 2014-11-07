@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
+    <ui:define name="content">
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ol class="breadcrumb">
+                              <li><a href="home.xhtml">Home</a></li>
+                              <li class="active"><strong>Outdoor Furniture</strong></li>
+                            </ol>                                         
+                        </div>
+                    </div>
+                    <h:panelGroup layout="block" rendered="#{empty catalogueManagedBean.filteredSubs('OUTDOOR')}" style="height:350px;" styleClass="row">
+                        <div class="col-sm-12">
+                        <br/>
+                        <h3>There are no outdoor furniture at the moment.</h3>
+                        <h4>Check back another time!</h4>
+                        </div>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" rendered="#{not empty catalogueManagedBean.filteredSubs('OUTDOOR')}" styleClass="row">
+                        <div class="col-sm-3">
+                            <div class="left-sidebar">
+                                <div class="brands_products" style="margin-top: 20px;">
+                                    <h4 style="padding-left: 25px;"><strong>SUB CATEGORIES</strong></h4>
+                                    <div class="brands-name">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <ui:repeat value="#{catalogueManagedBean.filteredSubs('OUTDOOR')}" var="sub">
+                                                <li><a href="outdoor.xhtml?sub=#{sub}">#{sub}</a></li>
+                                            </ui:repeat>
+                                            <hr/>
+                                            <li><a href="outdoor.xhtml">Display all</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="col-sm-9">
+                            <div class="catalogue">
+                                <h2 class="title text-center">OUTDOOR FURNITURE</h2>
+                                <h:form>
+                                <ui:repeat value="#{catalogueManagedBean.filteredCategory('OUTDOOR')}" var="furniture">
+                                    <div class="col-sm-4">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo text-center">
+                                                    <a href="productdetail.xhtml?id=#{furniture.id}">
+                                                        <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
+                                                            <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
+                                                        </pf:graphicImage>
+                                                        <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
+                                                            <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                                        </h:panelGroup>
+                                                    </a>
+                                                    <h4>#{catalogueManagedBean.co.country.currency.currencyCode}
+                                                    <h:outputText value="#{furniture.price}">
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                    </h:outputText>
+                                                    </h4>
+                                                    <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                                </h:form>
+                            </div>	
+                        </div>
+                        <br/><br/>                      
+                    </h:panelGroup>
+                </div>
+            </section>
+    </ui:define>
+</ui:composition>
