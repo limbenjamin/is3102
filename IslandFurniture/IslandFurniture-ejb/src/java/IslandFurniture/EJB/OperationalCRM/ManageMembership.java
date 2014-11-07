@@ -83,41 +83,54 @@ public class ManageMembership implements ManageMembershipLocal {
     public String checkMembershipUpgrade(Long customerID, Long transactionID) {
         Customer customer = (Customer) em.find(Customer.class, customerID);
         Transaction transaction = (Transaction) em.find(Transaction.class, transactionID);
-        String status = "Failed";
-        Integer totalPoints = 0;
-        Integer points = 0;
 
-        if (transaction instanceof FurnitureTransaction) {
-            FurnitureTransaction furnitureTransaction = (FurnitureTransaction) transaction;
-            for (FurnitureTransactionDetail f : furnitureTransaction.getFurnitureTransactionDetails()) {
-                points = points + f.getTotalPoints().intValue();
+        if (!transaction.equals(null)) {
+            String newTier = "";
+            Integer totalPoints = 0;
+            Integer points = 0;
+
+            if (transaction.getMember().equals(null)) {
+                transaction.setMember(customer);
+                
+                if (transaction instanceof FurnitureTransaction) {
+                    FurnitureTransaction furnitureTransaction = (FurnitureTransaction) transaction;
+                    for (FurnitureTransactionDetail f : furnitureTransaction.getFurnitureTransactionDetails()) {
+                        points = points + f.getTotalPoints().intValue();
+                    }
+                } else if (transaction instanceof RetailItemTransaction) {
+                    RetailItemTransaction RetailItemTransaction = (RetailItemTransaction) transaction;
+                    for (RetailItemTransactionDetail f : RetailItemTransaction.getRetailItemTransactionDetails()) {
+                        points = points + f.getTotalPoints().intValue();
+                    }
+                } else {
+                    RestaurantTransaction RestaurantTransaction = (RestaurantTransaction) transaction;
+                    for (RestaurantTransactionDetail f : RestaurantTransaction.getRestaurantTransactionDetails()) {
+                        points = points + f.getTotalPoints().intValue();
+                    }
+                }
             }
-        } else if (transaction instanceof RetailItemTransaction) {
-            RetailItemTransaction RetailItemTransaction = (RetailItemTransaction) transaction;
-            for (RetailItemTransactionDetail f : RetailItemTransaction.getRetailItemTransactionDetails()) {
-                points = points + f.getTotalPoints().intValue();
+
+            totalPoints = points + customer.getCumulativePoints();
+            customer.setCumulativePoints(totalPoints);
+            customer.setCurrentPoints(points + customer.getCurrentPoints());
+            List<MembershipTier> membershipTierList = viewMembershipTier();
+            membershipTierList.sort(null);
+            for (MembershipTier membershipTier : membershipTierList) {
+                if (totalPoints > membershipTier.getPoints() || totalPoints == membershipTier.getPoints()) {
+                    customer.setMembershipTier(membershipTier);
+                    newTier = membershipTier.getTitle();
+                }
             }
+
+            em.merge(transaction);
+            em.merge(customer);
+            em.flush();
+
+            return points.toString() + "," + totalPoints.toString() + "," + newTier;
+
         } else {
-            RestaurantTransaction RestaurantTransaction = (RestaurantTransaction) transaction;
-            for (RestaurantTransactionDetail f : RestaurantTransaction.getRestaurantTransactionDetails()) {
-                points = points + f.getTotalPoints().intValue();
-            }
+            return "fail";
         }
-
-        totalPoints = points + customer.getCumulativePoints();
-        List<MembershipTier> membershipTierList = viewMembershipTier();
-        membershipTierList.sort(null);
-        for (MembershipTier membershipTier : membershipTierList) {
-            if (totalPoints > membershipTier.getPoints() || totalPoints == membershipTier.getPoints()) {
-                customer.setMembershipTier(membershipTier);
-                status = membershipTier.getTitle();
-            }
-        }
-        
-        em.merge(customer);
-        em.flush();
-        
-        return status;
     }
 
     // Function: Get Customer
@@ -125,7 +138,7 @@ public class ManageMembership implements ManageMembershipLocal {
     public Customer getCustomer(Long customerID) {
         return em.find(Customer.class, customerID);
     }
-    
+
     //  Function: Get Customer from Card
     @Override
     public Customer getCustomerByCard(String cardID) {
