@@ -801,6 +801,7 @@ h2.title {
 
 .productinfo{
     position:relative;
+    min-height:355px;
 }
 
 .add-to-cart {
