@@ -166,7 +166,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addFurnitureModel("Round Table", 2500, "A perfectly round solid wooden table. We guarantee you won't find a rough edge.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
                 this.addFurnitureModel("Coffee Table", 3000, "The Coffee table perfect for coffee. Comes in coffee colour that blends perfectly with coffeee spills.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
                 this.addFurnitureModel("Study Table - Dinosaur Edition", 3250, "An artpiece loved by all from young to old. Has pointy razor sharp teethed edges to cover all your severing needs!", FurnitureCategory.WORKSPACE, FurnitureSubcategory.TABLES);
-                this.addFurnitureModel("Bedside Lamp H31", 80, "This lamp goes well with any bed you can imagine. Never out of place and definitely a bright addition to your lovely room.", FurnitureCategory.LIGHTING, FurnitureSubcategory.LIGHTING);
+                this.addFurnitureModel("Bedside Lamp H31", 80, "This lamp goes well with any bed you can imagine. Never out of place and definitely a bright addition to your lovely room.", FurnitureCategory.BEDROOM, FurnitureSubcategory.LIGHTING);
                 this.addFurnitureModel("Bathroom Rug E64", 30, "With this bathroom rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
                 this.addFurnitureModel("Kitchen Stool", 250, "A chair without a back, perfect for the lazy bones to correct their posture.", FurnitureCategory.KITCHEN, FurnitureSubcategory.CHAIRS);
 
