@@ -63,10 +63,10 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <p><strong>Product Availability</strong>:</p><br/>                                    
-                                    <ui:repeat value="#{productDetailManagedBean.localStores}" var="store">
+                                    <ui:repeat value="#{retailDetailManagedBean.localStores}" var="store">
                                         <strong>#{store.name}</strong>
-                                        <span class="#{productDetailManagedBean.getStockAvailability(store)}Tag">
-                                            #{productDetailManagedBean.getStockAvailability(store)}
+                                        <span class="#{retailDetailManagedBean.getStockAvailability(store)}Tag">
+                                            #{retailDetailManagedBean.getStockAvailability(store)}
                                         </span><br/>
                                     </ui:repeat>
                                     <br/><br/>
