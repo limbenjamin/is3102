@@ -146,9 +146,13 @@ public class MobileAppService implements MobileAppServiceLocal {
         q.setParameter("st", st);
         q.setParameter("TXT", searchtext);
 
-        if (q.getResultList().isEmpty()) {
-            System.out.println("getShoppingList(): Creating Default Shopping list for cust: " + Cust_id);
+        if (q.getResultList().isEmpty() && searchtext!=null) {
+            System.out.println("getShoppingList(): Creating Default Shopping list named "+searchtext+" for cust: " + Cust_id);
             return (mslb.createShoppingList(c.getEmailAddress(), Long.parseLong(StoreID), searchtext));
+        }
+        
+        if (searchtext==null){
+        System.out.println("Warning(): ShoppingList Name null !");
         }
 
         return (ShoppingList) q.getResultList().get(0);

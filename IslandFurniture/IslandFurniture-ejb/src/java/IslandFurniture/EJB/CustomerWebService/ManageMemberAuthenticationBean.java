@@ -161,10 +161,11 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }    
     
     @Override
-    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name){
+    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address){
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
+        customer.setAddress(address);
     }
     
     @Override
