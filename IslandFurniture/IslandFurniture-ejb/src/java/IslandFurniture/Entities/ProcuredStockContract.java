@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,7 +45,7 @@ public class ProcuredStockContract implements Serializable {
     private Long id;
     @OneToOne
     private ProcuredStockSupplier supplier;
-    @OneToMany(mappedBy="procuredStockContract", cascade={CascadeType.PERSIST})
+    @OneToMany(mappedBy="procuredStockContract", cascade={CascadeType.PERSIST}, fetch=FetchType.EAGER)
     private List<ProcuredStockContractDetail> procuredStockContractDetails = new ArrayList();
     
     public ProcuredStockContract() {

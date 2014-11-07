@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,7 +47,7 @@ public class Country implements Serializable {
     @OneToMany(mappedBy = "country")
     private List<Plant> plants;
 
-    @OneToOne(cascade={CascadeType.PERSIST})
+    @OneToOne(cascade={CascadeType.PERSIST}, fetch=FetchType.EAGER)
     private Currency currency;
 
     public Long getId() {

@@ -22,7 +22,7 @@ import javax.persistence.Query;
  *
  */
 @Stateful
-public class ManageStoreSection implements ManageStoreSectionLocal {
+public class ManageStoreSection implements ManageStoreSectionLocal, ManageStoreSectionRemote {
 
     @PersistenceContext
     EntityManager em;
