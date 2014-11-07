@@ -1233,7 +1233,36 @@ h2.title {
     margin-bottom: 20px;
 }
 
+/************************* receipt and transaction ***********************************/
 
+.tab-content .col-xs-12{
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-top-right-radius: 3px;    
+}
+
+.receipt, .receipt-filter {
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.member-receipt {
+    text-align: right;
+}
+
+.input-group-addon {
+    background-color: #fff;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.input-group .form-control {
+    border-left: 0;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    font-size: 11px;   
+}
 
 /**************************** MEDIA QUERIES ****************************************/
 
