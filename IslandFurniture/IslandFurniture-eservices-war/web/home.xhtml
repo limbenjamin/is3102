@@ -34,9 +34,12 @@
                                         </a>
                                     </div>
                                     <div class="col-sm-6">
-                                        <pf:graphicImage value="#{pictureManagedBean.image}" style="height:400px;" styleClass="slider-image img-responsive">
+                                        <pf:graphicImage value="#{pictureManagedBean.image}" style="height:400px;" rendered="#{not empty banner.picture.content}" styleClass="slider-image img-responsive">
                                             <f:param name="pictureId" value="#{banner.picture.id}" />
                                         </pf:graphicImage>
+                                        <h:panelGroup layout="block" rendered="#{empty banner.picture.content}">
+                                            <img src="#{application.contextPath}/assets/images/home/shelves.jpg" alt="" />
+                                        </h:panelGroup>
                                     </div>
                                 </div>
                                 </ui:repeat>
