@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pf="http://primefaces.org/ui">
+    <ui:define name="content">       
+	<section>
+	<div class="container">           
+            <div class="row">
+                <h:panelGroup layout="block" rendered="#{empty retailDetailManagedBean.retail}" style="height:410px;">
+                    <div class="col-md-12">
+                        <h2>Looks like this product does not exist!</h2>
+                        <hr/>
+                        <h4>Check out what we're selling instead!</h4>
+                            <a href="all.xhtml" class="btn btn-default btn-round">
+                                <i class="fa fa-info-circle"></i> All Products
+                            </a>
+                    </div>
+                </h:panelGroup>
+                <!--product-details-->
+                <h:panelGroup layout="block" rendered="#{not empty retailDetailManagedBean.retail}" styleClass="product-details">
+                        <div class="col-md-12">
+                            <ol class="breadcrumb">
+                              <li><a href="home.xhtml">Home</a></li>
+                              <li><a href="all.xhtml">All Products</a></li>
+                              <li class="active"><strong>#{retailDetailManagedBean.retail.name}</strong></li>
+                            </ol>
+                        </div>                     
+                        <div class="col-sm-4">
+                            <section class="container-fluid">
+                                <pf:graphicImage value="#{pictureManagedBean.image}" style="max-width: 360px" rendered="#{not empty retailDetailManagedBean.retail.thumbnail.content}">
+                                    <f:param name="pictureId" value="#{retailDetailManagedBean.retail.thumbnail.id}" />
+                                </pf:graphicImage>
+                                <h:panelGroup layout="block" rendered="#{empty retailDetailManagedBean.retail.thumbnail.content}">
+                                    <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                </h:panelGroup>
+                            </section>
+                        </div>
+			<div class="col-sm-8">
+                            <!--/product-information-->
+                            <div class="product-information">
+                                <h2>#{retailDetailManagedBean.retail.name}</h2>
+                                <h4>#{retailDetailManagedBean.co.country.currency.currencyCode}
+                                    <h:outputText value="#{retailDetailManagedBean.discountedPrice}" id="discounted">
+                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                    </h:outputText>
+                                    <small style="text-decoration: line-through;">
+                                        <h:outputText value="#{retailDetailManagedBean.co.country.currency.currencyCode} " rendered="#{retailDetailManagedBean.retail.price > retailDetailManagedBean.discountedPrice}"/>
+                                        <h:outputText value="#{retailDetailManagedBean.retail.price}" rendered="#{retailDetailManagedBean.retail.price > retailDetailManagedBean.discountedPrice}">
+                                            <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                        </h:outputText>
+                                    </small>
+                                </h4>
+                                <hr/>
+                                <div class="col-sm-8">
+                                    <p><b>Points worth:</b> #{retailDetailManagedBean.retail.pointsWorth}</p>
+                                    <br/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p><strong>Product Availability</strong>:</p><br/>                                    
+                                    <ui:repeat value="#{productDetailManagedBean.localStores}" var="store">
+                                        <strong>#{store.name}</strong>
+                                        <span class="#{productDetailManagedBean.getStockAvailability(store)}Tag">
+                                            #{productDetailManagedBean.getStockAvailability(store)}
+                                        </span><br/>
+                                    </ui:repeat>
+                                    <br/><br/>
+                                </div>
+                                <div class="col-sm-12">  
+                                    <!--category-tabs-->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="active"><a href="#details" role="tab" data-toggle="tab">
+                                                <i class="fa fa-fw fa-info-circle"></i> Product Details
+                                            </a></li>
+                                        <li><a href="#feedback" role="tab" data-toggle="tab">
+                                                <i class="fa fa-fw fa-comments"></i> Feedback
+                                            </a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="details">
+                                            <div class="col-xs-12">
+                                                <div class="col-sm-5">
+                                                    <h5>Description</h5>
+                                                    <p>#{retailDetailManagedBean.retail.riDescription}</p>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <h5>Care Instructions</h5>
+                                                    <p>Wipe clean with a cloth dampened in a mild cleaner.<br/>
+                                                        Wipe clean with a dry cloth.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="feedback">
+                                            <div class="col-xs-12">
+                                                <form class="form-horizontal feedback-form" role="form">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Title</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" placeholder="Title"/>
+                                                        </div>
+                                                        <label class="col-sm-2 control-label">Email</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="email" class="form-control" placeholder="Email"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Feedback</label>
+                                                        <div class="col-sm-10">
+                                                            <textarea class="form-control" placeholder="Your Feedback" rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-offset-2 col-sm-10">
+                                                            <button type="submit" class="btn btn-success">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+			</div>
+                    </h:panelGroup>
+                </div>
+            </div>
+	</section>        
+    </ui:define>
+</ui:composition>

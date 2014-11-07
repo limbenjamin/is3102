@@ -38,6 +38,8 @@ public interface ManageCatalogueBeanLocal {
     // get details of a furniture model
     FurnitureModel getFurnitureModel(Long id);
     
+    RetailItem getRetailItem(Long id);
+    
     List<FurnitureModel> getCountryFeaturedFurniture(CountryOffice co);
     
     List<RetailItem> getCountryFeaturedRetail(CountryOffice co);
