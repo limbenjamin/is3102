@@ -16,12 +16,15 @@ import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.Voucher;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import IslandFurniture.WAR.Util.NFCMethods;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -29,7 +32,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.TerminalFactory;
 
 /**
  *
@@ -44,6 +51,7 @@ public class RedemptionManagedBean implements Serializable {
     private List<Customer> customerList;
 
     private Long customerId;
+    private Long loyaltyCardId;
     private Long redeemableItemId;
     private String username;
     private Staff staff;
@@ -99,7 +107,56 @@ public class RedemptionManagedBean implements Serializable {
         Calendar calDate = cal;
         return calDate;
     }
+    
+    //  Function: To display Storage Bins in the particular Storage Area -- For AJAX    
+    public void changeRedeemableItem(AjaxBehaviorEvent event) {
+        System.out.println("redeemableItem ID " + redeemableItemId);
+        if (redeemableItemId != null) {
+            this.redeemableItem = itemBean.getRedeemableItem(redeemableItemId);
+            System.out.println("redeemableItem" + redeemableItem);
+        }
+    }
+    
+    public void scanNFC(AjaxBehaviorEvent event){
+        String customerCardId = "";
+        CardTerminal acr122uCardTerminal = null;
+        try {
+            TerminalFactory terminalFactory = TerminalFactory.getDefault();
+            if (!terminalFactory.terminals().list().isEmpty()) {
+                for (CardTerminal cardTerminal : terminalFactory.terminals().list()) {
+                    if (cardTerminal.getName().contains("ACS ACR122")) {
+                        acr122uCardTerminal = cardTerminal;
+                        break;
+                    }
+                }
+                if (acr122uCardTerminal != null) {
+                    try {
+                        if (acr122uCardTerminal.isCardPresent()) {
+                            NFCMethods nfc = new NFCMethods();
+                            customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
+                            this.customer = membershipBean.getCustomerByCard(customerCardId);
+                        }
+                    } catch (CardException ex) {
+                        Logger.getLogger(MembershipManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(MembershipManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+    }
 
+    public Long getLoyaltyCardId() {
+        return loyaltyCardId;
+    }
+
+    public void setLoyaltyCardId(Long loyaltyCardId) {
+        this.loyaltyCardId = loyaltyCardId;
+    }
+    
     public RedeemableItem getRedeemableItem() {
         return redeemableItem;
     }

@@ -7,7 +7,6 @@
 package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
-import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.ShoppingList;
@@ -15,6 +14,7 @@ import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,6 +72,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         shoppingList.setTotalPrice(0.00);
         shoppingList.setCustomers(newList);
         em.persist(shoppingList);
+        shoppingList.setIdHash(SHA1Hash(shoppingList.getId().toString()));
         return shoppingList;
     }    
     

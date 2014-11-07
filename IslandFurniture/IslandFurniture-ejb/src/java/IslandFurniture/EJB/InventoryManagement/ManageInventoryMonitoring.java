@@ -20,7 +20,7 @@ import javax.persistence.Query;
  * @author KamilulAshraf
  */
 @Stateful
-public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal {
+public class ManageInventoryMonitoring implements ManageInventoryMonitoringLocal, ManageInventoryMonitoringRemote {
 
     @PersistenceContext
     EntityManager em;

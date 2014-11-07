@@ -46,7 +46,7 @@
                                         <tr>
                                             <tr>
                                                 <td><h:outputText value="#{grd.id}"></h:outputText></td>
-                                                <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" pt:type="date" class="form-control"></h:inputText></td>
+                                                <td><h:inputText id="date" value="#{goodsIssuedDocumentManagedBean.issuedDateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
                                                 <td>
                                                     <h:selectOneMenu id="stockId" class="form-control needauto" value="#{goodsIssuedDocumentManagedBean.plantId}">
                                                         <f:selectItem itemLabel="Select Plant" />

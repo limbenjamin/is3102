@@ -31,6 +31,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -160,6 +161,10 @@ public class ProductDetailManagedBean {
             mslbl.updateListTotalPrice(listId, customer);
             ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
         }
+    }
+    
+    public String base64Decode() {
+        return DatatypeConverter.printBase64Binary(furniture.getThumbnail().getContent());
     }
     
     public String getStockAvailability (Store store) {
