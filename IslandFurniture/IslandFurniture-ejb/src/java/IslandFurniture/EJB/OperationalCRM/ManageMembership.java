@@ -108,6 +108,8 @@ public class ManageMembership implements ManageMembershipLocal {
                         points = points + f.getTotalPoints().intValue();
                     }
                 }
+            } else {
+                return "exist";
             }
 
             totalPoints = points + customer.getCumulativePoints();
@@ -131,6 +133,21 @@ public class ManageMembership implements ManageMembershipLocal {
         } else {
             return "fail";
         }
+    }
+    
+     @Override
+    public void checkMembershipUpgradeATPOS(Long customerID, Long transactionID) {
+        Customer customer = (Customer) em.find(Customer.class, customerID);
+        List<MembershipTier> membershipTierList = viewMembershipTier();
+        membershipTierList.sort(null);
+        for (MembershipTier membershipTier : membershipTierList) {
+            if (customer.getCumulativePoints() > membershipTier.getPoints() || customer.getCumulativePoints() == membershipTier.getPoints()) {
+                customer.setMembershipTier(membershipTier);
+            }
+        }
+
+        em.merge(customer);
+        em.flush();
     }
 
     // Function: Get Customer
