@@ -31,7 +31,8 @@ import org.junit.runners.Suite;
                     IslandFurniture.Test.CommonInfrastructure.ManageNotificationsBeanRemoteTest.class,
                     IslandFurniture.Test.CommonInfrastructure.ManageTodoBeanRemoteTest.class,
                     IslandFurniture.Test.CommonInfrastructure.ManageUserAccountBeanRemoteTest.class,
-                    IslandFurniture.Test.InventoryManagement.ManageInventoryMonitoringRemoteTest.class
+                    IslandFurniture.Test.InventoryManagement.ManageInventoryMonitoringRemoteTest.class,
+                    IslandFurniture.Test.InventoryManagement.ManageStoreSectionRemoteTest.class
                     })
 
 public class TestSuite {
