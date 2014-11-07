@@ -8,6 +8,7 @@ package IslandFurniture.WAR3.MOBILEAPP;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.MobileAppServiceLocal;
 import IslandFurniture.Entities.CountryOffice;
@@ -28,26 +29,24 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
-import javax.json.Json;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.json.*;
+import javax.json.Json;
 import javax.servlet.ServletContext;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
  *
  * @author James
  */
-
-
 @Named(value = "customerService")
 @Stateless
 @Path("cs")
@@ -70,6 +69,9 @@ public class MobileAppAPI {
 
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
+    
+    @EJB
+    private ManageStorefrontInventoryLocal msfil;
 
     @GET
     @Path("memberlogin")
@@ -133,11 +135,10 @@ public class MobileAppAPI {
 
     @GET
     @Path("prepcatalogue")
-    public String getCatalogue(@QueryParam("CO") String CO) {
+    public String getCatalogue(@QueryParam("CO") String CO,@QueryParam("STOREID") String StoreID) {
 
         JsonObjectBuilder object = Json.createObjectBuilder();
-        JsonArrayBuilder jab = Json.createArrayBuilder();
-
+        JsonArrayBuilder jab = Json.createArrayBuilder();     
         HashMap<FurnitureCategory, JsonArrayBuilder> map = new HashMap<>();
         map.put(null, Json.createArrayBuilder());
         for (FurnitureModel fm : mcb.getStoreFurniture(masl.getCOFromID(CO))) {
@@ -145,12 +146,11 @@ public class MobileAppAPI {
                 map.put(fm.getCategory(), Json.createArrayBuilder());
 
             }
-            Store s = new Store();
-            s.setCountryOffice(masl.getCOFromID(CO));
+            Store s = masl.getStoreFromID(StoreID);
             double price = (double) mmb.getDiscountedPrice(fm, s, new Customer()).get("D_PRICE");
-
-            map.get(fm.getCategory()).add(Json.createArrayBuilder().add(fm.getId()).add(fm.getName()).add(fm.getFurnitureDescription()).add(price));
-            map.get(null).add(Json.createArrayBuilder().add(fm.getId()).add(fm.getName()).add(fm.getFurnitureDescription()).add(price));
+            //msfil
+            map.get(fm.getCategory()).add(Json.createArrayBuilder().add(fm.getId()).add(fm.getName()).add(fm.getFurnitureDescription()).add(price).add(msfil.viewStorefrontInventoryStockLevelPerPlant(s, fm)));
+            map.get(null).add(Json.createArrayBuilder().add(fm.getId()).add(fm.getName()).add(fm.getFurnitureDescription()).add(price).add(msfil.viewStorefrontInventoryStockLevelPerPlant(s, fm)));
         }
 
         JsonArrayBuilder cata = Json.createArrayBuilder();
@@ -206,22 +206,25 @@ public class MobileAppAPI {
 
         object.add("name", sl.getName());
         Double total = 0.0;
+        Integer c=0;
         for (ShoppingListDetail sld : sl.getShoppingListDetails()) {
 
+            c+=sld.getQty();
             double price = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("D_PRICE");
             double oprice = (double) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("O_PRICE");
 
             total += price * sld.getQty();
             if (mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).keySet().contains("Successful_promotion")) {
                 PromotionDetail pd = (PromotionDetail) mmb.getDiscountedPrice(sld.getFurnitureModel(), masl.getStoreFromID(store_id), masl.getcustomerFromid(cust_id)).get("Successful_promotion");
-                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", pd.getPromotionCampaign().getTitle()));
+                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", pd.getPromotionCampaign().getTitle()).add("inv_txt",msfil.viewStorefrontInventoryStockLevelPerPlant(sld.getShoppingList().getStore(), sld.getFurnitureModel())));
             } else {
-                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", ""));
+                jab.add(Json.createObjectBuilder().add("fm", sld.getFurnitureModel().getName()).add("qty", sld.getQty()).add("oprice", oprice).add("uprice", price).add("price", Math.floor(price * sld.getQty() * 100) / 100.0).add("fid", sld.getFurnitureModel().getId()).add("delete_id", sld.getId()).add("PromoTxt", "").add("inv_txt",msfil.viewStorefrontInventoryStockLevelPerPlant(sld.getShoppingList().getStore(), sld.getFurnitureModel())));
             }
 
         }
 
         object.add("details", jab);
+        object.add("count", c);        
         object.add("store", sl.getStore().getId());
         object.add("totalprice", Math.floor(total * 100) / 100.0);
         object.add("shoplistid", sl.getId());
@@ -300,14 +303,15 @@ public class MobileAppAPI {
 
     @POST
     @Path("register")
+    @Produces(MediaType.APPLICATION_JSON)
     public String getRegister(@FormParam("email") String email, @FormParam("password") String password, @FormParam("password2") String password2, @FormParam("name") String name, @FormParam("address") String address, @FormParam("phone") String phone, @FormParam("dob") String dob) {
 
         try {
             mmab.createCustomerAccount(email, password, name, phone, address, name);
         } catch (Exception ex) {
-            return (ex.getMessage());
+            return (Json.createObjectBuilder().add("success", false).add("error", ex.getMessage()).build().toString());
         }
-        return "Successfully Created !";
+            return (Json.createObjectBuilder().add("success", false).add("data", Json.createArrayBuilder()).build().toString());
     }
 
 }
