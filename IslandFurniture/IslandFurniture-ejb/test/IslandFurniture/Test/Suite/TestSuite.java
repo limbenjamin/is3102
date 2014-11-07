@@ -18,6 +18,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({IslandFurniture.Test.Purchasing.ManagePurchaseOrderRemoteTest.class,
+                    IslandFurniture.Test.Purchasing.SupplierManagerRemoteTest.class,
                     IslandFurniture.Test.ITManagement.ManageOrganizationalHierarchyBeanRemoteTest.class,
                     IslandFurniture.Test.ITManagement.ManagePrivilegesBeanRemoteTest.class,
                     IslandFurniture.Test.ITManagement.ManageRolesBeanRemoteTest.class,
@@ -29,7 +30,10 @@ import org.junit.runners.Suite;
                     IslandFurniture.Test.CommonInfrastructure.ManageMessagesBeanRemoteTest.class,
                     IslandFurniture.Test.CommonInfrastructure.ManageNotificationsBeanRemoteTest.class,
                     IslandFurniture.Test.CommonInfrastructure.ManageTodoBeanRemoteTest.class,
-                    IslandFurniture.Test.CommonInfrastructure.ManageUserAccountBeanRemoteTest.class
+                    IslandFurniture.Test.CommonInfrastructure.ManageUserAccountBeanRemoteTest.class,
+                    IslandFurniture.Test.InventoryManagement.ManageInventoryMonitoringRemoteTest.class,
+                    IslandFurniture.Test.InventoryManagement.ManageStoreSectionRemoteTest.class,
+                    IslandFurniture.Test.InventoryManagement.ManageStorefrontInventoryRemoteTest.class
                     })
 
 public class TestSuite {

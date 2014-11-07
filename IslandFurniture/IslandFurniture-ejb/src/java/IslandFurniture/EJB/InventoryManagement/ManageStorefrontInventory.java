@@ -29,7 +29,7 @@ import javax.persistence.Query;
  *
  */
 @Stateful
-public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal {
+public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal,ManageStorefrontInventoryRemote {
 
     @PersistenceContext
     EntityManager em;

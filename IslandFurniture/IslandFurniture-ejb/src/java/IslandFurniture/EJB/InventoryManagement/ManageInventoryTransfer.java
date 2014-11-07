@@ -30,7 +30,7 @@ import javax.persistence.Query;
  *
  */
 @Stateful
-public class ManageInventoryTransfer implements ManageInventoryTransferLocal {
+public class ManageInventoryTransfer implements ManageInventoryTransferLocal, ManageInventoryTransferRemote {
 
     @PersistenceContext
     EntityManager em;
