@@ -11,6 +11,7 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Privilege;
 import IslandFurniture.Entities.Role;
 import IslandFurniture.Entities.Staff;
+import IslandFurniture.Exceptions.NullException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -21,7 +22,7 @@ import javax.ejb.Local;
 @Local
 public interface ManageNotificationsBeanLocal {
 
-    void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff);
+    void createNewNotificationForStaff(String title, String content, String link, String linkText, Staff staff)throws NullException;
 
     List<Notification> displayNotificationForStaff(Staff staff);
     

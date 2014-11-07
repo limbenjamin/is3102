@@ -512,4 +512,81 @@ public class StockManager implements StockManagerLocal,StockManagerRemote {
             System.err.println("Something went wrong here");
         }
     } 
+    @Override
+    public String addGalleryImage(Long fID, byte[] content, String description) {
+        FurnitureModel fm;
+        Picture picture;
+        try {
+            System.out.println("StockManager.addGalleryImage()");
+            fm = em.find(FurnitureModel.class, fID);
+            picture = new Picture();
+            picture.setContent(content);
+            picture.setDescription(description);
+            
+            if(fm.getGalleryPictures() == null)
+                fm.setGalleryPictures(new ArrayList<>());
+            
+            fm.getGalleryPictures().add(picture);
+            em.persist(picture);
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured";
+        }
+    }
+    @Override
+    public String addSpriteImage(Long fID, byte[] content, String description) {
+        FurnitureModel fm;
+        Picture picture;
+        try {
+            System.out.println("StockManager.addSpriteImage()");
+            fm = em.find(FurnitureModel.class, fID);
+            picture = new Picture();
+            picture.setContent(content);
+            picture.setDescription(description);
+            
+            if(fm.getPlanningSprites() == null) 
+                fm.setPlanningSprites(new ArrayList<>());
+            
+            fm.getPlanningSprites().add(picture); 
+            em.persist(picture);
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured"; 
+        }
+    }
+    @Override
+    public String deleteSpriteImage(Long fID) {
+        FurnitureModel fm;
+        List<Picture> pictureList;
+        try {
+            System.out.println("StockManager.deleteSpriteImage()");
+            fm = em.find(FurnitureModel.class, fID);
+            pictureList = fm.getPlanningSprites();
+            for(Picture p : pictureList) 
+                em.remove(p);
+            fm.setPlanningSprites(new ArrayList<>());
+            
+            em.flush();
+            return null;
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+            return "Unexpected error occured"; 
+        }
+    }
+    @Override
+    public void deleteGalleryImage(Long fID, Long pictureID) {
+        FurnitureModel fm;
+        Picture picture;
+        try {
+            System.out.println("StockManager.deleteGalleryImage()");
+            fm = em.find(FurnitureModel.class, fID);
+            picture = em.find(Picture.class, pictureID);
+            fm.getGalleryPictures().remove(picture);
+            em.remove(picture);
+        } catch(Exception ex) {
+            System.err.println("Something went wrong here");
+        }
+    }
 }

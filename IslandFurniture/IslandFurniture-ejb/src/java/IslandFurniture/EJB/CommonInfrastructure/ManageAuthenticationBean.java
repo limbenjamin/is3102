@@ -24,7 +24,7 @@ import javax.persistence.*;
  * @author Benjamin and the IS3102 team
  */
 @Stateful
-public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal {
+public class ManageAuthenticationBean implements ManageAuthenticationBeanLocal, ManageAuthenticationBeanRemote {
 
     @PersistenceContext
     EntityManager em;

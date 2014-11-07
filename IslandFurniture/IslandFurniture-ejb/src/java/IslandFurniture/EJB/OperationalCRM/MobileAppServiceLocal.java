@@ -52,5 +52,7 @@ public interface MobileAppServiceLocal {
     public List<ShoppingList> getShoppingList(String Cust_id, String StoreID);
 
     public void DeleteShopList(Long ID);
+
+    public void ShiftShopList(Long ListID, Long StoreID);
     
 }

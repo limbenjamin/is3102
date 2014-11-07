@@ -24,7 +24,7 @@ import javax.persistence.PersistenceContext;
  * @author Benjamin
  */
 @Stateful
-public class ManageTodoBean implements ManageTodoBeanLocal {
+public class ManageTodoBean implements ManageTodoBeanLocal, ManageTodoBeanRemote {
 
     @PersistenceContext
     EntityManager em;

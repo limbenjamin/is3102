@@ -13,6 +13,8 @@ import IslandFurniture.Entities.Announcement;
 import IslandFurniture.Entities.Event;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.EJB.ITManagement.ManageSystemAuditLogBeanLocal;
+import IslandFurniture.Exceptions.InvalidDateException;
+import IslandFurniture.Exceptions.NullException;
 import IslandFurniture.StaticClasses.TimeMethods;
 import java.io.IOException;
 import java.io.Serializable;
@@ -79,7 +81,7 @@ public class BroadcastManagedBean implements Serializable {
         plant = muaib.getStaff(username).getPlant();
     }
     
-    public void addAnnouncement() throws ParseException {
+    public void addAnnouncement() throws ParseException, InvalidDateException {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       title = request.getParameter("announcementForm:title");
       content = request.getParameter("announcementForm:content");
@@ -98,7 +100,7 @@ public class BroadcastManagedBean implements Serializable {
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Announcement added",""));
     }
     
-    public String editAnnouncement(ActionEvent event) throws IOException, ParseException {
+    public String editAnnouncement(ActionEvent event) throws IOException, ParseException, InvalidDateException {
       HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
       announcement = (Announcement) event.getComponent().getAttributes().get("toEdit");
       announcementBean.editAnnouncement(announcement.getId(),announcement.getTitle(),announcement.getContent(),announcement.getActiveDate(),announcement.getExpireDate());
@@ -109,7 +111,7 @@ public class BroadcastManagedBean implements Serializable {
       return "broadcast";
     }
     
-    public void deleteAnnouncement(){
+    public void deleteAnnouncement() throws NullException{
       id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
       announcement = announcementBean.getAnnouncement(id);
       announcementBean.deleteAnnouncement(id);

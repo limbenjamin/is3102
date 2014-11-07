@@ -173,6 +173,37 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #e3e6f3;
 }
 
+/**************************** COUNTRY SELECTION PAGE *******************************/
+
+#header-countries {
+  background-color: #F0F0E9;
+}
+
+#header-countries .logo{
+  text-align: center;
+}
+
+.centered-welcome {
+    display: block;
+    float: none;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    height: auto;
+    line-height: 30px;
+    padding: 0 15px;
+
+}
+
+.countries-list > li > a {
+  color: #696763;
+}
+
+.flag-icon {
+  max-width: 24px;
+  margin-right: 20px;
+}
+
 /************** TOP NAVBAR ******************/
 
 .contactinfo ul li:first-child{

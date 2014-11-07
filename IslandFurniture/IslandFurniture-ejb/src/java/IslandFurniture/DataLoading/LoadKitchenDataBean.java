@@ -45,10 +45,14 @@ public class LoadKitchenDataBean implements LoadKitchenDataBeanRemote {
             ingredSupplier.setCo(co);
             ingredSupplier.setCountry(co.getCountry());
             ingredSupplier.setEmail(email);
-            ingredSupplier.setIngredContract(new IngredientContract());
-            ingredSupplier.getIngredContract().setIngredContractDetails(new ArrayList<IngredientContractDetail>());
             ingredSupplier.setName(name);
             ingredSupplier.setPhoneNumber(phoneNo);
+            
+            IngredientContract ingredientContract = new IngredientContract();
+            ingredientContract.setIngredSupplier(ingredSupplier);
+            ingredientContract.setIngredContractDetails(new ArrayList<>());
+            
+            ingredSupplier.setIngredContract(ingredientContract);
             em.persist(ingredSupplier);
         }
 
