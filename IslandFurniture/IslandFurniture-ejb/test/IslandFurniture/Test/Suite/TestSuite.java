@@ -32,7 +32,8 @@ import org.junit.runners.Suite;
                     IslandFurniture.Test.CommonInfrastructure.ManageTodoBeanRemoteTest.class,
                     IslandFurniture.Test.CommonInfrastructure.ManageUserAccountBeanRemoteTest.class,
                     IslandFurniture.Test.InventoryManagement.ManageInventoryMonitoringRemoteTest.class,
-                    IslandFurniture.Test.InventoryManagement.ManageStoreSectionRemoteTest.class
+                    IslandFurniture.Test.InventoryManagement.ManageStoreSectionRemoteTest.class,
+                    IslandFurniture.Test.InventoryManagement.ManageStorefrontInventoryRemoteTest.class
                     })
 
 public class TestSuite {
