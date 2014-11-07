@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -34,7 +35,7 @@ public class ProcuredStockSupplier extends Supplier implements Serializable {
     @OneToMany(mappedBy = "supplier")
     private List<ProcuredStockPurchaseOrder> purchaseOrders;
 
-    @OneToOne(mappedBy = "supplier", cascade = {CascadeType.PERSIST})
+    @OneToOne(mappedBy = "supplier", cascade = {CascadeType.PERSIST}, fetch=FetchType.EAGER)
     private ProcuredStockContract procuredStockContract;
 
     public List<ProcuredStockPurchaseOrder> getPurchaseOrders() {
