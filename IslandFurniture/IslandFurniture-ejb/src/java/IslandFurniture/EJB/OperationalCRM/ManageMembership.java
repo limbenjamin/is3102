@@ -15,7 +15,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author Kamilul Ashraf
+ * @author Kamilul
  */
 @Stateless
 public class ManageMembership implements ManageMembershipLocal {
