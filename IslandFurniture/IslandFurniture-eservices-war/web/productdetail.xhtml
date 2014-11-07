@@ -9,7 +9,9 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pf="http://primefaces.org/ui">
     <ui:define name="head-meta">
-        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" />
+        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
         <meta property="og:image" content="data:image/png;base64,#{productDetailManagedBean.base64Decode()}" />
     </ui:define> 
     <ui:define name="content">
