@@ -12,7 +12,6 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.InventoryManagement.ManageStoreSectionLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.Entities.FurnitureModel;
-import IslandFurniture.Entities.ReplenishmentTransferOrder;
 import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StoreSection;
@@ -30,6 +29,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -42,6 +42,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
 
     private Long stockId;
     private Long storeSectionId;
+    private StorefrontInventory storefrontInventory;
 
     private List<StoreSection> storeSectionList;
     private List<StorefrontInventory> storefrontInventoryList;
@@ -91,6 +92,11 @@ public class StorefrontInventoryManagedBean implements Serializable {
             }
         }
     }
+    
+    public void viewStorefrontInventory(AjaxBehaviorEvent event) {
+        Long stockId = (Long) event.getComponent().getAttributes().get("stockId");
+        this.storefrontInventory = storefrontInventoryBean.getStorefrontInventory(plant, stockId);
+    }
 
 //  Function: To create a Storefront Inventory
     public void addStorefrontInventory(ActionEvent event) throws IOException {
@@ -111,7 +117,7 @@ public class StorefrontInventoryManagedBean implements Serializable {
 
 //  Function: To edit a Storefront Inventory
     public void editStorefrontInventory(ActionEvent event) throws IOException {
-        StorefrontInventory si = (StorefrontInventory) event.getComponent().getAttributes().get("storefrontInventory");
+        StorefrontInventory si = this.storefrontInventory;
 
         System.out.println("1. SI is: " + si.getLocationInStore().getId());
         if (si.getRepQty() > si.getMaxQty()) {
@@ -140,8 +146,14 @@ public class StorefrontInventoryManagedBean implements Serializable {
         storefrontInventoryList = storefrontInventoryBean.viewStorefrontInventory(plant);
         }
         
-        
-        
+    }
+
+    public StorefrontInventory getStorefrontInventory() {
+        return storefrontInventory;
+    }
+
+    public void setStorefrontInventory(StorefrontInventory storefrontInventory) {
+        this.storefrontInventory = storefrontInventory;
     }
 
     public List<Stock> getTempList() {
