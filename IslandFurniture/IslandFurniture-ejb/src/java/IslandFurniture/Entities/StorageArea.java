@@ -10,6 +10,7 @@ import IslandFurniture.Enums.StorageAreaType;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +34,7 @@ public class StorageArea implements Serializable {
     private Long id;
     @ManyToOne
     private Plant plant;
-    @OneToMany(mappedBy="storageArea")
+    @OneToMany(mappedBy="storageArea",fetch=FetchType.EAGER)
     private List<StorageBin> storageBins;
     private String name;
     private StorageAreaType type;

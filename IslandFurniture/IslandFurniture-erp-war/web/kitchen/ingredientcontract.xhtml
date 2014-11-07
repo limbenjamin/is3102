@@ -42,7 +42,7 @@
                                             <p:column headerText="Ingredient" sortBy="#{ic.ingredient.name}">
                                                 <h:outputText id="ingredient" value="#{ic.ingredient.name}" class="transparent-form"></h:outputText>
                                             </p:column> 
-                                            <p:column headerText="Lot Price" >
+                                            <p:column headerText="Lot Price (#{ingredientContractManagedBean.co.country.currency.currencyCode})" >
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                     <h:inputText id="lotPrice" value="#{ic.lotPrice}" class="form-control transparent-form"></h:inputText>

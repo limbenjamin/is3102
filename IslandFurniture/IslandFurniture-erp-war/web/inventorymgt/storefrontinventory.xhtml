@@ -42,7 +42,7 @@
                                             <th>Replenishment Quantity</th>
                                             <th>Maximum Quantity</th>
                                             <th>Store Section</th>
-                                            <th>Update</th>
+                                            <th>Details</th>
                                             <th>Delete</th>
                                         </tr>
                                         <h:form class="form-horizontal">
@@ -50,18 +50,17 @@
                                                 <tr>
                                                     <td><h:outputText value="#{ss.stock.name}"/></td>
                                                     <td><h:outputText value="#{ss.qty}"/></td>
-                                                    <td><h:inputText value="#{ss.repQty}" class="form-control" pt:required="true"></h:inputText></td>
-                                                    <td><h:inputText value="#{ss.maxQty}" class="form-control" pt:required="true"></h:inputText></td>
-                                                    <td>
-                                                        <h:selectOneMenu class="form-control needauto" value="#{ss.locationInStore.id}" pt:required="true">
-                                                            <f:selectItems value="#{storefrontInventoryManagedBean.storeSectionList}" var="l" itemLabel="#{l.name}" itemValue="#{l.id}" />
-                                                        </h:selectOneMenu>
-                                                    </td>
-                                                    <td>
-                                                        <h:commandButton action="storefrontinventory" actionListener="#{storefrontInventoryManagedBean.editStorefrontInventory}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                            <f:attribute name="storefrontInventory" value="#{ss}" />
-                                                        </h:commandButton>
-                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
+                                                    <td><h:outputText value="#{ss.repQty}" class="form-control transparent-form" /></td>
+                                                    <td><h:outputText value="#{ss.maxQty}" class="form-control transparent-form" /></td>
+                                                    <td><h:outputText value="#{ss.locationInStore.name}" class="form-control transparent-form" /></td>
+                                                    <td width="100px"> 
+                                                        <a data-toggle="modal" data-target="#viewStorefrontInventory">
+                                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0; text-align: center"> 
+                                                                <f:ajax listener="#{storefrontInventoryManagedBean.viewStorefrontInventory}"  render=":viewStorefrontInventory:content"/>
+                                                                <f:attribute name="stockId" value="#{ss.stock.id}" />
+                                                            </h:commandButton>
+                                                            <i class="fa fa-search-plus icon-button"></i> 
+                                                        </a>
                                                     </td>
                                                     <td>
                                                         <h:commandButton action="storefrontinventory" actionListener="#{storefrontInventoryManagedBean.deleteStorefrontInventory}" class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -119,14 +118,70 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton action="storefrontinventory" actionListener="#{storefrontInventoryManagedBean.addStorefrontInventory}" value="Add Stock to Storefront Inventory" class="btn btn-success pull-right btn-round"> 
+                                                <h:commandButton action="storefrontinventory" actionListener="#{storefrontInventoryManagedBean.addStorefrontInventory}" value="Add Stock" class="btn btn-success pull-right btn-round"> 
                                                 </h:commandButton>
                                             </div>
                                         </div>
                                     </h:form>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="viewStorefrontInventory" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Update Storefront Inventory</h4>
+                                    </div>
+                                    <h:form class="form-horizontal" id="viewStorefrontInventory">
+                                        <h:panelGroup id="content" class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Stock: </label>
+                                                <div class="col-sm-9">
+                                                    <h:outputText class="form-control transparent-form" value="#{storefrontInventoryManagedBean.storefrontInventory.stock.name}"></h:outputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Current Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:outputText class="form-control transparent-form" value="#{storefrontInventoryManagedBean.storefrontInventory.qty}"></h:outputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Replenishment Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText pt:type="number"  pt:required="true" class="form-control" value="#{storefrontInventoryManagedBean.storefrontInventory.repQty}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Maximum Quantity: </label>
+                                                <div class="col-sm-9">
+                                                    <h:inputText pt:type="number"  pt:required="true" class="form-control" value="#{storefrontInventoryManagedBean.storefrontInventory.maxQty}"></h:inputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Store Section: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu class="form-control needauto" value="#{storefrontInventoryManagedBean.storefrontInventory.locationInStore.id}" pt:required="true">
+                                                        <f:selectItems value="#{storefrontInventoryManagedBean.storeSectionList}" var="l" itemLabel="#{l.name}" itemValue="#{l.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                                <h:commandButton action="storefrontinventory" actionListener="#{storefrontInventoryManagedBean.editStorefrontInventory}" value="Update" class="btn btn-success pull-right btn-round"> 
+                                                </h:commandButton>
+                                            </div>
+                                        </h:panelGroup>
+
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal ends here -->
+
                     </div> 
                 </div>
             </ui:define>

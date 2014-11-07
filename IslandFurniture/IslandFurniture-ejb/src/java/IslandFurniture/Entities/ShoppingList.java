@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
@@ -22,18 +21,23 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class ShoppingList implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToMany(mappedBy="shoppingList")
-    private List<ShoppingListDetail> shoppingListDetails;
-    @ManyToMany
-    private List<Customer> customers; // Shopping list can be collaborated upon.
-    @ManyToOne
-    private Store store;
+    private String idHash;
     private String name;
     private Double totalPrice;
+
+    @OneToMany(mappedBy = "shoppingList")
+    private List<ShoppingListDetail> shoppingListDetails;
+
+    @ManyToMany
+    private List<Customer> customers; // Shopping list can be collaborated upon.
+
+    @ManyToOne
+    private Store store;
 
     public Long getId() {
         return id;
@@ -41,6 +45,30 @@ public class ShoppingList implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdHash() {
+        return idHash;
+    }
+
+    public void setIdHash(String idHash) {
+        this.idHash = idHash;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public List<ShoppingListDetail> getShoppingListDetails() {
@@ -92,34 +120,6 @@ public class ShoppingList implements Serializable {
         return "ShoppingList[ id=" + id + " ]";
     }
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @return the totalPrice
-     */
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    /**
-     * @param totalPrice the totalPrice to set
-     */
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-    
     // Extra Methods
     public boolean hasFurniture(FurnitureModel furniture) {
         for (ShoppingListDetail detail : shoppingListDetails) {
@@ -128,6 +128,5 @@ public class ShoppingList implements Serializable {
             }
         }
         return false;
-    }    
-    
+    }
 }
