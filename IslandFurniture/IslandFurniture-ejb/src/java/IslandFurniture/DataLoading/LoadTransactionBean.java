@@ -5,6 +5,7 @@
  */
 package IslandFurniture.DataLoading;
 
+import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimerLocal;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +35,8 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class LoadTransactionBean implements LoadTransactionBeanRemote {
+    @EJB
+    private ACRMAnalyticsTimerLocal aCRMAnalyticsTimer;
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -134,7 +138,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             Calendar cal = Calendar.getInstance();
             Calendar curr;
 
-            Random rand = new Random(1); // Seed to ensure always same sample transactions
+            Random rand = new Random(2); // Seed to ensure always same sample transactions
 
             List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
             List<RetailItemTransactionDetail> riTransDetails = new ArrayList();
@@ -148,8 +152,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             FurnitureModel studyTable = QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition");
             FurnitureModel swivelChair = QueryMethods.findFurnitureByName(em, "Swivel Chair");
             FurnitureModel lamp = QueryMethods.findFurnitureByName(em, "Bedside Lamp H31");
-            FurnitureModel bedFrame = QueryMethods.findFurnitureByName(em, "Gothic Bed Frame");
+            FurnitureModel bedFrame = QueryMethods.findFurnitureByName(em, "Gothic Bed Frame (Queen Size)");
             FurnitureModel nightStand = QueryMethods.findFurnitureByName(em, "Ninja Night Stand");
+            
+            int[] track = {0,0,0};
 
             for (Store eachStore : stores) {
                 if (!eachStore.getCountryOffice().getSuppliedWithFrom().isEmpty()) {
@@ -162,58 +168,26 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                         riTransDetails.clear();
                         restTransDetails.clear();
 
-                        // Declare pairing check flags
-                        boolean hasStudyTable = false;
-                        boolean hasSwivelChair = false;
-
-                        // Declare triplets check flags
-                        boolean hasBedsideLamp = false;
-                        boolean hasGothicBedFrame = false;
-                        boolean hasNinjaNightStand = false;
+                        // Type of staging
+                        int type = rand.nextInt(3);
+                        track[type]++;
 
                         for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
                             // Bias product pairing logic
-                            if (ss.getStock().equals(studyTable) && hasSwivelChair) {
-                                if (rand.nextDouble() < 0.85) {
+                            if (ss.getStock().equals(studyTable) && type == 0) {
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                                }
-                            } else if (ss.getStock().equals(swivelChair) && hasStudyTable) {
-                                if (rand.nextDouble() < 0.85) {
+                            } else if (ss.getStock().equals(swivelChair) && type == 0) {
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                                }
-                            } else if (ss.getStock().equals(lamp) && (hasGothicBedFrame || hasNinjaNightStand)) {
-                                if (rand.nextDouble() < 0.85) {
+                            } else if (ss.getStock().equals(lamp) && type == 1) {
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                                }
-                            } else if (ss.getStock().equals(bedFrame) && (hasBedsideLamp || hasNinjaNightStand)) {
-                                if (rand.nextDouble() < 0.85) {
+                            } else if (ss.getStock().equals(bedFrame) && type == 1) {
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                                }
-                            } else if (ss.getStock().equals(nightStand) && (hasBedsideLamp || hasGothicBedFrame)) {
-                                if (rand.nextDouble() < 0.85) {
+                            } else if (ss.getStock().equals(nightStand) && type == 1) {
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                                }
-                            } else if (rand.nextBoolean()) {
+                            } else if (rand.nextDouble() < 0.35) {
                                 // Equal chance item logic
 
                                 if (ss.getStock() instanceof FurnitureModel) {
-                                    // Track pairings and triplets count
-                                    if (ss.getStock().equals(studyTable)) {
-                                        hasStudyTable = true;
-                                    }
-                                    if (ss.getStock().equals(swivelChair)) {
-                                        hasSwivelChair = true;
-                                    }
-                                    if (ss.getStock().equals(lamp)) {
-                                        hasBedsideLamp = true;
-                                    }
-                                    if (ss.getStock().equals(bedFrame)) {
-                                        hasGothicBedFrame = true;
-                                    }
-                                    if (ss.getStock().equals(nightStand)) {
-                                        hasNinjaNightStand = true;
-                                    }
-
                                     fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
                                 } else if (ss.getStock() instanceof RetailItem) {
                                     riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(10) + 1));
@@ -319,6 +293,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                 em.flush();
             }
 
+            // Advance Analytics Timer
+            System.out.println(track[0] + " | " + track[1] + " | " + track[2]);
+            aCRMAnalyticsTimer.setAdvancePeriod(1);
+            
             return true;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());

@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.Hidden;
 
 import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimer;
-import IslandFurniture.EJB.ACRM.ACRMSingletonLocal;
+import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimerLocal;
 import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public class ConsoleManagedBean implements Serializable {
     private ProductionPlanningSingletonLocal singleatom;
 
     @EJB
-    private ACRMSingletonLocal acrmatom;
+    private ACRMAnalyticsTimerLocal acrmatom;
     
 
     private String statusMessage;

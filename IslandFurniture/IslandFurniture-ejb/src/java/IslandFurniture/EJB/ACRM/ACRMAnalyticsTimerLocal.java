@@ -19,6 +19,6 @@ import javax.ejb.Local;
 - * @author James
 - */
 @Local
-public interface ACRMSingletonLocal {
+public interface ACRMAnalyticsTimerLocal {
     public void setAdvancePeriod(int week);
 }

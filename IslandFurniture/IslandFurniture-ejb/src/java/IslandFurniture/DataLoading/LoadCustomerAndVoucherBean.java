@@ -184,12 +184,10 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
                     // Stage pairings
                     if (rand.nextDouble() < 0.75) {
                         try {
-                            System.out.println("List 2 " + QueryMethods.findFurnitureByName(em, "Swivel Chair").getId());
                             shopListBean.createShoppingListDetail(shopList.getId(), QueryMethods.findFurnitureByName(em, "Swivel Chair").getId(), rand.nextInt(5) + 1, 0.0);
                         } catch (DuplicateEntryException ex) {
                         }
                         try {
-                            System.out.println("List 2 " + QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition").getId());
                             shopListBean.createShoppingListDetail(shopList.getId(), QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition").getId(), rand.nextInt(5) + 1, 0.0);
                         } catch (DuplicateEntryException ex) {
                         }

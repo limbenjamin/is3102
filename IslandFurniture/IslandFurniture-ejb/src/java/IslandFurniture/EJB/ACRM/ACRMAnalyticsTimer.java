@@ -34,7 +34,7 @@ import javax.persistence.Query;
 @Startup
 @Singleton
 @Lock(WRITE)
-public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
+public class ACRMAnalyticsTimer implements ACRMAnalyticsTimerLocal {
 
     public static final Integer supportProb=40;
     @PersistenceContext(unitName = "IslandFurniture")
