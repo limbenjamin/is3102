@@ -144,62 +144,202 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="history">
-                                    <div class="col-md-8">
-                                        <br/>
-                                        
-                                    <ui:repeat value="#{customerAccountManagedBean.furnitureTransactions}" var="trans">    
-                                    <!-- Sales Transaction -->
-                                    <div class="panel panel-default receipt">
-                                    <div class="panel-heading receipt-head">Transaction ID: ##{trans.id}</div>
-                                      <div class="panel-body">
-                                          <p>
-                                              <strong>
-                                                <h:outputText value="#{trans.transTime.time}">
-                                                    <f:convertDateTime pattern="EEE, MMM d, yyyy HH:MM z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
-                                                </h:outputText>
-                                              </strong><br/>
-                                              Store: <strong>#{trans.store.name}</strong><br/></p>
-                                          <p>
-                                              Returned Credits: <strong>#{trans.returnedCreditsUsed}</strong>
-                                          </p>                                    
-                                      </div>
-                                      <div class="line"></div>
-                                      <table class="table">
-                                        <thead>
-                                          <tr>
-                                            <th>DESCRIPTION</th>
-                                            <th width="130">UNIT PRICE</th>
-                                            <th width="70">QTY</th>                    
-                                            <th width="80" class="text-right">TOTAL</th>
-                                            <th width="100" class="text-right">POINTS AWARDED</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ui:repeat value="#{trans.furnitureTransactionDetails}" var="detail">
-                                              <tr>
-                                                <td>#{detail.furnitureModel.name}</td>
-                                                <td>#{detail.unitPrice}</td>
-                                                <td>#{detail.qty}</td>
-                                                <td class="text-right">
-                                                    <h:outputText value="#{detail.unitPrice * detail.qty}" id="discounted">
-                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
-                                                    </h:outputText>
-                                                </td>
-                                                <td class="text-right">#{detail.unitPoints * detail.qty}</td>
-                                              </tr>
-                                            </ui:repeat>                                       
-                                          <tr>
-                                            <td class="no-border"><strong>Total Receipt / Points Awarded</strong></td>
-                                            <td colspan="3" class="text-right"><strong>
-                                                    #{customerAccountManagedBean.co.country.currency.currencyCode} 
-                                                    #{trans.grandTotal}</strong></td>
-                                            <td class="text-right"><strong>#{customerAccountManagedBean.calculatePoints(trans)} pts</strong></td>
-                                          </tr>
-                                        </tbody>
-                                      </table>                             
-                                    </div>                                        
-                                    </ui:repeat>
-                                        
+                                    <div class="row">
+                                        <br/><br/>
+                                        <div class="col-md-3">
+                                        <ul class="nav nav-tabs nav-stacked" role="tablist">
+                                          <li role="presentation" class="active"><a href="#furniture" role="tab" data-toggle="tab">Furniture</a></li>
+                                          <li role="presentation"><a href="#retail" role="tab" data-toggle="tab">Retail Items</a></li>
+                                          <li role="presentation"><a href="#restaurant" role="tab" data-toggle="tab">Restaurant</a></li>
+                                        </ul>
+                                        </div>
+
+                                        <!-- Transaction Content -->
+                                        <div class="col-md-9">
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane active" id="furniture">
+                                                <ui:repeat value="#{customerAccountManagedBean.furnitureTransactions}" var="trans">    
+                                                <!-- Sales Transaction -->
+                                                <div class="panel panel-default receipt">
+                                                <div class="panel-heading receipt-head">Transaction ID: ##{trans.id}</div>
+                                                  <div class="panel-body">
+                                                          <strong>
+                                                            <h:outputText value="#{trans.transTime.time}">
+                                                                <f:convertDateTime pattern="EEE, MMM d, yyyy HH:MM z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                                            </h:outputText>
+                                                          </strong><br/>
+                                                          Store: <strong>#{trans.store.name}</strong>                              
+                                                  </div>
+                                                  <div class="line"></div>
+                                                  <table class="table">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>DESCRIPTION</th>
+                                                        <th width="130">UNIT PRICE</th>
+                                                        <th width="70">QTY</th>                    
+                                                        <th width="80" class="text-right">TOTAL</th>
+                                                        <th width="100" class="text-right">POINTS AWARDED</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{trans.furnitureTransactionDetails}" var="detail">
+                                                          <tr>
+                                                            <td>#{detail.furnitureModel.name}</td>
+                                                            <td>#{detail.unitPrice}</td>
+                                                            <td>#{detail.qty}</td>
+                                                            <td class="text-right">
+                                                                <h:outputText value="#{detail.unitPrice * detail.qty}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td class="text-right">#{detail.unitPoints * detail.qty}</td>
+                                                          </tr>
+                                                        </ui:repeat>
+                                                        <tr>
+                                                            <td class="no-border"><strong>Voucher Discount</strong></td>
+                                                            <td colspan="3" class="text-right">
+                                                                <strong>- #{trans.voucherTotal} </strong>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                      <tr>
+                                                        <td class="no-border"><strong>Grand Total / Points Awarded</strong></td>
+                                                        <td colspan="3" class="text-right"><strong>
+                                                                #{customerAccountManagedBean.co.country.currency.currencyCode} 
+                                                                <h:outputText value="#{trans.grandTotal}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </strong></td>
+                                                        <td class="text-right"><strong>#{customerAccountManagedBean.calculatePoints(trans)} pts</strong></td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>                             
+                                                </div>                                        
+                                                </ui:repeat>                                                
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="retail">
+                                                <ui:repeat value="#{customerAccountManagedBean.retailTransactions}" var="trans">    
+                                                <!-- Sales Transaction -->
+                                                <div class="panel panel-default receipt">
+                                                <div class="panel-heading receipt-head">Transaction ID: ##{trans.id}</div>
+                                                  <div class="panel-body">
+                                                      <p>
+                                                          <strong>
+                                                            <h:outputText value="#{trans.transTime.time}">
+                                                                <f:convertDateTime pattern="EEE, MMM d, yyyy HH:MM z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                                            </h:outputText>
+                                                          </strong><br/>
+                                                          Store: <strong>#{trans.store.name}</strong><br/></p>                                   
+                                                  </div>
+                                                  <div class="line"></div>
+                                                  <table class="table">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>DESCRIPTION</th>
+                                                        <th width="130">UNIT PRICE</th>
+                                                        <th width="70">QTY</th>                    
+                                                        <th width="80" class="text-right">TOTAL</th>
+                                                        <th width="100" class="text-right">POINTS AWARDED</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{trans.retailItemTransactionDetails}" var="detail">
+                                                          <tr>
+                                                            <td>#{detail.retailItem.name}</td>
+                                                            <td>#{detail.unitPrice}</td>
+                                                            <td>#{detail.qty}</td>
+                                                            <td class="text-right">
+                                                                <h:outputText value="#{detail.unitPrice * detail.qty}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td class="text-right">#{detail.unitPoints * detail.qty}</td>
+                                                          </tr>
+                                                        </ui:repeat>
+                                                        <tr>
+                                                            <td class="no-border"><strong>Voucher Discount</strong></td>
+                                                            <td colspan="3" class="text-right">
+                                                                <strong>- #{trans.voucherTotal} </strong>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                      <tr>
+                                                        <td class="no-border"><strong>Total Receipt / Points Awarded</strong></td>
+                                                        <td colspan="3" class="text-right"><strong>
+                                                                #{customerAccountManagedBean.co.country.currency.currencyCode} 
+                                                                <h:outputText value="#{trans.grandTotal}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </strong></td>
+                                                        <td class="text-right"><strong>#{customerAccountManagedBean.calculatePoints(trans)} pts</strong></td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>                             
+                                                </div>                                        
+                                                </ui:repeat>                                                
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane" id="restaurant">
+                                                <ui:repeat value="#{customerAccountManagedBean.restaurantTransactions}" var="trans">    
+                                                <!-- Sales Transaction -->
+                                                <div class="panel panel-default receipt">
+                                                <div class="panel-heading receipt-head">Transaction ID: ##{trans.id}</div>
+                                                  <div class="panel-body">
+                                                          <strong>
+                                                            <h:outputText value="#{trans.transTime.time}">
+                                                                <f:convertDateTime pattern="EEE, MMM d, yyyy HH:MM z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                                            </h:outputText>
+                                                          </strong><br/>
+                                                          Store: <strong>#{trans.store.name}</strong>                              
+                                                  </div>
+                                                  <div class="line"></div>
+                                                  <table class="table">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>DESCRIPTION</th>
+                                                        <th width="130">UNIT PRICE</th>
+                                                        <th width="70">QTY</th>                    
+                                                        <th width="80" class="text-right">TOTAL</th>
+                                                        <th width="100" class="text-right">POINTS AWARDED</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{trans.restaurantTransactionDetails}" var="detail">
+                                                          <tr>
+                                                            <td>#{detail.furnitureModel.name}</td>
+                                                            <td>#{detail.unitPrice}</td>
+                                                            <td>#{detail.qty}</td>
+                                                            <td class="text-right">
+                                                                <h:outputText value="#{detail.unitPrice * detail.qty}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td class="text-right">#{detail.unitPoints * detail.qty}</td>
+                                                          </tr>
+                                                        </ui:repeat>
+                                                        <tr>
+                                                            <td class="no-border"><strong>Voucher Discount</strong></td>
+                                                            <td colspan="3" class="text-right">
+                                                                <strong>- #{trans.voucherTotal} </strong>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                      <tr>
+                                                        <td class="no-border"><strong>Grand Total / Points Awarded</strong></td>
+                                                        <td colspan="3" class="text-right"><strong>
+                                                                #{customerAccountManagedBean.co.country.currency.currencyCode} 
+                                                                <h:outputText value="#{trans.grandTotal}" id="discounted">
+                                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                                </h:outputText>
+                                                            </strong></td>
+                                                        <td class="text-right"><strong>#{customerAccountManagedBean.calculatePoints(trans)} pts</strong></td>
+                                                      </tr>
+                                                    </tbody>
+                                                  </table>                             
+                                                </div>                                        
+                                                </ui:repeat>                                                
+                                            </div>
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="settings">

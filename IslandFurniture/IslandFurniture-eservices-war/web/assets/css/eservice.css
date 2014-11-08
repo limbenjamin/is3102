@@ -908,6 +908,24 @@ h2.title {
   color: #696763;
 }
 
+
+.nav-stacked li {
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-stacked li.active {
+    border: none;
+    background-color: #ddd;
+}
+
+.nav-stacked li.active a {
+    background-color: #ddd;
+}
+.nav-stacked>li+li {
+    margin-top: 0px;
+    border-radius: 0px;
+}
+
 /**************************** PRODUCT DETAILS **************************************/
 
 .product-details{
