@@ -429,6 +429,7 @@ public class StocklistWS {
         if (!customerCardId.trim().isEmpty()){
             customer.setCumulativePoints(customer.getCumulativePoints()+ (int) totalPoints);
             customer.setCurrentPoints(customer.getCurrentPoints()+ (int) totalPoints);
+            //TODO add in ashraff's function checkmembershipupgradeatpos
         }
         String vouchers = voucher.substring(1, voucher.length()-1);
         System.err.println(vouchers);
