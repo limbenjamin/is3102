@@ -35,7 +35,7 @@ import javax.persistence.Query;
 @Startup
 @Singleton
 @Lock(WRITE)
-public class ACRMAnalyticsTimer implements ProductionPlanningSingletonLocal {
+public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -142,7 +142,7 @@ public class ACRMAnalyticsTimer implements ProductionPlanningSingletonLocal {
     }
 
     //should be done once every 6 months
-    @Schedule(second = "*/2", hour = "*", minute = "*", year = "1", info = "Production Planning")
+    @Schedule(second = "*/2", hour = "*", minute = "*", info = "Production Planning")
     public void Apiori() throws Exception {
 
         if (stepLeft <= 0) {
