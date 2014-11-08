@@ -8,7 +8,7 @@ package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
 import java.util.logging.Level;
@@ -161,10 +161,11 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }    
     
     @Override
-    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name){
+    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address){
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
+        customer.setAddress(address);
     }
     
     @Override

@@ -66,30 +66,61 @@
                                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                         <h4 class="modal-title" id="myModalLabel">Add Redemption</h4>
                                     </div>
-                                    <h:form id="createGRDD" class="form-horizontal">
-                                        <div class="modal-body">
+                                    <h:form id="redemptionForm" class="form-horizontal">
+                                        <h:panelGroup id="content" class="modal-body">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Customer: </label>
-                                                <div class="col-sm-9">
-                                                    <h:selectOneMenu class="form-control needauto" value="#{redemptionManagedBean.customerId}">
-                                                        <f:selectItem itemLabel="Select Customer" />
-                                                        <f:selectItems value="#{redemptionManagedBean.customerList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
-                                                    </h:selectOneMenu>
+                                                          <label class="col-sm-3 control-label">Name: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText class="form-control transparent-form" value="#{redemptionManagedBean.customer.name}"></h:outputText>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Email Address: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText class="form-control transparent-form" value="#{redemptionManagedBean.customer.emailAddress}"></h:outputText>
+                                                </div>
+                                            </div>                               
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Member Tier: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText class="form-control transparent-form" value="#{redemptionManagedBean.customer.membershipTier.title}"></h:outputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Loyalty Points: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText class="form-control transparent-form" value="#{redemptionManagedBean.customer.currentPoints}"></h:outputText>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Lifetime Points: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText class="form-control transparent-form" value="#{redemptionManagedBean.customer.cumulativePoints}"></h:outputText>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Redeemable Item: </label>
                                                 <div class="col-sm-9">
-                                                    <h:selectOneMenu class="form-control needauto" value="#{redemptionManagedBean.redeemableItemId}">
+                                                    <h:selectOneMenu class="form-control" value="#{redemptionManagedBean.redeemableItemId}">
+                                                        <f:ajax listener="#{redemptionManagedBean.changeRedeemableItem}" render="reqPoints" />
                                                         <f:selectItem itemLabel="Select Redeemable Item" />
-                                                        <f:selectItems value="#{redemptionManagedBean.redeemableItemList}" var="p" itemLabel="#{p.cashValue}" itemValue="#{p.id}" />
+                                                        <f:selectItems value="#{redemptionManagedBean.redeemableItemList}" var="p" itemLabel="Voucher Value: #{p.cashValue}" itemValue="#{p.id}" />
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Points Required: </label>
+                                                <div class="col-sm-8">
+                                                    <h:outputText id="reqPoints" class="form-control transparent-form" value="#{redemptionManagedBean.redeemableItem.pointsReq}"></h:outputText>
+                                                </div>
+                                            </div>
+                                        </h:panelGroup>
+                                        
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton value="Scan" class="btn btn-success btn-round" >
+                                                        <f:ajax listener="#{redemptionManagedBean.scanNFC}" render=":redemptionForm:content" />
+                                                    </h:commandButton> 
                                             <h:commandButton action="redemption" actionListener="#{redemptionManagedBean.addRedemption}" value="Add Redemption" class="btn btn-success pull-right btn-round"> 
                                             </h:commandButton>
                                         </div>

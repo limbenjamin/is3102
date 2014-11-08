@@ -5,9 +5,9 @@
  */
 package IslandFurniture.Entities;
 
-import static IslandFurniture.Entities.Staff.AESDecrypt;
-import static IslandFurniture.Entities.Staff.AESEncrypt;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
+import static IslandFurniture.StaticClasses.EncryptMethods.AESDecrypt;
+import static IslandFurniture.StaticClasses.EncryptMethods.AESEncrypt;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

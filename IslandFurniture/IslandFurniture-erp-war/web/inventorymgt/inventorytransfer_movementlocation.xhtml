@@ -20,14 +20,6 @@
                     </div>
                     
                     <div class="col-md-8">
-                        <h:panelGroup layout="block" rendered="#{not empty inventoryTransferMovementLocationManagedBean.stockUnitList}">
-                            <h:form> 
-                                <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStockUnit">
-                                    <i class="fa fa-fw fa-plus"></i>Select Stock
-                                </button>  
-                            </h:form>
-                        </h:panelGroup>
-
                         <section name="View Contents of Storage Location">
                             <span class="pull-right">
                                 <a href="inventorytransfer.xhtml">
@@ -52,7 +44,7 @@
                                             <th>Stock Unit Number</th>
                                             <th>Quantity</th>
                                             <th>Batch Number</th>
-                                            <th>Update</th>
+                                            <th width="100px">Details</th>
                                         </tr>
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s">
@@ -60,14 +52,16 @@
                                                     <td>#{s.stock.name}</td>
                                                     <td>#{s.id}</td>
                                                     <td>#{s.qty}</td>
-                                                    <td><h:inputText value="#{s.batchNo}" class="form-control" rendered="#{inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}"/>
-                                                        <h:outputText rendered="#{!inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}" value="#{s.batchNo}"/>
+                                                    <td>#{s.batchNo}</td>
+                                                    <td width="100px"> 
+                                                        <a data-toggle="modal" data-target="#viewStockUnit">
+                                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0; text-align: center"> 
+                                                                <f:ajax listener="#{inventoryTransferMovementLocationManagedBean.viewStockUnit}" render=":viewStockUnit:content" />
+                                                                <f:attribute name="stockUnitId" value="#{s.id}" />
+                                                            </h:commandButton>
+                                                            <i class="fa fa-search-plus icon-button"></i> 
+                                                        </a>
                                                     </td>
-                                                    <td><h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.updateBatchNumber}"  value="Update" class="btn btn-success btn-xs" rendered="#{inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(s.batchNo)}">  
-                                                            <f:attribute name="stockUnitId" value="#{s.id}" />
-                                                            <f:attribute name="batchNumber" value="#{s.batchNo}" />
-                                                            <f:attribute name="storageBinId" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}" />
-                                                        </h:commandButton></td>
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 
@@ -134,36 +128,35 @@
 
                         <!-- Modal -->
                         <section name="Move Stock">
-                            <div class="modal fade" id="newStockUnit" aria-hidden="true">
+                            <div class="modal fade" id="viewStockUnit" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">Select Stock</h4>
+                                            <h4 class="modal-title" id="myModalLabel">Move Stock Unit</h4>
                                         </div>
-                                        <h:form id="newStockUnit1" class="form-horizontal">
-                                            <div class="modal-body">
-
+                                        <h:form id="viewStockUnit" class="form-horizontal">
+                                            <h:panelGroup id="content" class="modal-body">
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Stock: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-
-                                                        <h:selectOneMenu class="form-control needauto" value="#{inventoryTransferMovementLocationManagedBean.stockId}" pt:required="true">
-                                                            <p:ajax listener="#{inventoryTransferMovementLocationManagedBean.onStockChange}" update="stockUnitMenu" />
-                                                            <f:selectItem itemLabel="Select Stock" />
-                                                            <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.stockUnitList}" var="s" itemLabel="#{s.stock.name}" itemValue="#{s.stock.id}" />
-                                                        </h:selectOneMenu>
+                                                        <h:outputText class="form-control transparent-form" value ="#{inventoryTransferMovementLocationManagedBean.stockUnit.stock.name}"/>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Stock Unit: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-
-                                                        <h:selectOneMenu id="stockUnitMenu" class="form-control" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}" pt:required="true">
-                                                            <f:selectItem itemLabel="Select Stock Unit ID" />
-                                                            <f:selectItems value="#{inventoryTransferMovementLocationManagedBean.stockUnitListOfTheStockOnly}" var="s" itemLabel="#{s.id}" itemValue="#{s.id}" />
-                                                        </h:selectOneMenu>
+                                                        <h:outputText class="form-control transparent-form" value ="#{inventoryTransferMovementLocationManagedBean.stockUnit.id}"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Batch Number: </label>
+                                                    <div class="col-sm-9 inner-addon right-addon">
+                                                        <h:inputText value="#{inventoryTransferMovementLocationManagedBean.stockUnit.batchNo}" class="form-control" rendered="#{inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(inventoryTransferMovementLocationManagedBean.stockUnit.batchNo)}" pt:required="true"/>
+                                                        <h:outputText value="#{inventoryTransferMovementLocationManagedBean.stockUnit.batchNo}" class="form-control transparent-form" rendered="#{!inventoryTransferMovementLocationManagedBean.ifBatchNoEmpty(inventoryTransferMovementLocationManagedBean.stockUnit.batchNo)}"/>
+                                                       
                                                     </div>
                                                 </div>
 
@@ -194,18 +187,19 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Quantity: </label>
                                                     <div class="col-sm-9 inner-addon right-addon">
-
-                                                        <h:inputText class="form-control" pt:type="number"  pt:required="true" value="#{inventoryTransferMovementLocationManagedBean.stockUnitQuantity}"></h:inputText>
+                                                        <h:inputText class="form-control" pt:type="number"  pt:required="true" value="#{inventoryTransferMovementLocationManagedBean.stockUnit.qty}"></h:inputText>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            
+                                            </h:panelGroup>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                                <h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.addStockUnitPendingMovement}" value="Add Stock" class="btn btn-success btn-round">
-                                                    <f:attribute name="stockId" value="#{inventoryTransferMovementLocationManagedBean.stock.id}" />
-                                                    <f:attribute name="stockUnitId" value="#{inventoryTransferMovementLocationManagedBean.stockUnitId}" />
+                                                <h:commandButton actionListener="#{inventoryTransferMovementLocationManagedBean.addStockUnitPendingMovement}" value="Move Stock Unit" class="btn btn-success btn-round">
+                                                    <f:attribute name="stockId" value="#{inventoryTransferMovementLocationManagedBean.stockUnit.stock.id}" />
+                                                    <f:attribute name="batchNo" value="#{inventoryTransferMovementLocationManagedBean.stockUnit.batchNo}" />
+                                                    <f:attribute name="stockUnitId" value="#{inventoryTransferMovementLocationManagedBean.stockUnit.id}" />
                                                     <f:attribute name="storageBinId" value="#{inventoryTransferMovementLocationManagedBean.storageBinId}" />
-                                                    <f:attribute name="stockUnitQuantity" value="#{inventoryTransferMovementLocationManagedBean.stockUnitQuantity}" />
+                                                    <f:attribute name="stockUnitQuantity" value="#{inventoryTransferMovementLocationManagedBean.stockUnit.qty}" />
                                                 </h:commandButton>
                                             </div>
                                         </h:form>

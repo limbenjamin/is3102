@@ -6,21 +6,28 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCustomerTransactionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.FurnitureTransaction;
+import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
-import static IslandFurniture.Entities.Staff.SHA1Hash;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
+import IslandFurniture.Entities.Transaction;
+import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
 import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -42,6 +49,7 @@ public class CustomerAccountManagedBean implements Serializable{
 
     private String name = null;
     private String phoneNo = null;
+    private String address = null;
     private String emailAddress = null;
     private Customer customer;
     private String hashedPassword = null;
@@ -55,6 +63,9 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<PromotionDetailByProduct> pdpPerks;
     private List<PromotionDetailByProductCategory> pdpcPerks;
     private List<PromotionDetailByProductSubCategory> pdpscPerks;
+    private List<FurnitureTransaction> furnitureTransactions;
+    private List<RetailItemTransaction> retailTransactions;
+    private List<RestaurantTransaction> restaurantTransactions;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -62,6 +73,8 @@ public class CustomerAccountManagedBean implements Serializable{
     private ManageLocalizationBeanLocal manageLocalizationBean;
     @EJB
     private ManagePerksBeanLocal perksBean;
+    @EJB
+    private ManageCustomerTransactionsLocal transBean;
     
     @PostConstruct
     public void init(){
@@ -88,6 +101,9 @@ public class CustomerAccountManagedBean implements Serializable{
             pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            furnitureTransactions = transBean.getFurnitureTransactions(customer);
+            retailTransactions = transBean.getRetailTransactions(customer);
+            restaurantTransactions = transBean.getRestaurantTransactions(customer);
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }
@@ -100,6 +116,26 @@ public class CustomerAccountManagedBean implements Serializable{
         return perksBean.getPerk(id).getAbsoluteDiscount();
     }
     
+    public long calculatePoints(Transaction trans) {
+        long totalPoints = 0;
+        if (trans instanceof FurnitureTransaction) {
+            FurnitureTransaction ftrans = (FurnitureTransaction)trans;
+            for (FurnitureTransactionDetail detail : ftrans.getFurnitureTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else if (trans instanceof RetailItemTransaction) {
+            RetailItemTransaction ritrans = (RetailItemTransaction)trans;
+            for (RetailItemTransactionDetail detail : ritrans.getRetailItemTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else {
+            RestaurantTransaction rtrans = (RestaurantTransaction)trans;
+            for (RestaurantTransactionDetail detail : rtrans.getRestaurantTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();            
+        }
+        return totalPoints;
+    }
+    
     public void modifyPersonalParticulars() throws IOException{
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
@@ -107,7 +143,8 @@ public class CustomerAccountManagedBean implements Serializable{
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         phoneNo = request.getParameter("particularsForm:phoneNo");
         name = request.getParameter("particularsForm:name");
-        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name);
+        address = request.getParameter("particularsForm:address");
+        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name, address);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
@@ -281,5 +318,37 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setPdpscPerks(List<PromotionDetailByProductSubCategory> pdpscPerks) {
         this.pdpscPerks = pdpscPerks;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<FurnitureTransaction> getFurnitureTransactions() {
+        return furnitureTransactions;
+    }
+
+    public void setFurnitureTransactions(List<FurnitureTransaction> furnitureTransactions) {
+        this.furnitureTransactions = furnitureTransactions;
+    }
+
+    public List<RetailItemTransaction> getRetailTransactions() {
+        return retailTransactions;
+    }
+
+    public void setRetailTransactions(List<RetailItemTransaction> retailTransactions) {
+        this.retailTransactions = retailTransactions;
+    }
+
+    public List<RestaurantTransaction> getRestaurantTransactions() {
+        return restaurantTransactions;
+    }
+
+    public void setRestaurantTransactions(List<RestaurantTransaction> restaurantTransactions) {
+        this.restaurantTransactions = restaurantTransactions;
     }
 }

@@ -8,9 +8,30 @@
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pf="http://primefaces.org/ui">
-    <ui:define name="content">       
-	<section>
-	<div class="container">           
+    <ui:define name="head-meta" rendered="#{not empty productDetailManagedBean.furniture.thumbnail.content}">
+        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
+        <meta property="og:image" content="data:image/png;base64,#{productDetailManagedBean.base64Decode()}" />
+    </ui:define>
+    <ui:define name="head-meta" rendered="#{empty productDetailManagedBean.furniture.thumbnail.content}">
+        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
+        <meta property="og:image" content="#{application.contextPath}/assets/images/nopic.jpg" />
+    </ui:define>    
+    <ui:define name="content">
+        <div id="fb-root"></div>
+        <h:outputScript>
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0]; 
+          if (d.getElementById(id)) return; 
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.0";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</h:outputScript>
+        <section>
+	<div class="container">
             <div class="row">
                 <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture}" style="height:410px;">
                     <div class="col-md-12">
@@ -40,6 +61,19 @@
                                     <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
                                 </h:panelGroup>
                             </section>
+                            <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.furniture.galleryPictures}">
+                            <div class="left-sidebar">
+                                <br/>
+                                <h2>Gallery</h2>
+                                <ui:repeat value="#{productDetailManagedBean.furniture.galleryPictures}" var="picture">
+                                <div class="col-sm-4">
+                                    <pf:graphicImage value="#{pictureManagedBean.image}" style="width: 100%; height: 100px;">
+                                        <f:param name="pictureId" value="#{picture.id}" />
+                                    </pf:graphicImage>
+                                </div>
+                                </ui:repeat>
+                            </div>
+                            </h:panelGroup>
                         </div>
 			<div class="col-sm-8">
                             <!--/product-information-->
@@ -56,10 +90,11 @@
                                         </h:outputText>
                                     </small>
                                 </h4>
-                                <!--<span class="product-options">
-                                    <a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a>
-                                    <a href="#"><i class="fa fa-eye"></i> View inside Room Planner</a>
-                                </span>-->
+                                <span class="product-options">
+                                    <div class="fb-share-button" data-href="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" data-layout="button"></div>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" data-text="Check out this product!">Tweet</a>
+                                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                                </span> 
                                 <hr/>
                                 <div class="col-sm-8">
                                     <p><b>Category:</b> #{productDetailManagedBean.furniture.category}</p>
