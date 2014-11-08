@@ -8,12 +8,18 @@
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pf="http://primefaces.org/ui">
-    <ui:define name="head-meta">
+    <ui:define name="head-meta" rendered="#{not empty productDetailManagedBean.furniture.thumbnail.content}">
         <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
         <meta property="og:image" content="data:image/png;base64,#{productDetailManagedBean.base64Decode()}" />
-    </ui:define> 
+    </ui:define>
+    <ui:define name="head-meta" rendered="#{empty productDetailManagedBean.furniture.thumbnail.content}">
+        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
+        <meta property="og:image" content="#{application.contextPath}/assets/images/nopic.jpg" />
+    </ui:define>    
     <ui:define name="content">
         <div id="fb-root"></div>
         <h:outputScript>
