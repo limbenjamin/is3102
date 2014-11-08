@@ -145,12 +145,15 @@
                                 </div>
                                 <div class="tab-pane" id="history">
                                     <div class="row">
-                                        <br/><br/>
+                                        <br/><br/>                                      
                                         <div class="col-md-3">
-                                        <ul class="nav nav-tabs nav-stacked" role="tablist">
-                                          <li role="presentation" class="active"><a href="#furniture" role="tab" data-toggle="tab">Furniture</a></li>
-                                          <li role="presentation"><a href="#retail" role="tab" data-toggle="tab">Retail Items</a></li>
-                                          <li role="presentation"><a href="#restaurant" role="tab" data-toggle="tab">Restaurant</a></li>
+                                        <div class="left-sidebar">
+                                            <h2 style="font-size:16px">Transactions</h2>
+                                        </div>
+                                        <ul class="nav nav-tabs nav-stacked trans-tabs" role="tablist">
+                                            <li role="presentation" class="active"><a href="#furniture" role="tab" data-toggle="tab"><i class="fa fa-archive"></i> Furniture</a></li>
+                                          <li role="presentation"><a href="#retail" role="tab" data-toggle="tab"><i class="fa fa-coffee"></i> Retail Items</a></li>
+                                          <li role="presentation"><a href="#restaurant" role="tab" data-toggle="tab"><i class="fa fa-cutlery"></i> Restaurant</a></li>
                                         </ul>
                                         </div>
 
@@ -305,7 +308,7 @@
                                                     <tbody>
                                                         <ui:repeat value="#{trans.restaurantTransactionDetails}" var="detail">
                                                           <tr>
-                                                            <td>#{detail.furnitureModel.name}</td>
+                                                            <td>#{detail.menuItem.name}</td>
                                                             <td>#{detail.unitPrice}</td>
                                                             <td>#{detail.qty}</td>
                                                             <td class="text-right">

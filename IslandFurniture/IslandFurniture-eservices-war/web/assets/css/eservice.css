@@ -909,19 +909,19 @@ h2.title {
 }
 
 
-.nav-stacked li {
+.trans-tabs li {
     border-bottom: 1px solid #ddd;
 }
 
-.nav-stacked li.active {
+.trans-tabs li.active {
     border: none;
     background-color: #ddd;
 }
 
-.nav-stacked li.active a {
+.trans-tabs li.active a {
     background-color: #ddd;
 }
-.nav-stacked>li+li {
+.trans-tabs>li+li {
     margin-top: 0px;
     border-radius: 0px;
 }
