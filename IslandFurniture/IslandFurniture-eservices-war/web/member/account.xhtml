@@ -53,6 +53,9 @@
                                                     <h:outputText rendered="#{empty customerAccountManagedBean.customer.membershipTier.title}" value="Basic"></h:outputText>
                                                 </h5>
                                             </div>
+                                        <button type="button" class="btn btn-xs btn-info btn-round" data-toggle="modal" data-target="#upgradeMember">
+                                            <i class="fa fa-star"></i> Upgrade
+                                        </button>                                            
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Current Points Balance: </label>
@@ -390,6 +393,32 @@
                 </div>
             </section>
             
+                <!-- Upgrade Membership Modal -->
+                <div class="modal fade" id="upgradeMember" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Upgrade Your Membership</h4>
+                      </div>
+                      <h:form id="upgradeMembership" class="form-horizontal">
+                          <div class="modal-body">
+                              <h5>Please enter the Transaction ID found on your receipt: </h5><br/>
+                              <div class="form-group">
+                                <label class="col-sm-2">Transaction ID: </label>
+                                <div class="col-sm-6">
+                                    <h:inputText id="transID" class="form-control" p:required="true"></h:inputText>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="#{customerAccountManagedBean.upgradeMember}" value="Upgrade" class="btn btn-success btn-round" />
+                          </div>
+                      </h:form>
+                    </div>
+                  </div>
+                </div>            
             
                 <!-- Account Removal Modal -->
                 <div class="modal fade" id="removeAccount" aria-hidden="true">
@@ -418,7 +447,7 @@
                       </h:form>
                     </div>
                   </div>
-                </div>            
+                </div>                
             </ui:define>
         </ui:composition>
     </h:body>

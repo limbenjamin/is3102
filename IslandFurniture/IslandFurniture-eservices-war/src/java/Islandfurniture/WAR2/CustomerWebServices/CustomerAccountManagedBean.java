@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageCustomerTransactionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureTransaction;
@@ -75,6 +76,8 @@ public class CustomerAccountManagedBean implements Serializable{
     private ManagePerksBeanLocal perksBean;
     @EJB
     private ManageCustomerTransactionsLocal transBean;
+    @EJB
+    private ManageMembershipLocal membershipBean;
     
     @PostConstruct
     public void init(){
@@ -175,6 +178,32 @@ public class CustomerAccountManagedBean implements Serializable{
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been successfully changed",""));
           ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
+      }
+    }
+    
+    public void upgradeMember() throws IOException {
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      Long transID = Long.parseLong(request.getParameter("upgradeMembership:transID"));
+      String status = membershipBean.checkMembershipUpgrade(customer.getId(), transID);
+      if (status.equals("fail")) {
+            String alertBarStatus = "Opps. You have not accumulated enough points, or you entered an invalid Transaction ID. Please try again.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+      } else if (status.equals("exist")) {
+            String alertBarStatus = "Receipt's Transaction ID has already been keyed in. You can't enter it again.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");      
+      } else {
+            String[] parts = status.split(",");
+            String alertBarStatus = "Congratulations! Your membership has been upgraded to the " 
+                    + parts[2] + " tier! You now have "
+                    + parts[1] + " lifetime points.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
       }
     }
     
