@@ -6,15 +6,19 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCustomerTransactionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.FurnitureTransaction;
+import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
+import IslandFurniture.Entities.Transaction;
 import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
 import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
@@ -55,6 +59,7 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<PromotionDetailByProduct> pdpPerks;
     private List<PromotionDetailByProductCategory> pdpcPerks;
     private List<PromotionDetailByProductSubCategory> pdpscPerks;
+    private List<FurnitureTransaction> furnitureTransactions;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -62,6 +67,8 @@ public class CustomerAccountManagedBean implements Serializable{
     private ManageLocalizationBeanLocal manageLocalizationBean;
     @EJB
     private ManagePerksBeanLocal perksBean;
+    @EJB
+    private ManageCustomerTransactionsLocal transBean;
     
     @PostConstruct
     public void init(){
@@ -88,6 +95,7 @@ public class CustomerAccountManagedBean implements Serializable{
             pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            furnitureTransactions = transBean.getFurnitureTransactions(customer);
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }
@@ -98,6 +106,16 @@ public class CustomerAccountManagedBean implements Serializable{
     
     public double getAbsoluteDiscount(Long id) {
         return perksBean.getPerk(id).getAbsoluteDiscount();
+    }
+    
+    public long calculatePoints(Transaction trans) {
+        long totalPoints = 0;
+        if (trans instanceof FurnitureTransaction) {
+            FurnitureTransaction ftrans = (FurnitureTransaction)trans;
+            for (FurnitureTransactionDetail detail : ftrans.getFurnitureTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        return totalPoints;
     }
     
     public void modifyPersonalParticulars() throws IOException{
@@ -290,5 +308,13 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<FurnitureTransaction> getFurnitureTransactions() {
+        return furnitureTransactions;
+    }
+
+    public void setFurnitureTransactions(List<FurnitureTransaction> furnitureTransactions) {
+        this.furnitureTransactions = furnitureTransactions;
     }
 }

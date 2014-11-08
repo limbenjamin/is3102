@@ -6,6 +6,11 @@
 
 package IslandFurniture.EJB.Kitchen;
 
+import IslandFurniture.Entities.MenuItem;
+import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.Enums.Month;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -14,5 +19,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface FoodForecastBeanLocal {
+
+    List<Integer> getYearsOfMmsf(Store store);
+
+    List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Integer year);
+
+    List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Month startMonth, int startYear, Month endMonth, int endYear);
     
 }
