@@ -41,4 +41,5 @@ public interface ManageShoppingListBeanLocal {
 
     void updateShoppingListDetail(ShoppingListDetail listDetail);
     
+    void addCustomerToShoppingList(String hashId, Customer customer);
 }
