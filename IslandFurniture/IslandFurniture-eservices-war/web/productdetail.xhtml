@@ -31,7 +31,7 @@
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</h:outputScript>
         <section>
-	<div class="container">           
+	<div class="container">
             <div class="row">
                 <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture}" style="height:410px;">
                     <div class="col-md-12">
@@ -61,6 +61,19 @@
                                     <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
                                 </h:panelGroup>
                             </section>
+                            <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.furniture.galleryPictures}">
+                            <div class="left-sidebar">
+                                <br/>
+                                <h2>Gallery</h2>
+                                <ui:repeat value="#{productDetailManagedBean.furniture.galleryPictures}" var="picture">
+                                <div class="col-sm-4">
+                                    <pf:graphicImage value="#{pictureManagedBean.image}" style="width: 100%; height: 100px;">
+                                        <f:param name="pictureId" value="#{picture.id}" />
+                                    </pf:graphicImage>
+                                </div>
+                                </ui:repeat>
+                            </div>
+                            </h:panelGroup>
                         </div>
 			<div class="col-sm-8">
                             <!--/product-information-->
