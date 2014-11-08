@@ -162,6 +162,10 @@ public class ShoppingListDetailManagedBean {
         return subtotal;
     }
     
+    public void shareList() {
+        
+    }
+    
     public Double getDiscountedPrice(Stock s) {
         return (Double)mmbl.getDiscountedPrice(s, shoppingList.getStore(), customer).get("D_PRICE");
     }
