@@ -129,15 +129,6 @@ public class Main {
             }
         }
 
-        // Load Transaction Data (Furniture & Retail Items only for now)
-        System.out.print("Load Transaction Data? (y/n):");
-        if (sc.nextLine().equalsIgnoreCase("y")) {
-            if (loadTransactionBean.loadSampleData()) {
-                System.out.println("Transaction data loaded successfully!");
-            } else {
-                System.out.println("Failed to load Transaction data. Check for existing data and/or recreate islandFurniture database");
-            }
-        }
 
         // Load Staff Data
         System.out.println("Note: If Organisation Data is not loaded, this function will throw error.");
@@ -174,6 +165,15 @@ public class Main {
             }
         }
         
+        // Load Transaction Data (Furniture & Retail Items only for now)
+        System.out.print("Load Transaction Data? (y/n):");
+        if (sc.nextLine().equalsIgnoreCase("y")) {
+            if (loadTransactionBean.loadSampleData()) {
+                System.out.println("Transaction data loaded successfully!");
+            } else {
+                System.out.println("Failed to load Transaction data. Check for existing data and/or recreate islandFurniture database");
+            }
+        }
         
         // Load Sales Forecasts from given set of Transactions
         System.out.print("Generate sales forecasts? (y/n):");
@@ -184,18 +184,6 @@ public class Main {
                 System.out.println("Failed to generate sales forecast data. Check for errors in server log.");
             }
         }
-
-//        // Load Production Capacity Data
-//        //Added by James
-//        //shift down later
-//        System.out.print("Load Production Capacity Data? (y/n):");
-//        if (sc.nextLine().equalsIgnoreCase("y")) {
-//            if (loadJamesTestData.loadProductionCapacityData()) {
-//                System.out.println("Production Capacity Data Emulated");
-//            } else {
-//                System.out.println("Failed to emulate Production Capacity Data");
-//            }
-//        }
 
     }
 

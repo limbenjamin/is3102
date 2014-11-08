@@ -12,11 +12,13 @@ import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import java.util.List;
+import javax.ejb.Local;
 
 /**
  *
  * @author Zee
  */
+@Local
 public interface ManageShoppingListBeanLocal {
     
     ShoppingList getShoppingList(Long id);
