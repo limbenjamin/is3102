@@ -62,7 +62,7 @@ hr{
     margin:1em 0;
     padding:0;height:1px;
     border:0;
-    border-top:1px solid #e3e6f3;
+    border-top:1px solid #D6D6D0;
 }
 
 .scroll-list {
@@ -79,6 +79,10 @@ text-decoration: line-through;
 body {
   font-family: 'Open Sans', sans-serif;
   position: relative;
+}
+
+.fb-share-button {
+   vertical-align: top;    
 }
 
 ul li {
@@ -902,6 +906,24 @@ h2.title {
   line-height: 1.42857;
   margin-right:0;
   color: #696763;
+}
+
+
+.trans-tabs li {
+    border-bottom: 1px solid #ddd;
+}
+
+.trans-tabs li.active {
+    border: none;
+    background-color: #ddd;
+}
+
+.trans-tabs li.active a {
+    background-color: #ddd;
+}
+.trans-tabs>li+li {
+    margin-top: 0px;
+    border-radius: 0px;
 }
 
 /**************************** PRODUCT DETAILS **************************************/

@@ -73,6 +73,7 @@ public class PaymentUI extends javax.swing.JFrame {
     private List<String> voucherList = new ArrayList();
     private String staffname;
     private String plantname;
+    private String plantAddress;
     private String customerCardId;
     private Double totalPayable;
     private Double totalRegisterCash;
@@ -123,6 +124,7 @@ public class PaymentUI extends javax.swing.JFrame {
         JSONObject jsonObject = (JSONObject) jsonParser.parse(staffJSON);
         staffname = (String) jsonObject.get("name");
         plantname = (String) jsonObject.get("plant");
+        plantAddress = (String) jsonObject.get("plantAddress");
         currencyCode = (String) jsonObject.get("symbol");
         grandTotalLabel.setText("Grand Total : "+currencyCode+" "+ grandTotal);
         voucherCredit.setText("Credit : "+currencyCode+" 0");
@@ -526,12 +528,13 @@ public class PaymentUI extends javax.swing.JFrame {
             }catch(Exception ex){
                 System.err.println("Unable to write to Partner Pole Display");
             }
-            String receipt = "Island Furniture\n\r";
-            receipt += plantname + " Store\n\r";
-            receipt += new Date() + " \n\r";
-            receipt += "\n\r\n\r";
-            receipt += "Transactions\n\r";
-            receipt += "----------------------------------------------\n\r";//46 chars
+            String receipt = "Island Furniture\n";
+            receipt += plantname + " Store\n";
+            receipt += plantAddress + "\n";
+            receipt += new Date() + " \n";
+            receipt += "\n\n";
+            receipt += "ID   Product Name           Price\n";
+            receipt += "---------------------------------\n";//33 chars
             for (int i=0;i<transaction.size();i++){
                 System.err.println(transaction.get(i).get(0));
                 System.err.println(transaction.get(i).get(1));
@@ -540,35 +543,39 @@ public class PaymentUI extends javax.swing.JFrame {
                 System.err.println(transaction.get(i).get(4));
                 System.err.println(transaction.get(i).get(5));
                 receipt += transaction.get(i).get(0)+"  ";
-                receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n\r";
+                receipt += transaction.get(i).get(1)+" ("+transaction.get(i).get(3)+"x)\n";
                 Double totalUnroundedAmt = Double.parseDouble(transaction.get(i).get(2)) * Double.parseDouble(transaction.get(i).get(3));
                 Double roundedamt = Math.round(totalUnroundedAmt* 100.0)/100.0;
-                if (transaction.get(i).get(5).equals(""))
-                    receipt += "                    "+ currencyCode + " " + df.format(roundedamt) + "\n\r\n\r";
-                else{
+                String transactionPrice = currencyCode + " " + df.format(roundedamt);
+                String emptyString = "                                                                    ";
+                if (transaction.get(i).get(5).equals("")){
+                    receipt += emptyString.substring(0,33-transactionPrice.length()) + transactionPrice + "\n\n";
+                }else{
                     int k;
-                    if(transaction.get(i).get(5).length()>15){
-                        k = 15;
+                    if(transaction.get(i).get(5).length()>20){
+                        k = 20;
                     }else{
                         k = transaction.get(i).get(5).length();
                     }
-                    receipt += transaction.get(i).get(5).substring(0, k)+ "     "+ currencyCode + " " + df.format(roundedamt) + "\n\r\n\r";
+                    int length = 46 - (k + transactionPrice.length());
+                    receipt += transaction.get(i).get(5).substring(0, k)+ emptyString.substring(0,length) + transactionPrice + "\n\n";
                 }
+                System.err.println("debughere: "+transactionPrice.length());
             }
-            receipt += "----------------------------------------------\n\r";
-            receipt+= "Grand Total: " +currencyCode+" "+df.format(Math.round(grandTotalAmt * 100.0) / 100.0) + "\n\r";
+            receipt += "----------------------------------------------\n";
+            receipt+= "Grand Total: " +currencyCode+" "+df.format(Math.round(grandTotalAmt * 100.0) / 100.0) + "\n";
             Double d = voucherAmt + receiptAmt;
-            receipt+= "Discounts: " +currencyCode+" "+ df.format(Math.round(d * 100.0) / 100.0) + "\n\r";
-            receipt+= "Amount Payable: " +currencyCode+" "+ df.format(Math.round(totalPayable * 100.0) / 100.0) + "\n\r\n\r";
+            receipt+= "Discounts: " +currencyCode+" "+ df.format(Math.round(d * 100.0) / 100.0) + "\n";
+            receipt+= "Amount Payable: " +currencyCode+" "+ df.format(Math.round(totalPayable * 100.0) / 100.0) + "\n\n";
             
             if (cashButton.isSelected() == true){
-                receipt+= "Payment Mode: Cash\n\r";
-                receipt+= "Cash Amount: " +currencyCode+" "+ df.format(Math.round(cashAmt * 100.0) / 100.0) + "\n\r";
-                receipt+= "Change: " +currencyCode+" " + df.format(Math.round(changeAmt * 100.0) / 100.0) + "\n\r";
+                receipt+= "Payment Mode: Cash\n";
+                receipt+= "Cash Amount: " +currencyCode+" "+ df.format(Math.round(cashAmt * 100.0) / 100.0) + "\n";
+                receipt+= "Change: " +currencyCode+" " + df.format(Math.round(changeAmt * 100.0) / 100.0) + "\n";
             }else{
-                receipt+= "Payment Mode : Credit Card\n\r";
+                receipt+= "Payment Mode : Credit Card\n";
             }
-            receipt+= "Cashier : "+ staffname +"\n\r\n\r";
+            receipt+= "Cashier : "+ staffname +"\n\n";
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = null;
             try {
@@ -579,12 +586,12 @@ public class PaymentUI extends javax.swing.JFrame {
             transactionId = String.valueOf( jsonObject.get("transactionId"));
             String points = String.valueOf( jsonObject.get("points"));
             if (customerName == null){
-                receipt+= "Thank you for shopping with us!\n\r";
+                receipt+= "Thank you for shopping with us!\n";
             }else{
-                receipt+= customerName+", thank you for shopping with us!\n\r";
-                receipt+= "Current Points: " + points + "\n\r";
+                receipt+= customerName+", thank you for shopping with us!\n";
+                receipt+= "Current Points: " + points + "\n";
             }
-            receipt += "Transaction Id: "+transactionId + "\n\r";
+            receipt += "Transaction Id: "+transactionId + "\n";
             
             
             try
@@ -592,7 +599,7 @@ public class PaymentUI extends javax.swing.JFrame {
                 JTextPane printing = new JTextPane();
                 printing.setSize(180, 300);
                 printing.setText(receipt);
-                Font font = new Font("Tahoma",Font.PLAIN, 7);
+                Font font = new Font("Courier New",Font.PLAIN, 7);
                 printing.setFont(font);
                 Double margin = 20.0;
                 Integer lines = 8;

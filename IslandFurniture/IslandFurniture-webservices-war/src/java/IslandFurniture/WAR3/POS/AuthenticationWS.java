@@ -69,7 +69,7 @@ public class AuthenticationWS {
         if (mabl.authenticate(username, password)) {
             Staff staff = muabl.getStaff(username);
             JsonObject object = Json.createObjectBuilder().add("name", staff.getName()).add("symbol", staff.getPlant().getCountry().getCurrency().getCurrencyCode())
-                    .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).build();
+                    .add("plant", staff.getPlant().getName()).add("cardId", staff.getCardId()).add("plantAddress", staff.getPlant().getAddress()).build();
             return object.toString();
         }
         return "Error";

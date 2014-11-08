@@ -29,7 +29,7 @@
                                 <i class="fa fa-shopping-cart"></i> My Shopping Lists
                             </a>
                     </div>
-                </h:panelGroup>                
+                </h:panelGroup>
                 <h:panelGroup layout="block" rendered="#{not empty shoppingListDetailManagedBean.shoppingList.id}" styleClass="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb">
@@ -39,16 +39,23 @@
                         </ol>
                         <h:form id="editShoppingList">
                             <div class="input-group pull-right" style="max-width: 250px;">
-                                <h:selectOneMenu id="storeId" class="form-control needauto" value="#{shoppingListDetailManagedBean.shoppingList.store.id}">
+                                <h:selectOneMenu id="storeId" class="form-control needauto" value="#{shoppingListDetailManagedBean.shoppingList.store.id}" style="height:30px;">
                                     <f:selectItems value="#{shoppingListDetailManagedBean.countryOffice.stores}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
                                 </h:selectOneMenu>
                               <span class="input-group-btn">
-                                  <h:commandButton action="#{shoppingListDetailManagedBean.editListStore}" value="Save" class="btn btn-default" style="height:35px;">
+                                  <h:commandButton action="#{shoppingListDetailManagedBean.editListStore}" value="Save" class="btn btn-default" style="height:30px;">
                                   </h:commandButton>
                               </span>
                             </div>
                         </h:form>                      
                         <h3>#{shoppingListDetailManagedBean.shoppingList.name}</h3>
+                        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#shareList">
+                            <i class="fa fa-envelope-o"></i> Invite Someone
+                        </button>
+                        <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#viewMembers">
+                            <i class="fa fa-users"></i> View List Members
+                        </button>                        
+                        <div class="fb-share-button" data-href="#{application.contextPath}/#{shoppingListDetailManagedBean.coDir}/member/shoppinglistdetail.xhtml" data-layout="button_count"></div>
                         <hr/>
                     </div> 
                     <div class="col-md-12">
@@ -121,21 +128,71 @@
                                 </ui:repeat>
                                 </h:form>
                             </tbody>
-                        </table> 
+                        </table>
+                        <hr/>
                     </div>
                     <div class="sub-total pull-right">
                         <h4><strong>Subtotal: #{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode} </strong> 
                             <h:outputText value="#{shoppingListDetailManagedBean.calculateSubTotal()}">
                                 <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
                             </h:outputText>  
-                        </h4>    
-                        <hr/>
-                        <div class="fb-share-button" data-href="#{application.contextPath}/#{shoppingListDetailManagedBean.coDir}/member/shoppinglistdetail.xhtml" data-layout="button_count"></div>
+                        </h4>
                     </div>
                     </div>
                 </h:panelGroup>
             </div>
         </section>
+        
+                <!-- Share Shopping List Modal -->
+                <div class="modal fade" id="shareList" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Invite Someone to Your Shopping List</h4>
+                      </div>
+                      <h:form id="shareShoppingList" class="form-horizontal">
+                          <div class="modal-body">
+                              <h5>Please enter the recipient's email address to share your shopping list</h5><br/>
+                              <div class="form-group">
+                                <label class="col-sm-2">Email: </label>
+                                <div class="col-sm-6">
+                                    <h:inputText id="recipientEmail" class="form-control" p:type="email" p:required="true"></h:inputText>
+                                </div>
+                              </div>                              
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                            <h:commandButton action="#{shoppingListDetailManagedBean.shareList()}" value="Invite" class="btn btn-success btn-round" />
+                          </div>
+                      </h:form>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- View Members Modal -->
+                <div class="modal fade" id="viewMembers" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Shopping List Members</h4>
+                      </div>
+                          <div class="modal-body">
+                              <h5>Total no. of Member(s): #{shoppingListDetailManagedBean.shoppingList.customers.size()}</h5>
+                              <hr/>
+                              <ul>
+                              <ui:repeat value="#{shoppingListDetailManagedBean.shoppingList.customers}" var="smember">
+                                  <li><i class="fa fa-user"></i> #{smember.name}</li>
+                              </ui:repeat>
+                              </ul>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Done</button>
+                          </div>
+                    </div>
+                  </div>
+                </div>                
             </ui:define>
         </ui:composition>
     </h:body>

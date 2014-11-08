@@ -50,7 +50,7 @@ public class ManageCustomerTransactions implements ManageCustomerTransactionsLoc
     
     @Override
     public List<RetailItemTransaction> getRetailTransactions(Customer customer) {
-        Query query = em.createQuery("SELECT m FROM Transaction m WHERE m.customer=:customer");
+        Query query = em.createQuery("SELECT m FROM Transaction m WHERE m.member=:customer");
         query.setParameter("customer", customer);
         List<Transaction> allTransactions = (List<Transaction>) query.getResultList();
         List<RetailItemTransaction> retailTransactions = new ArrayList<>();
@@ -68,7 +68,7 @@ public class ManageCustomerTransactions implements ManageCustomerTransactionsLoc
     
     @Override
     public List<RestaurantTransaction> getRestaurantTransactions(Customer customer) {
-        Query query = em.createQuery("SELECT m FROM Transaction m WHERE m.customer=:customer");
+        Query query = em.createQuery("SELECT m FROM Transaction m WHERE m.member=:customer");
         query.setParameter("customer", customer);
         List<Transaction> allTransactions = (List<Transaction>) query.getResultList();
         List<RestaurantTransaction> restaurantTransactions = new ArrayList<>();
