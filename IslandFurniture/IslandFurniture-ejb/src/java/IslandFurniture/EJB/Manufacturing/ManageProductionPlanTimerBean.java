@@ -35,7 +35,7 @@ import javax.persistence.Query;
 @Startup
 @Singleton
 @Lock(WRITE)
-public class ManageProductionPlanTimerBean {
+public class ManageProductionPlanTimerBean implements ProductionPlanningSingletonLocal{
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -50,6 +50,8 @@ public class ManageProductionPlanTimerBean {
         this.cdate = cdate;
     }
 
+    
+    @Override
     public void setAdvanceWeek(int week) {
         this.stepLeft = week;
         System.out.println("ManageProductionPlanTimerBean(): Stepping" + stepLeft);

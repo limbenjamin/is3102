@@ -5,25 +5,17 @@
  */
 package IslandFurniture.EJB.ACRM;
 
+import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
-import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.MarketBasketAnalysis;
-import IslandFurniture.Entities.ProcuredStockPurchaseOrder;
-import IslandFurniture.Entities.ProcuredStockSupplier;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.Entities.Transaction;
-import IslandFurniture.Entities.WeeklyMRPRecord;
-import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.StaticClasses.Helper;
-import IslandFurniture.StaticClasses.QueryMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +27,6 @@ import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import org.jboss.weld.util.ApiAbstraction;
 
 /**
  *
@@ -44,7 +35,7 @@ import org.jboss.weld.util.ApiAbstraction;
 @Startup
 @Singleton
 @Lock(WRITE)
-public class ACRMAnalyticsTimer {
+public class ACRMAnalyticsTimer implements ProductionPlanningSingletonLocal {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
