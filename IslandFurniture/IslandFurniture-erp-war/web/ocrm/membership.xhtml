@@ -55,7 +55,7 @@
                                         </h:commandButton>
                                     </div> 
                                 </div>    
-                            </h:form>
+                            </h:form> 
                         </h:panelGroup> 
                         <h:panelGroup id="searchCardGroup">
                             <h:form id="searchByCardForm" rendered="#{membershipManagedBean.cardForm}" class="form-horizontal form-inline">
@@ -63,7 +63,7 @@
                                     <label class="control-label col-sm-2">Card ID: </label>
                                     <div class="col-sm-5"> 
                                         <h:commandLink class="">  
-                                            <i class="glyphicon glyphicon-pencil btn-xs"></i>
+                                            <i class="fa fa-pencil-square-o btn"></i>
                                             <f:ajax listener="#{membershipManagedBean.scanNFCWithoutCustomerID}" render=":searchCardGroup :searchByCardForm" />
                                         </h:commandLink> 
                                         <h:outputText class="form-control col-sm-8 transparent-form" id="cardSearch" value="#{membershipManagedBean.customerCardID}" ></h:outputText>

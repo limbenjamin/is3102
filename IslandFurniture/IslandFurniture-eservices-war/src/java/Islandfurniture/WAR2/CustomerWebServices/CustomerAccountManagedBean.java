@@ -18,6 +18,10 @@ import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Transaction;
 import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
@@ -60,6 +64,8 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<PromotionDetailByProductCategory> pdpcPerks;
     private List<PromotionDetailByProductSubCategory> pdpscPerks;
     private List<FurnitureTransaction> furnitureTransactions;
+    private List<RetailItemTransaction> retailTransactions;
+    private List<RestaurantTransaction> restaurantTransactions;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -96,6 +102,8 @@ public class CustomerAccountManagedBean implements Serializable{
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
             furnitureTransactions = transBean.getFurnitureTransactions(customer);
+            retailTransactions = transBean.getRetailTransactions(customer);
+            restaurantTransactions = transBean.getRestaurantTransactions(customer);
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }
@@ -114,6 +122,16 @@ public class CustomerAccountManagedBean implements Serializable{
             FurnitureTransaction ftrans = (FurnitureTransaction)trans;
             for (FurnitureTransactionDetail detail : ftrans.getFurnitureTransactionDetails())
                 totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else if (trans instanceof RetailItemTransaction) {
+            RetailItemTransaction ritrans = (RetailItemTransaction)trans;
+            for (RetailItemTransactionDetail detail : ritrans.getRetailItemTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else {
+            RestaurantTransaction rtrans = (RestaurantTransaction)trans;
+            for (RestaurantTransactionDetail detail : rtrans.getRestaurantTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();            
         }
         return totalPoints;
     }
@@ -316,5 +334,21 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setFurnitureTransactions(List<FurnitureTransaction> furnitureTransactions) {
         this.furnitureTransactions = furnitureTransactions;
+    }
+
+    public List<RetailItemTransaction> getRetailTransactions() {
+        return retailTransactions;
+    }
+
+    public void setRetailTransactions(List<RetailItemTransaction> retailTransactions) {
+        this.retailTransactions = retailTransactions;
+    }
+
+    public List<RestaurantTransaction> getRestaurantTransactions() {
+        return restaurantTransactions;
+    }
+
+    public void setRestaurantTransactions(List<RestaurantTransaction> restaurantTransactions) {
+        this.restaurantTransactions = restaurantTransactions;
     }
 }

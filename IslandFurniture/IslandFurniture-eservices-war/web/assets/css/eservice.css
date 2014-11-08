@@ -908,6 +908,24 @@ h2.title {
   color: #696763;
 }
 
+
+.trans-tabs li {
+    border-bottom: 1px solid #ddd;
+}
+
+.trans-tabs li.active {
+    border: none;
+    background-color: #ddd;
+}
+
+.trans-tabs li.active a {
+    background-color: #ddd;
+}
+.trans-tabs>li+li {
+    margin-top: 0px;
+    border-radius: 0px;
+}
+
 /**************************** PRODUCT DETAILS **************************************/
 
 .product-details{
