@@ -136,10 +136,12 @@ public class ProcurementPlanManagedBean {
                 int i_month = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, true);
                 int i_year = Helper.addMonth(Helper.translateMonth(c_month), c_year, i, false);
                 ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
-                if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year) || i == 0 || i == 1){
-                    r.newCell("Locked");
-                }else{
-                    r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);
+                if(mppl.checkMppExist(mf, Helper.translateMonth(i_month), i_year)){
+                    if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year) || i == 0 || i == 1){
+                        r.newCell("Locked");
+                    }else if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month-1), i_year)|| i == 3){
+                        r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);
+                    }
                 }
             } catch (Exception ex) {
             }
@@ -160,13 +162,7 @@ public class ProcurementPlanManagedBean {
                     Month month = Helper.translateMonth(Integer.parseInt(stringTokenizer.nextToken()));
                     Integer year = Integer.parseInt(stringTokenizer.nextToken());
                     ManufacturingFacility mf = (ManufacturingFacility) muabl.getStaff(username).getPlant();
-                    try{
-                        mppl.createPurchaseOrder(mf,month,year);
-                        
-                    }catch(Exception e){
-                        System.err.println("Unable to generate PO");
-                        error_msg = "Unable to generate PO";
-                    }
+                    mppl.createPurchaseOrder(mf,month,year);
                     mnbl.createNewNotificationForPrivilegeFromPlant("New Purchase Order", "A new purchase order has been posted for approval", "/purchasing/purchaseorder.xhtml", "Approve PO", mpbl.getPrivilegeFromName("Purchase Order"), mf);
                     mppl.lockMpp(mf,month,year);
                     init();

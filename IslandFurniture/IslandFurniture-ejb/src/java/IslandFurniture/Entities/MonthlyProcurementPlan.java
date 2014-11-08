@@ -35,6 +35,7 @@ public class MonthlyProcurementPlan implements Serializable {
     private ManufacturingFacility manufacturingFacility;
 
     private Integer qty;
+    private Integer qtyOnHand;
     private Boolean locked;
 
     public Month getMonth() {
@@ -67,6 +68,14 @@ public class MonthlyProcurementPlan implements Serializable {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getQtyOnHand() {
+        return qtyOnHand;
+    }
+
+    public void setQtyOnHand(Integer qtyOnHand) {
+        this.qtyOnHand = qtyOnHand;
     }
 
     public Boolean isLocked() {

@@ -21,11 +21,13 @@
                     <span style='color:red'>
                         <h:outputLabel rendered="#{procurementPlanManagedBean.error_msg.length() gt 0}" value="#{procurementPlanManagedBean.error_msg} &lt;br/&gt;" escape="false"/>
                     </span>
-                  <section class="panel">
-                   <h:form>
-                        <h:commandButton value="Generate Procurement Plan" class="btn" action="#{procurementPlanManagedBean.generateProcurementPlan}">
+                    <h:form>
+                        <h:commandButton value="Generate Procurement Plan" class="btn btn-success" action="#{procurementPlanManagedBean.generateProcurementPlan}">
                         </h:commandButton>
-                    </h:form>  
+                    </h:form>
+                    <br />
+                  <section class="panel">
+                     
                       <p:dataTable rowStyleClass="#{datarow.colorClass}" id="MPP_dt"  var="datarow" value="#{procurementPlanManagedBean.dt.internalrows}" style="text-align:center;" resizableColumns="true" rowIndexVar="ri" rendered="#{procurementPlanManagedBean.dt.internalrows.size() gt 0}">
                         <f:facet name="header">
                             Procurement Planning Table
