@@ -198,9 +198,9 @@ public class CustomerAccountManagedBean implements Serializable{
               ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");      
       } else {
             String[] parts = status.split(",");
-            String alertBarStatus = "Congratulations! Your membership has been upgraded to the " 
-                    + parts[2] + " tier! You now have "
-                    + parts[1] + " lifetime points.";
+            String alertBarStatus = "Point Update Successful! You now have "
+                    + parts[1] + " lifetime points and your membership is in the "
+                    + parts[2] + " tier.";
             FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, alertBarStatus,""));
               ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
