@@ -20,5 +20,5 @@ import javax.ejb.Local;
 - */
 @Local
 public interface ACRMSingletonLocal {
-    public void setAdvanceWeek(int week);
+    public void setAdvancePeriod(int week);
 }

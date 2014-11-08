@@ -397,7 +397,7 @@ public class Apriori {
     public Vector<Vector<Object>> createlargeitemset(int n) {
         Vector candlist = new Vector();
         Vector<String> lis = new Vector<>(); //large item set
-        Vector<Vector<Object>> res=new Vector<>();
+        Vector<Vector<Object>> res = new Vector<>();
 
         hashtreenode htn = new hashtreenode();
         int i;
@@ -406,11 +406,11 @@ public class Apriori {
         candlist = ((candidateelement) candidate.elementAt(n - 1)).candlist;
         htn = ((candidateelement) candidate.elementAt(n - 1)).htroot;
 
-        getlargehash(0, htn, fullitemset, lis,res);
+        getlargehash(0, htn, fullitemset, lis, res);
 
         largeitemset.addElement(lis);
-        
-        return(res);
+
+        return (res);
 
     } // end public void createlargeitemset(int n)
 
@@ -420,7 +420,7 @@ public class Apriori {
         String[] splitted = s.split(" ");
 
         for (String sp : splitted) {
-            rtnobject.add(sp);
+            rtnobject.add(columnsmap.get(-1+Integer.valueOf(sp.trim())));
         }
 
         return rtnobject;
@@ -437,7 +437,7 @@ public class Apriori {
 //             : Vector lis : Vector that stores large itemsets
 //  Return     :
 //-------------------------------------------------------------
-    public Vector<Vector<Object>> getlargehash(int i, hashtreenode htnf, String transa, Vector<String> lis,Vector<Vector<Object>> returnVector) {
+    public Vector<Vector<Object>> getlargehash(int i, hashtreenode htnf, String transa, Vector<String> lis, Vector<Vector<Object>> returnVector) {
 
         int j;
 
@@ -455,7 +455,7 @@ public class Apriori {
             }
             for (int b = i + 1; b <= N; b++) {
                 if (htnf.ht.containsKey((getitemat(b, transa)))) {
-                    getlargehash(b, (hashtreenode) htnf.ht.get((getitemat(b, transa))), transa,lis, returnVector);
+                    getlargehash(b, (hashtreenode) htnf.ht.get((getitemat(b, transa))), transa, lis, returnVector);
                 }
             }
         }
@@ -506,10 +506,6 @@ public class Apriori {
             }
         } catch (Exception ex) {
         }
-        //row
-        this.N = Integer.valueOf(data.size()).longValue();
-        //column
-        this.M = Integer.valueOf(data.get(0).size()).longValue();
 
     }
     //-------------------------------------------------------------
@@ -575,6 +571,11 @@ public class Apriori {
 
         this.minsup = minsup;
 
+        //Number of items per transc
+        this.N =  Integer.valueOf(data.get(0).size()).longValue();
+        //Number of transactions
+        this.M = Integer.valueOf(data.size()).longValue();
+
         fullitemset = new String();
         fullitemset = fullitemset.concat("1");
         for (int i = 2; i <= N; i++) {
@@ -585,6 +586,8 @@ public class Apriori {
     }
 
     public Vector<Vector<Object>> findListSet(Integer k) {
+
+
 
         System.out.println();
         System.out.println("Algorithm apriori starting now.....");
@@ -612,7 +615,7 @@ public class Apriori {
 
 //      System.out.println("Now reading transactions, increment counters of itemset");
         transatraverse(k);
-        Vector<Vector<Object>> result=createlargeitemset(k); //This runs the algorithmm
+        Vector<Vector<Object>> result = createlargeitemset(k); //This runs the algorithmm
         System.out.println("Frequent " + k + "-itemsets:");
         System.out.println((Vector) (largeitemset.elementAt(k - 1)));
 
@@ -621,6 +624,6 @@ public class Apriori {
         s2 = d.getTime();
         System.out.println();
         System.out.println("Execution time is: " + ((s2 - s1) / (double) 1000) + " seconds.");
-        return(result);
+        return (result);
     }
 }

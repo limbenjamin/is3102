@@ -5,6 +5,8 @@
  */
 package IslandFurniture.WAR.Hidden;
 
+import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimer;
+import IslandFurniture.EJB.ACRM.ACRMSingletonLocal;
 import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
 import java.io.Serializable;
@@ -27,11 +29,19 @@ public class ConsoleManagedBean implements Serializable {
     @EJB
     private ProductionPlanningSingletonLocal singleatom;
 
+    @EJB
+    private ACRMSingletonLocal acrmatom;
+
     private String statusMessage;
 
     public void startMRPUpdates(AjaxBehaviorEvent event) {
         singleatom.setAdvanceWeek(12);
         statusMessage = "MRP Engine started . Moving 12 weeks in advance ! 1 week = 5s";
+    }
+
+    public void startACRMUpdates(AjaxBehaviorEvent event) {
+        acrmatom.setAdvancePeriod(1);
+        statusMessage = "ACRM ENGINE STARTED ! Moving 6 months in advance";
     }
 
     public void startMssrUpdates(AjaxBehaviorEvent event) {

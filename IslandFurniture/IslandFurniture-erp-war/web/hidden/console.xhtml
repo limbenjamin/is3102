@@ -22,6 +22,15 @@
             </h:commandButton><br />
             <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
         </h:form>
+
+        <h:form>
+            Activate Timed Functions for Analytical CRM<br />
+            <h:commandButton value="Start ACRM Analysis">
+                <f:ajax listener="#{consoleManagedBean.startACRMUpdates}" render="statusMessage" />
+            </h:commandButton><br />
+            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
+        </h:form>
+
     </h:body>
 </html>
 

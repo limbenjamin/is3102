@@ -5,7 +5,6 @@
  */
 package IslandFurniture.EJB.ACRM;
 
-import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
@@ -50,9 +49,9 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
         this.cdate = cdate;
     }
 
-    public void setAdvanceWeek(int week) {
+    public void setAdvancePeriod(int week) {
         this.stepLeft = week;
-        System.out.println("ManageProductionPlanTimerBean(): Stepping" + stepLeft);
+        System.out.println("ACRM(): Stepping" + stepLeft);
     }
 
     public static class currentdate {
@@ -171,7 +170,9 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
             ArrayList<Stock> master_product_list = new ArrayList<>();
 
             for (StockSupplied ss : (List<StockSupplied>) j.getResultList()) {
-                master_product_list.add(ss.getStock());
+                if (ss.getStock() instanceof FurnitureModel) {
+                    master_product_list.add(ss.getStock());
+                }
             }
 
             if (master_product_list.size() == 0) {
@@ -190,13 +191,19 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
             }
 
             //building the data
-            Vector<Boolean> tran = new Vector<Boolean>();
             for (FurnitureTransaction t : (List<FurnitureTransaction>) q.getResultList()) {
-                Query anotherQuery = em.createQuery("select fm from FurnitureModel fm where exists(select ft from FurnitureTransactionDetail ft where ft.furnitureTransaction=:trans and ft.furnitureModel=:fm)");
-                if (anotherQuery.getResultList().isEmpty()) {
-                    continue;
-                }
+
+                Vector<Boolean> tran = new Vector<Boolean>();
+
                 for (Stock p : master_product_list) {
+                    Query anotherQuery = em.createQuery("select fm from FurnitureModel fm where exists(select ft from FurnitureTransactionDetail ft where ft.furnitureTransaction=:trans and ft.furnitureModel=:fm)");
+                    anotherQuery.setParameter("trans", t);
+                    anotherQuery.setParameter("fm", p);
+
+                    if (anotherQuery.getResultList().isEmpty()) {
+                        tran.add(false);
+                        continue;
+                    }
 
                     if (anotherQuery.getResultList().contains(p)) {
                         tran.add(true);
@@ -205,22 +212,27 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
                     }
 
                 }
+                analysis.data.add(tran);
             }
-
-            analysis.data.add(tran);
 
             //For this countryoffice
             analysis.Start(30); //min support 30%
-            int start = 2;
+            int start = 1;
 
             while (start <= 5) {
-                Vector<Vector<Object>> itemset = analysis.createlargeitemset(2);
+
+         
+
+                Vector<Vector<Object>> itemset = analysis.findListSet(start);
 
                 if (itemset == null) {
                     break;
                 }
+                
+                
 
                 for (Vector<Object> o : itemset) {
+                    if (start<2) break;
 
                     MarketBasketAnalysis mba = new MarketBasketAnalysis();
                     mba.setCountryOffice(c);
