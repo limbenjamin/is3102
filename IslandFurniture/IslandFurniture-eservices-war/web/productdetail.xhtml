@@ -8,12 +8,18 @@
                 xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:pf="http://primefaces.org/ui">
-    <ui:define name="head-meta">
+    <ui:define name="head-meta" rendered="#{not empty productDetailManagedBean.furniture.thumbnail.content}">
         <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
         <meta property="og:type" content="website" />
         <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
         <meta property="og:image" content="data:image/png;base64,#{productDetailManagedBean.base64Decode()}" />
-    </ui:define> 
+    </ui:define>
+    <ui:define name="head-meta" rendered="#{empty productDetailManagedBean.furniture.thumbnail.content}">
+        <meta property="og:title" content="#{productDetailManagedBean.furniture.name}" /> 
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" />
+        <meta property="og:image" content="#{application.contextPath}/assets/images/nopic.jpg" />
+    </ui:define>    
     <ui:define name="content">
         <div id="fb-root"></div>
         <h:outputScript>
@@ -25,7 +31,7 @@
           fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</h:outputScript>
         <section>
-	<div class="container">           
+	<div class="container">
             <div class="row">
                 <h:panelGroup layout="block" rendered="#{empty productDetailManagedBean.furniture}" style="height:410px;">
                     <div class="col-md-12">
@@ -55,6 +61,19 @@
                                     <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
                                 </h:panelGroup>
                             </section>
+                            <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.furniture.galleryPictures}">
+                            <div class="left-sidebar">
+                                <br/>
+                                <h2>Gallery</h2>
+                                <ui:repeat value="#{productDetailManagedBean.furniture.galleryPictures}" var="picture">
+                                <div class="col-sm-4">
+                                    <pf:graphicImage value="#{pictureManagedBean.image}" style="width: 100%; height: 100px;">
+                                        <f:param name="pictureId" value="#{picture.id}" />
+                                    </pf:graphicImage>
+                                </div>
+                                </ui:repeat>
+                            </div>
+                            </h:panelGroup>
                         </div>
 			<div class="col-sm-8">
                             <!--/product-information-->

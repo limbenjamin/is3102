@@ -91,7 +91,6 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         Iterator<ShoppingListDetail> iterator = shoppingList.getShoppingListDetails().iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
-            System.out.println(current.getFurnitureModel().getName() + " | " + shoppingList.getStore().getName());
             Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore(), customer);
             subtotal = subtotal + discountedPrice * current.getQty();
         }
@@ -152,5 +151,14 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
     
     public Double getDiscountedPrice(Stock s, Store store, Customer customer) {
         return (Double)mmbl.getDiscountedPrice(s, store, customer).get("D_PRICE");
-    }    
+    }
+    
+    @Override
+    public void addCustomerToShoppingList(String hashId, Customer customer) {
+        Query query = em.createQuery("SELECT s FROM ShoppingList s WHERE s.idHash=:hash");
+        query.setParameter("hash", hashId);
+        ShoppingList sl = (ShoppingList) query.getSingleResult();
+        sl.getCustomers().add(customer);
+    }
+    
 }

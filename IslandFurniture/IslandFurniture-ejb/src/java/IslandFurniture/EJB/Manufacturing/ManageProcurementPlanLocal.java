@@ -29,4 +29,5 @@ public interface ManageProcurementPlanLocal {
     List<RetailItem> viewRetailItems();
     void lockMpp(ManufacturingFacility mf, Month month, Integer year);
     boolean checkMppLocked(ManufacturingFacility mf, Month month, Integer year);
+    boolean checkMppExist(ManufacturingFacility mf, Month month, Integer year);
 }

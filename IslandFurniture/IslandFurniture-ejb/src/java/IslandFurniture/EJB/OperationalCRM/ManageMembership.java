@@ -14,9 +14,12 @@ import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Transaction;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -91,7 +94,7 @@ public class ManageMembership implements ManageMembershipLocal {
 
             if (transaction.getMember()==null) {
                 transaction.setMember(customer);
-                
+
                 if (transaction instanceof FurnitureTransaction) {
                     FurnitureTransaction furnitureTransaction = (FurnitureTransaction) transaction;
                     for (FurnitureTransactionDetail f : furnitureTransaction.getFurnitureTransactionDetails()) {
@@ -135,8 +138,8 @@ public class ManageMembership implements ManageMembershipLocal {
             return "fail";
         }
     }
-    
-     @Override
+
+    @Override
     public void checkMembershipUpgradeATPOS(Long customerID, Long transactionID) {
         Customer customer = (Customer) em.find(Customer.class, customerID);
         List<MembershipTier> membershipTierList = viewMembershipTier();
@@ -160,9 +163,13 @@ public class ManageMembership implements ManageMembershipLocal {
     //  Function: Get Customer from Card
     @Override
     public Customer getCustomerByCard(String cardID) {
-        Query q = em.createQuery("SELECT s FROM Customer s WHERE s.loyaltyCardId=:id");
-        q.setParameter("id", cardID);
-        return (Customer) q.getResultList().get(0);
+        try {
+            Query q = em.createQuery("SELECT s FROM Customer s WHERE s.loyaltyCardId=:id");
+            q.setParameter("id", cardID);
+            return (Customer) q.getSingleResult();
+        } catch (NoResultException NRE) {
+            return null;
+        }
     }
 
     // Function: View the All the Customers
@@ -224,4 +231,18 @@ public class ManageMembership implements ManageMembershipLocal {
         return q.getResultList().isEmpty();
     }
 
+    /* Testing Ground */
+    @Override
+    public List<Customer> searchMemberByEmail(String email) {
+        try {
+            System.out.println("ManageMembership.searchCustomerByEmail()");
+            Query q = em.createQuery("SELECT a FROM Customer a WHERE a.emailAddress LIKE :email");
+            q.setParameter("email", "%" + email + "%");
+
+            List<Customer> results = (List<Customer>) q.getResultList();
+            return results;
+        } catch (NoResultException NRE) {
+            return null;
+        }
+    }
 }

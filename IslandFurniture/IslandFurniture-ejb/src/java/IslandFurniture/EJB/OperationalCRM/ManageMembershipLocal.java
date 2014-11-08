@@ -58,5 +58,7 @@ public interface ManageMembershipLocal {
     
     // Function: To check if the member is eligible for promotion, and if yes, promote [AT POS]
     void checkMembershipUpgradeATPOS(Long customerID, Long transactionID);
-    
+
+    public List<Customer> searchMemberByEmail(String email);
+
 }

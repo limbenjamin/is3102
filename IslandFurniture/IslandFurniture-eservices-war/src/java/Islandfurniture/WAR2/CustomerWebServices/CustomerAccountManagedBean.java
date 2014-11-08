@@ -6,15 +6,24 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCustomerTransactionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.FurnitureTransaction;
+import IslandFurniture.Entities.FurnitureTransactionDetail;
 import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
+import IslandFurniture.Entities.RestaurantTransaction;
+import IslandFurniture.Entities.RestaurantTransactionDetail;
+import IslandFurniture.Entities.RetailItemTransaction;
+import IslandFurniture.Entities.RetailItemTransactionDetail;
+import IslandFurniture.Entities.Transaction;
 import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import Islandfurniture.WAR2.Exceptions.NewPasswordsNotTheSameException;
 import Islandfurniture.WAR2.Exceptions.WrongPasswordException;
@@ -55,6 +64,9 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<PromotionDetailByProduct> pdpPerks;
     private List<PromotionDetailByProductCategory> pdpcPerks;
     private List<PromotionDetailByProductSubCategory> pdpscPerks;
+    private List<FurnitureTransaction> furnitureTransactions;
+    private List<RetailItemTransaction> retailTransactions;
+    private List<RestaurantTransaction> restaurantTransactions;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -62,6 +74,10 @@ public class CustomerAccountManagedBean implements Serializable{
     private ManageLocalizationBeanLocal manageLocalizationBean;
     @EJB
     private ManagePerksBeanLocal perksBean;
+    @EJB
+    private ManageCustomerTransactionsLocal transBean;
+    @EJB
+    private ManageMembershipLocal membershipBean;
     
     @PostConstruct
     public void init(){
@@ -88,6 +104,9 @@ public class CustomerAccountManagedBean implements Serializable{
             pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            furnitureTransactions = transBean.getFurnitureTransactions(customer);
+            retailTransactions = transBean.getRetailTransactions(customer);
+            restaurantTransactions = transBean.getRestaurantTransactions(customer);
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }
@@ -98,6 +117,26 @@ public class CustomerAccountManagedBean implements Serializable{
     
     public double getAbsoluteDiscount(Long id) {
         return perksBean.getPerk(id).getAbsoluteDiscount();
+    }
+    
+    public long calculatePoints(Transaction trans) {
+        long totalPoints = 0;
+        if (trans instanceof FurnitureTransaction) {
+            FurnitureTransaction ftrans = (FurnitureTransaction)trans;
+            for (FurnitureTransactionDetail detail : ftrans.getFurnitureTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else if (trans instanceof RetailItemTransaction) {
+            RetailItemTransaction ritrans = (RetailItemTransaction)trans;
+            for (RetailItemTransactionDetail detail : ritrans.getRetailItemTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();
+        }
+        else {
+            RestaurantTransaction rtrans = (RestaurantTransaction)trans;
+            for (RestaurantTransactionDetail detail : rtrans.getRestaurantTransactionDetails())
+                totalPoints += detail.getUnitPoints() * detail.getQty();            
+        }
+        return totalPoints;
     }
     
     public void modifyPersonalParticulars() throws IOException{
@@ -139,6 +178,32 @@ public class CustomerAccountManagedBean implements Serializable{
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Your password has been successfully changed",""));
           ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
           }
+      }
+    }
+    
+    public void upgradeMember() throws IOException {
+      ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+      HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+      Long transID = Long.parseLong(request.getParameter("upgradeMembership:transID"));
+      String status = membershipBean.checkMembershipUpgrade(customer.getId(), transID);
+      if (status.equals("fail")) {
+            String alertBarStatus = "Opps. You have not accumulated enough points, or you entered an invalid Transaction ID. Please try again.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
+      } else if (status.equals("exist")) {
+            String alertBarStatus = "Receipt's Transaction ID has already been keyed in. You can't enter it again.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");      
+      } else {
+            String[] parts = status.split(",");
+            String alertBarStatus = "Point Update Successful! You now have "
+                    + parts[1] + " lifetime points and your membership is in the "
+                    + parts[2] + " tier.";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, alertBarStatus,""));
+              ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
       }
     }
     
@@ -290,5 +355,29 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<FurnitureTransaction> getFurnitureTransactions() {
+        return furnitureTransactions;
+    }
+
+    public void setFurnitureTransactions(List<FurnitureTransaction> furnitureTransactions) {
+        this.furnitureTransactions = furnitureTransactions;
+    }
+
+    public List<RetailItemTransaction> getRetailTransactions() {
+        return retailTransactions;
+    }
+
+    public void setRetailTransactions(List<RetailItemTransaction> retailTransactions) {
+        this.retailTransactions = retailTransactions;
+    }
+
+    public List<RestaurantTransaction> getRestaurantTransactions() {
+        return restaurantTransactions;
+    }
+
+    public void setRestaurantTransactions(List<RestaurantTransaction> restaurantTransactions) {
+        this.restaurantTransactions = restaurantTransactions;
     }
 }
