@@ -21,6 +21,7 @@
                             <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                                 <li class="active"><a href="#info" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Account Info</a></li>
                                 <li><a href="#perks" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Perks &amp; Promotions</a></li>
+                                <li><a href="#history" role="tab" data-toggle="tab"><i class="fa fa-clock-o"></i> Transaction History</a></li>                                
                                 <li><a href="#settings" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Settings</a></li>
                             </ul>
                             <div class="tab-content">
@@ -140,6 +141,65 @@
                                                 </h:panelGroup>                                                
                                             </ui:repeat>                                            
                                         </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="history">
+                                    <div class="col-md-8">
+                                        <br/>
+                                        
+                                    <ui:repeat value="#{customerAccountManagedBean.furnitureTransactions}" var="trans">    
+                                    <!-- Sales Transaction -->
+                                    <div class="panel panel-default receipt">
+                                    <div class="panel-heading receipt-head">Transaction ID: ##{trans.id}</div>
+                                      <div class="panel-body">
+                                          <p>
+                                              <strong>
+                                                <h:outputText value="#{trans.transTime.time}">
+                                                    <f:convertDateTime pattern="EEE, MMM d, yyyy HH:MM z" timeZone="#{customerAccountManagedBean.co.timeZoneID}"/>
+                                                </h:outputText>
+                                              </strong><br/>
+                                              Store: <strong>#{trans.store.name}</strong><br/></p>
+                                          <p>
+                                              Returned Credits: <strong>#{trans.returnedCreditsUsed}</strong>
+                                          </p>                                    
+                                      </div>
+                                      <div class="line"></div>
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th>DESCRIPTION</th>
+                                            <th width="130">UNIT PRICE</th>
+                                            <th width="70">QTY</th>                    
+                                            <th width="80" class="text-right">TOTAL</th>
+                                            <th width="100" class="text-right">POINTS AWARDED</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ui:repeat value="#{trans.furnitureTransactionDetails}" var="detail">
+                                              <tr>
+                                                <td>#{detail.furnitureModel.name}</td>
+                                                <td>#{detail.unitPrice}</td>
+                                                <td>#{detail.qty}</td>
+                                                <td class="text-right">
+                                                    <h:outputText value="#{detail.unitPrice * detail.qty}" id="discounted">
+                                                        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                    </h:outputText>
+                                                </td>
+                                                <td class="text-right">#{detail.unitPoints * detail.qty}</td>
+                                              </tr>
+                                            </ui:repeat>                                       
+                                          <tr>
+                                            <td class="no-border"><strong>Total Receipt / Points Awarded</strong></td>
+                                            <td colspan="3" class="text-right"><strong>
+                                                    #{customerAccountManagedBean.co.country.currency.currencyCode} 
+                                                    #{trans.grandTotal}</strong></td>
+                                            <td class="text-right"><strong>#{customerAccountManagedBean.calculatePoints(trans)} pts</strong></td>
+                                          </tr>
+                                        </tbody>
+                                      </table>                             
+                                    </div>                                        
+                                    </ui:repeat>
+                                        
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="settings">

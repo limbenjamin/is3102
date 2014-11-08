@@ -1,5 +1,7 @@
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.GoodsReceiptDocument;
@@ -11,6 +13,7 @@ import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Entities.Stock;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +34,11 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
     private GoodsReceiptDocumentDetail goodsReceiptDocumentDetail;
     private Stock stock;
     private ProcuredStockPurchaseOrder purchaseOrder;
+    
+    @EJB
+    private ManageNotificationsBeanLocal manageNotificationsBean;
+    @EJB
+    private ManagePrivilegesBeanLocal managePrivilegesBean;
 
 //  Function: To get the Goods Recipt Document entity from Id
     @Override
@@ -116,6 +124,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
         if (goodsReceiptDocument.getReceiveFrom() != null) {
             goodsReceiptDocument.getReceiveFrom().setStatus(PurchaseOrderStatus.DELIVERED);
+            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Payment", "Purchase Order #" +  goodsReceiptDocument.getReceiveFrom().getId().toString() +" was delivered at " + goodsReceiptDocument.getPlant().getName(), "/purchasing/purchaseorder.xhtml", "Fulfill External Transfer Order", managePrivilegesBean.getPrivilegeFromName("Purchase Order"), goodsReceiptDocument.getReceiveFrom().getManufacturingFacility());
         }
         goodsReceiptDocument.setConfirm(true);
         goodsReceiptDocument.setPostingDate(postingDate);

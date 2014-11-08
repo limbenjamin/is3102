@@ -14,46 +14,46 @@
             <h4>View MMSF (Monthly Menu Item Sales Forecast)</h4><hr></hr>
         </div>        
         
-        <h:form rendered="#{!viewMmsfManagedBean.yearsOfMssr.isEmpty()}" class="form-horizontal">
+        <h:form rendered="#{not empty viewMmsfManagedBean.yearsOfMmsf}" class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-2 control-label" style="max-width:120px;">Select a year: </label>            
                 <div class="col-sm-2" style="max-width:120px;">
-                    <h:selectOneMenu value="#{viewMmsfManagedBean.yearOfMssr}" id="yearsOfMssr" class="form-control">
-                        <f:selectItems value="#{viewMmsfManagedBean.yearsOfMssr}" var="years" 
+                    <h:selectOneMenu value="#{viewMmsfManagedBean.yearOfMmsf}" id="yearsOfMssr" class="form-control">
+                        <f:selectItems value="#{viewMmsfManagedBean.yearsOfMmsf}" var="years" 
                                        itemLabel="#{years}" itemValue="#{years}" />
-                        <f:ajax render="mssrTable" listener="#{viewMmsfManagedBean.updateMssr}" />
+                        <f:ajax render="mssrTable" listener="#{viewMmsfManagedBean.updateMmsf}" />
                     </h:selectOneMenu>
                 </div>
             </div>
             <br />
-            <p:poll interval="1" listener="#{viewMmsfManagedBean.updateMssrList}" update="mssrTable" />
-            <p:accordionPanel id="mssrTable" value="#{viewMmsfManagedBean.mssrList}" var="mssrEntry" multiple="true">
-                <p:tab title="#{mssrEntry.first.name} (id:#{mssrEntry.first.id})">
-                    <p:dataTable value="#{viewMmsfManagedBean.mssrLabels}" var="label" style="text-align: center;">
+            <p:poll interval="1" listener="#{viewMmsfManagedBean.updateMmsfList}" update="mmsfTable" />
+            <p:accordionPanel id="mmsfTable" value="#{viewMmsfManagedBean.mmsfList}" var="mmsfEntry" multiple="true">
+                <p:tab title="#{mmsfEntry.first.name} (id:#{mmsfEntry.first.id})">
+                    <p:dataTable value="#{viewMmsfManagedBean.mmsfLabels}" var="label" style="text-align: center;">
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Month" />
                             </f:facet>
                             <h:outputText value="#{label.second}" />
                         </p:column>
-                        <p:columns value="#{mssrEntry.second}" var="mssr" style="#{(mssr.status == 'PENDING')?'background-color:#B1CAF2':null}">
+                        <p:columns value="#{mmsfEntry.second}" var="mmsf" style="#{(mmsf.status == 'PENDING')?'background-color:#B1CAF2':null}">
                             <f:facet name="header">
-                                <h:outputText value="#{mssr.month}" />
+                                <h:outputText value="#{mmsf.month}" />
                                 <br />
-                                <h:outputText value="#{mssr.year}" />
+                                <h:outputText value="#{mmsf.year}" />
                             </f:facet>
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}"/>
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == true}"/>
-                            <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == false}"/>
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == true}" />
-                            <h:outputText value="-" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == false}" />
-                            <h:outputText value="-" rendered="#{mssr.status == null}"/>
+                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}"/>
+                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mmsf.endMthUpdated == true}"/>
+                            <h:outputText value="-" rendered="#{mmsf.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mmsf.endMthUpdated == false}"/>
+                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first == 'varianceOffset' and mmsf.varianceUpdated == true}" />
+                            <h:outputText value="-" rendered="#{mmsf.status != null and label.first == 'varianceOffset' and mmsf.varianceUpdated == false}" />
+                            <h:outputText value="-" rendered="#{mmsf.status == null}"/>
                         </p:columns>
                     </p:dataTable>
                 </p:tab>
             </p:accordionPanel>
         </h:form>
-        <h:outputText value="No previous forecast available!" rendered="#{viewMmsfManagedBean.yearsOfMssr.isEmpty()}" />
+        <h:outputText value="No previous forecast available!" rendered="#{empty viewMmsfManagedBean.yearsOfMmsf}" />
     </ui:define>
 </ui:composition>
 
