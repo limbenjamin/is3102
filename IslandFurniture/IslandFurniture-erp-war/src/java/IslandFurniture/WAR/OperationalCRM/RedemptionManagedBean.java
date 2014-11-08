@@ -8,18 +8,19 @@ package IslandFurniture.WAR.OperationalCRM;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageRedeemableItemLocal;
-import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.Staff;
 import IslandFurniture.EJB.OperationalCRM.ManageRedemptionLocal;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.RedeemableItem;
 import IslandFurniture.Entities.Redemption;
+import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Voucher;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import IslandFurniture.WAR.Util.NFCMethods;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -58,6 +59,7 @@ public class RedemptionManagedBean implements Serializable {
     private Plant plant;
 
     private int cashValue;
+    private Integer pointsReq;
     private Date redemptionDateType;
     private Calendar redemptionDateCal;
     private Customer customer;
@@ -85,8 +87,8 @@ public class RedemptionManagedBean implements Serializable {
 
 //  Function: To create a Redemption
     public void addRedemption(ActionEvent event) throws IOException, ParseException {
-        customer = membershipBean.getCustomer(customerId);
-        redeemableItem = itemBean.getRedeemableItem(redeemableItemId);
+        //customer = membershipBean.getCustomer(customerId);
+        // redeemableItem = itemBean.getRedeemableItem(redeemableItemId);
         if (customer.getCurrentPoints().intValue() == redeemableItem.getPointsReq()
                 || customer.getCurrentPoints() > redeemableItem.getPointsReq()) {
             redemptionBean.createRedemption(staff, getCalendar(), customerId, redeemableItemId);           
@@ -149,30 +151,6 @@ public class RedemptionManagedBean implements Serializable {
         }
     }
 
-    public Long getLoyaltyCardId() {
-        return loyaltyCardId;
-    }
-
-    public void setLoyaltyCardId(Long loyaltyCardId) {
-        this.loyaltyCardId = loyaltyCardId;
-    }
-    
-    public RedeemableItem getRedeemableItem() {
-        return redeemableItem;
-    }
-
-    public void setRedeemableItem(RedeemableItem redeemableItem) {
-        this.redeemableItem = redeemableItem;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-    
     public List<Redemption> getRedemptionList() {
         return redemptionList;
     }
@@ -203,6 +181,14 @@ public class RedemptionManagedBean implements Serializable {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public Long getLoyaltyCardId() {
+        return loyaltyCardId;
+    }
+
+    public void setLoyaltyCardId(Long loyaltyCardId) {
+        this.loyaltyCardId = loyaltyCardId;
     }
 
     public Long getRedeemableItemId() {
@@ -245,6 +231,14 @@ public class RedemptionManagedBean implements Serializable {
         this.cashValue = cashValue;
     }
 
+    public Integer getPointsReq() {
+        return pointsReq;
+    }
+
+    public void setPointsReq(Integer pointsReq) {
+        this.pointsReq = pointsReq;
+    }
+
     public Date getRedemptionDateType() {
         return redemptionDateType;
     }
@@ -259,6 +253,22 @@ public class RedemptionManagedBean implements Serializable {
 
     public void setRedemptionDateCal(Calendar redemptionDateCal) {
         this.redemptionDateCal = redemptionDateCal;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public RedeemableItem getRedeemableItem() {
+        return redeemableItem;
+    }
+
+    public void setRedeemableItem(RedeemableItem redeemableItem) {
+        this.redeemableItem = redeemableItem;
     }
 
     public ManageUserAccountBeanLocal getStaffBean() {
@@ -292,5 +302,7 @@ public class RedemptionManagedBean implements Serializable {
     public void setMembershipBean(ManageMembershipLocal membershipBean) {
         this.membershipBean = membershipBean;
     }
+
+   
 
 }

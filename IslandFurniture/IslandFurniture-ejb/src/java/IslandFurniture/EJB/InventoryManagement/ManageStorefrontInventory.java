@@ -16,7 +16,7 @@ import IslandFurniture.Entities.StoreSection;
 import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
-import java.util.ArrayList;
+import IslandFurniture.StaticClasses.SendSMSBean;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -137,6 +137,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
                 em.persist(replenishmentTransferOrder);
                 em.flush();
                 manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Replenishment", "New replenishment transfer order", "/inventorymgt/inventorytransfer_replenish.xhtml", "Fulfill Replenishment", managePrivilegesBean.getPrivilegeFromName("Inventory Replenishment"), plant);
+                SendSMSBean.sendSMS("+6581273798", "New Action: Pending Replenishment for " + stock.getName() + " at " + storefrontInventory.getLocationInStore().getName());
             }
         }
         // End: If curr < replenishment, then create Replenishment Transfer Order 

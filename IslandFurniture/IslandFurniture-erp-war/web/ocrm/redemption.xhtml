@@ -102,7 +102,7 @@
                                                 <label class="col-sm-3 control-label">Redeemable Item: </label>
                                                 <div class="col-sm-9">
                                                     <h:selectOneMenu class="form-control" value="#{redemptionManagedBean.redeemableItemId}">
-                                                        <f:ajax listener="#{redemptionManagedBean.changeRedeemableItem}" render=":redemptionForm:content" />
+                                                        <f:ajax listener="#{redemptionManagedBean.changeRedeemableItem}" render="reqPoints" />
                                                         <f:selectItem itemLabel="Select Redeemable Item" />
                                                         <f:selectItems value="#{redemptionManagedBean.redeemableItemList}" var="p" itemLabel="Voucher Value: #{p.cashValue}" itemValue="#{p.id}" />
                                                     </h:selectOneMenu>

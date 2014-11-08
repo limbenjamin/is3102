@@ -1,5 +1,7 @@
 package IslandFurniture.EJB.InventoryManagement;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.Plant;
@@ -7,6 +9,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockUnit;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +30,11 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
     private Stock stock;
     private StockUnit stockUnit;
     private Plant plant;
+    
+    @EJB
+    private ManageNotificationsBeanLocal manageNotificationsBean;
+    @EJB
+    private ManagePrivilegesBeanLocal managePrivilegesBean;
 
 //  Function: To get GoodsIssuedDocument entity based on GoodIssuedDocumentId   
     @Override
@@ -88,6 +96,8 @@ public class ManageGoodsIssued implements ManageGoodsIssuedLocal {
         goodsIssuedDocument.setPostingDate(postingDate);
         em.merge(goodsIssuedDocument);
         em.flush();
+        
+        manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Incoming Shipment", "New incoming shipment from " + goodsIssuedDocument.getPlant().getName() + " " + goodsIssuedDocument.getPlant().getClass().getSimpleName(), "/inventorymgt/goodsreceipt.xhtml", "View Incoming Shipment Schedule", managePrivilegesBean.getPrivilegeFromName("Goods Issued"), goodsIssuedDocument.getDeliverTo());
     }
 
 //  Function: To display Goods Issued Document    

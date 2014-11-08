@@ -5,10 +5,10 @@
  */
 package IslandFurniture.EJB.InventoryManagement;
 
-import IslandFurniture.Entities.CountryOffice;
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.Entities.ExternalTransferOrder;
 import IslandFurniture.Entities.ExternalTransferOrderDetail;
-import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.ReplenishmentTransferOrder;
@@ -18,8 +18,10 @@ import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.Entities.StorefrontInventoryPK;
 import IslandFurniture.Enums.TransferOrderStatus;
+import IslandFurniture.StaticClasses.SendSMSBean;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,6 +45,11 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
     private ExternalTransferOrderDetail externalTransferOrderDetail;
     private StorefrontInventory storefrontInventory;
     private StorefrontInventoryPK storefrontInventoryPK;
+
+    @EJB
+    private ManageNotificationsBeanLocal manageNotificationsBean;
+    @EJB
+    private ManagePrivilegesBeanLocal managePrivilegesBean;
 
     @Override
     public StockUnit getStockUnit(Long stockUnitId) {
@@ -221,7 +228,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
     public List<Stock> viewStock() {
         Query q = em.createQuery("SELECT s " + "FROM Stock s");
         return q.getResultList();
-    }   
+    }
 
     @Override
     public List<StockUnit> viewStockUnitsOfAStock(Plant plant, Stock stock) {
@@ -239,7 +246,7 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
         q.setParameter("status", TransferOrderStatus.REQUESTED);
         return q.getResultList();
     }
-    
+
     //  Function: To display list of Replenishment Transfer Order (Requested)    
     @Override
     public ReplenishmentTransferOrder updateReplenishmentTransferOrder(Plant plant, Stock stock) {
@@ -279,9 +286,13 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
         replenishmentTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
         em.persist(replenishmentTransferOrder);
         em.flush();
+
+        storefrontInventoryPK = new StorefrontInventoryPK(plant.getId(), stock.getId());
+        storefrontInventory = (StorefrontInventory) em.find(StorefrontInventory.class, storefrontInventoryPK);
+
+        manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Replenishment", "New replenishment transfer order", "/inventorymgt/inventorytransfer_replenish.xhtml", "Fulfill Replenishment", managePrivilegesBean.getPrivilegeFromName("Inventory Replenishment"), plant);
+        SendSMSBean.sendSMSByPrivilegeFromPlant("New Action: Pending Replenishment for " + stock.getName() + " at " + storefrontInventory.getLocationInStore().getName(), managePrivilegesBean.getPrivilegeFromName("Inventory Replenishment"), plant);
     }
-
-
 
 //  Function: To delete a Replenishment Transfer Order  
     @Override
@@ -406,8 +417,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
         q.setParameter("status", TransferOrderStatus.FULFILLED);
         return q.getResultList();
     }
-    
-        //  Function: To display list of External Transfer Order (Fulfilled) Posted   
+
+    //  Function: To display list of External Transfer Order (Fulfilled) Posted   
     @Override
     public List<ExternalTransferOrder> viewExternalTransferOrderFulfilledPostedFromRequesting(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId AND s.status=:status");
@@ -476,6 +487,8 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
         externalTransferOrder.setStatus(TransferOrderStatus.REQUESTED);
         em.merge(externalTransferOrder);
         em.flush();
+
+        manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending External Transfer", "New external transfer order", "/inventorymgt/inventorytransfer_external.xhtml", "Fulfill External Transfer Order", managePrivilegesBean.getPrivilegeFromName("External Inventory Transfer"), externalTransferOrder.getFulfillingPlant());
     }
 
 //  Function: To edit External Transfer Order Request to Fulfilled 
@@ -496,25 +509,23 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
         em.merge(replenishmentTransferOrder);
         em.flush();
     }
-    
-       //  Function: To display list of External Transfer Order for Plant  
+
+    //  Function: To display list of External Transfer Order for Plant  
     @Override
     public List<ExternalTransferOrder> viewAllExternalTransferOrderRequesting(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.requestingPlant.id=:plantId");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
-    
-       //  Function: To display list of External Transfer Order for Plant  
+
+    //  Function: To display list of External Transfer Order for Plant  
     @Override
     public List<ExternalTransferOrder> viewAllExternalTransferOrderFulFilling(Plant plant) {
         Query q = em.createQuery("SELECT s FROM ExternalTransferOrder s WHERE s.fulfillingPlant.id=:plantId");
         q.setParameter("plantId", plant.getId());
         return q.getResultList();
     }
-    
-    
-    
+
 //        @Override
 //    public List<FurnitureModel> viewFurnitureModel(CountryOffice countryOffice) {
 //        Query q1 = em.createQuery("SELECT f FROM FurnitureModel f");
@@ -524,5 +535,4 @@ public class ManageInventoryTransfer implements ManageInventoryTransferLocal, Ma
 //        q2.setParameter("countryOffice", countryOffice.getId());
 //        return q2.getResultList();
 //    }
-    
 }

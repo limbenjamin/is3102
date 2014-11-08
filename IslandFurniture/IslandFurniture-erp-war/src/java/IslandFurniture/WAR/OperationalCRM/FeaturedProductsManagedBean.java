@@ -6,17 +6,17 @@
 package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
+import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageFeaturedProductsLocal;
+import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.Plant;
-import IslandFurniture.Entities.RetailItem;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -37,8 +37,7 @@ import javax.servlet.http.HttpSession;
 public class FeaturedProductsManagedBean implements Serializable {
 
     private List<Stock> featuredProductsList;
-    private List<Stock> stockList;
-    private List<Stock> tempList;
+    private List<FurnitureModel> stockList;
     private Long stockId;
     
     private String username;
@@ -54,6 +53,8 @@ public class FeaturedProductsManagedBean implements Serializable {
     public ManageFeaturedProductsLocal featuredBean;
     @EJB
     public ManageInventoryTransferLocal transferBean;
+    @EJB
+    public ManageCatalogueBeanLocal catBean;
 
     @PostConstruct
     public void init() {
@@ -62,14 +63,8 @@ public class FeaturedProductsManagedBean implements Serializable {
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
         featuredProductsList = featuredBean.viewFeaturedProducts(plant);
-        tempList = transferBean.viewStock();
-        stockList = new ArrayList<>();
-        for(Stock s : tempList) {
-            if(s instanceof FurnitureModel || s instanceof RetailItem)
-                stockList.add(s);
-        }
-
-        Iterator<Stock> iterator = stockList.iterator();
+        stockList = catBean.getStoreFurniture((CountryOffice) plant);
+        Iterator<FurnitureModel> iterator = stockList.iterator();
         while (iterator.hasNext()){
             Stock s = iterator.next();
             if (featuredProductsList.contains(s)) {
@@ -102,11 +97,11 @@ public class FeaturedProductsManagedBean implements Serializable {
         this.featuredProductsList = featuredProductsList;
     }
 
-    public List<Stock> getStockList() {
+    public List<FurnitureModel> getStockList() {
         return stockList;
     }
 
-    public void setStockList(List<Stock> stockList) {
+    public void setStockList(List<FurnitureModel> stockList) {
         this.stockList = stockList;
     }
 
@@ -181,5 +176,13 @@ public class FeaturedProductsManagedBean implements Serializable {
     public void setTransferBean(ManageInventoryTransferLocal transferBean) {
         this.transferBean = transferBean;
     }
-   
+
+    public ManageCatalogueBeanLocal getCatBean() {
+        return catBean;
+    }
+
+    public void setCatBean(ManageCatalogueBeanLocal catBean) {
+        this.catBean = catBean;
+    }
+    
 }
