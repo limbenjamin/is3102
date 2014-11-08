@@ -19,9 +19,67 @@
                     </div>                     
                     <div class="col-md-10"> 
                         <h4>Membership</h4><hr></hr>
+                    </div> 
+                </div>
+                <!--    Start Testing   -->
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h:form class="form-horizontal" id="optionForm">
+                            <div class="form-group"> 
+                                <label class="control-label col-sm-3">Search By: </label>
+                                <div class="col-sm-7 btn-group">
+                                    <h:commandButton class="btn btn-default" value="Email">
+                                        <f:ajax render=":searchEmailGroup :searchByEmailForm :searchCardGroup :searchByCardForm" listener="#{membershipManagedBean.searchByEmail}" />
+                                    </h:commandButton>
+                                    <h:commandButton class="btn btn-default" value="Card ID">
+                                        <f:ajax render=":searchEmailGroup :searchByEmailForm :searchCardGroup :searchByCardForm" listener="#{membershipManagedBean.searchByCard}" />
+                                    </h:commandButton>
+                                    <h:commandButton class="btn btn-default" value="All" actionListener="#{membershipManagedBean.searchAll}"></h:commandButton>
+                                </div> 
+                            </div> 
+                        </h:form>
                     </div>
-
-                    <div class="col-md-10">                      
+                </div>
+                <div class="row">
+                    <div class="col-sm-12"> 
+                        <h:panelGroup id="searchEmailGroup">
+                            <h:form id="searchByEmailForm" rendered="#{membershipManagedBean.emailForm}" class="form-horizontal form-inline">
+                                <div class="form-group col-sm-7">
+                                    <label class="control-label col-sm-2">Email: </label>
+                                    <div class="col-sm-5">
+                                        <h:inputText class="form-control" id="emailSearch" pt:required="required"></h:inputText>
+                                    </div> 
+                                    <div class="col-sm-2">
+                                        <h:commandButton class="btn btn-success" value="Search" actionListener="#{membershipManagedBean.searchEmail}">
+                                            
+                                        </h:commandButton>
+                                    </div> 
+                                </div>    
+                            </h:form>
+                        </h:panelGroup> 
+                        <h:panelGroup id="searchCardGroup">
+                            <h:form id="searchByCardForm" rendered="#{membershipManagedBean.cardForm}" class="form-horizontal form-inline">
+                                <div class="form-group col-sm-7">
+                                    <label class="control-label col-sm-2">Card ID: </label>
+                                    <div class="col-sm-5"> 
+                                        <h:commandLink class="">  
+                                            <i class="glyphicon glyphicon-pencil btn-xs"></i>
+                                            <f:ajax listener="#{membershipManagedBean.scanNFCWithoutCustomerID}" render=":searchCardGroup :searchByCardForm" />
+                                        </h:commandLink> 
+                                        <h:outputText class="form-control col-sm-8 transparent-form" id="cardSearch" value="#{membershipManagedBean.customerCardID}" ></h:outputText>
+                                    </div>  
+                                    <div class="col-sm-2">
+                                        <h:commandButton class="btn btn-success" value="Search" actionListener="#{membershipManagedBean.searchCard}">
+                                            <f:attribute name="customerCardID" value="#{membershipManagedBean.customerCardID}" />
+                                        </h:commandButton> 
+                                    </div> 
+                                </div>
+                            </h:form>
+                        </h:panelGroup>
+                    </div>
+                </div><br></br>
+                <div class="row">
+                    <div class="col-md-10">
                         <section name="Table of Contents of the Membership">
                             <div class="panel-heading dashboard-title-panel">
                                 View Customers Details
@@ -33,7 +91,7 @@
                                         <th>Member Name</th>
                                         <th width="100px">Details</th>
                                     </tr>
-                                    <h:form class="form-horizontal">
+                                    <h:form class="form-horizontal" id="memberDisplayForm">
                                         <ui:repeat value="#{membershipManagedBean.customerList}" var="c">
                                             <tr>
                                                 <td>
@@ -105,7 +163,7 @@
                                             <h:inputText class="form-control" value="#{membershipManagedBean.customer.loyaltyCardId}"></h:inputText>
                                         </div>
                                         <div class="col-sm-3">
-                                            <h:commandButton value="Scan" class="btn btn-success btn-round" >
+                                            <h:commandButton value="Scan" class="btn btn-primary btn-round" >
                                                 <f:ajax listener="#{membershipManagedBean.scanNFC}" render=":viewCustomerForm:content" />
                                                 <f:attribute name="customerID" value="#{membershipManagedBean.customer.id}" />
                                             </h:commandButton>    
