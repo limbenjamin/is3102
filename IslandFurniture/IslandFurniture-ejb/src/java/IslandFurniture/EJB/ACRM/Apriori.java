@@ -420,7 +420,7 @@ public class Apriori {
         String[] splitted = s.split(" ");
 
         for (String sp : splitted) {
-            rtnobject.add(columnsmap.get(-1+Integer.valueOf(sp.trim())));
+            rtnobject.add(columnsmap.get(-1 + Integer.valueOf(sp.trim())));
         }
 
         return rtnobject;
@@ -492,17 +492,15 @@ public class Apriori {
                     j++;
                     if (b) {
 
-                        {
-                            transa = transa.concat(" ");
-                            transa = transa.concat(Integer.toString(j));
-
-                        }
-                        transa = transa.trim();
-                        transatrahash(0, htn, transa);
+                        transa = transa.concat(" ");
+                        transa = transa.concat(Integer.toString(j));
 
                     }
 
                 }
+                transa = transa.trim();
+                transatrahash(0, htn, transa);
+
             }
         } catch (Exception ex) {
         }
@@ -519,14 +517,13 @@ public class Apriori {
     //-------------------------------------------------------------
 
     public void transatrahash(int i, hashtreenode htnf, String transa) {
-        Vector itemsetlist = new Vector();
         int j, lastpos, len;
         String d;
         itemsetnode tmpnode = new itemsetnode();
         StringTokenizer st;
 
         if (htnf.nodeattr == IL) {
-            itemsetlist = (Vector) htnf.itemsetlist;
+            Vector itemsetlist = (Vector) htnf.itemsetlist;
             len = itemsetlist.size();
             for (j = 0; j < len; j++) {
                 st = new StringTokenizer(transa);
@@ -572,7 +569,7 @@ public class Apriori {
         this.minsup = minsup;
 
         //Number of items per transc
-        this.N =  Integer.valueOf(data.get(0).size()).longValue();
+        this.N = Integer.valueOf(data.get(0).size()).longValue();
         //Number of transactions
         this.M = Integer.valueOf(data.size()).longValue();
 
@@ -586,8 +583,6 @@ public class Apriori {
     }
 
     public Vector<Vector<Object>> findListSet(Integer k) {
-
-
 
         System.out.println();
         System.out.println("Algorithm apriori starting now.....");

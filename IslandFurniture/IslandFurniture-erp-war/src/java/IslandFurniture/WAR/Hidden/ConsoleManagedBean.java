@@ -31,6 +31,7 @@ public class ConsoleManagedBean implements Serializable {
 
     @EJB
     private ACRMSingletonLocal acrmatom;
+    
 
     private String statusMessage;
 

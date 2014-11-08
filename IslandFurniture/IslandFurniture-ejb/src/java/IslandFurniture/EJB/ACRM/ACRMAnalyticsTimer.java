@@ -36,6 +36,7 @@ import javax.persistence.Query;
 @Lock(WRITE)
 public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
 
+    public static final Integer supportProb=40;
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
     public static currentdate cdate = new currentdate();
@@ -159,7 +160,7 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
         //Tabulate dataset
         Query co = em.createQuery("SELECT co from CountryOffice co");
 
-        em.createQuery("delete from MarketBasketAnalysis mba");
+        em.createQuery("delete from MarketBasketAnalysis mba").executeUpdate();
         System.out.println("Apirori(): Deleting all Existing MBA");
 
         for (CountryOffice c : (List<CountryOffice>) co.getResultList()) {
@@ -216,23 +217,24 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
             }
 
             //For this countryoffice
-            analysis.Start(30); //min support 30%
+            analysis.Start(supportProb); //min support 30%
             int start = 1;
 
             while (start <= 5) {
-
-         
 
                 Vector<Vector<Object>> itemset = analysis.findListSet(start);
 
                 if (itemset == null) {
                     break;
                 }
-                
-                
 
                 for (Vector<Object> o : itemset) {
-                    if (start<2) break;
+                    if (start < 2) {
+                        break;
+                    }
+                    if (o.isEmpty()) {
+                        continue;
+                    }
 
                     MarketBasketAnalysis mba = new MarketBasketAnalysis();
                     mba.setCountryOffice(c);
@@ -241,11 +243,11 @@ public class ACRMAnalyticsTimer implements ACRMSingletonLocal {
                     String all = " ";
                     for (Object k : o) {
                         mba.getFurnituremodels().add((FurnitureModel) k);
-                        all.concat(" ").concat(((FurnitureModel) k).getName());
+                        all=all.concat(" ").concat(((FurnitureModel) k).getName());
 
                     }
 
-                    System.out.println("Backet Size[" + start + "]:" + all.trim());
+                    System.out.println("Basket Size[" + start + "]:" + all.trim());
 
                     em.persist(mba);
 
