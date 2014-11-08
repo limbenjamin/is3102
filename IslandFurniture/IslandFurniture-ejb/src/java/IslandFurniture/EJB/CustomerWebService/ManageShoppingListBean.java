@@ -91,6 +91,7 @@ public class ManageShoppingListBean implements ManageShoppingListBeanLocal {
         Iterator<ShoppingListDetail> iterator = shoppingList.getShoppingListDetails().iterator();
         while (iterator.hasNext()) {
             ShoppingListDetail current = iterator.next();
+            System.out.println(current.getFurnitureModel().getName() + " | " + shoppingList.getStore().getName());
             Double discountedPrice = getDiscountedPrice(current.getFurnitureModel(), shoppingList.getStore(), customer);
             subtotal = subtotal + discountedPrice * current.getQty();
         }

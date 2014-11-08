@@ -5,6 +5,7 @@
  */
 package IslandFurniture.DataLoading;
 
+import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
@@ -16,14 +17,13 @@ import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.StaticClasses.QueryMethods;
 import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import static javax.ejb.TransactionAttributeType.REQUIRED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -37,7 +37,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
 
-    private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails, Calendar transTime) {
+    private FurnitureTransaction addFurnitureTransaction(Store store, List<FurnitureTransactionDetail> fTransDetails, Calendar transTime, Customer customer) {
         Double total = 0.0;
         FurnitureTransaction fTrans = new FurnitureTransaction();
         fTrans.setStore(store);
@@ -48,9 +48,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         fTrans.setFurnitureTransactionDetails(fTransDetails);
-        fTrans.setGrandTotal(Math.round(total*100)/100.0);
+        fTrans.setGrandTotal(Math.round(total * 100) / 100.0);
         fTrans.setVoucherTotal(0.0);
         fTrans.setReturnedCreditsUsed(0.0);
+        fTrans.setMember(customer);
 
         em.persist(fTrans);
 
@@ -67,7 +68,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         return fTransDetail;
     }
 
-    private RetailItemTransaction addRetailItemTransaction(Store store, List<RetailItemTransactionDetail> riTransDetails, Calendar transTime) {
+    private RetailItemTransaction addRetailItemTransaction(Store store, List<RetailItemTransactionDetail> riTransDetails, Calendar transTime, Customer customer) {
         Double total = 0.0;
         RetailItemTransaction riTrans = new RetailItemTransaction();
         riTrans.setStore(store);
@@ -78,8 +79,9 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         riTrans.setRetailItemTransactionDetails(riTransDetails);
-        riTrans.setGrandTotal(Math.round(total*100)/100.0);
+        riTrans.setGrandTotal(Math.round(total * 100) / 100.0);
         riTrans.setVoucherTotal(0.0);
+        riTrans.setMember(customer);
 
         em.persist(riTrans);
 
@@ -95,7 +97,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
         return riTransDetail;
     }
 
-    private RestaurantTransaction addRestaurantTransaction(Store store, List<RestaurantTransactionDetail> restTransDetails, Calendar transTime) {
+    private RestaurantTransaction addRestaurantTransaction(Store store, List<RestaurantTransactionDetail> restTransDetails, Calendar transTime, Customer customer) {
         Double total = 0.0;
         RestaurantTransaction restTrans = new RestaurantTransaction();
         restTrans.setStore(store);
@@ -105,8 +107,9 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             total += eachDetail.getSubtotal();
         }
         restTrans.setRestaurantTransactionDetails(restTransDetails);
-        restTrans.setGrandTotal(Math.round(total*100)/100.0);
+        restTrans.setGrandTotal(Math.round(total * 100) / 100.0);
         restTrans.setVoucherTotal(0.0);
+        restTrans.setMember(customer);
 
         em.persist(restTrans);
 
@@ -124,7 +127,6 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
     }
 
     @Override
-    @TransactionAttribute(REQUIRED)
     public boolean loadSampleData() {
 
         try {
@@ -139,63 +141,178 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             List<RestaurantTransactionDetail> restTransDetails = new ArrayList();
 
             List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
+            List<Customer> customers = (List<Customer>) em.createNamedQuery("getAllCustomers").getResultList();
+            Integer points;
+
+            // Pre search pairing and triple entities
+            FurnitureModel studyTable = QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition");
+            FurnitureModel swivelChair = QueryMethods.findFurnitureByName(em, "Swivel Chair");
+            FurnitureModel lamp = QueryMethods.findFurnitureByName(em, "Bedside Lamp H31");
+            FurnitureModel bedFrame = QueryMethods.findFurnitureByName(em, "Gothic Bed Frame");
+            FurnitureModel nightStand = QueryMethods.findFurnitureByName(em, "Ninja Night Stand");
 
             for (Store eachStore : stores) {
-                // Get current time in store's timezone
-                curr = TimeMethods.getPlantCurrTime(eachStore);
+                if (!eachStore.getCountryOffice().getSuppliedWithFrom().isEmpty()) {
+                    // Get current time in store's timezone
+                    curr = TimeMethods.getPlantCurrTime(eachStore);
 
-                for (int i = 0; i < 800; i++) {
-                    // Add Furniture Transaction & Retail Item Transaction
-                    fTransDetails.clear();
-                    riTransDetails.clear();
-                    restTransDetails.clear();
+                    for (int i = 0; i < 800; i++) {
+                        // Add Furniture Transactions & Retail Item Transactions & Restaurant Transactions
+                        fTransDetails.clear();
+                        riTransDetails.clear();
+                        restTransDetails.clear();
 
-                    for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
-                        if (rand.nextBoolean()) {
-                            if (ss.getStock() instanceof FurnitureModel) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), 10));
-//                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) stock, rand.nextInt(50) + 1));
-                            } else if (ss.getStock() instanceof RetailItem) {
-                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), 10));
-//                                riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) stock, rand.nextInt(50) + 1));
+                        // Declare pairing check flags
+                        boolean hasStudyTable = false;
+                        boolean hasSwivelChair = false;
+
+                        // Declare triplets check flags
+                        boolean hasBedsideLamp = false;
+                        boolean hasGothicBedFrame = false;
+                        boolean hasNinjaNightStand = false;
+
+                        for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
+                            // Bias product pairing logic
+                            if (ss.getStock().equals(studyTable) && hasSwivelChair) {
+                                if (rand.nextDouble() < 0.85) {
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                }
+                            } else if (ss.getStock().equals(swivelChair) && hasStudyTable) {
+                                if (rand.nextDouble() < 0.85) {
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                }
+                            } else if (ss.getStock().equals(lamp) && (hasGothicBedFrame || hasNinjaNightStand)) {
+                                if (rand.nextDouble() < 0.85) {
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                }
+                            } else if (ss.getStock().equals(bedFrame) && (hasBedsideLamp || hasNinjaNightStand)) {
+                                if (rand.nextDouble() < 0.85) {
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                }
+                            } else if (ss.getStock().equals(nightStand) && (hasBedsideLamp || hasGothicBedFrame)) {
+                                if (rand.nextDouble() < 0.85) {
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                }
+                            } else if (rand.nextBoolean()) {
+                                // Equal chance item logic
+
+                                if (ss.getStock() instanceof FurnitureModel) {
+                                    // Track pairings and triplets count
+                                    if (ss.getStock().equals(studyTable)) {
+                                        hasStudyTable = true;
+                                    }
+                                    if (ss.getStock().equals(swivelChair)) {
+                                        hasSwivelChair = true;
+                                    }
+                                    if (ss.getStock().equals(lamp)) {
+                                        hasBedsideLamp = true;
+                                    }
+                                    if (ss.getStock().equals(bedFrame)) {
+                                        hasGothicBedFrame = true;
+                                    }
+                                    if (ss.getStock().equals(nightStand)) {
+                                        hasNinjaNightStand = true;
+                                    }
+
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                } else if (ss.getStock() instanceof RetailItem) {
+                                    riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(10) + 1));
+                                }
                             }
                         }
-                    }
 
-                    for (MenuItem mi : eachStore.getCountryOffice().getMenuItems()) {
-                        if (rand.nextBoolean()) {
-                            restTransDetails.add(this.addRestaurantTransactionDetail(mi, rand.nextInt(10) + 1));
+                        for (MenuItem mi : eachStore.getCountryOffice().getMenuItems()) {
+                            if (rand.nextBoolean()) {
+                                restTransDetails.add(this.addRestaurantTransactionDetail(mi, rand.nextInt(10) + 1));
+                            }
                         }
-                    }
 
-                    if (!fTransDetails.isEmpty()) {
-                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
-                        do {
-                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        } while (cal.after(curr));
+                        if (!fTransDetails.isEmpty()) {
+                            // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                            do {
+                                cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                            } while (cal.after(curr));
 
-                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
-                        this.addFurnitureTransaction(eachStore, fTransDetails, cal);
-                    }
+                            // Seasonal Staging
+                            if (rand.nextDouble() < 0.3) {
+                                // Christmas Peak
+                                cal.set(Calendar.MONTH, 11);
+                            } else if (eachStore.getCountry().equals(QueryMethods.findCountryByName(em, "Singapore")) && cal.get(Calendar.MONTH) == 4) {
+                                // Great Singapore Sales lower sales in May, higher in June
+                                if (rand.nextBoolean()) {
+                                    cal.set(Calendar.MONTH, 5);
+                                }
+                            }
 
-                    if (!riTransDetails.isEmpty()) {
-                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
-                        do {
-                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        } while (cal.after(curr));
+                            cal = TimeMethods.convertToUtcTime(eachStore, cal);
+                            FurnitureTransaction addedFT = this.addFurnitureTransaction(eachStore, fTransDetails, cal, (rand.nextBoolean()) ? customers.get(rand.nextInt(customers.size())) : null);
+                            if (addedFT.getMember() != null) {
+                                points = 0;
+                                for (FurnitureTransactionDetail detail : addedFT.getFurnitureTransactionDetails()) {
+                                    points += detail.getTotalPoints().intValue();
+                                }
+                                addedFT.getMember().setCumulativePoints(addedFT.getMember().getCumulativePoints() + points);
+                                addedFT.getMember().setCurrentPoints(addedFT.getMember().getCurrentPoints() + points);
+                            }
+                        }
 
-                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
-                        this.addRetailItemTransaction(eachStore, riTransDetails, cal);
-                    }
+                        if (!riTransDetails.isEmpty()) {
+                            // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                            do {
+                                cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                            } while (cal.after(curr));
 
-                    if (!restTransDetails.isEmpty()) {
-                        // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
-                        do {
-                            cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
-                        } while (cal.after(curr));
+                            // Seasonal Staging
+                            if (rand.nextDouble() < 0.3) {
+                                // Christmas Peak
+                                cal.set(Calendar.MONTH, 11);
+                            } else if (eachStore.getCountry().equals(QueryMethods.findCountryByName(em, "Singapore")) && cal.get(Calendar.MONTH) == 4) {
+                                // Great Singapore Sales lower sales in May, higher in June
+                                if (rand.nextBoolean()) {
+                                    cal.set(Calendar.MONTH, 5);
+                                }
+                            }
 
-                        cal = TimeMethods.convertToUtcTime(eachStore, cal);
-                        this.addRestaurantTransaction(eachStore, restTransDetails, cal);
+                            cal = TimeMethods.convertToUtcTime(eachStore, cal);
+                            RetailItemTransaction addedRT = this.addRetailItemTransaction(eachStore, riTransDetails, cal, (rand.nextBoolean()) ? customers.get(rand.nextInt(customers.size())) : null);
+                            if (addedRT.getMember() != null) {
+                                points = 0;
+                                for (RetailItemTransactionDetail detail : addedRT.getRetailItemTransactionDetails()) {
+                                    points += detail.getTotalPoints().intValue();
+                                }
+                                addedRT.getMember().setCumulativePoints(addedRT.getMember().getCumulativePoints() + points);
+                                addedRT.getMember().setCurrentPoints(addedRT.getMember().getCurrentPoints() + points);
+                            }
+                        }
+
+                        if (!restTransDetails.isEmpty()) {
+                            // Note: for java.util.Calendar, value of month ranges from 0 to 11 inclusive
+                            do {
+                                cal.set(rand.nextInt(2) + 2013, rand.nextInt(12), rand.nextInt(28) + 1, rand.nextInt(13) + 10, rand.nextInt(60), rand.nextInt(60));
+                            } while (cal.after(curr));
+
+                            // Seasonal Staging
+                            if (rand.nextDouble() < 0.3) {
+                                // Christmas Peak
+                                cal.set(Calendar.MONTH, 11);
+                            } else if (eachStore.getCountry().equals(QueryMethods.findCountryByName(em, "Singapore")) && cal.get(Calendar.MONTH) == 4) {
+                                // Great Singapore Sales lower sales in May, higher in June
+                                if (rand.nextBoolean()) {
+                                    cal.set(Calendar.MONTH, 5);
+                                }
+                            }
+
+                            cal = TimeMethods.convertToUtcTime(eachStore, cal);
+                            RestaurantTransaction addedRestTrans = this.addRestaurantTransaction(eachStore, restTransDetails, cal, (rand.nextBoolean()) ? customers.get(rand.nextInt(customers.size())) : null);
+                            if (addedRestTrans.getMember() != null) {
+                                points = 0;
+                                for (RestaurantTransactionDetail detail : addedRestTrans.getRestaurantTransactionDetails()) {
+                                    points += detail.getTotalPoints().intValue();
+                                }
+                                addedRestTrans.getMember().setCumulativePoints(addedRestTrans.getMember().getCumulativePoints() + points);
+                                addedRestTrans.getMember().setCurrentPoints(addedRestTrans.getMember().getCurrentPoints() + points);
+                            }
+                        }
                     }
                 }
 

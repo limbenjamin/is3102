@@ -39,7 +39,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
-    
+
     @EJB
     StockManagerLocal sml;
 
@@ -170,8 +170,6 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 this.addFurnitureModel("Bathroom Rug E64", 30, "With this bathroom rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
                 this.addFurnitureModel("Kitchen Stool", 250, "A chair without a back, perfect for the lazy bones to correct their posture.", FurnitureCategory.KITCHEN, FurnitureSubcategory.CHAIRS);
 
-
-                
                 // Add BOM to FurnitureModel
                 List<FurnitureModel> fmList = em.createNamedQuery("getAllFurnitureModels").getResultList();
                 List<Material> materialList = em.createNamedQuery("Material.getMaterialList").getResultList();
@@ -236,12 +234,12 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                     for (FurnitureModel eachFm : furnitureModels) {
                         if (rand.nextBoolean()) {
-                            this.addStockSupplied(eachFm, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                            this.addStockSupplied(eachFm, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()) * 100) / 100);
                         }
                     }
                     for (RetailItem eachRi : retailItems) {
                         if (rand.nextBoolean()) {
-                            this.addStockSupplied(eachRi, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                            this.addStockSupplied(eachRi, eachCo, mfs.get(rand.nextInt(mfs.size())), Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()) * 100) / 100);
                         }
                     }
 
@@ -249,11 +247,37 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
 
                 em.flush();
             } else {
-                // Manual data loading for first system release
+                // Manual data loading
                 this.addMaterial("Flathead Screw, Plus (5mm x 15mm)", 10);
+                this.addMaterial("Flathead Screw, Minus (5mm x 15mm)", 10);
+                this.addMaterial("Roundhead Screw, Plus (5mm x 15mm)", 12);
+                this.addMaterial("Roundhead Screw, Minus (5mm x 15mm)", 12);
+                this.addMaterial("Drawer Track, Black (500mm)", 86);
+                this.addMaterial("Drawer Track, Black (250mm)", 43);
+                this.addMaterial("Drawer Track, White (500mm)", 86);
+                this.addMaterial("Drawer Track, White (250mm)", 43);
+                this.addMaterial("Cabinet Door Hinge 01, Black", 62);
                 this.addMaterial("Cabinet Door Hinge 01, White", 62);
                 this.addMaterial("Rosewood Plank (30mm x 5000mm x 1000mm)", 10000);
+                this.addMaterial("Rosewood Plank (15mm x 5000mm x 1000mm)", 5000);
+                this.addMaterial("Rosewood Block (200mm x 200mm x 5000mm)", 25000);
+                this.addMaterial("Cherrywood Plank (30mm x 5000mm x 1000mm)", 9000);
+                this.addMaterial("Cherrywood Plank (15mm x 5000mm x 1000mm)", 4500);
+                this.addMaterial("Cherrywood Block (80mm x 80mm x 800mm)", 3400);
+                this.addMaterial("Pulpwood Plank (30mm x 5000mm x 1000mm)", 6120);
+                this.addMaterial("Pulpwood Plank (15mm x 5000mm x 1000mm)", 3060);
                 this.addMaterial("Steel Knob 01", 55);
+                this.addMaterial("Steel Knob 02", 52);
+                this.addMaterial("Steel Knob 03", 65);
+                this.addMaterial("Castor Wheel (Plastic), White", 125);
+                this.addMaterial("Castor Wheel (Metal), Black", 145);
+                this.addMaterial("Ceramic Lamp Mould, White", 255);
+                this.addMaterial("Screwhead Bulb (5500lm, 60W)", 255);
+                this.addMaterial("Chrome Steel Wiring (White, 1000mm)", 5000);
+                this.addMaterial("Dyed Thread (Blue, 20000mm)", 290);
+                this.addMaterial("Dyed Thread (Green, 20000mm)", 290);
+                this.addMaterial("Cloth Base (White, 450mm x 600mm)", 140);
+                this.addMaterial("Chrome Steel Pipe (White, D30mm x L1000mm)", 245);
 
                 FurnitureModel fm;
                 BOM bom;
@@ -264,6 +288,16 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 bomDetails.clear();
                 bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 4));
                 bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Rosewood Plank (30mm x 5000mm x 1000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Castor Wheel (Metal), Black"), 4));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Round Table", 2500, "A perfectly round solid wooden table. We guarantee you won't find a rough edge.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.TABLES);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 22));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Rosewood Plank (30mm x 5000mm x 1000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cherrywood Block (80mm x 80mm x 800mm)"), 4));
                 bom.setBomDetails(bomDetails);
                 fm.setBom(bom);
 
@@ -284,6 +318,68 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 bom.setBomDetails(bomDetails);
                 fm.setBom(bom);
 
+                fm = this.addFurnitureModel("Bedside Lamp H31", 80, "This lamp goes well with any bed you can imagine. Never out of place and definitely a bright addition to your lovely room.", FurnitureCategory.BEDROOM, FurnitureSubcategory.LIGHTING);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Flathead Screw, Plus (5mm x 15mm)"), 2));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Ceramic Lamp Mould, White"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Screwhead Bulb (5500lm, 60W)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Chrome Steel Wiring (White, 1m)"), 1));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Bathroom Rug E64", 30, "Blue bathroom rug. With this rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Dyed Thread (Blue, 20000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cloth Base (White, 450mm x 600mm)"), 1));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Bathroom Rug E36", 30, "Green bathroom rug. With this rug, never slip and fall again! Also proven to prevent cold feet for a new confident you.", FurnitureCategory.BATHROOM, FurnitureSubcategory.TEXTILE);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Dyed Thread (Green, 20000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cloth Base (White, 450mm x 600mm)"), 1));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Kitchen Stool", 250, "A chair without a back, perfect for the lazy bones to correct their posture.", FurnitureCategory.KITCHEN, FurnitureSubcategory.CHAIRS);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cherrywood Plank (30mm x 5000mm x 1000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Chrome Steel Pipe (White, D30mm x L1000mm)"), 2));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Wooven Plaster Sofa", 12000, "Designed by reknown guest designer Italio Fernando from Rome, this sofa is the epitome of integration between design and comfort.", FurnitureCategory.LIVING_ROOM, FurnitureSubcategory.CHAIRS);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Rosewood Block (200mm x 200mm x 5000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Chrome Steel Pipe (White, D30mm x L1000mm)"), 6));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Dyed Thread (Green, 20000mm)"), 2));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cloth Base (White, 450mm x 600mm)"), 10));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Gothic Bed Frame (Queen Size)", 8000, "Perfect bed frame for the odd couple. With a dash of wierdness and plenty of comfort.", FurnitureCategory.BEDROOM, FurnitureSubcategory.BEDS);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Rosewood Block (200mm x 200mm x 5000mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Chrome Steel Pipe (White, D30mm x L1000mm)"), 12));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cloth Base (White, 450mm x 600mm)"), 5));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
+                fm = this.addFurnitureModel("Ninja Night Stand" , 4200, "Bedside stand for the stealthy. Ninja star not included.", FurnitureCategory.BEDROOM, FurnitureSubcategory.STORAGE);
+                bom = new BOM();
+                bomDetails.clear();
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Cherrywood Block (80mm x 80mm x 800mm)"), 1));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Drawer Track, Black (250mm)"), 2));
+                bomDetails.add(new BOMDetail(bom, QueryMethods.findMaterialByName(em, "Steel Knob 03"), 1));
+                bom.setBomDetails(bomDetails);
+                fm.setBom(bom);
+
                 Set<RetailItem> retailItems = new HashSet();
 
                 retailItems.add(this.addRetailItem("Pisang Goreng - Original - Regular", 50));
@@ -295,25 +391,44 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                 retailItems.add(this.addRetailItem("Sambal Cheese Stick - Regular", 60));
 
                 CountryOffice co;
-                ManufacturingFacility mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tuas");
+                ManufacturingFacility mf;
                 java.util.Currency javaCurrency;
 
+                mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Tuas");
                 co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Singapore");
                 javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, 50.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, 300.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, 325.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Gothic Bed Frame (Queen Size)"), co, mf, 800.00);
                 for (RetailItem ri : retailItems) {
-                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()) * 100) / 100);
                 }
 
                 co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Malaysia");
                 javaCurrency = java.util.Currency.getInstance(co.getCountry().getCurrency().getCurrencyCode());
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
-                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, Math.floor((rand.nextInt(30000) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Swivel Chair"), co, mf, 125.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Coffee Table"), co, mf, 645.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Gothic Bed Frame (Queen Size)"), co, mf, 1720.00);
                 for (RetailItem ri : retailItems) {
-                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits())*100)/100);
+                    this.addStockSupplied(ri, co, mf, Math.floor((rand.nextInt(300) + 1.0) / Math.pow(10.0, javaCurrency.getDefaultFractionDigits()) * 100) / 100);
                 }
+
+                mf = (ManufacturingFacility) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "China"), "Su Zhou - Su Zhou Industrial Park");
+                co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Singapore"), "Singapore");
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Round Table"), co, mf, 250.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Bedside Lamp H31"), co, mf, 8.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Bathroom Rug E64"), co, mf, 3.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Bathroom Rug E36"), co, mf, 3.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Kitchen Stool"), co, mf, 2.50);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Wooven Plaster Sofa"), co, mf, 1200.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Ninja Night Stand"), co, mf, 420.00);
+
+                co = (CountryOffice) QueryMethods.findPlantByName(em, QueryMethods.findCountryByName(em, "Malaysia"), "Malaysia");
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Round Table"), co, mf, 530.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Wooven Plaster Sofa"), co, mf, 2940.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Study Table - Dinosaur Edition"), co, mf, 700.00);
+                this.addStockSupplied(QueryMethods.findFurnitureByName(em, "Ninja Night Stand"), co, mf, 900.00);
             }
 
             // Populate production capacities for each manufacturing facilities, each furniture model
@@ -329,7 +444,7 @@ public class LoadStocksBean implements LoadStocksBeanRemote {
                     }
                 }
             }
-            
+
             sml.addNFCTagToStock("Swivel Chair", "04e48cea5d2b80");
             sml.addNFCTagToStock("Coffee Table", "04e4a0ea5d2b80");
             sml.addNFCTagToStock("Study Table - Dinosaur Edition", "04e100ea412b84");
