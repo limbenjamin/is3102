@@ -363,6 +363,32 @@ input[type="checkbox"] {
     height:12px;
 }
 
+/************************* image upload ***********************************/
+
+.gallery-thumbnail {
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.gallery-thumbnail > img{
+    height: 90px;
+}
+
+.add-image {
+  height: 144px;
+  background-color: #1aae88;
+  padding: 34px;
+  text-align: center;
+}
+
+.add-image:hover {
+    opacity: 0.9;
+}
+
+.add-image i, .add-image p {
+  color: #fff;
+}
+
 /************************* PrimeFaces Datepicker Override ***********************************/
 
 .ui-datepicker-calendar .ui-state-default {

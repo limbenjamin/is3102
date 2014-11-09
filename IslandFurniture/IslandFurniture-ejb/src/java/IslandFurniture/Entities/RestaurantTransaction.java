@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -17,6 +19,12 @@ import javax.persistence.OneToMany;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            // Fetches all Transactions from specified store falling between startDate and endDate
+            name = "getStoreRestTrans",
+            query = "SELECT a FROM RestaurantTransaction a WHERE a.transTime >= :startDate AND a.transTime <= :endDate AND a.store = :store")
+})
 public class RestaurantTransaction extends Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
     @OneToMany(mappedBy = "restaurantTransaction", cascade = {CascadeType.ALL})

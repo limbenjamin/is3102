@@ -15,6 +15,9 @@ public class SystemConstants {
 
     // Number of Months from the start of current month where MSSR edits should be locked
     public static final int FORECAST_LOCKOUT_MONTHS = 2;
+    
+    // Number of Months from the start of the current month where MMSF edits should be locked
+    public static final int FOOD_FORECAST_LOCKOUT_MONTHS = 1;
 
     // Number of Months from the start of current month where MSSR planning should be done
     public static final int FORECAST_HORIZON = 6;

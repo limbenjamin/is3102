@@ -21,7 +21,7 @@
                     <h:selectOneMenu value="#{viewMmsfManagedBean.yearOfMmsf}" id="yearsOfMssr" class="form-control">
                         <f:selectItems value="#{viewMmsfManagedBean.yearsOfMmsf}" var="years" 
                                        itemLabel="#{years}" itemValue="#{years}" />
-                        <f:ajax render="mssrTable" listener="#{viewMmsfManagedBean.updateMmsf}" />
+                        <f:ajax render="mmsfTable" listener="#{viewMmsfManagedBean.updateMmsf}" />
                     </h:selectOneMenu>
                 </div>
             </div>
@@ -42,11 +42,9 @@
                                 <br />
                                 <h:outputText value="#{mmsf.year}" />
                             </f:facet>
-                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}"/>
-                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mmsf.endMthUpdated == true}"/>
-                            <h:outputText value="-" rendered="#{mmsf.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mmsf.endMthUpdated == false}"/>
-                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first == 'varianceOffset' and mmsf.varianceUpdated == true}" />
-                            <h:outputText value="-" rendered="#{mmsf.status != null and label.first == 'varianceOffset' and mmsf.varianceUpdated == false}" />
+                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first != 'qtySold'}"/>
+                            <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first == 'qtySold' and mmsf.endMthUpdated == true}"/>
+                            <h:outputText value="-" rendered="#{mmsf.status != null and label.first == 'qtySold' and mmsf.endMthUpdated == false}"/>
                             <h:outputText value="-" rendered="#{mmsf.status == null}"/>
                         </p:columns>
                     </p:dataTable>
