@@ -47,23 +47,26 @@
                             <h:form class="row" id="photoForm">
                                 <h:panelGroup id="galleryList">
                                     <ui:repeat value="#{furniturePhotoManagedBean.galleryList}" var="image">
-                                        <div class="thumbnail col-sm-4"> 
+                                        <div class="thumbnail gallery-thumbnail col-sm-4"> 
                                             <p:graphicImage value="#{pictureManagedBean.image}">
                                                 <f:param name="pictureId" value="#{image.id}" />
-                                            </p:graphicImage> 
+                                            </p:graphicImage>
                                             <h5><strong>#{image.description}</strong></h5>   
                                             <h:commandButton value="&times;" class="transparent-button top-right">
                                                 <f:ajax render=":photoForm:galleryList" listener="#{furniturePhotoManagedBean.deleteGalleryImage}" />
                                                 <f:attribute name="imageID" value="#{image.id}" />
                                             </h:commandButton>
                                         </div>
-                                    </ui:repeat> 
+                                    </ui:repeat>
+                                    <div class="thumbnail gallery-thumbnail col-sm-4">
+                                        <a href="#">
+                                            <div data-toggle="modal" data-target="#newImage" class="add-image">
+                                            <i class="fa fa-3x fa-plus"></i><br/><br/>
+                                            <p>New Photo</p>
+                                            </div>
+                                        </a>
+                                    </div>                                    
                                 </h:panelGroup>
-                                <div class="thumbnail">
-                                    <a data-toggle="modal" data-target="#newImage">
-                                        <button class="btn btn-default">Something for now</button>
-                                    </a>
-                                </div>
                             </h:form> 
                         </div>
                         <div class="col-sm-6 col-sm-offset-1"> 
