@@ -84,10 +84,11 @@
                                     <p:commandButton type="button" onclick="PF('switcher').previous();" value="&lsaquo;" styleClass="btn btn-default btn-xs"/>
                                     <p:commandButton type="button" onclick="PF('switcher').next();" value="&rsaquo;" styleClass="btn btn-default btn-xs"/>             
                                 </div>
+                                <br/>
                             </div>
-                            <div >
+                            <div>
                                 <h:form class="form-group" enctype="multipart/form-data">
-                                    <p:fileUpload fileUploadListener="#{furniturePhotoManagedBean.handleMultipleFileUpload}" multiple="true" styleClass="col-sm-12" />
+                                    <p:fileUpload fileUploadListener="#{furniturePhotoManagedBean.handleMultipleFileUpload}" multiple="true" styleClass="col-sm-12" style="padding:15px 0px;"/>
                                     <h:commandButton class="btn btn-success btn-sm pull-right" value="Submit" action="#{furniturePhotoManagedBean.addSpriteImage}">
                                     </h:commandButton>
                                 </h:form>
