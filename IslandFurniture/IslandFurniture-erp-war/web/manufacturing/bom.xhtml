@@ -29,15 +29,15 @@
                             <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newBOM">
                                 <i class="fa fa-fw fa-plus"></i>New Material to BOM 
                             </button>                            
-                        </span>                          
+                        </span>
                         <h4><strong>#{bOMManagedBean.furniture.name}</strong></h4><hr></hr>
                     </div>
                     <div class="col-md-10">
                         <div class="col-md-5">
                             <h:form id="categoryForm" class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Furniture Category: </label>           
-                                    <div class="col-sm-7">
+                                    <label class="col-sm-4">Furniture Category: </label>           
+                                    <div class="col-sm-8">
                                         <h:selectOneMenu id="categoryField" class="form-control" value="#{bOMManagedBean.furniture.category}">
                                             <f:selectItems value="#{bOMManagedBean.categoryList}" var="category" 
                                                            itemLabel="#{category}" itemValue="#{category}" />
@@ -46,8 +46,8 @@
                                     </div>  
                                 </div>  
                                 <div class="form-group"> 
-                                    <label class="col-sm-5 control-label">Furniture Sub-category: </label>          
-                                    <div class="col-sm-7"> 
+                                    <label class="col-sm-4">Furniture Sub-category: </label>          
+                                    <div class="col-sm-8"> 
                                         <h:selectOneMenu id="subcategoryField" class="form-control" value="#{bOMManagedBean.furniture.subcategory}"> 
                                             <f:selectItems value="#{bOMManagedBean.subcategoryList}" var="subcategory" 
                                                            itemLabel="#{subcategory}" itemValue="#{subcategory}" />
@@ -56,22 +56,28 @@
                                     </div> 
                                 </div>
                             </h:form>
-                            <h:panelGroup rendered="#{bOMManagedBean.descriptionTooLong}">
+                            <h:panelGroup layout="block" rendered="#{bOMManagedBean.descriptionTooLong}">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Furniture Description: </label> 
-                                    <h:outputText class="col-sm-5" value="#{bOMManagedBean.truncateDescription()}"></h:outputText> 
-                                    <button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#furnitureDescription">
+                                    <label class="col-xs-4" style="padding: 0px;">Furniture Description: </label> 
+                                    <h:outputText class="col-xs-6" value="#{bOMManagedBean.truncateDescription()}"></h:outputText>
+                                    <a href="#">
+                                        <span class="col-xs-2 fa fa-lg fa-pencil" style="padding: 0px; text-align: right;" data-toggle="modal" data-target="#furnitureDescription"></span>
+                                    </a>
+                                    <!--<button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#furnitureDescription">
                                         ...
-                                    </button>
+                                    </button>!-->
                                 </div>
                             </h:panelGroup>
-                            <h:panelGroup rendered="#{!bOMManagedBean.descriptionTooLong}">
+                            <h:panelGroup layout="block" rendered="#{!bOMManagedBean.descriptionTooLong}">
                                 <div class="form-group">
-                                    <label class="col-sm-5 control-label">Furniture Description: </label> 
-                                    <h:outputText class="col-sm-5" value="#{bOMManagedBean.truncateDescription()}"></h:outputText> 
-                                    <button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#furnitureDescription">
+                                    <label class="col-xs-4" style="padding: 0px;">Furniture Description: </label> 
+                                    <h:outputText class="col-xs-6" value="#{bOMManagedBean.truncateDescription()}"></h:outputText> 
+                                    <a href="#">
+                                        <span class="col-xs-2 fa fa-lg fa-pencil" style="padding: 0px; text-align: right;" data-toggle="modal" data-target="#furnitureDescription"></span>
+                                    </a>                                    
+                                    <!--<button type="button" class="btn btn-sm btn-default col-sm-offset-1" data-toggle="modal" data-target="#furnitureDescription">
                                         ...
-                                    </button>
+                                    </button>-->
                                 </div>
                             </h:panelGroup>
                         </div> 
@@ -97,7 +103,7 @@
                             <div class="form-group row">
                                 <h:form class="form-horizontal">
                                     <div class="col-sm-9 pull-right">
-                                        <h:commandButton value="See More" actionListener="#{bOMManagedBean.photoActionListener}" class="btn btn-sm btn-default" style="outline:0px; text-align: center;"> 
+                                        <h:commandButton value="View Gallery Images" actionListener="#{bOMManagedBean.photoActionListener}" class="btn btn-sm btn-default" style="outline:0px; text-align: center;"> 
                                             <f:attribute name="fID" value="#{bOMManagedBean.furnitureID}" />
                                         </h:commandButton>
                                     </div>
