@@ -24,13 +24,23 @@ public class CustomerPeriodAnalysisReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Double totalRevenue;
+    private Long numofcustomers;
 
     @ManyToOne
     private CountryPeriodAnalysisReport countryPeriodAnalysisReport;
 
     @ManyToOne
-    private CustomerSegment customerSegment;
+    private MembershipTier customerSegment;
 
+    public Long getNumofcustomers() {
+        return numofcustomers;
+    }
+
+    public void setNumofcustomers(Long numofcustomers) {
+        this.numofcustomers = numofcustomers;
+    }
+
+          
     public Long getId() {
         return id;
     }
@@ -55,11 +65,11 @@ public class CustomerPeriodAnalysisReport implements Serializable {
         this.countryPeriodAnalysisReport = countryPeriodAnalysisReport;
     }
 
-    public CustomerSegment getCustomerSegment() {
+    public MembershipTier getCustomerSegment() {
         return customerSegment;
     }
 
-    public void setCustomerSegment(CustomerSegment customerSegment) {
+    public void setCustomerSegment(MembershipTier customerSegment) {
         this.customerSegment = customerSegment;
     }
 
