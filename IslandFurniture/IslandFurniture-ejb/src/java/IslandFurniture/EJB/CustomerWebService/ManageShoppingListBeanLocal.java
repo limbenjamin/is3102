@@ -11,6 +11,7 @@ import IslandFurniture.Entities.ShoppingList;
 import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.InvalidInputException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -43,5 +44,5 @@ public interface ManageShoppingListBeanLocal {
 
     void updateShoppingListDetail(ShoppingListDetail listDetail);
     
-    void addCustomerToShoppingList(String hashId, Customer customer);
+    void addCustomerToShoppingList(String hashId, Customer customer) throws InvalidInputException, DuplicateEntryException;
 }
