@@ -73,9 +73,14 @@ public class CountryOfficeFilter implements Filter {
                 System.out.println("Attempt to access member pages. Checking for login...");
                 HttpSession session = req.getSession(false);
                 if (session == null || session.getAttribute("emailAddress") == null) {
-                    res.sendRedirect(req.getContextPath() + coDir + "/login.xhtml");
+                    res.sendRedirect(req.getContextPath() + coDir + "/login.xhtml?target=" + newDest + ((req.getQueryString() == null) ? "" : "?" + req.getQueryString()));
                     res.flushBuffer();
                 }
+            }
+
+            if (newDest.contains("login.xhtml")) {
+                System.out.println("QueryString" + request.getParameter("target"));
+                request.setAttribute("target", request.getParameter("target"));
             }
 
             if (!res.isCommitted()) {
