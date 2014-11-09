@@ -31,7 +31,7 @@
                                     </h:selectOneMenu>
                                 </div> 
                                 <div class="col-sm-2">
-                                    <h:commandButton action="#{currencyManagedBean.displayCurrencyDetails()}" value="Select" class="btn btn-success btn-sm"></h:commandButton>
+                                    <h:commandButton action="#{currencyManagedBean.displayCurrencyDetails()}" value="Go" class="btn btn-default btn-round btn-sm" style="width:50px;"></h:commandButton>
                                 </div>
                             </div>
                         </h:form>
@@ -39,7 +39,7 @@
                 </div>
                 <h:panelGroup class="row" rendered="#{currencyManagedBean.toDisplay}">
                     <div class="col-md-10">                    
-                        <h4><strong>#{currencyManagedBean.currency.name}</strong></h4><hr></hr> 
+                        <h4><strong>#{currencyManagedBean.currency.name}</strong></h4><hr></hr>
                     </div>
                     <div class="col-md-10">
                         <span class="pull-right">         
@@ -49,6 +49,7 @@
                             </h:form>
                         </span>   
                         <h:outputText value="Singapore Dollar > #{currencyManagedBean.currency.name}: #{currencyManagedBean.latestRate}" ></h:outputText>
+                        <br/><br/>
                         <p:panel>
                             <p:chart type="line" model="#{currencyManagedBean.lineModel1}" style="height:300px;"/>
                         </p:panel>
