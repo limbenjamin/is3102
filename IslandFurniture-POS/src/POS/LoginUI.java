@@ -353,6 +353,7 @@ public class LoginUI extends javax.swing.JFrame {
                     System.err.println(e);
                 }
                 LoginUI loginUI = new LoginUI(cash, storeType);
+                loginUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 loginUI.setVisible(true);
             }
         });
@@ -371,6 +372,7 @@ public class LoginUI extends javax.swing.JFrame {
 
     private void SelectScreen(String result) throws IOException, ParseException{
         SelectStoreUI store = new SelectStoreUI(result, totalRegisterCash, storeType);
+        store.setExtendedState(JFrame.MAXIMIZED_BOTH);
         store.setVisible(true);
         this.setVisible(false);
     }
