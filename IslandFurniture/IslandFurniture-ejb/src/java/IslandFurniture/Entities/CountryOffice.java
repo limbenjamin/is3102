@@ -64,6 +64,20 @@ public class CountryOffice extends Plant implements Serializable {
     private List<WebBanner> webBanners;
     @OneToMany
     private List<Stock> featuredProducts;
+    
+    @OneToMany
+    private List<MarketBasketAnalysis> marketbasketanalysis;
+
+    public List<MarketBasketAnalysis> getMarketbasketanalysis() {
+        return marketbasketanalysis;
+    }
+
+    public void setMarketbasketanalysis(List<MarketBasketAnalysis> marketbasketanalysis) {
+        this.marketbasketanalysis = marketbasketanalysis;
+    }
+    
+    
+    
 
     public String getUrlCode() {
         return urlCode;

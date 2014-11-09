@@ -381,30 +381,30 @@ public class LoadOrgEntitiesBean implements LoadOrgEntitiesBeanRemote {
         this.addManufacturingFacility("Su Zhou - Su Zhou Industrial Park", country, "Asia/Shanghai", co, 31.2970217, 120.5677953, "1326 Binhe Rd Huqiu, Suzhou, Jiangsu China, 215011");
 
         country = this.addCountry("Indonesia");
-        co = this.addCountryOffice("Indonesia", "in", country, "Asia/Jakarta", 0.0, 0.0, "");
-        this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co, 0.0, 0.0, "");
-        this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Indonesia", "in", country, "Asia/Jakarta", -7.296718, 112.7601835, "Ruko Manyar Indah, Jalan Ngagel Jaya Selatan Blok J No.25-26, Surabaya, Jawa Timur 60284, Indonesia");
+        this.addManufacturingFacility("Surabaya", country, "Asia/Jakarta", co, -7.296718, 112.7601835, "Ruko Manyar Indah, Jalan Ngagel Jaya Selatan Blok J No.25-26, Surabaya, Jawa Timur 60284, Indonesia");
+        this.addManufacturingFacility("Sukabumi", country, "Asia/Jakarta", co, -6.9255318, 106.9295588, "Jl. Tipar Gede No.7, 13710 Indonesia");
 
         country = this.addCountry("Cambodia");
-        co = this.addCountryOffice("Cambodia", "camb", country, "Asia/Phnom_Penh", 0.0, 0.0, "");
-        this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Cambodia", "camb", country, "Asia/Phnom_Penh", 11.478303, 104.491256, "Kampong Speu Airport, Kampong Speu, Cambodia");
+        this.addManufacturingFacility("Krong Chbar Mon", country, "Asia/Phnom_Penh", co, 11.478303, 104.491256, "Kampong Speu Airport, Kampong Speu, Cambodia");
 
         country = this.addCountry("Thailand");
-        co = this.addCountryOffice("Thailand", "th", country, "Asia/Bangkok", 0.0, 0.0, "");
-        this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co, 0.0, 0.0, "");
-        this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Thailand", "th", country, "Asia/Bangkok", 18.7085122, 98.9839431, "Saraphi District, Chiang Mai, Thailand");
+        this.addStore("Bangkok - Ma Boon Krong", country, "Asia/Bangkok", co, 13.7447582, 100.5299468, "MBK Center, 444 Phayathai Rd, Bangkok, Pathumwan 10330, Thailand");
+        this.addManufacturingFacility("Chiang Mai", country, "Asia/Bangkok", co, 18.7085122, 98.9839431, "Saraphi District, Chiang Mai, Thailand");
 
         country = this.addCountry("Vietnam");
-        co = this.addCountryOffice("Vietnam", "viet", country, "Asia/Ho_Chi_Minh", 0.0, 0.0, "");
-        this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Vietnam", "viet", country, "Asia/Ho_Chi_Minh", 10.7843079, 106.6666286, "625 Cách Mạng Tháng 8, 15, 10, Hồ Chí Minh, Vietnam");
+        this.addManufacturingFacility("Ho Chi Minh", country, "Asia/Ho_Chi_Minh", co, 10.7843079, 106.6666286, "625 Cách Mạng Tháng 8, 15, 10, Hồ Chí Minh, Vietnam");
 
         country = this.addCountry("Laos");
-        co = this.addCountryOffice("Laos", "laos", country, "Asia/Vientiane", 0.0, 0.0, "");
-        this.addStore("Vientiane", country, "Asia/Vientiane", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Laos", "laos", country, "Asia/Vientiane", 17.9527945, 102.6235611, "Dongpalan Rd, Vientiane, Laos");
+        this.addStore("Vientiane", country, "Asia/Vientiane", co, 17.9527945, 102.6235611, "Dongpalan Rd, Vientiane, Laos");
 
         country = this.addCountry("Canada");
-        co = this.addCountryOffice("Canada", "ca", country, "Canada/Pacific", 0.0, 0.0, "");
-        this.addStore("Toronto", country, "Canada/Eastern", co, 0.0, 0.0, "");
+        co = this.addCountryOffice("Canada", "ca", country, "Canada/Pacific", 43.6504454, -79.3837612, "St. Lawrence Market, 92 Front St E, Toronto, ON M5E 1C3, Canada");
+        this.addStore("Toronto", country, "Canada/Eastern", co, 43.6504454, -79.3837612, "St. Lawrence Market, 92 Front St E, Toronto, ON M5E 1C3, Canada");
 
         em.flush();
 

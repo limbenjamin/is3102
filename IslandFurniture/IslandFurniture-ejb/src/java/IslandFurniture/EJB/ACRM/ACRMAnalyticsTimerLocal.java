@@ -9,8 +9,9 @@
  *
  * @author James
  */
-package IslandFurniture.EJB.Manufacturing;
+package IslandFurniture.EJB.ACRM;
 
+import IslandFurniture.EJB.Manufacturing.*;
 import javax.ejb.Local;
 
 /**
@@ -18,6 +19,6 @@ import javax.ejb.Local;
 - * @author James
 - */
 @Local
-public interface ProductionPlanningSingletonLocal {
-    public void setAdvanceWeek(int week);
+public interface ACRMAnalyticsTimerLocal {
+    public void setAdvancePeriod(int week);
 }
