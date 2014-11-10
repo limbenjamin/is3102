@@ -31,12 +31,14 @@
                     </div>
                 </h:panelGroup>
                 <h:panelGroup layout="block" rendered="#{not empty shoppingListDetailManagedBean.shoppingList.id}" styleClass="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 no-print">
                         <ol class="breadcrumb">
                           <li><a href="index.xhtml">Home</a></li>
                           <li><a href="shoppinglist.xhtml">Shopping Lists</a></li>
                           <li class="active"><strong>#{shoppingListDetailManagedBean.shoppingList.name}</strong></li>
                         </ol>
+                    </div>
+                    <div class="col-md-12" id="printArea">
                         <h:form id="editShoppingList">
                             <div class="input-group pull-right" style="max-width: 250px;">
                                 <h:selectOneMenu id="storeId" class="form-control needauto" value="#{shoppingListDetailManagedBean.shoppingList.store.id}" style="height:30px;">
@@ -55,10 +57,11 @@
                         <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#viewMembers">
                             <i class="fa fa-users"></i> View List Members
                         </button>                        
-                        <div class="fb-share-button" data-href="#{application.contextPath}#{shoppingListDetailManagedBean.coDir}/member/shoppinglistinvite.xhtml?id=#{shoppingListDetailManagedBean.shoppingList.idHash}" data-layout="button_count"></div>
+                        <div class="fb-share-button no-print" data-href="#{application.contextPath}#{shoppingListDetailManagedBean.coDir}/member/shoppinglistinvite.xhtml?id=#{shoppingListDetailManagedBean.shoppingList.idHash}" data-layout="button_count"></div>
+                        <button onclick="javascript:window.print()" class="btn btn-info btn-xs">
+                            <i class="fa fa-print"></i> Print List
+                        </button>
                         <hr/>
-                    </div> 
-                    <div class="col-md-12">
                     <div class="table-responsive list_info">
                         <table class="table table-condensed">
                             <thead>
@@ -69,8 +72,8 @@
                                 <td class="price">Price 
                                     (#{shoppingListDetailManagedBean.countryOffice.country.currency.currencyCode})</td>
                                 <td class="quantity">Quantity</td>
-                                <td>Update</td>
-                                <td>Remove</td>
+                                <td class="no-print">Update</td>
+                                <td class="no-print">Remove</td>
                             </tr>
                             </thead>
                             <tbody>
@@ -112,13 +115,13 @@
                                     <td class="list_quantity">
                                         <h:inputText id="quantity" value="#{detail.qty}" class="form-control list_quantity_input" p:required="true" p:type="number" p:min="1"></h:inputText>
                                     </td>
-                                    <td>
+                                    <td class="no-print">
                                         <h:commandButton actionListener="#{shoppingListDetailManagedBean.editDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                             <f:attribute name="detailid" value="#{detail}" />
                                         </h:commandButton>
                                         <i class="fa fa-lg fa-save icon-button"></i>
                                     </td>
-                                    <td>
+                                    <td class="no-print">
                                         <h:commandButton actionListener="#{shoppingListDetailManagedBean.deleteDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                             <f:param name="detailid" value="#{detail.id}" />
                                         </h:commandButton>                                            
