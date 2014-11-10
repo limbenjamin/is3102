@@ -20,6 +20,8 @@ import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Material;
 import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.MenuItem;
+import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
+import IslandFurniture.Entities.MonthlyMenuItemSalesForecastPK;
 import IslandFurniture.Entities.MonthlyProductionPlan;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.MonthlyStockSupplyReqPK;
@@ -383,6 +385,15 @@ public class QueryMethods {
         MonthlyStockSupplyReqPK mssrPK = new MonthlyStockSupplyReqPK(mssr.getStock().getId(), mssr.getCountryOffice().getId(), Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
 
         return em.find(MonthlyStockSupplyReq.class, mssrPK);
+    }
+    
+    public static MonthlyMenuItemSalesForecast findNextMmsf(EntityManager em, MonthlyMenuItemSalesForecast mmsf, int monthsOffset) {
+        Calendar cal = TimeMethods.getCalFromMonthYear(mmsf.getMonth(), mmsf.getYear());
+        cal.add(Calendar.MONTH, monthsOffset);
+
+        MonthlyMenuItemSalesForecastPK mmsfPK = new MonthlyMenuItemSalesForecastPK(mmsf.getMenuItem().getId(), mmsf.getStore().getId(), Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
+
+        return em.find(MonthlyMenuItemSalesForecast.class, mmsfPK);
     }
 
     public static List<StockSupplied> getStockSuppliedToStore(EntityManager em, Store store) {

@@ -404,3 +404,7 @@ input[type="checkbox"] {
 	font-weight: normal;
 	color: #ffffff;    
 }
+
+.ui-accordion-header.ui-state-active {
+    background: #2c3e50;
+}

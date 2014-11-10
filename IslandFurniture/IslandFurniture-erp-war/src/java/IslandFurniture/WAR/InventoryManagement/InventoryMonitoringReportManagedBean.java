@@ -11,13 +11,25 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.StockUnit;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryMonitoringLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 /**
  *
@@ -31,6 +43,7 @@ public class InventoryMonitoringReportManagedBean implements Serializable {
     private String plantType;
     private Staff staff;
     private Plant plant;
+    private JasperPrint jp;
 
     private List<StockUnit> stockUnitList;
 
@@ -56,6 +69,21 @@ public class InventoryMonitoringReportManagedBean implements Serializable {
         }
 
         stockUnitList = monitoringBean.viewStockUnitAll(plant);
+    }
+    
+    public void prepareExport() throws JRException {
+        JRBeanCollectionDataSource jbcd  = new JRBeanCollectionDataSource(stockUnitList);
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        String path = externalContext.getRealPath("/WEB-INF/jasper/report1.jasper");
+        this.jp = JasperFillManager.fillReport(path, new HashMap(),jbcd);
+    }
+    
+    public void PDF(ActionEvent actionEvent) throws JRException, IOException {
+        prepareExport();
+        HttpServletResponse resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        ServletOutputStream stream = resp.getOutputStream();
+        JasperExportManager.exportReportToPdfStream(jp, stream);
+        FacesContext.getCurrentInstance().responseComplete();
     }
 
     public String getUsername() {

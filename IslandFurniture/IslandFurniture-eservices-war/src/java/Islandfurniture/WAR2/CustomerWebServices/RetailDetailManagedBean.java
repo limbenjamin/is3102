@@ -30,6 +30,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -122,6 +123,10 @@ public class RetailDetailManagedBean {
     public void redirectPage() throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/home.xhtml");        
+    }
+    
+    public String base64Decode() {
+        return DatatypeConverter.printBase64Binary(retail.getThumbnail().getContent());
     }    
 
     public RetailItem getRetail() {
@@ -178,5 +183,21 @@ public class RetailDetailManagedBean {
 
     public void setCo(CountryOffice co) {
         this.co = co;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCoDir() {
+        return coDir;
+    }
+
+    public void setCoDir(String coDir) {
+        this.coDir = coDir;
     }
 }

@@ -35,10 +35,11 @@
                                             </td>  
                                             <td width="100px">
                                                 <a data-toggle="modal" data-target="#viewPricing">
-                                                    <h:commandButton value="..." class="btn btn-xs">
+                                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
                                                         <f:ajax listener="#{pricePlanningManagedBean.viewPricing}" render=":viewPricingForm:content" />
                                                         <f:attribute name="stockID" value="#{fm.id}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-search-plus icon-button"></i>
                                                 </a> 
                                             </td> 
                                         </tr>
@@ -49,7 +50,7 @@
                             <p:tab title="Retail Item"> 
                                 <table class="table table-hover"> 
                                     <tr>
-                                        <th>Furniture Name</th>
+                                        <th>Retail Item Name</th>
                                         <th width="100px">Pricing &amp; Points</th>
                                     </tr> 
                                     <h:form id="selectRetailItemForm">
@@ -60,10 +61,11 @@
                                             </td> 
                                             <td width="100px">
                                                 <a data-toggle="modal" data-target="#viewPricing">
-                                                    <h:commandButton value="..." class="btn btn-xs"> 
+                                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;"> 
                                                         <f:ajax listener="#{pricePlanningManagedBean.viewPricing}" render=":viewPricingForm:content" />
                                                         <f:attribute name="stockID" value="#{item.id}" />
                                                     </h:commandButton>
+                                                    <i class="fa fa-search-plus icon-button"></i>
                                                 </a> 
                                             </td> 
                                         </tr>

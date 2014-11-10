@@ -5,7 +5,20 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
-        
+        <p:outputPanel id="statuses">
+            <p:outputPanel id="statusUpdate1" rendered="#{not empty reviewForecastManagedBean.errorMessage}">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{reviewForecastManagedBean.errorMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="statusUpdate2" rendered="#{not empty reviewForecastManagedBean.successMessage}">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{reviewForecastManagedBean.successMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li><a href="../dash.xhtml">Home</a></li>
@@ -13,54 +26,53 @@
             </ol>  
         </div>        
         <h:form>
-        <div class="col-md-12">    
-            <span class="pull-right">
-                <h:commandButton value="Reject Pending Forecasts" class="btn btn-sm btn-default btn-extra-right">
-                    <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.rejectForecast}" />
-                </h:commandButton>                 
-                <h:commandButton value="Approve Pending Forecasts" class="btn btn-sm btn-success btn-extra-right">
-                    <f:ajax execute="@form" render="statusMessage mssrTable" listener="#{reviewForecastManagedBean.approveForecast}" />
-                </h:commandButton>               
-            </span>            
-            <h4>Review Forecasts</h4><hr></hr>
-        </div>
-        <div class="col-md-12">
-            <h:outputText id="statusMessage" value="#{reviewForecastManagedBean.statusMessage}"/>
-            <p:accordionPanel id="mssrTable" value="#{reviewForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{reviewForecastManagedBean.panelActive}">
-                <p:tab title="#{mssrPairedEntry.first.name} (id:#{mssrPairedEntry.first.id})">
-                    <p:dataTable value="#{createForecastManagedBean.mssrLabels}" var="label">
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Month" />
-                            </f:facet>
-                            <h:outputText value="#{label.second}" />
-                        </p:column>
-                        <p:columns value="#{mssrPairedEntry.second.first}" var="mssr">
-                            <f:facet name="header">
-                                <h:outputText value="#{mssr.month}" />
-                                <br />
-                                <h:outputText value="#{mssr.year}" />
-                            </f:facet>
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == true}" />
-                            <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == false}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested' or label.first == 'varianceOffset' or label.first == 'status')}" />
-                            <h:outputText value="-" rendered="#{mssr.status == null}"/>
-                        </p:columns>
-                        <p:columns value="#{mssrPairedEntry.second.second}" var="mssr" style="#{(mssr.status == 'PENDING')?'background-color:#B1CAF2':null}">
-                            <f:facet name="header">
-                                <h:outputText value="#{mssr.month}" />
-                                <br />
-                                <h:outputText value="#{mssr.year}" />
-                            </f:facet>
-                            <h:outputText value="-" rendered="#{mssr.status == null}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == true}" />
-                            <h:outputText value="-" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == false}" />
-                            <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory')}" />
-                            <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}" />
-                        </p:columns>
-                    </p:dataTable>
-                </p:tab>
-            </p:accordionPanel>
+            <div class="col-md-12">    
+                <span class="pull-right">
+                    <h:commandButton value="Reject Pending Forecasts" class="btn btn-sm btn-default btn-extra-right">
+                        <f:ajax execute="@form" render=":statuses mssrTable" listener="#{reviewForecastManagedBean.rejectForecast}" />
+                    </h:commandButton>                 
+                    <h:commandButton value="Approve Pending Forecasts" class="btn btn-sm btn-success btn-extra-right">
+                        <f:ajax execute="@form" render=":statuses mssrTable" listener="#{reviewForecastManagedBean.approveForecast}" />
+                    </h:commandButton>               
+                </span>            
+                <h4>Review Forecasts</h4><hr></hr>
+            </div>
+            <div class="col-md-12">
+                <p:accordionPanel id="mssrTable" value="#{reviewForecastManagedBean.mssrPairedList}" var="mssrPairedEntry" multiple="true" activeIndex="#{reviewForecastManagedBean.panelActive}">
+                    <p:tab title="#{mssrPairedEntry.first.name} (id:#{mssrPairedEntry.first.id})">
+                        <p:dataTable value="#{reviewForecastManagedBean.mssrLabels}" var="label">
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Month" />
+                                </f:facet>
+                                <h:outputText value="#{label.second}" />
+                            </p:column>
+                            <p:columns value="#{mssrPairedEntry.second.first}" var="mssr">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mssr.month}" />
+                                    <br />
+                                    <h:outputText value="#{mssr.year}" />
+                                </f:facet>
+                                <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == true}" />
+                                <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory') and mssr.endMthUpdated == false}" />
+                                <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and (label.first == 'qtyForecasted' or label.first == 'plannedInventory' or label.first == 'qtyRequested' or label.first == 'varianceOffset' or label.first == 'status')}" />
+                                <h:outputText value="-" rendered="#{mssr.status == null}"/>
+                            </p:columns>
+                            <p:columns value="#{mssrPairedEntry.second.second}" var="mssr" style="#{(mssr.status == 'PENDING')?'background-color:#B1CAF2':null}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mssr.month}" />
+                                    <br />
+                                    <h:outputText value="#{mssr.year}" />
+                                </f:facet>
+                                <h:outputText value="-" rendered="#{mssr.status == null}" />
+                                <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == true}" />
+                                <h:outputText value="-" rendered="#{mssr.status != null and label.first == 'varianceOffset' and mssr.varianceUpdated == false}" />
+                                <h:outputText value="-" rendered="#{mssr.status != null and (label.first == 'qtySold' or label.first == 'actualInventory')}" />
+                                <h:outputText value="#{mssr[label.first]}" rendered="#{mssr.status != null and label.first != 'qtySold' and label.first != 'actualInventory' and label.first != 'varianceOffset'}" />
+                            </p:columns>
+                        </p:dataTable>
+                    </p:tab>
+                </p:accordionPanel>
             </div>
         </h:form>
     </ui:define>

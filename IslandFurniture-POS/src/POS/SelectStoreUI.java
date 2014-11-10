@@ -289,6 +289,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
             String furniturelist = Connector.postForm(params, values, "stock/furniturelist");
             System.err.println(furniturelist);
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, furniturelist, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -298,6 +299,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         LoginUI loginUI = new LoginUI(totalRegisterCash, storeType);
+        loginUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
         loginUI.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logoutButtonActionPerformed
