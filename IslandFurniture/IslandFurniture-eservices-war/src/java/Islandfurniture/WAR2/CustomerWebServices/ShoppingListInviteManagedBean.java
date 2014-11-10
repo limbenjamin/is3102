@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Islandfurniture.WAR2.CustomerWebServices;
-
 
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.Entities.Customer;
+import IslandFurniture.Exceptions.DuplicateEntryException;
+import IslandFurniture.Exceptions.InvalidInputException;
 import java.io.IOException;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -27,47 +28,64 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class ShoppingListInviteManagedBean {
+public class ShoppingListInviteManagedBean implements Serializable {
 
     String hashId;
     String title;
     String emailAddress;
     Customer customer;
     String coDir;
-    
+
     @EJB
-    private ManageMemberAuthenticationBeanLocal mmab;  
+    private ManageMemberAuthenticationBeanLocal mmab;
     @EJB
     private ManageShoppingListBeanLocal mslbl;
-        
+
     /**
      * Creates a new instance of ShoppingListInviteManagedBean
      */
     public ShoppingListInviteManagedBean() {
     }
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         title = "Shopping list invite";
         HttpSession session = Util.getSession();
         emailAddress = (String) session.getAttribute("emailAddress");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest httpReq = (HttpServletRequest) ec.getRequest();
         coDir = (String) httpReq.getAttribute("coCode");
-        if(coDir !=null && !coDir.isEmpty()){
-            coDir = "/"+ coDir;
+        if (coDir != null && !coDir.isEmpty()) {
+            coDir = "/" + coDir;
         }
         customer = mmab.getCustomer(emailAddress);
         hashId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        mslbl.addCustomerToShoppingList(hashId, customer);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "You have been added to the shopping list", ""));
-        try {
-            ec.redirect(ec.getRequestContextPath() + coDir + "/home.xhtml");
-        } catch (IOException ex) {
 
+    }
+
+    public void addToList() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        coDir = ec.getRequestParameterMap().get("coCode");
+        hashId = ec.getRequestParameterMap().get("hashId");
+        if (coDir != null && !coDir.isEmpty()) {
+            coDir = "/" + coDir;
         }
 
+        System.out.println(hashId + " | " + customer);
+        try {
+            mslbl.addCustomerToShoppingList(hashId, customer);
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "You have been added to the shopping list", ""));
+        } catch (InvalidInputException | DuplicateEntryException invex) {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, invex.getMessage(), ""));
+        } finally {
+            try {
+                ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglist.xhtml");
+            } catch (IOException ex) {
+
+            }
+        }
     }
 
     public String getHashId() {
@@ -125,7 +143,5 @@ public class ShoppingListInviteManagedBean {
     public void setMslbl(ManageShoppingListBeanLocal mslbl) {
         this.mslbl = mslbl;
     }
-    
-    
-    
+
 }

@@ -21,4 +21,5 @@ import javax.ejb.Local;
 @Local
 public interface ACRMAnalyticsTimerLocal {
     public void setAdvancePeriod(int week);
+    public void setAdvancePeriodForACRMT(int week);
 }

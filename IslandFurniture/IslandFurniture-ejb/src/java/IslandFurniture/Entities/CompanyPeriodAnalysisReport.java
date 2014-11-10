@@ -5,14 +5,18 @@
  */
 package IslandFurniture.Entities;
 
-import IslandFurniture.Enums.Month;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -26,13 +30,21 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Double totalRevenue;
+    
+    @Temporal(TemporalType.DATE)
+    private Calendar analysis_date;
 
-    private Month month;
-    private Integer week;
-    private Integer year;
 
-    @OneToMany(mappedBy = "companyPeriodAnalysisReport")
-    private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports;
+    @OneToMany(mappedBy = "companyPeriodAnalysisReport",cascade = CascadeType.PERSIST)
+    private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports=new ArrayList<>();
+
+    public Calendar getAnalysis_date() {
+        return analysis_date;
+    }
+
+    public void setAnalysis_date(Calendar analysis_date) {
+        this.analysis_date = analysis_date;
+    }
 
     public Long getId() {
         return id;
@@ -50,29 +62,7 @@ public class CompanyPeriodAnalysisReport implements Serializable {
         this.totalRevenue = totalRevenue;
     }
 
-    public Month getMonth() {
-        return month;
-    }
-
-    public void setMonth(Month month) {
-        this.month = month;
-    }
-
-    public Integer getWeek() {
-        return week;
-    }
-
-    public void setWeek(Integer week) {
-        this.week = week;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
+ 
 
     public List<CountryPeriodAnalysisReport> getCountryPeriodAnalysisReports() {
         return countryPeriodAnalysisReports;
@@ -106,5 +96,7 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     public String toString() {
         return "CompanyPeriodAnalysisReport[ id=" + id + " ]";
     }
+    
+
 
 }

@@ -6,6 +6,8 @@
 
 package IslandFurniture.DataStructures;
 
+import java.io.Serializable;
+
 /**
  * Datastructure for JSF to display Paired data
  *
@@ -13,7 +15,7 @@ package IslandFurniture.DataStructures;
  * @param <A> First item
  * @param <B> Second item
  */
-public class Couple<A, B> {
+public class Couple<A, B> implements Serializable {
     private A first;
     private B second;
 
