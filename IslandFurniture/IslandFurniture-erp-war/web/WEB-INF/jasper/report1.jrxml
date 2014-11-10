@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b5da4b27-7b6c-4acf-a9bf-efd2211c4c33">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b5da4b27-7b6c-4acf-a9bf-efd2211c4c33">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<field name="id" class="java.lang.String"/>
-	<field name="qty" class="java.lang.String"/>
-	<field name="stock" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT * FROM StorefrontInventory]]>
+	</queryString>
+	<field name="MAXQTY" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="QTY" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="REPQTY" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="LOCATIONINSTORE_ID" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="STOCK_ID" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="STORE_ID" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="store.name" class="java.lang.String"/>
+	<group name="Location In Store">
+		<groupExpression><![CDATA[$F{LOCATIONINSTORE_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -24,34 +52,50 @@
 		<band height="35" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="61" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="880b43df-2d3b-457c-99e0-23722a42dbbe"/>
-				<text><![CDATA[id]]></text>
+				<reportElement x="0" y="0" width="100" height="20" uuid="aed3fc0a-ce2f-46dc-9048-1cf6e620d52e"/>
+				<text><![CDATA[STOCK_ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="0" width="100" height="20" uuid="22525f48-0469-4243-9f98-da0d0cff7ca4"/>
-				<text><![CDATA[qty]]></text>
+				<reportElement x="111" y="0" width="100" height="20" uuid="05596a97-ff74-43e8-b0c5-8d470adb6fc5"/>
+				<text><![CDATA[QTY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="331" y="2" width="100" height="20" uuid="c59b4897-d8be-4874-8e50-2e65d62b4a95"/>
-				<text><![CDATA[stock]]></text>
+				<reportElement x="231" y="0" width="100" height="20" uuid="b39eb0b2-8821-41f2-86b7-c86147d6fd36"/>
+				<text><![CDATA[REPQTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="0" width="100" height="20" uuid="b5944db0-932a-44ff-90b6-3e065f872521"/>
+				<text><![CDATA[MAXQTY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="20" uuid="3a5c8e89-8e2f-4888-995a-c5093f732756"/>
+				<text><![CDATA[store.name]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="27" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="9e0459e8-9aab-4681-aa77-099e29c9bde8"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="100" height="20" uuid="5fa6401b-47cc-48a5-ba78-9b98e3d078f4"/>
+				<textFieldExpression><![CDATA[$F{STOCK_ID}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="138" y="0" width="100" height="20" uuid="6a72dc7c-28d4-40ba-8eb5-f3724c1ecec1"/>
-				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+				<reportElement x="111" y="0" width="100" height="20" uuid="c27121a3-8bc6-41ca-89c2-94c067b38e89"/>
+				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="331" y="0" width="100" height="20" uuid="27d64fd4-5b4f-49e7-a5ed-13cd564095c1"/>
-				<textFieldExpression><![CDATA[$F{stock}]]></textFieldExpression>
+				<reportElement x="231" y="0" width="100" height="20" uuid="1fd97dcd-7047-4fad-b907-0295830ff379"/>
+				<textFieldExpression><![CDATA[$F{REPQTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="0" width="100" height="20" uuid="3c70be58-6725-4f0f-a3ff-e39a870ce944"/>
+				<textFieldExpression><![CDATA[$F{MAXQTY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="a126e490-a397-4d4c-932b-d34087c47fd3"/>
+				<textFieldExpression><![CDATA[$F{store.name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
