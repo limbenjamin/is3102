@@ -38,7 +38,9 @@ public class basketAnalysisBean implements basketAnalysisBeanLocal {
        
        for (MarketBasketAnalysis mba : (List<MarketBasketAnalysis>)q.getResultList())
        {
-           
+           for (FurnitureModel fmz : mba.getFurnituremodels()){
+           data.put(fmz, null);
+           }
        }
        
        data.remove(fm);
@@ -47,6 +49,22 @@ public class basketAnalysisBean implements basketAnalysisBeanLocal {
        
     
     }
+    
+    
+        public List<FurnitureModel> findListOfrelated(String fm, String co){
+            
+            System.out.println("Finding Related():"+fm + " @ " + co);
+        
+            Query q=em.createQuery("select f from FurnitureModel f where f.name=:s");
+            q.setParameter("s", fm);
+            FurnitureModel fzz = (FurnitureModel)q.getResultList().get(0);
+            Query q2=em.createQuery("select co from CountryOffice co where co.name=:s");
+            q2.setParameter("s", co);
+            CountryOffice coo = (CountryOffice) q2.getResultList().get(0);
+            
+            return (findListOfrelated(fzz, coo));
+        
+        }
 
     public void persist(Object object) {
         em.persist(object);

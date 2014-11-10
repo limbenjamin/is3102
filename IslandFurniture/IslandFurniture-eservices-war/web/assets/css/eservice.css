@@ -57,6 +57,14 @@
     padding: 10px;
 }
 
+.text-true {
+    color:#1aae88;
+}
+
+.text-false {
+    color:#FE980F;
+}
+
 hr{
     display:block;
     margin:1em 0;
@@ -1295,4 +1303,31 @@ h2.title {
         float: none;
     }   
 
+}
+
+/**************************** PRINTING ****************************************/
+
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  img {
+      max-width: 70px !important;
+  }
+  #printArea, #printArea * {
+    visibility: visible;
+  }
+  #printArea {
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  header, footer, #editShoppingList, 
+  .btn, #fb-share-button, .no-print, li {
+      display: none;
+  }
 }

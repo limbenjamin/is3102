@@ -61,4 +61,6 @@ public interface ManageMembershipLocal {
 
     public List<Customer> searchMemberByEmail(String email);
 
+    public MembershipTier promoteCustomer(Customer c);
+
 }

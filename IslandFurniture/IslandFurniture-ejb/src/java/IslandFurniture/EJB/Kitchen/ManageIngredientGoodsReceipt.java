@@ -11,6 +11,7 @@ import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.IngredientInventory;
 import IslandFurniture.Entities.IngredientInventoryPK;
 import IslandFurniture.Entities.IngredientPurchaseOrder;
+import IslandFurniture.Entities.IngredientPurchaseOrderDetail;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.PurchaseOrderStatus;
@@ -46,6 +47,7 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         ingredientGoodsReceiptDocument.setLastModBy(staff);
         ingredientGoodsReceiptDocument.setLastModTime(createTime);
         ingredientGoodsReceiptDocument.setReceiptDate(createTime);
+        ingredientGoodsReceiptDocument.setDeliveryNote("Note Number: ");
         ingredientGoodsReceiptDocument.setPosted(false);
         em.persist(ingredientGoodsReceiptDocument);
         em.flush();
@@ -59,6 +61,7 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         ingredientGoodsReceiptDocument.setLastModBy(staff);
         ingredientGoodsReceiptDocument.setLastModTime(time);
         ingredientGoodsReceiptDocument.setReceiptDate(time);
+        ingredientGoodsReceiptDocument.setDeliveryNote(updatedIngredientGoodsReceiptDocument.getDeliveryNote());
         em.merge(ingredientGoodsReceiptDocument);
         em.flush();
     }
@@ -199,5 +202,31 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
     public IngredientGoodsReceiptDocument getIngredientGoodsReceiptDocument(Long id) {
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, id);
         return ingredientGoodsReceiptDocument;
+    }
+    
+    //  Function: To get the Purchase Order entity from Id
+    @Override
+    public IngredientPurchaseOrder getPurchaseOrder(Long id) {
+        ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, id);
+        return ingredientPurchaseOrder;
+    }
+    
+    //  Function: To return list the Purchase Order Details of a Purchase Order which will be used to create Goods Receipt Document Details    
+    @Override
+    public List<IngredientPurchaseOrderDetail> viewPurchaseOrderDetail(IngredientPurchaseOrder po) {
+        Query q = em.createQuery("SELECT s FROM IngredientPurchaseOrderDetail s WHERE s.ingredPurchaseOrder.id=:id");
+        q.setParameter("id", po.getId());
+        return q.getResultList();
+    }
+    
+    //  @Need to check --  Function: To set the Goods Receipt Document to the Purchase Order    
+    @Override
+    public void setGoodsReceiptDocumentToThePurchaseOrder(IngredientGoodsReceiptDocument goodsReceiptDocument, IngredientPurchaseOrder po, Calendar date) {
+        po.setIngredGoodsReceiptDoc(ingredientGoodsReceiptDocument);
+        em.merge(po);
+        em.flush();
+        goodsReceiptDocument.setReceiptDate(date);
+        em.merge(goodsReceiptDocument);
+        em.flush();
     }
 }

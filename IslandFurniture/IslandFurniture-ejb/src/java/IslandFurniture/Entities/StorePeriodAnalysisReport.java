@@ -35,7 +35,7 @@ public class StorePeriodAnalysisReport implements Serializable {
     @ManyToOne
     private CountryPeriodAnalysisReport countryPeriodAnalysisReport;
 
-    @OneToMany(mappedBy = "storePeriodAnalysisReport",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "storePeriodAnalysisReport", cascade = CascadeType.PERSIST)
     private List<ProductAnalysisReport> productAnalysisReports = new ArrayList<>();
 
     public Long getId() {
@@ -47,11 +47,16 @@ public class StorePeriodAnalysisReport implements Serializable {
     }
 
     public Double getTotalRevenue() {
-        return totalRevenue;
+        Double ttotalrevenue = 0.0;
+        for (ProductAnalysisReport par : this.getProductAnalysisReports()) {
+            ttotalrevenue += par.getTotalRevenue();
+        }
+
+        return ttotalrevenue;
     }
 
     public void setTotalRevenue(Double totalRevenue) {
-        this.totalRevenue = totalRevenue;
+        //this.totalRevenue = totalRevenue;
     }
 
     public Store getStore() {

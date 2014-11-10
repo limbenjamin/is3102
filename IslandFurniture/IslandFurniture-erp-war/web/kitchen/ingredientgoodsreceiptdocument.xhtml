@@ -21,6 +21,9 @@
                     <div class="col-md-10"> 
 
                         <span class="pull-right">
+                            <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#fromPO">
+                                <i class="fa fa-fw fa-plus"></i> Populate from Purchase Order
+                            </button>
                             <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#addIngredient">
                                 <i class="fa fa-fw fa-plus"></i> Add Ingredient
                             </button>   
@@ -43,12 +46,14 @@
                                 <table class="table table-hover table-condensed">
                                     <tr>
                                         <th>Receipt Date</th>
-                                        <th>Update</th>
+                                        <th>Delivery Note Number</th>
+                                        <th width="100px">Update</th>
                                     </tr>
                                     <h:form class="form-horizontal">
                                         <tr>
                                             <td><h:inputText id="date" value="#{ingredientGoodsReceiptDocumentManagedBean.dateString}" pt:type="date" class="form-control" pt:required="true"></h:inputText></td>
-                                            <td>
+                                            <td><h:inputText value="#{ingredientGoodsReceiptDocumentManagedBean.ingredientGoodsReceipt.deliveryNote}" class="form-control"></h:inputText></td>
+                                            <td width="100px">
                                                 <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.editIngredientGoodsReceiptDocument}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
@@ -148,7 +153,37 @@
                                     </h:form>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="fromPO" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Add Ingredient to Goods Receipt Document</h4>
+                                    </div>
+                                    <h:form id="createPO" class="form-horizontal">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Purchase Order: </label>
+                                                <div class="col-sm-9">
+                                                    <h:selectOneMenu id="storageBinMenu" class="form-control needauto" value="#{ingredientGoodsReceiptDocumentManagedBean.purchaseOrderId}">
+                                                        <f:selectItem itemLabel="Select Purchase Order" />
+                                                        <f:selectItems value="#{ingredientGoodsReceiptDocumentManagedBean.purchaseOrderList}" var="p" itemLabel="#{p.id}" itemValue="#{p.id}" />
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                            <h:commandButton action="ingredientgoodsreceiptdocument" actionListener="#{ingredientGoodsReceiptDocumentManagedBean.addGoodsReceiptDocumentDetailFromPO}" value="Populate from Purchase Order" class="btn btn-success pull-right btn-round"> 
+                                            </h:commandButton>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

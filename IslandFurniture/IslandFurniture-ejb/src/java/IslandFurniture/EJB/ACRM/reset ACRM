@@ -1,0 +1,6 @@
+SET SQL_SAFE_UPDATES=0;
+DELETE FROM productanalysisreport;
+DELETE from storeperiodanalysisreport;
+DELETE FROM customerperiodanalysisreport;
+DELETE FROM countryperiodanalysisreport;
+DELETE FROM islandfurniture.companyperiodanalysisreport;

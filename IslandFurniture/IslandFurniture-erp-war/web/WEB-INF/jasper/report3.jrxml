@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="34c02c39-4b3a-49b0-aff4-6b430e545a19">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="13"/>
+	<queryString>
+		<![CDATA[SELECT
+     SUM(transaction.`GRANDTOTAL`) AS trans_SUM,
+     SUM(transaction.`GRANDTOTAL`) AS trans_SUM,
+     COUNT(furnituretransactiondetail.`FURNITUREMODEL_ID`) AS furnituretransactiondetail_COUNTFURN,
+     transaction.`ID` AS transaction_ID,
+     transaction.`GRANDTOTAL` AS transaction_GRANDTOTAL,
+     transaction.`TRANSTIME` AS transaction_TRANSTIME,
+     transaction.`VOUCHERTOTAL` AS transaction_VOUCHERTOTAL,
+     transaction.`MEMBER_ID` AS transaction_MEMBER_ID,
+     transaction.`STORE_ID` AS transaction_STORE_ID,
+     furnituretransactiondetail.`ID` AS furnituretransactiondetail_ID,
+     furnituretransactiondetail.`NUMCLAIMED` AS furnituretransactiondetail_NUMCLAIMED,
+     furnituretransactiondetail.`NUMRETURNED` AS furnituretransactiondetail_NUMRETURNED,
+     furnituretransactiondetail.`QTY` AS furnituretransactiondetail_QTY,
+     furnituretransactiondetail.`UNITPOINTS` AS furnituretransactiondetail_UNITPOINTS,
+     furnituretransactiondetail.`UNITPRICE` AS furnituretransactiondetail_UNITPRICE,
+     furnituretransactiondetail.`FURNITUREMODEL_ID` AS furnituretransactiondetail_FURNITUREMODEL_ID,
+     furnituretransactiondetail.`FURNITURETRANSACTION_ID` AS furnituretransactiondetail_FURNITURETRANSACTION_ID,
+     furnituretransactiondetail.`PROMOTIONDETAIL_ID` AS furnituretransactiondetail_PROMOTIONDETAIL_ID,
+     furnituremodel.`ID` AS furnituremodel_ID,
+     furnituremodel.`CATEGORY` AS furnituremodel_CATEGORY,
+     furnituremodel.`FURNITUREDESCRIPTION` AS furnituremodel_FURNITUREDESCRIPTION,
+     furnituremodel.`POINTSWORTH` AS furnituremodel_POINTSWORTH,
+     furnituremodel.`PRICE` AS furnituremodel_PRICE,
+     furnituremodel.`SUBCATEGORY` AS furnituremodel_SUBCATEGORY,
+     furnituremodel.`BOM_ID` AS furnituremodel_BOM_ID,
+     furnituremodel.`THUMBNAIL_ID` AS furnituremodel_THUMBNAIL_ID,
+     stock.`ID` AS stock_ID,
+     stock.`DTYPE` AS stock_DTYPE,
+     stock.`NAME` AS stock_NAME,
+     furnituretransaction.`ID` AS furnituretransaction_ID,
+     furnituretransaction.`RETURNEDCREDITSUSED` AS furnituretransaction_RETURNEDCREDITSUSED,
+     furnituretransaction.`RETURNEDTRANS_ID` AS furnituretransaction_RETURNEDTRANS_ID
+FROM
+     `stock` stock INNER JOIN `furnituremodel` furnituremodel ON stock.`ID` = furnituremodel.`ID`
+     INNER JOIN `furnituretransactiondetail` furnituretransactiondetail ON stock.`ID` = furnituretransactiondetail.`FURNITUREMODEL_ID`
+     INNER JOIN `furnituretransaction` furnituretransaction ON furnituretransactiondetail.`FURNITURETRANSACTION_ID` = furnituretransaction.`ID`
+     INNER JOIN `transaction` transaction ON furnituretransaction.`ID` = transaction.`ID`]]>
+	</queryString>
+	<field name="trans_SUM" class="java.lang.Double"/>
+	<field name="furnituretransactiondetail_COUNTFURN" class="java.lang.Long"/>
+	<field name="transaction_ID" class="java.lang.Long"/>
+	<field name="transaction_GRANDTOTAL" class="java.lang.Double"/>
+	<field name="transaction_TRANSTIME" class="java.sql.Timestamp"/>
+	<field name="transaction_VOUCHERTOTAL" class="java.lang.Double"/>
+	<field name="transaction_MEMBER_ID" class="java.lang.Long"/>
+	<field name="transaction_STORE_ID" class="java.lang.Long"/>
+	<field name="furnituretransactiondetail_ID" class="java.lang.Long"/>
+	<field name="furnituretransactiondetail_NUMCLAIMED" class="java.lang.Integer"/>
+	<field name="furnituretransactiondetail_NUMRETURNED" class="java.lang.Integer"/>
+	<field name="furnituretransactiondetail_QTY" class="java.lang.Integer"/>
+	<field name="furnituretransactiondetail_UNITPOINTS" class="java.lang.Long"/>
+	<field name="furnituretransactiondetail_UNITPRICE" class="java.lang.Double"/>
+	<field name="furnituretransactiondetail_FURNITUREMODEL_ID" class="java.lang.Long"/>
+	<field name="furnituretransactiondetail_FURNITURETRANSACTION_ID" class="java.lang.Long"/>
+	<field name="furnituretransactiondetail_PROMOTIONDETAIL_ID" class="java.lang.Long"/>
+	<field name="furnituremodel_ID" class="java.lang.Long"/>
+	<field name="furnituremodel_CATEGORY" class="java.lang.Integer"/>
+	<field name="furnituremodel_FURNITUREDESCRIPTION" class="java.lang.String"/>
+	<field name="furnituremodel_POINTSWORTH" class="java.lang.Long"/>
+	<field name="furnituremodel_PRICE" class="java.lang.Double"/>
+	<field name="furnituremodel_SUBCATEGORY" class="java.lang.Integer"/>
+	<field name="furnituremodel_BOM_ID" class="java.lang.Long"/>
+	<field name="furnituremodel_THUMBNAIL_ID" class="java.lang.Long"/>
+	<field name="stock_ID" class="java.lang.Long"/>
+	<field name="stock_DTYPE" class="java.lang.String"/>
+	<field name="stock_NAME" class="java.lang.String"/>
+	<field name="furnituretransaction_ID" class="java.lang.Long"/>
+	<field name="furnituretransaction_RETURNEDCREDITSUSED" class="java.lang.Double"/>
+	<field name="furnituretransaction_RETURNEDTRANS_ID" class="java.lang.Long"/>
+	<group name="By Furniture">
+		<groupExpression><![CDATA[$F{stock_NAME}]]></groupExpression>
+		<groupHeader>
+			<band height="36">
+				<textField>
+					<reportElement x="51" y="16" width="100" height="20" uuid="0574e45b-8ecd-491f-b88e-3ff6530c26ef"/>
+					<textFieldExpression><![CDATA[$F{stock_NAME}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="86" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
