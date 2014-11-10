@@ -58,10 +58,10 @@ public class ManageStaffAccountsBeanRemoteTest {
         ManagePrivilegesBeanRemote managePrivilegesBeanRemote = lookupManagePrivilegesBeanRemote();
         ManageRolesBeanRemote manageRolesBeanRemote = lookupManageRolesBeanRemote();
         priv = managePrivilegesBeanRemote.displayPrivilege().get(0);
-        priv = managePrivilegesBeanRemote.displayPrivilege().get(1);
+        priv2 = managePrivilegesBeanRemote.displayPrivilege().get(1);
         role = manageRolesBeanRemote.displayRole().get(0);
         //System.err.println("herehere "+ role.getName()+"  "+priv.getName());
-        //manageRolesBeanRemote.addPrivilegeToRole(role.getId(), priv.getName());
+        manageRolesBeanRemote.addPrivilegeToRole(role.getId(), priv.getName());
         store = staticManageOrganizationalHierarchyBeanRemote.displayStore().get(0);
         co = staticManageOrganizationalHierarchyBeanRemote.displayCountryOffice().get(0);
     }
