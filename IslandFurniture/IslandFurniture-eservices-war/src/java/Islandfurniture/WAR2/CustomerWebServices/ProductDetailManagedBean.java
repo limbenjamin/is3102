@@ -6,6 +6,7 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.ACRM.basketAnalysisBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
@@ -52,6 +53,7 @@ public class ProductDetailManagedBean {
     private String coDir;
     private CountryOffice co;
     private Double discountedPrice;
+    private List<FurnitureModel> recommendedProducts;
 
     public Stock getStock() {
         return stock;
@@ -82,6 +84,8 @@ public class ProductDetailManagedBean {
     private ManageMarketingBeanLocal mmbl;
     @EJB
     private ManageStorefrontInventoryLocal inventoryBean;
+    @EJB
+    private basketAnalysisBeanLocal basketBean;
     
     @PostConstruct
     public void init() {
@@ -119,6 +123,12 @@ public class ProductDetailManagedBean {
         if (furniture != null) {
             discountedPrice = getDiscountedPrice(furniture);
             System.out.println("Got furniture model " + furniture.getName());            
+        }
+        
+        recommendedProducts = basketBean.findListOfrelated(furniture, co);
+        System.out.println("No. of related furniture is " + recommendedProducts.size());
+        for (FurnitureModel model:recommendedProducts) {
+            System.out.println(model.getName());
         }
     }
     
@@ -170,7 +180,7 @@ public class ProductDetailManagedBean {
     public String getStockAvailability (Store store) {
         return inventoryBean.viewStorefrontInventoryStockLevelPerPlant(store, furniture);
     }
-    
+        
     public void redirectPage() throws IOException {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(ec.getRequestContextPath() + "/" + coDir + "/home.xhtml");        
@@ -279,5 +289,12 @@ public class ProductDetailManagedBean {
     public void setDiscountedPrice(Double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
-    
+
+    public List<FurnitureModel> getRecommendedProducts() {
+        return recommendedProducts;
+    }
+
+    public void setRecommendedProducts(List<FurnitureModel> recommendedProducts) {
+        this.recommendedProducts = recommendedProducts;
+    }
 }
