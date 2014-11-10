@@ -12,13 +12,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Entity
-public class WeeklyMenuItemSalesForecast implements Serializable {
+@NamedQueries({
+    @NamedQuery(
+            name = "getWmsfByStoreMi",
+            query = "SELECT a FROM WeeklyMenuItemSalesForecast a WHERE a.mmsf.store = :store AND a.mmsf.menuItem = :mi AND a.mmsf.year = :year AND a.mmsf.month = :month")
+})
+public class WeeklyMenuItemSalesForecast implements Serializable, Comparable<WeeklyMenuItemSalesForecast> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -91,8 +98,17 @@ public class WeeklyMenuItemSalesForecast implements Serializable {
     }
 
     @Override
+    public int compareTo(WeeklyMenuItemSalesForecast other) {
+        if(this.weekNo < other.weekNo) return -1;
+        if(this.weekNo > other.weekNo) return 1;
+        
+        return 0;
+    }
+    
+    @Override
     public String toString() {
         return "WeeklyMenuItemSalesForecast[ id=" + id + " ]";
     }
+
     
 }

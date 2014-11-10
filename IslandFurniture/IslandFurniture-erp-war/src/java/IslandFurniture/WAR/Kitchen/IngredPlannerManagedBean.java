@@ -15,6 +15,7 @@ import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Enums.Month;
 import IslandFurniture.Exceptions.ForecastFailureException;
 import IslandFurniture.Exceptions.InvalidInputException;
 import IslandFurniture.Exceptions.InvalidMmsfException;
@@ -29,6 +30,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpSession;
 
@@ -38,7 +40,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class CreateMmsfManagedBean implements Serializable {
+public class IngredPlannerManagedBean implements Serializable {
 
     @EJB
     private ManagePrivilegesBeanLocal managePrivilegesBean;
@@ -55,14 +57,17 @@ public class CreateMmsfManagedBean implements Serializable {
     private Staff staff;
     private Store store;
 
-    String panelActive = "0";
-    String successMessage = "";
-    String errorMessage = "";
+    private String panelActive = "0";
+    private String successMessage = "";
+    private String errorMessage = "";
 
     int numPoints;
 
     private List<Couple<String, String>> mmsfLabels = new ArrayList();
     private List<Couple<MenuItem, Couple<List<MonthlyMenuItemSalesForecast>, List<MonthlyMenuItemSalesForecast>>>> mmsfPairedList;
+
+    private Month wmsfMonth;
+    private int wmsfYear;
 
     @PostConstruct
     public void init() {
@@ -158,7 +163,6 @@ public class CreateMmsfManagedBean implements Serializable {
         }
     }
 
-    // Incomplete at the moment
     public void saveForecast(AjaxBehaviorEvent event) {
         try {
             List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> coupleList = new ArrayList();
@@ -177,10 +181,22 @@ public class CreateMmsfManagedBean implements Serializable {
         }
     }
 
+    public void fetchWmsf(ActionEvent event) {
+        this.wmsfMonth = Month.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("month"));
+        this.wmsfYear = Integer.valueOf(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("year"));
+        System.out.println(wmsfMonth + " | " + this.wmsfYear);
+        try {
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect("ingredplannerweek.xhtml?month=" + this.wmsfMonth + "&year=" + this.wmsfYear);
+        } catch (IOException ex) {
+
+        }
+    }
+
     /**
      * Creates a new instance of CreateMmsfManagedBean
      */
-    public CreateMmsfManagedBean() {
+    public IngredPlannerManagedBean() {
     }
 
     public Staff getStaff() {
@@ -245,6 +261,22 @@ public class CreateMmsfManagedBean implements Serializable {
 
     public void setMmsfPairedList(List<Couple<MenuItem, Couple<List<MonthlyMenuItemSalesForecast>, List<MonthlyMenuItemSalesForecast>>>> mmsfPairedList) {
         this.mmsfPairedList = mmsfPairedList;
+    }
+
+    public Month getWmsfMonth() {
+        return wmsfMonth;
+    }
+
+    public void setWmsfMonth(Month wmsfMonth) {
+        this.wmsfMonth = wmsfMonth;
+    }
+
+    public int getWmsfYear() {
+        return wmsfYear;
+    }
+
+    public void setWmsfYear(int wmsfYear) {
+        this.wmsfYear = wmsfYear;
     }
 
 }
