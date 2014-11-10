@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -336,6 +337,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
+            store.setExtendedState(JFrame.MAXIMIZED_BOTH);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -374,6 +376,7 @@ public class ScanItemsUI extends javax.swing.JFrame {
         CheckoutUI checkoutUI;
         try {
             checkoutUI = new CheckoutUI(staffJSON, listJSON, transaction, totalRegisterCash, storeType);
+            checkoutUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
             checkoutUI.setVisible(true);
             this.setVisible(false);
         } catch (ParseException ex) {

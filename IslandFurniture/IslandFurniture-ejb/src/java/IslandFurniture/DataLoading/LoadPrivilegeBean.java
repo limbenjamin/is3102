@@ -47,7 +47,8 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Production Planner","Procured Stock Supplier","Stock Supply","Procurement Plan","View Audit Log",
         "Ingredient","Dish","Menu","Currency","Store Inventory","External Inventory Transfer","Inventory Replenishment",
         "Promotion Manager","Pricing Management","Ingredient Management","Web Management","Member Management",
-        "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information"};
+        "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
+        "Membership","Customer Chat","Ingredient Supplier","View MSSF","ACRM"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
@@ -57,7 +58,8 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Manage purchase orders","Do production planning","View supplier","View stock supply","Generate Procurement Plan","View Audit Log",
         "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency","Manage Store Inventory","External Inventory Transfer",
         "Replenish Inventory","Manage Promotions","Manage Prices","Manage Ingredients","Manage Web functions","Manage Membership",
-        "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information"};
+        "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
+        "Manage Members","Customer Chat","Ingredient Supplier","View MSSF","ACRM"};
         
         
         String[][] arr = new String [][] { 
@@ -131,7 +133,13 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             {"Manage Redemption", "/ocrm/redemption.xhtml", "fa-cube", "Manage Redemption", "true","40"},
             {"Furniture Return", "/ocrm/furniturereturn.xhtml", "fa-cube", "Furniture Return", "true","41"},
             {"Customer Feedback", "/ocrm/feedback.xhtml", "fa-cube", "Customer Feedback", "true","42"},
-            {"Product Information", "/ocrm/productinfo.xhtml", "fa-cube", "Product Information", "true","43"}
+            {"Product Information", "/ocrm/productinfo.xhtml", "fa-cube", "Product Information", "true","43"},
+            {"Membership","/ocrm/membership.xhtml", "fa-cube", "Membership", "true","44"},
+            {"Customer Chat","/ocrm/customerchat.xhtml", "fa-cube", "Customer Chat", "true","45"},
+            {"Ingredient Supplier","/kitchen/ingredientsupplier.xhtml", "fa-cube", "Ingredient Supplier", "true","46"},
+            {"View MSSF","/kitchen/viewmmsf.xhtml", "fa-cube", "View MSSF", "true","47"},
+            {"ACRM","/acrm/dashboard.xhtml", "fa-cube", "ACRM", "true","48"},
+            {"View Audit Log","/it/viewauditlog.xhtml", "fa-cube", "View Audit Log", "true","49"},
         };
         
         for (int i=0; i<privileges.length; i++){

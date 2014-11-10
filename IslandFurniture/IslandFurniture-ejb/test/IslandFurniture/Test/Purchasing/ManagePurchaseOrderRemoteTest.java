@@ -74,7 +74,7 @@ public class ManagePurchaseOrderRemoteTest {
         SupplierManagerRemote supplierManagerRemote = lookupSupplierManagerRemote();
         
         mf = (ManufacturingFacility) manageOrganizationalHierarchyBeanRemote.getPlantById(Long.parseLong("412")); //Tuas MF
-        mf2 = manageOrganizationalHierarchyBeanRemote.displayManufacturingFacility().get(1);
+        mf2 = (ManufacturingFacility) manageOrganizationalHierarchyBeanRemote.getPlantById(Long.parseLong("425")); //Chiang Mai
         co = manageOrganizationalHierarchyBeanRemote.displayCountryOffice().get(0);
         store = manageOrganizationalHierarchyBeanRemote.displayStore().get(0);
         stock = stockManagerRemote.getStock(Long.parseLong("432")); //flathead screw
