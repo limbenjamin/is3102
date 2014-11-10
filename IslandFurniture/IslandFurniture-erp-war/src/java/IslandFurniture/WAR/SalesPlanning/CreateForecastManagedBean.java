@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 @ManagedBean(name = "createForecastManagedBean")
 @ViewScoped
 public class CreateForecastManagedBean implements Serializable {
+
     @EJB
     private ManagePrivilegesBeanLocal managePrivilegesBean;
 
@@ -56,7 +57,8 @@ public class CreateForecastManagedBean implements Serializable {
     private CountryOffice co;
 
     String panelActive = "0";
-    String statusMessage = "";
+    String errorMessage = "";
+    String successMessage = "";
 
     int numPoints;
     int plannedInv;
@@ -68,6 +70,9 @@ public class CreateForecastManagedBean implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
+
+        errorMessage = "";
+        successMessage = "";
 
         Plant plant = staff.getPlant();
 
@@ -115,15 +120,15 @@ public class CreateForecastManagedBean implements Serializable {
 
             } catch (InvalidMssrException ex) {
                 noPrevious = true;
-                statusMessage = ex.getMessage();
+                errorMessage = ex.getMessage();
             }
         }
 
         if (!impacted) {
-            statusMessage = "Failed to forecast: There are no available months to forecast!";
+            errorMessage = "Failed to forecast: There are no available months to forecast!";
         } else {
             if (!noPrevious) {
-                statusMessage = "Naive forecast performed successfullly!";
+                successMessage = "Naive forecast performed successfullly!";
             }
         }
     }
@@ -131,28 +136,28 @@ public class CreateForecastManagedBean implements Serializable {
     public void nPointForecast(AjaxBehaviorEvent event) {
         try {
             boolean impacted = false;
-            statusMessage = "";
+            errorMessage = "";
 
             for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
                 try {
                     couple.getSecond().setSecond(salesForecastBean.retrieveNPointForecast(co, couple.getFirst(), this.numPoints, this.plannedInv));
                     impacted = true;
                 } catch (ForecastFailureException ex) {
-                    statusMessage += " " + ex.getMessage() + ",";
+                    errorMessage += " " + ex.getMessage() + ",";
                 }
             }
-            
+
             if (!impacted) {
-                statusMessage = "Failed to forecast: There are no available months to forecast!";
+                errorMessage = "Failed to forecast: There are no available months to forecast!";
             } else {
-                if (statusMessage.isEmpty()) {
-                    statusMessage = numPoints + "-Point forecast performed successfullly!";
+                if (errorMessage.isEmpty()) {
+                    successMessage = numPoints + "-Point forecast performed successfullly!";
                 } else {
-                    statusMessage = "No historical data for:" + statusMessage.substring(0, statusMessage.length() - 1);
+                    errorMessage = "No historical data for:" + errorMessage.substring(0, errorMessage.length() - 1);
                 }
             }
         } catch (InvalidInputException ex) {
-            statusMessage = ex.getMessage();
+            errorMessage = ex.getMessage();
         }
     }
 
@@ -165,12 +170,12 @@ public class CreateForecastManagedBean implements Serializable {
             }
 
             salesForecastBean.saveMonthlyStockSupplyReq(coupleList);
-            
+
             manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Requirements Forecast", "New requirements forecast awaiting your approval", "/salesplanning/reviewforecast.xhtml", "Review Forecast", managePrivilegesBean.getPrivilegeFromName("Review Forecast"), co);
-            
-            statusMessage = "Forecast saved successfully!";
+
+            successMessage = "Forecast saved successfully!";
         } catch (InvalidMssrException ex) {
-            statusMessage = "Error saving forecast: " + ex.getMessage();
+            errorMessage = "Error saving forecast: " + ex.getMessage();
         }
     }
 
@@ -188,12 +193,20 @@ public class CreateForecastManagedBean implements Serializable {
         this.panelActive = panelActive;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getSuccessMessage() {
+        return successMessage;
+    }
+
+    public void setSuccessMessage(String successMessage) {
+        this.successMessage = successMessage;
     }
 
     public int getNumPoints() {

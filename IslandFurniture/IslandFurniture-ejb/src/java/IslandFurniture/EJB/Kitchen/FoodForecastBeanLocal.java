@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.EJB.Kitchen;
 
+import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.Month;
+import IslandFurniture.Exceptions.ForecastFailureException;
+import IslandFurniture.Exceptions.InvalidInputException;
+import IslandFurniture.Exceptions.InvalidMmsfException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -21,11 +24,23 @@ import javax.ejb.Local;
 public interface FoodForecastBeanLocal {
 
     List<Integer> getYearsOfMmsf(Store store);
+    
+    List<MonthlyMenuItemSalesForecast> retrieveNaiveForecast(Store store, MenuItem mi) throws ForecastFailureException, InvalidMmsfException;
+    
+    List<MonthlyMenuItemSalesForecast> retrieveNPointForecast(Store store, MenuItem mi, int nPoint) throws ForecastFailureException, InvalidInputException;
+    
+    void saveMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList) throws InvalidMmsfException;
+    
+    void reviewMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList, boolean approved) throws InvalidMmsfException;
 
     List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Integer year);
 
     List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Month startMonth, int startYear, Month endMonth, int endYear);
 
+    List<MonthlyMenuItemSalesForecast> retrieveUnlockedMmsfForStoreMi(Store store, MenuItem mi);
+
+    List<MonthlyMenuItemSalesForecast> retrieveLockedMmsfForStoreMi(Store store, MenuItem mi, int mthsHist) throws IllegalArgumentException;
+
     void updateMonthlyMenuItemSalesForecast(Store store, Month startMth, int startYr, Month endMth, int endYr);
-    
+
 }
