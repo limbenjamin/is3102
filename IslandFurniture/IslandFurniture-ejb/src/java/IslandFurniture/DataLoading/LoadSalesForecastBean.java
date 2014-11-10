@@ -5,12 +5,18 @@
  */
 package IslandFurniture.DataLoading;
 
+import IslandFurniture.EJB.Kitchen.FoodForecastBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Enums.MssrStatus;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.EJB.SalesPlanning.SalesForecastBeanLocal;
+import IslandFurniture.Entities.MenuItem;
+import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
+import IslandFurniture.Entities.Store;
+import IslandFurniture.Enums.MmsfStatus;
+import static IslandFurniture.StaticClasses.SystemConstants.FOOD_FORECAST_LOCKOUT_MONTHS;
 import IslandFurniture.StaticClasses.TimeMethods;
 import static IslandFurniture.StaticClasses.SystemConstants.FORECAST_LOCKOUT_MONTHS;
 import java.util.Calendar;
@@ -33,6 +39,8 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
     private EntityManager em;
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
+    @EJB
+    private FoodForecastBeanLocal foodForecastBean;
 
     @Override
     public boolean loadSampleData() {
@@ -42,6 +50,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
         Random rand = new Random(1);
         List<CountryOffice> countryOffices = (List<CountryOffice>) em.createNamedQuery("getAllCountryOffices").getResultList();
 
+        // Load Furniture & Retail Item MSSR
         for (CountryOffice eachCo : countryOffices) {
             prevMth = TimeMethods.getPlantCurrTime(eachCo);
             prevMth.add(Calendar.MONTH, -1);
@@ -64,8 +73,8 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     // Update Quantity Forecasted and Actual Inventories
                     if (i < listOfMssr.size() - (FORECAST_LOCKOUT_MONTHS + 1)) {
                         do {
-                            eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(10)*10 - 50);
-                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
+                            eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(10) * 10 - 50);
+                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0 && eachMssr.getQtyForecasted() >= 0);
 
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
                     } else {
@@ -89,7 +98,14 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory());
                     }
 
+                    // Not to allow negative Quantities requested
+                    if (eachMssr.getQtyRequested() < 0) {
+                        eachMssr.setQtyForecasted(eachMssr.getQtyForecasted() + (-1 * eachMssr.getQtyRequested()));
+                        eachMssr.setQtyRequested(0);
+                    }
+
                     eachMssr.setStatus(MssrStatus.APPROVED);
+                    em.merge(eachMssr);
 
                     System.out.println(eachMssr);
                 }
@@ -125,6 +141,12 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset());
                     }
 
+                    // Don't allow qtyRequested to drop into negative
+                    if (mssr.getQtyRequested() < 0) {
+                        mssr.setQtyForecasted(mssr.getQtyForecasted() + (-1 * mssr.getQtyRequested()));
+                        mssr.setQtyRequested(0);
+                    }
+
                     if (mssr.getStatus() != null && mssr.getStatus().equals(MssrStatus.NONE)) {
                         em.remove(mssr);
                     }
@@ -133,6 +155,52 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                 }
             }
         }
+
+        // Load Mmsf
+        for (Store eachStore : em.createNamedQuery("getAllStores", Store.class).getResultList()) {
+            prevMth = TimeMethods.getPlantCurrTime(eachStore);
+            prevMth.add(Calendar.MONTH, -1);
+
+            lockedOutCutoff = TimeMethods.getPlantCurrTime(eachStore);
+            lockedOutCutoff.add(Calendar.MONTH, FOOD_FORECAST_LOCKOUT_MONTHS);
+
+            foodForecastBean.updateMonthlyMenuItemSalesForecast(eachStore, Month.JAN, 2013, Month.getMonth(prevMth.get(Calendar.MONTH)), prevMth.get(Calendar.YEAR));
+
+            for (MenuItem mi : eachStore.getCountryOffice().getMenuItems()) {
+                List<MonthlyMenuItemSalesForecast> listOfMmsf = foodForecastBean.retrieveMmsfForStoreMi(eachStore, mi, Month.JAN, 2013, Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+                listOfMmsf.sort(null);
+
+                for (int i = 0; i < listOfMmsf.size(); i++) {
+                    MonthlyMenuItemSalesForecast eachMmsf = listOfMmsf.get(i);
+
+                    // Update Quantity Forecasted
+                    if (i < listOfMmsf.size() - (FOOD_FORECAST_LOCKOUT_MONTHS + 1)) {
+                        do {
+                            eachMmsf.setQtyForecasted(eachMmsf.getQtySold() + rand.nextInt(10) * 10 - 50);
+                        } while (eachMmsf.getQtyForecasted() < eachMmsf.getQtySold());
+
+                    } else {
+                        eachMmsf.setQtyForecasted(500 + rand.nextInt(500));
+                    }
+
+                    eachMmsf.setStatus(MmsfStatus.APPROVED);
+                    em.merge(eachMmsf);
+
+                    System.out.println(eachMmsf);
+                }
+
+                // Remove the quantity sold for demonstration
+                Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.MAR, 2014);
+                listOfMmsf = foodForecastBean.retrieveMmsfForStoreMi(eachStore, mi, Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
+
+                for (int i = 0; i < listOfMmsf.size(); i++) {
+                    MonthlyMenuItemSalesForecast mmsf = listOfMmsf.get(i);
+                    mmsf.setQtySold(0);
+                    mmsf.setEndMthUpdated(false);
+                }
+            }
+        }
+
         return true;
     }
 

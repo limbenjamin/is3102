@@ -6,7 +6,9 @@
 package IslandFurniture.Entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,11 +35,11 @@ public class CountryPeriodAnalysisReport implements Serializable {
     @ManyToOne
     private CompanyPeriodAnalysisReport companyPeriodAnalysisReport;
 
-    @OneToMany(mappedBy = "countryPeriodAnalysisReport")
-    private List<StorePeriodAnalysisReport> storePeriodAnalysisReports;
+    @OneToMany(mappedBy = "countryPeriodAnalysisReport",cascade = CascadeType.PERSIST)
+    private List<StorePeriodAnalysisReport> storePeriodAnalysisReports  = new ArrayList<>();
 
-    @OneToMany(mappedBy = "countryPeriodAnalysisReport")
-    private List<CustomerPeriodAnalysisReport> customerPeriodAnalysisReport;
+    @OneToMany(mappedBy = "countryPeriodAnalysisReport",cascade = CascadeType.PERSIST)
+    private List<CustomerPeriodAnalysisReport> customerPeriodAnalysisReport = new ArrayList<>();
 
     public Long getId() {
         return id;

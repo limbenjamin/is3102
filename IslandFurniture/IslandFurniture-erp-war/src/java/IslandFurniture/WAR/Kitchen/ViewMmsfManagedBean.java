@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.DataStructures.Couple;
@@ -11,10 +10,8 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.Kitchen.FoodForecastBeanLocal;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
-import IslandFurniture.Entities.MonthlyStockSupplyReq;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
-import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -36,7 +33,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class ViewMmsfManagedBean implements Serializable{
+public class ViewMmsfManagedBean implements Serializable {
 
     @EJB
     private FoodForecastBeanLocal foodForecastBean;
@@ -51,7 +48,7 @@ public class ViewMmsfManagedBean implements Serializable{
     private Store store;
 
     private List<Couple<String, String>> mmsfLabels = new ArrayList();
-    private List<Couple<Stock, List<MonthlyStockSupplyReq>>> mmsfList;
+    private List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> mmsfList;
 
     public ViewMmsfManagedBean() {
     }
@@ -67,7 +64,7 @@ public class ViewMmsfManagedBean implements Serializable{
             // Populate MSSR labels and formatted labels
             this.mmsfLabels = MonthlyMenuItemSalesForecast.getLabels();
 
-            this.store = (Store) store;
+            this.store = (Store) plant;
 
             this.yearsOfMmsf = foodForecastBean.getYearsOfMmsf(store);
             if (!this.yearsOfMmsf.isEmpty()) {
@@ -94,9 +91,9 @@ public class ViewMmsfManagedBean implements Serializable{
         for (MenuItem mi : store.getCountryOffice().getMenuItems()) {
             this.mmsfList.add(new Couple(mi, foodForecastBean.retrieveMmsfForStoreMi(store, mi, this.yearOfMmsf)));
         }
-        
+
     }
-    
+
     //
     // Getters & Setters
     //
@@ -156,13 +153,12 @@ public class ViewMmsfManagedBean implements Serializable{
         this.mmsfLabels = mmsfLabels;
     }
 
-    public List<Couple<Stock, List<MonthlyStockSupplyReq>>> getMmsfList() {
+    public List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> getMmsfList() {
         return mmsfList;
     }
 
-    public void setMmsfList(List<Couple<Stock, List<MonthlyStockSupplyReq>>> mmsfList) {
+    public void setMmsfList(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> mmsfList) {
         this.mmsfList = mmsfList;
     }
 
- 
 }

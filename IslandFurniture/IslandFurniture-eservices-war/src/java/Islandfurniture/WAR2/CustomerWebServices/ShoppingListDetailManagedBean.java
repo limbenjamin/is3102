@@ -19,6 +19,7 @@ import IslandFurniture.Entities.ShoppingListDetail;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.StorefrontInventory;
+import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -162,8 +163,12 @@ public class ShoppingListDetailManagedBean {
         return subtotal;
     }
     
-    public void shareList() {
-        
+    public void shareList() throws Exception {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        String recipientEmail = request.getParameter("shareShoppingList:recipientEmail");
+        SendEmailByPost.sendEmail("customerservice", recipientEmail, "Share Shopping List", customer.getName()+ 
+                " has requested to share the shopping list with you. Click here to accept: https://localhost/cws/sg/member/shoppinglistinvite.xhtml?id=" + shoppingList.getIdHash());
     }
     
     public Double getDiscountedPrice(Stock s) {

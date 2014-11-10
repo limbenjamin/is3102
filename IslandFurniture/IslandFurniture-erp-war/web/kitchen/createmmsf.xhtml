@@ -1,0 +1,143 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <p:outputPanel id="statuses">
+            <p:outputPanel id="statusUpdate1" rendered="#{not empty createMmsfManagedBean.errorMessage}">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{createMmsfManagedBean.errorMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="statusUpdate2" rendered="#{not empty createMmsfManagedBean.successMessage}">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{createMmsfManagedBean.successMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li class="active"><strong>Create MMSF</strong></li>
+            </ol>  
+            <h4>Create MMSF (Monthly Menu Item Sales Forecast)</h4><hr></hr>
+        </div>    
+        <div class="col-md-12">
+            <h:form id="form">
+
+                <ul class="nav nav-tabs dashboard-tabs" role="tablist">
+                    <li class="active"><a href="#nmethod" role="tab" data-toggle="tab">Forecast By Naive Method</a></li>
+                    <li><a href="#npoint" role="tab" data-toggle="tab">Forecast By N-Point Moving Average</a></li>
+                    <li><a href="#approval" role="tab" data-toggle="tab">Submit For Approval</a></li>
+                </ul>  
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="nmethod">
+                        <section class="panel">
+                            <div class="panel-heading dashboard-title-panel">
+                                Description:
+                            </div>
+                            <div class="panel-body">
+                                <h5>Calculates the growth trend by taking the ratio between the average sales figures of the last 2 years, then adjusting the previous month-on-month values with the calculated growth trend weightage.</h5>
+                                <br/>
+                                <h:commandButton value="Perform Forecasting" class="btn btn-success">
+                                    <f:ajax render=":statuses :form:mmsfTable" listener="#{createMmsfManagedBean.naiveForecast}" />
+                                </h:commandButton>
+                            </div>
+                        </section>
+                    </div>
+
+
+                    <div class="tab-pane" id="npoint" >
+                        <section class="panel">
+                            <div class="panel-heading dashboard-title-panel">
+                                Input and Description:
+                            </div> 
+                            <div class="panel-body">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel for="numPoints" value="Number of Points: " />
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="numPoints" value="#{createMmsfManagedBean.numPoints}"/>
+                                        </p:column>
+                                        <p:column rowspan="2" style="vertical-align:text-top;">
+                                            Attempts to take the average sales figures of the N months that precedes the month planned. If sales figures are not available for any of the months, attempts to take the forecasted figures. If the forecasted figures are also not available, skips the month.
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <h:commandButton value="Perform Forecasting" class="btn btn-success">
+                                                <f:ajax execute="numPoints" render=":statuses :form:mmsfTable" listener="#{createMmsfManagedBean.nPointForecast}" />
+                                            </h:commandButton>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="tab-pane" id="approval" >
+                        <section class="panel">
+                            <div class="panel-heading dashboard-title-panel">
+                                Description:
+                            </div>     
+                            <div class="panel-body">
+                                <h5>Submits the current planned figures to the sales manager for approval. WARNING: Once submitted, figures may not be changed unless the sales manager rejects the forecast.</h5>
+                                <br/>
+                                <h:commandButton value="Submit Forecast" class="btn btn-success">
+                                    <f:ajax execute="@form" render=":statuses :form:mmsfTable" listener="#{createMmsfManagedBean.saveForecast}" />
+                                </h:commandButton>
+                            </div>
+                        </section>
+                    </div>
+
+                </div>              
+
+                <br/>
+                <h4>Generated Forecasts</h4><hr></hr>
+                <p:accordionPanel id="mmsfTable" value="#{createMmsfManagedBean.mmsfPairedList}" var="mmsfPairedEntry" multiple="true" activeIndex="#{createMmsfManagedBean.panelActive}">
+                    <p:tab title="#{mmsfPairedEntry.first.name} (id:#{mmsfPairedEntry.first.id})">
+                        <p:dataTable value="#{createMmsfManagedBean.mmsfLabels}" var="label">
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Month" />
+                                </f:facet>
+                                <h:outputText value="#{label.second}" />
+                            </p:column>
+                            <p:columns value="#{mmsfPairedEntry.second.first}" var="mmsf">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mmsf.month}" />
+                                    <br />
+                                    <h:outputText value="#{mmsf.year}" />
+                                </f:facet>
+                                <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first == 'qtySold' and mmsf.endMthUpdated == true}" />
+                                <h:outputText value="-" rendered="#{mmsf.status != null and label.first == 'qtySold' and mmsf.endMthUpdated == false}" />
+                                <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and (label.first == 'qtyForecasted' or label.first == 'status')}" />
+                                <h:outputText value="-" rendered="#{mmsf.status == null}"/>
+                            </p:columns>
+                            <p:columns value="#{mmsfPairedEntry.second.second}" var="mmsf" style="#{(mmsf.status == 'PENDING')?'background-color:#B1CAF2':null}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{mmsf.month}" />
+                                    <br />
+                                    <h:outputText value="#{mmsf.year}" />
+                                </f:facet>
+                                <h:outputText value="-" rendered="#{label.first == 'status' and mmsf.status == null}" />
+                                <h:outputText value="#{mmsf[label.first]}" rendered="#{label.first == 'status' and mmsf.status != null}" />
+                                <h:outputText value="-" rendered="#{label.first == 'qtySold'}" />
+                                <p:inputText value="#{mmsf[label.first]}" rendered="#{(mmsf.status == 'REJECTED' or mmsf.status == null or mmsf.status == 'NONE') and label.first == 'qtyForecasted'}" />
+                                <h:outputText value="#{mmsf[label.first]}" rendered="#{!(mmsf.status == 'REJECTED' or mmsf.status == null or mmsf.status == 'NONE') and label.first == 'qtyForecasted'}" />
+                            </p:columns>
+                        </p:dataTable>
+                    </p:tab>
+                </p:accordionPanel>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

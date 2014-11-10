@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.PostPersist;
 
 /**
  *
@@ -115,11 +114,4 @@ public class RestaurantTransactionDetail implements Serializable {
     public Long getTotalPoints() {
         return this.qty * this.unitPoints;
     }
-
-    // Entity Callbacks
-    @PostPersist
-    public void postPersist() {
-        System.out.println("Successfully persisted " + this);
-    }
-
 }

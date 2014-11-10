@@ -4,15 +4,19 @@
  * and open the template in the editor.
  */
 
-package IslandFurniture.EJB.Manufacturing;
-
-import javax.ejb.Local;
-import javax.ejb.Remote;
 
 /**
  *
  * @author James
  */
+package IslandFurniture.EJB.Manufacturing;
+
+import javax.ejb.Local;
+
+/**
+- *
+- * @author James
+- */
 @Local
 public interface ProductionPlanningSingletonLocal {
     public void setAdvanceWeek(int week);

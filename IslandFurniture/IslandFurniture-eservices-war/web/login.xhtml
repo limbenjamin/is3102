@@ -33,6 +33,7 @@
                                 <div class="form-group">
                                     <div class="col-xs-9">
                                         <input type="hidden" name="coCode" value="#{request.getAttribute('coCode')}" />
+                                        <input type="hidden" name="target" value="#{request.getAttribute('target')}" />
                                         <h:commandButton action="#{memberAuthenticationManagedBean.login}" class="btn btn-success btn-round" value="Login" />
                                     </div>
                                 </div>
@@ -96,6 +97,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <input type="hidden" name="coCode" value="#{request.getAttribute('coCode')}" />
+                                        <input type="hidden" name="target" value="#{request.getAttribute('target')}" />
                                         <h:commandButton action="#{memberAuthenticationManagedBean.register}" class="btn btn-success btn-round" value="Sign up!" />
                                     </div>
                                 </div>

@@ -143,52 +143,20 @@
                                 <div class="col-sm-12">  
                                     <!--category-tabs-->
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li class="active"><a href="#details" role="tab" data-toggle="tab">
+                                        <li class="active">
+                                            <a href="#details" role="tab" data-toggle="tab">
                                                 <i class="fa fa-fw fa-info-circle"></i> Product Details
-                                            </a></li>
-                                        <li><a href="#feedback" role="tab" data-toggle="tab">
-                                                <i class="fa fa-fw fa-comments"></i> Feedback
-                                            </a></li>
+                                            </a>
+                                        </li>
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="details">
                                             <div class="col-xs-12">
-                                                <div class="col-sm-5">
-                                                    <h5>Description</h5>
+                                                <div class="col-sm-12">
+                                                    <h5><strong>Furniture Description</strong></h5>
                                                     <p>#{productDetailManagedBean.furniture.furnitureDescription}</p>
+                                                    <br/>
                                                 </div>
-                                                <div class="col-sm-5">
-                                                    <h5>Care Instructions</h5>
-                                                    <p>Wipe clean with a cloth dampened in a mild cleaner.<br/>
-                                                        Wipe clean with a dry cloth.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tab-pane" id="feedback">
-                                            <div class="col-xs-12">
-                                                <form class="form-horizontal feedback-form" role="form">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Title</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control" placeholder="Title"/>
-                                                        </div>
-                                                        <label class="col-sm-2 control-label">Email</label>
-                                                        <div class="col-sm-4">
-                                                            <input type="email" class="form-control" placeholder="Email"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Feedback</label>
-                                                        <div class="col-sm-10">
-                                                            <textarea class="form-control" placeholder="Your Feedback" rows="3"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" class="btn btn-success">Submit</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -197,107 +165,47 @@
 			</div>
                     </h:panelGroup>
                     <br/><br/>
-                    <!--
-                    <div class="recommended_items">
-                        <h2>RECOMMENDED (7)</h2>
-                        <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                <div class="item active">
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
+                    <h:panelGroup layout="block" rendered="#{not empty productDetailManagedBean.recommendedProducts}" styleClass="recommended_items">
+                        <hr/>
+                        <h4 class="text-center">Recommended Products</h4>
+                        <hr/>
+                        <h:form>
+                            <ui:repeat value="#{productDetailManagedBean.recommendedProducts}" var="furniture">
+                                <div class="col-sm-3">
+                                    <div class="product-image-wrapper">
+                                        <div class="single-products">
+                                            <div class="productinfo text-center">
+                                                <a href="productdetail.xhtml?id=#{furniture.id}">
+                                                    <pf:graphicImage value="#{pictureManagedBean.image}" rendered="#{not empty furniture.thumbnail.content}">
+                                                        <f:param name="pictureId" value="#{furniture.thumbnail.id}" />
+                                                    </pf:graphicImage>
+                                                    <h:panelGroup layout="block" rendered="#{empty furniture.thumbnail.content}">
+                                                        <img src="#{application.contextPath}/assets/images/nopic.jpg" alt="" />
+                                                    </h:panelGroup>
+                                                </a>
+                                                <div style="min-height:16px;">
+                                                <h5 style="text-decoration:line-through;"> 
+                                                    <h:outputText value="#{catalogueManagedBean.co.country.currency.currencyCode} " rendered="#{furniture.price > productDetailManagedBean.getDiscountedPrice(furniture)}"/>
+                                                    <h:outputText value="#{furniture.price}" rendered="#{furniture.price > productDetailManagedBean.getDiscountedPrice(furniture)}">
+                                                    <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                    </h:outputText>
+                                                </h5>
                                                 </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-
+                                                <h4>
+                                                    <strong>#{productDetailManagedBean.co.country.currency.currencyCode}
+                                                        <h:outputText value="#{productDetailManagedBean.getDiscountedPrice(furniture)}" id="discounted">
+                                                            <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" pattern="#0.00"/>
+                                                        </h:outputText>
+                                                    </strong>
+                                                </h4>
+                                                <a href="productdetail.xhtml?id=#{furniture.id}"><h5>#{furniture.name}</h5></a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="item">
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo text-center">
-                                                    <a href="#"><img src="#{application.contextPath}/assets/images/home/product8.jpg" alt="" /></a>
-                                                    <h2>$3.20</h2>
-                                                    <a href="#"><p>Merlion Magnet</p></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </div>
-                    </div>!-->
+                            </ui:repeat>
+                        </h:form>
+                    </h:panelGroup>
                 </div>
             </div>
 	</section>        

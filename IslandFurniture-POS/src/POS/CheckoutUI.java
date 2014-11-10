@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.smartcardio.CardException;
 import javax.smartcardio.CardTerminal;
 import javax.smartcardio.TerminalFactory;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONObject;
@@ -270,8 +271,8 @@ public class CheckoutUI extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addComponent(couponField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(grandTotalLabel)
@@ -305,6 +306,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
+            store.setExtendedState(JFrame.MAXIMIZED_BOTH);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -365,6 +367,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -458,6 +461,7 @@ public class CheckoutUI extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(CheckoutUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        payment.setExtendedState(JFrame.MAXIMIZED_BOTH);
         payment.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_payButtonActionPerformed

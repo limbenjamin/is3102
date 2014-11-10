@@ -8,6 +8,7 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
+        <meta charset="utf-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
         <title>Island Furniture - Web Application Admin Dashboard</title>
         <!-- core styles -->
@@ -35,47 +36,47 @@
 
             td[role='gridcell']
             {
-            border:0px;
+                border:0px;
             }
 
 
             .summary{
-            background: none !important;
-            background-color: #dad9d6 !important;
+                background: none !important;
+                background-color: #dad9d6 !important;
             }
             .editable{
             }
 
             .normal_odd{
-            background: none !important;
-            background-color: #cccccc !important;
+                background: none !important;
+                background-color: #cccccc !important;
             }
             .normal_even{
-            background: none !important;
-            background-color: #D4D8D1 !important;
+                background: none !important;
+                background-color: #D4D8D1 !important;
             }
 
             .HEAVY_WORKLOAD
             {
-            background-color: red !important;
-            filter: alpha(opacity=80) !important;
+                background-color: red !important;
+                filter: alpha(opacity=80) !important;
             }
 
             .MEDIUM_WORKLOAD
             {
-            background-color: yellow !important;
-            filter: alpha(opacity=80) !important;
+                background-color: yellow !important;
+                filter: alpha(opacity=80) !important;
             }
 
             .LIGHT_WORKLOAD
             {
-            background-color: green !important;
-            filter: alpha(opacity=80) !important;
+                background-color: green !important;
+                filter: alpha(opacity=80) !important;
             }
 
             .ERROR
             {
-            background-color: red !important;
+                background-color: red !important;
             }
 
 
@@ -133,22 +134,22 @@
                                 <div class="panel-heading small"><b>Notifications</b>
                                 </div>
                                 <ul class="list-group">
-                                <h:form id="newNotification">                                      
-                                    <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
-                                        <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
-                                        <li class="list-group-item #{loginManagedBean.notificationList.get(i).isread}">
-                                            <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name :'nid' , value : '#{loginManagedBean.notificationList.get(i).id}'}]);">
-                                                <div class="m-body">
-                                                    <span class="pull-right #{loginManagedBean.notificationList.get(i).isread}-icon"></span>
-                                                    <small><strong><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></strong></small>
-                                                    <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
-                                                    <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </c:forEach>
-                                    <p:poll interval="3" listener="#{loginManagedBean.pullNotification()}" update="newNotification" />
-                                </h:form>
+                                    <h:form id="newNotification">                                      
+                                        <c:forEach var="i" begin="0" end="#{loginManagedBean.notificationList.size()-1}">
+                                            <p:remoteCommand name="callbutton" actionListener="#{loginManagedBean.read}" />
+                                            <li class="list-group-item #{loginManagedBean.notificationList.get(i).isread}">
+                                                <a href="#{application.contextPath}#{loginManagedBean.notificationList.get(i).link}" onclick="callbutton([{name: 'nid', value: '#{loginManagedBean.notificationList.get(i).id}'}]);">
+                                                    <div class="m-body">
+                                                        <span class="pull-right #{loginManagedBean.notificationList.get(i).isread}-icon"></span>
+                                                        <small><strong><h6>#{loginManagedBean.notificationList.get(i).title}:</h6></strong></small>
+                                                        <span>#{loginManagedBean.notificationList.get(i).content}</span><br></br>
+                                                        <span class="small"><i class="fa fa-clock-o"></i> #{loginManagedBean.localDateTimeList.get(i).toLocalTime()}  #{loginManagedBean.localDateTimeList.get(i).toLocalDate()}</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </c:forEach>
+                                        <p:poll interval="3" listener="#{loginManagedBean.pullNotification()}" update="newNotification" />
+                                    </h:form>
                                 </ul>
                             </div>
                         </div>
@@ -212,22 +213,22 @@
 
                         <!-- inner content wrapper -->
                         <div class="wrapper">
-                            <c:if test="${flash.message.severity == 'ERROR 2'}">
+                            <p:outputPanel rendered="#{flash.message.severity == 'ERROR 2'}">
                                 <div class="alert alert-danger alert-dismissible" role="alert">
                                     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                     <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
                                 </div>
-                            </c:if>
-                            <c:if test="${flash.message.severity == 'INFO 0'}">
+                            </p:outputPanel>
+                            <p:outputPanel rendered="#{flash.message.severity == 'INFO 0'}">
                                 <div class="alert alert-success alert-dismissible" role="alert">
                                     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                     <strong><h:outputText value="#{flash.message.summary}" escape="false"/></strong>
                                 </div>
-                            </c:if>
+                            </p:outputPanel>
                             <ui:insert name="content" >Content</ui:insert>
-                        <h:form id="hiddenForm" style="display: none;"> 
-                            <h:commandButton id="hidden-logout" actionListener="#{dashManagedBean.logout}" /> 
-                        </h:form> 
+                            <h:form id="hiddenForm" style="display: none;"> 
+                                <h:commandButton id="hidden-logout" actionListener="#{dashManagedBean.logout}" /> 
+                            </h:form> 
                         </div>
                         <!-- /inner content wrapper -->
                     </div>
@@ -237,12 +238,12 @@
                 <!-- /main content -->
             </section>
         </div>
-        
+
         <!-- core scripts -->
 <!--        <script src="#{application.contextPath}/assets/plugins/jquery-1.11.1.min.js"></script>-->
         <script src="#{application.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="#{application.contextPath}/assets/plugins/jquery.slimscroll.min.js"></script>
-        
+
         <script src="#{application.contextPath}/assets/js/idletimer.js"></script>
         <!-- template scripts -->
         <script src="#{application.contextPath}/assets/js/offscreen.js"></script>
@@ -253,14 +254,14 @@
         <!-- trying out select2.js -->
         <script src="#{application.contextPath}/assets/plugins/select2/select2.js"></script>
         <script>
-            $(document).ready(function() {
-                $(".needauto").select2();
-            });
-            $( document ).idleTimer( 300000 );
-            $( document ).on( "idle.idleTimer", function(event, elem, obj){
-                document.getElementById("hiddenForm:hidden-logout").click(); 
-                alert("Logged out due to inactivity");
-            });
+                                                $(document).ready(function() {
+                                                    $(".needauto").select2();
+                                                });
+                                                $(document).idleTimer(300000);
+                                                $(document).on("idle.idleTimer", function(event, elem, obj) {
+                                                    document.getElementById("hiddenForm:hidden-logout").click();
+                                                    alert("Logged out due to inactivity");
+                                                });
         </script>
     </h:body>
 </html>

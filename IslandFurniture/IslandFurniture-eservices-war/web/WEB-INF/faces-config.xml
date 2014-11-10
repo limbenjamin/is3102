@@ -35,6 +35,16 @@
                     <value>#{productDetailManagedBean.id}</value>
                 </view-param>  
             </redirect> 
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>shoppinglistinvite</from-outcome>
+            <to-view-id>/shoppinglistinvite.xhtml</to-view-id>
+            <redirect include-view-params="true">  
+                <view-param>  
+                    <name>id</name>  
+                    <value>#{shoppingListInviteManagedBean.id}</value>
+                </view-param>  
+            </redirect> 
         </navigation-case>        
     </navigation-rule>
     <application>

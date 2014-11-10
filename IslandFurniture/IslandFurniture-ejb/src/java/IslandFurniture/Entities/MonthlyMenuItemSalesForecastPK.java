@@ -19,6 +19,16 @@ public class MonthlyMenuItemSalesForecastPK implements Serializable {
     private Integer year;
     private Long store;
     private Long menuItem;
+
+    public MonthlyMenuItemSalesForecastPK() {
+    }
+
+    public MonthlyMenuItemSalesForecastPK(Long menuItem, Long store, Month month, Integer year) {
+        this.menuItem = menuItem;
+        this.store = store;
+        this.month = month;
+        this.year = year;
+    }
     
     @Override
     public boolean equals(Object object) {

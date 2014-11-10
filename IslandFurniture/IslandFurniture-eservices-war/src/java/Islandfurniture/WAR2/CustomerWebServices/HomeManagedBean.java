@@ -21,8 +21,8 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.WebBanner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -30,7 +30,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.primefaces.model.DefaultStreamedContent;
@@ -42,7 +41,7 @@ import org.primefaces.model.StreamedContent;
  */
 @ManagedBean
 @ViewScoped
-public class HomeManagedBean {
+public class HomeManagedBean implements Serializable {
     
     private CountryOffice co;
     private List<WebBanner> webBanners;
