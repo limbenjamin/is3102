@@ -6,6 +6,7 @@
 
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageCustomerRedemptionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageCustomerTransactionsLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
@@ -19,6 +20,7 @@ import IslandFurniture.Entities.PromotionDetail;
 import IslandFurniture.Entities.PromotionDetailByProduct;
 import IslandFurniture.Entities.PromotionDetailByProductCategory;
 import IslandFurniture.Entities.PromotionDetailByProductSubCategory;
+import IslandFurniture.Entities.Redemption;
 import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
@@ -67,6 +69,7 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<FurnitureTransaction> furnitureTransactions;
     private List<RetailItemTransaction> retailTransactions;
     private List<RestaurantTransaction> restaurantTransactions;
+    private List<Redemption> redemptions;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -76,6 +79,8 @@ public class CustomerAccountManagedBean implements Serializable{
     private ManagePerksBeanLocal perksBean;
     @EJB
     private ManageCustomerTransactionsLocal transBean;
+    @EJB
+    private ManageCustomerRedemptionsLocal redeemBean;
     @EJB
     private ManageMembershipLocal membershipBean;
     
@@ -107,6 +112,7 @@ public class CustomerAccountManagedBean implements Serializable{
             furnitureTransactions = transBean.getFurnitureTransactions(customer);
             retailTransactions = transBean.getRetailTransactions(customer);
             restaurantTransactions = transBean.getRestaurantTransactions(customer);
+            redemptions = redeemBean.getRedemptions(customer);
             co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
         }
     }
@@ -205,6 +211,15 @@ public class CustomerAccountManagedBean implements Serializable{
                 new FacesMessage(FacesMessage.SEVERITY_INFO, alertBarStatus,""));
               ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
       }
+    }
+    
+    public Integer countClaimed() {
+        Integer claimed = 0;
+        for (Redemption r: redemptions) {
+            if (r.isClaimed())
+                claimed++;
+        }
+        return claimed;
     }
     
     public void removeAccount() throws WrongPasswordException, IOException{
@@ -379,5 +394,13 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setRestaurantTransactions(List<RestaurantTransaction> restaurantTransactions) {
         this.restaurantTransactions = restaurantTransactions;
+    }
+
+    public List<Redemption> getRedemptions() {
+        return redemptions;
+    }
+
+    public void setRedemptions(List<Redemption> redemptions) {
+        this.redemptions = redemptions;
     }
 }

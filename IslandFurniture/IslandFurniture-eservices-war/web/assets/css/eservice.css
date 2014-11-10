@@ -57,6 +57,14 @@
     padding: 10px;
 }
 
+.text-true {
+    color:#1aae88;
+}
+
+.text-false {
+    color:#FE980F;
+}
+
 hr{
     display:block;
     margin:1em 0;
