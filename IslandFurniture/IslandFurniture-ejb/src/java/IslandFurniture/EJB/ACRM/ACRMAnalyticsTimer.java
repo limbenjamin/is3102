@@ -183,7 +183,7 @@ public class ACRMAnalyticsTimer implements ACRMAnalyticsTimerLocal {
         cdate2.addWeek();
 
         //Calculate CLV value for all customers
-        Query clv = em.createQuery("select sum(t.grandTotal),t.member from Transaction t ORDER BY t.member GROUP BY t.member,FUNC('YEAR',t.transTime)");
+        Query clv = em.createQuery("select sum(t.grandTotal),t.member from Transaction t GROUP BY t.member,FUNC('YEAR',t.transTime) ORDER BY t.member DESC ");
         Double rev = 0.0;
         Long count = 0L;
 
