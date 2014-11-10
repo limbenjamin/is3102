@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -35,7 +34,7 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean(name = "reviewForecastManagedBean")
 @ViewScoped
-public class ReviewForecast implements Serializable {
+public class ReviewForecastManagedBean implements Serializable {
 
     @EJB
     private SalesForecastBeanLocal salesForecastBean;
@@ -46,10 +45,9 @@ public class ReviewForecast implements Serializable {
     private Staff staff;
     private CountryOffice co;
 
-    String panelActive = "0";
-    String statusMessage = "";
-
-    Future<Boolean> asyncResult;
+    private String panelActive = "0";
+    private String errorMessage = "";
+    private String successMessage = "";
 
     private List<Couple<String, String>> mssrLabels = new ArrayList();
     private List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> mssrPairedList;
@@ -58,6 +56,9 @@ public class ReviewForecast implements Serializable {
     public void init() {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
+
+        errorMessage = "";
+        successMessage = "";
 
         Plant plant = staff.getPlant();
 
@@ -83,7 +84,7 @@ public class ReviewForecast implements Serializable {
         for (StockSupplied ss : co.getSuppliedWithFrom()) {
             List<MonthlyStockSupplyReq> lockedMssrList = salesForecastBean.retrieveLockedMssrForCoStock(co, ss.getStock(), 6);
             List<MonthlyStockSupplyReq> unlockedMssrList = salesForecastBean.retrieveUnlockedMssrForCoStock(co, ss.getStock());
-            
+
             this.mssrPairedList.add(new Couple(ss.getStock(), new Couple(lockedMssrList, unlockedMssrList)));
         }
 
@@ -104,12 +105,12 @@ public class ReviewForecast implements Serializable {
             salesForecastBean.reviewMonthlyStockSupplyReq(coupleList, approved);
 
             if (approved) {
-                statusMessage = "Forecast approved.";
+                successMessage = "Forecast approved successfully";
             } else {
-                statusMessage = "Forecast rejected.";
+                errorMessage = "Forecast rejected successfully";
             }
         } catch (Exception ex) {
-            statusMessage = "Error reviewing forecast: " + ex.getMessage();
+            errorMessage = "Error reviewing forecast: " + ex.getMessage();
         }
     }
 
@@ -128,7 +129,7 @@ public class ReviewForecast implements Serializable {
     /**
      * Creates a new instance of CreateForecastManagedBean
      */
-    public ReviewForecast() {
+    public ReviewForecastManagedBean() {
     }
 
     public String getPanelActive() {
@@ -139,12 +140,20 @@ public class ReviewForecast implements Serializable {
         this.panelActive = panelActive;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getSuccessMessage() {
+        return successMessage;
+    }
+
+    public void setSuccessMessage(String successMessage) {
+        this.successMessage = successMessage;
     }
 
     public List<Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>>> getMssrPairedList() {

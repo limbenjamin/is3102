@@ -74,7 +74,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     if (i < listOfMssr.size() - (FORECAST_LOCKOUT_MONTHS + 1)) {
                         do {
                             eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(10) * 10 - 50);
-                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0);
+                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0 && eachMssr.getQtyForecasted() >= 0);
 
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
                     } else {
@@ -96,6 +96,12 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getVarianceOffset() - oldMssr.getPlannedInventory());
                     } else {
                         eachMssr.setQtyRequested(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory());
+                    }
+
+                    // Not to allow negative Quantities requested
+                    if (eachMssr.getQtyRequested() < 0) {
+                        eachMssr.setQtyForecasted(eachMssr.getQtyForecasted() + (-1 * eachMssr.getQtyRequested()));
+                        eachMssr.setQtyRequested(0);
                     }
 
                     eachMssr.setStatus(MssrStatus.APPROVED);
@@ -133,6 +139,12 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                         mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset() - oldMssr.getPlannedInventory());
                     } else {
                         mssr.setQtyRequested(mssr.getQtyForecasted() + mssr.getPlannedInventory() - mssr.getVarianceOffset());
+                    }
+
+                    // Don't allow qtyRequested to drop into negative
+                    if (mssr.getQtyRequested() < 0) {
+                        mssr.setQtyForecasted(mssr.getQtyForecasted() + (-1 * mssr.getQtyRequested()));
+                        mssr.setQtyRequested(0);
                     }
 
                     if (mssr.getStatus() != null && mssr.getStatus().equals(MssrStatus.NONE)) {
@@ -176,7 +188,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
 
                     System.out.println(eachMmsf);
                 }
-                
+
                 // Remove the quantity sold for demonstration
                 Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.MAR, 2014);
                 listOfMmsf = foodForecastBean.retrieveMmsfForStoreMi(eachStore, mi, Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));

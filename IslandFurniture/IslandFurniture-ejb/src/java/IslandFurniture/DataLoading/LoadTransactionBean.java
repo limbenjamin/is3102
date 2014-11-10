@@ -139,7 +139,7 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
             Calendar cal = Calendar.getInstance();
             Calendar curr;
 
-            Random rand = new Random(2); // Seed to ensure always same sample transactions
+            Random rand = new Random(1); // Seed to ensure always same sample transactions
 
             List<FurnitureTransactionDetail> fTransDetails = new ArrayList();
             List<RetailItemTransactionDetail> riTransDetails = new ArrayList();
@@ -169,29 +169,42 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                     restTransDetails.clear();
 
                     // Type of staging
-                    int type = rand.nextInt(3);
-                    track[type]++;
+                    int grp1 = rand.nextInt(2);
+                    track[0] += grp1;
+                    int grp2 = rand.nextInt(2);
+                    track[1] += grp2;
+                    
+                    boolean added = false;
 
                     if (!eachStore.getCountryOffice().getSuppliedWithFrom().isEmpty()) {
                         for (StockSupplied ss : eachStore.getCountryOffice().getSuppliedWithFrom()) {
                             // Bias product pairing logic
-                            if (ss.getStock().equals(studyTable) && type == 0) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                            } else if (ss.getStock().equals(swivelChair) && type == 0) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                            } else if (ss.getStock().equals(lamp) && type == 1) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                            } else if (ss.getStock().equals(bedFrame) && type == 1) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                            } else if (ss.getStock().equals(nightStand) && type == 1) {
-                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
-                            } else if (rand.nextDouble() < 0.35) {
-                                // Equal chance item logic
+                            if (ss.getStock().equals(studyTable) && grp1 == 1) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
+                                added = true;
+                            } else if (ss.getStock().equals(swivelChair) && grp1 == 1) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
+                                added = true;
+                            }
+
+                            if (ss.getStock().equals(lamp) && grp2 == 1) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
+                                added = true;
+                            } else if (ss.getStock().equals(bedFrame) && grp2 == 1) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
+                                added = true;
+                            } else if (ss.getStock().equals(nightStand) && grp2 == 1) {
+                                fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
+                                added = true;
+                            }
+
+                            // Equal chance item logic
+                            if (!added && rand.nextDouble() < 0.35) {
 
                                 if (ss.getStock() instanceof FurnitureModel) {
-                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(10) + 1));
+                                    fTransDetails.add(this.addFurnitureTransactionDetail((FurnitureModel) ss.getStock(), rand.nextInt(30) + 1));
                                 } else if (ss.getStock() instanceof RetailItem) {
-                                    riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(10) + 1));
+                                    riTransDetails.add(this.addRetailItemTransactionDetail((RetailItem) ss.getStock(), rand.nextInt(30) + 1));
                                 }
                             }
                         }
@@ -254,10 +267,10 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
                             }
                         }
                     }
-                    
+
                     for (MenuItem mi : eachStore.getCountryOffice().getMenuItems()) {
                         if (rand.nextBoolean()) {
-                            restTransDetails.add(this.addRestaurantTransactionDetail(mi, rand.nextInt(10) + 1));
+                            restTransDetails.add(this.addRestaurantTransactionDetail(mi, rand.nextInt(30) + 2));
                         }
                     }
 
