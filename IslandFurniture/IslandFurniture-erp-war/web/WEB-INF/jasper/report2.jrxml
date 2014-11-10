@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="248636f9-e195-4938-87d5-3d7879ac1eba">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     stock.`ID` AS stock_ID,
+     stock.`DTYPE` AS stock_DTYPE,
+     stock.`NAME` AS stock_NAME,
+     storefrontinventory.`MAXQTY` AS storefrontinventory_MAXQTY,
+     storefrontinventory.`QTY` AS storefrontinventory_QTY,
+     storefrontinventory.`REPQTY` AS storefrontinventory_REPQTY,
+     storefrontinventory.`LOCATIONINSTORE_ID` AS storefrontinventory_LOCATIONINSTORE_ID,
+     storefrontinventory.`STOCK_ID` AS storefrontinventory_STOCK_ID,
+     storefrontinventory.`STORE_ID` AS storefrontinventory_STORE_ID,
+     storesection.`ID` AS storesection_ID,
+     storesection.`DESCRIPTION` AS storesection_DESCRIPTION,
+     storesection.`NAME` AS storesection_NAME,
+     storesection.`STORELEVEL` AS storesection_STORELEVEL,
+     storesection.`STORE_ID` AS storesection_STORE_ID
+FROM
+     `stock` stock INNER JOIN `storefrontinventory` storefrontinventory ON stock.`ID` = storefrontinventory.`STOCK_ID`
+     INNER JOIN `storesection` storesection ON storefrontinventory.`LOCATIONINSTORE_ID` = storesection.`ID`]]>
+	</queryString>
+	<field name="stock_ID" class="java.lang.Long"/>
+	<field name="stock_DTYPE" class="java.lang.String"/>
+	<field name="stock_NAME" class="java.lang.String"/>
+	<field name="storefrontinventory_MAXQTY" class="java.lang.Integer"/>
+	<field name="storefrontinventory_QTY" class="java.lang.Integer"/>
+	<field name="storefrontinventory_REPQTY" class="java.lang.Integer"/>
+	<field name="storefrontinventory_LOCATIONINSTORE_ID" class="java.lang.Long"/>
+	<field name="storefrontinventory_STOCK_ID" class="java.lang.Long"/>
+	<field name="storefrontinventory_STORE_ID" class="java.lang.Long"/>
+	<field name="storesection_ID" class="java.lang.Long"/>
+	<field name="storesection_DESCRIPTION" class="java.lang.String"/>
+	<field name="storesection_NAME" class="java.lang.String"/>
+	<field name="storesection_STORELEVEL" class="java.lang.Integer"/>
+	<field name="storesection_STORE_ID" class="java.lang.Long"/>
+	<group name="StoreSection">
+		<groupExpression><![CDATA[$F{storesection_NAME}]]></groupExpression>
+		<groupHeader>
+			<band height="32"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

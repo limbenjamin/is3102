@@ -14,6 +14,9 @@ import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientPurchaseOrder;
+import IslandFurniture.Entities.IngredientPurchaseOrderDetail;
+import IslandFurniture.Entities.Store;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -43,9 +46,11 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
     private Long ingredientId;
     private Integer quantity;
     private Long id;
+    private Long purchaseOrderId;
 
     private List<Ingredient> ingredientList;
     private List<IngredientGoodsReceiptDocumentDetail> ingredientGoodsReceiptDetailList;
+    private List<IngredientPurchaseOrder> purchaseOrderList;
 
     private String username;
     private String dateString;
@@ -81,6 +86,8 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
         } catch (Exception e) {
             id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
         }
+        
+        purchaseOrderList = receiptBean.viewIngredientPurchaseOrder((Store) plant);
         ingredientGoodsReceipt = receiptBean.getIngredientGoodsReceiptDocument(id);
         ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
         ingredientList = ingredientInventoryBean.viewIngredient(plant);
@@ -110,6 +117,23 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
         cal.setTime(date);
         Calendar calDate = cal;
         return calDate;
+    }
+    
+//  Function: To create Ingredient Goods Receipt Document Detail from Purchase Order    
+    public void addGoodsReceiptDocumentDetailFromPO(ActionEvent event) throws IOException {
+        HttpSession session = Util.getSession();
+        id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
+        Long purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
+        IngredientPurchaseOrder purchaseOrder = receiptBean.getPurchaseOrder(purchaseOrderId);
+
+        for (IngredientPurchaseOrderDetail p : receiptBean.viewPurchaseOrderDetail(purchaseOrder)) {
+            receiptBean.createIngredientGoodsReceiptDocumentDetail(staff, getCalendar(), ingredientGoodsReceipt, p.getIngredient(), p.getQuantity());
+        }
+        
+        receiptBean.setGoodsReceiptDocumentToThePurchaseOrder(ingredientGoodsReceipt, purchaseOrder, getCalendar());
+        ingredientGoodsReceiptDetailList = receiptBean.viewIngredientGooodsReceiptDocumentDetail(ingredientGoodsReceipt);
     }
 
 //  Function: To create a Ingredient Goods Receipt Detail (Request)
@@ -155,6 +179,22 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
         receiptBean.postIngredientGoodsReceiptDocument(staff, getCalendar(), ingredientGoodsReceipt);
+    }
+
+    public Long getPurchaseOrderId() {
+        return purchaseOrderId;
+    }
+
+    public void setPurchaseOrderId(Long purchaseOrderId) {
+        this.purchaseOrderId = purchaseOrderId;
+    }
+    
+    public List<IngredientPurchaseOrder> getPurchaseOrderList() {
+        return purchaseOrderList;
+    }
+
+    public void setPurchaseOrderList(List<IngredientPurchaseOrder> purchaseOrderList) {
+        this.purchaseOrderList = purchaseOrderList;
     }
 
     public Long getIngredientId() {

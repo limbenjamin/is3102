@@ -10,6 +10,7 @@ import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
 import IslandFurniture.Entities.IngredientPurchaseOrder;
+import IslandFurniture.Entities.IngredientPurchaseOrderDetail;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
 import java.util.Calendar;
@@ -50,8 +51,14 @@ public interface ManageIngredientGoodsReceiptLocal {
     //  Function: Return IngredientGoodsReceiptDocument entity
     IngredientGoodsReceiptDocument getIngredientGoodsReceiptDocument(Long id);
 
+    //  Function: To get the Purchase Order entity from Id
+    IngredientPurchaseOrder getPurchaseOrder(Long id);
+
     // Function: Post Ingredient Goods Receipt Document
     void postIngredientGoodsReceiptDocument(Staff staff, Calendar time, IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument);
+
+    //  @Need to check --  Function: To set the Goods Receipt Document to the Purchase Order
+    void setGoodsReceiptDocumentToThePurchaseOrder(IngredientGoodsReceiptDocument goodsReceiptDocument, IngredientPurchaseOrder po, Calendar date);
 
     //  Function: View list of Ingredient
     List<Ingredient> viewIngredient();
@@ -64,5 +71,8 @@ public interface ManageIngredientGoodsReceiptLocal {
 
     //  Function: View list of Ingredient Purchase Order
     List<IngredientPurchaseOrder> viewIngredientPurchaseOrder(Store store);
+
+    //  Function: To return list the Purchase Order Details of a Purchase Order which will be used to create Goods Receipt Document Details
+    List<IngredientPurchaseOrderDetail> viewPurchaseOrderDetail(IngredientPurchaseOrder po);
     
 }
