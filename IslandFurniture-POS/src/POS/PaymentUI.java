@@ -168,8 +168,6 @@ public class PaymentUI extends javax.swing.JFrame {
         finishButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1366, 720));
-        setPreferredSize(new java.awt.Dimension(1366, 720));
 
         welcomeLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         welcomeLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/islandfurniture.png"))); // NOI18N
@@ -367,23 +365,27 @@ public class PaymentUI extends javax.swing.JFrame {
                     .addComponent(receiptCredit))
                 .addGap(18, 18, 18)
                 .addComponent(doneButton)
-                .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cashButton)
-                    .addComponent(creditCardButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cashCreditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(payButton))
-                .addGap(18, 18, 18)
-                .addComponent(grandTotalLabel)
-                .addGap(18, 18, 18)
-                .addComponent(payableLabel)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeDueLabel)
-                    .addComponent(finishButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cashButton)
+                            .addComponent(creditCardButton))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cashCreditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(payButton))
+                        .addGap(18, 18, 18)
+                        .addComponent(grandTotalLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(payableLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(changeDueLabel)
+                        .addContainerGap(42, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(finishButton)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -412,6 +414,7 @@ public class PaymentUI extends javax.swing.JFrame {
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -427,6 +430,7 @@ public class PaymentUI extends javax.swing.JFrame {
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
+            store.setExtendedState(JFrame.MAXIMIZED_BOTH);
             store.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {
@@ -704,6 +708,7 @@ public class PaymentUI extends javax.swing.JFrame {
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         } catch (IOException ex) {

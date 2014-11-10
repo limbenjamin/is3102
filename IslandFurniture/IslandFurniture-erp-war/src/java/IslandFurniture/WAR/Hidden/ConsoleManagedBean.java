@@ -5,7 +5,6 @@
  */
 package IslandFurniture.WAR.Hidden;
 
-import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimer;
 import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimerLocal;
 import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
 import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
@@ -31,7 +30,6 @@ public class ConsoleManagedBean implements Serializable {
 
     @EJB
     private ACRMAnalyticsTimerLocal acrmatom;
-    
 
     private String statusMessage;
 
@@ -43,6 +41,11 @@ public class ConsoleManagedBean implements Serializable {
     public void startACRMUpdates(AjaxBehaviorEvent event) {
         acrmatom.setAdvancePeriod(1);
         statusMessage = "ACRM ENGINE STARTED ! Moving 6 months in advance";
+    }
+
+    public void startACRMTUpdates(AjaxBehaviorEvent event) {
+        acrmatom.setAdvancePeriodForACRMT(1);
+        statusMessage = "ACRM Transaction ENGINE STARTED ! Adding a week";
     }
 
     public void startMssrUpdates(AjaxBehaviorEvent event) {

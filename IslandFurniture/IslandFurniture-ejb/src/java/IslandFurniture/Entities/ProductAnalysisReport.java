@@ -97,4 +97,7 @@ public class ProductAnalysisReport implements Serializable {
         return "StorePeriodAnalysisDetail[ id=" + id + " ]";
     }
 
+    
+
+
 }
