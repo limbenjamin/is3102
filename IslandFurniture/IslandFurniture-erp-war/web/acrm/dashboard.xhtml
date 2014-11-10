@@ -18,8 +18,175 @@
                             <li class="active"><strong>Analytical CRM</strong></li>
                         </ol>                      
                     </div>                   
-                </div>                
+                </div>
+                <style type="text/css">
+                    .rot-neg-90 {
+                        -moz-transform:rotate(-270deg); 
+                        -moz-transform-origin: bottom left;
+                        -webkit-transform: rotate(-270deg);
+                        -webkit-transform-origin: bottom left;
+                        -o-transform: rotate(-270deg);
+                        -o-transform-origin:  bottom left;
+                        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+                    }
+                </style>
+                <p:tabView>
+                    <p:tab title="Business Intelligence">
+
+
+                        <!-- STart Dashboard-->
+                        <h:form>
+                            <p:panelGrid style="width:100%" id="dashboard">
+                                <p:row>
+                                    <p:column colspan="3" style="width:66%">
+                                        <p:outputLabel for="from" value="From:" />
+                                        <p:calendar id="from" value="#{companyRevenue.from.time}">
+                                            <p:ajax event="dateSelect" listener="${companyRevenue.refreshAreaModel()}" update="@([id$=dashboard])"/>
+                                        </p:calendar>
+                                        &nbsp;&nbsp;<b>Country:</b>
+                                        <p:selectOneMenu value="#{companyRevenue.country}" style="position:relative;top:11px">
+                                            <p:ajax event="change" update="@([id$=dashboard])" listener="${companyRevenue.countrychangelisten}"></p:ajax>
+                                            <f:selectItems value="#{companyRevenue.countryOptions}">
+                                            </f:selectItems>
+                                        </p:selectOneMenu>
+                                        &nbsp;&nbsp;<b>Product:</b>
+                                        <p:selectOneMenu value="#{companyRevenue.product}" style="position:relative;top:11px">
+                                            <p:ajax event="change" update="@([id$=dashboard])" listener="${companyRevenue.productchangelisten}"></p:ajax>
+                                            <f:selectItems value="#{companyRevenue.productoptions}">
+                                            </f:selectItems>
+                                        </p:selectOneMenu>
+
+
+                                    </p:column>
+
+                                    <p:column style="width:33%" colspan="1">
+                                        <div style="float:right">
+                                            <p:outputLabel for="to" value="TO:" />
+                                            <p:calendar id="to" value="#{companyRevenue.to.time}">
+                                                <p:ajax event="dateSelect" listener="${companyRevenue.refreshAreaModel()}" update="@([id$=dashboard])"/>
+                                            </p:calendar>
+                                        </div>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="4" style="height:10px;background-color:none;">
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{companyRevenue.nonHQmode==false}">
+                                    <p:column colspan="1" style="width:2%;height:300px">
+                                        <span class="rot-neg-90" style="font-weight:bold">Global Level Analysis</span>
+                                    </p:column>
+                                    <p:column colspan="2" style="width:66%;">
+                                        <p:chart type="bar" model="#{companyRevenue.areaModel}"  id="co_chart">
+                                            <p:ajax event="itemSelect" listener="#{companyRevenue.toggleCountry}" update="@([id$=dashboard])" />
+                                        </p:chart>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart type="donut" model="#{companyRevenue.aggregatedCountryBreakdown}" style="height:300px;" id="cod_chart">
+                                        </p:chart>
+                                    </p:column>
+
+
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="1" style="width:2%;height:300px">
+                                        <span class="rot-neg-90" style="font-weight:bold">Country Level Analysis</span>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart1" type="donut" model="#{companyRevenue.storeBreakdown}" style="height:300px" rendered="${companyRevenue.storeBreakdown!=null}">
+                                        </p:chart>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart2" type="pie" model="#{companyRevenue.storeBreakdownAggregated}" style="height:300px"  rendered="${companyRevenue.storeBreakdownAggregated!=null}">
+                                        </p:chart>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart3" type="bubble" model="#{companyRevenue.cnproductAnalysisChart}" style="height:300px"  rendered="${companyRevenue.cnproductAnalysisChart!=null}">
+                                            <p:ajax event="itemSelect" listener="#{companyRevenue.toogleProduct}" update="@([id$=dashboard])" />
+                                        </p:chart>
+                                    </p:column>
+
+                                </p:row>
+
+                                <p:row>
+                                    <p:column colspan="1" style="width:2%;height:300px">
+                                        <span class="rot-neg-90" style="font-weight:bold">Country Level Analysis</span>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart4" type="pie" model="#{companyRevenue.countryAggregatedMembershiptier_instance}" style="height:300px" rendered="#{companyRevenue.countryAggregatedMembershiptier_instance!=null}"></p:chart>
+
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart5" type="pie" model="#{companyRevenue.countryAggregatedMembershiptier}" style="height:300px" rendered="#{companyRevenue.countryAggregatedMembershiptier!=null}"></p:chart>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <p:chart id="chart6" type="bubble" model="#{companyRevenue.cnproductAnalysisChart_instance}" style="height:300px"  rendered="${companyRevenue.cnproductAnalysisChart_instance!=null}">
+                                            <p:ajax event="itemSelect" listener="#{companyRevenue.toogleProduct2}" update="@([id$=dashboard])" />
+
+                                        </p:chart>
+                                    </p:column>
+
+                                </p:row>
+
+                                <p:row>
+                                    <p:column colspan="1" style="width:2%;height:300px">
+                                        <span class="rot-neg-90" style="font-weight:bold">Country/Product Level Analysis</span>
+                                    </p:column>
+                                    <p:column colspan="2" style="width:33%">
+                                        <p:chart type="bar" id="chart7" model="#{companyRevenue.product_time_Series}" style="height:300px" rendered="#{companyRevenue.product_time_Series!=null}"/>
+                                    </p:column>
+                                    <p:column colspan="1" style="width:33%">
+                                        <h4>Market Basket Analysis: Similar to <h:outputLabel value="#{companyRevenue.product}" rendered="#{companyRevenue.product!=null}"></h:outputLabel></h4>
+                                        <p:dataTable value="#{companyRevenue.related_Products}" var="row" rendered="#{companyRevenue.product!=null}">
+                                            <p:column>
+                                                <h:outputLabel value="#{row}"></h:outputLabel>
+                                            </p:column>
+
+
+                                        </p:dataTable>
+
+                                    </p:column>
+
+                                </p:row>
+
+
+                            </p:panelGrid>
+                        </h:form>
+                        <!-- End Dashboard-->
+                    </p:tab>
+                    <p:tab title="Customer CLV" id="CLV">
+                        <h3>Select Country</h3>
+                        <p:selectOneMenu style="position:relative;top:11px">
+                            <p:ajax event="change" update="@([id$=CLV])" listener="${companyRevenue.customerchangelisten}"></p:ajax>
+                            <f:selectItems value="#{companyRevenue.countryOptions}">
+                            </f:selectItems>
+                        </p:selectOneMenu>
+                        <br/>
+                        <br/>
+                        <br/>
+
+                        <p:dataTable value="#{companyRevenue.customers}" var="row" style="width:100%">
+                            <p:column headerText="Name" sortBy="${row.name}" style="text-align: center">
+                                <h:outputText value="${row.name}"/>                                
+                            </p:column>
+                            <p:column headerText="Membership Tier" style="text-align: center">
+                                <h:outputText value="${row.membershipTier.title}"/>                                
+                            </p:column>
+                            <p:column headerText="Life Time Value" sortBy="${row.lifetimeVal}" style="text-align: center">
+                                <h:outputText value="${row.lifetimeVal}">
+                                    <f:convertNumber currencySymbol="$" type="currency" />
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:tab>
+                </p:tabView>
+
+
             </ui:define>
         </ui:composition>
+
     </h:body>
 </html>

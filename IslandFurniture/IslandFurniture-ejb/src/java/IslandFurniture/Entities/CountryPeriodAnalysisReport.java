@@ -50,11 +50,17 @@ public class CountryPeriodAnalysisReport implements Serializable {
     }
 
     public Double getTotalRevenue() {
-        return totalRevenue;
+        Double ttotalrevenue=0.0;
+        for (StorePeriodAnalysisReport spar : this.getStorePeriodAnalysisReports()){
+            ttotalrevenue+=spar.getTotalRevenue();
+        }
+        
+        
+        return ttotalrevenue;
     }
 
     public void setTotalRevenue(Double totalRevenue) {
-        this.totalRevenue = totalRevenue;
+        //this.totalRevenue = totalRevenue;
     }
 
     public CountryOffice getCountryOffice() {

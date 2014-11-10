@@ -6,10 +6,12 @@
 package IslandFurniture.DataLoading;
 
 import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimerLocal;
+import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
 import IslandFurniture.Entities.FurnitureTransaction;
 import IslandFurniture.Entities.FurnitureTransactionDetail;
+import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
@@ -38,6 +40,9 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
     @EJB
     private ACRMAnalyticsTimerLocal aCRMAnalyticsTimer;
+    
+    @EJB
+    private ManageMembershipLocal mmsl;
 
     @PersistenceContext(unitName = "IslandFurniture")
     private EntityManager em;
@@ -293,10 +298,21 @@ public class LoadTransactionBean implements LoadTransactionBeanRemote {
 
                 em.flush();
             }
+            
+            //Promote members since they have points already
+            
+            for (Customer c: customers)
+            {
+                mmsl.promoteCustomer(c);
+            }
+            
+            
 
             // Advance Analytics Timer
             System.out.println(track[0] + " | " + track[1] + " | " + track[2]);
             aCRMAnalyticsTimer.setAdvancePeriod(1);
+            aCRMAnalyticsTimer.setAdvancePeriodForACRMT(1);
+            
 
             return true;
         } catch (Exception ex) {
