@@ -41,6 +41,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -59,6 +60,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private Long supplierId;
     private Long procuredStockId;
     private Long plantId;
+    private Long selectedStockID;
 
     private Calendar orderDate;
     private PurchaseOrderStatus status;
@@ -75,6 +77,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private String orderDateString;
     private int quantity;
     private int numberOfLots;
+    private int selectedLotSize = 0;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
@@ -191,6 +194,13 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void updateLotSize(AjaxBehaviorEvent event) {
+        for (ProcuredStockPurchaseOrderDetail pod: purchaseOrderDetailList) {
+            if (pod.getProcuredStock().getId().equals(this.selectedStockID))
+                this.selectedLotSize = getStockLotSize(pod.getProcuredStock());
+        }
+    }    
 
     public ManufacturingFacility getMf() {
         return mf;
@@ -374,6 +384,22 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
     public void setSml(SupplierManagerLocal sml) {
         this.sml = sml;
+    }
+
+    public int getSelectedLotSize() {
+        return selectedLotSize;
+    }
+
+    public void setSelectedLotSize(int selectedLotSize) {
+        this.selectedLotSize = selectedLotSize;
+    }
+
+    public Long getSelectedStockID() {
+        return selectedStockID;
+    }
+
+    public void setSelectedStockID(Long selectedStockID) {
+        this.selectedStockID = selectedStockID;
     }
 
 }
