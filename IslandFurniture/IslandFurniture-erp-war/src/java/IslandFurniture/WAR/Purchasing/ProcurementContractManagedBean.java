@@ -25,6 +25,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -109,8 +110,6 @@ public class ProcurementContractManagedBean implements Serializable {
                     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                     ec.redirect("supplier.xhtml");
             } else { 
-                System.out.println("SupplierID is " + supplierID);
-
                 supplier = supplierManager.getSupplier(supplierID);
                 supplierList = supplierManager.displaySupplierList();
                 stockList = supplierManager.displayProcuredStock();
@@ -170,10 +169,9 @@ public class ProcurementContractManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementcontract";
     }
-    public String editProcurementContractDetail(ActionEvent event) throws IOException { 
+    public String editProcurementContractDetail() throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()"); 
-        pcd = (ProcuredStockContractDetail) event.getComponent().getAttributes().get("toEdit"); 
-        System.out.println("toEdit: Currency is " + pcd.getCurrency().getName());
+        System.out.println("Currency is " + pcd.getCurrency().getName());
         String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), Long.parseLong(pcd.getCurrency().getName()));  
         if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -185,5 +183,14 @@ public class ProcurementContractManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementcontract";
     }
-    
+    public void viewPCD(AjaxBehaviorEvent event) {
+        System.out.println("ProcurementContractManagedBean.viewPCD()"); 
+        Long pcdID = (Long) event.getComponent().getAttributes().get("pcdID");
+        for(ProcuredStockContractDetail pcd : detailList) {
+            if(pcd.getId().equals(pcdID)) {
+                this.pcd = pcd;
+                break;
+            }
+        }
+    }
 }

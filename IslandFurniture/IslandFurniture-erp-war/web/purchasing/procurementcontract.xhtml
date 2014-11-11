@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" 
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
 
     <h:body>
         <ui:composition template="../template.xhtml"> 
@@ -19,21 +19,21 @@
                             <li class="active"><strong>#{procurementContractManagedBean.supplier.name} Procurement Contract</strong></li>
                         </ol>                        
                     </div>                    
-                    <div class="col-md-12">                        
+                    <div class="col-md-10">                        
                         <span class="pull-right">
                             <a href="supplier.xhtml">
-                            <button type="button" class="btn btn-sm btn-default">
-                                <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
-                            </button>
+                                <button type="button" class="btn btn-sm btn-default">
+                                    <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                                </button>
                             </a>                            
                             <button type="button" class="btn btn-sm btn-success btn-right-margin" data-toggle="modal" data-target="#newPCD">
                                 <i class="fa fa-fw fa-plus"></i>New Procurement Contract Detail
                             </button>                            
                         </span>
                         <h4><strong>#{procurementContractManagedBean.supplier.name}</strong>
-                         | Procurement Contract</h4><hr></hr>   
+                            | Procurement Contract</h4><hr></hr>   
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-10">
                         <div class="panel-heading dashboard-title-panel">
                             Edit Procurement Contract details for #{procurementContractManagedBean.supplier.name}
                         </div>
@@ -42,11 +42,7 @@
                                 <tr>
                                     <th>Stock Supplied</th>
                                     <th>Manufacturing Facility</th>
-                                    <th>Currency</th>
-                                    <th>Lot Price</th>
-                                    <th>Lot Size</th>
-                                    <th>Lead Time (Days)</th>
-                                    <th>Update</th>
+                                    <th>Details</th>
                                     <th>Delete</th>
                                 </tr>
                                 <h:form class="form-horizontal" id="pcdForm">
@@ -59,34 +55,13 @@
                                                 <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
                                             </td> 
                                             <td>
-                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency}">
-                                                    <f:selectItem itemLabel="#{PCD.currency.name}" />
-                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
-                                                </h:selectOneMenu>
-                                            </td>
-                                            <td>
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="lotPrice" value="#{PCD.lotPrice}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="size" value="#{PCD.lotSize}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
-                                                    <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:attribute name="toEdit" value="#{PCD}" />
-                                                </h:commandButton>
-                                                <i class="fa fa-lg fa-save icon-button"></i>   
+                                                <a data-toggle="modal" data-target="#viewPCD">
+                                                    <h:commandButton class="btn btn-sm transparent-button" style="outline:0;">
+                                                        <f:ajax listener="#{procurementContractManagedBean.viewPCD}" render=":viewPCDForm:content" />
+                                                        <f:attribute name="pcdID" value="#{PCD.id}" />
+                                                    </h:commandButton>
+                                                    <i class="fa fa-search-plus icon-button"></i>
+                                                </a>
                                             </td>
                                             <td>
                                                 <h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
@@ -99,125 +74,134 @@
                                 </h:form>
                             </table>
                         </div>
-                        <div class="tab-content">
-                            <div class="tab-pane active">                        
-                                <section class="panel">
-                                    <h:form id="deletePCDForm" class="form-horizontal">
-                                        <p:dataTable value="#{procurementContractManagedBean.detailList}" var="PCD" id="PCDList"> 
-                                            <p:column headerText="Stock Supplied" sortBy="#{PCD.procuredStock.name}" style="width: 20%;">
-                                                <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
-                                            </p:column>
-                                            <p:column headerText="Manufacturing Facility" sortBy="#{PCD.supplierFor.name}" style="width: 20%;"> 
-                                                <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
-                                            </p:column> 
-                                            <p:column headerText="Currency" style="width: 12%;"> 
-                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency}">
-                                                    <f:selectItem itemLabel="#{PCD.currency.name}" />
-                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
-                                                </h:selectOneMenu>
-                                            </p:column>   
-                                            <p:column headerText="Lot Price" style="width: 12%;">
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="lotPrice" value="#{PCD.lotPrice}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </p:column>
-                                            <p:column headerText="Lot Size" style="width: 10%;">
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                    <h:inputText id="size" value="#{PCD.lotSize}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </p:column>
-                                            <p:column headerText="Lead Time(Days)" style="width: 10%;">
-                                                <div class="inner-addon left-addon">
-                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
-                                                    <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
-                                                </div>
-                                            </p:column>
-                                            <p:column headerText="Update" style="text-align: center; width: 8%;">
-                                                <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
-                                                    <f:attribute name="toEdit" value="#{PCD}" />
-                                                </h:commandButton>
-                                                <i class="fa fa-lg fa-save icon-button"></i>                                  
-                                            </p:column>
-                                            <p:column headerText="Delete" style="text-align: center; width: 8%;">
-                                                <h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                    <f:param name="pcdID" value="#{PCD.id}" />
-                                                </h:commandButton>     
-                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
-                                            </p:column>
-                                        </p:dataTable>
-                                    </h:form> 
-                                </section>
-                            </div>
-                        </div>
                     </div>  
-            <!-- Modal for New Procurement Contract Detail  -->
-            <div class="modal fade" id="newPCD" aria-hidden="true" name="createStorageArea">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Create New Procurement Contract Detail</h4>
-                  </div>
-                    <h:form id="addPCD" class="form-horizontal">
-                        <h:inputHidden id="supplierID" value="#{procurementContractManagedBean.supplierID}"></h:inputHidden>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Stock Name: </label>
-                            <div class="col-sm-8">
-                                <h:selectOneMenu id="stockID" class="form-control needauto" value="Select Stock" pt:required="required">
-                                    <f:selectItem itemLabel="Select Stock" noSelectionOption="true" />
-                                    <f:selectItems value="#{procurementContractManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
-                                </h:selectOneMenu>
+                </div>
+                <!-- Modal for New Procurement Contract Detail  -->
+                <div class="modal fade" id="newPCD" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Create New Procurement Contract Detail</h4>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Manufacturing Facility: </label>
-                            <div class="col-sm-8">
-                                <h:selectOneMenu id="mfID" class="form-control needauto" value="Select Manufacturing Facility" pt:required="required">
-                                    <f:selectItem itemLabel="Select Manufacturing Facility" noSelectionOption="true" /> 
-                                    <f:selectItems value="#{procurementContractManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Currency: </label>
-                            <div class="col-sm-8">
-                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="Select Currency" pt:required="required">
-                                    <f:selectItem itemLabel="Select Currency" noSelectionOption="true" /> 
-                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
-                                </h:selectOneMenu>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Lot Size: </label>
-                            <div class="col-sm-8">
-                                <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Lot Price: </label>
-                            <div class="col-sm-8">
-                                <h:inputText id="lotPrice" class="form-control" pt:required="required"></h:inputText>
-                            </div> 
-                        </div> 
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Lead Time(days): </label>
-                            <div class="col-sm-8">
-                                <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
-                            </div>
+                            <h:form id="addPCD" class="form-horizontal">
+                                <h:inputHidden id="supplierID" value="#{procurementContractManagedBean.supplierID}"></h:inputHidden>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Stock Name: </label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu id="stockID" class="form-control needauto" value="Select Stock" pt:required="required">
+                                                <f:selectItem itemLabel="Select Stock" noSelectionOption="true" />
+                                                <f:selectItems value="#{procurementContractManagedBean.stockList}" var="s" itemLabel="#{s.name}" itemValue="#{s.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Manufacturing Facility: </label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu id="mfID" class="form-control needauto" value="Select Manufacturing Facility" pt:required="required">
+                                                <f:selectItem itemLabel="Select Manufacturing Facility" noSelectionOption="true" /> 
+                                                <f:selectItems value="#{procurementContractManagedBean.mfList}" var="mf" itemLabel="#{mf.name}" itemValue="#{mf.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Currency: </label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu id="currencyID" class="form-control needauto" value="Select Currency" pt:required="required">
+                                                <f:selectItem itemLabel="Select Currency" noSelectionOption="true" /> 
+                                                <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Lot Size: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Lot Price: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText id="lotPrice" class="form-control" pt:required="required"></h:inputText>
+                                        </div> 
+                                    </div> 
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Lead Time(days): </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton action="#{procurementContractManagedBean.addProcurementContractDetail}" class="btn btn-success btn-round" value="Add Detail"></h:commandButton>
+                                </div>
+                            </h:form> 
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                        <h:commandButton action="#{procurementContractManagedBean.addProcurementContractDetail}" class="btn btn-success btn-round" value="Add Detail"></h:commandButton>
+                </div>  
+                <!-- Modal for View PCD -->
+                <div class="modal fade" id="viewPCD" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">View and Edit Contract Details</h4>
+                            </div>
+                            <h:form id="viewPCDForm" class="form-horizontal">
+                                <h:panelGroup id="content" class="modal-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Stock Name: </label>
+                                        <div class="col-sm-8">
+                                            <h:outputText value="#{procurementContractManagedBean.pcd.procuredStock.name}" class="form-control transparent-form"></h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Manufacturing Facility: </label>
+                                        <div class="col-sm-8">
+                                            <h:outputText value="#{procurementContractManagedBean.pcd.supplierFor.name}" class="form-control transparent-form"></h:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Currency: </label>
+                                        <div class="col-sm-8">
+                                            <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{procurementContractManagedBean.pcd.currency}">
+                                                <f:selectItem itemLabel="#{PCD.currency.name}" />
+                                                <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Lot Price: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText value="#{procurementContractManagedBean.pcd.lotPrice}" class="form-control">
+                                                <f:convertNumber maxFractionDigits="2"/>
+                                            </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Lot Size: </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText value="#{procurementContractManagedBean.pcd.lotSize}" class="form-control"></h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Lead Time (Days): </label>
+                                        <div class="col-sm-8">
+                                            <h:inputText value="#{procurementContractManagedBean.pcd.leadTimeInDays}" class="form-control"></h:inputText>
+                                        </div>
+                                    </div> 
+                                </h:panelGroup>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
+                                    <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" action="#{procurementContractManagedBean.editProcurementContractDetail}" value="Update" class="btn btn-round btn-success">
+                                    </h:commandButton>
+                                </div>
+                            </h:form>
+                        </div>
                     </div>
-                    </h:form> 
-                </div>
-              </div>
-            </div>  
-                </div>
+                </div> 
             </ui:define>
         </ui:composition>
     </h:body>

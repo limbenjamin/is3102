@@ -137,7 +137,6 @@ public class SupplierManagedBean implements Serializable {
     public void pcActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", event.getComponent().getAttributes().get("sID"));
         supplierID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("supplierID");
-        System.out.println("While inside SupplierManagedBean, the supplierID is " + supplierID);
         FacesContext.getCurrentInstance().getExternalContext().redirect("procurementcontract.xhtml");
     }
     
