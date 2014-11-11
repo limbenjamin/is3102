@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 /**
@@ -19,6 +21,11 @@ import javax.persistence.OneToOne;
  * @author James
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "findWisrByYrMthWk",
+            query = "SELECT a FROM WeeklyIngredientSupplyReq a WHERE a.year=:year AND a.month = :month AND a.week = :week AND a.ingredient = :ingredient")
+})
 public class WeeklyIngredientSupplyReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +36,7 @@ public class WeeklyIngredientSupplyReq implements Serializable {
     private Month month;
     private Integer year;
     private Long qty;
+    private Long qtyToOrder;
 
     @ManyToOne
     private Ingredient ingredient;
@@ -81,6 +89,14 @@ public class WeeklyIngredientSupplyReq implements Serializable {
 
     public Ingredient getIngredient() {
         return ingredient;
+    }
+
+    public Long getQtyToOrder() {
+        return qtyToOrder;
+    }
+
+    public void setQtyToOrder(Long qtyToOrder) {
+        this.qtyToOrder = qtyToOrder;
     }
 
     public void setIngredient(Ingredient ingredient) {
