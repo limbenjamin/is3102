@@ -34,6 +34,71 @@
                          | Procurement Contract</h4><hr></hr>   
                     </div>
                     <div class="col-md-12">
+                        <div class="panel-heading dashboard-title-panel">
+                            Edit Procurement Contract details for #{procurementContractManagedBean.supplier.name}
+                        </div>
+                        <div class="list-group-item">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>Stock Supplied</th>
+                                    <th>Manufacturing Facility</th>
+                                    <th>Currency</th>
+                                    <th>Lot Price</th>
+                                    <th>Lot Size</th>
+                                    <th>Lead Time (Days)</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+                                </tr>
+                                <h:form class="form-horizontal" id="pcdForm">
+                                    <ui:repeat value="#{procurementContractManagedBean.detailList}" var="PCD" id="pcdList">
+                                        <tr>
+                                            <td>
+                                                <h:outputText id="stockName" value="#{PCD.procuredStock.name}" class="transparent-form"></h:outputText>
+                                            </td>
+                                            <td>
+                                                <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
+                                            </td> 
+                                            <td>
+                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency}">
+                                                    <f:selectItem itemLabel="#{PCD.currency.name}" />
+                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <td>
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="lotPrice" value="#{PCD.lotPrice}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                    <h:inputText id="size" value="#{PCD.lotSize}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="inner-addon left-addon">
+                                                    <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
+                                                    <h:inputText id="leadTime" value="#{PCD.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;">
+                                                    <f:attribute name="toEdit" value="#{PCD}" />
+                                                </h:commandButton>
+                                                <i class="fa fa-lg fa-save icon-button"></i>   
+                                            </td>
+                                            <td>
+                                                <h:commandButton action="#{procurementContractManagedBean.deleteProcurementContractDetail}" class="btn btn-sm transparent-button" style="outline:0;"> 
+                                                    <f:param name="pcdID" value="#{PCD.id}" />
+                                                </h:commandButton>     
+                                                <i class="fa fa-lg fa-trash-o icon-button"></i>     
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </h:form>
+                            </table>
+                        </div>
                         <div class="tab-content">
                             <div class="tab-pane active">                        
                                 <section class="panel">
@@ -46,9 +111,9 @@
                                                 <h:outputText id="MFName" value="#{PCD.supplierFor.name}"></h:outputText>
                                             </p:column> 
                                             <p:column headerText="Currency" style="width: 12%;"> 
-                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency.name}">
+                                                <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{PCD.currency}">
                                                     <f:selectItem itemLabel="#{PCD.currency.name}" />
-                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency.id}" />
+                                                    <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
                                                 </h:selectOneMenu>
                                             </p:column>   
                                             <p:column headerText="Lot Price" style="width: 12%;">
