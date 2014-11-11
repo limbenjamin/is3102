@@ -129,22 +129,35 @@ public class IngredPlannerWeekManagedBean implements Serializable {
         }
     }
 
-    public void resetWmsf(AjaxBehaviorEvent event){
+    public void resetWmsf(AjaxBehaviorEvent event) {
         foodForecastBean.resetWmsfList(wmsfPairedList);
         errorMessage = "";
         successMessage = "Default optimal figures loaded successfully";
     }
-    
-    public String datePeriod(int weekNo){
+
+    public String datePeriod(int weekNo) {
         String formatted = "";
         Calendar start = Helper.getStartDateOfWeek(month.value, year, weekNo);
-        formatted += start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) +1) + "/" + start.get(Calendar.YEAR);
+        formatted += start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) + 1) + "/" + start.get(Calendar.YEAR);
         formatted += " - ";
         start.add(Calendar.DAY_OF_MONTH, 7);
-        formatted += start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) +1) + "/" + start.get(Calendar.YEAR);
-        
+        formatted += start.get(Calendar.DAY_OF_MONTH) + "/" + (start.get(Calendar.MONTH) + 1) + "/" + start.get(Calendar.YEAR);
+
         return formatted;
     }
+
+    public void orderIngred() {
+        try {
+            foodForecastBean.saveWeeklyMenuItemSalesForecast(wmsfPairedList);
+            foodForecastBean.orderIngredients(this.wmsfPairedList, this.store, this.month, this.year, this.notNullWmsfList.size());
+            errorMessage = "";
+            successMessage = "Ingredients ordered successfully";
+        } catch (InvalidWmsfException ex) {
+            successMessage = "";
+            errorMessage = ex.getMessage();
+        }
+    }
+
     /**
      * Creates a new instance of IngredPlannerWeekManagedBean
      */

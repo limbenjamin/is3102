@@ -47,11 +47,11 @@ public class LoadKitchenDataBean implements LoadKitchenDataBeanRemote {
             ingredSupplier.setEmail(email);
             ingredSupplier.setName(name);
             ingredSupplier.setPhoneNumber(phoneNo);
-            
+
             IngredientContract ingredientContract = new IngredientContract();
             ingredientContract.setIngredSupplier(ingredSupplier);
             ingredientContract.setIngredContractDetails(new ArrayList<>());
-            
+
             ingredSupplier.setIngredContract(ingredientContract);
             em.persist(ingredSupplier);
         }
@@ -192,7 +192,7 @@ public class LoadKitchenDataBean implements LoadKitchenDataBeanRemote {
                 if (rand.nextBoolean()) {
                     ingred = this.addIngredient(eachCo, eachName);
                     ingredSupplier = ingredSupplierList.get(rand.nextInt(ingredSupplierList.size()));
-                    ingredSupplier.getIngredContract().getIngredContractDetails().add(this.addIngredContractDetail(ingredSupplier.getIngredContract(), ingred, rand.nextInt(6) * 50, rand.nextInt(51) + 50, rand.nextInt(7) + 5));
+                    ingredSupplier.getIngredContract().getIngredContractDetails().add(this.addIngredContractDetail(ingredSupplier.getIngredContract(), ingred, rand.nextInt(6) * 10 + 10, rand.nextInt(51) + 50, rand.nextInt(7) + 5));
                     for (Store eachStore : eachCo.getStores()) {
                         this.addIngredientInv(eachStore, ingred, rand.nextInt(50) + 10);
                     }

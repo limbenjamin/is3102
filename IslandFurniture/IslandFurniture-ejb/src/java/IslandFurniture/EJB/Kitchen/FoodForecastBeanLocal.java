@@ -37,6 +37,8 @@ public interface FoodForecastBeanLocal {
     
     boolean isWmsfListEditable(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList);
     
+    void orderIngredients(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList, Store store, Month month, int year, int numWeeks);
+    
     List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> resetWmsfList(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList);
     
     void reviewMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList, boolean approved) throws InvalidMmsfException;

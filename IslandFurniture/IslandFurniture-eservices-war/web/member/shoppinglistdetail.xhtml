@@ -9,15 +9,6 @@
 <h:body>    
     <ui:composition template="../template.xhtml">
         <ui:define name="content">
-        <div id="fb-root"></div>
-        <h:outputScript>
-        (function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0]; 
-          if (d.getElementById(id)) return; 
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.0";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</h:outputScript>
         <section>
             <div class="container">
                 <h:panelGroup layout="block" rendered="#{empty shoppingListDetailManagedBean.shoppingList.id}" style="height:410px;" styleClass="row">
@@ -59,8 +50,7 @@
                         </button>
                         <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#viewMembers">
                             <i class="fa fa-users"></i> View List Members
-                        </button>                        
-                        <div class="fb-share-button no-print" data-href="#{application.contextPath}#{shoppingListDetailManagedBean.coDir}/member/shoppinglistinvite.xhtml?id=#{shoppingListDetailManagedBean.shoppingList.idHash}" data-layout="button_count"></div>
+                        </button>
                         <hr/>
                     <div class="table-responsive list_info">
                         <table class="table table-condensed">
