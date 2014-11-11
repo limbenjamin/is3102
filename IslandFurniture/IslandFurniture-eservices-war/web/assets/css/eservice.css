@@ -8,8 +8,13 @@
 }
 
 .btn-theme {
+    color: #fff;
     background-color: #2c3e50;
     border-color: #2c3e50;
+}
+
+.btn-theme:hover {
+    color: #fff;
 }
 
 .transparent-button {
@@ -581,8 +586,13 @@ ul.sub-menu {
   margin-top: 23px;
 }
 
+.get:hover {
+    color:#fff;
+    background: #1aae88;
+}
+
 .item button:hover {
-  background: #2c3e50;
+  background: #1aae88;
 }
 
 .control-carousel {
