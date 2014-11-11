@@ -40,7 +40,7 @@ public class SupplierManagedBean implements Serializable {
     private Long supplierID;
     private ProcuredStockSupplier supplier;
     private List<Country> countryList;
-
+    
     public List<Country> getCountryList() {
         return countryList;
     }
@@ -106,6 +106,11 @@ public class SupplierManagedBean implements Serializable {
     public String editSupplier(ActionEvent event) throws IOException {
         System.out.println("SupplierManagedBean.editSupplier()"); 
         supplier = (ProcuredStockSupplier) event.getComponent().getAttributes().get("toEdit");
+        
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String c = (String) request.getParameter("editSupplierForm:updateCountry");
+        System.out.println("Country changed to " + c);
+        
         System.out.println("Supplier country is " + supplier.getCountry().getName());
         if(supplierManager.editSupplier(supplier.getId(), supplier.getName(), supplier.getCountry().getName(), supplier.getPhoneNumber(), supplier.getEmail())) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
@@ -129,10 +134,15 @@ public class SupplierManagedBean implements Serializable {
         }
         return "supplier";
     }
-    public void pcActionListener(ActionEvent event) throws IOException{
+    public void pcActionListener(ActionEvent event) throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", event.getComponent().getAttributes().get("sID"));
         supplierID = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("supplierID");
         System.out.println("While inside SupplierManagedBean, the supplierID is " + supplierID);
         FacesContext.getCurrentInstance().getExternalContext().redirect("procurementcontract.xhtml");
+    }
+    
+    public void updateCountry(ActionEvent event) {
+        String updateCountry = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("updateCountry");
+        System.out.println("Update Country is " + updateCountry); 
     }
 }
