@@ -427,7 +427,7 @@ public class StockManager implements StockManagerLocal,StockManagerRemote {
         }
     }
     @Override
-    public String addRetailItem(String itemName, Double itemPrice) {
+    public String addRetailItem(String itemName) {
         RetailItem item;
         try {
             System.out.println("StockManager.addRetailItem()");
@@ -435,8 +435,7 @@ public class StockManager implements StockManagerLocal,StockManagerRemote {
             if(item == null) {
                 item = new RetailItem();
                 item.setName(itemName);
-                item.setPrice(itemPrice);
-                em.persist(item);
+                em.persist(item); 
                 return null;
             } else {
                 System.out.println("Item " + itemName + " already exist. Unable to add.");

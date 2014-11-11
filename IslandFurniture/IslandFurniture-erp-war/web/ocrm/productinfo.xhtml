@@ -31,32 +31,37 @@
             <br/>
             <h:form rendered="#{productInfoManagedBean.product == null}" class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Search Product by ID: </label>            
-                    <div class="col-sm-2">
-                        <p:inputText value="#{productInfoManagedBean.stockId}" />
-                    </div>
-                    <div class="col-sm-2">
-                        <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductById}" value="Search" class="btn btn-primary" />
-                    </div>
+                    <label class="col-sm-3 control-label">Search Product by ID: </label>
+                        <div class="col-sm-4">                
+                            <div class="input-group">
+                              <h:inputText value="#{productInfoManagedBean.stockId}" class="form-control"/>
+                              <span class="input-group-btn">
+                                <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductById}" value="Search" class="btn btn-primary" />
+                              </span>
+                            </div>
+                        </div>
                 </div>
             </h:form>
             <h:form rendered="#{productInfoManagedBean.product == null}" class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Search Product by Name: </label>            
-                    <div class="col-sm-2">
-                        <p:inputText value="#{productInfoManagedBean.stockName}" />
-                    </div>
-                    <div class="col-sm-2">
-                        <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductByName}" value="Search" class="btn btn-primary" />
+                    <label class="col-sm-3 control-label">Search Product by Name: </label>            
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <h:inputText value="#{productInfoManagedBean.stockName}" class="form-control"/>
+                            <span class="input-group-btn">
+                                <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.searchProductByName}" value="Search" class="btn btn-primary" />                                
+                            </span>
+                        </div>
                     </div>
                 </div>
             </h:form>
+            <br/><br/>
             <h:form rendered="#{productInfoManagedBean.productList != null}" class="form-horizontal">
                 <div class="form-group">
-                    <p:dataTable value="#{productInfoManagedBean.productList}" var="product">
+                    <p:dataTable value="#{productInfoManagedBean.productList}" var="product" style="text-align: center;">
                         <p:column>
                             <f:facet name="header">Product ID</f:facet>
-                            <h:outputText value="#{product.id}" />
+                            <h:outputText value="#{product.id}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">Product Name</f:facet>
@@ -67,8 +72,9 @@
                             <h:outputText value="#{product.class.simpleName}" />
                         </p:column>
                         <p:column>
-                            <f:facet name="header">Select</f:facet>
-                            <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.setStockId(product.id)}" value="Select" class="btn btn-primary" />
+                            <f:facet name="header">View</f:facet>
+                            <h:commandButton action="productinfo.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{productInfoManagedBean.setStockId(product.id)}" class="btn btn-sm transparent-button" style="outline:0;" />
+                            <i class="fa fa-lg fa-search-plus icon-button"></i>
                         </p:column>
                     </p:dataTable>
                 </div>
@@ -76,47 +82,60 @@
             <p:outputPanel rendered="#{productInfoManagedBean.product != null}" styleClass="form-horizontal">
                 <div class="col-md-8">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Product ID: </label>
-                        <div class="col-sm-10">#{productInfoManagedBean.product.id}</div>
+                        <label class="col-sm-3 limit-gap">Product ID: </label>
+                        <div class="col-sm-9">#{productInfoManagedBean.product.id}</div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Name: </label>
-                        <div class="col-sm-10">#{productInfoManagedBean.product.name}</div>
+                        <label class="col-sm-3 limit-gap">Name: </label>
+                        <div class="col-sm-9">#{productInfoManagedBean.product.name}</div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Product Type: </label>
-                        <div class="col-sm-10">#{productInfoManagedBean.product.class.simpleName}</div>
+                        <label class="col-sm-3 limit-gap">Product Type: </label>
+                        <div class="col-sm-9">#{productInfoManagedBean.product.class.simpleName}</div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Description: </label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 limit-gap">Description: </label>
+                        <div class="col-sm-9">
                             <h:outputText rendered="#{productInfoManagedBean.furniture != null}" value="#{productInfoManagedBean.furniture.furnitureDescription}" />
                             <h:outputText rendered="#{productInfoManagedBean.retailItem != null}" value="#{productInfoManagedBean.retailItem.riDescription}" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Points Worth: </label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 limit-gap">Points Worth: </label>
+                        <div class="col-sm-9">
                             <h:outputText rendered="#{productInfoManagedBean.furniture != null}" value="#{productInfoManagedBean.furniture.pointsWorth}" />
                             <h:outputText rendered="#{productInfoManagedBean.retailItem != null}" value="#{productInfoManagedBean.retailItem.pointsWorth}" />
                         </div>
                     </div>
                     <p:outputPanel rendered="#{productInfoManagedBean.furniture != null}" styleClass="form-group">
-                        <label class="col-sm-2 control-label">Category: </label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 limit-gap">Category: </label>
+                        <div class="col-sm-9">
                             <h:outputText value="#{productInfoManagedBean.furniture.category}" />
                         </div>
                     </p:outputPanel>
                     <p:outputPanel rendered="#{productInfoManagedBean.furniture != null}" styleClass="form-group">
-                        <label class="col-sm-2 control-label">Subcategory: </label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 limit-gap">Subcategory: </label>
+                        <div class="col-sm-9">
                             <h:outputText value="#{productInfoManagedBean.furniture.subcategory}" />
                         </div>
                     </p:outputPanel>
+                </div>
+                <div class="col-md-4">
+                    <h:form class="form-horizontal">
+                        <h4>Product Thumbnail:</h4>
+                        <p:graphicImage rendered="#{productInfoManagedBean.furniture != null}" value="#{pictureManagedBean.image}" width="250">
+                            <f:param name="pictureId" value="#{productInfoManagedBean.furniture.thumbnail.id}" />
+                        </p:graphicImage>
+                        <p:graphicImage rendered="#{productInfoManagedBean.retailItem != null}" value="#{pictureManagedBean.image}" width="250">
+                            <f:param name="pictureId" value="#{productInfoManagedBean.retailItem.thumbnail.id}" />
+                        </p:graphicImage>
+                    </h:form>
+                </div>
+                <div class="col-md-12">
                     <br/>
                     <h4>Status of Product in Stores of #{productInfoManagedBean.co.name} Country Office</h4>
                     <hr/>
-                    <p:dataTable value="#{productInfoManagedBean.co.stores}" var="store">
+                    <p:dataTable value="#{productInfoManagedBean.co.stores}" var="store" style="text-align: center;">
                         <p:column>
                             <f:facet name="header">Store</f:facet>
                             <h:outputText value="#{store.name}" />
@@ -146,18 +165,7 @@
                             <f:facet name="header">Promo Campaign</f:facet>
                             <h:outputText value="#{productInfoManagedBean.findPromo(store)}" />
                         </p:column>
-                    </p:dataTable>
-                </div>
-                <div class="col-md-4">
-                    <h:form class="form-horizontal">
-                        <h4>Product Thumbnail:</h4>
-                        <p:graphicImage rendered="#{productInfoManagedBean.furniture != null}" value="#{pictureManagedBean.image}" width="250">
-                            <f:param name="pictureId" value="#{productInfoManagedBean.furniture.thumbnail.id}" />
-                        </p:graphicImage>
-                        <p:graphicImage rendered="#{productInfoManagedBean.retailItem != null}" value="#{pictureManagedBean.image}" width="250">
-                            <f:param name="pictureId" value="#{productInfoManagedBean.retailItem.thumbnail.id}" />
-                        </p:graphicImage>
-                    </h:form>
+                    </p:dataTable>                    
                 </div>
             </p:outputPanel>
         </div>
