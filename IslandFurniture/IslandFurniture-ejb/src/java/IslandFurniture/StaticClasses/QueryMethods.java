@@ -37,6 +37,7 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StorageArea;
 import IslandFurniture.Entities.StorageBin;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.WeeklyIngredientSupplyReq;
 import IslandFurniture.Entities.WeeklyMRPRecord;
 import IslandFurniture.Entities.WeeklyProductionPlan;
 import IslandFurniture.Enums.MenuType;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
 /**
@@ -378,6 +380,48 @@ public class QueryMethods {
         }
     }
 
+    public static WeeklyIngredientSupplyReq findOrMakePastWmsf(EntityManager em, WeeklyIngredientSupplyReq wisr, int weeksOffset) {
+        int year = wisr.getYear();
+        int month = wisr.getMonth().value;
+        int week = wisr.getWeek();
+
+        int weekOff = weeksOffset;
+        while (weekOff > 0) {
+            weekOff--;
+            week--;
+            if (week <= 0) {
+                week = Helper.getNumOfWeeks(month, year);
+                month--;
+                if (month < 0) {
+                    month = 11;
+                    year--;
+                }
+            }
+        }
+
+        Query q = em.createNamedQuery("findWisrByYrMthWk");
+        q.setParameter("ingredient", wisr.getIngredient());
+        q.setParameter("year", year);
+        q.setParameter("month", Month.getMonth(month));
+        q.setParameter("week", week);
+
+        try {
+            return (WeeklyIngredientSupplyReq) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            WeeklyIngredientSupplyReq pastWisr = new WeeklyIngredientSupplyReq();
+            pastWisr.setIngredient(wisr.getIngredient());
+            pastWisr.setStore(wisr.getStore());
+            pastWisr.setYear(year);
+            pastWisr.setMonth(Month.getMonth(month));
+            pastWisr.setWeek(week);
+            pastWisr.setQty((long)0);
+
+            return pastWisr;
+        } catch (NonUniqueResultException nurex){
+            return null;
+        }
+    }
+
     public static MonthlyStockSupplyReq findNextMssr(EntityManager em, MonthlyStockSupplyReq mssr, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mssr.getMonth(), mssr.getYear());
         cal.add(Calendar.MONTH, monthsOffset);
@@ -386,7 +430,7 @@ public class QueryMethods {
 
         return em.find(MonthlyStockSupplyReq.class, mssrPK);
     }
-    
+
     public static MonthlyMenuItemSalesForecast findNextMmsf(EntityManager em, MonthlyMenuItemSalesForecast mmsf, int monthsOffset) {
         Calendar cal = TimeMethods.getCalFromMonthYear(mmsf.getMonth(), mmsf.getYear());
         cal.add(Calendar.MONTH, monthsOffset);

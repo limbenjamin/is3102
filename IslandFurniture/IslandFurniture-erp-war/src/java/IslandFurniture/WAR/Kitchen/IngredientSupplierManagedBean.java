@@ -7,7 +7,7 @@
 package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Kitchen.IngredientSupplierManagerLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class IngredientSupplierManagedBean implements Serializable {
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote manageOrganizationalHierarchyBean;
+    private ManageOrganizationalHierarchyBeanLocal manageOrganizationalHierarchyBean;
     @EJB
     private IngredientSupplierManagerLocal supplierManager;
     @EJB

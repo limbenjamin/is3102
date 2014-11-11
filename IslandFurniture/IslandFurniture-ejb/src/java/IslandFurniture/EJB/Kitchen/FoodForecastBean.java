@@ -6,17 +6,27 @@
 package IslandFurniture.EJB.Kitchen;
 
 import IslandFurniture.DataStructures.Couple;
+import IslandFurniture.Entities.Dish;
+import IslandFurniture.Entities.Ingredient;
+import IslandFurniture.Entities.IngredientContractDetail;
+import IslandFurniture.Entities.IngredientPurchaseOrderDetail;
 import IslandFurniture.Entities.MenuItem;
+import IslandFurniture.Entities.MenuItemDetail;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecastPK;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
+import IslandFurniture.Entities.RecipeDetail;
 import IslandFurniture.Entities.RestaurantTransaction;
 import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.WeeklyIngredientSupplyReq;
+import IslandFurniture.Entities.WeeklyMenuItemSalesForecast;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Enums.MmsfStatus;
 import IslandFurniture.Exceptions.ForecastFailureException;
 import IslandFurniture.Exceptions.InvalidInputException;
 import IslandFurniture.Exceptions.InvalidMmsfException;
+import IslandFurniture.Exceptions.InvalidWmsfException;
+import IslandFurniture.StaticClasses.Helper;
 import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.SystemConstants.FOOD_FORECAST_LOCKOUT_MONTHS;
 import static IslandFurniture.StaticClasses.SystemConstants.FORECAST_DEFAULT_WEIGHT;
@@ -24,7 +34,9 @@ import static IslandFurniture.StaticClasses.SystemConstants.FORECAST_HORIZON;
 import IslandFurniture.StaticClasses.TimeMethods;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -198,7 +210,85 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
             throw new InvalidMmsfException("All forecast entries are either pending approval or have already been approved.");
         }
     }
-    
+
+    @Override
+    @TransactionAttribute(REQUIRED)
+    public void saveWeeklyMenuItemSalesForecast(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList) throws InvalidWmsfException {
+        Calendar lockoutCutoff;
+
+        for (Couple<MenuItem, List<WeeklyMenuItemSalesForecast>> wmsfList : miWmsfList) {
+            int sum = 0;
+
+            for (int i = 0; i < wmsfList.getSecond().size(); i++) {
+                WeeklyMenuItemSalesForecast wmsf = wmsfList.getSecond().get(i);
+                sum += wmsf.getQty();
+                if (i == wmsfList.getSecond().size() - 1 && sum != wmsf.getMmsf().getQtyForecasted()) {
+                    throw new InvalidWmsfException("The weekly quantities forecasted for " + wmsf.getMmsf().getMenuItem().getName() + " do not match up to the Monthly figure of " + wmsf.getMmsf().getQtyForecasted() + ". Please make necessary adjustments and try again.");
+                }
+            }
+
+            for (WeeklyMenuItemSalesForecast wmsf : wmsfList.getSecond()) {
+                lockoutCutoff = TimeMethods.getPlantCurrTime(wmsf.getMmsf().getStore());
+                lockoutCutoff.add(Calendar.MONTH, FOOD_FORECAST_LOCKOUT_MONTHS);
+
+                if (!wmsf.isLocked()) {
+                    if (wmsf.getQty() < 0) {
+                        throw new InvalidWmsfException("Invalid entry for " + wmsf.getMmsf().getMenuItem().getName() + ", Week " + wmsf.getWeekNo());
+                    }
+
+                    Calendar currMthYr = TimeMethods.getCalFromMonthYear(wmsf.getMmsf().getMonth(), wmsf.getMmsf().getYear());
+
+                    if (currMthYr.compareTo(lockoutCutoff) > 0) {
+                        em.merge(wmsf);
+                    } else {
+                        throw new InvalidWmsfException("This Weekly Menu Item Sales Forecast falls within the lockout period and cannot be edited.");
+                    }
+                } else {
+                    throw new InvalidWmsfException("This Weekly Menu Item Sales Forecast has already been locked and cannot be edited");
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> resetWmsfList(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList) {
+        for (Couple<MenuItem, List<WeeklyMenuItemSalesForecast>> couple : miWmsfList) {
+            if (couple.getSecond() != null) {
+                int totalReq = couple.getSecond().get(0).getMmsf().getQtyForecasted();
+                int numWeeks = couple.getSecond().size();
+                for (WeeklyMenuItemSalesForecast wmsf : couple.getSecond()) {
+                    wmsf.setQty(totalReq / numWeeks);
+                }
+                couple.getSecond().get(numWeeks - 1).setQty(totalReq - (numWeeks - 1) * (totalReq / numWeeks));
+            }
+        }
+
+        return miWmsfList;
+    }
+
+    @Override
+    public boolean isWmsfListEditable(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList) {
+        Calendar lockoutCutoff;
+
+        for (Couple<MenuItem, List<WeeklyMenuItemSalesForecast>> wmsfList : miWmsfList) {
+            for (WeeklyMenuItemSalesForecast wmsf : wmsfList.getSecond()) {
+                lockoutCutoff = TimeMethods.getPlantCurrTime(wmsf.getMmsf().getStore());
+                lockoutCutoff.add(Calendar.MONTH, FOOD_FORECAST_LOCKOUT_MONTHS);
+
+                if (wmsf.isLocked()) {
+                    return false;
+                }
+
+                Calendar currMthYr = TimeMethods.getCalFromMonthYear(wmsf.getMmsf().getMonth(), wmsf.getMmsf().getYear());
+                if (currMthYr.compareTo(lockoutCutoff) < 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     @Override
     @TransactionAttribute(REQUIRED)
     public void reviewMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList, boolean approved) throws InvalidMmsfException {
@@ -214,6 +304,7 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
                     if (mmsf.getStatus() == MmsfStatus.PENDING) {
                         if (approved == true) {
                             mmsf.setStatus(MmsfStatus.APPROVED);
+                            this.createWeeklyForecast(mmsf);
                         } else {
                             mmsf.setStatus(MmsfStatus.REJECTED);
                         }
@@ -229,6 +320,87 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
         if (!impacted) {
             throw new InvalidMmsfException("There are no pending forecasts to approve or reject!");
         }
+    }
+
+    @Override
+    public void orderIngredients(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList, Store store, Month month, int year, int numWeeks) {
+        for (int i = 0; i < numWeeks; i++) {
+            Map<Dish, Integer> dishMap = new HashMap();
+
+            for (Couple<MenuItem, List<WeeklyMenuItemSalesForecast>> couple : miWmsfList) {
+                if (couple.getSecond() != null && couple.getSecond().size() == numWeeks) {
+                    for (MenuItemDetail miDetail : couple.getFirst().getMenuItemDetails()) {
+                        couple.getSecond().get(i).setLocked(true);
+                        em.merge(couple.getSecond().get(i));
+                        
+                        if (dishMap.containsKey(miDetail.getDish())) {
+                            dishMap.put(miDetail.getDish(), dishMap.get(miDetail.getDish()) + miDetail.getQuantity() * couple.getSecond().get(i).getQty());
+                        } else {
+                            dishMap.put(miDetail.getDish(), miDetail.getQuantity() * couple.getSecond().get(i).getQty());
+                        }
+                    }
+                }
+            }
+
+            Map<Ingredient, Double> ingredMap = new HashMap();
+
+            for (Dish eachDish : dishMap.keySet()) {
+                System.out.println(eachDish.getName() + ": " + dishMap.get(eachDish));
+                for (RecipeDetail rd : eachDish.getRecipe().getRecipeDetails()) {
+                    if (ingredMap.containsKey(rd.getIngredient())) {
+                        ingredMap.put(rd.getIngredient(), ingredMap.get(rd.getIngredient()) + rd.getQuantity() * dishMap.get(eachDish));
+                    } else {
+                        ingredMap.put(rd.getIngredient(), rd.getQuantity() * dishMap.get(eachDish));
+                    }
+                }
+            }
+
+            for (Ingredient ingred : ingredMap.keySet()) {
+                System.out.println(ingred.getName() + ": " + ingredMap.get(ingred));
+                IngredientContractDetail icd = QueryMethods.getICDByIngredAndCo(em, ingred, store.getCountryOffice());
+                System.out.println(icd);
+
+                if (icd != null) {
+                    WeeklyIngredientSupplyReq wisr = new WeeklyIngredientSupplyReq();
+                    wisr.setIngredient(ingred);
+                    wisr.setStore(store);
+                    wisr.setMonth(month);
+                    wisr.setYear(year);
+                    wisr.setWeek(i + 1);
+                    wisr.setQty((long)Math.ceil(ingredMap.get(ingred)));
+                    em.persist(wisr);
+
+                    WeeklyIngredientSupplyReq pastWisr = QueryMethods.findOrMakePastWmsf(em, wisr, (int) Math.ceil(icd.getLeadTimeInDays() / 7.0));
+                    if(pastWisr != null){
+                        pastWisr.setQtyToOrder(wisr.getQty());
+                        
+                        IngredientPurchaseOrderDetail ipod = new IngredientPurchaseOrderDetail();
+                        ipod.setIngredient(ingred);
+                        ipod.setNumberOfLots((int) Math.ceil(wisr.getQty() / icd.getLotSize()));
+                        ipod.setQuantity(ipod.getNumberOfLots()*icd.getLotSize());
+                        ipod.setSubtotalPrice(icd.getLotPrice()*ipod.getNumberOfLots());
+                        em.persist(ipod);
+                        
+                        pastWisr.setIngredPoDetail(ipod);
+                        em.merge(pastWisr);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Integer month) {
+        Query q = em.createNamedQuery("getWmsfByStoreMi");
+        q.setParameter("store", store);
+        q.setParameter("mi", menuItem);
+        q.setParameter("year", year);
+        q.setParameter("month", Month.getMonth(month));
+
+        List<WeeklyMenuItemSalesForecast> wmsfList = (List<WeeklyMenuItemSalesForecast>) q.getResultList();
+        wmsfList.sort(null);
+
+        return wmsfList;
     }
 
     @Override
@@ -356,6 +528,30 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
                 mmsf = this.addMonthlyMenuItemSalesForecast(eachDetail.getMenuItem(), store, Month.getMonth(cal.get(Calendar.MONTH)), cal.get(Calendar.YEAR));
                 mmsf.setQtySold(mmsf.getQtySold() + eachDetail.getQty());
             }
+        }
+    }
+
+    private void createWeeklyForecast(MonthlyMenuItemSalesForecast mmsf) {
+        int numWeeks = Helper.getNumOfWeeks(mmsf.getMonth().value, mmsf.getYear());
+        int sum = 0;
+        int weeklyNum = mmsf.getQtyForecasted() / numWeeks;
+
+        mmsf.setWmsfList(new ArrayList());
+        for (int i = 1; i <= numWeeks; i++) {
+            WeeklyMenuItemSalesForecast wmsf = new WeeklyMenuItemSalesForecast();
+            wmsf.setLocked(false);
+            wmsf.setWeekNo(i);
+            wmsf.setMmsf(mmsf);
+            if (i < numWeeks) {
+                sum += weeklyNum;
+                wmsf.setQty(weeklyNum);
+            } else {
+                wmsf.setQty(mmsf.getQtyForecasted() - sum);
+            }
+
+            mmsf.getWmsfList().add(wmsf);
+
+            em.persist(wmsf);
         }
     }
 

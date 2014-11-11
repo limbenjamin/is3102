@@ -17,6 +17,8 @@ import javax.ejb.Local;
 @Local
 public interface basketAnalysisBeanLocal {
 
-    public List<FurnitureModel> findListOfrelated(FurnitureModel fm, CountryOffice co);
+    List<FurnitureModel> findListOfrelated(FurnitureModel fm, CountryOffice co);
+
+    List<FurnitureModel> findListOfrelated(String fm, String co);
     
 }

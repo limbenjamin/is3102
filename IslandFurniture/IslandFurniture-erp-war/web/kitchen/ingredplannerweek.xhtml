@@ -1,0 +1,79 @@
+<ui:composition template="../template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <f:metadata>
+            <f:viewParam name="month" value="#{ingredPlannerWeekManagedBean.month}"/>
+            <f:viewParam name="year" value="#{ingredPlannerWeekManagedBean.year}"/>
+        </f:metadata>
+        <p:outputPanel id="statuses">
+            <p:outputPanel id="statusUpdate1" rendered="#{not empty ingredPlannerWeekManagedBean.errorMessage}">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{ingredPlannerWeekManagedBean.errorMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel id="statusUpdate2" rendered="#{not empty ingredPlannerWeekManagedBean.successMessage}">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                    <strong><h:outputText value="#{ingredPlannerWeekManagedBean.successMessage}" escape="false"/></strong>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="../dash.xhtml">Home</a></li>
+                <li><a href="ingredplanner.xhtml">Ingredient Planner</a></li>
+                <li class="active"><strong>Planned Weekly Menu Item Sales</strong></li>
+            </ol>  
+        </div>
+        <div class="col-md-12">
+            <h:form id="form">
+                <span class="pull-right">
+                    <h:commandButton value="Save Updates" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
+                        <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.updateWmsf}" execute="@form" />
+                    </h:commandButton>
+                    <h:commandButton value="Reset Figures" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
+                        <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.resetWmsf}" />
+                    </h:commandButton>
+                    <h:commandButton action="ingredplannerweek.xhtml" actionListener="#{ingredPlannerWeekManagedBean.orderIngred}" value="Order Ingredients" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}" />
+                    <h:commandLink action="ingredplanner.xhtml">
+                        <button type="button" class="btn btn-sm btn-default">
+                            <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                        </button> 
+                    </h:commandLink>
+                </span>  
+                <h4>Planned Weekly Menu Item Sales (#{ingredPlannerWeekManagedBean.month} #{ingredPlannerWeekManagedBean.year}, #{ingredPlannerWeekManagedBean.store.name} Store)</h4><hr/>
+                <p:dataTable id="wmsfTable" value="#{ingredPlannerWeekManagedBean.wmsfPairedList}" var="wmsfCouple" rendered="#{ingredPlannerWeekManagedBean.notNullWmsfList != null}">
+                    <p:column>
+                        <f:facet name="header">
+                            Menu Items
+                        </f:facet>
+                        <h:outputText value="#{wmsfCouple.first.name}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            Month Total
+                        </f:facet>
+                        <h:outputText rendered="#{not empty wmsfCouple.second}" value="#{wmsfCouple.second.get(0).mmsf.qtyForecasted}" />
+                        <h:outputText value="-" rendered="#{wmsfCouple.second == null}"/>
+                    </p:column>
+                    <p:columns value="#{ingredPlannerWeekManagedBean.notNullWmsfList}" var="wmsf">
+                        <f:facet name="header">
+                            #{wmsf.mmsf.month} #{wmsf.mmsf.year}<br/>
+                            Week #{wmsf.weekNo}<br/>
+                            #{ingredPlannerWeekManagedBean.datePeriod(wmsf.weekNo)}
+                        </f:facet>
+                        <h:outputText rendered="#{ingredPlannerWeekManagedBean.editable == false and not empty wmsfCouple.second}" value="#{wmsfCouple.second.get(wmsf.weekNo-1).qty}" />
+                        <h:inputText rendered="#{ingredPlannerWeekManagedBean.editable == true and not empty wmsfCouple.second}" size="4" value="#{wmsfCouple.second.get(wmsf.weekNo-1).qty}" />
+                        <h:outputText rendered="#{empty wmsfCouple.second}" value="-" />
+                    </p:columns>
+                </p:dataTable>
+                <h:outputText rendered="#{ingredPlannerWeekManagedBean.notNullWmsfList == null}" value="There are no Weekly Menu Item Sales Forecast in this month." />
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

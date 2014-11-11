@@ -43,7 +43,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Stock</th>
-                                    <th>Lot Size</th>
                                     <th>No. Of Lots Ordered</th>
                                     <th>Total Quantity</th>
                                 </tr>
@@ -55,9 +54,6 @@
                                             </td>                                            
                                             <td>
                                                 #{pod.procuredStock.name}
-                                            </td>
-                                            <td>
-                                                #{purchaseOrderDeliveredManagedBean.getStockLotSize(pod.procuredStock)}
                                             </td>
                                             <td>
                                                 #{pod.numberOfLots}

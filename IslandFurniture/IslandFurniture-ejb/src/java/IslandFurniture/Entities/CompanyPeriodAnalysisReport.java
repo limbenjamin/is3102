@@ -30,13 +30,12 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Double totalRevenue;
-    
+
     @Temporal(TemporalType.DATE)
     private Calendar analysis_date;
 
-
-    @OneToMany(mappedBy = "companyPeriodAnalysisReport",cascade = CascadeType.PERSIST)
-    private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports=new ArrayList<>();
+    @OneToMany(mappedBy = "companyPeriodAnalysisReport", cascade = CascadeType.PERSIST)
+    private List<CountryPeriodAnalysisReport> countryPeriodAnalysisReports = new ArrayList<>();
 
     public Calendar getAnalysis_date() {
         return analysis_date;
@@ -55,14 +54,16 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     }
 
     public Double getTotalRevenue() {
-        return totalRevenue;
+        Double ttotalrevenue = 0.0;
+        for (CountryPeriodAnalysisReport par : this.getCountryPeriodAnalysisReports()) {
+            ttotalrevenue += par.getTotalRevenue();
+        }
+        return ttotalrevenue;
     }
 
     public void setTotalRevenue(Double totalRevenue) {
-        this.totalRevenue = totalRevenue;
+        //this.totalRevenue = totalRevenue;
     }
-
- 
 
     public List<CountryPeriodAnalysisReport> getCountryPeriodAnalysisReports() {
         return countryPeriodAnalysisReports;
@@ -96,7 +97,5 @@ public class CompanyPeriodAnalysisReport implements Serializable {
     public String toString() {
         return "CompanyPeriodAnalysisReport[ id=" + id + " ]";
     }
-    
-
 
 }

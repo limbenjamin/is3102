@@ -9,10 +9,12 @@ import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.WeeklyMenuItemSalesForecast;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Exceptions.ForecastFailureException;
 import IslandFurniture.Exceptions.InvalidInputException;
 import IslandFurniture.Exceptions.InvalidMmsfException;
+import IslandFurniture.Exceptions.InvalidWmsfException;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -31,7 +33,17 @@ public interface FoodForecastBeanLocal {
     
     void saveMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList) throws InvalidMmsfException;
     
+    void saveWeeklyMenuItemSalesForecast(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList) throws InvalidWmsfException;
+    
+    boolean isWmsfListEditable(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList);
+    
+    void orderIngredients(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList, Store store, Month month, int year, int numWeeks);
+    
+    List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> resetWmsfList(List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> miWmsfList);
+    
     void reviewMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList, boolean approved) throws InvalidMmsfException;
+    
+    List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Integer month);
 
     List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Integer year);
 

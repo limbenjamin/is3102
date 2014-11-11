@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -56,7 +57,7 @@ public class MonthlyMenuItemSalesForecast implements Serializable, Comparable<Mo
     private MmsfStatus status;
     private boolean endMthUpdated = false;
 
-    @OneToMany(mappedBy = "mmsf")
+    @OneToMany(mappedBy = "mmsf", cascade = {CascadeType.ALL})
     private List<WeeklyMenuItemSalesForecast> wmsfList;
 
     public Month getMonth() {
