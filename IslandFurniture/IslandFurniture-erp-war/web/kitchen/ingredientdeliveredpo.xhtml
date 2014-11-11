@@ -43,7 +43,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Ingredient</th>
-                                    <th>Lot Size</th>
                                     <th>No. Of Lots Ordered</th>
                                     <th>Total Quantity</th>
                                 </tr>
@@ -55,9 +54,6 @@
                                             </td>                                            
                                             <td>
                                                 #{pod.ingredient.name}
-                                            </td>
-                                            <td>
-                                                #{ingredientDeliveredPOManagedBean.getStockLotSize(pod.ingredient)}
                                             </td>
                                             <td>
                                                 #{pod.numberOfLots}

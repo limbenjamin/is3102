@@ -49,7 +49,9 @@
                                     <th>ID</th>
                                     <th>Ingredient</th>
                                     <th>Lot Size</th>
+                                    <th></th>
                                     <th>No. of Lots</th>
+                                    <th>Total Quantity</th>
                                     <th>Update</th>
                                     <th>Delete</th>
                                 </tr>
@@ -65,8 +67,12 @@
                                             <td>
                                                 #{ingredientPlannedPOManagedBean.getStockLotSize(pod.ingredient)}
                                             </td>
+                                            <td> x </td>
                                             <td>
                                                 <h:inputText id="numberOfLots" value="#{pod.numberOfLots}" class="form-control" p:required="true" p:type="number" p:min="1"></h:inputText>
+                                            </td>
+                                            <td>
+                                                #{pod.quantity}
                                             </td>
                                             <td>
                                                 <h:commandButton actionListener="#{ingredientPlannedPOManagedBean.editStock}" class="btn btn-sm transparent-button" style="outline:0;"> 
