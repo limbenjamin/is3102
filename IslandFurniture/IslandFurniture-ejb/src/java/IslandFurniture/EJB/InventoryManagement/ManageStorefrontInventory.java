@@ -29,7 +29,7 @@ import javax.persistence.Query;
  *
  */
 @Stateful
-public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal,ManageStorefrontInventoryRemote {
+public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal, ManageStorefrontInventoryRemote {
 
     @PersistenceContext
     EntityManager em;
@@ -44,9 +44,8 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
     private ManageNotificationsBeanLocal manageNotificationsBean;
     @EJB
     private ManagePrivilegesBeanLocal managePrivilegesBean;
-    
-//  Function: To add Storefront Inventory
 
+//  Function: To add Storefront Inventory
     @Override
     public void createStorefrontInventory(Plant plant, Long stockId, int rQty, int mQty, Long storeSectionId) {
         storefrontInventory = new StorefrontInventory();
@@ -137,7 +136,7 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
                 em.persist(replenishmentTransferOrder);
                 em.flush();
                 manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Replenishment", "New replenishment transfer order", "/inventorymgt/inventorytransfer_replenish.xhtml", "Fulfill Replenishment", managePrivilegesBean.getPrivilegeFromName("Inventory Replenishment"), plant);
-                SendSMSBean.sendSMS("+6581273798", "New Action: Pending Replenishment for " + stock.getName() + " at " + storefrontInventory.getLocationInStore().getName());
+                SendSMSBean.sendSMSByPrivilegeFromPlant("New Action: Pending Replenishment for " + stock.getName() + " at " + storefrontInventory.getLocationInStore().getName(), managePrivilegesBean.getPrivilegeFromName("Inventory Replenishment"), plant);
             }
         }
         // End: If curr < replenishment, then create Replenishment Transfer Order 
@@ -149,7 +148,13 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId AND s.stock.id=:stockId");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
-        storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
+        System.out.println("Stock is " + stock.getName());
+        System.out.println("Plant is " + plant.getName());
+        try {
+            storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
+        } catch (Exception e) {
+            return "Out of Stock";
+        }
 
         Query t = em.createQuery("SELECT s FROM StockUnit s WHERE s.location.storageArea.plant.id=:plantId AND s.stock.id=:stockId AND s.available=TRUE AND s.goodsIssuedDocument=NULL");
         t.setParameter("plantId", plant.getId());

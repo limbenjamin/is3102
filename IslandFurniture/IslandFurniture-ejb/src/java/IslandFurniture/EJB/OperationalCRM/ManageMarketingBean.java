@@ -47,6 +47,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     @Override
     public int EmailCustomer(PromotionCampaign pc, CountryOffice co) {
         ArrayList<Customer> c = new ArrayList();
+        
+        System.out.println("Emailing customers... ");
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
 
@@ -69,6 +71,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                 SendEmailByPost.sendEmail("marketing@islandfurniture.com", cc.getEmailAddress(), "Island Furniture Promotion:" + pc.getTitle(), pc.getRemark());
             } catch (Exception ex) {
             }
+            // To send only 1 email for demo purposes, remove break to send to all customers
+            break;
         }
 
         return c.stream().distinct().toArray().length;
@@ -122,7 +126,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
                 } else {
 
                     for (int i = 0; i < pd.getPromotionCoupons().size(); i++) {
-                        if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false && pd.getPromotionCoupons().get(i).getId()>0) {
+                        if (pd.getPromotionCoupons().get(i).getOneTimeUsage() == false && pd.getPromotionCoupons().get(i).getId() > 0) {
                             pd.getPromotionCoupons().get(i).setPromotionDetail(null);
                             pd.getPromotionCoupons().remove(pd.getPromotionCoupons().get(i));
                         }
@@ -179,7 +183,11 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         Query q = em.createQuery("select ss from StockSupplied ss where ss.stock=:s and ss.countryOffice=:co");
         q.setParameter("s", s);
         q.setParameter("co", co);
-        return ((StockSupplied) (q.getResultList().get(0))).getPrice();
+        try {
+            return ((StockSupplied) (q.getResultList().get(0))).getPrice();
+        } catch (Exception ex) {
+            return 0.0;
+        }
     }
 
     @Override
@@ -281,8 +289,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
         }
 
-        returnobj.put("O_PRICE", Math.round(this.getPrice(s, ss.getCountryOffice())*100.0)/100.0);
-        returnobj.put("D_PRICE", Math.round(minprice*100.0)/100.0);
+        returnobj.put("O_PRICE", Math.round(this.getPrice(s, ss.getCountryOffice()) * 100.0) / 100.0);
+        returnobj.put("D_PRICE", Math.round(minprice * 100.0) / 100.0);
         if (effective_coupon != null) {
             returnobj.put("USED_COUPON", effective_coupon);
         }

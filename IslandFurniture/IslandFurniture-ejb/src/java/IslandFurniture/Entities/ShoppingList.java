@@ -7,6 +7,7 @@ package IslandFurniture.Entities;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class ShoppingList implements Serializable {
     private String name;
     private Double totalPrice;
 
-    @OneToMany(mappedBy = "shoppingList")
+    @OneToMany(mappedBy = "shoppingList", cascade = {CascadeType.ALL})
     private List<ShoppingListDetail> shoppingListDetails;
 
     @ManyToMany
