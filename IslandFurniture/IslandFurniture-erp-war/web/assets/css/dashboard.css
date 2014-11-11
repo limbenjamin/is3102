@@ -45,6 +45,10 @@
     margin: 0px 5px;
 }
 
+.limit-gap {
+    max-width: 125px;
+}
+
 /************************* some useful classes ***********************************/
 
 .centered-title {
