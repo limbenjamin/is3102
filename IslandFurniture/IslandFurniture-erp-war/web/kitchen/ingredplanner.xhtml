@@ -127,7 +127,7 @@
                                 <h:outputText value="#{mmsf[label.first]}" rendered="#{mmsf.status != null and label.first == 'qtyForecasted'}" />
                                 <p:outputPanel rendered="#{label.first == 'status' and mmsf.status != null}">
                                     <h:outputText value="#{mmsf[label.first]}" />
-                                    <h:commandButton value="View Weeks" actionListener="#{ingredPlannerManagedBean.fetchWmsf}" rendered="#{mmsf.status == 'APPROVED'}">
+                                    <h:commandButton value="View Weeks" actionListener="#{ingredPlannerManagedBean.fetchWmsf}" rendered="#{mmsf.status == 'APPROVED'}" class="btn btn-sm btn-primary">
                                         <f:param name="month" value="#{mmsf.month}" />
                                         <f:param name="year" value="#{mmsf.year}" />
                                     </h:commandButton>
@@ -143,7 +143,7 @@
                                 <h:outputText value="-" rendered="#{label.first == 'status' and mmsf.status == null}" />
                                 <p:outputPanel rendered="#{label.first == 'status' and mmsf.status != null}">
                                     <h:outputText value="#{mmsf[label.first]}" />
-                                    <h:commandButton value="Plan Weeks" actionListener="#{ingredPlannerManagedBean.fetchWmsf}" rendered="#{mmsf.status == 'APPROVED'}">
+                                    <h:commandButton value="Plan Weeks" actionListener="#{ingredPlannerManagedBean.fetchWmsf}" rendered="#{mmsf.status == 'APPROVED'}" class="btn btn-sm btn-success">
                                         <f:param name="month" value="#{mmsf.month}" />
                                         <f:param name="year" value="#{mmsf.year}" />
                                     </h:commandButton>

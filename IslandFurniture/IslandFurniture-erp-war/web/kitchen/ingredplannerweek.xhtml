@@ -33,13 +33,13 @@
         <div class="col-md-12">
             <h:form id="form">
                 <span class="pull-right">
-                    <h:commandButton value="Save Updates" class="btn btn-sm btn-success pull-right">
+                    <h:commandButton value="Save Updates" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
                         <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.updateWmsf}" execute="@form" />
                     </h:commandButton>
-                    <h:commandButton value="Reset Figures" class="btn btn-sm btn-success pull-right">
+                    <h:commandButton value="Reset Figures" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
                         <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.resetWmsf}" />
                     </h:commandButton>
-                    <h:commandButton action="ingredplannerweek.xhtml" actionListener="#{ingredPlannerWeekManagedBean.orderIngred}" value="Order Ingredients" class="btn btn-sm btn-success pull-right" />
+                    <h:commandButton action="ingredplannerweek.xhtml" actionListener="#{ingredPlannerWeekManagedBean.orderIngred}" value="Order Ingredients" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}" />
                     <h:commandLink action="ingredplanner.xhtml">
                         <button type="button" class="btn btn-sm btn-default">
                             <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
