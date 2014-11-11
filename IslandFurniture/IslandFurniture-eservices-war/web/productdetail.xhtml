@@ -91,6 +91,11 @@
                                         </h:outputText>
                                     </small>
                                 </h4>
+                                <h:panelGroup rendered="#{not empty productDetailManagedBean.furniture.planningSprites}">
+                                <button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#rotate">
+                                    <i class="fa fa-eye"></i> View in Rotatable Form
+                                </button>
+                                </h:panelGroup>
                                 <span class="product-options">
                                     <div class="fb-share-button" data-href="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" data-layout="button"></div>
                                     <a href="https://twitter.com/share" class="twitter-share-button" data-url="#{application.contextPath}/#{productDetailManagedBean.coDir}/productdetail.xhtml?id=#{productDetailManagedBean.id}" data-text="Check out this product!">Tweet</a>
@@ -209,6 +214,37 @@
                     </h:panelGroup>
                 </div>
             </div>
-	</section>        
+	</section>
+        <h:panelGroup rendered="#{not empty productDetailManagedBean.furniture.planningSprites}">
+                <!-- View and Rotate Product -->
+                <div class="modal fade" id="rotate" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Rotate Product</h4>
+                      </div>
+                          <div class="modal-body" style="text-align:center;">
+                            <div class="rotate-label">
+                                <pf:commandButton type="button" onclick="PF('switcher').previous();" value="&lsaquo;" styleClass="btn btn-default btn-xs"/>
+                                <pf:commandButton type="button" onclick="PF('switcher').next();" value="&rsaquo;" styleClass="btn btn-default btn-xs"/> 
+                            </div>
+                            <div>
+                                <pf:imageSwitch effect="wipe" widgetVar="switcher" slideshowAuto="false" speed="250" style="margin:0 auto;">
+                                    <ui:repeat value="#{productDetailManagedBean.furniture.planningSprites}" var="sprite">
+                                        <pf:graphicImage value="#{pictureManagedBean.image}"> 
+                                            <f:param name="pictureId" value="#{sprite.id}" />
+                                        </pf:graphicImage>
+                                    </ui:repeat> 
+                                </pf:imageSwitch>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Done</button>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+        </h:panelGroup>
     </ui:define>
 </ui:composition>
