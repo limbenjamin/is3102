@@ -86,10 +86,16 @@
                             </div>
                             <h:form id="viewPricingForm" class="form-horizontal">
                                 <h:panelGroup id="content" class="modal-body">
-                                    <h:panelGroup class="form-group">
+                                    <h:panelGroup rendered="#{pricePlanningManagedBean.displayFurniture}" class="form-group">
+                                        <label class="col-sm-3 col-md-offset-1 control-label">Points Earned: </label>
+                                        <div class="col-sm-6">
+                                            <h:inputText class="form-control" value="#{pricePlanningManagedBean.furniture.pointsWorth}" ></h:inputText>
+                                        </div>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{pricePlanningManagedBean.displayRetailItem}" class="form-group">
                                         <label class="col-sm-3 col-md-offset-1 control-label">Points Earned: </label> 
                                         <div class="col-sm-6">
-                                            <h:inputText class="form-control" value="#{pricePlanningManagedBean.points}" ></h:inputText>
+                                            <h:inputText class="form-control" value="#{pricePlanningManagedBean.retailItem.pointsWorth}" ></h:inputText>
                                         </div>
                                     </h:panelGroup><hr></hr> 
                                     <ui:repeat value="#{pricePlanningManagedBean.displayList}" varStatus="loop" var="ss">
