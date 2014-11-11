@@ -30,20 +30,20 @@
                                 <section class="panel">  
                                     <h:form class="form-horizontal" id="SSForm">
                                         <p:dataTable value="#{stockSupplierManagedBean.stockSuppliedList}" var="ss" id="SSListTable"> 
-                                            <p:column headerText="Country Office / Distribution Centre" sortBy="#{ss.countryOffice.name}">
+                                            <p:column filterBy="#{ss.countryOffice.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control" headerText="Country Office / Distribution Centre" sortBy="#{ss.countryOffice.name}">
                                                 <h:outputText value="#{ss.countryOffice.name}" class="transparent-form"></h:outputText>
                                             </p:column>
-                                            <p:column headerText="Manufacturing Facility" sortBy="#{ss.manufacturingFacility.name}">
+                                            <p:column filterBy="#{ss.manufacturingFacility.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control" headerText="Manufacturing Facility" sortBy="#{ss.manufacturingFacility.name}">
                                                 <h:outputText value="#{ss.manufacturingFacility.name}" class="transparent-form"></h:outputText>
                                             </p:column> 
-                                            <p:column headerText="Stock" sortBy="#{ss.stock.name}">
+                                            <p:column filterBy="#{ss.stock.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control"  headerText="Stock" sortBy="#{ss.stock.name}">
                                                 <h:outputText value="#{ss.stock.name}" class="transparent-form"></h:outputText>
                                             </p:column>  
                                             <p:column headerText="Delete" style="text-align: center; width: 10%">
                                                 <h:commandButton class="btn btn-sm transparent-button" style="outline: 0;" actionListener="#{stockSupplierManagedBean.deleteStockSupplyRequest}">
                                                     <f:param name="cID" value="#{ss.countryOffice.id}" />
                                                     <f:param name="mfID" value="#{ss.manufacturingFacility.id}" />
-                                                    <f:param name="sID" value="#{ss.stock.id}" /> 
+                                                    <f:param name="sID" value="#{ss.stock.id}" />  
                                                 </h:commandButton> 
                                                 <i class="fa fa-lg fa-trash-o icon-button" ></i>
                                             </p:column>

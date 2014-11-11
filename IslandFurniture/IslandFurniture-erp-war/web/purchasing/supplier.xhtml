@@ -55,7 +55,7 @@
                                                 <td> 
                                                     <div class="inner-addon left-addon">
                                                         <h:selectOneMenu id="supplierCountry" class="form-control needauto" value="#{supplier.country.name}">    
-                                                            <f:selectItems value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}" />
+                                                            <f:selectItems id="updateCountry" value="#{supplierManagedBean.countryList}" var="c" itemLabel="#{c.name}" itemValue="#{c.name}"></f:selectItems>
                                                         </h:selectOneMenu>
                                                     </div>
                                                 </td> 

@@ -60,6 +60,7 @@ public class LoadSupplierBean implements LoadSupplierBeanRemote {
             supplier.setPhoneNumber(phoneNo);
             ProcuredStockContract pc = new ProcuredStockContract();
             pc.setSupplier(supplier);
+            pc.setProcuredStockContractDetails(new ArrayList<>());
             supplier.setProcuredStockContract(pc);
             em.persist(supplier);
 

@@ -6,13 +6,14 @@
 
 package IslandFurniture.WAR.Manufacturing;
 
+import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
-import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -129,4 +130,24 @@ public class StockSupplierManagedBean implements Serializable {
         }
         return "stocksupplier";
     } 
+    
+    public boolean filterByName(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim();
+        if (filterText == null || filterText.equals("")) {
+            return true;
+        }
+
+        if (value == null) {
+            return false;
+        }
+
+        String carName = value.toString().toUpperCase();
+        filterText = filterText.toUpperCase();
+
+        if (carName.contains(filterText)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
