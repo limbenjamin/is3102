@@ -87,8 +87,7 @@ public class RedemptionManagedBean implements Serializable {
 
 //  Function: To create a Redemption
     public void addRedemption(ActionEvent event) throws IOException, ParseException {
-        //customer = membershipBean.getCustomer(customerId);
-        // redeemableItem = itemBean.getRedeemableItem(redeemableItemId);
+        customer = membershipBean.getCustomer(customerId);
         if (customer.getCurrentPoints().intValue() == redeemableItem.getPointsReq()
                 || customer.getCurrentPoints() > redeemableItem.getPointsReq()) {
             redemptionBean.createRedemption(staff, getCalendar(), customerId, redeemableItemId);           
@@ -137,6 +136,7 @@ public class RedemptionManagedBean implements Serializable {
                             NFCMethods nfc = new NFCMethods();
                             customerCardId = (nfc.getID(acr122uCardTerminal)).substring(0, 8);
                             this.customer = membershipBean.getCustomerByCard(customerCardId);
+                            customerId = this.customer.getId();
                         }
                     } catch (CardException ex) {
                         Logger.getLogger(MembershipManagedBean.class.getName()).log(Level.SEVERE, null, ex);

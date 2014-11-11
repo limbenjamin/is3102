@@ -39,7 +39,10 @@ public interface ManageMembershipLocal {
     List<MembershipTier> viewMembershipTier();
 
     //  Function: To check if there is no Membership Tier with the Same Title
-    boolean checkIfNoMembershipTierSameName(String title);
+    boolean checkIfNoMembershipTierSamePoints(Integer points);
+    
+    //  Function: To check if there is no Membership Tier with the Same Title
+    boolean checkIfNoMembershipTierSameName(String name);
 
     //  Function: To check if there is no Customers in the Tier
     boolean checkIfNoCustomersInTheTier(MembershipTier mt);
