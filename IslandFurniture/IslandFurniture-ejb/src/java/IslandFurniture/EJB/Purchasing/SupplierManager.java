@@ -23,7 +23,6 @@ import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.StockSuppliedPK;
 import IslandFurniture.StaticClasses.QueryMethods;
 import static IslandFurniture.StaticClasses.QueryMethods.findCountryByName;
-import static IslandFurniture.StaticClasses.QueryMethods.findPCDByStockMFAndSupplier;
 import static IslandFurniture.StaticClasses.QueryMethods.findSupplierByName;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,6 +203,7 @@ public class SupplierManager implements SupplierManagerLocal, SupplierManagerRem
         ProcuredStock stock;
         ProcuredStockContract pc;
         List<ProcuredStockContractDetail> pcdList;
+        List<ProcuredStockContractDetail> tempList;
         ProcuredStockContractDetail pcd;
         Currency currency;
         try {
@@ -214,9 +214,9 @@ public class SupplierManager implements SupplierManagerLocal, SupplierManagerRem
             currency = em.find(Currency.class, currencyID);
             System.out.println("MF is " + mf.getName() + ", Stock is " + stock.getName() + ". Supplier is " + supplier.getName());
             
-            pcd = findPCDByStockMFAndSupplier(em, stock, mf, supplier); 
+            tempList = QueryMethods.findPCDByStockAndMF(em, stock, mf); 
             
-            if(pcd != null) {
+            if(!tempList.isEmpty()) {
                 System.out.println("ProcuredStockContractDetail already exist");
                 return "Procured Stock Contract Detail already exist";
             }
@@ -248,13 +248,13 @@ public class SupplierManager implements SupplierManagerLocal, SupplierManagerRem
             return "Unexpected error occured";
         }
     }
-    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID) {
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, String currencyToChange) {
         ProcuredStockContractDetail pcd;
         Currency currency;
         try {
             System.out.println("SupplierManager.editProcurementContractDetails()");
             pcd = em.find(ProcuredStockContractDetail.class, id);
-            currency = em.find(Currency.class, currencyID);
+            currency = QueryMethods.findCurrencyByName(em, currencyToChange);
             pcd.setLeadTimeInDays(leadTime);
             pcd.setLotSize(size); 
             pcd.setCurrency(currency);

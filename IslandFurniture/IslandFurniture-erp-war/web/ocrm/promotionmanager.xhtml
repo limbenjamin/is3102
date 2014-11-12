@@ -11,6 +11,7 @@
                     xmlns:ui="http://java.sun.com/jsf/facelets"
                     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                     xmlns:o="http://omnifaces.org/ui"
+                    xmlns:p="http://primefaces.org/ui"
                     >
 
 
@@ -198,9 +199,20 @@
                                     </p:selectOneMenu>
                                 </p:column>
 
-                                <p:column headerText="Usage Limit">
-                                    <p:inputText value="${row.usageCount}" style="width:50px;"/>
-                                    <p:dialog header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200" minWidth="600">
+
+                                <p:column headerText="Usage Limit" >
+                                    <h:panelGroup layout="block" id="usage" >
+                                        <p:inputText value="#{row.usageCount}" style="width:50px;"  rendered="#{2147483647 > row.usageCount}"/>
+                                        <p:outputLabel  for="vanishthis" value="Infinite Life:"  rendered="#{row.usageCount>=2147483647}" />
+                                        <p:selectOneMenu requiredMessage="PD_${row.id}"  id="vanishthis" rendered="#{row.usageCount>=2147483647}">
+                                            <f:selectItem itemLabel="Yes" itemValue="#{Integer.MAX_VALUE}"></f:selectItem>
+                                            <f:selectItem itemLabel="No" itemValue="1"></f:selectItem>
+                                            <p:ajax update="@([id$=usage]),@([id$=vanishthis])" listener="${marketing.dummyTrigger}"></p:ajax>
+                                            
+                                        </p:selectOneMenu>
+                                    </h:panelGroup>
+
+                                    <p:dialog  header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200" minWidth="600" rendered="${marketing.currentEdit!=null}">
                                         <p:dataTable value="#{row.promotionCoupons}" var="coupon" rendered="${marketing.currentEdit!=null}" style="width:600px">
                                             <p:column headerText="CouponID" style="width:200px">
                                                 <h:outputText value="${marketing.getCouponID(coupon)}"/>
@@ -282,8 +294,7 @@
                             <br/>
                             <b><u>Note:</u></b><br/>
                             * Dollar Discount supercedes percentage Discount<br/>
-                            ** Non-Perishable Coupon will make all issued Coupon Disappear<br/>
-                            *** Put 2147483647 for promotion for promotion that will never expire !
+                            ** Non-Perishable Coupon will make all issued Coupon Disappear
                             <br/> If you want to do a promotion on all product, select by productcategory then select All categories !
 
                         </p:fieldset>

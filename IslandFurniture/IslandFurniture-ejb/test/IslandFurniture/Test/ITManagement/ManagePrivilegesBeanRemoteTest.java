@@ -119,9 +119,8 @@ public class ManagePrivilegesBeanRemoteTest {
         System.out.println("Case 3");
         try{
             Privilege result =  managePrivilegesBeanRemote.getPrivilegeFromName("non existent");
-            fail("Exception Not Thrown");
         }catch(Exception e){
-            
+            fail("Exception Thrown");
         }
     }
 
