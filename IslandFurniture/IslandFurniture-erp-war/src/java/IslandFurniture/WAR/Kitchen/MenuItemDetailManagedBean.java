@@ -163,14 +163,14 @@ public class MenuItemDetailManagedBean implements Serializable {
 
             }
         }
-    }
+    } 
     public String editMenuItemAttribute(ActionEvent event) {
         System.out.println("MenuItemDetailManagedBean.editMenuItemAttribute");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String menuType = request.getParameter("attributeForm:menuType");
         String price = request.getParameter("attributeForm:price"); 
-        System.out.println("MenuType is " + menuType + ". Price is " + price + ". Ala carte is " + alacarte);
-        String msg = menuManager.editMenuItemAttribute(menuItemID, MenuType.valueOf(menuType), Double.parseDouble(price), alacarte);
+        String points = request.getParameter("attributeForm:points"); 
+        String msg = menuManager.editMenuItemAttribute(menuItemID, MenuType.valueOf(menuType), Double.parseDouble(price), Long.parseLong(points), alacarte);
         if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));

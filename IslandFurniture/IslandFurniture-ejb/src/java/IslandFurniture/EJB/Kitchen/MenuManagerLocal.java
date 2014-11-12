@@ -25,11 +25,11 @@ public interface MenuManagerLocal {
 
     public String deleteMenuItem(Long menuItemID, CountryOffice co);
 
-    public String addMenuItem(String menuName, Double price, CountryOffice co, boolean alaCarte, MenuType menuType);
+    public String addMenuItem(String menuName, Double price, Long points, CountryOffice co, boolean alaCarte, MenuType menuType);
 
     public MenuItem getMenuItem(Long menuItemID);
 
-    public String editMenuItemAttribute(Long menuItemID, MenuType menuType, Double price, boolean alaCarte);
+    public String editMenuItemAttribute(Long menuItemID, MenuType menuType, Double price, Long points, boolean alaCarte);
 
     public String editMenuItemDetail(Long menuItemDetailID, Integer quantity);
 
