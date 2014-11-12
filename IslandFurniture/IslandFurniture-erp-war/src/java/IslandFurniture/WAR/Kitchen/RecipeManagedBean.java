@@ -163,7 +163,8 @@ public class RecipeManagedBean implements Serializable {
         System.out.println("RecipeManagedBean.addToRecipe()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String name = request.getParameter("addNewIngredientForm:ingredientName");
-        String msg = ksm.addIngredient(name, co);
+        if(name != null && !name.isEmpty())
+            ksm.addIngredient(name, co);
         this.ingredientList = ksm.getIngredientList(co);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dishID", dish.getId());
     }

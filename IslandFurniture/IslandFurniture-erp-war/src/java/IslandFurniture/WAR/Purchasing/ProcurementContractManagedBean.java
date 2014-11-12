@@ -168,8 +168,8 @@ public class ProcurementContractManagedBean implements Serializable {
         }    
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
         return "procurementcontract";
-    }
-    public String editProcurementContractDetail() throws IOException { 
+    } 
+    public String editProcurementContractDetail(ActionEvent event) throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()"); 
         System.out.println("Currency is " + pcd.getCurrency().getName());
         String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), Long.parseLong(pcd.getCurrency().getName()));  

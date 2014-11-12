@@ -34,10 +34,10 @@
                                                 <h:inputText value="#{menuItem.name}" id="menuItemName" class="form-control"></h:inputText>
                                             </p:column>
                                             <p:column headerText="Price" style="width: 8%;" >
-                                                <h:inputText value="#{menuItem.price}" class="form-control"></h:inputText>
+                                                <h:outputText value="#{menuItem.price}"></h:outputText>
                                             </p:column>
-                                            <p:column headerText="Menu Type" sortBy="#{menuItem.menuType}">
-                                                <h:outputText value="#{menuItem.menuType}" ></h:outputText>
+                                            <p:column headerText="Menu Type" sortBy="#{menuItem.menuType.toString()}" style="width: 12%">
+                                                <h:outputText value="#{menuItem.menuType.toString()}" ></h:outputText>
                                             </p:column>
                                             <p:column headerText="Details" style="text-align: center; width: 8%;">
                                                 <h:commandButton actionListener="#{menuItemManagedBean.menuItemDetailActionListener}" class="btn btn-success btn-xs transparent-button">

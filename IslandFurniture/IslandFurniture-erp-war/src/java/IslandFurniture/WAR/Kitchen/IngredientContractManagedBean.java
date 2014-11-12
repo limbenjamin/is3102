@@ -86,7 +86,7 @@ public class IngredientContractManagedBean implements Serializable {
         }
     }
     public void addIngredientContractDetail() throws IOException {
-        System.out.println("ProcurementContractManagedBean.addProcurementContractDetail()");
+        System.out.println("IngredientContractManagedBean.addProcurementContractDetail()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String supplierId = request.getParameter("addICD:supplierID");
         String ingredientID = request.getParameter("addICD:ingredientID");
@@ -106,7 +106,7 @@ public class IngredientContractManagedBean implements Serializable {
         ec.redirect("ingredientcontract.xhtml"); 
     }
     public void editIngredientContractDetail(ActionEvent event) throws IOException {
-        System.out.println("ProcurementContractManagedBean.editIngredientContractDetail()");
+        System.out.println("IngredientContractManagedBean.editIngredientContractDetail()");
         icd = (IngredientContractDetail) event.getComponent().getAttributes().get("toEdit"); 
         String msg = supplierManager.editIngredientContractDetail(icd.getId(), icd.getLotSize(), icd.getLeadTimeInDays(), icd.getLotPrice());  
         if(msg != null) { 
@@ -121,7 +121,7 @@ public class IngredientContractManagedBean implements Serializable {
         ec.redirect("ingredientcontract.xhtml");  
     }
     public void deleteIngredientContractDetail() throws IOException {
-        System.out.println("ProcurementContractManagedBean.deleteIngredientContractDetail()");
+        System.out.println("IngredientContractManagedBean.deleteIngredientContractDetail()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("icdID"));
         String msg = supplierManager.deleteIngredientContractDetail(id, this.supplierID);
         if(msg != null) {

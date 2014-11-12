@@ -46,7 +46,9 @@
                             <div class="form-group col-md-4"> 
                                 <label class="col-sm-5 control-label">Menu Item Price: </label>           
                                 <div class="col-sm-7">
-                                    <h:inputText id="price" value="#{menuItemDetailManagedBean.menuItem.price}" class="form-control" style="max-width:100px;"></h:inputText>
+                                    <h:inputText id="price" value="#{menuItemDetailManagedBean.menuItem.price}" class="form-control" style="max-width:100px;">
+                                        <f:convertNumber maxFractionDigits="2" />
+                                    </h:inputText>
                                 </div>  
                             </div>
                             <h:panelGroup class="form-group col-md-3" rendered="#{menuItemDetailManagedBean.displayAlaCarte()}">
@@ -55,8 +57,8 @@
                                     <h:selectBooleanCheckbox value="#{menuItemDetailManagedBean.alacarte}" id="alaCarte" class="form-control" />
                                 </div>
                             </h:panelGroup> 
-                            <div class="form-group col-md-2">
-                                <h:commandButton action="menuitemdetail.xhtml" actionListener="#{menuItemDetailManagedBean.editMenuItemAttribute}" value="Update" class="btn btn-success btn-xs pull-right"> 
+                            <div class="form-group col-md-1 pull-right">
+                                <h:commandButton action="menuitemdetail.xhtml" actionListener="#{menuItemDetailManagedBean.editMenuItemAttribute}" value="Update" class="btn btn-primary btn-xs"> 
                                     <f:attribute name="toUpdate" value="#{menuItemDetailManagedBean.menuItem}" />
                                 </h:commandButton>
                             </div>
