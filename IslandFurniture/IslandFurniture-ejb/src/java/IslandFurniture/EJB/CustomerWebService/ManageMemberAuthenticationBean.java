@@ -6,11 +6,13 @@
 
 package IslandFurniture.EJB.CustomerWebService;
 
+import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.MembershipTier;
 import static IslandFurniture.StaticClasses.EncryptMethods.SHA1Hash;
 import IslandFurniture.StaticClasses.SendEmailByPost;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -34,6 +36,12 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     
     @Resource SessionContext ctx;
     private Customer customer;
+    
+    @Override
+    public List<Country> getCountries() {
+        Query q = em.createNamedQuery("getAllCountry");
+        return q.getResultList();
+    }    
     
     @Override
     public Customer authenticate(String emailAddress, String password){
@@ -161,11 +169,15 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }    
     
     @Override
-    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address){
+    public void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address, Long countryId){
+        Query query = em.createQuery("SELECT c FROM Country c WHERE c.id=:id");
+        query.setParameter("id", countryId);
+        Country country = (Country)query.getSingleResult();
         customer = getCustomer(emailAddress);
         customer.setPhoneNo(phoneNo);
         customer.setName(name);
         customer.setAddress(address);
+        customer.setCountry(country);
     }
     
     @Override
