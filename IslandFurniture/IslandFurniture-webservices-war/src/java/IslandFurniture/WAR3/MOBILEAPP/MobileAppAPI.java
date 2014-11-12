@@ -319,7 +319,7 @@ public class MobileAppAPI {
     public String getRegister(@FormParam("email") String email, @FormParam("password") String password, @FormParam("password2") String password2, @FormParam("name") String name, @FormParam("address") String address, @FormParam("phone") String phone, @FormParam("dob") String dob) {
 
         try {
-            mmab.createCustomerAccount(email, password, name, phone, address, name);
+            mmab.createCustomerAccount(email, password, name, phone, address, name, null);
         } catch (Exception ex) {
             return (Json.createObjectBuilder().add("success", false).add("error", ex.getMessage()).build().toString());
         }
