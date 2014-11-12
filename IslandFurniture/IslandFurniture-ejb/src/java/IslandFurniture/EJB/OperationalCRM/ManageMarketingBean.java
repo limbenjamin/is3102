@@ -67,7 +67,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
         }
 
-        for (Customer cc : (Customer[]) c.stream().distinct().toArray()) {
+        for (Customer cc :  c) {
             try {
                 SendEmailByPost.sendEmail("marketing@islandfurniture.com", cc.getEmailAddress(), "Island Furniture Promotion:" + pc.getTitle(), pc.getRemark());
             } catch (Exception ex) {

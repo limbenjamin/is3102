@@ -156,12 +156,6 @@
                         <!-- End Dashboard-->
                     </p:tab>
                     <p:tab title="Customer CLV" id="CLV">
-                        <h3>Select Country</h3>
-                        <p:selectOneMenu style="position:relative;top:11px">
-                            <p:ajax event="change" update="@([id$=CLV])" listener="${companyRevenue.customerchangelisten}"></p:ajax>
-                            <f:selectItems value="#{companyRevenue.countryOptions}">
-                            </f:selectItems>
-                        </p:selectOneMenu>
                         <br/>
                         <br/>
                         <br/>
