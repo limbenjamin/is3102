@@ -41,16 +41,16 @@
                                             <p:column headerText="Ingredient" sortBy="#{recipe.ingredient.name}">
                                                 <h:outputText value="#{recipe.ingredient.name}" id="ingredientName" class="form-control transparent-form"></h:outputText>
                                             </p:column> 
-                                            <p:column headerText="Quantity">
+                                            <p:column headerText="Quantity" style="width: 12%">
                                                 <h:inputText value="#{recipe.quantity}" id="ingredientQuantity" pt:type="number" class="form-control transparent-form"></h:inputText>
                                             </p:column>
-                                            <p:column headerText="Update" style="text-align: center; width: 100px;">
+                                            <p:column headerText="Update" style="text-align: center; width: 10%;">
                                                 <h:commandButton actionListener="#{recipeManagedBean.editRecipeDetail}" class="btn btn-sm transparent-button" style="outline:0;">
                                                     <f:attribute name="toEdit" value="#{recipe}" /> 
                                                 </h:commandButton>
                                                 <i class="fa fa-lg fa-save icon-button"></i>   
                                             </p:column>
-                                            <p:column headerText="Delete" style="text-align: center; width: 100px;">
+                                            <p:column headerText="Delete" style="text-align: center; width: 10%;">
                                                 <h:commandButton action="#{recipeManagedBean.deleteRecipeDetail()}" class="btn btn-sm transparent-button" style="outline:0;"> 
                                                     <f:param name="recipeDetailID" value="#{recipe.id}" />
                                                 </h:commandButton>
@@ -112,7 +112,7 @@
                             <h:form id="addNewIngredientForm" class="form-horizontal">
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">Material Name: </label>
+                                        <label class="col-sm-3 control-label">Ingredient Name: </label>
                                         <div class="col-sm-9">
                                             <h:inputText id="ingredientName" class="form-control" pt:required="required"></h:inputText>
                                         </div>
