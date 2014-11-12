@@ -48,7 +48,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Ingredient","Dish","Menu","Currency","Store Inventory","External Inventory Transfer","Inventory Replenishment",
         "Promotion Manager","Pricing Management","Ingredient Management","Web Management","Member Management",
         "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
-        "Membership","Customer Chat","Ingredient Supplier","View MSSF","ACRM"};
+        "Membership","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planner","Review MMSF"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
@@ -59,7 +59,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency","Manage Store Inventory","External Inventory Transfer",
         "Replenish Inventory","Manage Promotions","Manage Prices","Manage Ingredients","Manage Web functions","Manage Membership",
         "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
-        "Manage Members","Customer Chat","Ingredient Supplier","View MSSF","ACRM"};
+        "Manage Members","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planning","Review MMSF"};
         
         
         String[][] arr = new String [][] { 
@@ -140,6 +140,9 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             {"View MSSF","/kitchen/viewmmsf.xhtml", "fa-cube", "View MSSF", "true","47"},
             {"ACRM","/acrm/dashboard.xhtml", "fa-cube", "ACRM", "true","48"},
             {"View Audit Log","/it/viewauditlog.xhtml", "fa-cube", "View Audit Log", "true","49"},
+            {"Ingredient Planner","/kitchen/ingredplanner.xhtml", "fa-cube", "Ingredient Planner", "true","50"},
+            {"Ingredient Planner","/kitchen/ingredientpo.xhtml", "fa-cube", "Ingredient Purchase Orders", "true","51"},
+            {"Review MMSF","/kitchen/reviewmmsf.xhtml", "fa-cube", "Review MMSF", "true","52"},
         };
         
         for (int i=0; i<privileges.length; i++){
