@@ -128,11 +128,16 @@ public class FurniturePhotoManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please upload 36 images for Photo Sprite", ""));
         } else { 
-            stockManager.deleteSpriteImage(furnitureID);
-            for(int i=0; i<uploadList.length; i++) 
-                stockManager.addSpriteImage(furnitureID, uploadList[i].getContent(), uploadList[i].getDescription());
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Photo Sprite has been successfully added", ""));
+            try { 
+                stockManager.deleteSpriteImage(furnitureID);
+                for(int i=0; i<uploadList.length; i++) 
+                    stockManager.addSpriteImage(furnitureID, uploadList[i].getContent(), uploadList[i].getDescription());
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Photo Sprite has been successfully added", ""));
+            } catch(Exception ex) {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please rename images as 1.jpg, 2.jpg ... ", ""));
+            }
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("fID", furniture.getId());
         ec.redirect("furniturephoto.xhtml");
