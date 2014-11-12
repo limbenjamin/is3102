@@ -124,7 +124,7 @@ public class ManageGoodsReceipt implements ManageGoodsReceiptLocal {
 
         if (goodsReceiptDocument.getReceiveFrom() != null) {
             goodsReceiptDocument.getReceiveFrom().setStatus(PurchaseOrderStatus.DELIVERED);
-            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Payment", "Purchase Order #" +  goodsReceiptDocument.getReceiveFrom().getId().toString() +" was delivered at " + goodsReceiptDocument.getPlant().getName(), "/purchasing/purchaseorder.xhtml", "Fulfill External Transfer Order", managePrivilegesBean.getPrivilegeFromName("Purchase Order"), goodsReceiptDocument.getReceiveFrom().getManufacturingFacility());
+            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Payment", "Purchase Order #" +  goodsReceiptDocument.getReceiveFrom().getId().toString() +" was delivered at " + goodsReceiptDocument.getPlant().getName(), "/purchasing/purchaseorder.xhtml", "Make Payment to Supplier", managePrivilegesBean.getPrivilegeFromName("Purchase Order"), goodsReceiptDocument.getReceiveFrom().getManufacturingFacility());
         }
         goodsReceiptDocument.setConfirm(true);
         goodsReceiptDocument.setPostingDate(postingDate);
