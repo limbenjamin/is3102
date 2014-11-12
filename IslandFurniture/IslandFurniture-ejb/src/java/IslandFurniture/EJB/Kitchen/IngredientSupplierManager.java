@@ -45,7 +45,7 @@ public class IngredientSupplierManager implements IngredientSupplierManagerLocal
     @Override
     public IngredientSupplier getSupplier(Long id) {
         try {
-            System.out.println("IngrediemtSupplierManager.getSupplier()");
+            System.out.println("IngredientSupplierManager.getSupplier()");
             return em.find(IngredientSupplier.class, id);
         } catch (Exception ex) {
             System.err.println("No results found");
@@ -60,7 +60,7 @@ public class IngredientSupplierManager implements IngredientSupplierManagerLocal
         IngredientContract ic;
         List<IngredientContractDetail> icList;
         try {
-            System.out.println("IngrediemtSupplierManager.addSupplier()");
+            System.out.println("IngredientSupplierManager.addSupplier()");
             country = QueryMethods.findCountryByName(em, countryName);
             supplier = QueryMethods.findIngredSupplierByNameAndCo(em, supplierName, co);
             if (supplier != null) {
