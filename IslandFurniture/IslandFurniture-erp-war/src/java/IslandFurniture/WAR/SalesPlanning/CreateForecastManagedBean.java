@@ -111,6 +111,8 @@ public class CreateForecastManagedBean implements Serializable {
     public void naiveForecast(AjaxBehaviorEvent event) {
         boolean impacted = false;
         boolean noPrevious = false;
+        errorMessage = "";
+        successMessage = "";
 
         for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
             try {
@@ -137,6 +139,7 @@ public class CreateForecastManagedBean implements Serializable {
         try {
             boolean impacted = false;
             errorMessage = "";
+            successMessage = "";
 
             for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> couple : this.mssrPairedList) {
                 try {
@@ -153,7 +156,8 @@ public class CreateForecastManagedBean implements Serializable {
                 if (errorMessage.isEmpty()) {
                     successMessage = numPoints + "-Point forecast performed successfullly!";
                 } else {
-                    errorMessage = "No historical data for:" + errorMessage.substring(0, errorMessage.length() - 1);
+                    errorMessage = "Forecast not performed for:" + errorMessage.substring(0, errorMessage.length() - 1);
+                    errorMessage += "\n\nThis could be due to forecasts already made or there are no historical sales for reference.";
                 }
             }
         } catch (InvalidInputException ex) {
@@ -164,6 +168,8 @@ public class CreateForecastManagedBean implements Serializable {
     public void saveForecast(AjaxBehaviorEvent event) {
         try {
             List<Couple<Stock, List<MonthlyStockSupplyReq>>> coupleList = new ArrayList();
+            errorMessage = "";
+            successMessage = "";
 
             for (Couple<Stock, Couple<List<MonthlyStockSupplyReq>, List<MonthlyStockSupplyReq>>> mssrEntry : this.mssrPairedList) {
                 coupleList.add(new Couple(mssrEntry.getFirst(), mssrEntry.getSecond().getSecond()));

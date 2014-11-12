@@ -5,16 +5,10 @@
  */
 package IslandFurniture.StaticClasses;
 
-import IslandFurniture.Entities.Country;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * This is a bean that will be automatically run at deployment. Use this to
@@ -24,40 +18,11 @@ import javax.persistence.PersistenceContext;
  */
 @Startup
 @Singleton
-public class InitialiseServerBean implements InitialiseServerBeanLocal {
-
-
-
-
-    Country country;
-
-    private boolean updateMssrStarted;
-
-
+public class InitialiseServerBean {
 
     @PostConstruct
     public void initialiseServer() {
-//        loaddata();
-        this.updateMssrStarted = false;
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
-
-    @Override
-    public boolean isUpdateMssrStarted() {
-        return updateMssrStarted;
-    }
-
-    public void setUpdateMssrStarted(boolean updateMssrStarted) {
-        this.updateMssrStarted = updateMssrStarted;
-    }
-
-    @Override
-    public void startMssrTimer() {
-        this.updateMssrStarted = true;
-    }
-    
-
-    
-    
 
 }

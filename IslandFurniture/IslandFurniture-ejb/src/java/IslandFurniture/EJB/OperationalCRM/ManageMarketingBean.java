@@ -20,6 +20,7 @@ import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.StockSupplied;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.StaticClasses.SendEmailByPost;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
     @Override
     public int EmailCustomer(PromotionCampaign pc, CountryOffice co) {
         ArrayList<Customer> c = new ArrayList();
-        
+
         System.out.println("Emailing customers... ");
 
         for (PromotionDetail pd : pc.getPromotionDetails()) {
@@ -372,9 +373,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
         Double dl = Math.log(l);
         String encrypted = b64.encodeToString(cipher.encrypt(ByteBuffer.allocate(Float.BYTES).putFloat(dl.floatValue()).array()));
-        encrypted = encrypted.replaceAll("\\/", "@");
-        encrypted = encrypted.replaceAll("\\+", "!");
-        encrypted = encrypted.replaceAll("=", "%");
+        BigInteger x = new BigInteger(encrypted.getBytes());
+        encrypted = x.toString();
 
         System.out.println("encrypted=" + encrypted);
         System.out.println("Decrypted=" + decodeCouponID(encrypted));
@@ -391,10 +391,12 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         System.out.println("Attempting to decrypt:" + s);
         RC4 cipher = new RC4("ISLANDFURNITURE_81273798".getBytes());
         Base64 b64 = new Base64();
-        s = s.replaceAll("@", "/");
-        s = s.replaceAll("!", "+");
-        s = s.replaceAll("%", "=");
+        
+        BigInteger x = new BigInteger(s);
+        s=new String(x.toByteArray());
 
+        
+        
         byte[] todecrypt = b64.decode(s);
         ByteBuffer buffer = ByteBuffer.allocate(Float.BYTES);
         buffer.put(cipher.decrypt(todecrypt)).flip();

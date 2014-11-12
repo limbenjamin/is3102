@@ -9,7 +9,9 @@ import IslandFurniture.DataStructures.Couple;
 import IslandFurniture.Entities.Dish;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientContractDetail;
+import IslandFurniture.Entities.IngredientPurchaseOrder;
 import IslandFurniture.Entities.IngredientPurchaseOrderDetail;
+import IslandFurniture.Entities.IngredientSupplier;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MenuItemDetail;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecastPK;
@@ -22,6 +24,7 @@ import IslandFurniture.Entities.WeeklyIngredientSupplyReq;
 import IslandFurniture.Entities.WeeklyMenuItemSalesForecast;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Enums.MmsfStatus;
+import IslandFurniture.Enums.PurchaseOrderStatus;
 import IslandFurniture.Exceptions.ForecastFailureException;
 import IslandFurniture.Exceptions.InvalidInputException;
 import IslandFurniture.Exceptions.InvalidMmsfException;
@@ -170,7 +173,7 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
         }
 
         if (!impacted) {
-            throw new ForecastFailureException("NoMonths");
+            throw new ForecastFailureException(mi.getName());
         }
 
         return unlockedMmsfList;
@@ -332,7 +335,7 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
                     for (MenuItemDetail miDetail : couple.getFirst().getMenuItemDetails()) {
                         couple.getSecond().get(i).setLocked(true);
                         em.merge(couple.getSecond().get(i));
-                        
+
                         if (dishMap.containsKey(miDetail.getDish())) {
                             dishMap.put(miDetail.getDish(), dishMap.get(miDetail.getDish()) + miDetail.getQuantity() * couple.getSecond().get(i).getQty());
                         } else {
@@ -367,20 +370,20 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
                     wisr.setMonth(month);
                     wisr.setYear(year);
                     wisr.setWeek(i + 1);
-                    wisr.setQty((long)Math.ceil(ingredMap.get(ingred)));
+                    wisr.setQty((long) Math.ceil(ingredMap.get(ingred)));
                     em.persist(wisr);
 
                     WeeklyIngredientSupplyReq pastWisr = QueryMethods.findOrMakePastWmsf(em, wisr, (int) Math.ceil(icd.getLeadTimeInDays() / 7.0));
-                    if(pastWisr != null){
+                    if (pastWisr != null) {
                         pastWisr.setQtyToOrder(wisr.getQty());
-                        
+
                         IngredientPurchaseOrderDetail ipod = new IngredientPurchaseOrderDetail();
                         ipod.setIngredient(ingred);
                         ipod.setNumberOfLots((int) Math.ceil(wisr.getQty() / icd.getLotSize()));
-                        ipod.setQuantity(ipod.getNumberOfLots()*icd.getLotSize());
-                        ipod.setSubtotalPrice(icd.getLotPrice()*ipod.getNumberOfLots());
+                        ipod.setQuantity(ipod.getNumberOfLots() * icd.getLotSize());
+                        ipod.setSubtotalPrice(icd.getLotPrice() * ipod.getNumberOfLots());
                         em.persist(ipod);
-                        
+
                         pastWisr.setIngredPoDetail(ipod);
                         em.merge(pastWisr);
                     }
@@ -390,17 +393,102 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
     }
 
     @Override
-    public List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Integer month) {
+    public List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Month month) {
         Query q = em.createNamedQuery("getWmsfByStoreMi");
         q.setParameter("store", store);
         q.setParameter("mi", menuItem);
         q.setParameter("year", year);
-        q.setParameter("month", Month.getMonth(month));
+        q.setParameter("month", month);
 
         List<WeeklyMenuItemSalesForecast> wmsfList = (List<WeeklyMenuItemSalesForecast>) q.getResultList();
         wmsfList.sort(null);
 
         return wmsfList;
+    }
+
+    @Override
+    public List<WeeklyIngredientSupplyReq> retrieveWisrForStoreIngredYrMth(Store store, Ingredient ingred, int year, Month month) {
+        Query q = em.createNamedQuery("getWisrByStoreIngredYrMth");
+        q.setParameter("store", store);
+        q.setParameter("ingredient", ingred);
+        q.setParameter("year", year);
+        q.setParameter("month", month);
+
+        List<WeeklyIngredientSupplyReq> wisrList = (List<WeeklyIngredientSupplyReq>) q.getResultList();
+        int numWeeks = Helper.getNumOfWeeks(month.value, year);
+
+        if (wisrList.size() < numWeeks) {
+            int[] slots = {0, 0, 0, 0, 0};
+            for (WeeklyIngredientSupplyReq wisr : wisrList) {
+                slots[wisr.getWeek() - 1]++;
+            }
+            for (int i = 0; i < numWeeks; i++) {
+                if (slots[i] == 0) {
+                    WeeklyIngredientSupplyReq wisr = new WeeklyIngredientSupplyReq();
+                    wisr.setIngredient(ingred);
+                    wisr.setStore(store);
+                    wisr.setMonth(month);
+                    wisr.setYear(year);
+                    wisr.setWeek(i + 1);
+                    wisrList.add(wisr);
+                }
+            }
+        }
+        wisrList.sort(null);
+
+        return wisrList;
+    }
+
+    @Override
+    public void makeIngredPurchaseOrders(Store store, Month month, int year, int week) {
+        Query q = em.createNamedQuery("getWisrByStoreYrMthWk");
+        q.setParameter("store", store);
+        q.setParameter("year", year);
+        q.setParameter("month", month);
+        q.setParameter("week", week);
+
+        List<WeeklyIngredientSupplyReq> wisrList = (List<WeeklyIngredientSupplyReq>) q.getResultList();
+        Map<IngredientSupplier, List<IngredientPurchaseOrderDetail>> supplierMap = new HashMap();
+        IngredientSupplier supplier;
+        List<IngredientPurchaseOrderDetail> ipodList;
+
+        for (WeeklyIngredientSupplyReq wisr : wisrList) {
+            supplier = QueryMethods.findIngredSupplierFromIngred(em, wisr.getIngredient());
+
+            if (wisr.getIngredPoDetail() != null) {
+                if (supplier != null) {
+                    if (!supplierMap.containsKey(supplier) || (supplierMap.containsKey(supplier) && supplierMap.get(supplier) == null)) {
+                        ipodList = new ArrayList();
+                        ipodList.add(wisr.getIngredPoDetail());
+                        supplierMap.put(supplier, ipodList);
+                    } else {
+                        supplierMap.get(supplier).add(wisr.getIngredPoDetail());
+                    }
+                } else {
+                    System.err.println("Ingredient NOT ORDERED for " + wisr.getIngredient().getName() + " because there is no supplier for this ingredient!");
+                }
+            }
+        }
+
+        for (IngredientSupplier eachSup : supplierMap.keySet()) {
+            IngredientPurchaseOrder ipo = new IngredientPurchaseOrder();
+            ipo.setCurrency(eachSup.getCountry().getCurrency());
+            ipo.setIngredPurchaseOrderDetails(supplierMap.get(eachSup));
+            ipo.setIngredSupplier(eachSup);
+            ipo.setOrderDate(Helper.getStartDateOfWeek(month.value, year, week));
+            ipo.setStatus(PurchaseOrderStatus.PLANNED);
+            ipo.setShipsTo(store);
+            ipo.setStore(store);
+
+            double totalPrice = 0.0;
+            for (IngredientPurchaseOrderDetail ipod : ipo.getIngredPurchaseOrderDetails()) {
+                totalPrice += ipod.getSubtotalPrice();
+                ipod.setIngredPurchaseOrder(ipo);
+            }
+            ipo.setPrice(totalPrice);
+
+            em.persist(ipo);
+        }
     }
 
     @Override
@@ -621,4 +709,5 @@ public class FoodForecastBean implements FoodForecastBeanLocal {
 
         return growthRate;
     }
+
 }

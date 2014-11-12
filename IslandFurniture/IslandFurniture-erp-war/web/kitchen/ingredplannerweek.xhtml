@@ -5,6 +5,11 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="content">
+        <style type="text/css">
+            tr.ui-widget-content.ui-datatable-even, tr.ui-widget-content.ui-datatable-odd{
+                border-bottom: 1px #ccc !important;
+            }
+        </style>
         <f:metadata>
             <f:viewParam name="month" value="#{ingredPlannerWeekManagedBean.month}"/>
             <f:viewParam name="year" value="#{ingredPlannerWeekManagedBean.year}"/>
@@ -33,16 +38,26 @@
         <div class="col-md-12">
             <h:form id="form">
                 <span class="pull-right">
-                    <h:commandButton value="Save Updates" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
+                    <h:commandButton value="Save Updates" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true and ingredPlannerWeekManagedBean.notNullWmsfList != null}">
                         <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.updateWmsf}" execute="@form" />
                     </h:commandButton>
-                    <h:commandButton value="Reset Figures" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}">
+                    <h:commandButton value="Reset Figures" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true and ingredPlannerWeekManagedBean.notNullWmsfList != null}">
                         <f:ajax render="wmsfTable :statuses" listener="#{ingredPlannerWeekManagedBean.resetWmsf}" />
                     </h:commandButton>
-                    <h:commandButton action="ingredplannerweek.xhtml" actionListener="#{ingredPlannerWeekManagedBean.orderIngred}" value="Order Ingredients" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true}" />
-                    <h:commandLink action="ingredplanner.xhtml">
+                    <h:commandButton action="ingredplannerweek.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{ingredPlannerWeekManagedBean.orderIngred}" value="Order Ingredients" class="btn btn-sm btn-success pull-right" rendered="#{ingredPlannerWeekManagedBean.editable == true and ingredPlannerWeekManagedBean.notNullWmsfList != null}" />
+                    <a href="ingredplanner.xhtml">
                         <button type="button" class="btn btn-sm btn-default">
                             <i class="fa fa-fw fa-arrow-circle-o-left"></i>Back
+                        </button> 
+                    </a>
+                    <h:commandLink action="ingredplannerweek.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{ingredPlannerWeekManagedBean.prevMonth}">
+                        <button type="button" class="btn btn-sm btn-default">
+                            <i class="fa fa-fw fa-caret-square-o-left"></i>Prev Month
+                        </button> 
+                    </h:commandLink>
+                    <h:commandLink action="ingredplannerweek.xhtml?faces-redirect=true&amp;includeViewParams=true" actionListener="#{ingredPlannerWeekManagedBean.nextMonth}">
+                        <button type="button" class="btn btn-sm btn-default">
+                            Next Month<i class="fa fa-fw fa-caret-square-o-right"></i>
                         </button> 
                     </h:commandLink>
                 </span>  
@@ -74,6 +89,57 @@
                 </p:dataTable>
                 <h:outputText rendered="#{ingredPlannerWeekManagedBean.notNullWmsfList == null}" value="There are no Weekly Menu Item Sales Forecast in this month." />
             </h:form>
+            <br/><br/>
+            <p:outputPanel id="ingredArea">
+                <h4>Weekly Ingredient Supply Requirements (#{ingredPlannerWeekManagedBean.month} #{ingredPlannerWeekManagedBean.year}, #{ingredPlannerWeekManagedBean.store.name} Store)</h4><hr/>
+                <p:dataTable value="#{ingredPlannerWeekManagedBean.wisrPairedList}" var="wisrCouple">
+                    <p:column>
+                        <f:facet name="header">
+                            Ingredients
+                        </f:facet>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column rowspan="2"><h:outputText value="#{wisrCouple.first.name}" /></p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            &#160;
+                        </f:facet>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>Gross Requirements</p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>Quantity to Order</p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:columns value="#{ingredPlannerWeekManagedBean.notNullWisrList}" var="wisr">
+                        <f:facet name="header">
+                            #{wisr.month} #{wisr.year}<br/>
+                            Week #{wisr.week}<br/>
+                            #{ingredPlannerWeekManagedBean.datePeriod(wisr.week)}
+                        </f:facet>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <h:outputText rendered="#{wisrCouple.second.size() gt wisr.week-1 and wisrCouple.second.get(wisr.week-1).qty != null}" value="#{wisrCouple.second.get(wisr.week-1).qty}" />
+                                    <h:outputText rendered="#{wisrCouple.second.size() le wisr.week-1 and wisrCouple.second.get(wisr.week-1).qty == null}" value="-" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputText rendered="#{wisrCouple.second.size() gt wisr.week-1 and wisrCouple.second.get(wisr.week-1).qtyToOrder != null}" value="#{wisrCouple.second.get(wisr.week-1).qtyToOrder}" />
+                                    <h:outputText rendered="#{wisrCouple.second.size() gt wisr.week-1 and wisrCouple.second.get(wisr.week-1).qtyToOrder == null}" value="-" />
+                                    <h:outputText rendered="#{wisrCouple.second.size() le wisr.week-1}" value="-" />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:columns>
+                </p:dataTable>
+            </p:outputPanel>
         </div>
     </ui:define>
 </ui:composition>

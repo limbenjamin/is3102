@@ -21,8 +21,8 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(
-            name = "findIngredientByName",
-            query = "SELECT a FROM Ingredient a WHERE a.name = :name"),
+            name = "findIngredientByNameAndCo",
+            query = "SELECT a FROM Ingredient a WHERE a.name = :name AND a.countryOffice = :countryOffice"),
     @NamedQuery(name = "getIngredientListByCountryOffice",
             query = "SELECT a FROM Ingredient a WHERE a.countryOffice = :countryOffice"),
     @NamedQuery(name = "getIngredientByCountryOfficeAndName",

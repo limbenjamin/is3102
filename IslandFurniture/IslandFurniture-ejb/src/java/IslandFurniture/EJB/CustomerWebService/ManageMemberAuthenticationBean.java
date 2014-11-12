@@ -68,7 +68,7 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }
     
     @Override
-    public Long createCustomerAccount(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth) {
+    public Long createCustomerAccount(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth, Country country) {
         Customer customer = new Customer();
         customer.setActive(Boolean.TRUE);
         //generate salt
@@ -82,6 +82,7 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setDateOfBirth(dateOfBirth);
         customer.setCumulativePoints(0);
         customer.setCurrentPoints(0);
+        customer.setCountry(country);
         em.persist(customer);
         em.flush();
         try {
@@ -93,7 +94,7 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
     }
     
     @Override
-    public Long createCustomerAccountNoEmail(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth) {
+    public Long createCustomerAccountNoEmail(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth, Country country) {
         Customer customer = new Customer();
         customer.setActive(Boolean.TRUE);
         //generate salt
@@ -107,6 +108,7 @@ public class ManageMemberAuthenticationBean implements ManageMemberAuthenticatio
         customer.setDateOfBirth(dateOfBirth);
         customer.setCumulativePoints(0);
         customer.setCurrentPoints(0);
+        customer.setCountry(country);
         em.persist(customer);
         em.flush();
         return customer.getId();

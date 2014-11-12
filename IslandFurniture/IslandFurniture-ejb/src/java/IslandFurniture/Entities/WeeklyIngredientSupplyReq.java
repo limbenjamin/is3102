@@ -23,10 +23,16 @@ import javax.persistence.OneToOne;
 @Entity
 @NamedQueries({
     @NamedQuery(
-            name = "findWisrByYrMthWk",
-            query = "SELECT a FROM WeeklyIngredientSupplyReq a WHERE a.year=:year AND a.month = :month AND a.week = :week AND a.ingredient = :ingredient")
+            name = "getWisrByStoreIngredYrMth",
+            query = "SELECT a FROM WeeklyIngredientSupplyReq a WHERE a.store = :store AND a.year = :year AND a.month = :month AND a.ingredient = :ingredient"),
+    @NamedQuery(
+            name = "findWisrByStoreYrMthWk",
+            query = "SELECT a FROM WeeklyIngredientSupplyReq a WHERE a.store = :store AND a.year = :year AND a.month = :month AND a.week = :week AND a.ingredient = :ingredient"),
+    @NamedQuery(
+            name = "getWisrByStoreYrMthWk",
+            query = "SELECT a FROM WeeklyIngredientSupplyReq a WHERE a.store = :store AND a.year = :year AND a.month = :month AND a.week = :week")
 })
-public class WeeklyIngredientSupplyReq implements Serializable {
+public class WeeklyIngredientSupplyReq implements Serializable, Comparable<WeeklyIngredientSupplyReq> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -137,6 +143,17 @@ public class WeeklyIngredientSupplyReq implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public int compareTo(WeeklyIngredientSupplyReq other){
+        if(this.week < other.week){
+            return -1;
+        } else if (this.week > other.week){
+            return 1;
+        }
+        
+        return 0;
     }
 
     @Override

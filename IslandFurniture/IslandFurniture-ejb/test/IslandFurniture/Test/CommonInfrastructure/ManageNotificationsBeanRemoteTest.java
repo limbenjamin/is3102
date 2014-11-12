@@ -101,14 +101,13 @@ public class ManageNotificationsBeanRemoteTest {
         }
         try{
             manageNotificationsBeanRemote.createNewNotificationForPrivilege("title", "content", "link.xhtml", "linkText", null);
-            fail("Exception Not Thrown");
-        }catch(Exception e){            
+        }catch(Exception e){ 
+            fail("Exception Thrown");
         }
         try{
             manageNotificationsBeanRemote.createNewNotificationForPrivilege("title2", "content2", "link.xhtml", "linkText", privilege);
-            fail("Exception Not Thrown");
         }catch(Exception e){
-            
+            fail("Exception Thrown");
         }
     }
 
@@ -121,14 +120,13 @@ public class ManageNotificationsBeanRemoteTest {
         }
         try{
             manageNotificationsBeanRemote.createNewNotificationForPrivilegeFromPlant("title", "content", "link.xhtml", "linkText", null, store);
-            fail("Exception Not Thrown");
-        }catch(Exception e){            
+        }catch(Exception e){
+            fail("Exception Thrown");
         }
         try{
             manageNotificationsBeanRemote.createNewNotificationForPrivilegeFromPlant("title2", "content2", "link.xhtml", "linkText", privilege, null);
-            fail("Exception Not Thrown");
         }catch(Exception e){
-            
+            fail("Exception Thrown");
         }
     }
     

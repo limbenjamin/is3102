@@ -22,9 +22,9 @@ public interface ManageMemberAuthenticationBeanLocal {
 
     Customer authenticate(String emailAddress, String password);
 
-    Long createCustomerAccount(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth);
+    Long createCustomerAccount(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth, Country country);
     
-    Long createCustomerAccountNoEmail(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth);
+    Long createCustomerAccountNoEmail(String emailAddress, String password, String name, String phoneNo, String address, String dateOfBirth, Country country);
     
     Customer getCustomerFromLoyaltyCardId(String loyaltyCardId);
     

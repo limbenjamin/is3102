@@ -11,6 +11,7 @@
                     xmlns:ui="http://java.sun.com/jsf/facelets"
                     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                     xmlns:o="http://omnifaces.org/ui"
+                    xmlns:p="http://primefaces.org/ui"
                     >
 
 
@@ -173,7 +174,7 @@
                                 </p:column>
 
                                 <p:column headerText="Applicable Stores" id="updatecol4">
-                                    <p:selectOneMenu value="#{row.applicablePlant}" converter="omnifaces.SelectItemsConverter">
+                                    <p:selectOneMenu value="#{row.applicablePlant}" >
                                         <f:selectItem itemLabel="ALL STORES" itemValue="${null}"/>
                                         <f:selectItems  value="${marketing.listOfStores}" var="member" itemLabel="#{member.name}" itemValue="#{member}"></f:selectItems>
                                     </p:selectOneMenu>
@@ -192,15 +193,27 @@
                                 </p:column>
 
                                 <p:column headerText="Membership Tier" id="updatecol1">
-                                    <p:selectOneMenu  label="Membership Tiers"  value="#{row.membershiptier}" converter="omnifaces.SelectItemsConverter">
+                                    <p:selectOneMenu  label="Membership Tiers"  value="#{row.membershiptier}" >
                                         <f:selectItem itemValue="${null}" itemLabel="ALL Customers" />
                                         <f:selectItems  value="${marketing.membershipTiers}" var="member" itemLabel="#{member.title}" itemValue="#{member}"></f:selectItems>
                                     </p:selectOneMenu>
                                 </p:column>
 
-                                <p:column headerText="Usage Limit">
-                                    <p:inputText value="${row.usageCount}" style="width:50px;"/>
-                                    <p:dialog header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200" minWidth="600">
+                                <p:column headerText="Usage Limit" >
+                                                <h:panelGroup layout="block" id="usage" >
+                                    <p:inputText value="${row.usageCount}" style="width:50px;"  rendered="#{2147483647 > row.usageCount}"/>
+
+                                    <p:outputLabel for="vanishthis" value="Infinite Life:"  rendered="#{row.usageCount>=2147483647}" />
+                                    <p:selectOneMenu id="vanishthis" value="#{row.usageCount}" rendered="#{row.usageCount>=2147483647}">
+                                        <f:selectItem itemLabel="Yes" itemValue="#{Integer.MAX_VALUE}"></f:selectItem>
+                                        <f:selectItem itemLabel="No" itemValue="1"></f:selectItem>
+                                        <p:ajax update="@([id$=usage]),@([id$=vanishthis])"></p:ajax>
+
+                                    </p:selectOneMenu>
+                                    </h:panelGroup>
+
+
+                                    <p:dialog  header="List Of Coupons" widgetVar="Coupons_${row.id}" minHeight="200" minWidth="600" rendered="${marketing.currentEdit!=null}">
                                         <p:dataTable value="#{row.promotionCoupons}" var="coupon" rendered="${marketing.currentEdit!=null}" style="width:600px">
                                             <p:column headerText="CouponID" style="width:200px">
                                                 <h:outputText value="${marketing.getCouponID(coupon)}"/>
@@ -235,7 +248,7 @@
 
                                 <p:column headerText="Specific" id="updatecol3">
                                     <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProduct'}">
-                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetail(row)['stock']}" converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetail(row)['stock']}" >
                                             <f:selectItems  value="${marketing.listOfStocks}" var="member" itemLabel="#{member.name}[$#{marketing.getPrice(member)}]" itemValue="#{member}"></f:selectItems>
                                         </p:selectOneMenu>
                                         <br/>
@@ -243,14 +256,14 @@
                                     </h:panelGroup>
 
                                     <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductCategory'}">
-                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPC(row)['category']}" converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPC(row)['category']}" >
                                             <f:selectItem itemLabel="ALL Categories" itemValue="${null}"/>
                                             <f:selectItems  value="${marketing.furnitureCategory}" var="member" itemLabel="#{member}" itemValue="#{member}"></f:selectItems>
                                         </p:selectOneMenu>
                                     </h:panelGroup>
 
                                     <h:panelGroup layout="block" rendered="${marketing.whatpromotiondetail(row)=='PromotionDetailByProductSubCategory'}">
-                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPSC(row)['category']}" converter="omnifaces.SelectItemsConverter">
+                                        <p:selectOneMenu label="Product"  value="#{marketing.typeCastPromoDetailtoPSC(row)['category']}" >
                                             <f:selectItems  value="${marketing.furnitureSubCategory}" var="member" itemLabel="#{member}" itemValue="#{member}"></f:selectItems>
                                         </p:selectOneMenu>
                                     </h:panelGroup>

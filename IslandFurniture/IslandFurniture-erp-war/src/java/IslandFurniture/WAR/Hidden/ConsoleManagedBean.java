@@ -7,7 +7,7 @@ package IslandFurniture.WAR.Hidden;
 
 import IslandFurniture.EJB.ACRM.ACRMAnalyticsTimerLocal;
 import IslandFurniture.EJB.Manufacturing.ProductionPlanningSingletonLocal;
-import IslandFurniture.StaticClasses.InitialiseServerBeanLocal;
+import IslandFurniture.StaticClasses.TimerControlLocal;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -21,9 +21,8 @@ import javax.faces.view.ViewScoped;
 @Named(value = "consoleManagedBean")
 @ViewScoped
 public class ConsoleManagedBean implements Serializable {
-
     @EJB
-    private InitialiseServerBeanLocal initialiseServerBean;
+    private TimerControlLocal timerControl;
 
     @EJB
     private ProductionPlanningSingletonLocal singleatom;
@@ -49,8 +48,13 @@ public class ConsoleManagedBean implements Serializable {
     }
 
     public void startMssrUpdates(AjaxBehaviorEvent event) {
-        initialiseServerBean.startMssrTimer();
+        timerControl.startMssrTimer();
         statusMessage = "MSSR Update Timer Started. 5sec = 1 Month";
+    }
+    
+    public void startIngredientPurchaseOrderUpdates(AjaxBehaviorEvent event){
+        timerControl.setIpodSteps(2);
+        statusMessage = "Ingredient Purchase Order automatic processing started. Demo for 2 weeks only.";
     }
 
     /**
