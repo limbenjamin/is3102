@@ -10,14 +10,15 @@ import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Store;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.bean.ViewScoped;
 
 /**
  *
@@ -36,7 +37,11 @@ public class IndexManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        this.coList = manageOrganizationalHierarchyBean.displayCountryOffice();
+        this.coList = new ArrayList<>();
+        for(CountryOffice co: manageOrganizationalHierarchyBean.displayCountryOffice()) {
+            if (!co.getStores().isEmpty())
+                this.coList.add(co);
+        }
         this.storeList = manageOrganizationalHierarchyBean.displayStore();
     }
 
