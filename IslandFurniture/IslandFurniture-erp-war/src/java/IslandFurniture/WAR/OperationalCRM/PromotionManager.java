@@ -352,7 +352,7 @@ public class PromotionManager implements Serializable {
                 RequestContext.getCurrentInstance().scrollTo("manage_campaign");
                 break;
 
-            case "Email":
+            case "Email Customers!":
                 System.out.println("(campaignbutton): Email");
                 currentEdit = thepc;
                 success_msg = "Emailed campaign: " + thepc.getTitle() + " TOTAL EMAIL SENT=" + mbean.EmailCustomer(thepc, ubean.getCountryOffice(currentUser.getPlant()));

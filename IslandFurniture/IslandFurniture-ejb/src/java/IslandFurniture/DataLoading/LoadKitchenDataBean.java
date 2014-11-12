@@ -71,7 +71,7 @@ public class LoadKitchenDataBean implements LoadKitchenDataBeanRemote {
     }
 
     private Ingredient addIngredient(CountryOffice co, String name) {
-        Ingredient ingred = QueryMethods.findIngredientByName(em, name);
+        Ingredient ingred = QueryMethods.findIngredientByNameAndCo(em, name, co);
 
         if (ingred == null) {
             ingred = new Ingredient();
@@ -211,7 +211,7 @@ public class LoadKitchenDataBean implements LoadKitchenDataBeanRemote {
                     if (rand.nextBoolean()) {
                         recipeDetail = new RecipeDetail();
                         recipeDetail.setIngredient(eachIngred);
-                        recipeDetail.setQuantity(rand.nextInt(100) / 3.0);
+                        recipeDetail.setQuantity((rand.nextInt(5)+1) / 2.0);
                         recipeDetail.setRecipe(dish.getRecipe());
                         em.persist(recipeDetail);
 

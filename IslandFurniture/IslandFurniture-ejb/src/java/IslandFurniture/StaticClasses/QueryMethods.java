@@ -149,9 +149,10 @@ public class QueryMethods {
         }
     }
 
-    public static Ingredient findIngredientByName(EntityManager em, String ingredientName) {
-        Query q = em.createNamedQuery("findIngredientByName");
+    public static Ingredient findIngredientByNameAndCo(EntityManager em, String ingredientName, CountryOffice co) {
+        Query q = em.createNamedQuery("findIngredientByNameAndCo");
         q.setParameter("name", ingredientName);
+        q.setParameter("countryOffice", co);
 
         try {
             return (Ingredient) q.getSingleResult();
@@ -380,6 +381,21 @@ public class QueryMethods {
         }
     }
 
+    public static IngredientSupplier findIngredSupplierFromIngred(EntityManager em, Ingredient ingred) {
+        Query q = em.createNamedQuery("findIngredSupplierFromIngred");
+        q.setParameter("ingredient", ingred);
+
+        for(IngredientSupplier supplier: (List<IngredientSupplier>) q.getResultList()){
+            System.out.println(supplier.getName());
+        }
+        
+        try {
+            return (IngredientSupplier) q.getSingleResult();
+        } catch (NoResultException nrex) {
+            return null;
+        }
+    }
+
     public static WeeklyIngredientSupplyReq findOrMakePastWmsf(EntityManager em, WeeklyIngredientSupplyReq wisr, int weeksOffset) {
         int year = wisr.getYear();
         int month = wisr.getMonth().value;
@@ -390,8 +406,8 @@ public class QueryMethods {
             weekOff--;
             week--;
             if (week <= 0) {
-                week = Helper.getNumOfWeeks(month, year);
                 month--;
+                week = Helper.getNumOfWeeks(month, year);
                 if (month < 0) {
                     month = 11;
                     year--;
@@ -399,8 +415,9 @@ public class QueryMethods {
             }
         }
 
-        Query q = em.createNamedQuery("findWisrByYrMthWk");
+        Query q = em.createNamedQuery("findWisrByStoreYrMthWk");
         q.setParameter("ingredient", wisr.getIngredient());
+        q.setParameter("store", wisr.getStore());
         q.setParameter("year", year);
         q.setParameter("month", Month.getMonth(month));
         q.setParameter("week", week);
@@ -414,10 +431,9 @@ public class QueryMethods {
             pastWisr.setYear(year);
             pastWisr.setMonth(Month.getMonth(month));
             pastWisr.setWeek(week);
-            pastWisr.setQty((long)0);
 
             return pastWisr;
-        } catch (NonUniqueResultException nurex){
+        } catch (NonUniqueResultException nurex) {
             return null;
         }
     }

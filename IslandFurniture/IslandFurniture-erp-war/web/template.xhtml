@@ -58,19 +58,19 @@
 
             .HEAVY_WORKLOAD
             {
-                background-color: red !important;
+                background-color: #e74c3c !important;
                 filter: alpha(opacity=80) !important;
             }
 
             .MEDIUM_WORKLOAD
             {
-                background-color: yellow !important;
+                background-color: #f39c12 !important;
                 filter: alpha(opacity=80) !important;
             }
 
             .LIGHT_WORKLOAD
             {
-                background-color: green !important;
+                background-color: #2ecc71 !important;
                 filter: alpha(opacity=80) !important;
             }
 
@@ -257,7 +257,7 @@
                                                 $(document).ready(function() {
                                                     $(".needauto").select2();
                                                 });
-                                                $(document).idleTimer(300000);
+                                                $(document).idleTimer(900000);
                                                 $(document).on("idle.idleTimer", function(event, elem, obj) {
                                                     document.getElementById("hiddenForm:hidden-logout").click();
                                                     alert("Logged out due to inactivity");

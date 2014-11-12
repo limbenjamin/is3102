@@ -10,10 +10,13 @@ import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.EJB.Kitchen.FoodForecastBeanLocal;
+import IslandFurniture.EJB.Kitchen.KitchenStockManagerLocal;
+import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.WeeklyIngredientSupplyReq;
 import IslandFurniture.Entities.WeeklyMenuItemSalesForecast;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Exceptions.InvalidWmsfException;
@@ -26,6 +29,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -40,6 +44,9 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class IngredPlannerWeekManagedBean implements Serializable {
+
+    @EJB
+    private KitchenStockManagerLocal kitchenStockManager;
 
     @EJB
     private ManagePrivilegesBeanLocal managePrivilegesBean;
@@ -65,6 +72,9 @@ public class IngredPlannerWeekManagedBean implements Serializable {
     private List<Couple<MenuItem, List<WeeklyMenuItemSalesForecast>>> wmsfPairedList;
     private boolean editable = true;
     private List<WeeklyMenuItemSalesForecast> notNullWmsfList;
+    private List<WeeklyIngredientSupplyReq> notNullWisrList;
+
+    private List<Couple<Ingredient, List<WeeklyIngredientSupplyReq>>> wisrPairedList;
 
     @PostConstruct
     public void init() {
@@ -86,6 +96,7 @@ public class IngredPlannerWeekManagedBean implements Serializable {
                 this.year = Integer.valueOf(yearParam);
 
                 this.loadWmsf();
+                this.loadWisr();
             } catch (Exception ex) {
                 try {
                     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -108,7 +119,7 @@ public class IngredPlannerWeekManagedBean implements Serializable {
         wmsfPairedList = new ArrayList();
 
         for (MenuItem mi : this.store.getCountryOffice().getMenuItems()) {
-            List<WeeklyMenuItemSalesForecast> wmsfList = foodForecastBean.retrieveWmsfForStoreMi(store, mi, year, month.value);
+            List<WeeklyMenuItemSalesForecast> wmsfList = foodForecastBean.retrieveWmsfForStoreMi(store, mi, year, month);
             wmsfPairedList.add(new Couple(mi, wmsfList));
             if (wmsfList != null && !wmsfList.isEmpty()) {
                 this.notNullWmsfList = wmsfList;
@@ -116,6 +127,18 @@ public class IngredPlannerWeekManagedBean implements Serializable {
         }
 
         this.editable = foodForecastBean.isWmsfListEditable(wmsfPairedList);
+    }
+
+    public void loadWisr() {
+        wisrPairedList = new ArrayList();
+
+        for (Ingredient ingred : kitchenStockManager.getIngredientList(store.getCountryOffice())) {
+            List<WeeklyIngredientSupplyReq> wisrList = foodForecastBean.retrieveWisrForStoreIngredYrMth(store, ingred, year, month);
+            wisrPairedList.add(new Couple(ingred, wisrList));
+            if (wisrList != null && !wisrList.isEmpty()) {
+                this.notNullWisrList = wisrList;
+            }
+        }
     }
 
     public void updateWmsf(AjaxBehaviorEvent event) {
@@ -150,11 +173,31 @@ public class IngredPlannerWeekManagedBean implements Serializable {
         try {
             foodForecastBean.saveWeeklyMenuItemSalesForecast(wmsfPairedList);
             foodForecastBean.orderIngredients(this.wmsfPairedList, this.store, this.month, this.year, this.notNullWmsfList.size());
-            errorMessage = "";
-            successMessage = "Ingredients ordered successfully";
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Ingredients ordered successfully", ""));
         } catch (InvalidWmsfException ex) {
-            successMessage = "";
-            errorMessage = ex.getMessage();
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), ""));
+        }
+    }
+
+    public void nextMonth() {
+        int monthVal = this.month.value + 1;
+        if (monthVal >= 12) {
+            this.month = Month.JAN;
+            this.year++;
+        } else {
+            this.month = Month.getMonth(monthVal);
+        }
+    }
+
+    public void prevMonth() {
+        int monthVal = this.month.value - 1;
+        if (monthVal < 0) {
+            this.month = Month.DEC;
+            this.year--;
+        } else {
+            this.month = Month.getMonth(monthVal);
         }
     }
 
@@ -234,6 +277,22 @@ public class IngredPlannerWeekManagedBean implements Serializable {
 
     public void setNotNullWmsfList(List<WeeklyMenuItemSalesForecast> notNullWmsfList) {
         this.notNullWmsfList = notNullWmsfList;
+    }
+
+    public List<Couple<Ingredient, List<WeeklyIngredientSupplyReq>>> getWisrPairedList() {
+        return wisrPairedList;
+    }
+
+    public void setWisrPairedList(List<Couple<Ingredient, List<WeeklyIngredientSupplyReq>>> wisrPairedList) {
+        this.wisrPairedList = wisrPairedList;
+    }
+
+    public List<WeeklyIngredientSupplyReq> getNotNullWisrList() {
+        return notNullWisrList;
+    }
+
+    public void setNotNullWisrList(List<WeeklyIngredientSupplyReq> notNullWisrList) {
+        this.notNullWisrList = notNullWisrList;
     }
 
 }

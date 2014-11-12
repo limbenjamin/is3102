@@ -8,37 +8,34 @@
     </h:head>
     <h:body>
         <h:form>
-            Activate Timed Functions Here <br />
+            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
+
+
+            Activate Timed Functions for MSSR <br />
             <h:commandButton value="Start Update MSSR Timers">
                 <f:ajax listener="#{consoleManagedBean.startMssrUpdates}" render="statusMessage" />
             </h:commandButton><br />
-            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
-        </h:form>
 
-        <h:form>
             Activate Timed Functions for Production Planning<br />
             <h:commandButton value="Start Production Planning Simulation">
                 <f:ajax listener="#{consoleManagedBean.startMRPUpdates}" render="statusMessage" />
             </h:commandButton><br />
-            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
-        </h:form>
 
-        <h:form>
+            Activate Timed Functions for Ingredient Requirements Purchasing<br />
+            <h:commandButton value="Start Ingredient Purchasing Timers">
+                <f:ajax listener="#{consoleManagedBean.startIngredientPurchaseOrderUpdates}" render="statusMessage" />
+            </h:commandButton><br />
+
             Activate Timed Functions for Analytical CRM<br />
             <h:commandButton value="Start ACRM Analysis">
                 <f:ajax listener="#{consoleManagedBean.startACRMUpdates}" render="statusMessage" />
             </h:commandButton><br />
-            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
-        </h:form>
 
-        <h:form>
             Activate Timed Functions for Analytical CRM For Transaction<br />
             <h:commandButton value="Start ACRM Analysis For Transaction">
                 <f:ajax listener="#{consoleManagedBean.startACRMTUpdates}" render="statusMessage" />
             </h:commandButton><br />
-            <h:outputText id="statusMessage" value="#{consoleManagedBean.statusMessage}" />
         </h:form>
-
 
     </h:body>
 </html>

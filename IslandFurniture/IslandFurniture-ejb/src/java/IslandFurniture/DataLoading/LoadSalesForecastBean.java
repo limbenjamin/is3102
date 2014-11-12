@@ -73,8 +73,8 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     // Update Quantity Forecasted and Actual Inventories
                     if (i < listOfMssr.size() - (FORECAST_LOCKOUT_MONTHS + 1)) {
                         do {
-                            eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(10) * 10 - 50);
-                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0 && eachMssr.getQtyForecasted() >= 0);
+                            eachMssr.setQtyForecasted(eachMssr.getQtySold() + rand.nextInt(10) * 10 - 30);
+                        } while (eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold() < 0 || eachMssr.getQtyForecasted() <= 0);
 
                         eachMssr.setActualInventory(eachMssr.getQtyForecasted() + eachMssr.getPlannedInventory() - eachMssr.getQtySold());
                     } else {

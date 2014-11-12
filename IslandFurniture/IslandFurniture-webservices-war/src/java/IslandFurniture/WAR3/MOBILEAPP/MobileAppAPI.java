@@ -8,6 +8,7 @@ package IslandFurniture.WAR3.MOBILEAPP;
 import IslandFurniture.EJB.CustomerWebService.ManageCatalogueBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorefrontInventoryLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
@@ -77,6 +78,9 @@ public class MobileAppAPI {
     @EJB
     private ManageMembershipLocal cmu;
 
+    @EJB
+    private ManageOrganizationalHierarchyBeanLocal mohb;
+
     @GET
     @Path("memberlogin")
     @Produces(MediaType.APPLICATION_JSON)
@@ -85,7 +89,6 @@ public class MobileAppAPI {
         if (Cust_ID == null) {
             return "";
         }
-        
 
         Long custid = Long.parseLong(Cust_ID);
         System.out.println("getCustomerInfo(): " + Cust_ID);
@@ -316,10 +319,10 @@ public class MobileAppAPI {
     @POST
     @Path("register")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getRegister(@FormParam("email") String email, @FormParam("password") String password, @FormParam("password2") String password2, @FormParam("name") String name, @FormParam("address") String address, @FormParam("phone") String phone, @FormParam("dob") String dob) {
+    public String getRegister(@FormParam("email") String email, @FormParam("password") String password, @FormParam("password2") String password2, @FormParam("name") String name, @FormParam("address") String address, @FormParam("phone") String phone, @FormParam("dob") String dob, @FormParam("country") String country) {
 
         try {
-            mmab.createCustomerAccount(email, password, name, phone, address, name);
+            mmab.createCustomerAccount(email, password, name, phone, address, name, mohb.findCountryOfficeByName(country).getCountry());
         } catch (Exception ex) {
             return (Json.createObjectBuilder().add("success", false).add("error", ex.getMessage()).build().toString());
         }
@@ -330,18 +333,17 @@ public class MobileAppAPI {
     @Path("promote")
     @Produces(MediaType.APPLICATION_JSON)
     public String PromoteMember(@QueryParam("cust_id") Long custID, @QueryParam("transc_id") Long Transc_ID) {
-        String status="";
-        try{
-         status = cmu.checkMembershipUpgrade(custID, Transc_ID);
-                System.out.println("PromoteMember(): "+ status);
+        String status = "";
+        try {
+            status = cmu.checkMembershipUpgrade(custID, Transc_ID);
+            System.out.println("PromoteMember(): " + status);
 
-        }catch(Exception ex){
-                System.out.println("PromoteMember(): "+ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println("PromoteMember(): " + ex.getMessage());
 
-            return (Json.createObjectBuilder().add("success", false).add("error", "ERROR"+ex.getMessage()).build().toString());
+            return (Json.createObjectBuilder().add("success", false).add("error", "ERROR" + ex.getMessage()).build().toString());
         }
-        
-        
+
         if (status.equals("fail")) {
             return (Json.createObjectBuilder().add("success", false).add("error", "Invalid ID").build().toString());
         }
@@ -349,7 +351,6 @@ public class MobileAppAPI {
         if (status.equals("exist")) {
             return (Json.createObjectBuilder().add("success", false).add("error", "Already Used !").build().toString());
         }
-        
 
         return (Json.createObjectBuilder().add("success", true).add("added", status.split(",")[0]).add("current", status.split(",")[1]).add("promote", status.split(",")[2]).build().toString());
 

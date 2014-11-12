@@ -10,6 +10,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageShoppingListBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
+import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureModel;
@@ -23,6 +24,7 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.Voucher;
 import IslandFurniture.Exceptions.DuplicateEntryException;
 import IslandFurniture.StaticClasses.QueryMethods;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -164,9 +166,12 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         String[] addresses = {"325 Park Lane, Cruz 376421", "12 Stuart Lane, FIN 298301", "92 Rockefella Ricker House, GF 234091", "90 Albertster Street, 29", "23 Rickets Lane, Singapore 234998"};
         Customer cust;
         List<Store> stores = (List<Store>) em.createNamedQuery("getAllStores").getResultList();
+        List<Country> countries = new ArrayList();
+        countries.add(QueryMethods.findCountryByName(em, "Singapore"));
+        countries.add(QueryMethods.findCountryByName(em, "Malaysia"));
 
         for (int i = 0; i < 1600; i++) {
-            Long custId = mmabl.createCustomerAccountNoEmail(firstNames[i % firstNames.length] + i + "@limbenjamin.com", "pass", firstNames[i % firstNames.length] + " " + midNames[i % midNames.length] + " " + lastNames[i % lastNames.length], "+6581273798", addresses[i % addresses.length], (rand.nextInt(30) + 1) + "-" + (rand.nextInt(12) + 1) + "-" + (rand.nextInt(40) + 1950));
+            Long custId = mmabl.createCustomerAccountNoEmail(firstNames[i % firstNames.length] + i + "@limbenjamin.com", "pass", firstNames[i % firstNames.length] + " " + midNames[i % midNames.length] + " " + lastNames[i % lastNames.length], "+6581273798", addresses[i % addresses.length], (rand.nextInt(30) + 1) + "-" + (rand.nextInt(12) + 1) + "-" + (rand.nextInt(40) + 1950), countries.get(i%countries.size()));
             cust = em.find(Customer.class, custId);
 
             // Shopping List additions
@@ -205,11 +210,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
                 shopListBean.updateListTotalPrice(shopList.getId(), cust);
             }
         }
-
+        Country country = mohb.findCountryByName("Singapore");
         // Create Customers
-        mmabl.createCustomerAccountNoEmail("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989");
-        mmabl.createCustomerAccountNoEmail("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958");
-        mmabl.createCustomerAccountNoEmail("craig@limbenjamin.com", "pass", "Craig H. Cotter", "210-967-1644", "2703 Bell Street San Antonio, TX 78233", "11-04-1985");
+        mmabl.createCustomerAccountNoEmail("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989",country);
+        mmabl.createCustomerAccountNoEmail("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958",country);
+        mmabl.createCustomerAccountNoEmail("craig@limbenjamin.com", "pass", "Craig H. Cotter", "210-967-1644", "2703 Bell Street San Antonio, TX 78233", "11-04-1985",country);
         Customer c = mmabl.getCustomer("martha@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "B00DBD31");
         c = mmabl.getCustomer("stella@limbenjamin.com");
