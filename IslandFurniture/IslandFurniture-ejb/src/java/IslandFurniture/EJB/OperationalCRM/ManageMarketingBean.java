@@ -305,6 +305,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
     @Override
     public double calcDiscount(Stock s, CountryOffice co, PromotionDetail pd) {
+        System.out.println("Calc Discount for Stock :" +s + " CO="+co+" pd="+pd);
         Double op = this.getPrice(s, co);
         Double newprice = op;
         //agnostic about membershipTier
@@ -312,7 +313,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         if (pd.getPromotionCampaign() == null) {
             return op;
         }
-
+        
+        
         if (pd.getUsageCount() <= 0 || pd.getPromotionCampaign().getLocked() || pd.getPromotionCampaign().getExpired()) {
             return (op);
         }

@@ -33,7 +33,7 @@ public class ConsoleManagedBean implements Serializable {
     private String statusMessage;
 
     public void startMRPUpdates(AjaxBehaviorEvent event) {
-        singleatom.setAdvanceWeek(12);
+        singleatom.setAdvanceWeek(6);
         statusMessage = "MRP Engine started . Moving 12 weeks in advance ! 1 week = 5s";
     }
 
