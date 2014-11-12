@@ -30,13 +30,16 @@
                                 <section class="panel">  
                                     <h:form class="form-horizontal" id="SSForm">
                                         <p:dataTable value="#{stockSupplierManagedBean.stockSuppliedList}" var="ss" id="SSListTable"> 
-                                            <p:column filterBy="#{ss.countryOffice.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control" headerText="Country Office / Distribution Centre" sortBy="#{ss.countryOffice.name}">
-                                                <h:outputText value="#{ss.countryOffice.name}" class="transparent-form"></h:outputText>
+                                            <p:column id="countryName" filterBy="#{ss.countryOffice.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control filter-box" headerText="Country Office / Dist. Centre" sortBy="#{ss.countryOffice.name}">
+                                                <p:watermark for="@(#SSForm\\:SSListTable\\:countryName\\:filter)" value="Filter Countries..."/>
+                                                <h:outputText value="#{ss.countryOffice.name}"></h:outputText>
                                             </p:column>
-                                            <p:column filterBy="#{ss.manufacturingFacility.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control" headerText="Manufacturing Facility" sortBy="#{ss.manufacturingFacility.name}">
+                                            <p:column id="mfName" filterBy="#{ss.manufacturingFacility.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control filter-box" headerText="Manufacturing Facility" sortBy="#{ss.manufacturingFacility.name}">
+                                                <p:watermark for="@(#SSForm\\:SSListTable\\:mfName\\:filter)" value="Filter Facilities..."/>
                                                 <h:outputText value="#{ss.manufacturingFacility.name}" class="transparent-form"></h:outputText>
                                             </p:column> 
-                                            <p:column filterBy="#{ss.stock.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control"  headerText="Stock" sortBy="#{ss.stock.name}">
+                                            <p:column id="stockName" filterBy="#{ss.stock.name}" filterFunction="#{stockSupplierManagedBean.filterByName}" filterStyleClass="form-control filter-box"  headerText="Stock" sortBy="#{ss.stock.name}">
+                                                <p:watermark for="@(#SSForm\\:SSListTable\\:stockName\\:filter)" value="Filter Stock..."/>
                                                 <h:outputText value="#{ss.stock.name}" class="transparent-form"></h:outputText>
                                             </p:column>  
                                             <p:column headerText="Delete" style="text-align: center; width: 10%">
