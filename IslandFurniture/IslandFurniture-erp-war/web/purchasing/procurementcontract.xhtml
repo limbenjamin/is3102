@@ -162,11 +162,11 @@
                                         <div class="col-sm-8">
                                             <h:outputText value="#{procurementContractManagedBean.pcd.supplierFor.name}" class="form-control transparent-form"></h:outputText>
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Currency: </label>
                                         <div class="col-sm-8">
-                                            <h:selectOneMenu id="currencyID" class="form-control needauto" value="#{procurementContractManagedBean.pcd.currency}">
+                                            <h:selectOneMenu id="currencyID" class="form-control" value="#{procurementContractManagedBean.pcd.currency}">
                                                 <f:selectItem itemLabel="#{PCD.currency.name}" />
                                                 <f:selectItems value="#{procurementContractManagedBean.currencyList}" var="currency" itemLabel="#{currency.name}" itemValue="#{currency}" />
                                             </h:selectOneMenu>
@@ -191,12 +191,12 @@
                                         <div class="col-sm-8">
                                             <h:inputText value="#{procurementContractManagedBean.pcd.leadTimeInDays}" class="form-control"></h:inputText>
                                         </div>
-                                    </div>  
-                                </h:panelGroup> 
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>
-                                    <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail}" class="btn btn-success btn-round" value="Update" ></h:commandButton>
-                                </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-round" data-dismiss="modal">Cancel</button>    
+                                        <h:commandButton actionListener="#{procurementContractManagedBean.editProcurementContractDetail()}" class="btn btn-success btn-round" value="Update" ></h:commandButton>
+                                    </div>
+                                </h:panelGroup>  
                             </h:form>
                         </div>
                     </div>

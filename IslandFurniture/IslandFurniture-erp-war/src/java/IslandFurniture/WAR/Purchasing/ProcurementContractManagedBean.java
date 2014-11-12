@@ -133,7 +133,7 @@ public class ProcurementContractManagedBean implements Serializable {
         System.out.println(this.getSupplierID());
         return "procurementcontract";
     }
-    public String deleteProcurementContractDetail() {
+    public void deleteProcurementContractDetail() throws IOException {
         System.out.println("ProcurementContractManagedBean.deleteProcurementContractDetail()");
         Long id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("pcdID"));
         String msg = supplierManager.deleteProcurementContractDetail(id, this.supplierID);
@@ -145,9 +145,10 @@ public class ProcurementContractManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Procurement Contract Detail has been successfully deleted", ""));    
         }    
-        return "procurementcontract"; 
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("procurementcontract.xhtml");
     }
-    public String addProcurementContractDetail() {
+    public void addProcurementContractDetail() throws IOException {
         System.out.println("ProcurementContractManagedBean.addProcurementContractDetail()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String supplierId = request.getParameter("addPCD:supplierID");
@@ -167,9 +168,10 @@ public class ProcurementContractManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Procurement Contract Detail has been successfully added", ""));    
         }    
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
-        return "procurementcontract";
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("procurementcontract.xhtml");
     } 
-    public String editProcurementContractDetail(ActionEvent event) throws IOException { 
+    public void editProcurementContractDetail(ActionEvent event) throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()"); 
         System.out.println("Currency is " + pcd.getCurrency().getName());
         String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), Long.parseLong(pcd.getCurrency().getName()));  
@@ -181,7 +183,8 @@ public class ProcurementContractManagedBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Procurement Contract Detail has been updated", ""));
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("supplierID", supplier.getId());
-        return "procurementcontract";
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect("procurementcontract.xhtml");
     }
     public void viewPCD(AjaxBehaviorEvent event) {
         System.out.println("ProcurementContractManagedBean.viewPCD()"); 
