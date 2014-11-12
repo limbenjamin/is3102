@@ -12,10 +12,9 @@ import javax.ejb.Local;
  * @author Chen Tong <chentong@nus.edu.sg>
  */
 @Local
-public interface InitialiseServerBeanLocal {
+public interface TimerControlLocal {
 
     void startMssrTimer();
-
-    boolean isUpdateMssrStarted();
     
+    void setIpodSteps(int ipodSteps);
 }

@@ -6,9 +6,11 @@
 package IslandFurniture.EJB.Kitchen;
 
 import IslandFurniture.DataStructures.Couple;
+import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.MenuItem;
 import IslandFurniture.Entities.MonthlyMenuItemSalesForecast;
 import IslandFurniture.Entities.Store;
+import IslandFurniture.Entities.WeeklyIngredientSupplyReq;
 import IslandFurniture.Entities.WeeklyMenuItemSalesForecast;
 import IslandFurniture.Enums.Month;
 import IslandFurniture.Exceptions.ForecastFailureException;
@@ -43,7 +45,9 @@ public interface FoodForecastBeanLocal {
     
     void reviewMonthlyMenuItemSalesForecast(List<Couple<MenuItem, List<MonthlyMenuItemSalesForecast>>> miMmsfList, boolean approved) throws InvalidMmsfException;
     
-    List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Integer month);
+    List<WeeklyMenuItemSalesForecast> retrieveWmsfForStoreMi(Store store, MenuItem menuItem, Integer year, Month month);
+    
+    List<WeeklyIngredientSupplyReq> retrieveWisrForStoreIngredYrMth(Store store, Ingredient ingred, int year, Month month);
 
     List<MonthlyMenuItemSalesForecast> retrieveMmsfForStoreMi(Store store, MenuItem menuItem, Integer year);
 
@@ -54,5 +58,7 @@ public interface FoodForecastBeanLocal {
     List<MonthlyMenuItemSalesForecast> retrieveLockedMmsfForStoreMi(Store store, MenuItem mi, int mthsHist) throws IllegalArgumentException;
 
     void updateMonthlyMenuItemSalesForecast(Store store, Month startMth, int startYr, Month endMth, int endYr);
+
+    void makeIngredPurchaseOrders(Store store, Month month, int year, int week);
 
 }

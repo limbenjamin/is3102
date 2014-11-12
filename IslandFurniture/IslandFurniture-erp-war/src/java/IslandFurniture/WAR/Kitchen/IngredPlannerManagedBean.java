@@ -155,7 +155,8 @@ public class IngredPlannerManagedBean implements Serializable {
                 if (errorMessage.isEmpty()) {
                     successMessage = numPoints + "-Point forecast performed successfullly!";
                 } else {
-                    errorMessage = "No historical data for:" + errorMessage.substring(0, errorMessage.length() - 1);
+                    errorMessage = "Forecast not performed for:" + errorMessage.substring(0, errorMessage.length() - 1);
+                    errorMessage += "\n\nThis could be due to forecasts already made or there are no historical sales for reference.";
                 }
             }
         } catch (InvalidInputException ex) {

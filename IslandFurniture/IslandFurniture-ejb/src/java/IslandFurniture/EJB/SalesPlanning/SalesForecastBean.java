@@ -270,7 +270,7 @@ public class SalesForecastBean implements SalesForecastBeanLocal {
         }
 
         if (!impacted) {
-            throw new ForecastFailureException("NoMonths");
+            throw new ForecastFailureException(stock.getName());
         }
 
         return unlockedMssrList;
