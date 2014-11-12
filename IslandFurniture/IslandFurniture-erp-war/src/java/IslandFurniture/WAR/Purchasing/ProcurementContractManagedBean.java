@@ -42,6 +42,7 @@ public class ProcurementContractManagedBean implements Serializable {
     private SupplierManagerLocal supplierManager;
     
     private Long supplierID;
+    private String currencyNameToChange;
     private ProcuredStockSupplier supplier;
     private ProcuredStockContractDetail pcd;
     private List<ProcuredStockSupplier> supplierList;
@@ -98,6 +99,14 @@ public class ProcurementContractManagedBean implements Serializable {
 
     public void setCurrencyList(List<Currency> currencyList) {
         this.currencyList = currencyList;
+    }
+
+    public String getCurrencyNameToChange() {
+        return currencyNameToChange;
+    }
+
+    public void setCurrencyNameToChange(String currencyNameToChange) {
+        this.currencyNameToChange = currencyNameToChange;
     }
     
     @PostConstruct
@@ -173,8 +182,8 @@ public class ProcurementContractManagedBean implements Serializable {
     } 
     public void editProcurementContractDetail(ActionEvent event) throws IOException { 
         System.out.println("ProcurementContractManagedBean.editProcurementContractDetail()"); 
-        System.out.println("Currency is " + pcd.getCurrency().getName());
-        String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), Long.parseLong(pcd.getCurrency().getName()));  
+        System.out.println("Currency is " + currencyNameToChange);
+        String msg = supplierManager.editProcurementContractDetail(pcd.getId(), pcd.getLotSize(), pcd.getLeadTimeInDays(), pcd.getLotPrice(), currencyNameToChange);  
         if(msg != null) { 
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, ""));
@@ -195,5 +204,6 @@ public class ProcurementContractManagedBean implements Serializable {
                 break;
             }
         }
+        this.currencyNameToChange = this.pcd.getCurrency().getName();
     }
 }

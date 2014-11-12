@@ -332,14 +332,13 @@ public class QueryMethods {
         }
     }
 
-    public static ProcuredStockContractDetail findPCDByStockMFAndSupplier(EntityManager em, ProcuredStock stock, ManufacturingFacility mf, ProcuredStockSupplier s) {
-        Query q = em.createNamedQuery("getProcurementContractDetailByStockMFAndSupplier", ProcuredStockContractDetail.class);
+    public static List<ProcuredStockContractDetail> getProcurementContractDetailByStockAndMF(EntityManager em, ProcuredStock stock, ManufacturingFacility mf) {
+        Query q = em.createNamedQuery("getProcurementContractDetailByStockAndMF", ProcuredStockContractDetail.class);
         q.setParameter("stock", stock);
         q.setParameter("mf", mf);
-        q.setParameter("supplier", s);
 
         try {
-            return (ProcuredStockContractDetail) q.getSingleResult();
+            return (List<ProcuredStockContractDetail>) q.getResultList();
         } catch (NoResultException NRE) {
             return null;
         }
