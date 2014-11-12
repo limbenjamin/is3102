@@ -48,7 +48,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Ingredient","Dish","Menu","Currency","Store Inventory","External Inventory Transfer","Inventory Replenishment",
         "Promotion Manager","Pricing Management","Ingredient Management","Web Management","Member Management",
         "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
-        "Membership","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planner","Review MMSF"};
+        "Membership","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planner","Review MMSF","Ingredient Stock Take"};
         
         String[] privilegeDescription = new String [] {
         "Modify user particulars such as Phone no. and Email Address","Access dashboard","Send message to other IslandFurniture staff","Broadcast events and announcements to entire plant",
@@ -59,7 +59,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
         "Manage Ingrdients","Manage Dishes and Recipes","Manage Menu items and details","Manage Currency","Manage Store Inventory","External Inventory Transfer",
         "Replenish Inventory","Manage Promotions","Manage Prices","Manage Ingredients","Manage Web functions","Manage Membership",
         "Manage Redeemable", "Manage Redemption", "Furniture Return", "Customer Feedback", "Product Information",
-        "Manage Members","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planning","Review MMSF"};
+        "Manage Members","Customer Chat","Ingredient Supplier","View MSSF","ACRM","Ingredient Planning","Review MMSF","Ingredient Stock Take"};
         
         
         String[][] arr = new String [][] { 
@@ -143,6 +143,7 @@ public class LoadPrivilegeBean implements LoadPrivilegeBeanRemote {
             {"Ingredient Planner","/kitchen/ingredplanner.xhtml", "fa-cube", "Ingredient Planner", "true","50"},
             {"Ingredient Planner","/kitchen/ingredientpo.xhtml", "fa-cube", "Ingredient Purchase Orders", "true","51"},
             {"Review MMSF","/kitchen/reviewmmsf.xhtml", "fa-cube", "Review MMSF", "true","52"},
+            {"Ingredient Stock Take","/kitchen/ingredientstocktake.xhtml", "fa-cube", "Ingredient Stock Take", "true","53"}
         };
         
         for (int i=0; i<privileges.length; i++){

@@ -139,7 +139,7 @@ public class ProcurementPlanManagedBean {
                 if(mppl.checkMppExist(mf, Helper.translateMonth(i_month), i_year)){
                     if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month), i_year) || i == 0 || i == 1){
                         r.newCell("Locked");
-                    }else if(mppl.checkMppLocked(mf , Helper.translateMonth(i_month-1), i_year)|| i == 3){
+                    }else{
                         r.newCell("Create").setCommand("CREATE").setIdentifier(i_month+"-"+i_year);
                     }
                 }
