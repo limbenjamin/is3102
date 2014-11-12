@@ -77,7 +77,7 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     private String orderDateString;
     private int quantity;
     private int numberOfLots;
-    private int selectedLotSize = 0;
+    private int selectedLotSize;
     private DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @EJB
@@ -116,6 +116,8 @@ public class PurchaseOrderManaged2Bean implements Serializable {
 
             }
         }
+        selectedStockID = procuredStockList.get(0).getId();
+        selectedLotSize = getStockLotSize(procuredStockList.get(0));
     }
 
     public void addStock() throws ParseException, Exception {
@@ -196,9 +198,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
     }
     
     public void updateLotSize(AjaxBehaviorEvent event) {
-        for (ProcuredStockPurchaseOrderDetail pod: purchaseOrderDetailList) {
-            if (pod.getProcuredStock().getId().equals(this.selectedStockID))
-                this.selectedLotSize = getStockLotSize(pod.getProcuredStock());
+        for (ProcuredStock pod: procuredStockList) {
+            if (pod.getId().equals(this.selectedStockID))
+                this.selectedLotSize = getStockLotSize(pod);
         }
     }    
 
