@@ -54,6 +54,7 @@ public class MembershipManagedBean implements Serializable {
     private Staff staff;
     private Plant plant;
     private Store store;
+    private String param;
     
     private boolean emailForm;
     private boolean cardForm;
@@ -77,7 +78,7 @@ public class MembershipManagedBean implements Serializable {
             this.store = (Store) plant;
             this.emailForm = false; 
             this.cardForm = false;
-            String param = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
+            param = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
             if(param == null) 
                 customerList = null;
             else {
@@ -107,6 +108,7 @@ public class MembershipManagedBean implements Serializable {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Account details of " + customer.getName() + " has been successfully updated", ""));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", param);
         ec.redirect("membership.xhtml"); 
     } 
     

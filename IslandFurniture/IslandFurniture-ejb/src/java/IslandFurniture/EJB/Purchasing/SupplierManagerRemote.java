@@ -40,7 +40,7 @@ public interface SupplierManagerRemote {
 
     public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID); 
 
-    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, String currencyToChange);
 
     public List<StockSupplied> getAllStockSupplied();
 
