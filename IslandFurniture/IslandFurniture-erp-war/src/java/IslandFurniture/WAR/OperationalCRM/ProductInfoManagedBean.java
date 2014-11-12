@@ -17,6 +17,7 @@ import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Stock;
 import IslandFurniture.Entities.Store;
 import IslandFurniture.Entities.StoreSection;
+import IslandFurniture.Entities.StorefrontInventory;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -39,6 +40,7 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class ProductInfoManagedBean implements Serializable {
+
     @EJB
     private ManageStorefrontInventoryLocal manageStorefrontInventory;
 
@@ -95,13 +97,13 @@ public class ProductInfoManagedBean implements Serializable {
                     converter = new NumberConverter();
                     converter.setCurrencyCode(co.getCountry().getCurrency().getCurrencyCode());
                     converter.setType("currency");
-                    
+
                     // Load price and promotion content for product
                     priceMap = new HashMap();
-                    for(Store store: co.getStores()){
+                    for (Store store : co.getStores()) {
                         priceMap.put(store, manageMarketingBean.getDiscountedPrice(product, store, null));
                     }
-                    
+
                 }
             } else if (stockNameParam != null) {
                 stockName = stockNameParam;
@@ -150,19 +152,26 @@ public class ProductInfoManagedBean implements Serializable {
             return promoUsed.getPromotionCampaign().getTitle();
         }
     }
-    
-    public Integer findWarehouseStockLvl(Store store){
+
+    public Integer findWarehouseStockLvl(Store store) {
         return manageStorefrontInventory.viewStockUnitStockQty(store, product);
     }
-    
-    public Integer findStorefrontStockLvl(Store store){
+
+    public Integer findStorefrontStockLvl(Store store) {
         return manageStorefrontInventory.viewStorefrontInventoryStockQty(store, product);
     }
 
-    public String findStockLocation(Store store){
-        StoreSection section = store.findStorefrontInventory(product).getLocationInStore();
-        return section.getName() + " (Lvl " + section.getStoreLevel() + ")";
+    public String findStockLocation(Store store) {
+        StorefrontInventory sfInv = store.findStorefrontInventory(product);
+
+        if (sfInv != null) {
+            StoreSection section = sfInv.getLocationInStore();
+            return section.getName() + " (Lvl " + section.getStoreLevel() + ")";
+        } else{
+            return "None";
+        }
     }
+
     /**
      * Creates a new instance of ProductInfoManagedBean
      */
