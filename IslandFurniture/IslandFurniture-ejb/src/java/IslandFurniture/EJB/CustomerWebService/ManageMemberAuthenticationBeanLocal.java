@@ -8,6 +8,7 @@ package IslandFurniture.EJB.CustomerWebService;
 
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.Customer;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,6 +17,8 @@ import javax.ejb.Local;
  */
 @Local
 public interface ManageMemberAuthenticationBeanLocal {
+    
+    List<Country> getCountries();
 
     Customer authenticate(String emailAddress, String password);
 
@@ -27,7 +30,7 @@ public interface ManageMemberAuthenticationBeanLocal {
     
     Customer getCustomer(String emailAddress);
     
-    void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address);
+    void modifyPersonalParticulars(String emailAddress, String phoneNo, String name, String address, Long countryId);
     
     void setCustomerLoyaltyCardId(Customer customer, String loyaltyCardId);
     
