@@ -266,6 +266,9 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                     }
                     purchaseOrderDetail.setQuantity(totalQty);
                     purchaseOrderDetail.setNumberOfLots(totalQty/lotSize);
+                    if (totalQty/lotSize == 0){
+                        break;
+                    }
                     mpp.setQtyOnHand(totalQty - mpp.getQty()+ mpp2.getQtyOnHand());
                     purchaseOrderDetail.setPurchaseOrder(purchaseOrder);
                     purchaseOrderDetail.setProcuredStock(ps);
@@ -276,6 +279,10 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 }
             }
             em.flush();
+            if (purchaseOrder.getPurchaseOrderDetails().isEmpty()){
+                em.remove(purchaseOrder);
+                em.flush();
+            }
             
         }
         createTransferOrder(month,year,mf);
@@ -343,17 +350,29 @@ public class ManageProcurementPlan implements ManageProcurementPlanLocal {
                 eto.setTransferDate(cal);
                 em.persist(eto);
                 em.flush();
-                for (int j = 0; j < mssrList.size(); j++) {                
-                    ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
-                    etod.setStock(mssrList.get(j).getStock());
-                    if(k == maxWeekNumber - 1)
-                        etod.setQty(mssrList.get(j).getQtyRequested() - ((maxWeekNumber - 1)* (mssrList.get(j).getQtyRequested()/4)));
-                    else{
-                        etod.setQty(mssrList.get(j).getQtyRequested()/4);
+                for (int j = 0; j < mssrList.size(); j++) {
+                    if (mssrList.get(j).getStock() instanceof RetailItem){
+                        ExternalTransferOrderDetail etod = new ExternalTransferOrderDetail();
+                        etod.setStock(mssrList.get(j).getStock());
+                        int qty;
+                        if(k == maxWeekNumber - 1){
+                            qty = mssrList.get(j).getQtyRequested() - ((maxWeekNumber - 1)* (mssrList.get(j).getQtyRequested()/4));
+                        }else{
+                            qty = mssrList.get(j).getQtyRequested()/4;
+                        }
+                        if (qty == 0)
+                            continue;
+                        else{
+                            etod.setQty(qty);
+                        }
+                        em.persist(etod);
+                        etod.setExtTransOrder(eto);
+                        eto.getExtTransOrderDetails().add(etod);
                     }
-                    em.persist(etod);
-                    etod.setExtTransOrder(eto);
-                    eto.getExtTransOrderDetails().add(etod);
+                }
+                em.flush();
+                if (eto.getExtTransOrderDetails().isEmpty()){
+                    em.remove(eto);
                 }
                 em.flush();
                 cal.add(Calendar.DATE, 7);

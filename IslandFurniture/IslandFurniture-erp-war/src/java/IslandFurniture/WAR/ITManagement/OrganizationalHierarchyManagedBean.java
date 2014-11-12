@@ -164,7 +164,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public String deleteCO(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
-        mohBean.deleteCountryOffice(countryOffice.getId());
+        try{
+            mohBean.deleteCountryOffice(countryOffice.getId());
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error, unable to delete country Office",""));
+            return "manageplant";
+        }
         coList = mohBean.displayCountryOffice();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office deleted",""));

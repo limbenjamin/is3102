@@ -53,6 +53,8 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal, Ma
         announcement.setTitle(title);
         announcement.setContent(content);
         announcement.setActiveDate(activeDate);
+        // need to add one day because it should be valid for whole of today, until midnight of tomorrow.
+        expireDate.add(Calendar.DAY_OF_MONTH, 1);
         announcement.setExpireDate(expireDate);
         announcement.setCreator(staff);
         announcement.setPlant(staff.getPlant());
@@ -72,6 +74,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal, Ma
         announcement.setTitle(title);
         announcement.setContent(content);
         announcement.setActiveDate(activeDate);
+        expireDate.add(Calendar.DAY_OF_MONTH, 1);
         announcement.setExpireDate(expireDate);
         announcement.setCreator(staff);
     }
@@ -95,7 +98,7 @@ public class ManageAnnouncementsBean implements ManageAnnouncementsBeanLocal, Ma
         staff = staffbean.getStaff(username);
         plant = staff.getPlant();
         Query query = em.createQuery("SELECT a FROM Announcement a WHERE a.plant=:plant AND :today BETWEEN a.activeDate AND a.expireDate");
-        query.setParameter("today", today, TemporalType.DATE);
+        query.setParameter("today", today, TemporalType.TIMESTAMP);
         query.setParameter("plant", plant);
         return query.getResultList();
     }
