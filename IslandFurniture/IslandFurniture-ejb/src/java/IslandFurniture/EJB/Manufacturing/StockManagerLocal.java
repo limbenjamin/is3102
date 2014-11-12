@@ -39,7 +39,7 @@ public interface StockManagerLocal {
 
     public String deleteRetailItem(Long itemID);
 
-    public String addRetailItem(String itemName, Double itemPrice);
+    public String addRetailItem(String itemName); 
 
     public String deleteFurnitureModel(Long furnitureID);
 

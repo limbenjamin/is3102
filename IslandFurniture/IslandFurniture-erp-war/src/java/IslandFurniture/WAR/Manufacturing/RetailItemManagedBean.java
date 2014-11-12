@@ -113,10 +113,7 @@ public class RetailItemManagedBean implements Serializable {
         System.out.println("RetailItemManagedBean.addRetailItem()");
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String itemName = request.getParameter("addRetailItemForm:name");
-        String itemPrice = request.getParameter("addRetailItemForm:price");
-        if(itemPrice.isEmpty())
-            itemPrice = "0";
-        String msg = stockManager.addRetailItem(itemName, Double.parseDouble(itemPrice));
+        String msg = stockManager.addRetailItem(itemName);
         if(msg != null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, "")); 

@@ -1,6 +1,8 @@
 package Islandfurniture.WAR2.CustomerWebServices;
 
+import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
+import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.Customer;
 import java.io.IOException;
 import java.io.Serializable;
@@ -38,6 +40,8 @@ public class MemberAuthenticationManagedBean implements Serializable {
 
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
+    @EJB
+    private ManageLocalizationBeanLocal manageLocalizationBean;  
 
     @PostConstruct
     public void init() {
@@ -117,6 +121,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
         phoneNo = request.getParameter("registerForm:phoneNo");
         dateOfBirth = request.getParameter("registerForm:dateOfBirth");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        Country country = manageLocalizationBean.findCoByCode(coDir).getCountry();
         Date date = null;
         try {
             date = sdf.parse(dateOfBirth);
@@ -125,7 +130,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
         }
         Format formatter = new SimpleDateFormat("dd-mm-YYYY");
         String s = formatter.format(date);
-        id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, s);
+        id = mmab.createCustomerAccount(emailAddress, password, name, phoneNo, address, s, country);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Created", ""));
         if (target == null || target.isEmpty()) {

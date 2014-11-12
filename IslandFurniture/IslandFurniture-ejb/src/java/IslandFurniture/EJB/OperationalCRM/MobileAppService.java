@@ -176,6 +176,7 @@ public class MobileAppService implements MobileAppServiceLocal {
 
     public void DeleteShopList(Long ID) {
         try {
+            System.out.println(ID);
             ShoppingList sl = em.find(ShoppingList.class, ID);
             em.remove(sl);
         } catch (Exception ex) {

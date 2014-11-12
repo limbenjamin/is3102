@@ -56,12 +56,20 @@ public class MembershipTierManagedBean implements Serializable {
 
 //  Function: To create a Membership Tier
     public void addMembershipTier(ActionEvent event) throws IOException {
-        if (membershipBean.checkIfNoMembershipTierSameName(title)) {
-            membershipBean.createMembershipTier(title, points);
-            membershipTierList = membershipBean.viewMembershipTier();
 
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been created", ""));
+        System.out.println("The title is " + title);
+        System.out.println("The points is " + points);
+
+        if (membershipBean.checkIfNoMembershipTierSameName(title)) {
+            if (membershipBean.checkIfNoMembershipTierSamePoints(points)) {
+                membershipBean.createMembershipTier(title, points);
+                membershipTierList = membershipBean.viewMembershipTier();
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been created", ""));
+            } else {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Membership Tier the same number of points. Creation of Membership Tier was unsuccessful.", ""));
+            }
         } else {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is an existing Membership Tier with that title. Creation of Membership Tier was unsuccessful.", ""));
@@ -71,13 +79,14 @@ public class MembershipTierManagedBean implements Serializable {
 //  Function: To edit a Membership Tier
     public void editMembershipTier(ActionEvent event) throws IOException {
         MembershipTier ss = (MembershipTier) event.getComponent().getAttributes().get("membershipTier");
-            membershipBean.editMembershipTier(ss);
-            membershipTierList = membershipBean.viewMembershipTier();
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been edited", ""));
+        membershipBean.editMembershipTier(ss);
+        membershipTierList = membershipBean.viewMembershipTier();
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Membership Tier has sucessfully been edited", ""));
+
     }
 
-//  Function: To delete a Membership Tier
+    //  Function: To delete a Membership Tier
     public void deleteMembershipTier(ActionEvent event) throws IOException {
         MembershipTier ss = (MembershipTier) event.getComponent().getAttributes().get("membershipTier");
 

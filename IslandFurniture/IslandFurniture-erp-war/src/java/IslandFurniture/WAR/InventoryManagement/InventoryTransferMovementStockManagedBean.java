@@ -89,7 +89,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         stockUnitMovementList = transferBean.viewStockUnitMovement(plant, stock);
         storageAreaList = storageBean.viewStorageArea(plant);
     }
-    
+
     // Function: To view the stock unit details
     public void viewStockUnit(AjaxBehaviorEvent event) {
         Long stockUnitId = (Long) event.getComponent().getAttributes().get("stockUnitId");
@@ -130,7 +130,7 @@ public class InventoryTransferMovementStockManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("stockUnitQuantity", event.getComponent().getAttributes().get("stockUnitQuantity"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("storageBinId", event.getComponent().getAttributes().get("storageBinId"));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("batchNo", event.getComponent().getAttributes().get("batchNo"));
-        
+
         stockUnitId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitId");
         stockUnit = transferBean.getStockUnit(stockUnitId);
         stockUnitQuantity = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("stockUnitQuantity");

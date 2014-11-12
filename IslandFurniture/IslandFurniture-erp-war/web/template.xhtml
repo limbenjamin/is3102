@@ -257,7 +257,7 @@
                                                 $(document).ready(function() {
                                                     $(".needauto").select2();
                                                 });
-                                                $(document).idleTimer(300000);
+                                                $(document).idleTimer(900000);
                                                 $(document).on("idle.idleTimer", function(event, elem, obj) {
                                                     document.getElementById("hiddenForm:hidden-logout").click();
                                                     alert("Logged out due to inactivity");

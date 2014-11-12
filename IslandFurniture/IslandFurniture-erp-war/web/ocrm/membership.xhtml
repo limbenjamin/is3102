@@ -51,7 +51,6 @@
                                     </div> 
                                     <div class="col-sm-2">
                                         <h:commandButton class="btn btn-success" value="Search" actionListener="#{membershipManagedBean.searchEmail}">
-                                            
                                         </h:commandButton>
                                     </div> 
                                 </div>    
@@ -60,13 +59,13 @@
                         <h:panelGroup id="searchCardGroup">
                             <h:form id="searchByCardForm" rendered="#{membershipManagedBean.cardForm}" class="form-horizontal form-inline">
                                 <div class="form-group col-sm-7">
-                                    <label class="control-label col-sm-2">Card ID: </label>
+                                    <label class="control-label col-sm-2">Card ID: </label> 
                                     <div class="col-sm-5"> 
                                         <h:commandLink class="">  
                                             <i class="fa fa-pencil-square-o btn"></i>
                                             <f:ajax listener="#{membershipManagedBean.scanNFCWithoutCustomerID}" render=":searchCardGroup :searchByCardForm" />
                                         </h:commandLink> 
-                                        <h:outputText class="form-control col-sm-8 transparent-form" id="cardSearch" value="#{membershipManagedBean.customerCardID}" ></h:outputText>
+                                        <h:outputText class="form-control col-sm-8 transparent-form" id="cardSearch" value="#{membershipManagedBean.customerCardID}" pt:required="required"></h:outputText>
                                     </div>  
                                     <div class="col-sm-2">
                                         <h:commandButton class="btn btn-success" value="Search" actionListener="#{membershipManagedBean.searchCard}">
@@ -79,43 +78,45 @@
                     </div>
                 </div><br></br>
                 <div class="row">
-                    <div class="col-md-10">
-                        <section name="Table of Contents of the Membership">
-                            <div class="panel-heading dashboard-title-panel">
-                                View Customers Details
-                            </div>
-                            <div class="list-group-item">  
-                                <table class="table table-hover table-condensed">
-                                    <tr>
-                                        <th>Member ID</th>
-                                        <th>Member Name</th>
-                                        <th width="100px">Details</th>
-                                    </tr>
-                                    <h:form class="form-horizontal" id="memberDisplayForm">
-                                        <ui:repeat value="#{membershipManagedBean.customerList}" var="c">
-                                            <tr>
-                                                <td>
-                                                    <h:outputText value="#{c.id}"></h:outputText>
-                                                </td>
-                                                <td>
-                                                    <h:outputText value="#{c.name}"></h:outputText>
-                                                </td>
-                                                <td width="100px"> 
-                                                    <a data-toggle="modal" data-target="#viewCustomer">
-                                                        <h:commandButton class="btn btn-sm transparent-button" style="outline:0; text-align: center"> 
-                                                            <f:ajax listener="#{membershipManagedBean.viewCustomer}" render=":viewCustomerForm:content" />
-                                                            <f:attribute name="customerID" value="#{c.id}" />
-                                                        </h:commandButton>
-                                                        <i class="fa fa-search-plus icon-button"></i> 
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </ui:repeat>
-                                    </h:form> 
-                                </table>
-                            </div>
-                        </section>
-                    </div>
+                    <h:panelGroup rendered="#{membershipManagedBean.customerList.size() > 0}">
+                        <div class="col-md-10">
+                            <section name="Table of Contents of the Membership">
+                                <div class="panel-heading dashboard-title-panel">
+                                    View Customers Details
+                                </div>
+                                <div class="list-group-item">  
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <th>Member ID</th>
+                                            <th>Member Name</th>
+                                            <th width="100px">Details</th>
+                                        </tr>
+                                        <h:form class="form-horizontal" id="memberDisplayForm">
+                                            <ui:repeat value="#{membershipManagedBean.customerList}" var="c">
+                                                <tr>
+                                                    <td>
+                                                        <h:outputText value="#{c.id}"></h:outputText>
+                                                    </td>
+                                                    <td>
+                                                        <h:outputText value="#{c.name}"></h:outputText>
+                                                    </td>
+                                                    <td width="100px"> 
+                                                        <a data-toggle="modal" data-target="#viewCustomer">
+                                                            <h:commandButton class="btn btn-sm transparent-button" style="outline:0; text-align: center"> 
+                                                                <f:ajax listener="#{membershipManagedBean.viewCustomer}" render=":viewCustomerForm:content" />
+                                                                <f:attribute name="customerID" value="#{c.id}" />
+                                                            </h:commandButton>
+                                                            <i class="fa fa-search-plus icon-button"></i> 
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </h:form> 
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                    </h:panelGroup>
                 </div>
                 <!-- Modal for View Customer-->
                 <div class="modal fade" id="viewCustomer" aria-hidden="true">

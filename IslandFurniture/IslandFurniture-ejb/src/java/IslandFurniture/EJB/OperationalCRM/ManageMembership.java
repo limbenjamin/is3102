@@ -14,8 +14,7 @@ import IslandFurniture.Entities.RestaurantTransactionDetail;
 import IslandFurniture.Entities.RetailItemTransaction;
 import IslandFurniture.Entities.RetailItemTransactionDetail;
 import IslandFurniture.Entities.Transaction;
-import java.util.ArrayList;
-import java.util.Iterator;
+import IslandFurniture.StaticClasses.SendSMSBean;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -148,7 +147,11 @@ public class ManageMembership implements ManageMembershipLocal {
             em.merge(transaction);
             em.merge(customer);
             em.flush();
-
+            
+            if (newTier != null) {
+                SendSMSBean.sendSMS(customer.getPhoneNo(), "Congratulations " + customer.getName() + ", your membership tier is upgraded to " + newTier + "!");
+            }
+            
             return points.toString() + "," + totalPoints.toString() + "," + newTier;
 
         } else {
@@ -237,6 +240,14 @@ public class ManageMembership implements ManageMembershipLocal {
     public boolean checkIfNoMembershipTierSameName(String title) {
         Query q = em.createQuery("SELECT s FROM MembershipTier s WHERE s.title=:title");
         q.setParameter("title", title);
+        return q.getResultList().isEmpty();
+    }
+    
+        //  Function: To check if there is no Membership Tier with the Same Title
+    @Override
+    public boolean checkIfNoMembershipTierSamePoints(Integer points) {
+        Query q = em.createQuery("SELECT s FROM MembershipTier s WHERE s.points=:points");
+        q.setParameter("points", points);
         return q.getResultList().isEmpty();
     }
 

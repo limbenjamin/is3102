@@ -42,19 +42,19 @@
                                             <p:column headerText="Ingredient" sortBy="#{ic.ingredient.name}">
                                                 <h:outputText id="ingredient" value="#{ic.ingredient.name}" class="transparent-form"></h:outputText>
                                             </p:column> 
-                                            <p:column headerText="Lot Price (#{ingredientContractManagedBean.co.country.currency.currencyCode})" >
+                                            <p:column headerText="Lot Price (#{ingredientContractManagedBean.co.country.currency.currencyCode})" style="width: 10%">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                     <h:inputText id="lotPrice" value="#{ic.lotPrice}" class="form-control transparent-form"></h:inputText>
                                                 </div>
                                             </p:column>
-                                            <p:column headerText="Lot Size" >
+                                            <p:column headerText="Lot Size" style="width: 10%">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a>
                                                     <h:inputText id="size" value="#{ic.lotSize}" class="form-control transparent-form"></h:inputText>
                                                 </div>
                                             </p:column>
-                                            <p:column headerText="Lead Time(Days)">
+                                            <p:column headerText="Lead Time(Days)" style="width: 10%">
                                                 <div class="inner-addon left-addon">
                                                     <a href="#"><i class="glyphicon glyphicon-pencil"></i></a> 
                                                     <h:inputText id="leadTime" value="#{ic.leadTimeInDays}" class="form-control transparent-form"></h:inputText>
@@ -91,7 +91,7 @@
                         <h:inputHidden id="supplierID" value="#{ingredientContractManagedBean.supplierID}"></h:inputHidden>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Ingredient: </label>
+                            <label class="col-sm-3 control-label">Ingredient: </label>
                             <div class="col-sm-8">
                                 <h:selectOneMenu id="ingredientID" class="form-control needauto" value="Select Ingredient" pt:required="required">
                                     <f:selectItem itemLabel="Select Ingredient" noSelectionOption="true" />
@@ -100,19 +100,19 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Lot Price: </label>
+                            <label class="col-sm-3 control-label">Lot Price: </label>
                             <div class="col-sm-8">
                                 <h:inputText id="lotPrice" class="form-control" pt:required="required"></h:inputText>
                             </div> 
                         </div> 
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Lot Size: </label>
+                            <label class="col-sm-3 control-label">Lot Size: </label>
                             <div class="col-sm-8">
                                 <h:inputText id="size" class="form-control" pt:required="required"></h:inputText>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Lead Time(days): </label>
+                            <label class="col-sm-3 control-label">Lead Time(days): </label>
                             <div class="col-sm-8">
                                 <h:inputText id="leadTime" class="form-control" pt:required="required"></h:inputText>
                             </div>

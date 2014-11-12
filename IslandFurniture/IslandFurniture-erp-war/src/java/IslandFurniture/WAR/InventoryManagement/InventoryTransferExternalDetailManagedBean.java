@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -54,7 +55,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     private Long id;
     private int check;
 
-    private List<StorageBin> storageBinList;
+    private List<StorageBin> storageBinList = new ArrayList<>();
     private List<StorageArea> storageAreaList;
     private List<Stock> stockList;
     private List<ExternalTransferOrderDetail> externalTransferOrderDetailList;
@@ -106,36 +107,52 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
             id = (Long) session.getAttribute("transferorderexternalid");
         }
         externalTransferOrder = transferBean.getExternalTransferOrder(id);
+        List<StorageBin> storageBinListTemp = storageBean.viewStorageBinsAtShippingOnly(plant);
         externalTransferOrderDetailList = transferBean.viewExternalTransferOrderDetail(id);
-        storageBinList = storageBean.viewStorageBinsAtShippingOnly(plant);
-//        Iterator<StorageBin> iterator = storageBinList.iterator();
-//        while (iterator.hasNext()) {
-//            StorageBin s = iterator.next();
-//            System.out.println("1.");
-//            // doesn't workm after here
-//            for (StockUnit u : s.getStockUnits()) {
-//                System.out.println("2.");
-//                for (ExternalTransferOrderDetail e : externalTransferOrderDetailList) {
-//                    System.out.println("3.");
-//                    if (e.getStock().equals(u.getStock())) {
-//                        System.out.println("4.");
-//                        if (e.getQty() < u.getQty()) {
-//                            System.out.println("5.");
-//                            iterator.remove();
-//                            break;
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        Iterator<StorageBin> iterator = storageBinListTemp.iterator();
+        boolean status = true;
+        int count = 0;
+        int max = externalTransferOrderDetailList.size();
+
+        System.out.println("max is " + max);
+
+        while (iterator.hasNext()) {
+            count = 0;
+            StorageBin s = iterator.next();
+            status = true;
+            for (StockUnit u : s.getStockUnits()) {
+                if (status) {
+                    for (ExternalTransferOrderDetail e : externalTransferOrderDetailList) {
+                        if (status) {
+                            if (e.getStock().equals(u.getStock())) {
+                                if ((u.getQty() > e.getQty())) {
+                                    count = count + 1;
+                                    if (count == max) {
+                                        iterator.remove();
+                                        storageBinList.add(s);
+                                        status = false;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (count == max) {
+                    return;
+                }
+            }
+        }
 
         // start: To display date properly
-        if (externalTransferOrder.getTransferDate() != null) {
+        if (externalTransferOrder.getTransferDate()
+                != null) {
             dateString = df.format(externalTransferOrder.getTransferDate().getTime());
         }
         // end: To display date properly
         // start: To display plant list properly
         plantList = orgBean.displayPlantbyInstanceOf(plant);
+
         plantList.remove(plant);
         for (Plant g : plantList) {
 
@@ -152,13 +169,15 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         }
         // end: To display plant list properly
         // start: To display fulfilled plant properly
-        if (externalTransferOrder.getFulfillingPlant() != null) {
+
+        if (externalTransferOrder.getFulfillingPlant()
+                != null) {
             plantId = externalTransferOrder.getFulfillingPlant().getId();
         }
         // end: To display fulfilled plant properly
         // start: To display plant name properly
 
-        if (externalTransferOrder.getRequestingPlant() != null) {
+        if (externalTransferOrder.getRequestingPlant()!= null) {
             String plantType2 = externalTransferOrder.getRequestingPlant().getClass().getSimpleName();
             if (plantType2.equals("ManufacturingFacility")) {
                 plantType2 = "MFG";
@@ -170,7 +189,8 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
             plantTypeRequest = externalTransferOrder.getRequestingPlant().getName() + " (" + plantType2 + ")";
         }
 
-        if (externalTransferOrder.getFulfillingPlant() != null) {
+        if (externalTransferOrder.getFulfillingPlant()
+                != null) {
             String plantType3 = externalTransferOrder.getFulfillingPlant().getClass().getSimpleName();
             if (plantType3.equals("ManufacturingFacility")) {
                 plantType3 = "MFG";

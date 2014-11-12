@@ -211,11 +211,11 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
                 shopListBean.updateListTotalPrice(shopList.getId(), cust);
             }
         }
-
+        Country country = mohb.findCountryByName("Singapore");
         // Create Customers
-        mmabl.createCustomerAccountNoEmail("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989");
-        mmabl.createCustomerAccountNoEmail("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958");
-        mmabl.createCustomerAccountNoEmail("craig@limbenjamin.com", "pass", "Craig H. Cotter", "210-967-1644", "2703 Bell Street San Antonio, TX 78233", "11-04-1985");
+        mmabl.createCustomerAccountNoEmail("martha@limbenjamin.com", "pass", "Martha R. Coffman", "214-814-6054", "579 Traction Street Greenville, SC 29601", "15-06-1989",country);
+        mmabl.createCustomerAccountNoEmail("stella@limbenjamin.com", "pass", "Stella J. Collier", "925-940-7302", "2901 Brown Street, CA 94612", "11-02-1958",country);
+        mmabl.createCustomerAccountNoEmail("craig@limbenjamin.com", "pass", "Craig H. Cotter", "210-967-1644", "2703 Bell Street San Antonio, TX 78233", "11-04-1985",country);
         Customer c = mmabl.getCustomer("martha@limbenjamin.com");
         mmabl.setCustomerLoyaltyCardId(c, "B00DBD31");
         c = mmabl.getCustomer("stella@limbenjamin.com");

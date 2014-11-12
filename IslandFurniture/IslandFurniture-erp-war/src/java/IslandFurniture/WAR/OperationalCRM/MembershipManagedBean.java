@@ -79,7 +79,7 @@ public class MembershipManagedBean implements Serializable {
             this.cardForm = false;
             String param = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("param");
             if(param == null) 
-                customerList = membershipBean.viewCustomers();
+                customerList = null;
             else {
                 String input = param.substring(0, 4);
                 if(input.equals("mail"))
@@ -88,7 +88,7 @@ public class MembershipManagedBean implements Serializable {
                     customerList = new ArrayList<>();
                     customerList.add(membershipBean.getCustomerByCard(param.substring(4)));
                 } else
-                    ;
+                    customerList = membershipBean.viewCustomers();
             }
         } else {
             try {
@@ -208,19 +208,24 @@ public class MembershipManagedBean implements Serializable {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", thisEmail);
         }
         ec.redirect("membership.xhtml");
-    }
+    } 
     public void searchCard(ActionEvent event) throws IOException {
         System.out.println("MembershipManagedBean.searchCard()");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         customerCardID = (String) event.getComponent().getAttributes().get("customerCardID");
-        this.customer = membershipBean.getCustomerByCard(customerCardID); 
-        if(customer == null) {
+        if(customerCardID == null || customerCardID.isEmpty()) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "No such Card ID exists", ""));  
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", null);
-        } else { 
-            String thisCard = "card" + customerCardID;
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", thisCard);
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "No input detected. Please scan card until Loyalty Card ID appears on the screen", ""));  
+        } else {
+            this.customer = membershipBean.getCustomerByCard(customerCardID); 
+            if(customer == null) {
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "No such Card ID exists", ""));  
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", null);
+            } else { 
+                String thisCard = "card" + customerCardID;
+                FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", thisCard);
+            }
         }
         ec.redirect("membership.xhtml");
     }
@@ -228,7 +233,7 @@ public class MembershipManagedBean implements Serializable {
     public void searchAll(ActionEvent event) throws IOException {
         System.out.println("MembershipManagedBean.searchAll()");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", null);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("param", "full");
         ec.redirect("membership.xhtml");        
     }
     
