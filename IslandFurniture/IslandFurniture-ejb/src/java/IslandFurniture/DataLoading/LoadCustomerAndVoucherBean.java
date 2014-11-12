@@ -171,9 +171,8 @@ public class LoadCustomerAndVoucherBean implements LoadCustomerAndVoucherBeanRem
         countries.add(QueryMethods.findCountryByName(em, "Malaysia"));
 
         for (int i = 0; i < 1600; i++) {
-            Long custId = mmabl.createCustomerAccountNoEmail(firstNames[i % firstNames.length] + i + "@limbenjamin.com", "pass", firstNames[i % firstNames.length] + " " + midNames[i % midNames.length] + " " + lastNames[i % lastNames.length], "+6581273798", addresses[i % addresses.length], (rand.nextInt(30) + 1) + "-" + (rand.nextInt(12) + 1) + "-" + (rand.nextInt(40) + 1950));
+            Long custId = mmabl.createCustomerAccountNoEmail(firstNames[i % firstNames.length] + i + "@limbenjamin.com", "pass", firstNames[i % firstNames.length] + " " + midNames[i % midNames.length] + " " + lastNames[i % lastNames.length], "+6581273798", addresses[i % addresses.length], (rand.nextInt(30) + 1) + "-" + (rand.nextInt(12) + 1) + "-" + (rand.nextInt(40) + 1950), countries.get(i%countries.size()));
             cust = em.find(Customer.class, custId);
-            cust.setCountry(countries.get(i%countries.size()));
 
             // Shopping List additions
             ShoppingList shopList = shopListBean.createShoppingList(cust.getEmailAddress(), stores.get(i % stores.size()).getId(), firstNames[i % firstNames.length] + "'s List of Stuff to Buy");
