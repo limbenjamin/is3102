@@ -83,7 +83,8 @@ public class ACRMChartGeneratorBean implements ACRMChartGeneratorBeanLocal {
     }
 
     public List<Customer> filterCustomer(String Country) { //since our data dont have country data... this basically grab all
-        Query l = em.createQuery("select c from Customer c ORDER BY c.lifetimeVal desc"); //and co.country=c.country
+        Query l = em.createQuery("select c from Customer c WHERE c.country.name=:name ORDER BY c.lifetimeVal desc"); //and co.country=c.country
+        l.setParameter("name", Country);
         return (List<Customer>) l.getResultList();
 
     }

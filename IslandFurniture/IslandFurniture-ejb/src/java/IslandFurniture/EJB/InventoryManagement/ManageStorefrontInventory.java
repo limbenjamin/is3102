@@ -181,8 +181,14 @@ public class ManageStorefrontInventory implements ManageStorefrontInventoryLocal
         Query q = em.createQuery("SELECT s FROM StorefrontInventory s WHERE s.store.id=:plantId AND s.stock.id=:stockId");
         q.setParameter("plantId", plant.getId());
         q.setParameter("stockId", stock.getId());
-        storefrontInventory = (StorefrontInventory) q.getResultList().get(0);
-        return storefrontInventory.getQty();
+
+        List<StorefrontInventory> sfInvList = (List<StorefrontInventory>) q.getResultList();
+        if (sfInvList != null && !sfInvList.isEmpty()) {
+            storefrontInventory = sfInvList.get(0);
+            return storefrontInventory.getQty();
+        }else{
+            return 0;
+        }
     }
 
     //  Function: To return the Qty of StockUnit
