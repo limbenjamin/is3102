@@ -561,7 +561,7 @@ public class PaymentUI extends javax.swing.JFrame {
                     }else{
                         k = transaction.get(i).get(5).length();
                     }
-                    int length = 46 - (k + transactionPrice.length());
+                    int length = 33 - (k + transactionPrice.length());
                     receipt += transaction.get(i).get(5).substring(0, k)+ emptyString.substring(0,length) + transactionPrice + "\n\n";
                 }
                 System.err.println("debughere: "+transactionPrice.length());
