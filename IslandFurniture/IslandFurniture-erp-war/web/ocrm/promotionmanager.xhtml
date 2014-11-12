@@ -54,13 +54,21 @@
                     width:auto !important;
 
                 }
-
-
-
-
-
-
             </style>
+            <p:outputPanel id="msg">
+                <p:outputPanel id="statusUpdate1" rendered="#{not empty marketing.error_msg}">
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                        <strong><h:outputText value="#{marketing.error_msg}" escape="false"/></strong>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="statusUpdate2" rendered="#{not empty marketing.success_msg}">
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                        <strong><h:outputText value="#{marketing.success_msg}" escape="false"/></strong>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
             <div class="col-md-12">
                 <ol class="breadcrumb">
                     <li><a href="../dash.xhtml">Home</a></li>
@@ -68,12 +76,6 @@
                 </ol>                        
             </div>
             <br/>
-            <br/>
-            <h:panelGroup layout="block" id="msg" >
-                <p:outputLabel rendered="${marketing.error_msg.length()>0}" style="color:red;font-weight:bold" value="${marketing.error_msg}"/>
-                <br/>
-                <p:outputLabel rendered="${marketing.success_msg.length()>0}" style="color:green;font-weight:bold"  value="${marketing.success_msg}"/>
-            </h:panelGroup>
             <br/>
             <!-- campaign Management-->
             <p:tabView id="panel" dynamic="true" style="">
@@ -208,7 +210,7 @@
                                             <f:selectItem itemLabel="Yes" itemValue="#{Integer.MAX_VALUE}"></f:selectItem>
                                             <f:selectItem itemLabel="No" itemValue="1"></f:selectItem>
                                             <p:ajax update="@([id$=usage]),@([id$=vanishthis])" listener="${marketing.dummyTrigger}"></p:ajax>
-                                            
+
                                         </p:selectOneMenu>
                                     </h:panelGroup>
 

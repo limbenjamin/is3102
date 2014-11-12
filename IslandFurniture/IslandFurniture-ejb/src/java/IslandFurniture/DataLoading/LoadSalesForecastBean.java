@@ -111,7 +111,7 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                 }
 
                 // Remove the quantity sold and actualInventory for demonstration
-                Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.MAR, 2014);
+                Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.AUG, 2014);
                 listOfMssr = salesForecastBean.retrieveMssrForCoStock(eachCo, ss.getStock(), Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
 
                 for (int i = 0; i < listOfMssr.size(); i++) {
@@ -187,16 +187,6 @@ public class LoadSalesForecastBean implements LoadSalesForecastBeanRemote {
                     em.merge(eachMmsf);
 
                     System.out.println(eachMmsf);
-                }
-
-                // Remove the quantity sold for demonstration
-                Calendar mthOfDel = TimeMethods.getCalFromMonthYear(Month.MAR, 2014);
-                listOfMmsf = foodForecastBean.retrieveMmsfForStoreMi(eachStore, mi, Month.getMonth(mthOfDel.get(Calendar.MONTH)), mthOfDel.get(Calendar.YEAR), Month.getMonth(lockedOutCutoff.get(Calendar.MONTH)), lockedOutCutoff.get(Calendar.YEAR));
-
-                for (int i = 0; i < listOfMmsf.size(); i++) {
-                    MonthlyMenuItemSalesForecast mmsf = listOfMmsf.get(i);
-                    mmsf.setQtySold(0);
-                    mmsf.setEndMthUpdated(false);
                 }
             }
         }
