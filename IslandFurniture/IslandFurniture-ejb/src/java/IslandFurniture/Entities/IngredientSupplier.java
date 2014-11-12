@@ -27,22 +27,24 @@ import javax.persistence.OneToOne;
     @NamedQuery(
             name = "findIngredSupplierByNameAndCo",
             query = "SELECT a FROM IngredientSupplier a WHERE a.name = :name AND a.co = :co"),
+    @NamedQuery(name = "findIngredSupplierFromIngred",
+            query = "SELECT a FROM IngredientSupplier a WHERE EXISTS(SELECT b FROM IngredientContractDetail b WHERE b.ingredient = :ingredient AND b.ingredContract.ingredSupplier = a)")
 })
 public class IngredientSupplier extends Supplier implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @OneToOne(mappedBy = "ingredSupplier", cascade={CascadeType.PERSIST})
+    @OneToOne(mappedBy = "ingredSupplier", cascade = {CascadeType.PERSIST})
     private IngredientContract ingredContract;
 
     @OneToMany(mappedBy = "ingredSupplier")
     private List<IngredientPurchaseOrder> ingredPurchaseOrders;
-    
+
     @ManyToOne
     private CountryOffice co;
-    
+
     public IngredientSupplier() {
-        
+
     }
 
     public IngredientContract getIngredContract() {

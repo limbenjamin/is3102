@@ -5,6 +5,8 @@
  */
 package IslandFurniture.EJB.Kitchen;
 
+import IslandFurniture.EJB.CommonInfrastructure.ManageNotificationsBeanLocal;
+import IslandFurniture.EJB.ITManagement.ManagePrivilegesBeanLocal;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocumentDetail;
@@ -17,6 +19,7 @@ import IslandFurniture.Entities.Store;
 import IslandFurniture.Enums.PurchaseOrderStatus;
 import java.util.Calendar;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +34,11 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
 
     @PersistenceContext
     EntityManager em;
+
+    @EJB
+    private ManageNotificationsBeanLocal manageNotificationsBean;
+    @EJB
+    private ManagePrivilegesBeanLocal managePrivilegesBean;
 
     private IngredientGoodsReceiptDocument ingredientGoodsReceiptDocument;
     private IngredientGoodsReceiptDocumentDetail ingredientGoodsReceiptDocumentDetail;
@@ -90,6 +98,11 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
             ingredientInventory = (IngredientInventory) em.find(IngredientInventory.class, pk);
             ingredientInventory.setQty(ingredientInventory.getQty() + ii.getQty());
             em.merge(ingredientInventory);
+        }
+
+        if (ingredientGoodsReceiptDocument.getIngredientPurchaseOrder() != null) {
+            ingredientGoodsReceiptDocument.getIngredientPurchaseOrder().setStatus(PurchaseOrderStatus.DELIVERED);
+            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Payment", "Purchase Order #" + ingredientGoodsReceiptDocument.getIngredientPurchaseOrder().getId().toString() + " was delivered at " + ingredientGoodsReceiptDocument.getStore().getName() + ingredientGoodsReceiptDocument.getStore().getClass().getSimpleName(), "/kitchen/ingredientpo.xhtml", "Make Payment to Supplier", managePrivilegesBean.getPrivilegeFromName("Ingredient Planner"), ingredientGoodsReceiptDocument.getStore());
         }
 
         ingredientGoodsReceiptDocument.setLastModBy(staff);
@@ -203,14 +216,14 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         ingredientGoodsReceiptDocument = (IngredientGoodsReceiptDocument) em.find(IngredientGoodsReceiptDocument.class, id);
         return ingredientGoodsReceiptDocument;
     }
-    
+
     //  Function: To get the Purchase Order entity from Id
     @Override
     public IngredientPurchaseOrder getPurchaseOrder(Long id) {
         ingredientPurchaseOrder = (IngredientPurchaseOrder) em.find(IngredientPurchaseOrder.class, id);
         return ingredientPurchaseOrder;
     }
-    
+
     //  Function: To return list the Purchase Order Details of a Purchase Order which will be used to create Goods Receipt Document Details    
     @Override
     public List<IngredientPurchaseOrderDetail> viewPurchaseOrderDetail(IngredientPurchaseOrder po) {
@@ -218,7 +231,7 @@ public class ManageIngredientGoodsReceipt implements ManageIngredientGoodsReceip
         q.setParameter("id", po.getId());
         return q.getResultList();
     }
-    
+
     //  @Need to check --  Function: To set the Goods Receipt Document to the Purchase Order    
     @Override
     public void setGoodsReceiptDocumentToThePurchaseOrder(IngredientGoodsReceiptDocument goodsReceiptDocument, IngredientPurchaseOrder po, Calendar date) {

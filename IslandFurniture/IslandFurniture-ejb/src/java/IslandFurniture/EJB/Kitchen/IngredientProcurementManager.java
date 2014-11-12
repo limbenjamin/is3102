@@ -115,7 +115,7 @@ public class IngredientProcurementManager implements IngredientProcurementManage
     
     @Override
     public Integer getLotSize(Ingredient ingredient, Store store) {
-        Query q = em.createNamedQuery("getIngredientContractDetailByIngredAndCo");
+        Query q = em.createNamedQuery("getICDByIngredAndCo");
         q.setParameter("ingredient", ingredient);
         q.setParameter("co", store.getCountryOffice());
         

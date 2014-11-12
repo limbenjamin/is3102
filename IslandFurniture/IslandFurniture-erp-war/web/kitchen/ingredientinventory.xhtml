@@ -33,21 +33,12 @@
                                         <tr>
                                             <th>Ingredient</th>
                                             <th>Current Quantity</th>
-                                            <th>Threshold Quantity</th>
-                                            <th>Update</th>
                                         </tr>
                                         <h:form class="form-horizontal">
                                             <ui:repeat value="#{ingredientInventoryManagedBean.ingredientInventoryList}" var="ss">
                                                 <tr>
                                                     <td><h:outputText value="#{ss.ingredient.name}"/></td>
                                                     <td><h:outputText value="#{ss.qty}"/></td>
-                                                    <td><h:inputText value="#{ss.threshold}" class="form-control"></h:inputText></td>
-                                                    <td>
-                                                        <h:commandButton action="ingredientinventory" actionListener="#{ingredientInventoryManagedBean.editIngredientInventory}" class="btn btn-sm transparent-button" style="outline:0;"> 
-                                                            <f:attribute name="ingredientInventory" value="#{ss}" />
-                                                        </h:commandButton>
-                                                        <i class="fa fa-lg fa-pencil-square-o icon-button"></i>
-                                                    </td>
                                                 </tr>
                                             </ui:repeat>
                                         </h:form> 

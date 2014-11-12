@@ -12,6 +12,7 @@ import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManageMemberAuthenticationBeanLocal;
 import IslandFurniture.EJB.CustomerWebService.ManagePerksBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.ManageMembershipLocal;
+import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Customer;
 import IslandFurniture.Entities.FurnitureTransaction;
@@ -54,6 +55,7 @@ public class CustomerAccountManagedBean implements Serializable{
     private String phoneNo = null;
     private String address = null;
     private String emailAddress = null;
+    private Country country = null;
     private Customer customer;
     private String hashedPassword = null;
     private String oldPassword = null;
@@ -70,6 +72,7 @@ public class CustomerAccountManagedBean implements Serializable{
     private List<RetailItemTransaction> retailTransactions;
     private List<RestaurantTransaction> restaurantTransactions;
     private List<Redemption> redemptions;
+    private List<Country> countryList;
     
     @EJB
     private ManageMemberAuthenticationBeanLocal mmab;
@@ -109,6 +112,8 @@ public class CustomerAccountManagedBean implements Serializable{
             pdpscPerks = perksBean.getPDPSC(customer);
             phoneNo = customer.getPhoneNo();
             name = customer.getName();
+            country = customer.getCountry();
+            countryList = mmab.getCountries();
             furnitureTransactions = transBean.getFurnitureTransactions(customer);
             retailTransactions = transBean.getRetailTransactions(customer);
             restaurantTransactions = transBean.getRestaurantTransactions(customer);
@@ -153,7 +158,12 @@ public class CustomerAccountManagedBean implements Serializable{
         phoneNo = request.getParameter("particularsForm:phoneNo");
         name = request.getParameter("particularsForm:name");
         address = request.getParameter("particularsForm:address");
-        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name, address);
+        Long countryID = null;
+        if (country != null)
+            countryID = Long.parseLong(request.getParameter("particularsForm:country"));
+        else
+            countryID = Long.parseLong(request.getParameter("particularsForm:countryFirst"));
+        mmab.modifyPersonalParticulars(emailAddress, phoneNo, name, address, countryID);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().putNow("message",
              new FacesMessage(FacesMessage.SEVERITY_INFO, "Your details have been updated!",""));        
         ec.redirect(ec.getRequestContextPath() + coDir + "/member/account.xhtml");
@@ -402,5 +412,21 @@ public class CustomerAccountManagedBean implements Serializable{
 
     public void setRedemptions(List<Redemption> redemptions) {
         this.redemptions = redemptions;
+    }
+
+    public List<Country> getCountryList() {
+        return countryList;
+    }
+
+    public void setCountryList(List<Country> countryList) {
+        this.countryList = countryList;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 }

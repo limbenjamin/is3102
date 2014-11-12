@@ -124,8 +124,6 @@ public class IngredientGoodsReceiptDocumentManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         id = (Long) session.getAttribute("ingredientgoodsreceiptdocumentid");
         
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("POid", event.getComponent().getAttributes().get("POid"));
-        Long purchaseOrderId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("POid");
         IngredientPurchaseOrder purchaseOrder = receiptBean.getPurchaseOrder(purchaseOrderId);
 
         for (IngredientPurchaseOrderDetail p : receiptBean.viewPurchaseOrderDetail(purchaseOrder)) {
