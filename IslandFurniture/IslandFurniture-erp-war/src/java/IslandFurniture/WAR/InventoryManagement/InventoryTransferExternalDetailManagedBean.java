@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageGoodsIssuedLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageInventoryTransferLocal;
 import IslandFurniture.EJB.InventoryManagement.ManageStorageLocationLocal;
@@ -88,7 +88,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
     @EJB
     public ManageStorageLocationLocal storageBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote orgBean;
+    private ManageOrganizationalHierarchyBeanLocal orgBean;
     @EJB
     public ManageGoodsIssuedLocal issuedBean;
 
@@ -177,7 +177,7 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         // end: To display fulfilled plant properly
         // start: To display plant name properly
 
-        if (externalTransferOrder.getRequestingPlant()!= null) {
+        if (externalTransferOrder.getRequestingPlant() != null) {
             String plantType2 = externalTransferOrder.getRequestingPlant().getClass().getSimpleName();
             if (plantType2.equals("ManufacturingFacility")) {
                 plantType2 = "MFG";
@@ -438,11 +438,11 @@ public class InventoryTransferExternalDetailManagedBean implements Serializable 
         this.df = df;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
+    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
         this.orgBean = orgBean;
     }
 

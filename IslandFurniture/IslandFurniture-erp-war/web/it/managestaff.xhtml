@@ -4,7 +4,8 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     
     <h:body>
         <ui:composition template="../template.xhtml">
@@ -17,11 +18,11 @@
                                 </ol>
                             </div>                            
                             <div class="col-md-8">
-                                <c:if test="${staffManagedBean.isGlobalHq.booleanValue()}">
+                                <p:outputPanel rendered="${staffManagedBean.isGlobalHq == true}">
                                     <button type="button" class="btn btn-sm btn-success pull-right btn-right-margin" data-toggle="modal" data-target="#newStaffGlobal">
                                         <i class="fa fa-fw fa-plus"></i>New Staff (Global)
                                     </button>
-                                </c:if>
+                                </p:outputPanel>>
                                 <button type="button" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#newStaff">
                                     <i class="fa fa-fw fa-plus"></i>New Staff
                                 </button>

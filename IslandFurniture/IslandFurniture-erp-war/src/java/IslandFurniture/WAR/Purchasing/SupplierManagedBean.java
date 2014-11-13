@@ -6,9 +6,9 @@
 
 package IslandFurniture.WAR.Purchasing;
 
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.ProcuredStockSupplier;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.EJB.Purchasing.SupplierManagerLocal;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class SupplierManagedBean implements Serializable {
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote manageOrganizationalHierarchyBean;
+    private ManageOrganizationalHierarchyBeanLocal manageOrganizationalHierarchyBean;
     @EJB
     private SupplierManagerLocal supplierManager;
     

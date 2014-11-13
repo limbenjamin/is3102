@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.CustomerCommunicationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Feedback;
@@ -34,21 +33,21 @@ public class FeedbackManagedBean {
     private Plant plant;
     private List<Feedback> feedbackList;
     private Feedback feedback;
-    
+
     @EJB
-    ManageOrganizationalHierarchyBeanRemote mohBean;
+    ManageOrganizationalHierarchyBeanLocal mohBean;
     @EJB
     ManageUserAccountBeanLocal staffBean;
     @EJB
     CustomerCommunicationBeanLocal ccb;
-    
+
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = staffBean.getStaff(username);
         plant = staff.getPlant();
-        feedbackList = ccb.getAllFeedbackForCO((CountryOffice)plant);
+        feedbackList = ccb.getAllFeedbackForCO((CountryOffice) plant);
     }
 
     public String getUsername() {
@@ -91,11 +90,11 @@ public class FeedbackManagedBean {
         this.feedback = feedback;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
+    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
         this.mohBean = mohBean;
     }
 
@@ -115,8 +114,4 @@ public class FeedbackManagedBean {
         this.ccb = ccb;
     }
 
-    
-    
-    
-    
 }

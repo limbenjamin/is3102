@@ -1,7 +1,7 @@
 package IslandFurniture.WAR.InventoryManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.GoodsIssuedDocument;
 import IslandFurniture.Entities.GoodsIssuedDocumentDetail;
 import IslandFurniture.Entities.Plant;
@@ -94,7 +94,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote orgBean;
+    private ManageOrganizationalHierarchyBeanLocal orgBean;
 
     @PostConstruct
     public void init() {
@@ -235,7 +235,7 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         goodsIssuedDocumentId = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("GRDid");
         goodsIssuedDocument = issuedBean.getGoodsIssuedDocument(goodsIssuedDocumentId);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("GRDid", goodsIssuedDocumentId);
-        
+
         if (goodsIssuedDocument.getIssuedDate() == null && goodsIssuedDocument.getDeliverTo() == null) {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "The 'Issued Date' and 'Issued To' fields need to be updated before the Posting of Goods Issued Document. Posting was unsuccessful.", ""));
@@ -595,14 +595,12 @@ public class GoodsIssuedDocumentManagedBean implements Serializable {
         this.staffBean = staffBean;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
+    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
         this.orgBean = orgBean;
     }
-
-  
 
 }

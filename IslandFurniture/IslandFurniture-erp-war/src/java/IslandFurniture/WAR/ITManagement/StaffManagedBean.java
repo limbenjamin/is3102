@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.ITManagement;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageAuthenticationBeanLocal;
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageRolesBeanLocal;
 import IslandFurniture.EJB.ITManagement.ManageStaffAccountsBeanLocal;
 import IslandFurniture.Entities.Country;
@@ -34,13 +33,13 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 @ViewScoped
-public class StaffManagedBean  implements Serializable  {
-    
+public class StaffManagedBean implements Serializable {
+
     private String username;
     private List<Staff> staffList;
     private String password;
     private String name;
-    private String emailAddress; 
+    private String emailAddress;
     private String phoneNo;
     private String countryName;
     private String plantName;
@@ -54,37 +53,37 @@ public class StaffManagedBean  implements Serializable  {
     private List<Role> roleList;
     private Role role;
     private String cardId;
-    
+
     @EJB
     private ManageStaffAccountsBeanLocal msabl;
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote mohBean;
+    private ManageOrganizationalHierarchyBeanLocal mohBean;
     @EJB
     private ManageUserAccountBeanLocal muab;
     @EJB
     private ManageAuthenticationBeanLocal mabl;
     @EJB
     private ManageRolesBeanLocal mrbl;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         HttpSession session = Util.getSession();
         username = (String) session.getAttribute("username");
         staff = muab.getStaff(username);
         //Global HQ can manage staff in all plants
-        if (staff.getPlant() instanceof GlobalHQ){
+        if (staff.getPlant() instanceof GlobalHQ) {
             staffList = msabl.displayAllStaffAccounts();
             isGlobalHq = Boolean.TRUE;
-        }else{
+        } else {
             staffList = msabl.displayStaffAccountsFromPlant(username);
         }
         countryList = mohBean.getCountries();
         plantList = mohBean.displayPlant();
         roleList = mrbl.displayRole();
     }
-    
-    public String createStaff(){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+    public String createStaff() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         username = request.getParameter("staffForm:username");
         name = request.getParameter("staffForm:name");
         password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
@@ -95,19 +94,19 @@ public class StaffManagedBean  implements Serializable  {
         staff = muab.getStaff((String) session.getAttribute("username"));
         countryName = staff.getPlant().getCountry().getName();
         plantName = staff.getPlant().getName();
-        
+
         id = msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
-            System.out.println("Selected item: " + selected); 
-            msabl.addRoleToStaffByUsername(username,selected);
+            System.out.println("Selected item: " + selected);
+            msabl.addRoleToStaffByUsername(username, selected);
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created", ""));
         return "managestaff";
     }
-    
-    public String createStaffWithPlant(){
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+    public String createStaffWithPlant() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         username = request.getParameter("globalStaffForm:username");
         name = request.getParameter("globalStaffForm:name");
         password = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(2);
@@ -119,27 +118,27 @@ public class StaffManagedBean  implements Serializable  {
         countryName = plant.getCountry().getName();
         //msabl.createStaffAccount(username, password, name, emailAddress, phoneNo, countryName, plantName, cardId);
         for (String selected : selectedRoles) {
-            System.out.println("Selected item: " + selected); 
-            msabl.addRoleToStaffByUsername(username,selected);
+            System.out.println("Selected item: " + selected);
+            msabl.addRoleToStaffByUsername(username, selected);
         }
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff created", ""));
         return "managestaff";
     }
-    
-    public String deleteStaff(){
+
+    public String deleteStaff() {
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         msabl.deleteStaffAccount(id);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff deleted",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff deleted", ""));
         return "managestaff";
     }
-    
-    public String resetpassword(){
+
+    public String resetpassword() {
         id = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
         mabl.resetPasswordByAdmin(id);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
-                        new FacesMessage(FacesMessage.SEVERITY_INFO, "Password reseted",""));
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Password reseted", ""));
         return "managestaff";
     }
 
@@ -231,11 +230,11 @@ public class StaffManagedBean  implements Serializable  {
         this.plantList = plantList;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
+    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
         this.mohBean = mohBean;
     }
 
@@ -326,7 +325,5 @@ public class StaffManagedBean  implements Serializable  {
     public void setCardId(String cardId) {
         this.cardId = cardId;
     }
-    
-    
-    
+
 }

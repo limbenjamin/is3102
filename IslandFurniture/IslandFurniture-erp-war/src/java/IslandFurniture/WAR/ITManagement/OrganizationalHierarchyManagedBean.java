@@ -6,11 +6,11 @@
 
 package IslandFurniture.WAR.ITManagement;
 
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.Entities.Country;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.Store;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,7 +21,6 @@ import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +54,7 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     private String timezone;
     
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote mohBean;
+    private ManageOrganizationalHierarchyBeanLocal mohBean;
     
     @PostConstruct
     public void init(){
@@ -266,11 +265,11 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         this.coList = coList;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
+    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
         this.mohBean = mohBean;
     }
 

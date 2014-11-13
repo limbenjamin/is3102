@@ -6,7 +6,7 @@
 package IslandFurniture.WAR.Kitchen;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.Kitchen.ManageIngredientGoodsReceiptLocal;
 import IslandFurniture.EJB.Kitchen.ManageIngredientInventoryLocal;
 import IslandFurniture.Entities.IngredientGoodsReceiptDocument;
@@ -15,21 +15,17 @@ import IslandFurniture.Entities.Plant;
 import IslandFurniture.Entities.Staff;
 import IslandFurniture.Entities.Ingredient;
 import IslandFurniture.WAR.CommonInfrastructure.Util;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -62,7 +58,7 @@ public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
     @EJB
     public ManageIngredientInventoryLocal ingredientInventoryBean;
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote orgBean;
+    private ManageOrganizationalHierarchyBeanLocal orgBean;
 
     @PostConstruct
     public void init() {
@@ -86,7 +82,6 @@ public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
         }
         // end: To display date properly
     }
-
 
     public Long getId() {
         return id;
@@ -200,11 +195,11 @@ public class IngredientGoodsReceiptPostedManagedBean implements Serializable {
         this.ingredientInventoryBean = ingredientInventoryBean;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getOrgBean() {
+    public ManageOrganizationalHierarchyBeanLocal getOrgBean() {
         return orgBean;
     }
 
-    public void setOrgBean(ManageOrganizationalHierarchyBeanRemote orgBean) {
+    public void setOrgBean(ManageOrganizationalHierarchyBeanLocal orgBean) {
         this.orgBean = orgBean;
     }
 

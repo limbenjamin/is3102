@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package IslandFurniture.WAR.OperationalCRM;
 
 import IslandFurniture.EJB.CommonInfrastructure.ManageUserAccountBeanLocal;
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.OperationalCRM.CustomerCommunicationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.CustChatThread;
@@ -29,19 +28,19 @@ import javax.servlet.http.HttpSession;
 @ManagedBean
 @ViewScoped
 public class CustomerChatManagedBean implements Serializable {
-    
+
     private String username;
     private Staff staff;
     private Plant plant;
     List<CustChatThread> threadList;
-    
+
     @EJB
-    ManageOrganizationalHierarchyBeanRemote mohBean;
+    ManageOrganizationalHierarchyBeanLocal mohBean;
     @EJB
     ManageUserAccountBeanLocal staffBean;
     @EJB
     CustomerCommunicationBeanLocal ccb;
-    
+
     @PostConstruct
     public void init() {
         HttpSession session = Util.getSession();
@@ -50,8 +49,8 @@ public class CustomerChatManagedBean implements Serializable {
         plant = staff.getPlant();
         threadList = ccb.getActiveThreadFromCountry((CountryOffice) plant);
     }
-    
-    public void refreshActiveThreads(){
+
+    public void refreshActiveThreads() {
         threadList = ccb.getActiveThreadFromCountry((CountryOffice) plant);
     }
 
@@ -87,11 +86,11 @@ public class CustomerChatManagedBean implements Serializable {
         this.threadList = threadList;
     }
 
-    public ManageOrganizationalHierarchyBeanRemote getMohBean() {
+    public ManageOrganizationalHierarchyBeanLocal getMohBean() {
         return mohBean;
     }
 
-    public void setMohBean(ManageOrganizationalHierarchyBeanRemote mohBean) {
+    public void setMohBean(ManageOrganizationalHierarchyBeanLocal mohBean) {
         this.mohBean = mohBean;
     }
 
@@ -110,7 +109,5 @@ public class CustomerChatManagedBean implements Serializable {
     public void setCcb(CustomerCommunicationBeanLocal ccb) {
         this.ccb = ccb;
     }
-    
-    
-        
+
 }

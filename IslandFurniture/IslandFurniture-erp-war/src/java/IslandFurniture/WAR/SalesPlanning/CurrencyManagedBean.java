@@ -6,10 +6,8 @@
 
 package IslandFurniture.WAR.SalesPlanning;
 
-import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanRemote;
+import IslandFurniture.EJB.ITManagement.ManageOrganizationalHierarchyBeanLocal;
 import IslandFurniture.EJB.SalesPlanning.CurrencyManagerLocal;
-import IslandFurniture.Entities.Country;
-import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.ExchangeRate;
 import java.io.Serializable;
@@ -19,14 +17,10 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.CategoryAxis;
-import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
@@ -40,7 +34,7 @@ public class CurrencyManagedBean implements Serializable {
     @EJB
     private CurrencyManagerLocal currencyManager;
     @EJB
-    private ManageOrganizationalHierarchyBeanRemote mohBean;
+    private ManageOrganizationalHierarchyBeanLocal mohBean;
     
     private String currencyParser;
     private List<Currency> currencyList;
