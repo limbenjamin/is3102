@@ -359,7 +359,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
             }
         }
 
-        return newprice;
+        return Math.max(newprice, 0);
 
     }
 
