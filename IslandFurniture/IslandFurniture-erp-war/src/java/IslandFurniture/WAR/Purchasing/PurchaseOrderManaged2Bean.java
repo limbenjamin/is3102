@@ -189,8 +189,9 @@ public class PurchaseOrderManaged2Bean implements Serializable {
             orderContent = orderContent + " x " + current.getQuantity() + "\r\n ";
         }
         try {
-            // send notification to supplier: using zi xuan's email address as a placeholder currently
-            SendEmailByPost.sendEmail("manufacturing", "aura.chrome@gmail.com",
+            // send notification to supplier: using benjamin's email address as a placeholder currently
+            // to avoid spamming other people's email addresses
+            SendEmailByPost.sendEmail("manufacturing", "supplier@limbenjamin.com",
                     title, orderContent);
         } catch (Exception ex) {
             Logger.getLogger(PurchaseOrderManaged2Bean.class.getName()).log(Level.SEVERE, null, ex);

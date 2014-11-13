@@ -35,6 +35,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
     private Long id;
     private String confirmPassword = null;
     private String coDir;
+    private String coCode;
     private String code;
     private String target;
 
@@ -99,7 +100,8 @@ public class MemberAuthenticationManagedBean implements Serializable {
         confirmPassword = request.getParameter("registerForm:confirmPassword");
 
         target = ec.getRequestParameterMap().get("target");
-        coDir = ec.getRequestParameterMap().get("coCode");
+        coCode = ec.getRequestParameterMap().get("coCode");
+        coDir = coCode;
 
         if (coDir == null || coDir.isEmpty()) {
             coDir = "";
@@ -121,7 +123,7 @@ public class MemberAuthenticationManagedBean implements Serializable {
         phoneNo = request.getParameter("registerForm:phoneNo");
         dateOfBirth = request.getParameter("registerForm:dateOfBirth");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-        Country country = manageLocalizationBean.findCoByCode(coDir).getCountry();
+        Country country = manageLocalizationBean.findCoByCode(coCode).getCountry();
         Date date = null;
         try {
             date = sdf.parse(dateOfBirth);

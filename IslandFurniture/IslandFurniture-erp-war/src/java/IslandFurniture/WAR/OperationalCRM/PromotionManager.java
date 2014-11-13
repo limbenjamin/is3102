@@ -5,6 +5,7 @@
  */
 package IslandFurniture.WAR.OperationalCRM;
 
+import IslandFurniture.EJB.Manufacturing.ManageProductionPlanTimerBean;
 import IslandFurniture.EJB.OperationalCRM.ManageMarketingBeanLocal;
 import IslandFurniture.Entities.MembershipTier;
 import IslandFurniture.Entities.Plant;
@@ -74,6 +75,21 @@ public class PromotionManager implements Serializable {
     public List<Plant> listOfStores;
 
     public List<Stock> listOfStocks;
+
+    public void dummyTrigger(AjaxBehaviorEvent event) {
+
+        SelectOneMenu som = (SelectOneMenu) event.getComponent();
+        PromotionDetail target=null;
+
+        for (PromotionDetail pd : currentEdit.getPromotionDetails()) {
+            if (pd.getId().equals(Long.valueOf(som.getRequiredMessage().split("_")[1]))) {
+                target = pd;
+                pd.setUsageCount(1);
+                break;
+            }
+        }
+
+    }
 
     public class dummy {
 
@@ -420,7 +436,7 @@ public class PromotionManager implements Serializable {
             target.getPromotionCoupons().add(0, pc);
             success_msg = "Using Coupon ! remember to set limited Quantity";
             return;
-        } else if(!evalcouponstatus(target).equals("Non-Perishable Coupon")) {
+        } else if (!evalcouponstatus(target).equals("Non-Perishable Coupon")) {
             PromotionCoupon pc = new PromotionCoupon();
             pc.setId(-1L);
             pc.setOneTimeUsage(false);
@@ -472,7 +488,7 @@ public class PromotionManager implements Serializable {
     }
 
     public String getCouponID(PromotionCoupon pc) {
-            return (mbean.encodeCouponID(pc.getId()));
+        return (mbean.encodeCouponID(pc.getId()));
 
     }
 

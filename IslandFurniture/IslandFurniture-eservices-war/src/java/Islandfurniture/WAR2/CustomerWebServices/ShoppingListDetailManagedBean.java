@@ -31,7 +31,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -169,6 +168,7 @@ public class ShoppingListDetailManagedBean {
         String recipientEmail = request.getParameter("shareShoppingList:recipientEmail");
         SendEmailByPost.sendEmail("customerservice", recipientEmail, "Share Shopping List", customer.getName()+ 
                 " has requested to share the shopping list with you. Click here to accept: https://localhost/cws/sg/member/shoppinglistinvite.xhtml?id=" + shoppingList.getIdHash());
+        ec.redirect(ec.getRequestContextPath() + coDir + "/member/shoppinglistdetail.xhtml?id=" + listId);
     }
     
     public Double getDiscountedPrice(Stock s) {

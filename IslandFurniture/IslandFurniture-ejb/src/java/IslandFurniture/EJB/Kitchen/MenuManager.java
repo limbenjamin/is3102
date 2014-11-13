@@ -51,7 +51,7 @@ public class MenuManager implements MenuManagerLocal {
             return null;
         }
     }
-    public String addMenuItem(String menuName, Double price, CountryOffice co, boolean alaCarte, MenuType menuType) {
+    public String addMenuItem(String menuName, Double price, Long points, CountryOffice co, boolean alaCarte, MenuType menuType) {
         MenuItem menuItem;
         String msg = null;
         List<MenuItemDetail> menuItemDetails;
@@ -67,6 +67,7 @@ public class MenuManager implements MenuManagerLocal {
                 
                 menuItem.setName(menuName);
                 menuItem.setPrice(price);
+                menuItem.setPointsWorth(points);
                 menuItem.setAlaCarte(alaCarte);
                 menuItem.setMenuType(menuType);
                 menuItem.setCountryOffice(co);
@@ -109,7 +110,7 @@ public class MenuManager implements MenuManagerLocal {
             return "Unexpected error occured";
         }
     }
-    public String editMenuItemAttribute(Long menuItemID, MenuType menuType, Double price, boolean alaCarte) {
+    public String editMenuItemAttribute(Long menuItemID, MenuType menuType, Double price, Long points, boolean alaCarte) {
         MenuItem menuItem;
         try {
             System.out.println("MenuManager.editMenuItemAttribute()");
@@ -117,6 +118,7 @@ public class MenuManager implements MenuManagerLocal {
             menuItem.setPrice(price);
             menuItem.setMenuType(menuType);
             menuItem.setAlaCarte(alaCarte);
+            menuItem.setPointsWorth(points);
             return null;
         } catch(Exception ex) {
             System.err.println("Something went wrong here"); 

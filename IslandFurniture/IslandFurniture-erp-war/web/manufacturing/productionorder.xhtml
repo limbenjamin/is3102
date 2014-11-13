@@ -11,6 +11,20 @@
     <h:body>
         <ui:composition template="../template.xhtml">
             <ui:define name="content">
+                <p:outputPanel id="statuses">
+                    <p:outputPanel id="statusUpdate1" rendered="#{not empty productionOrderManagedBean.errorMessage}">
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                            <strong><h:outputText value="#{productionOrderManagedBean.errorMessage}" escape="false"/></strong>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel id="statusUpdate2" rendered="#{not empty productionOrderManagedBean.successMessage}">
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+                            <strong><h:outputText value="#{productionOrderManagedBean.successMessage}" escape="false"/></strong>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
                 <div class="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb">
@@ -22,7 +36,6 @@
                         <h4>Plants' Production Orders</h4>
                         <hr></hr>                                   
                     </div>
-                    <h:outputText id="statusMessage" value="#{productionOrderManagedBean.statusMessage}" />
                     <div class="col-md-10">                                               
                         <ul class="nav nav-tabs dashboard-tabs" role="tablist">
                             <li class="active"><a href="#planned" role="tab" data-toggle="tab">Planned</a></li>
@@ -74,7 +87,7 @@
                                             <p:column headerText="Commence">
                                                 <h:commandButton class="btn btn-success btn-xs" value="Confirm">
                                                     <f:param name="batchNo" value="#{plannedPO.batchNo}" />
-                                                    <f:ajax execute="storageBinMenu" render=":statusMessage plannedTable :startedForm:startedTable" listener="#{productionOrderManagedBean.commencePO}" />
+                                                    <f:ajax execute="storageBinMenu" render=":statuses plannedTable :startedForm:startedTable" listener="#{productionOrderManagedBean.commencePO}" />
                                                 </h:commandButton>
                                             </p:column>
                                         </p:dataTable>
@@ -120,7 +133,7 @@
                                             <p:column headerText="Complete"> 
                                                 <h:commandButton class="btn btn-success btn-xs" style="outline:0;" value="Confirm">
                                                     <f:param name="batchNo" value="#{po.batchNo}" /> 
-                                                    <f:ajax execute="storageBinMenu" render=":statusMessage startedTable :completedForm:completedTable" listener="#{productionOrderManagedBean.completePO}" />
+                                                    <f:ajax execute="storageBinMenu" render=":statuses startedTable :completedForm:completedTable" listener="#{productionOrderManagedBean.completePO}" />
                                                 </h:commandButton>
                                             </p:column> 
 

@@ -7,7 +7,6 @@
 package IslandFurniture.EJB.Purchasing;
 
 import IslandFurniture.Entities.CountryOffice;
-import IslandFurniture.Entities.Currency;
 import IslandFurniture.Entities.ManufacturingFacility;
 import IslandFurniture.Entities.ProcuredStock;
 import IslandFurniture.Entities.ProcuredStockContractDetail;
@@ -40,7 +39,7 @@ public interface SupplierManagerLocal {
 
     public String addProcurementContractDetail(Long supplierID, Long mfID, Long stockID, Integer size, Integer leadTime, Double lotPrice, Long currencyID); 
 
-    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, Long currencyID);
+    public String editProcurementContractDetail(Long id, Integer size, Integer leadTime, Double lotPrice, String currencyToChange);
 
     public List<StockSupplied> getAllStockSupplied();
 

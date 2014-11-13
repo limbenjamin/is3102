@@ -174,7 +174,7 @@ public class IngredPlannerManagedBean implements Serializable {
 
             foodForecastBean.saveMonthlyMenuItemSalesForecast(coupleList);
 
-            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Restaurant Forecast", "New restaurant forecast awaiting your approval", "/kitchen/reviewmmsf.xhtml?store=" + store, "Review Forecast", managePrivilegesBean.getPrivilegeFromName("Review MMSF"), store.getCountryOffice());
+            manageNotificationsBean.createNewNotificationForPrivilegeFromPlant("Pending Restaurant Forecast", "New restaurant forecast awaiting your approval", "/kitchen/reviewmmsf.xhtml?store=" + store.getId(), "Review Forecast", managePrivilegesBean.getPrivilegeFromName("Review MMSF"), store.getCountryOffice());
 
             successMessage = "Forecast saved successfully!";
         } catch (InvalidMmsfException ex) {

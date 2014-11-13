@@ -9,5 +9,8 @@
     <property name="URL" value="jdbc:mysql://localhost:3306/islandfurniture?zeroDateTimeBehavior=convertToNull"/>
     <property name="User" value="root"/>
     <property name="Password" value="root"/>
+    <property name="characterEncoding" value="UTF-8"/>
+    <property name="characterSetResults" value="UTF-8"/>
+    <property name="useUnicode" value="true"/>
   </jdbc-connection-pool>
 </resources>

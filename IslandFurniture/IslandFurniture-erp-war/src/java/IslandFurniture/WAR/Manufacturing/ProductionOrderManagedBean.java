@@ -48,14 +48,15 @@ public class ProductionOrderManagedBean implements Serializable {
     private ManufacturingFacility mf;
     private ProductionOrder po;
     private List<ProductionOrder> poList;
-    private List<ProductionOrder> plannedPOList = new ArrayList<ProductionOrder>();
-    private List<ProductionOrder> startedPOList = new ArrayList<ProductionOrder>();
-    private List<ProductionOrder> completedPOList = new ArrayList<ProductionOrder>();
+    private List<ProductionOrder> plannedPOList = new ArrayList();
+    private List<ProductionOrder> startedPOList = new ArrayList();
+    private List<ProductionOrder> completedPOList = new ArrayList();
 
     private Long chosenBinId;
-    private List<StorageBin> storageBins = new ArrayList<StorageBin>();
+    private List<StorageBin> storageBins = new ArrayList();
 
-    private String statusMessage;
+    private String successMessage = "";
+    private String errorMessage = "";
 
     public Staff getStaff() {
         return staff;
@@ -121,12 +122,20 @@ public class ProductionOrderManagedBean implements Serializable {
         this.storageBins = storageBins;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getSuccessMessage() {
+        return successMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
+    public void setSuccessMessage(String successMessage) {
+        this.successMessage = successMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     @PostConstruct
@@ -135,6 +144,10 @@ public class ProductionOrderManagedBean implements Serializable {
         HttpSession session = Util.getSession();
         this.staff = staffBean.getStaff((String) session.getAttribute("username"));
         Plant plant = staff.getPlant();
+
+        successMessage = "";
+        errorMessage = "";
+
         if (plant instanceof ManufacturingFacility) {
             mf = (ManufacturingFacility) plant;
 
@@ -184,31 +197,35 @@ public class ProductionOrderManagedBean implements Serializable {
 
     public void commencePO(AjaxBehaviorEvent event) {
         Long batchNo = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("batchNo"));
+        successMessage = "";
+        errorMessage = "";
 
         System.out.println("ProductionOrderManagedBean.commencePO() " + batchNo + " | " + chosenBinId);
         try {
             po = productionManager.commencePO(batchNo, chosenBinId);
             plannedPOList.remove(po);
             startedPOList.add(po);
-            statusMessage = "Commencement successful!";
+            successMessage = "Commencement successful!";
         } catch (InvalidInputException ex) {
-            statusMessage = ex.getMessage();
+            errorMessage = ex.getMessage();
         } catch (InsufficientMaterialException ex) {
-            statusMessage = ex.getMessage();
+            errorMessage = ex.getMessage();
         }
     }
 
     public void completePO(AjaxBehaviorEvent event) {
         Long batchNo = new Long(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("batchNo"));
+        successMessage = "";
+        errorMessage = "";
 
         System.out.println("ProductionOrderManagedBean.completePO()" + batchNo + " | " + chosenBinId);
         try {
             po = productionManager.completePO(batchNo, chosenBinId);
             startedPOList.remove(po);
             completedPOList.add(po);
-            statusMessage = "Completion successful!";
+            successMessage = "Completion successful!";
         } catch (InvalidInputException ex) {
-            statusMessage = ex.getMessage();
+            errorMessage = ex.getMessage();
         }
     }
 }

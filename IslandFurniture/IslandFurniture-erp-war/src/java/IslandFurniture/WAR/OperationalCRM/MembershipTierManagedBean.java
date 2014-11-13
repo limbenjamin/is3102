@@ -43,7 +43,7 @@ public class MembershipTierManagedBean implements Serializable {
     @EJB
     private ManageUserAccountBeanLocal staffBean;
     @EJB
-    public ManageMembershipLocal membershipBean;
+    private ManageMembershipLocal membershipBean;
 
     @PostConstruct
     public void init() {

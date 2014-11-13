@@ -154,8 +154,8 @@ public class LoadStorageDataBean implements LoadStorageDataBeanRemote {
                         storeInv.setStock(ss.getStock());
                         storeInv.setStore((Store) plant);
                         storeInv.setMaxQty(maxQty);
-                        storeInv.setRepQty((int) Math.floor(maxQty * 0.2));
-                        storeInv.setQty((int) Math.floor(maxQty * (rand.nextInt(5) * 0.1 + 0.3)));
+                        storeInv.setRepQty((int) Math.floor(maxQty * 0.3));
+                        storeInv.setQty((int) Math.floor(maxQty * (rand.nextInt(5) * 0.1 + 0.1)));
                         storeInv.setLocationInStore(storeSect);
                         em.persist(storeInv);
 

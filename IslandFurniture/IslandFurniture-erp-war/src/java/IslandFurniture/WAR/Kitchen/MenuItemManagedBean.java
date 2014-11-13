@@ -157,8 +157,9 @@ public class MenuItemManagedBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String name = request.getParameter("addMenuItemForm:name");
         String price = request.getParameter("addMenuItemForm:price"); 
+        String points = request.getParameter("addMenuItemForm:points"); 
         String menuType = request.getParameter("addMenuItemForm:menuType");
-        String output = menuManager.addMenuItem(name, Double.parseDouble(price), co, checkbox, MenuType.valueOf(menuType));
+        String output = menuManager.addMenuItem(name, Double.parseDouble(price), Long.parseLong(points), co, checkbox, MenuType.valueOf(menuType));
         
         String id = output.split("#")[0];
         String msg = output.split("#")[1];

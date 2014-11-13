@@ -67,7 +67,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
         }
 
-        for (Customer cc : (Customer[]) c.stream().distinct().toArray()) {
+        for (Customer cc :  c) {
             try {
                 SendEmailByPost.sendEmail("marketing@islandfurniture.com", cc.getEmailAddress(), "Island Furniture Promotion:" + pc.getTitle(), pc.getRemark());
             } catch (Exception ex) {
@@ -305,6 +305,7 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
 
     @Override
     public double calcDiscount(Stock s, CountryOffice co, PromotionDetail pd) {
+        System.out.println("Calc Discount for Stock :" +s + " CO="+co+" pd="+pd);
         Double op = this.getPrice(s, co);
         Double newprice = op;
         //agnostic about membershipTier
@@ -312,7 +313,8 @@ public class ManageMarketingBean implements ManageMarketingBeanLocal {
         if (pd.getPromotionCampaign() == null) {
             return op;
         }
-
+        
+        
         if (pd.getUsageCount() <= 0 || pd.getPromotionCampaign().getLocked() || pd.getPromotionCampaign().getExpired()) {
             return (op);
         }

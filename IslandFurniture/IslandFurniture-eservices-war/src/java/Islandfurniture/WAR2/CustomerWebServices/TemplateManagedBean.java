@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Islandfurniture.WAR2.CustomerWebServices;
 
 import IslandFurniture.EJB.CustomerWebService.ManageLocalizationBeanLocal;
 import IslandFurniture.Entities.CountryOffice;
 import IslandFurniture.Enums.FurnitureSubcategory;
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,40 +31,49 @@ import javax.servlet.http.HttpServletRequest;
 @ViewScoped
 public class TemplateManagedBean implements Serializable {
 
-    private FacesContext ctx = FacesContext.getCurrentInstance(); 
+    private FacesContext ctx = FacesContext.getCurrentInstance();
     private List<CountryOffice> coList;
     private String selectedLocale;
     private CountryOffice co;
     private List<FurnitureSubcategory> subcategoryList;
-    
+
     @EJB
     private ManageLocalizationBeanLocal manageLocalizationBean;
-    
+
     @PostConstruct
     public void init() {
         HttpServletRequest httpReq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+
         co = manageLocalizationBean.findCoByCode((String) httpReq.getAttribute("coCode"));
-        setCountryLocale((String) httpReq.getAttribute("coCode"));      
-        // get furniture subcategory enum list
-        subcategoryList = new ArrayList<>(EnumSet.allOf(FurnitureSubcategory.class));
-    } 
-    
+        if (co != null) {
+            setCountryLocale((String) httpReq.getAttribute("coCode"));
+            // get furniture subcategory enum list
+            subcategoryList = new ArrayList<>(EnumSet.allOf(FurnitureSubcategory.class));
+        } else {
+            try{
+                ec.redirect(ec.getRequestContextPath());
+            } catch (IOException ex) {
+                
+            }
+        }
+    }
+
     public void setCountryLocale(String coCode) {
         selectedLocale = coCode;
         if (coCode.equals("cn")) {
             ctx.getViewRoot().setLocale(new Locale("zh", "CN"));
-        }    
-        else if (coCode.equals("my")) {
+        } else if (coCode.equals("my")) {
             ctx.getViewRoot().setLocale(new Locale("ms", "MY"));
-        }
-        else
+        } else {
             ctx.getViewRoot().setLocale(new Locale("en", "SG"));
+        }
     }
-    
+
     public String getLocalizedCurrencyFormat() {
-        return NumberFormat.getCurrencyInstance(ctx.getViewRoot().getLocale()).format(1000);     
-    }     
-    
+        return NumberFormat.getCurrencyInstance(ctx.getViewRoot().getLocale()).format(1000);
+    }
+
     public List<CountryOffice> getCoList() {
         return coList;
     }
@@ -95,5 +105,5 @@ public class TemplateManagedBean implements Serializable {
     public void setSubcategoryList(List<FurnitureSubcategory> subcategoryList) {
         this.subcategoryList = subcategoryList;
     }
-    
+
 }

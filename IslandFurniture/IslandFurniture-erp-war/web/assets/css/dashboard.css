@@ -49,6 +49,10 @@
     max-width: 125px;
 }
 
+.no-bottom .form-group {
+    margin-bottom: 0px;
+}
+
 /************************* some useful classes ***********************************/
 
 .centered-title {
@@ -160,6 +164,13 @@ img{
     background-image: none;
     border-radius: 3px;
     border: 1px solid #e3e6f3;
+}
+
+/* filter boxes for tables */
+.filter-box {
+    width: 100% !important;
+    height: 26px;
+    margin: 7px 0px 4px 0px !important;
 }
 
 /************************* dashboard notifications ***********************************/

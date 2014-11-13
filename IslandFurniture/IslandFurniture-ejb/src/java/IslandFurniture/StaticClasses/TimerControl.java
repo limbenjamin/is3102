@@ -50,13 +50,13 @@ public class TimerControl implements TimerControlLocal {
     @PostConstruct
     public void init() {
         this.updateMssrStarted = false;
-        cal = TimeMethods.getCalFromMonthYear(Month.FEB, 2014);
+        cal = TimeMethods.getCalFromMonthYear(Month.AUG, 2014);
         prevMth = Calendar.getInstance();
         prevMth.add(Calendar.MONTH, -1);
 
-        ipodYr = 2015;
-        ipodMth = 0;
-        ipodWk = 1;
+        ipodYr = 2014;
+        ipodMth = 11;
+        ipodWk = 4;
     }
 
     @Schedule(hour = "*", minute = "*", second = "*/5")
