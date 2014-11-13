@@ -1,7 +1,11 @@
 package POS;
 
 import Helper.Connector;
+import Helper.LCD;
 import Helper.NFCMethods;
+import gnu.io.CommPortIdentifier;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,6 +19,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,9 +38,39 @@ public class LoginUI extends javax.swing.JFrame {
     private List<Timer> timerList = new ArrayList();
     private Double totalRegisterCash;
     private String storeType;
+    
+    private OutputStream partnerPoleDisplayOutputStream;
+    private String partnerPoleDisplayCOMPort;
+    SerialPort serialPort;
+    byte[] clear = {0x0C};
+    byte[] newLine = {0x0A};
+    byte[] carriageReturn = {0x0D};
             
     public LoginUI(Double totalRegisterCash, String storeType) {
         initComponents();
+        try{
+            partnerPoleDisplayCOMPort = LCD.getPort();
+            initPartnerPoleDisplay();
+        }catch(Exception e){
+            System.err.println("Unable to init Partner Pole Display");
+        }
+        try{
+            partnerPoleDisplayOutputStream.write(clear);
+            partnerPoleDisplayOutputStream.write("Welcome to".getBytes());
+            partnerPoleDisplayOutputStream.write(newLine);
+            partnerPoleDisplayOutputStream.write(carriageReturn);
+            partnerPoleDisplayOutputStream.write("Island Furniture".getBytes());
+        }catch(Exception ex){
+            System.err.println("Unable to write to Partner Pole Display");
+            //ex.printStackTrace();
+        }
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
+        }
         this.totalRegisterCash = totalRegisterCash;
         this.storeType = storeType;
         try {
@@ -375,6 +410,51 @@ public class LoginUI extends javax.swing.JFrame {
         store.setExtendedState(JFrame.MAXIMIZED_BOTH);
         store.setVisible(true);
         this.setVisible(false);
+    }
+    
+    private void initPartnerPoleDisplay()
+    {
+        Enumeration commPortList = CommPortIdentifier.getPortIdentifiers();
+        
+        while (commPortList.hasMoreElements()) 
+        {
+            CommPortIdentifier commPort = (CommPortIdentifier) commPortList.nextElement();
+            
+            if (commPort.getPortType() == CommPortIdentifier.PORT_SERIAL &&
+                    commPort.getName().equals(partnerPoleDisplayCOMPort))
+            {
+                try
+                {
+                    serialPort = (SerialPort) commPort.open("UnifiedPointOfSale", 5000);
+                    partnerPoleDisplayOutputStream = serialPort.getOutputStream();
+                }
+                catch(PortInUseException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(IOException ex)
+                {
+                    JOptionPane.showMessageDialog(null, "Unable to initialize Partner Pole Display: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+    
+    public void closePartnerPoleDisplay(){
+        if(serialPort != null)
+        {
+            try
+            {
+                byte[] clear = {0x0C};
+                partnerPoleDisplayOutputStream.write(clear);
+                partnerPoleDisplayOutputStream.close();
+                serialPort.close();
+            }
+            catch(IOException ex)
+            {
+                ex.printStackTrace();
+            }
+        }       
     }
     
 }

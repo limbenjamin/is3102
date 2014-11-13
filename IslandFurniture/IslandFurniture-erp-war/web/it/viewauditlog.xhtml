@@ -15,11 +15,12 @@
                     <h4>View Audit Log</h4>
                     <hr></hr>       
                 </div>
-                <div class="col-md-12 col-sm-12">                                               
+                <div class="col-md-12 col-sm-12">
+                    <h:form>
+                          <h:commandButton value="Export PDF" class="btn btn-success" actionListener="#{auditLogManagedBean.PDF}"/>
+                    </h:form>
+                    <br />
                   <section class="panel">
-                      <h:form>
-                          <h:commandButton value="PDF" actionListener="#{auditLogManagedBean.PDF}"/>
-                      </h:form>
                       <h:form>
                         <p:dataTable var="log" value="#{auditLogManagedBean.logList}" style="text-align: center"
                                      emptyMessage="No records found with given criteria" filteredValue="#{auditLogManagedBean.filteredLogList}">

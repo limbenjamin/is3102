@@ -315,6 +315,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String retaillist = Connector.postForm(params, values, "stock/retaillist");
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, retaillist, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {
@@ -333,6 +334,7 @@ public class SelectStoreUI extends javax.swing.JFrame {
         try {
             String restaurantlist = Connector.postForm(params, values, "stock/restaurantlist");
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, restaurantlist, totalRegisterCash, storeType);
+            scanItem.setExtendedState(JFrame.MAXIMIZED_BOTH);
             scanItem.setVisible(true);
             this.setVisible(false);
         }catch (Exception ex) {

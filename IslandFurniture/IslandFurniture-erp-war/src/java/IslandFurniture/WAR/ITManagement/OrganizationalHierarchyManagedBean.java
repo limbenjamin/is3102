@@ -77,11 +77,23 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         plantType = request.getParameter("plantForm:plantType");
         switch (plantType) {
             case "Store":
-                mohBean.addStore(plantName, timezone, countryOffice);
+                try{
+                    mohBean.addStore(plantName, timezone, countryOffice);
+                }catch(Exception e){
+                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to add Store",""));
+                    return "manageplant";
+                }
                 storeList = mohBean.displayStore();
                 break;
             case "Manufacturing Facility":
-                mohBean.addManufacturingFacility(plantName, timezone, countryOffice);
+                try{
+                    mohBean.addManufacturingFacility(plantName, timezone, countryOffice);
+                }catch(Exception e){
+                    FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to add Manufacturing Facility",""));
+                    return "manageplant";
+                }
                 mfList = mohBean.displayManufacturingFacility();
                 break;
             default:
@@ -97,7 +109,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         store = (Store) event.getComponent().getAttributes().get("toEdit");
         String temp = store.getCountryOffice().getName();
         countryOffice = mohBean.findCountryOfficeByName(temp);
-        mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), countryOffice);
+        try{
+            mohBean.editStore(store.getId(), store.getName(), store.getTimeZoneID(), countryOffice);
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to edit Store",""));
+            return "manageplant";
+        }
         storeList = mohBean.displayStore();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Store edited",""));
@@ -109,7 +127,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
         String temp = mf.getCountryOffice().getName();
         countryOffice = mohBean.findCountryOfficeByName(temp);
-        mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), countryOffice);
+        try{
+            mohBean.editManufacturingFacility(mf.getId(), mf.getName(), mf.getTimeZoneID(), countryOffice);
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to edit Manufacturing Facility",""));
+            return "manageplant";
+        }
         mfList = mohBean.displayManufacturingFacility();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing Facility Edited",""));
@@ -121,7 +145,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         countryOffice = (CountryOffice) event.getComponent().getAttributes().get("toEdit");
         String temp = countryOffice.getCountry().getName();
         country = mohBean.findCountryByName(temp);
-        mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), country, countryOffice.getTimeZoneID());
+        try{
+            mohBean.editCountryOffice(countryOffice.getId(), countryOffice.getName(), country, countryOffice.getTimeZoneID());
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to edit Country Office",""));
+            return "manageplant";
+        }
         coList = mohBean.displayCountryOffice();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office edited",""));
@@ -134,7 +164,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
         countryString = request.getParameter("coForm:country");
         country = mohBean.findCountryByName(countryString);
         timezone = request.getParameter("coForm:timezone");
-        mohBean.addCountryOffice(plantName, country, timezone);
+        try{
+            mohBean.addCountryOffice(plantName, country, timezone);
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to add Country Office",""));
+            return "manageplant";
+        }
         coList = mohBean.displayCountryOffice();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Country Office added",""));
@@ -144,7 +180,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public String deleteStore(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         store = (Store) event.getComponent().getAttributes().get("toEdit");
-        mohBean.deleteStore(store.getId());
+        try{
+            mohBean.deleteStore(store.getId());
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to add delete store",""));
+            return "manageplant";
+        }
         storeList = mohBean.displayStore();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Store deleted",""));
@@ -154,7 +196,13 @@ public class OrganizationalHierarchyManagedBean implements Serializable  {
     public String deleteMF(ActionEvent event) throws IOException {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         mf = (ManufacturingFacility) event.getComponent().getAttributes().get("toEdit");
-        mohBean.deleteManufacturingFacility(mf.getId());
+        try{
+            mohBean.deleteManufacturingFacility(mf.getId());
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unable to add delete manufacturing plant",""));
+            return "manageplant";
+        }
         mfList = mohBean.displayManufacturingFacility();
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("message",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Manufacturing facility deleted",""));

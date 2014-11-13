@@ -89,7 +89,7 @@ public class MapStaffDataBean implements MapStaffDataBeanRemote {
             "Purchasing (Mfg)","Cust. Service (Store)","Production Planning (Mfg)","Management (Mfg)","Kitchen (Store)",
             "IT (CO)","Sales Planning (CO)","Sales Planning (CO)","Marketing (CO)","Management (CO)",//for first system release,load evelyn as sales manager here
             "Cust. Service (CO)","Restaurant Planning (CO)","Warehouse (CO)","Web Admin (CO)","IT (HQ)","IT (HQ)",
-            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Kitchen (Store)","Sales Manager (CO)","IT (CO)","Cashier (Store)",
+            "Production & Ops (HQ)","Supply Chain (HQ)","Management (HQ)","Sales Planning (CO)","Sales Manager (CO)","IT (CO)","Cashier (Store)",
                                     };
         
         for (int i=0; i<arr.length; i++){

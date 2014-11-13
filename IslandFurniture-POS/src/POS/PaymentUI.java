@@ -132,8 +132,12 @@ public class PaymentUI extends javax.swing.JFrame {
         changeDueLabel.setText("Change Due: "+currencyCode+" 0");
         payableLabel.setText("Total Payable: "+currencyCode+" 0");
         cardId = (String) jsonObject.get("cardId");
-        partnerPoleDisplayCOMPort = LCD.getPort();
-        initPartnerPoleDisplay();
+        try{
+            partnerPoleDisplayCOMPort = LCD.getPort();
+            initPartnerPoleDisplay();
+        }catch(Exception e){
+            System.err.println("Unable to init Partner Pole Display");
+        } 
     }
 
     /**
@@ -409,8 +413,12 @@ public class PaymentUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -425,8 +433,12 @@ public class PaymentUI extends javax.swing.JFrame {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -462,7 +474,9 @@ public class PaymentUI extends javax.swing.JFrame {
     }//GEN-LAST:event_cashButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
-        cashAmt = Double.parseDouble(cashCreditField.getText());
+        if (cashButton.isSelected() == true){
+            cashAmt = Double.parseDouble(cashCreditField.getText());
+        }
         calculateTotal();
         if (payableAmt == 0.0){
             System.err.println("");
@@ -537,8 +551,8 @@ public class PaymentUI extends javax.swing.JFrame {
             receipt += plantAddress + "\n";
             receipt += new Date() + " \n";
             receipt += "\n\n";
-            receipt += "ID   Product Name           Price\n";
-            receipt += "---------------------------------\n";//33 chars
+            receipt += "ID   Product Name        Price\n";
+            receipt += "------------------------------\n";//30 chars
             for (int i=0;i<transaction.size();i++){
                 System.err.println(transaction.get(i).get(0));
                 System.err.println(transaction.get(i).get(1));
@@ -553,20 +567,20 @@ public class PaymentUI extends javax.swing.JFrame {
                 String transactionPrice = currencyCode + " " + df.format(roundedamt);
                 String emptyString = "                                                                    ";
                 if (transaction.get(i).get(5).equals("")){
-                    receipt += emptyString.substring(0,33-transactionPrice.length()) + transactionPrice + "\n\n";
+
                 }else{
                     int k;
-                    if(transaction.get(i).get(5).length()>20){
-                        k = 20;
+                    if(transaction.get(i).get(5).length()>30){
+                        k = 30;
                     }else{
                         k = transaction.get(i).get(5).length();
                     }
-                    int length = 33 - (k + transactionPrice.length());
-                    receipt += transaction.get(i).get(5).substring(0, k)+ emptyString.substring(0,length) + transactionPrice + "\n\n";
+                    int length = 30 - (k + transactionPrice.length());
+                    receipt += transaction.get(i).get(5).substring(0, k)+ "\n";
                 }
-                System.err.println("debughere: "+transactionPrice.length());
+                receipt += emptyString.substring(0,30-transactionPrice.length()) + transactionPrice + "\n\n"; 
             }
-            receipt += "----------------------------------------------\n";
+            receipt += "------------------------------\n";
             receipt+= "Grand Total: " +currencyCode+" "+df.format(Math.round(grandTotalAmt * 100.0) / 100.0) + "\n";
             Double d = voucherAmt + receiptAmt;
             receipt+= "Discounts: " +currencyCode+" "+ df.format(Math.round(d * 100.0) / 100.0) + "\n";
@@ -703,8 +717,12 @@ public class PaymentUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);

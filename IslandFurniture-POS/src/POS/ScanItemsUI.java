@@ -89,8 +89,12 @@ public class ScanItemsUI extends javax.swing.JFrame {
         jTable.changeSelection(0, 0, false, false);
         jTable.editCellAt(0, 0);
         jTable.getEditorComponent().requestFocusInWindow();
-        partnerPoleDisplayCOMPort = LCD.getPort();
-        initPartnerPoleDisplay();
+        try{
+            partnerPoleDisplayCOMPort = LCD.getPort();
+            initPartnerPoleDisplay();
+        }catch(Exception e){
+            System.err.println("Unable to init Partner Pole Display");
+        } 
         jTable.getModel().addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
                 if (changing.equals(false)) {
@@ -332,8 +336,13 @@ public class ScanItemsUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -370,8 +379,12 @@ public class ScanItemsUI extends javax.swing.JFrame {
                 }
         }
         System.err.println(transaction);
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         CheckoutUI checkoutUI;
         try {

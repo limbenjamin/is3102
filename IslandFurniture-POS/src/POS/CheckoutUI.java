@@ -92,8 +92,12 @@ public class CheckoutUI extends javax.swing.JFrame {
             jTable.getModel().setValueAt(transaction.get(i).get(3), i, 4);
             jTable.getModel().setValueAt(transaction.get(i).get(4), i, 5);
         }
-        partnerPoleDisplayCOMPort = LCD.getPort();
-        initPartnerPoleDisplay();
+        try{
+            partnerPoleDisplayCOMPort = LCD.getPort();
+            initPartnerPoleDisplay();
+        }catch(Exception e){
+            System.err.println("Unable to init Partner Pole Display");
+        } 
     }
 
     /**
@@ -301,8 +305,12 @@ public class CheckoutUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void reconcileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reconcileButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             SelectStoreUI store = new SelectStoreUI(staffJSON, totalRegisterCash, storeType);
@@ -362,8 +370,12 @@ public class CheckoutUI extends javax.swing.JFrame {
     }//GEN-LAST:event_readCardButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             ScanItemsUI scanItem = new ScanItemsUI(staffJSON, listJSON, totalRegisterCash, storeType);
@@ -453,8 +465,12 @@ public class CheckoutUI extends javax.swing.JFrame {
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         PaymentUI payment = null;
-        if(serialPort != null){
-            closePartnerPoleDisplay();
+        try{
+            if(serialPort != null){
+                closePartnerPoleDisplay();
+            }
+        }catch(Exception e){
+            System.err.println("Unable to close Partner Pole Display");
         }
         try {
             payment = new PaymentUI(staffJSON, listJSON, transaction, customerName, customerCardId, grandTotal, totalRegisterCash, storeType);
